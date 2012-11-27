@@ -1,0 +1,352 @@
+<mockup version="1.0" skin="sketch" measuredW="1525" measuredH="615" mockupW="1069" mockupH="615">
+  <controls>
+    <control controlID="17" controlTypeID="__group__" x="456" y="39" w="663" h="576" measuredW="663" measuredH="576" zOrder="0" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::TabBar" x="0" y="11" w="663" h="565" measuredW="582" measuredH="100" zOrder="0" locked="false" isInGroup="17">
+          <controlProperties>
+            <selectedIndex>0</selectedIndex>
+            <text>Lundi%203/9%20%20%20%2C%20Mardi%204/9%2C%20Mercredi%205/9%20%20%20%20%2C%20Jeudi%206/9%2C%20Vendredi%207/9%2C%20Samedi%208/9</text>
+          </controlProperties>
+        </control>
+        <control controlID="1" controlTypeID="com.balsamiq.mockups::Component" x="282" y="0" w="23" h="25" measuredW="23" measuredH="25" zOrder="1" locked="false" isInGroup="17">
+          <controlProperties>
+            <override controlID="0" x="0" y="0" w="23" h="25">
+              <text>%7Bcolor%3A%23ffffff%7D3%7Bcolor%7D</text>
+            </override>
+            <src>$ACCOUNT/assets/Bootstrap.bmml#tb-badge-warning</src>
+          </controlProperties>
+        </control>
+        <control controlID="2" controlTypeID="com.balsamiq.mockups::Component" x="90" y="2" w="23" h="25" measuredW="23" measuredH="25" zOrder="2" locked="false" isInGroup="17">
+          <controlProperties>
+            <override controlID="0" x="0" y="0" w="23" h="25">
+              <text>%7Bcolor%3A%23ffffff%7D5%7Bcolor%7D</text>
+            </override>
+            <src>$ACCOUNT/assets/Bootstrap.bmml#tb-badge-warning</src>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="49" controlTypeID="__group__" x="483" y="450" w="571" h="70" measuredW="571" measuredH="70" zOrder="1" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="__group__" x="0" y="0" w="513" h="70" measuredW="513" measuredH="70" zOrder="0" locked="false" isInGroup="49">
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::Component" x="0" y="0" w="74" h="27" measuredW="74" measuredH="27" zOrder="0" locked="false" isInGroup="0">
+              <controlProperties>
+                <override controlID="0" x="0" y="0" w="74" h="27">
+                  <color>13576743</color>
+                  <text>Maths</text>
+                </override>
+                <src>$ACCOUNT/assets/Annotated%20Wireframe.bmml#Callout%20Right%20Marker</src>
+              </controlProperties>
+            </control>
+            <control controlID="1" controlTypeID="__group__" x="130" y="0" w="383" h="70" measuredW="383" measuredH="70" zOrder="1" locked="false" isInGroup="0">
+              <groupChildrenDescriptors>
+                <control controlID="0" controlTypeID="com.balsamiq.mockups::Canvas" x="0" y="0" w="383" h="70" measuredW="100" measuredH="70" zOrder="0" locked="false" isInGroup="1">
+                  <controlProperties>
+                    <borderStyle>roundedSolid</borderStyle>
+                  </controlProperties>
+                </control>
+                <control controlID="1" controlTypeID="com.balsamiq.mockups::Paragraph" x="32" y="8" w="343" h="55" measuredW="200" measuredH="80" zOrder="1" locked="false" isInGroup="1">
+                  <controlProperties>
+                    <size>11</size>
+                    <text>%20Sur%20feuille%20%3A%20p249%20n%B040%0A%20%0AApprendre%20les%20formules%20des%20aires</text>
+                  </controlProperties>
+                </control>
+              </groupChildrenDescriptors>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+        <control controlID="3" controlTypeID="com.balsamiq.mockups::PointyButton" x="532" y="5" w="-1" h="-1" measuredW="39" measuredH="27" zOrder="1" locked="false" isInGroup="49">
+          <controlProperties>
+            <size>10</size>
+            <text>TAF</text>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="50" controlTypeID="__group__" x="483" y="281" w="571" h="159" measuredW="571" measuredH="159" zOrder="2" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="__group__" x="0" y="0" w="515" h="159" measuredW="515" measuredH="159" zOrder="0" locked="false" isInGroup="50">
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::Component" x="0" y="0" w="83" h="27" measuredW="83" measuredH="27" zOrder="0" locked="false" isInGroup="0">
+              <controlProperties>
+                <override controlID="0" x="0" y="0" w="83" h="27">
+                  <color>2848996</color>
+                  <text>Fran%E7ais</text>
+                </override>
+                <src>$ACCOUNT/assets/Annotated%20Wireframe.bmml#Callout%20Right%20Marker</src>
+              </controlProperties>
+            </control>
+            <control controlID="1" controlTypeID="__group__" x="132" y="0" w="383" h="159" measuredW="383" measuredH="159" zOrder="1" locked="false" isInGroup="0">
+              <groupChildrenDescriptors>
+                <control controlID="0" controlTypeID="com.balsamiq.mockups::Canvas" x="0" y="0" w="383" h="159" measuredW="100" measuredH="70" zOrder="0" locked="false" isInGroup="1">
+                  <controlProperties>
+                    <borderStyle>roundedSolid</borderStyle>
+                  </controlProperties>
+                </control>
+                <control controlID="1" controlTypeID="com.balsamiq.mockups::Paragraph" x="32" y="8" w="343" h="144" measuredW="200" measuredH="80" zOrder="1" locked="false" isInGroup="1">
+                  <controlProperties>
+                    <size>11</size>
+                    <text>%20Bonjour%20%E0%20tous%2C%0A%20%0AUn%20petit%20mot%20pour%20vous%20dire%20que%20nous%20nous%20retrouverons%20%E0%20la%20rentr%E9e%20des%20vacances%20de%20f%E9vrier%20et%20pour%20vous%20montrer%20que%20je%20ne%20vous%20oublie%20pas%2C%20je%20vais%20vous%20demander%20de%20lire%20d%27ici%20l%E0%20le%20roman%20d%27Antoine%20de%20Saint%20Exup%E9ry%3A%20Le%20Petit%20Prince%20exceptionnellement%2C%20je%20ne%20le%20mets%20pas%20en%20commande%20chez%20Decitre%2C%20persuad%E9e%20que%20beaucoup%20d%27entre%20vous%20l%27ont%20d%E9ja%20dans%20leur%20biblioth%E8que...%20*Lire%20Le%20Petit%20Prince*.</text>
+                  </controlProperties>
+                </control>
+              </groupChildrenDescriptors>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+        <control controlID="3" controlTypeID="com.balsamiq.mockups::PointyButton" x="532" y="5" w="-1" h="-1" measuredW="39" measuredH="27" zOrder="1" locked="false" isInGroup="50">
+          <controlProperties>
+            <size>10</size>
+            <text>TAF</text>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="54" controlTypeID="__group__" x="481" y="529" w="571" h="70" measuredW="571" measuredH="70" zOrder="5" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::Component" x="0" y="6" w="83" h="27" measuredW="83" measuredH="27" zOrder="0" locked="false" isInGroup="54">
+          <controlProperties>
+            <override controlID="0" x="0" y="0" w="83" h="27">
+              <color>11982760</color>
+              <text>S.V.T.</text>
+            </override>
+            <override controlID="-1"/>
+            <src>$ACCOUNT/assets/Annotated%20Wireframe.bmml#Callout%20Right%20Marker</src>
+          </controlProperties>
+        </control>
+        <control controlID="3" controlTypeID="__group__" x="134" y="0" w="383" h="70" measuredW="383" measuredH="70" zOrder="1" locked="false" isInGroup="54">
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::Canvas" x="0" y="0" w="383" h="70" measuredW="100" measuredH="70" zOrder="0" locked="false" isInGroup="3">
+              <controlProperties>
+                <borderStyle>roundedSolid</borderStyle>
+              </controlProperties>
+            </control>
+            <control controlID="1" controlTypeID="com.balsamiq.mockups::Paragraph" x="32" y="8" w="343" h="55" measuredW="200" measuredH="80" zOrder="1" locked="false" isInGroup="3">
+              <controlProperties>
+                <size>11</size>
+                <text>DM%20classification%20de%20plusieurs%20animaux</text>
+              </controlProperties>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+        <control controlID="5" controlTypeID="com.balsamiq.mockups::PointyButton" x="532" y="5" w="-1" h="-1" measuredW="39" measuredH="27" zOrder="2" locked="false" isInGroup="54">
+          <controlProperties>
+            <size>10</size>
+            <text>TAF</text>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="55" controlTypeID="__group__" x="481" y="203" w="571" h="70" measuredW="571" measuredH="70" zOrder="3" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="__group__" x="0" y="0" w="517" h="70" measuredW="517" measuredH="70" zOrder="0" locked="false" isInGroup="55">
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="__group__" x="134" y="0" w="383" h="70" measuredW="383" measuredH="70" zOrder="0" locked="false" isInGroup="0">
+              <groupChildrenDescriptors>
+                <control controlID="0" controlTypeID="com.balsamiq.mockups::Canvas" x="0" y="0" w="383" h="70" measuredW="100" measuredH="70" zOrder="0" locked="false" isInGroup="0">
+                  <controlProperties>
+                    <borderStyle>roundedSolid</borderStyle>
+                  </controlProperties>
+                </control>
+                <control controlID="1" controlTypeID="com.balsamiq.mockups::Paragraph" x="32" y="8" w="343" h="55" measuredW="200" measuredH="80" zOrder="1" locked="false" isInGroup="0">
+                  <controlProperties>
+                    <size>11</size>
+                    <text>Apporter%20les%206%20OBJETS%20OBLIGATOIRES%20+%20mat%E9riaux%20divers%20pour%20fabrication%20MACHINE%20IMAGINAIRE%20+%20scotch%20et%20colle%20et%20ciseaux%20et%20journaux</text>
+                  </controlProperties>
+                </control>
+              </groupChildrenDescriptors>
+            </control>
+            <control controlID="1" controlTypeID="com.balsamiq.mockups::Component" x="0" y="0" w="117" h="27" measuredW="117" measuredH="27" zOrder="1" locked="false" isInGroup="0">
+              <controlProperties>
+                <override controlID="0" x="0" y="0" w="-1" h="-1">
+                  <color>16770457</color>
+                  <text>Arts%20Plastiques</text>
+                </override>
+                <src>$ACCOUNT/assets/Annotated%20Wireframe.bmml#Callout%20Right%20Marker</src>
+              </controlProperties>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+        <control controlID="3" controlTypeID="com.balsamiq.mockups::PointyButton" x="532" y="5" w="-1" h="-1" measuredW="39" measuredH="27" zOrder="1" locked="false" isInGroup="55">
+          <controlProperties>
+            <size>10</size>
+            <text>TAF</text>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="56" controlTypeID="__group__" x="481" y="126" w="571" h="70" measuredW="571" measuredH="70" zOrder="4" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::Component" x="0" y="0" w="74" h="27" measuredW="74" measuredH="27" zOrder="0" locked="false" isInGroup="56">
+          <controlProperties>
+            <override controlID="0" x="0" y="0" w="74" h="27">
+              <color>6770343</color>
+              <text>Anglais</text>
+            </override>
+            <override controlID="-1"/>
+            <src>$ACCOUNT/assets/Annotated%20Wireframe.bmml#Callout%20Right%20Marker</src>
+          </controlProperties>
+        </control>
+        <control controlID="2" controlTypeID="com.balsamiq.mockups::PointyButton" x="532" y="5" w="-1" h="-1" measuredW="39" measuredH="27" zOrder="1" locked="false" isInGroup="56">
+          <controlProperties>
+            <size>10</size>
+            <text>TAF</text>
+          </controlProperties>
+        </control>
+        <control controlID="3" controlTypeID="__group__" x="134" y="0" w="383" h="70" measuredW="383" measuredH="70" zOrder="2" locked="false" isInGroup="56">
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::Canvas" x="0" y="0" w="383" h="70" measuredW="100" measuredH="70" zOrder="0" locked="false" isInGroup="3">
+              <controlProperties>
+                <borderStyle>roundedSolid</borderStyle>
+              </controlProperties>
+            </control>
+            <control controlID="1" controlTypeID="com.balsamiq.mockups::Paragraph" x="32" y="8" w="343" h="55" measuredW="200" measuredH="80" zOrder="1" locked="false" isInGroup="3">
+              <controlProperties>
+                <size>11</size>
+                <text>APPRENDRE%20DEBUT%20DU%20DIALOGUE%20/%20EX%20P154%20BOOK%202%20ET%204</text>
+              </controlProperties>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="72" controlTypeID="__group__" x="458" y="0" w="659" h="27" measuredW="659" measuredH="27" zOrder="6" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="__group__" x="337" y="0" w="322" h="27" measuredW="322" measuredH="27" zOrder="0" locked="false" isInGroup="72">
+          <groupChildrenDescriptors>
+            <control controlID="1" controlTypeID="__group__" x="0" y="0" w="322" h="27" measuredW="322" measuredH="27" zOrder="0" locked="false" isInGroup="0">
+              <groupChildrenDescriptors>
+                <control controlID="0" controlTypeID="__group__" x="91" y="0" w="231" h="27" measuredW="231" measuredH="27" zOrder="0" locked="false" isInGroup="1">
+                  <groupChildrenDescriptors>
+                    <control controlID="0" controlTypeID="com.balsamiq.mockups::Paragraph" x="63" y="4" w="168" h="23" measuredW="200" measuredH="80" zOrder="0" locked="false" isInGroup="0">
+                      <controlProperties>
+                        <bold>true</bold>
+                        <text>3%20sept.%20-%208%20sept.%202012</text>
+                      </controlProperties>
+                    </control>
+                    <control controlID="1" controlTypeID="com.balsamiq.mockups::PointyButton" x="29" y="0" w="21" h="-1" measuredW="21" measuredH="27" zOrder="1" locked="false" isInGroup="0">
+                      <controlProperties>
+                        <size>10</size>
+                        <text/>
+                      </controlProperties>
+                    </control>
+                    <control controlID="2" controlTypeID="com.balsamiq.mockups::PointyButton" x="0" y="0" w="21" h="-1" measuredW="21" measuredH="27" zOrder="2" locked="false" isInGroup="0">
+                      <controlProperties>
+                        <direction>left</direction>
+                        <size>10</size>
+                        <text>%20</text>
+                      </controlProperties>
+                    </control>
+                  </groupChildrenDescriptors>
+                </control>
+                <control controlID="1" controlTypeID="com.balsamiq.mockups::PointyButton" x="0" y="0" w="78" h="-1" measuredW="78" measuredH="27" zOrder="1" locked="false" isInGroup="1">
+                  <controlProperties>
+                    <direction>center</direction>
+                    <size>10</size>
+                    <text>Aujourd%27hui</text>
+                  </controlProperties>
+                </control>
+              </groupChildrenDescriptors>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+        <control controlID="2" controlTypeID="__group__" x="0" y="0" w="215" h="27" measuredW="215" measuredH="27" zOrder="1" locked="false" isInGroup="72">
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="__group__" x="0" y="0" w="215" h="27" measuredW="215" measuredH="27" zOrder="0" locked="false" isInGroup="2">
+              <controlProperties>
+                <controlName>tb-pill-selected</controlName>
+              </controlProperties>
+              <groupChildrenDescriptors>
+                <control controlID="0" controlTypeID="com.balsamiq.mockups::RoundButton" x="0" y="0" w="215" h="27" measuredW="32" measuredH="32" zOrder="0" locked="false" isInGroup="0">
+                  <controlProperties>
+                    <borderColor>10066329</borderColor>
+                    <color>16777215</color>
+                    <shape>roundRect</shape>
+                    <size>11</size>
+                    <text/>
+                  </controlProperties>
+                </control>
+              </groupChildrenDescriptors>
+            </control>
+            <control controlID="1" controlTypeID="__group__" x="4" y="3" w="210" h="23" measuredW="210" measuredH="23" zOrder="1" locked="false" isInGroup="2">
+              <controlProperties>
+                <controlName>tb-nav-pill-bar</controlName>
+                <map>%3Carea%20shape%3D%22rect%22%20coords%3D%226%2C3%2C216%2C26%22%20href%3D%22CT-eleves-cours.bmml%22%20alt%3D%22CT-eleves-cours%22%20id%3D%221%22/%3E</map>
+              </controlProperties>
+              <groupChildrenDescriptors>
+                <control controlID="0" controlTypeID="__group__" x="0" y="0" w="104" h="23" measuredW="104" measuredH="23" zOrder="0" locked="false" isInGroup="1">
+                  <controlProperties>
+                    <controlName>tb-pill-selected</controlName>
+                    <href>CT-eleves%26bm%3BCT-eleves.bmml%26bm%3BCT-eleves.bmml%26bm%3BCT-eleves.bmml</href>
+                    <map>%3Carea%20shape%3D%22rect%22%20coords%3D%226%2C3%2C110%2C26%22%20href%3D%22CT-eleves.bmml%22%20alt%3D%22CT-eleves%22%20id%3D%220%22/%3E</map>
+                  </controlProperties>
+                  <groupChildrenDescriptors>
+                    <control controlID="0" controlTypeID="com.balsamiq.mockups::RoundButton" x="0" y="0" w="104" h="23" measuredW="32" measuredH="32" zOrder="0" locked="false" isInGroup="0">
+                      <controlProperties>
+                        <borderColor>16777215</borderColor>
+                        <color>16777215</color>
+                        <shape>roundRect</shape>
+                        <size>11</size>
+                        <text>%5BTravail%20%E0%20faire%5D</text>
+                      </controlProperties>
+                    </control>
+                  </groupChildrenDescriptors>
+                </control>
+                <control controlID="1" controlTypeID="__group__" x="106" y="0" w="104" h="23" measuredW="104" measuredH="23" zOrder="1" locked="false" isInGroup="1">
+                  <controlProperties>
+                    <controlName>tb-pill</controlName>
+                    <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22112%2C3%2C216%2C26%22%20href%3D%22CT-eleves-mode-liste.bmml%22%20alt%3D%22CT-eleves-mode-liste%22%20id%3D%221%22/%3E</map>
+                  </controlProperties>
+                  <groupChildrenDescriptors>
+                    <control controlID="0" controlTypeID="com.balsamiq.mockups::RoundButton" x="0" y="0" w="104" h="23" measuredW="32" measuredH="32" zOrder="0" locked="false" isInGroup="1">
+                      <controlProperties>
+                        <backgroundAlpha>1</backgroundAlpha>
+                        <borderColor>2848996</borderColor>
+                        <color>2848996</color>
+                        <shape>roundRect</shape>
+                        <size>13</size>
+                        <text>Cours</text>
+                      </controlProperties>
+                    </control>
+                  </groupChildrenDescriptors>
+                </control>
+              </groupChildrenDescriptors>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="75" controlTypeID="com.balsamiq.mockups::IconLabel" x="1093" y="45" w="-1" h="-1" measuredW="24" measuredH="41" zOrder="7" locked="false" isInGroup="-1">
+      <controlProperties>
+        <borderStyle>square</borderStyle>
+        <href>Parametres-affichage-eleve%26bm%3BParametres-affichage-eleve.bmml%26bm%3BParametres-affichage-eleve.bmml%26bm%3BParametres-affichage-eleve.bmml</href>
+        <icon>GearIcon%7Csmall</icon>
+        <labelPosition>bottom</labelPosition>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22637%2C45%2C661%2C86%22%20href%3D%22Parametres-affichage-eleve.bmml%22%20alt%3D%22Parametres-affichage-eleve%22%20id%3D%2275%22/%3E</map>
+        <size>9</size>
+        <text>%20</text>
+      </controlProperties>
+    </control>
+    <control controlID="78" controlTypeID="__group__" x="1048" y="182" w="477" h="137" measuredW="477" measuredH="137" zOrder="8" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="1" controlTypeID="com.balsamiq.mockups::Arrow" x="0" y="37" w="-1" h="-1" measuredW="150" measuredH="100" zOrder="0" locked="false" isInGroup="78">
+          <controlProperties>
+            <backgroundAlpha>0.5</backgroundAlpha>
+            <curvature>1</curvature>
+            <direction>bottom</direction>
+            <leftArrow>false</leftArrow>
+            <markup>false</markup>
+            <text>La%20souris%20sur%20le%20bouton%20entraine%20l%27apparition%20du%20TAF%20en%20toolTip.</text>
+          </controlProperties>
+        </control>
+        <control controlID="2" controlTypeID="com.balsamiq.mockups::Tooltip" x="150" y="0" w="327" h="83" measuredW="326" measuredH="0" zOrder="1" locked="false" isInGroup="78">
+          <controlProperties>
+            <align>left</align>
+            <text>*%5BVendredi%2031%20ao%FBt%5D*%0ACorrection%20de%20l%27exercice%20sur%20la%20classification%0ATP%20en%20salle%20informatique%20sur%20phyllobo%EEte</text>
+            <tooltipDirection>SW</tooltipDirection>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+  </controls>
+</mockup>

@@ -1,0 +1,314 @@
+<mockup version="1.0" skin="sketch" measuredW="1120" measuredH="605" mockupW="664" mockupH="605">
+  <controls>
+    <control controlID="7" controlTypeID="com.balsamiq.mockups::IconLabel" x="1093" y="33" w="-1" h="-1" measuredW="24" measuredH="41" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <borderStyle>square</borderStyle>
+        <href>Parametres-affichage-eleve%26bm%3BParametres-affichage-eleve.bmml%26bm%3BParametres-affichage-eleve.bmml%26bm%3BParametres-affichage-eleve.bmml</href>
+        <icon>GearIcon%7Csmall</icon>
+        <labelPosition>bottom</labelPosition>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22637%2C33%2C661%2C74%22%20href%3D%22Parametres-affichage-eleve.bmml%22%20alt%3D%22Parametres-affichage-eleve%22%20id%3D%227%22/%3E</map>
+        <size>9</size>
+        <text>%20</text>
+      </controlProperties>
+    </control>
+    <control controlID="28" controlTypeID="com.balsamiq.mockups::Canvas" x="456" y="64" w="663" h="541" measuredW="100" measuredH="70" zOrder="0" locked="false" isInGroup="-1"/>
+    <control controlID="30" controlTypeID="__group__" x="456" y="1" w="212" h="24" measuredW="212" measuredH="24" zOrder="2" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="__group__" x="0" y="0" w="212" h="24" measuredW="212" measuredH="24" zOrder="0" locked="false" isInGroup="30">
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::Paragraph" x="0" y="0" w="212" h="24" measuredW="200" measuredH="80" zOrder="0" locked="false" isInGroup="0">
+              <controlProperties>
+                <bold>true</bold>
+                <size>16</size>
+                <text>Validation%20des%20saisies</text>
+              </controlProperties>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="31" controlTypeID="com.balsamiq.mockups::ButtonBar" x="456" y="27" w="-1" h="-1" measuredW="160" measuredH="30" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Classes%2C%20Groupes</text>
+      </controlProperties>
+    </control>
+    <control controlID="32" controlTypeID="__group__" x="835" y="0" w="285" h="27" measuredW="285" measuredH="27" zOrder="4" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="1" controlTypeID="__group__" x="0" y="0" w="285" h="27" measuredW="285" measuredH="27" zOrder="0" locked="false" isInGroup="32">
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="__group__" x="98" y="0" w="187" h="27" measuredW="187" measuredH="27" zOrder="0" locked="false" isInGroup="1">
+              <groupChildrenDescriptors>
+                <control controlID="0" controlTypeID="com.balsamiq.mockups::Paragraph" x="59" y="4" w="128" h="23" measuredW="200" measuredH="80" zOrder="0" locked="false" isInGroup="0">
+                  <controlProperties>
+                    <bold>true</bold>
+                    <text>Septembre%202012</text>
+                  </controlProperties>
+                </control>
+                <control controlID="1" controlTypeID="com.balsamiq.mockups::PointyButton" x="29" y="0" w="21" h="-1" measuredW="21" measuredH="27" zOrder="1" locked="false" isInGroup="0">
+                  <controlProperties>
+                    <size>10</size>
+                    <text/>
+                  </controlProperties>
+                </control>
+                <control controlID="2" controlTypeID="com.balsamiq.mockups::PointyButton" x="0" y="0" w="21" h="-1" measuredW="21" measuredH="27" zOrder="2" locked="false" isInGroup="0">
+                  <controlProperties>
+                    <direction>left</direction>
+                    <size>10</size>
+                    <text>%20</text>
+                  </controlProperties>
+                </control>
+              </groupChildrenDescriptors>
+            </control>
+            <control controlID="1" controlTypeID="com.balsamiq.mockups::PointyButton" x="0" y="0" w="83" h="-1" measuredW="78" measuredH="27" zOrder="1" locked="false" isInGroup="1">
+              <controlProperties>
+                <direction>center</direction>
+                <size>10</size>
+                <text>Aujourd%27hui</text>
+              </controlProperties>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="55" controlTypeID="__group__" x="492" y="89" w="590" h="43" measuredW="590" measuredH="43" zOrder="5" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::Canvas" x="0" y="0" w="590" h="43" measuredW="100" measuredH="70" zOrder="0" locked="false" isInGroup="55">
+          <controlProperties>
+            <borderStyle>roundedSolid</borderStyle>
+            <color>13421772</color>
+          </controlProperties>
+        </control>
+        <control controlID="1" controlTypeID="com.balsamiq.mockups::Component" x="9" y="7" w="39" h="27" measuredW="39" measuredH="27" zOrder="1" locked="false" isInGroup="55">
+          <controlProperties>
+            <override controlID="0" x="0" y="0" w="-1" h="-1">
+              <size>16</size>
+              <text>6%B0</text>
+            </override>
+            <src>$ACCOUNT/assets/Annotated%20Wireframe.bmml#Callout%20Right%20Marker</src>
+          </controlProperties>
+        </control>
+        <control controlID="2" controlTypeID="com.balsamiq.mockups::Component" x="461" y="8" w="76" h="27" measuredW="76" measuredH="27" zOrder="2" locked="false" isInGroup="55">
+          <controlProperties>
+            <override controlID="0" x="0" y="0" w="76" h="27">
+              <color>9684093</color>
+              <text>196/301</text>
+            </override>
+            <src>$ACCOUNT/assets/Annotated%20Wireframe.bmml#Callout%20Square%20Marker</src>
+          </controlProperties>
+        </control>
+        <control controlID="3" controlTypeID="com.balsamiq.mockups::Icon" x="553" y="12" w="-1" h="-1" measuredW="24" measuredH="24" zOrder="3" locked="false" isInGroup="55">
+          <controlProperties>
+            <href>CT-principal%26bm%3BCT-principal.bmml%26bm%3BCT-principal.bmml%26bm%3BCT-principal.bmml</href>
+            <icon>DownFillTriangleIcon%7Csmall</icon>
+            <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22589%2C101%2C613%2C125%22%20href%3D%22CT-principal.bmml%22%20alt%3D%22CT-principal%22%20id%3D%223%22/%3E</map>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="56" controlTypeID="__group__" x="492" y="367" w="590" h="43" measuredW="590" measuredH="43" zOrder="6" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::Canvas" x="0" y="0" w="590" h="43" measuredW="100" measuredH="70" zOrder="0" locked="false" isInGroup="56">
+          <controlProperties>
+            <borderStyle>roundedSolid</borderStyle>
+            <color>13421772</color>
+          </controlProperties>
+        </control>
+        <control controlID="2" controlTypeID="com.balsamiq.mockups::Component" x="461" y="8" w="76" h="27" measuredW="76" measuredH="27" zOrder="1" locked="false" isInGroup="56">
+          <controlProperties>
+            <override controlID="0" x="0" y="0" w="76" h="27">
+              <color>9684093</color>
+              <text>254/301</text>
+            </override>
+            <override controlID="-1"/>
+            <src>$ACCOUNT/assets/Annotated%20Wireframe.bmml#Callout%20Square%20Marker</src>
+          </controlProperties>
+        </control>
+        <control controlID="3" controlTypeID="com.balsamiq.mockups::Icon" x="553" y="12" w="-1" h="-1" measuredW="24" measuredH="24" zOrder="2" locked="false" isInGroup="56">
+          <controlProperties>
+            <icon>RightFillTriangleIcon%7Csmall</icon>
+          </controlProperties>
+        </control>
+        <control controlID="4" controlTypeID="com.balsamiq.mockups::Component" x="9" y="8" w="39" h="27" measuredW="39" measuredH="27" zOrder="3" locked="false" isInGroup="56">
+          <controlProperties>
+            <override controlID="0" x="0" y="0" w="-1" h="-1">
+              <size>16</size>
+              <text>5%B0</text>
+            </override>
+            <src>$ACCOUNT/assets/Annotated%20Wireframe.bmml#Callout%20Right%20Marker</src>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="57" controlTypeID="__group__" x="492" y="425" w="590" h="43" measuredW="590" measuredH="43" zOrder="7" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::Canvas" x="0" y="0" w="590" h="43" measuredW="100" measuredH="70" zOrder="0" locked="false" isInGroup="57">
+          <controlProperties>
+            <borderStyle>roundedSolid</borderStyle>
+            <color>13421772</color>
+          </controlProperties>
+        </control>
+        <control controlID="2" controlTypeID="com.balsamiq.mockups::Component" x="461" y="8" w="76" h="27" measuredW="76" measuredH="27" zOrder="1" locked="false" isInGroup="57">
+          <controlProperties>
+            <override controlID="0" x="0" y="0" w="76" h="27">
+              <color>9684093</color>
+              <text>254/301</text>
+            </override>
+            <override controlID="-1"/>
+            <src>$ACCOUNT/assets/Annotated%20Wireframe.bmml#Callout%20Square%20Marker</src>
+          </controlProperties>
+        </control>
+        <control controlID="3" controlTypeID="com.balsamiq.mockups::Icon" x="553" y="12" w="-1" h="-1" measuredW="24" measuredH="24" zOrder="2" locked="false" isInGroup="57">
+          <controlProperties>
+            <icon>RightFillTriangleIcon%7Csmall</icon>
+          </controlProperties>
+        </control>
+        <control controlID="4" controlTypeID="com.balsamiq.mockups::Component" x="9" y="8" w="39" h="27" measuredW="39" measuredH="27" zOrder="3" locked="false" isInGroup="57">
+          <controlProperties>
+            <override controlID="0" x="0" y="0" w="-1" h="-1">
+              <size>16</size>
+              <text>4%B0</text>
+            </override>
+            <src>$ACCOUNT/assets/Annotated%20Wireframe.bmml#Callout%20Right%20Marker</src>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="58" controlTypeID="__group__" x="492" y="486" w="590" h="43" measuredW="590" measuredH="43" zOrder="8" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::Canvas" x="0" y="0" w="590" h="43" measuredW="100" measuredH="70" zOrder="0" locked="false" isInGroup="58">
+          <controlProperties>
+            <borderStyle>roundedSolid</borderStyle>
+            <color>13421772</color>
+          </controlProperties>
+        </control>
+        <control controlID="2" controlTypeID="com.balsamiq.mockups::Component" x="461" y="8" w="76" h="27" measuredW="76" measuredH="27" zOrder="1" locked="false" isInGroup="58">
+          <controlProperties>
+            <override controlID="0" x="0" y="0" w="76" h="27">
+              <color>9684093</color>
+              <text>254/301</text>
+            </override>
+            <src>$ACCOUNT/assets/Annotated%20Wireframe.bmml#Callout%20Square%20Marker</src>
+          </controlProperties>
+        </control>
+        <control controlID="3" controlTypeID="com.balsamiq.mockups::Icon" x="553" y="12" w="-1" h="-1" measuredW="24" measuredH="24" zOrder="2" locked="false" isInGroup="58">
+          <controlProperties>
+            <icon>RightFillTriangleIcon%7Csmall</icon>
+          </controlProperties>
+        </control>
+        <control controlID="4" controlTypeID="com.balsamiq.mockups::Component" x="9" y="8" w="39" h="27" measuredW="39" measuredH="27" zOrder="3" locked="false" isInGroup="58">
+          <controlProperties>
+            <override controlID="0" x="0" y="0" w="-1" h="-1">
+              <size>16</size>
+              <text>3%B0</text>
+            </override>
+            <src>$ACCOUNT/assets/Annotated%20Wireframe.bmml#Callout%20Right%20Marker</src>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="102" controlTypeID="__group__" x="655" y="143" w="421" h="198" measuredW="421" measuredH="198" zOrder="9" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::Component" x="307" y="4" w="63" h="19" measuredW="63" measuredH="19" zOrder="0" locked="false" isInGroup="102">
+          <controlProperties>
+            <override controlID="0" x="0" y="0" w="63" h="19">
+              <text>119/120</text>
+            </override>
+            <override controlID="-1"/>
+            <src>$ACCOUNT/assets/Bootstrap.bmml#tb-label-success</src>
+          </controlProperties>
+        </control>
+        <control controlID="1" controlTypeID="com.balsamiq.mockups::Component" x="307" y="58" w="63" h="19" measuredW="63" measuredH="19" zOrder="1" locked="false" isInGroup="102">
+          <controlProperties>
+            <override controlID="0" x="0" y="0" w="63" h="19">
+              <text>45/70</text>
+            </override>
+            <override controlID="-1"/>
+            <src>$ACCOUNT/assets/Bootstrap.bmml#tb-label-success</src>
+          </controlProperties>
+        </control>
+        <control controlID="2" controlTypeID="com.balsamiq.mockups::Component" x="307" y="112" w="63" h="19" measuredW="63" measuredH="19" zOrder="2" locked="false" isInGroup="102">
+          <controlProperties>
+            <override controlID="0" x="0" y="0" w="63" h="19">
+              <text>27/85</text>
+            </override>
+            <override controlID="-1"/>
+            <src>$ACCOUNT/assets/Bootstrap.bmml#tb-label-success</src>
+          </controlProperties>
+        </control>
+        <control controlID="3" controlTypeID="com.balsamiq.mockups::Component" x="307" y="166" w="63" h="19" measuredW="63" measuredH="19" zOrder="3" locked="false" isInGroup="102">
+          <controlProperties>
+            <override controlID="0" x="0" y="0" w="63" h="19">
+              <text>5/26</text>
+            </override>
+            <override controlID="-1"/>
+            <src>$ACCOUNT/assets/Bootstrap.bmml#tb-label-success</src>
+          </controlProperties>
+        </control>
+        <control controlID="4" controlTypeID="com.balsamiq.mockups::Component" x="13" y="0" w="44" h="27" measuredW="44" measuredH="27" zOrder="4" locked="false" isInGroup="102">
+          <controlProperties>
+            <override controlID="0" x="0" y="0" w="44" h="27">
+              <color>13421772</color>
+              <text>6%B01</text>
+            </override>
+            <override controlID="-1"/>
+            <src>$ACCOUNT/assets/Annotated%20Wireframe.bmml#Callout%20Right%20Marker</src>
+          </controlProperties>
+        </control>
+        <control controlID="5" controlTypeID="com.balsamiq.mockups::Component" x="13" y="54" w="44" h="27" measuredW="44" measuredH="27" zOrder="5" locked="false" isInGroup="102">
+          <controlProperties>
+            <override controlID="0" x="0" y="0" w="44" h="27">
+              <color>13421772</color>
+              <text>6%B02</text>
+            </override>
+            <override controlID="-1"/>
+            <src>$ACCOUNT/assets/Annotated%20Wireframe.bmml#Callout%20Right%20Marker</src>
+          </controlProperties>
+        </control>
+        <control controlID="6" controlTypeID="com.balsamiq.mockups::Component" x="13" y="108" w="44" h="27" measuredW="44" measuredH="27" zOrder="6" locked="false" isInGroup="102">
+          <controlProperties>
+            <override controlID="0" x="0" y="0" w="44" h="27">
+              <color>13421772</color>
+              <text>6%B03</text>
+            </override>
+            <override controlID="-1"/>
+            <src>$ACCOUNT/assets/Annotated%20Wireframe.bmml#Callout%20Right%20Marker</src>
+          </controlProperties>
+        </control>
+        <control controlID="7" controlTypeID="com.balsamiq.mockups::Component" x="13" y="162" w="44" h="27" measuredW="44" measuredH="27" zOrder="7" locked="false" isInGroup="102">
+          <controlProperties>
+            <override controlID="0" x="0" y="0" w="44" h="27">
+              <color>13421772</color>
+              <text>6%B04</text>
+            </override>
+            <override controlID="-1"/>
+            <src>$ACCOUNT/assets/Annotated%20Wireframe.bmml#Callout%20Right%20Marker</src>
+          </controlProperties>
+        </control>
+        <control controlID="8" controlTypeID="com.balsamiq.mockups::HRule" x="0" y="31" w="421" h="-1" measuredW="100" measuredH="5" zOrder="8" locked="false" isInGroup="102"/>
+        <control controlID="9" controlTypeID="com.balsamiq.mockups::HRule" x="0" y="85" w="421" h="-1" measuredW="100" measuredH="5" zOrder="9" locked="false" isInGroup="102"/>
+        <control controlID="10" controlTypeID="com.balsamiq.mockups::HRule" x="0" y="139" w="421" h="-1" measuredW="100" measuredH="5" zOrder="10" locked="false" isInGroup="102"/>
+        <control controlID="11" controlTypeID="com.balsamiq.mockups::HRule" x="0" y="193" w="421" h="-1" measuredW="100" measuredH="5" zOrder="11" locked="false" isInGroup="102"/>
+        <control controlID="12" controlTypeID="com.balsamiq.mockups::Icon" x="390" y="1" w="-1" h="-1" measuredW="24" measuredH="24" zOrder="12" locked="false" isInGroup="102">
+          <controlProperties>
+            <icon>RightTriangleIcon%7Csmall</icon>
+          </controlProperties>
+        </control>
+        <control controlID="13" controlTypeID="com.balsamiq.mockups::Icon" x="390" y="55" w="-1" h="-1" measuredW="24" measuredH="24" zOrder="13" locked="false" isInGroup="102">
+          <controlProperties>
+            <icon>RightTriangleIcon%7Csmall</icon>
+          </controlProperties>
+        </control>
+        <control controlID="14" controlTypeID="com.balsamiq.mockups::Icon" x="390" y="112" w="-1" h="-1" measuredW="24" measuredH="24" zOrder="14" locked="false" isInGroup="102">
+          <controlProperties>
+            <icon>RightTriangleIcon%7Csmall</icon>
+          </controlProperties>
+        </control>
+        <control controlID="15" controlTypeID="com.balsamiq.mockups::Icon" x="390" y="166" w="-1" h="-1" measuredW="24" measuredH="24" zOrder="15" locked="false" isInGroup="102">
+          <controlProperties>
+            <icon>RightTriangleIcon%7Csmall</icon>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+  </controls>
+</mockup>
