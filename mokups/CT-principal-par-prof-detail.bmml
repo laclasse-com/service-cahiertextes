@@ -1,0 +1,120 @@
+<mockup version="1.0" skin="sketch" measuredW="1612" measuredH="632" mockupW="1156" mockupH="568">
+  <controls>
+    <control controlID="7" controlTypeID="com.balsamiq.mockups::IconLabel" x="1109" y="86" w="-1" h="-1" measuredW="24" measuredH="41" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <borderStyle>square</borderStyle>
+        <href>Parametres-affichage-eleve%26bm%3BParametres-affichage-eleve.bmml%26bm%3BParametres-affichage-eleve.bmml%26bm%3BParametres-affichage-eleve.bmml</href>
+        <icon>GearIcon%7Csmall</icon>
+        <labelPosition>bottom</labelPosition>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22653%2C22%2C677%2C63%22%20href%3D%22Parametres-affichage-eleve.bmml%22%20alt%3D%22Parametres-affichage-eleve%22%20id%3D%227%22/%3E</map>
+        <size>9</size>
+        <text>%20</text>
+      </controlProperties>
+    </control>
+    <control controlID="104" controlTypeID="com.balsamiq.mockups::Canvas" x="456" y="64" w="700" h="568" measuredW="100" measuredH="70" zOrder="0" locked="false" isInGroup="-1"/>
+    <control controlID="105" controlTypeID="__group__" x="471" y="90" w="548" h="24" measuredW="548" measuredH="24" zOrder="1" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="__group__" x="0" y="0" w="548" h="24" measuredW="548" measuredH="24" zOrder="0" locked="false" isInGroup="105">
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::Paragraph" x="0" y="0" w="548" h="24" measuredW="200" measuredH="80" zOrder="0" locked="false" isInGroup="0">
+              <controlProperties>
+                <bold>true</bold>
+                <size>16</size>
+                <text>Validation%20des%20saisies%20par%20enseignant%20%3E%20Giacomo%20Guilizzoni</text>
+              </controlProperties>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="107" controlTypeID="__group__" x="471" y="120" w="667" h="43" measuredW="667" measuredH="43" zOrder="2" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::Canvas" x="0" y="0" w="667" h="43" measuredW="100" measuredH="70" zOrder="0" locked="false" isInGroup="107">
+          <controlProperties>
+            <borderStyle>roundedSolid</borderStyle>
+            <color>13421772</color>
+          </controlProperties>
+        </control>
+        <control controlID="4" controlTypeID="com.balsamiq.mockups::ComboBox" x="24" y="9" w="-1" h="-1" measuredW="155" measuredH="24" zOrder="1" locked="false" isInGroup="107">
+          <controlProperties>
+            <href>CT-principal-par-prof%26bm%3BCT-principal-par-prof.bmml%26bm%3BCT-principal-par-prof.bmml%26bm%3BCT-principal-par-prof.bmml</href>
+            <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2239%2C65%2C194%2C89%22%20href%3D%22CT-principal-par-prof.bmml%22%20alt%3D%22CT-principal-par-prof%22%20id%3D%224%22/%3E</map>
+            <text>Giacomo%20Guilizzoni</text>
+          </controlProperties>
+        </control>
+        <control controlID="8" controlTypeID="com.balsamiq.mockups::ComboBox" x="208" y="9" w="179" h="-1" measuredW="119" measuredH="24" zOrder="2" locked="false" isInGroup="107">
+          <controlProperties>
+            <text>Tous%20les%20mois</text>
+          </controlProperties>
+        </control>
+        <control controlID="9" controlTypeID="com.balsamiq.mockups::ComboBox" x="412" y="9" w="179" h="-1" measuredW="151" measuredH="24" zOrder="3" locked="false" isInGroup="107">
+          <controlProperties>
+            <text>Toutes%20ses%20classes</text>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="168" controlTypeID="com.balsamiq.mockups::VCurly" x="1184" y="407" w="428" h="136" measuredW="180" measuredH="140" zOrder="4" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>10</size>
+        <text>Liste%20des%20entr%E9es%20faite%20par%20l%27enseignant%20choisi%2C%20tri%E9e%20par%20classe%20dans%20l%27ordre%20croissant%20des%20niveaux%20de%20classe.%0AUn%20selection%20multiple%20%28tout%20ou%20rien%20aussi%29%20est%20possible%20avant%20d%27appuyer%20sur%20le%20bouton%20%22valider%22.</text>
+      </controlProperties>
+    </control>
+    <control controlID="169" controlTypeID="com.balsamiq.mockups::VCurly" x="1184" y="114" w="418" h="64" measuredW="180" measuredH="140" zOrder="5" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>10</size>
+        <text>Filtres%20de%20s%E9lection%20de%20l%27enseignant%0Aet%20du%20mois.%0ALorsqu%27on%20s%E9lectionne%20un%20enseignant%2C%20le%20nouveau%20filtre%20par%20rapport%20%E0%20ses%20classes%20appara%EEt.</text>
+      </controlProperties>
+    </control>
+    <control controlID="173" controlTypeID="com.balsamiq.mockups::VCurly" x="1189" y="184" w="418" h="214" measuredW="180" measuredH="140" zOrder="6" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>10</size>
+        <text>Statistiques%20pour%20cet%20enseignant%20et%20cette%20classe%20sur%20la%20p%E9riode%20s%E9lectionn%E9e%20%28tous%20les%20mois%20ou%20mois%20choisi%29.%0A-%20bar1%3A%20Fr%E9quence%20des%20entr%E9es%20.%0A-%20Pie1%20%3A%20proportion%20entr%E9es%20valid%E9es%20/%20non%20valid%E9es.</text>
+      </controlProperties>
+    </control>
+    <control controlID="179" controlTypeID="com.balsamiq.mockups::DataGrid" x="479" y="359" w="649" h="231" measuredW="304" measuredH="242" zOrder="7" locked="false" isInGroup="-1">
+      <controlProperties>
+        <hLines>false</hLines>
+        <rowHeight>54</rowHeight>
+        <text>Classe%20%5Ev%2C%20Cours%2C%20Travail%20%E0%20faire%2C%20Valider%20%5B%5D%0A4%B03%2C%20%2C%20%2C%5Bv%5D%0A4%B03%2C%20%2C%20%2C%5B%5D%0A4%B04%2C%20%2C%20%2C%5B%5D%0A3%B01%2C%20%2C%20%2C%5B%5D%0A%7B0C%2C%2035L%2C%2035C%2C%2010C%7D</text>
+        <vLines>true</vLines>
+      </controlProperties>
+    </control>
+    <control controlID="182" controlTypeID="com.balsamiq.mockups::ColumnChart" x="710" y="178" w="272" h="120" measuredW="187" measuredH="175" zOrder="8" locked="false" isInGroup="-1"/>
+    <control controlID="189" controlTypeID="__group__" x="471" y="176" w="220" h="122" measuredW="220" measuredH="122" zOrder="9" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::Canvas" x="0" y="0" w="220" h="122" measuredW="100" measuredH="70" zOrder="0" locked="false" isInGroup="189">
+          <controlProperties>
+            <borderStyle>roundedSolid</borderStyle>
+          </controlProperties>
+        </control>
+        <control controlID="1" controlTypeID="com.balsamiq.mockups::Label" x="25" y="54" w="-1" h="-1" measuredW="47" measuredH="22" zOrder="1" locked="false" isInGroup="189">
+          <controlProperties>
+            <text>Italien</text>
+          </controlProperties>
+        </control>
+        <control controlID="2" controlTypeID="com.balsamiq.mockups::Label" x="25" y="23" w="-1" h="-1" measuredW="170" measuredH="22" zOrder="2" locked="false" isInGroup="189">
+          <controlProperties>
+            <text>%5Bgguilizzoni@laclasse.com%5D</text>
+          </controlProperties>
+        </control>
+        <control controlID="3" controlTypeID="com.balsamiq.mockups::Label" x="25" y="85" w="-1" h="-1" measuredW="128" measuredH="22" zOrder="3" locked="false" isInGroup="189">
+          <controlProperties>
+            <text>4%B03%2C%204%B04%2C%203%B01%2C%203%B02</text>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="192" controlTypeID="com.balsamiq.mockups::Button" x="982" y="327" w="-1" h="-1" measuredW="144" measuredH="27" zOrder="10" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Valider%20les%20entr%E9es</text>
+      </controlProperties>
+    </control>
+    <control controlID="193" controlTypeID="com.balsamiq.mockups::Button" x="983" y="596" w="-1" h="-1" measuredW="144" measuredH="27" zOrder="11" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Valider%20les%20entr%E9es</text>
+      </controlProperties>
+    </control>
+    <control controlID="194" controlTypeID="com.balsamiq.mockups::PieChart" x="1012" y="181" w="114" h="114" measuredW="180" measuredH="180" zOrder="12" locked="false" isInGroup="-1"/>
+  </controls>
+</mockup>
