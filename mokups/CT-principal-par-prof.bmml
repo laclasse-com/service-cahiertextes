@@ -1,0 +1,95 @@
+<mockup version="1.0" skin="sketch" measuredW="1612" measuredH="605" mockupW="1156" mockupH="541">
+  <controls>
+    <control controlID="7" controlTypeID="com.balsamiq.mockups::IconLabel" x="1109" y="86" w="-1" h="-1" measuredW="24" measuredH="41" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <borderStyle>square</borderStyle>
+        <href>Parametres-affichage-eleve%26bm%3BParametres-affichage-eleve.bmml%26bm%3BParametres-affichage-eleve.bmml%26bm%3BParametres-affichage-eleve.bmml</href>
+        <icon>GearIcon%7Csmall</icon>
+        <labelPosition>bottom</labelPosition>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22653%2C22%2C677%2C63%22%20href%3D%22Parametres-affichage-eleve.bmml%22%20alt%3D%22Parametres-affichage-eleve%22%20id%3D%227%22/%3E</map>
+        <size>9</size>
+        <text>%20</text>
+      </controlProperties>
+    </control>
+    <control controlID="104" controlTypeID="com.balsamiq.mockups::Canvas" x="456" y="64" w="700" h="541" measuredW="100" measuredH="70" zOrder="0" locked="false" isInGroup="-1"/>
+    <control controlID="105" controlTypeID="__group__" x="471" y="90" w="355" h="24" measuredW="355" measuredH="24" zOrder="1" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="__group__" x="0" y="0" w="355" h="24" measuredW="355" measuredH="24" zOrder="0" locked="false" isInGroup="105">
+          <groupChildrenDescriptors>
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::Paragraph" x="0" y="0" w="355" h="24" measuredW="200" measuredH="80" zOrder="0" locked="false" isInGroup="0">
+              <controlProperties>
+                <bold>true</bold>
+                <size>16</size>
+                <text>Validation%20des%20saisies%20par%20enseignant</text>
+              </controlProperties>
+            </control>
+          </groupChildrenDescriptors>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="107" controlTypeID="__group__" x="471" y="120" w="667" h="43" measuredW="667" measuredH="43" zOrder="2" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::Canvas" x="0" y="0" w="667" h="43" measuredW="100" measuredH="70" zOrder="0" locked="false" isInGroup="107">
+          <controlProperties>
+            <borderStyle>roundedSolid</borderStyle>
+            <color>13421772</color>
+          </controlProperties>
+        </control>
+        <control controlID="4" controlTypeID="com.balsamiq.mockups::ComboBox" x="24" y="9" w="-1" h="-1" measuredW="167" measuredH="24" zOrder="1" locked="false" isInGroup="107">
+          <controlProperties>
+            <href>CT-principal-par-prof-detail%26bm%3BCT-principal-par-prof-detail.bmml%26bm%3BCT-principal-par-prof-detail.bmml%26bm%3BCT-principal-par-prof-detail.bmml</href>
+            <map>%3Carea%20shape%3D%22rect%22%20coords%3D%2239%2C65%2C206%2C89%22%20href%3D%22CT-principal-par-prof-detail.bmml%22%20alt%3D%22CT-principal-par-prof-detail%22%20id%3D%224%22/%3E</map>
+            <text>Tous%20les%20enseignants</text>
+          </controlProperties>
+        </control>
+        <control controlID="8" controlTypeID="com.balsamiq.mockups::ComboBox" x="208" y="9" w="179" h="-1" measuredW="119" measuredH="24" zOrder="2" locked="false" isInGroup="107">
+          <controlProperties>
+            <text>Tous%20les%20mois</text>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="168" controlTypeID="com.balsamiq.mockups::VCurly" x="1184" y="407" w="428" h="136" measuredW="180" measuredH="140" zOrder="4" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>10</size>
+        <text>Liste%20des%20enseignants%20avec%20leurs%20disciplines%20et%20leurs%20saisies%20sur%20la%20p%E9riode%20donn%E9e%20%28tous%20les%20mois%20ou%20un%20mois%20choisi%29.</text>
+      </controlProperties>
+    </control>
+    <control controlID="169" controlTypeID="com.balsamiq.mockups::VCurly" x="1184" y="114" w="418" h="64" measuredW="180" measuredH="140" zOrder="5" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>10</size>
+        <text>Filtres%20de%20s%E9lection%20de%20l%27enseignant%0Aet%20du%20mois.%0ALorsqu%27on%20s%E9lectionne%20un%20enseignant%2C%20ou%20un%20mois%2C%20l%27ensemble%20des%20composants%20de%20la%20page%20prennent%20en%20compte%20ces%20choix.</text>
+      </controlProperties>
+    </control>
+    <control controlID="173" controlTypeID="com.balsamiq.mockups::VCurly" x="1185" y="178" w="418" h="214" measuredW="180" measuredH="140" zOrder="6" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>10</size>
+        <text>Statistiques%20li%E9es%20aux%20filtres.%0A-%20Radar%20%3A%20r%E9partition%20des%20entr%E9es%20par%20enseignants%20sur%20la%20p%E9riode%20donn%E9e%20%0A%28tous%20les%20mois%20ou%20un%20mois%20donn%E9%29.</text>
+      </controlProperties>
+    </control>
+    <control controlID="179" controlTypeID="com.balsamiq.mockups::DataGrid" x="479" y="389" w="649" h="166" measuredW="329" measuredH="146" zOrder="7" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>nom%20%5Ev%2C%20Discipline%2C%20stats%0A%5BGiacomo%20Guilizzoni%5D%2C%20Italien%2C%20112%0A%5BMarco%20Botton%5D%2C%20Maths%2C%2090%0A%5BMariah%20Maclachlan%5D%2C%20Art%20Pastique%2C%200%20%0A%5BValerie%20Liberty%5D%2C%20Education%20Physique%2C%204%0A%7B55L%2C%200R%2C%2035C%7D</text>
+      </controlProperties>
+    </control>
+    <control controlID="181" controlTypeID="com.balsamiq.mockups::Component" x="667" y="171" w="272" h="204" measuredW="272" measuredH="204" zOrder="8" locked="false" isInGroup="-1">
+      <controlProperties>
+        <override controlID="0" x="0" y="0" w="272" h="204"/>
+        <override controlID="1" x="94" y="37" w="57" h="28"/>
+        <override controlID="3" x="182" y="97" w="76" h="49"/>
+        <override controlID="4" x="71" y="37" w="23" h="64"/>
+        <override controlID="5" x="71" y="100" w="49" h="17"/>
+        <override controlID="6" x="120" y="117" w="62" h="28"/>
+        <override controlID="2" x="151" y="64" w="106" h="33"/>
+        <override controlID="-1"/>
+        <override controlID="0:0" x="74" y="0" w="54" h="104"/>
+        <override controlID="0:4" x="0" y="95" w="133" h="9"/>
+        <override controlID="0:2" x="128" y="104" w="110" h="82"/>
+        <override controlID="0:3" x="133" y="95" w="139" h="8"/>
+        <override controlID="0:1" x="128" y="0" w="54" h="104"/>
+        <override controlID="0:5" x="74" y="104" w="54" h="100"/>
+        <src>$ACCOUNT/assets/radar.bmml#radar</src>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>
