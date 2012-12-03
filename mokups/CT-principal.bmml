@@ -1,6 +1,6 @@
-<mockup version="1.0" skin="sketch" measuredW="1610" measuredH="605" mockupW="1154" mockupH="541">
+<mockup version="1.0" skin="sketch" measuredW="1504" measuredH="541" mockupW="1154" mockupH="541">
   <controls>
-    <control controlID="7" controlTypeID="com.balsamiq.mockups::IconLabel" x="1109" y="86" w="-1" h="-1" measuredW="24" measuredH="41" zOrder="6" locked="false" isInGroup="-1">
+    <control controlID="7" controlTypeID="com.balsamiq.mockups::IconLabel" x="1003" y="22" w="-1" h="-1" measuredW="24" measuredH="41" zOrder="6" locked="false" isInGroup="-1">
       <controlProperties>
         <borderStyle>square</borderStyle>
         <href>Parametres-affichage-eleve%26bm%3BParametres-affichage-eleve.bmml%26bm%3BParametres-affichage-eleve.bmml%26bm%3BParametres-affichage-eleve.bmml</href>
@@ -11,23 +11,23 @@
         <text>%20</text>
       </controlProperties>
     </control>
-    <control controlID="104" controlTypeID="com.balsamiq.mockups::Canvas" x="456" y="64" w="700" h="541" measuredW="100" measuredH="70" zOrder="0" locked="false" isInGroup="-1"/>
-    <control controlID="105" controlTypeID="__group__" x="471" y="90" w="304" h="24" measuredW="304" measuredH="24" zOrder="1" locked="false" isInGroup="-1">
+    <control controlID="104" controlTypeID="com.balsamiq.mockups::Canvas" x="350" y="0" w="700" h="541" measuredW="100" measuredH="70" zOrder="0" locked="false" isInGroup="-1"/>
+    <control controlID="105" controlTypeID="__group__" x="365" y="26" w="375" h="24" measuredW="375" measuredH="24" zOrder="1" locked="false" isInGroup="-1">
       <groupChildrenDescriptors>
-        <control controlID="0" controlTypeID="__group__" x="0" y="0" w="304" h="24" measuredW="304" measuredH="24" zOrder="0" locked="false" isInGroup="105">
+        <control controlID="0" controlTypeID="__group__" x="0" y="0" w="375" h="24" measuredW="375" measuredH="24" zOrder="0" locked="false" isInGroup="105">
           <groupChildrenDescriptors>
-            <control controlID="0" controlTypeID="com.balsamiq.mockups::Paragraph" x="0" y="0" w="304" h="24" measuredW="200" measuredH="80" zOrder="0" locked="false" isInGroup="0">
+            <control controlID="0" controlTypeID="com.balsamiq.mockups::Paragraph" x="0" y="0" w="375" h="24" measuredW="200" measuredH="80" zOrder="0" locked="false" isInGroup="0">
               <controlProperties>
                 <bold>true</bold>
                 <size>16</size>
-                <text>Validation%20des%20saisies%20par%20classe</text>
+                <text>Validation%20des%20saisies%20par%20classe/groupe</text>
               </controlProperties>
             </control>
           </groupChildrenDescriptors>
         </control>
       </groupChildrenDescriptors>
     </control>
-    <control controlID="107" controlTypeID="__group__" x="471" y="120" w="667" h="43" measuredW="667" measuredH="43" zOrder="2" locked="false" isInGroup="-1">
+    <control controlID="107" controlTypeID="__group__" x="365" y="56" w="667" h="43" measuredW="667" measuredH="43" zOrder="2" locked="false" isInGroup="-1">
       <groupChildrenDescriptors>
         <control controlID="0" controlTypeID="com.balsamiq.mockups::Canvas" x="0" y="0" w="667" h="43" measuredW="100" measuredH="70" zOrder="0" locked="false" isInGroup="107">
           <controlProperties>
@@ -52,7 +52,7 @@
         </control>
       </groupChildrenDescriptors>
     </control>
-    <control controlID="162" controlTypeID="__group__" x="471" y="176" w="662" h="80" measuredW="662" measuredH="80" zOrder="5" locked="false" isInGroup="-1">
+    <control controlID="162" controlTypeID="__group__" x="365" y="112" w="662" h="80" measuredW="662" measuredH="80" zOrder="5" locked="false" isInGroup="-1">
       <groupChildrenDescriptors>
         <control controlID="0" controlTypeID="com.balsamiq.mockups::Canvas" x="0" y="0" w="662" h="80" measuredW="100" measuredH="70" zOrder="0" locked="false" isInGroup="162">
           <controlProperties>
@@ -66,13 +66,14 @@
               <color>9684093</color>
               <text>196/301</text>
             </override>
+            <override controlID="-1"/>
             <src>$ACCOUNT/assets/Annotated%20Wireframe.bmml#Callout%20Square%20Marker</src>
           </controlProperties>
         </control>
         <control controlID="9" controlTypeID="com.balsamiq.mockups::PieChart" x="18" y="5" w="71" h="73" measuredW="180" measuredH="180" zOrder="2" locked="false" isInGroup="162"/>
       </groupChildrenDescriptors>
     </control>
-    <control controlID="163" controlTypeID="__group__" x="471" y="290" w="667" h="103" measuredW="667" measuredH="103" zOrder="3" locked="false" isInGroup="-1">
+    <control controlID="163" controlTypeID="__group__" x="365" y="226" w="667" h="103" measuredW="667" measuredH="103" zOrder="3" locked="false" isInGroup="-1">
       <groupChildrenDescriptors>
         <control controlID="0" controlTypeID="__group__" x="0" y="0" w="667" h="48" measuredW="667" measuredH="48" zOrder="0" locked="false" isInGroup="163">
           <groupChildrenDescriptors>
@@ -94,6 +95,7 @@
                       <color>13421772</color>
                       <text>6%B01</text>
                     </override>
+                    <override controlID="-1"/>
                     <src>$ACCOUNT/assets/Annotated%20Wireframe.bmml#Callout%20Right%20Marker</src>
                   </controlProperties>
                 </control>
@@ -354,6 +356,7 @@
                       <size>9</size>
                       <text>119/120</text>
                     </override>
+                    <override controlID="-1"/>
                     <src>$ACCOUNT/assets/Bootstrap.bmml#tb-label-success</src>
                   </controlProperties>
                 </control>
@@ -628,7 +631,6 @@
                       <color>13421772</color>
                       <text>6%B02</text>
                     </override>
-                    <override controlID="-1"/>
                     <src>$ACCOUNT/assets/Annotated%20Wireframe.bmml#Callout%20Right%20Marker</src>
                   </controlProperties>
                 </control>
@@ -637,6 +639,7 @@
                     <override controlID="0" x="0" y="0" w="63" h="19">
                       <text>45/70</text>
                     </override>
+                    <override controlID="-1"/>
                     <src>$ACCOUNT/assets/Bootstrap.bmml#tb-label-success</src>
                   </controlProperties>
                 </control>
@@ -911,7 +914,6 @@
                       <color>13421772</color>
                       <text>6%B03</text>
                     </override>
-                    <override controlID="-1"/>
                     <src>$ACCOUNT/assets/Annotated%20Wireframe.bmml#Callout%20Right%20Marker</src>
                   </controlProperties>
                 </control>
@@ -920,7 +922,6 @@
                     <override controlID="0" x="0" y="0" w="63" h="19">
                       <text>27/85</text>
                     </override>
-                    <override controlID="-1"/>
                     <src>$ACCOUNT/assets/Bootstrap.bmml#tb-label-success</src>
                   </controlProperties>
                 </control>
@@ -1195,6 +1196,7 @@
                       <color>13421772</color>
                       <text>6%B04</text>
                     </override>
+                    <override controlID="-1"/>
                     <src>$ACCOUNT/assets/Annotated%20Wireframe.bmml#Callout%20Right%20Marker</src>
                   </controlProperties>
                 </control>
@@ -1203,7 +1205,6 @@
                     <override controlID="0" x="0" y="0" w="63" h="19">
                       <text>5/26</text>
                     </override>
-                    <override controlID="-1"/>
                     <src>$ACCOUNT/assets/Bootstrap.bmml#tb-label-success</src>
                   </controlProperties>
                 </control>
@@ -1231,7 +1232,6 @@
                       <color>13421772</color>
                       <text>6%B05</text>
                     </override>
-                    <override controlID="-1"/>
                     <src>$ACCOUNT/assets/Annotated%20Wireframe.bmml#Callout%20Right%20Marker</src>
                   </controlProperties>
                 </control>
@@ -1492,7 +1492,6 @@
                       <size>9</size>
                       <text>119/120</text>
                     </override>
-                    <override controlID="-1"/>
                     <src>$ACCOUNT/assets/Bootstrap.bmml#tb-label-success</src>
                   </controlProperties>
                 </control>
@@ -1767,6 +1766,7 @@
                       <color>13421772</color>
                       <text>6%B06</text>
                     </override>
+                    <override controlID="-1"/>
                     <src>$ACCOUNT/assets/Annotated%20Wireframe.bmml#Callout%20Right%20Marker</src>
                   </controlProperties>
                 </control>
@@ -1775,7 +1775,6 @@
                     <override controlID="0" x="0" y="0" w="63" h="19">
                       <text>45/70</text>
                     </override>
-                    <override controlID="-1"/>
                     <src>$ACCOUNT/assets/Bootstrap.bmml#tb-label-success</src>
                   </controlProperties>
                 </control>
@@ -1785,7 +1784,7 @@
         </control>
       </groupChildrenDescriptors>
     </control>
-    <control controlID="164" controlTypeID="__group__" x="471" y="411" w="667" h="103" measuredW="667" measuredH="103" zOrder="4" locked="false" isInGroup="-1">
+    <control controlID="164" controlTypeID="__group__" x="365" y="347" w="667" h="103" measuredW="667" measuredH="103" zOrder="4" locked="false" isInGroup="-1">
       <groupChildrenDescriptors>
         <control controlID="0" controlTypeID="__group__" x="0" y="0" w="667" h="48" measuredW="667" measuredH="48" zOrder="0" locked="false" isInGroup="164">
           <groupChildrenDescriptors>
@@ -1807,7 +1806,6 @@
                       <color>13421772</color>
                       <text>5%B01</text>
                     </override>
-                    <override controlID="-1"/>
                     <src>$ACCOUNT/assets/Annotated%20Wireframe.bmml#Callout%20Right%20Marker</src>
                   </controlProperties>
                 </control>
@@ -2068,7 +2066,6 @@
                       <size>9</size>
                       <text>119/120</text>
                     </override>
-                    <override controlID="-1"/>
                     <src>$ACCOUNT/assets/Bootstrap.bmml#tb-label-success</src>
                   </controlProperties>
                 </control>
@@ -2343,6 +2340,7 @@
                       <color>13421772</color>
                       <text>5%B02</text>
                     </override>
+                    <override controlID="-1"/>
                     <src>$ACCOUNT/assets/Annotated%20Wireframe.bmml#Callout%20Right%20Marker</src>
                   </controlProperties>
                 </control>
@@ -2351,7 +2349,6 @@
                     <override controlID="0" x="0" y="0" w="63" h="19">
                       <text>45/70</text>
                     </override>
-                    <override controlID="-1"/>
                     <src>$ACCOUNT/assets/Bootstrap.bmml#tb-label-success</src>
                   </controlProperties>
                 </control>
@@ -2626,6 +2623,7 @@
                       <color>13421772</color>
                       <text>5%B03</text>
                     </override>
+                    <override controlID="-1"/>
                     <src>$ACCOUNT/assets/Annotated%20Wireframe.bmml#Callout%20Right%20Marker</src>
                   </controlProperties>
                 </control>
@@ -2634,6 +2632,7 @@
                     <override controlID="0" x="0" y="0" w="63" h="19">
                       <text>27/85</text>
                     </override>
+                    <override controlID="-1"/>
                     <src>$ACCOUNT/assets/Bootstrap.bmml#tb-label-success</src>
                   </controlProperties>
                 </control>
@@ -2908,7 +2907,6 @@
                       <color>13421772</color>
                       <text>5%B04</text>
                     </override>
-                    <override controlID="-1"/>
                     <src>$ACCOUNT/assets/Annotated%20Wireframe.bmml#Callout%20Right%20Marker</src>
                   </controlProperties>
                 </control>
@@ -2917,6 +2915,7 @@
                     <override controlID="0" x="0" y="0" w="63" h="19">
                       <text>5/26</text>
                     </override>
+                    <override controlID="-1"/>
                     <src>$ACCOUNT/assets/Bootstrap.bmml#tb-label-success</src>
                   </controlProperties>
                 </control>
@@ -2944,6 +2943,7 @@
                       <color>13421772</color>
                       <text>6%B05</text>
                     </override>
+                    <override controlID="-1"/>
                     <src>$ACCOUNT/assets/Annotated%20Wireframe.bmml#Callout%20Right%20Marker</src>
                   </controlProperties>
                 </control>
@@ -3204,6 +3204,7 @@
                       <size>9</size>
                       <text>119/120</text>
                     </override>
+                    <override controlID="-1"/>
                     <src>$ACCOUNT/assets/Bootstrap.bmml#tb-label-success</src>
                   </controlProperties>
                 </control>
@@ -3213,21 +3214,21 @@
         </control>
       </groupChildrenDescriptors>
     </control>
-    <control controlID="168" controlTypeID="com.balsamiq.mockups::VCurly" x="1182" y="293" w="428" h="300" measuredW="180" measuredH="140" zOrder="7" locked="false" isInGroup="-1">
+    <control controlID="168" controlTypeID="com.balsamiq.mockups::VCurly" x="1076" y="229" w="428" h="300" measuredW="180" measuredH="140" zOrder="7" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Liste%20des%20classes%20avec%20les%20charts%20sur%20le%20nombres%20d%27entr%E9es%20valid%E9es%20par%20rapport%20au%20nombres%20d%27entr%E9es%20totales.%0ACes%20nombre%20tiennent%20compte%20des%20filtres%20s%E9lectionn%E9s%20en%20partie%20haute%20de%20l%27%E9cran.</text>
       </controlProperties>
     </control>
-    <control controlID="169" controlTypeID="com.balsamiq.mockups::VCurly" x="1182" y="120" w="418" h="51" measuredW="180" measuredH="140" zOrder="8" locked="false" isInGroup="-1">
+    <control controlID="169" controlTypeID="com.balsamiq.mockups::VCurly" x="1076" y="56" w="418" h="51" measuredW="180" measuredH="140" zOrder="8" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Filtres%20de%20s%E9lection%20du%20mois%20de%20la%20classe%2C%20et%20de%20la%20mati%E8re.</text>
       </controlProperties>
     </control>
-    <control controlID="173" controlTypeID="com.balsamiq.mockups::VCurly" x="1182" y="178" w="418" h="89" measuredW="180" measuredH="140" zOrder="9" locked="false" isInGroup="-1">
+    <control controlID="173" controlTypeID="com.balsamiq.mockups::VCurly" x="1076" y="114" w="418" h="89" measuredW="180" measuredH="140" zOrder="9" locked="false" isInGroup="-1">
       <controlProperties>
         <text>Statistiques%20li%E9es%20aux%20filtres.</text>
       </controlProperties>
     </control>
-    <control controlID="174" controlTypeID="com.balsamiq.mockups::LineChart" x="683" y="184" w="208" h="61" measuredW="187" measuredH="175" zOrder="10" locked="false" isInGroup="-1"/>
+    <control controlID="174" controlTypeID="com.balsamiq.mockups::LineChart" x="577" y="120" w="208" h="61" measuredW="187" measuredH="175" zOrder="10" locked="false" isInGroup="-1"/>
   </controls>
 </mockup>
