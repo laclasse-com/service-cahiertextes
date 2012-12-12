@@ -11,9 +11,9 @@
 class MainController < Controller
   # the index action is called automatically when no other action is specified
   def index
-    @appname = 'CTXTv2'
+    @appname = 'Laclasse.com > CahierDeTextes'
     @title = 'Cahier de textes'
-    @meta_desc = "Some keywords,"
+    @meta_desc = "Laclasse.com, ENT, Cahier de Textes"
     @meta_author = "Pierre-Gilles Levallois / ERASME 2012"
   end
 end

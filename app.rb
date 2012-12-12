@@ -2,6 +2,9 @@
 # the application.
 #
 # It will be required from either `config.ru` or `start.rb`
+#
+# Launch commande : bundle exec thin start -p 7000
+#
 require 'rubygems'
 require 'ramaze'
 
@@ -11,7 +14,7 @@ Ramaze.options.roots = [__DIR__]
 # Dependencies. Enable what you need.
 require 'sequel'
 require 'ramaze/helper/user'
-#require 'ramaze/helper/sixpack'
+require 'sixpack'
 #require 'fra-cas'
 
 # Initialize controllers and models
