@@ -1,0 +1,23 @@
+#coding: utf-8
+class AdminPanelAbility < SixPack
+  Ramaze::Helper::SixPack::Abilities << AdminPanelAbility
+
+  def self.check_abilities(user)
+    activites = user.activites(App[:url => '/admin'])
+    activites.each do |a|
+      case a
+      when :statistiques
+        can :read, User
+      when :activation_user
+        can [:read, :update], User
+        can :manage, Regroupement, :etablissement_id => user.profil_actif.etablissement_id
+      when :gestion_user
+        can :manage, [User, Profil, ProfilUser, RoleUser, MembreRegroupement, EnseigneRegroupement, Regroupement]
+        can :manage, Etablissement
+        cannot :delete, Etablissement
+      when :param_app
+        can :manage, [RoleProfil, Role]
+      end
+    end
+  end
+end

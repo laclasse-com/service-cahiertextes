@@ -1,0 +1,7 @@
+class Annuaire
+  include Ramaze::Optioned
+
+  options.dsl do
+    o "This is a test options", :foo_bar, "Hello World!"
+  end
+end
