@@ -1,7 +1,7 @@
 #coding: utf-8
 #
 # model for 'cours' table
-# generated 2012-12-12 15:07:48 +0100 by sequel_model_generator.rb
+# generated 2012-12-12 15:12:21 +0100 by sequel_model_generator.rb
 #
 # ------------------------------+---------------------+----------+----------+------------+--------------------
 # COLUMN_NAME                   | DATA_TYPE           | NULL? | KEY | DEFAULT | EXTRA
@@ -10,7 +10,7 @@
 # usr_id                        | varchar(16)         | false    | MUL      |            | 
 # mat_id                        | varchar(16)         | false    | MUL      |            | 
 # cahier_textes_id              | int(11)             | false    | MUL      |            | 
-# Ressource_id                  | int(11)             | false    | MUL      |            | 
+# Ressource_id                  | int(11)             | true     | MUL      |            | 
 # plage_horaire_id              | varchar(10)         | false    | MUL      |            | 
 # contenu                       | text                | false    |          |            | 
 # date_cours                    | datetime            | true     |          |            | 
@@ -27,13 +27,13 @@ class Cours < Sequel::Model(:cours)
  plugin :json_serializer
 
  # Referential integrity
- many_to_one :cahier_textes
  many_to_one :Ressource
+ many_to_one :cahier_textes
  many_to_one :plage_horaire
  one_to_many :devoir
 
  # Not nullable cols
  def validate
- validates_presence [:usr_id, :mat_id, :cahier_textes_id, :Ressource_id, :plage_horaire_id, :contenu]
+ validates_presence [:usr_id, :mat_id, :cahier_textes_id, :plage_horaire_id, :contenu]
  end
 end

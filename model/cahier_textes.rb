@@ -1,7 +1,7 @@
 #coding: utf-8
 #
 # model for 'cahier_textes' table
-# generated 2012-12-12 15:07:48 +0100 by sequel_model_generator.rb
+# generated 2012-12-12 15:12:21 +0100 by sequel_model_generator.rb
 #
 # ------------------------------+---------------------+----------+----------+------------+--------------------
 # COLUMN_NAME                   | DATA_TYPE           | NULL? | KEY | DEFAULT | EXTRA

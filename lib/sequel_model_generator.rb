@@ -6,7 +6,7 @@
 # - A header that reminds you the table structure
 # - the plugin list you wrote in 'plugin_to_add' array
 # - The Sequel referential inegrity : one_to_many, many_to_one
-# - A "Validate" method that checks not nullable columnns and unique columns
+# - A "Validate" method that checks not nullable columnns and unique columns, if they have no default value
 # - Generates init.rb to be include in the project
 #
 # Note : db_connect.rb should already exists. Create it using Rake

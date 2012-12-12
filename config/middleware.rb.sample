@@ -1,0 +1,15 @@
+#coding: utf-8
+module Ramaze
+  current_mw = Ramaze.middleware(:dev).middlewares
+  middleware! :dev do |m|
+    current_mw.each do |mw|
+      m.use(mw[0],*mw[1], &mw[2]) # middleware, args, block
+    end
+
+    m.use Rack::Session::Cookie
+    m.use Rack::Fracas, :cas_base_url => "https://www.dev.laclasse.com/sso/",
+      :ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE
+
+    m.run(Ramaze::AppMap)
+  end
+end
