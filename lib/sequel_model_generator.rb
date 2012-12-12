@@ -20,10 +20,14 @@
 
 require 'sequel'
 
-require_relative '../model/db_connect'
+# Name of included file for db connection string
+db_connect = '../config/db'
+
+require_relative db_connect
 
 # Target dir
 @model_dir_target = "../model"
+
 
 # List of plugins to add to the model
 plugin_to_add = [
@@ -155,7 +159,7 @@ models_to_create.each do |m|
   # not nullable columns
   DB.schema(m).each do |c|
     info = c[1]
-    list_of_not_nullable_cols.push(c[0]) unless info[:allow_null] or info[:primary_key]
+    list_of_not_nullable_cols.push(c[0]) unless info[:allow_null] or info[:primary_key] or info[:default]
   end
 
   # Unique columns
@@ -186,7 +190,7 @@ init = createfile("init.rb")
 if !init.nil?
   writeheader(init, "include file to access all models")
   init.puts "require 'sequel'\n"
-  init.puts "require_relative 'db_connect'\n"
+  init.puts "require_relative '" + db_connect + "'\n"
   init.puts "# MODELS"
   models_to_create.each do |m|
     init.puts "require_relative '#{m}'"
