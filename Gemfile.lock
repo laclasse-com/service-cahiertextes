@@ -1,0 +1,121 @@
+GEM
+  remote: https://rubygems.org/
+  remote: http://gems.erasme.org/
+  specs:
+    active_support (3.0.0)
+      activesupport (= 3.0.0)
+    activesupport (3.0.0)
+    addressable (2.3.2)
+    awesome_print (1.1.0)
+    aws-sdk (1.7.1)
+      httparty (~> 0.7)
+      json (~> 1.4)
+      nokogiri (>= 1.4.4)
+      uuidtools (~> 2.1)
+    bacon (1.1.0)
+    choice (0.1.6)
+    chunky_png (1.2.6)
+    compass (0.12.2)
+      chunky_png (~> 1.2)
+      fssm (>= 0.2.7)
+      sass (~> 3.1)
+    daemons (1.1.9)
+    eventmachine (1.0.0)
+    faraday (0.8.4)
+      multipart-post (~> 1.1)
+    fssm (0.2.9)
+    git (1.2.5)
+    highline (1.6.15)
+    httmultiparty (0.3.8)
+      httparty (>= 0.7.3)
+      multipart-post
+    httparty (0.9.0)
+      multi_json (~> 1.0)
+      multi_xml
+    innate (2012.12)
+      rack (~> 1.4.1)
+    json (1.7.5)
+    launchy (2.1.2)
+      addressable (~> 2.3)
+    lolcommits (0.3.3)
+      active_support
+      choice (~> 0.1.6)
+      git (~> 1.2.5)
+      httmultiparty
+      launchy (~> 2.1.1)
+      methadone (~> 1.2.1)
+      oauth
+      rmagick (~> 2.13.1)
+      statsd-ruby
+      twitter
+    methadone (1.2.3)
+      bundler
+    mime-types (1.19)
+    multi_json (1.5.0)
+    multi_xml (0.5.1)
+    multipart-post (1.1.5)
+    mysql2 (0.3.11)
+    nokogiri (1.5.5)
+    oauth (0.4.7)
+    rack (1.4.1)
+    rack-test (0.6.2)
+      rack (>= 1.0)
+    rake (10.0.2)
+    ramaze (2012.12.08)
+      innate (>= 2012.12)
+      rake
+    rb-fsevent (0.9.2)
+    rdoc (3.12)
+      json (~> 1.4)
+    rdoc-data (3.12)
+      rdoc (> 2.5, < 4.0)
+    rmagick (2.13.1)
+    sass (3.2.3)
+    sequel (3.42.0)
+    simple_oauth (0.2.0)
+    simplecov (0.7.1)
+      multi_json (~> 1.0)
+      simplecov-html (~> 0.7.1)
+    simplecov-html (0.7.1)
+    sixpack (0.4.0)
+      awesome_print
+      aws-sdk
+      bundler
+      compass
+      fssm
+      highline
+      mime-types
+      rb-fsevent
+      rmagick
+      sass
+    statsd-ruby (1.1.0)
+    thin (1.5.0)
+      daemons (>= 1.0.9)
+      eventmachine (>= 0.12.6)
+      rack (>= 1.0.0)
+    twitter (4.4.1)
+      faraday (~> 0.8)
+      multi_json (~> 1.3)
+      simple_oauth (~> 0.2)
+    uuidtools (2.1.3)
+    yard (0.8.3)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bacon
+  json
+  lolcommits
+  mysql2
+  nokogiri
+  rack-test
+  rake
+  ramaze
+  rdoc
+  rdoc-data
+  sequel
+  simplecov
+  sixpack
+  thin
+  yard

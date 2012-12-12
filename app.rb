@@ -11,8 +11,8 @@ Ramaze.options.roots = [__DIR__]
 # Dependencies. Enable what you need.
 require 'sequel'
 require 'ramaze/helper/user'
-require 'ramaze/helper/sixpack'
-require 'fra-cas'
+#require 'ramaze/helper/sixpack'
+#require 'fra-cas'
 
 # Initialize controllers and models
 require __DIR__('config/init')
