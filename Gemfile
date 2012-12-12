@@ -1,12 +1,14 @@
 # encoding: utf-8
 source 'https://rubygems.org'
+source 'http://gems.erasme.org'
 
 gem 'ramaze'
 gem 'rake'
 gem 'sequel'
 gem 'mysql2'
 gem 'thin'
-gem 'json'     
+gem 'json'  
+gem 'sixpack'   
 
 # Gems pour le dev
 group :development do
