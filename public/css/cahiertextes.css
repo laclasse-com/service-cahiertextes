@@ -30,9 +30,9 @@ body {
   border-radius: 0px 4px 4px 4px;
   font-size: 13px;
   line-height: 20px;
-  white-space: pre-wrap;
-  word-break: break-all;
-  word-wrap: break-word;
   padding:20px;                       
 }
 
+#liste-eleve .contenu-jour-eleve {
+  display:block;
+}
