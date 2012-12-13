@@ -1,0 +1,10 @@
+#
+# Site configuration
+#
+  :appname        : 'DanubeAVelo'
+  :servername     : 'danubeavelo.famille-levallois.net'
+  :title          : 'Mais où en est donc la famille Levallois ?'
+  :email          : 'pgl@erasme.org'
+  :meta_desc      : 'Vélo, bicyclette, vacances, camping, nature, eurovelo6, famille, itinérant, randonnée'
+  :meta_author    : 'Pierre-Gilles Levallois / @pilooz'
+

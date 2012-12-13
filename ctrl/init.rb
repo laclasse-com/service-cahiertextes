@@ -22,3 +22,6 @@ end
 #  end
 #
 require __DIR__('main')
+require __DIR__('eleve')
+require __DIR__('prof')
+require __DIR__('principal')

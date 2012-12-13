@@ -8,12 +8,14 @@
 #  map '/otherurl'
 #
 # this will force the controller to be mounted on: /otherurl.
-class MainController < Controller
+class MainController < Ramaze::Controller
+  layout :default
+  helper :xhtml
+  engine :etanni
+  
+
   # the index action is called automatically when no other action is specified
   def index
-    @appname = 'Laclasse.com > CahierDeTextes'
-    @title = 'Cahier de textes'
-    @meta_desc = "Laclasse.com, ENT, Cahier de Textes"
-    @meta_author = "Pierre-Gilles Levallois / ERASME 2012"
+
   end
 end

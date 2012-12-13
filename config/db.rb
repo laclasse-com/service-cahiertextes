@@ -1,4 +1,3 @@
-require 'sequel'
 Sequel.extension(:pagination)
 
 DB=Sequel.mysql2(
@@ -6,7 +5,6 @@ DB=Sequel.mysql2(
   :user     => 'root',
   :password => '',
   :charset=>'utf8')
-
 
 #Uncomment this if you want to log all DB queries
 #require 'logger'
