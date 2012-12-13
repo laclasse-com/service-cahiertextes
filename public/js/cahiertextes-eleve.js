@@ -1,26 +1,50 @@
 /**
 	
-	@file cahiertextes.js
+	@file cahiertextes-eleve.js
 	@author PGL pgl@erasme.org
 	@description : Ressources Javascripts pour les vues du cahier de textes
 **/
 
 ;$(document).ready(function(){
-
   //
-  // Prise en compte de la sélection d'un jour sur la tab nav.
+  // Initialisation
   //
-  $('#nav-jours-eleve a').on('click', function () {
-    var s = $(this).html().substring(0,2).toUpperCase();   
+  function initialize() {
+    // Cacher les badges
+    $('#nav-jours-eleve a .badge').hide();
+    // cacher tous les onglets
+    cacherToutLesTab();
+    // Activer l'onglet d'aujourd'hui
+    ActiverJour(getAujourdhui());
+  }
+  
+  function getAujourdhui(){
+    var j = new Array("DI", "LU", "MA", "ME", "JE", "VE", "SA");
+    var aujourdhui = new Date();
+    return j[aujourdhui.getDay()];
+  }
+  
+  function ActiverJour(j){
+    // Sélectionner celui cliqué
+    $('#nav-jours-eleve li.' + j).addClass("active");
+    // Sélectionner le div de contenu corespondant
+    $('#liste-eleve div.' + j).show();
+  }
+  
+  function cacherToutLesTab(){
     // déselectionner tous les onglets
     $('#nav-jours-eleve li').removeClass('active');
     // Cacher tous les contenus
     $('#liste-eleve div.contenu-jour-eleve').hide();
-    
-    // Sélectionner celui cliqué
-    $(this).parents().addClass("active");
-    // Sélectionner le div de contenu corespondant
-    $('#liste-eleve div#'+ s).show();
+  }
+  
+  //
+  // Prise en compte de la sélection d'un jour sur la tab nav.
+  //
+  $('#nav-jours-eleve li').on('click', function () {
+    var j = $(this).attr("class"); 
+    cacherToutLesTab();
+    ActiverJour(j);
   });
   
   //
@@ -65,5 +89,6 @@
     alert ('params');
   });
   
-});
 
+  initialize();
+});
