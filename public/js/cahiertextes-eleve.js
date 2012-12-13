@@ -7,6 +7,17 @@
 
 ;$(document).ready(function(){
   //
+  // Mapping des éléments de l'interface
+  //
+  var TABS        = $('#nav-jours-eleve li');
+  var TAF         = $('#controles-liste-eleve a#taf');
+  var COURS       = $('#controles-liste-eleve a#cours');
+  var AUJOURDHUI  = $('#controles-liste-eleve a#aujourdhui');
+  var HIER        = $('#controles-liste-eleve a#hier');
+  var DEMAIN      = $('#controles-liste-eleve a#demain');
+  var PARAMS      = $('#controles-liste-eleve a#params');
+  
+  //
   // Initialisation
   //
   function initialize() {
@@ -33,7 +44,7 @@
   
   function cacherToutLesTab(){
     // déselectionner tous les onglets
-    $('#nav-jours-eleve li').removeClass('active');
+    TABS.removeClass('active');
     // Cacher tous les contenus
     $('#liste-eleve div.contenu-jour-eleve').hide();
   }
@@ -41,7 +52,7 @@
   //
   // Prise en compte de la sélection d'un jour sur la tab nav.
   //
-  $('#nav-jours-eleve li').on('click', function () {
+  TABS.on('click', function () {
     var j = $(this).attr("class"); 
     cacherToutLesTab();
     ActiverJour(j);
@@ -50,45 +61,45 @@
   //
   // Prise en compte du clique sur "taf"
   //
-  $('#controles-liste-eleve a#taf').on('click', function () {
+  TAF.on('click', function () {
     alert ('taf');
   });
   
   //
   // Prise en compte du clique sur "cours"
   //
-  $('#controles-liste-eleve a#cours').on('click', function () {
+  COURS.on('click', function () {
     alert ('cours');
   });
   
   //
   // Prise en compte du clique sur "aujourd'hui"
   //
-  $('#controles-liste-eleve a#aujourdhui').on('click', function () {
-    alert ('aujourdhui');
+  AUJOURDHUI.on('click', function () {
+    initialize();
   });
   
   //
   // Prise en compte du clique sur "hier"
   //
-  $('#controles-liste-eleve a#hier').on('click', function () {
+  HIER.on('click', function () {
     alert ('hier');
   });
   
   //
   // Prise en compte du clique sur "demain"
   //
-  $('#controles-liste-eleve a#demain').on('click', function () {
+  DEMAIN.on('click', function () {
     alert ('demain');
   });
   
   //
   // Prise en compte du clique sur "parametres"
   //
-  $('#controles-liste-eleve a#params').on('click', function () {
+  PARAMS.on('click', function () {
     alert ('params');
   });
   
-
+  // Allez hop, init et c'est parti.
   initialize();
 });
