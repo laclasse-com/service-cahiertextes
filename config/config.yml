@@ -1,0 +1,6 @@
+#
+# Site configuration
+#
+  :appname        : 'Laclasse.com > Cahier de Textes'
+  :apptitle       : 'Cahier de textes'
+

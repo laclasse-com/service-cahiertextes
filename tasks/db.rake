@@ -1,5 +1,5 @@
 namespace :db do
-  RAMAZE_ROOT = File.expand_path(File.join(File.dirname(__FILE__), '..'))
+  #RAMAZE_ROOT = File.expand_path(File.join(File.dirname(__FILE__), '..'))
 
   task :load_config do
     require(File.join(RAMAZE_ROOT, 'app'))
