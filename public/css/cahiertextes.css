@@ -1,0 +1,38 @@
+/********************************************************************************
+	
+	@file cahiertextes.css
+	@author PGL pgl@erasme.org
+	@description : CSS complémentaire pour l'application cahier de Textes
+	
+********************************************************************************/
+
+body {
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+/*************************************************
+  Classes et sélecteurs spéciaux, par vues 
+**************************************************/
+
+#controles-liste-eleve .lead {
+  margin-bottom: 0px;
+}
+
+#nav-jours-eleve {
+  margin-bottom: 0px;
+}
+
+#liste-eleve {
+  border-right: 1px solid #E1E1E8;
+  border-bottom: 1px solid #E1E1E8;
+  border-left: 1px solid #E1E1E8;
+  border-radius: 0px 4px 4px 4px;
+  font-size: 13px;
+  line-height: 20px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  word-wrap: break-word;
+  padding:20px;                       
+}
+
