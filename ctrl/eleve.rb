@@ -5,8 +5,15 @@
 #
 
 class EleveController < MainController
+  
+  set_layout 'default'
+  set_layout nil => [:testws]
 
   def index
     
+  end
+  
+  def testws
+    "toto"
   end
 end
