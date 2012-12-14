@@ -15,6 +15,7 @@
   var AUJOURDHUI  = $('#controles-liste-eleve a#aujourdhui');
   var HIER        = $('#controles-liste-eleve a#hier');
   var DEMAIN      = $('#controles-liste-eleve a#demain');
+  var PERIODE     = $('#controles-liste-eleve div#periode-eleve');
   var PARAMS      = $('#controles-liste-eleve a#params');
   
   //
@@ -29,12 +30,14 @@
     ActiverJour(getAujourdhui());
   }
   
+  // Renvoie le jour d'aujourd'hui sur 2 caractères
   function getAujourdhui(){
     var j = new Array("DI", "LU", "MA", "ME", "JE", "VE", "SA");
     var aujourdhui = new Date();
     return j[aujourdhui.getDay()];
   }
   
+  //
   function ActiverJour(j){
     // Sélectionner celui cliqué
     $('#nav-jours-eleve li.' + j).addClass("active");
@@ -47,6 +50,13 @@
     TABS.removeClass('active');
     // Cacher tous les contenus
     $('#liste-eleve div.contenu-jour-eleve').hide();
+  }
+  
+  // Mettre à jour la période dans la barre de contrôle.
+  function setPeriode(d) {
+    //firstD = ''
+    //DEMAIN.html('Semaine du ' + firstD + ' au ' + lastD + ' ' + mois);
+    alert($.now().getDay());
   }
   
   //
@@ -102,4 +112,5 @@
   
   // Allez hop, init et c'est parti.
   initialize();
+  setPeriode();
 });
