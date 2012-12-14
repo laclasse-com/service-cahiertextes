@@ -9,24 +9,29 @@
   //
   // Mapping des éléments de l'interface
   //
-  var TABS        = $('#nav-jours-eleve li');
-  var TAF         = $('#controles-liste-eleve a#taf');
-  var COURS       = $('#controles-liste-eleve a#cours');
-  var AUJOURDHUI  = $('#controles-liste-eleve a#aujourdhui');
-  var HIER        = $('#controles-liste-eleve a#hier');
-  var DEMAIN      = $('#controles-liste-eleve a#demain');
-  var PERIODE     = $('#controles-liste-eleve div#periode-eleve');
-  var PARAMS      = $('#controles-liste-eleve a#params');
-  var BADGES      = $('#nav-jours-eleve a .badge');
-  var CONTENUS    = $('#liste-eleve div.contenu-jour-eleve');
+  var tabsSelector= '#nav-jours-eleve li';
+  var TABS        = $(tabsSelector);                                // Tous les onglets, 1 par jour de la semaine
+  var BADGES      = $('#nav-jours-eleve a .badge'); 
+  var div_contenu = '#liste-eleve';                                 // Tous les badges affichant les devoirs à faire pour chaque onglet
+  var CONTENUS    = $(div_contenu + ' div.contenu-jour-eleve');     // Tous les div affichant la liste des devoirs pour chaque jour
+
+  var TAF         = $('#controles-liste-eleve a#taf');              // Bouton "Travail à faire"
+  var COURS       = $('#controles-liste-eleve a#cours');            // Bouton "Cours"
+  var AUJOURDHUI  = $('#controles-liste-eleve a#aujourdhui');       // Bouton "Aujourdhui"
+  var LW          = $('#controles-liste-eleve a#lastweek');         // Bouton "Semaine dernière"
+  var NW          = $('#controles-liste-eleve a#nextweek');         // Bouton "Semaine prochaine"
+  var PARAMS      = $('#controles-liste-eleve a#params');           // Bouton "Paramètres"
+  var PERIODE     = $('#controles-liste-eleve div#periode-eleve');  // Label affichant la semaine en cours
   
   moment.lang('fr');
-  var M =  moment(new Date());
+  var M =  null;
   
   //
   // Initialisation
   //
   function initialize() {
+    var Jour = ( M == undefined ) ? new Date() : M ;
+    M = moment(Jour);
     // Cacher les badges
     BADGES.hide();
     // cacher tous les onglets
@@ -45,9 +50,9 @@
   //
   function ActiverJour(j){
     // Sélectionner celui cliqué
-    $('#nav-jours-eleve li.' + j).addClass("active");
+    $(tabsSelector + '.' + j).addClass("active");
     // Sélectionner le div de contenu corespondant
-    $('#liste-eleve div.' + j).show();
+    $(div_contenu + ' div.' + j).show();
   }
   
   function cacherToutLesTab(){
@@ -59,10 +64,9 @@
   
   // Mettre à jour la période dans la barre de contrôle.
   function setPeriode() {
-    first = M.day(1).format('dddd D');
-    last  = M.day(5).format('dddd D');
-    mois  = M.format('MMMM');
-    PERIODE.html('Semaine du ' + first + ' au ' + last + ' ' + mois);
+    first = M.day(1).format('dddd D MMMM YYYY');
+    last  = M.day(5).format('dddd D MMMM YYYY');
+    PERIODE.html('Du ' + first + ' au ' + last);
   }
   
   //
@@ -73,7 +77,7 @@
     cacherToutLesTab();
     ActiverJour(j);
   });
-  
+
   //
   // Prise en compte du clique sur "taf"
   //
@@ -92,21 +96,24 @@
   // Prise en compte du clique sur "aujourd'hui"
   //
   AUJOURDHUI.on('click', function () {
+    M = moment(new Date());
     initialize();
   });
   
   //
   // Prise en compte du clique sur "hier"
   //
-  HIER.on('click', function () {
-    alert ('hier');
+  LW.on('click', function () {
+    M.add('w', -1);
+    initialize();
   });
   
   //
   // Prise en compte du clique sur "demain"
   //
-  DEMAIN.on('click', function () {
-    alert ('demain');
+  NW.on('click', function () {
+    M.add('w', 1);
+    initialize();
   });
   
   //
@@ -118,4 +125,5 @@
   
   // Allez hop, init et c'est parti.
   initialize();
+
 });
