@@ -9,11 +9,11 @@
   //
   // Mapping des éléments de l'interface
   //
-  var tabsSelector= '#nav-jours-eleve li';
-  var TABS        = $(tabsSelector);                                // Tous les onglets, 1 par jour de la semaine
+  var tabsId      = '#nav-jours-eleve li';
+  var TABS        = $(tabsId);                                      // Tous les onglets, 1 par jour de la semaine
   var BADGES      = $('#nav-jours-eleve a .badge'); 
-  var div_contenu = '#liste-eleve';                                 // Tous les badges affichant les devoirs à faire pour chaque onglet
-  var CONTENUS    = $(div_contenu + ' div.contenu-jour-eleve');     // Tous les div affichant la liste des devoirs pour chaque jour
+  var contentsId = '#liste-eleve';                                 // Tous les badges affichant les devoirs à faire pour chaque onglet
+  var CONTENUS    = $(contentsId + ' div.contenu-jour-eleve');     // Tous les div affichant la liste des devoirs pour chaque jour
 
   var TAF         = $('#controles-liste-eleve a#taf');              // Bouton "Travail à faire"
   var COURS       = $('#controles-liste-eleve a#cours');            // Bouton "Cours"
@@ -22,6 +22,10 @@
   var NW          = $('#controles-liste-eleve a#nextweek');         // Bouton "Semaine prochaine"
   var PARAMS      = $('#controles-liste-eleve a#params');           // Bouton "Paramètres"
   var PERIODE     = $('#controles-liste-eleve div#periode-eleve');  // Label affichant la semaine en cours
+  
+  var popupId     = 'div#FenetreModale';
+  var POPUP       = $(popupId);                         // Popup de l'application
+  var POPUPTITLE  = $(popupId + ' h3');                 // Titre de la popup
   
   moment.lang('fr');
   var M =  null;
@@ -36,23 +40,27 @@
     BADGES.hide();
     // cacher tous les onglets
     cacherToutLesTab();
-    // 
+    // Sync du label de la semaine en cours
     setPeriode();
     // Activer l'onglet d'aujourd'hui
     ActiverJour(getAujourdhui());
+    // Récupérer les données
+    //ws('/eleve/liste/taf/'+ M.format('YYYYMMDD'), contentsId );
   }
   
   // Renvoie le jour d'aujourd'hui sur 2 caractères
   function getAujourdhui(){
-    return M.format('dd').toUpperCase();
+    var today = moment(new Date());
+    if (today.format('DDD') == M.format('DDD')) return M.format('dd').toUpperCase();
+    return 'LU';
   }
   
-  //
+  // Activation d'un onglet donné.
   function ActiverJour(j){
     // Sélectionner celui cliqué
-    $(tabsSelector + '.' + j).addClass("active");
+    $(tabsId + '.' + j).addClass("active");
     // Sélectionner le div de contenu corespondant
-    $(div_contenu + ' div.' + j).show();
+    $(contentsId + ' div.' + j).show();
   }
   
   function cacherToutLesTab(){
@@ -120,10 +128,35 @@
   // Prise en compte du clique sur "parametres"
   //
   PARAMS.on('click', function () {
-    alert ('params');
+    POPUPTITLE.html('Règler les paramètres de mon cahier de textes');
   });
+  
+  //
+  // Service de récupération des données
+  //
+  function ws(sUrl, targetComponent) {
+  	$.ajax({
+  		url: sUrl,
+  		success: 
+  		  function(result){ 
+  		    setData(result); 
+  		    eval('reDraw'+ targetComponent + '()');
+  		  }
+    });
+  }
+  
+  // données dans un objet pour traiter la mise à jour des vues
+  function setData(jsonObj) {
+    console.log(jsonObj);
+  }
+
+
   
   // Allez hop, init et c'est parti.
   initialize();
+
+  var o = mapui('/eleve/testws', '#liste-eleve .LU', '', ''); // new object instance
+
+o.load();
 
 });
