@@ -17,24 +17,29 @@
   var DEMAIN      = $('#controles-liste-eleve a#demain');
   var PERIODE     = $('#controles-liste-eleve div#periode-eleve');
   var PARAMS      = $('#controles-liste-eleve a#params');
+  var BADGES      = $('#nav-jours-eleve a .badge');
+  var CONTENUS    = $('#liste-eleve div.contenu-jour-eleve');
+  
+  moment.lang('fr');
+  var M =  moment(new Date());
   
   //
   // Initialisation
   //
   function initialize() {
     // Cacher les badges
-    $('#nav-jours-eleve a .badge').hide();
+    BADGES.hide();
     // cacher tous les onglets
     cacherToutLesTab();
+    // 
+    setPeriode();
     // Activer l'onglet d'aujourd'hui
     ActiverJour(getAujourdhui());
   }
   
   // Renvoie le jour d'aujourd'hui sur 2 caractères
   function getAujourdhui(){
-    var j = new Array("DI", "LU", "MA", "ME", "JE", "VE", "SA");
-    var aujourdhui = new Date();
-    return j[aujourdhui.getDay()];
+    return M.format('dd').toUpperCase();
   }
   
   //
@@ -49,14 +54,15 @@
     // déselectionner tous les onglets
     TABS.removeClass('active');
     // Cacher tous les contenus
-    $('#liste-eleve div.contenu-jour-eleve').hide();
+    CONTENUS.hide();
   }
   
   // Mettre à jour la période dans la barre de contrôle.
-  function setPeriode(d) {
-    //firstD = ''
-    //DEMAIN.html('Semaine du ' + firstD + ' au ' + lastD + ' ' + mois);
-    alert($.now().getDay());
+  function setPeriode() {
+    first = M.day(1).format('dddd D');
+    last  = M.day(5).format('dddd D');
+    mois  = M.format('MMMM');
+    PERIODE.html('Semaine du ' + first + ' au ' + last + ' ' + mois);
   }
   
   //
@@ -112,5 +118,4 @@
   
   // Allez hop, init et c'est parti.
   initialize();
-  setPeriode();
 });
