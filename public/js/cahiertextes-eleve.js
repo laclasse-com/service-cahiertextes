@@ -44,8 +44,6 @@
     setPeriode();
     // Activer l'onglet d'aujourd'hui
     ActiverJour(getAujourdhui());
-    // Récupérer les données
-    //ws('/eleve/liste/taf/'+ M.format('YYYYMMDD'), contentsId );
   }
   
   // Renvoie le jour d'aujourd'hui sur 2 caractères
@@ -131,31 +129,11 @@
     POPUPTITLE.html('Règler les paramètres de mon cahier de textes');
   });
   
-  //
-  // Service de récupération des données
-  //
-  function ws(sUrl, targetComponent) {
-  	$.ajax({
-  		url: sUrl,
-  		success: 
-  		  function(result){ 
-  		    setData(result); 
-  		    eval('reDraw'+ targetComponent + '()');
-  		  }
-    });
-  }
-  
-  // données dans un objet pour traiter la mise à jour des vues
-  function setData(jsonObj) {
-    console.log(jsonObj);
-  }
-
-
   
   // Allez hop, init et c'est parti.
   initialize();
 
-  var o = mapui('/eleve/testws', '#liste-eleve .LU', '', ''); // new object instance
+  var o = mapui('/eleve/devoirs', '#liste-eleve .LU', '', ''); // new object instance
 
 o.load();
 
