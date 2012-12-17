@@ -75,7 +75,7 @@ MyClass.staticMethod();
         Helpers
     ************************************/
     
-    function refresh(){
+    function _refresh(){
       $(eltUI).html(getDataSet());
     }
     
@@ -92,16 +92,25 @@ MyClass.staticMethod();
           return VERSION;
       },
       
+      //
       // Load method sending GET url to get some data
+      //
       load : function () {
         $.ajax({
       		url: urlWs,
       		success: 
       		  function(result){ 
       		    setDataSet(result);
-      		    refresh();
+      		    _refresh();
       		  }
         });
+      },
+      
+      //
+      // Refresh method freshing html element's content
+      //
+      refresh : function () {
+        _refresh();
       }
     };
 
