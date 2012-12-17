@@ -7,10 +7,17 @@
 class EleveController < MainController
   
   set_layout 'default'
-  set_layout nil => [:devoirs, :cours]
+  set_layout nil => [:cours, :devoirs, :params]
 
   def index
     
+  end
+  
+  #
+  # Liste des cours de l'élève
+  #
+  def cours
+    "cours"
   end
   
   #
@@ -21,11 +28,10 @@ class EleveController < MainController
   end
   
   #
-  # Liste des cours de l'élève
+  # Paramètres chaiers de textes l'élève
   #
-  def cours
-    "cours"
+  def params
+    "Param&egrave;tres d'affichage du cahier de textes de l'&eacute;l&egrave;ve..."
   end
-  
   
 end

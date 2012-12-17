@@ -6,35 +6,7 @@
 	 - ...
 	@author PGL pgl@erasme.org
 */
-
-
-/*
-// constructor function
-function MyClass () {
-  var privateVariable; // private member only available within the constructor fn
-
-  this.privilegedMethod = function () { // it can access private members
-    //..
-  };
-}
-
-// A 'static method', it's just like a normal function 
-// it has no relation with any 'MyClass' object instance
-MyClass.staticMethod = function () {};
-
-MyClass.prototype.publicMethod = function () {
-  // the 'this' keyword refers to the object instance
-  // you can access only 'privileged' and 'public' members
-};
-
-var myObj = new MyClass(); // new object instance
-
-myObj.publicMethod();
-MyClass.staticMethod();
-
-*/
-
-(function (undefined) {
+(function () {
 
     /************************************
         Constants
@@ -42,7 +14,7 @@ MyClass.staticMethod();
 
     var mapui,
         VERSION   = "0.0.1",
-        urlWs     = undefined,
+        url       = undefined,
         eltUI     = undefined,
         dataSet   = undefined,
         template  = undefined,
@@ -64,26 +36,35 @@ MyClass.staticMethod();
 
 
     // mapUi prototype object
-    function MapUi(url, elt, data, tpl) {
-        urlWs     = url;
-        eltUI     = elt;
-        dataSet   = data;
-        template  = tpl;
+    function MapUi(config) {
+        cfg = eval(config);
+        
+        url     = loadConf('url', undefined);
+        eltUI     = loadConf('html_elt', 'debug');
+        dataSet   = loadConf('data', undefined);
+        template  = loadConf('row_template', undefined);
     }
 
     /************************************
         Helpers
     ************************************/
+    function loadConf(p, defV) {
+        return (cfg[p] == undefined) ? defV : cfg[p];
+    }
+    
     
     function _refresh(){
       $(eltUI).html(getDataSet());
     }
     
+    function error(m) {
+      alert (m);
+    }
     /************************************
         Top level functions
     ************************************/
-    mapui = function (url, elt, data, tpl) {
-      return new MapUi(url, elt, data, tpl);
+    var mapui = function (config) {
+      return new MapUi(config);
     };
     
     mapui.fn = MapUi.prototype = {
@@ -95,15 +76,30 @@ MyClass.staticMethod();
       //
       // Load method sending GET url to get some data
       //
-      load : function () {
-        $.ajax({
-      		url: urlWs,
-      		success: 
-      		  function(result){ 
-      		    setDataSet(result);
-      		    _refresh();
-      		  }
-        });
+      load : function (data) {
+        if ( data == undefined ) {
+         if ( !url ) return error('url should be set');
+         $.ajax({
+        		url: url,
+        		success: 
+        		  function(result){ 
+        		    setDataSet(result);
+        		    _refresh();
+        		  },
+            statusCode: {
+              404: function() {
+                error('The page "'+url+'" was not found.');
+              },
+              500: function() {
+                error('The server has made boo ! \nPlease retry later...');
+              }
+            }
+          });
+        } 
+        else { 
+          setDataSet(data);
+          _refresh();
+        }       
       },
       
       //
