@@ -22,7 +22,7 @@
   var NW          = $('#controles-liste-eleve a#nextweek');         // Bouton "Semaine prochaine"
   var PARAMS      = $('#controles-liste-eleve a#params');           // Bouton "Paramètres"
   var PERIODE     = $('#controles-liste-eleve div#periode-eleve');  // Label affichant la semaine en cours
-  
+    
   var popupId     = 'div#FenetreModale';
   var POPUP       = $(popupId);                         // Popup de l'application
   var POPUPTITLE  = $(popupId + ' h3');                 // Titre de la popup
@@ -133,8 +133,13 @@
   // Allez hop, init et c'est parti.
   initialize();
 
-  var o = mapui('/eleve/devoirs', '#liste-eleve .LU', '', ''); // new object instance
+  var o = mapui({ 
+                  url : '/eleve/devoirs',
+                  html_elt : '#liste-eleve .LU'
+               });
+      
 
 o.load();
+
 
 });
