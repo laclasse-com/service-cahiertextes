@@ -17,14 +17,14 @@ class EleveController < MainController
   # Liste des cours de l'élève
   #
   def cours
-    "cours"
+    "cours".to_json
   end
   
   #
   # Liste des devoirs de l'élève
   #
   def devoirs
-    "devoirs"
+    '{\"jour_jj\":\"LU\", \"matiere\":\"Maths\"}'.to_json
   end
   
   #

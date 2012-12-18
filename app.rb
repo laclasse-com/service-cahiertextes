@@ -16,6 +16,7 @@ require 'yaml'
 require 'sequel'
 require 'ramaze/helper/user'
 require 'sixpack'
+require 'json'
 #require 'fra-cas'
 
 # Reading YAML Config.
