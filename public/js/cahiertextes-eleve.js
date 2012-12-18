@@ -27,14 +27,13 @@
   var POPUP       = $(popupId);                         // Popup de l'application
   var POPUPTITLE  = $(popupId + ' h3');                 // Titre de la popup
   
-  moment.lang('fr');
-  var M =  null;
+  var M =  undefined;
   
   //
   // Initialisation
   //
   function initialize() {
-    var Jour = ( M == undefined ) ? new Date() : M ;
+    var Jour = ( M == undefined ) ? new Date() : M;
     M = moment(Jour);
     // Cacher les badges
     BADGES.hide();
@@ -49,6 +48,8 @@
   // Renvoie le jour d'aujourd'hui sur 2 caractères
   function getAujourdhui(){
     var today = moment(new Date());
+    console.log(today);
+    console.log(M);
     if (today.format('DDD') == M.format('DDD')) return M.format('dd').toUpperCase();
     return 'LU';
   }
@@ -70,8 +71,9 @@
   
   // Mettre à jour la période dans la barre de contrôle.
   function setPeriode() {
-    first = M.day(1).format('dddd D MMMM YYYY');
-    last  = M.day(5).format('dddd D MMMM YYYY');
+    var D = M.clone();
+    var first = D.day(1).format('dddd D MMMM YYYY');
+    var last  = D.day(5).format('dddd D MMMM YYYY');
     PERIODE.html('Du ' + first + ' au ' + last);
   }
   
@@ -133,13 +135,22 @@
   // Allez hop, init et c'est parti.
   initialize();
 
-  var o = mapui({ 
+
+  var o = new mapui({ 
                   url : '/eleve/devoirs',
                   html_elt : '#liste-eleve .LU'
                });
-      
 
-o.load();
 
+
+  o.load();
+
+/*
+  var o2 = new mapui({ 
+                  url : '/eleve/cours',
+                  html_elt : '#liste-eleve .MA'
+               });
+  o2.load();
+*/
 
 });

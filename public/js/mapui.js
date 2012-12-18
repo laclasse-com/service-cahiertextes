@@ -1,60 +1,44 @@
-/**
-	Mapui.js est un ojet simple qui permet de mapper des éléments HTML, et de leur associer 
-	des métodes :
-	 - refresh() pour raffraichir les données
-	 - load() pour charger les données à partir d'un web service
-	 - ...
-	@author PGL pgl@erasme.org
-*/
+
 (function () {
 
     /************************************
         Constants
-    ************************************/
+    *************************************/
 
-    var mapui,
-        VERSION   = "0.0.1",
-        url       = undefined,
-        eltUI     = undefined,
-        dataSet   = undefined,
-        template  = undefined,
-        
+    var mapui,        
         // check for nodeJS
-        hasModule = (typeof module !== 'undefined' && module.exports),
-        
-        setDataSet = function (d) {
-          dataSet = d;
-        },
-        
-        getDataSet = function (d) {
-          return dataSet;
-        };
-        
+        hasModule = (typeof module !== 'undefined' && module.exports);
+                        
     /************************************
         Constructors
     ************************************/
 
-
     // mapUi prototype object
     function MapUi(config) {
-        cfg = eval(config);
-        
-        url     = loadConf('url', undefined);
-        eltUI     = loadConf('html_elt', 'debug');
-        dataSet   = loadConf('data', undefined);
-        template  = loadConf('row_template', undefined);
+        var cfg = eval(config);
+        this.url       = ( cfg['url'] == undefined ) ? undefined : cfg['url']; 
+        this.htmlElt   = ( cfg['html_elt'] == undefined) ? undefined : cfg['html_elt'];
+        this.dataSet   = ( cfg['data'] == undefined ) ? undefined : cfg['data'];
+        this.template  = ( cfg['row_template'] == undefined ) ? undefined : cfg['row_template'];
     }
 
+    
     /************************************
         Helpers
     ************************************/
-    function loadConf(p, defV) {
-        return (cfg[p] == undefined) ? defV : cfg[p];
+    function setDataSet(d) {
+      $(this.htmlElt).attr("style", "color:blue;");
+      this.dataSet = d;
     }
     
+    function getDataSet(d) {
+      return this.dataSet;
+    } 
     
     function _refresh(){
-      $(eltUI).html(getDataSet());
+      var elt = $(this.htmlElt);
+      var val = getDataSet();
+      elt.html(val);
     }
     
     function error(m) {
@@ -70,25 +54,26 @@
     mapui.fn = MapUi.prototype = {
       // Version 
       version : function () {
-          return VERSION;
+          return this.VERSION;
       },
       
       //
       // Load method sending GET url to get some data
       //
       load : function (data) {
+        var elt = $(this.htmlElt);
         if ( data == undefined ) {
-         if ( !url ) return error('url should be set');
+         if ( !this.url ) return error('url should be set');
          $.ajax({
-        		url: url,
+        		url: this.url,
         		success: 
         		  function(result){ 
         		    setDataSet(result);
-        		    _refresh();
+        		    elt.html(getDataSet());
         		  },
             statusCode: {
               404: function() {
-                error('The page "'+url+'" was not found.');
+                error('The page "'+this.url+'" was not found.');
               },
               500: function() {
                 error('The server has made boo ! \nPlease retry later...');
@@ -98,7 +83,7 @@
         } 
         else { 
           setDataSet(data);
-          _refresh();
+          elt.html(getDataSet());
         }       
       },
       
