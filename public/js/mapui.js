@@ -21,100 +21,71 @@
         this.dataSet   = ( cfg['data'] == undefined ) ? undefined : cfg['data'];
         this.template  = ( cfg['row_template'] == undefined ) ? undefined : cfg['row_template'];
     }
-
     
     /************************************
         Helpers
-    ************************************/
-    function setDataSet(d) {
-      $(this.htmlElt).attr("style", "color:blue;");
-      this.dataSet = d;
-    }
-    
-    function getDataSet(d) {
-      return this.dataSet;
-    } 
-    
-    function _refresh(){
-      var elt = $(this.htmlElt);
-      var val = getDataSet();
-      elt.html(val);
-    }
+    ************************************/   
+    function _refresh(elt){
+   }
     
     function error(m) {
       alert (m);
     }
+    
     /************************************
         Top level functions
     ************************************/
-    var mapui = function (config) {
-      return new MapUi(config);
-    };
+    MapUi.prototype.version = function() {
+      return this.VERSION;
+    }
     
-    mapui.fn = MapUi.prototype = {
-      // Version 
-      version : function () {
-          return this.VERSION;
-      },
-      
-      //
-      // Load method sending GET url to get some data
-      //
-      load : function (data) {
-        var elt = $(this.htmlElt);
-        if ( data == undefined ) {
-         if ( !this.url ) return error('url should be set');
-         $.ajax({
-        		url: this.url,
-        		success: 
-        		  function(result){ 
-        		    setDataSet(result);
-        		    elt.html(getDataSet());
-        		  },
-            statusCode: {
-              404: function() {
-                error('The page "'+this.url+'" was not found.');
-              },
-              500: function() {
-                error('The server has made boo ! \nPlease retry later...');
-              }
-            }
-          });
-        } 
-        else { 
-          setDataSet(data);
-          elt.html(getDataSet());
-        }       
-      },
-      
-      //
-      // Refresh method freshing html element's content
-      //
-      refresh : function () {
-        _refresh();
+    MapUi.prototype.refresh = function() {   
+      var output = "";
+      if (this.template !== undefined) {
+        // template mustache.
+        //var o2 = eval($.parseJSON(this.dataSet));
+        var t = {
+                  jour_jj:"LU", matiere:"Maths"
+                };
+        this.dataSet = t;       
+        output = Mustache.to_html(this.template, $.parseJSON(this.dataSet));
+        console.log(output);
+
+      } else {
+        output = this.dataSet;
       }
-    };
-
-    /************************************
-        Exposing MapUi
-    ************************************/
-
-    // CommonJS module is defined
-    if (hasModule) {
-        module.exports = mapui;
-    }
-    /*global ender:false */
-    if (typeof ender === 'undefined') {
-        // here, `this` means `window` in the browser, or `global` on the server
-        // add `moment` as a global object via a string identifier,
-        // for Closure Compiler "advanced" mode
-        this['mapui'] = mapui;
-    }
-    /*global define:false */
-    if (typeof define === "function" && define.amd) {
-        define("mapui", [], function () {
-            return mapui;
+      
+      $(this.htmlElt).html(output);
+     }
+    
+    MapUi.prototype.load = function(data) {
+      if ( data == undefined ) {
+       if ( !this.url ) return error('url should be set');
+       var self = this;
+       $.ajax({
+      		url: this.url,
+      		success: 
+      		  function(result){ 
+      		    self.dataSet = result;
+      		    self.refresh();
+      		  },
+          statusCode: {
+            404: function() {
+              error('The page "'+this.url+'" was not found.');
+            },
+            500: function() {
+              error('The server has made boo ! \nPlease retry later...');
+            }
+          }
         });
+      } 
+      else { 
+        this.dataSet = data;
+        this.refresh();
+      }       
     }
+    
+    
+    window.MapUi = MapUi;
     
 }).call(this);

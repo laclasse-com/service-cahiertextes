@@ -13,8 +13,14 @@
   var TABS        = $(tabsId);                                      // Tous les onglets, 1 par jour de la semaine
   var BADGES      = $('#nav-jours-eleve a .badge'); 
   var contentsId = '#liste-eleve';                                 // Tous les badges affichant les devoirs à faire pour chaque onglet
-  var CONTENUS    = $(contentsId + ' div.contenu-jour-eleve');     // Tous les div affichant la liste des devoirs pour chaque jour
+  //var CONTENUS    = $(contentsId + ' div.contenu-jour-eleve');     // Tous les div affichant la liste des devoirs pour chaque jour
 
+  var CONTENUS    = new MapUi({ 
+                      url : '/eleve/devoirs',
+                      html_elt : contentsId,
+                      row_template : '<div class="contenu-jour-eleve {{jour_jj}}"><div class="matiere {{matiere}}">{{matiere}}</div></div>'
+                    });
+                    
   var TAF         = $('#controles-liste-eleve a#taf');              // Bouton "Travail à faire"
   var COURS       = $('#controles-liste-eleve a#cours');            // Bouton "Cours"
   var AUJOURDHUI  = $('#controles-liste-eleve a#aujourdhui');       // Bouton "Aujourdhui"
@@ -43,13 +49,13 @@
     setPeriode();
     // Activer l'onglet d'aujourd'hui
     ActiverJour(getAujourdhui());
+    // Charger le contenu
+    CONTENUS.load();
   }
   
   // Renvoie le jour d'aujourd'hui sur 2 caractères
   function getAujourdhui(){
     var today = moment(new Date());
-    console.log(today);
-    console.log(M);
     if (today.format('DDD') == M.format('DDD')) return M.format('dd').toUpperCase();
     return 'LU';
   }
@@ -66,7 +72,7 @@
     // déselectionner tous les onglets
     TABS.removeClass('active');
     // Cacher tous les contenus
-    CONTENUS.hide();
+    $(CONTENUS).hide();
   }
   
   // Mettre à jour la période dans la barre de contrôle.
@@ -135,7 +141,7 @@
   // Allez hop, init et c'est parti.
   initialize();
 
-
+/*
   var o = new mapui({ 
                   url : '/eleve/devoirs',
                   html_elt : '#liste-eleve .LU'
