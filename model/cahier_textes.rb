@@ -22,7 +22,7 @@ class CahierTextes < Sequel::Model(:cahier_textes)
  plugin :json_serializer
 
  # Referential integrity
- one_to_many :cours
+ one_to_many :cours, :class => Cours
 
  # Not nullable cols
  def validate

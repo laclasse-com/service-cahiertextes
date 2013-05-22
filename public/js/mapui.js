@@ -5,9 +5,7 @@
         Constants
     *************************************/
 
-    var mapui,        
-        // check for nodeJS
-        hasModule = (typeof module !== 'undefined' && module.exports);
+    var hasModule = (typeof module !== 'undefined' && module.exports);
                         
     /************************************
         Constructors
@@ -19,7 +17,7 @@
         this.url       = ( cfg['url'] == undefined ) ? undefined : cfg['url']; 
         this.htmlElt   = ( cfg['html_elt'] == undefined) ? undefined : cfg['html_elt'];
         this.dataSet   = ( cfg['data'] == undefined ) ? undefined : cfg['data'];
-        this.template  = ( cfg['row_template'] == undefined ) ? undefined : cfg['row_template'];
+        this.template  = ( cfg['template'] == undefined ) ? undefined : cfg['template'];
     }
     
     /************************************
@@ -41,20 +39,26 @@
     
     MapUi.prototype.refresh = function() {   
       var output = "";
-      if (this.template !== undefined) {
+      var tpl = "";  
+      var self = this;
+      if (this.template !== undefined || this.template !== '') {
         // template mustache.
-        //var o2 = eval($.parseJSON(this.dataSet));
-        var t = {
-                  jour_jj:"LU", matiere:"Maths"
-                };
-        this.dataSet = t;       
-        output = Mustache.to_html(this.template, $.parseJSON(this.dataSet));
-        console.log(output);
-
+        output = (Mustache.render(self.template, $.parseJSON(this.dataSet)));
+        
+        /*
+        // chargement du template 
+        $.get('./js/templates/' + self.template + '.html', function(result) {
+          // Fetch the <script /> block from the loaded external
+          // template file which contains our greetings template.
+          var tpl = $(result).filter('script#'+self.template).html(self.template);
+          output = (Mustache.render(tpl, $.parseJSON(this.dataSet)));
+          $(this.htmlElt).html(output);
+          alert(output);
+        });
+        */
       } else {
         output = this.dataSet;
       }
-      
       $(this.htmlElt).html(output);
      }
     
@@ -63,21 +67,31 @@
        if ( !this.url ) return error('url should be set');
        var self = this;
        $.ajax({
-      		url: this.url,
+      		url: self.url,
+      		/*
       		success: 
       		  function(result){ 
       		    self.dataSet = result;
       		    self.refresh();
       		  },
+      		*/
           statusCode: {
             404: function() {
-              error('The page "'+this.url+'" was not found.');
+              error('The page "'+self.url+'" was not found.');
             },
             500: function() {
               error('The server has made boo ! \nPlease retry later...');
             }
           }
-        });
+        }).done(function (result) {
+            //self.refresh();
+            self.dataSet = eval("{ rows : " + result + " }");
+            console.log(self.dataSet);
+            //self.dataSet = $.parseJSON("{rows: [" + result + "] }");
+            o = Mustache.to_html(self.template, $.parseJSON(self.dataSet));
+            console.log(o);
+            $('#debug').html(o);
+          });
       } 
       else { 
         this.dataSet = data;
