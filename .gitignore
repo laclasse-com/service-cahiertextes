@@ -19,3 +19,6 @@ config/*.rb
 .yardoc
 _yardoc
 doc/
+
+# Vagrant
+vagrant/
