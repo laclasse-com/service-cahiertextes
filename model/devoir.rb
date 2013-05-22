@@ -27,7 +27,7 @@ class Devoir < Sequel::Model(:devoir)
  # Referential integrity
  many_to_one :Ressource
  many_to_one :type_devoir, :key=>:Type_devoir_id
- many_to_one :cours
+ many_to_one :cours, :class => Cours
  one_to_many :fait
 
  # Not nullable cols

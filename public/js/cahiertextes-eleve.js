@@ -14,11 +14,21 @@
   var BADGES      = $('#nav-jours-eleve a .badge'); 
   var contentsId = '#liste-eleve';                                 // Tous les badges affichant les devoirs à faire pour chaque onglet
   //var CONTENUS    = $(contentsId + ' div.contenu-jour-eleve');     // Tous les div affichant la liste des devoirs pour chaque jour
-
   var CONTENUS    = new MapUi({ 
                       url : '/eleve/devoirs',
                       html_elt : contentsId,
-                      row_template : '<div class="contenu-jour-eleve {{jour_jj}}"><div class="matiere {{matiere}}">{{matiere}}</div></div>'
+                      template : 
+                                '<div class="contenu-jour-eleve {{jour_jj}}">'+
+                                '{{# rows }}'+
+                                ' <div class="matiere {{mat_id}}">{{mat_id}}</div>'+
+                                '  <div class="devoir">{{contenu}}</div>'+
+                                '  {{/ rows }} '+
+                                '</div>'
+                                                      /*,
+                      row_template : '<div class="contenu-jour-eleve {{jour_jj}}">'+
+                                        '<div class="matiere {{matiere}}">{{matiere}}</div>'+
+                                        '<div class="devoir">{{devoir}}</div>'+
+                                     '</div>'*/
                     });
                     
   var TAF         = $('#controles-liste-eleve a#taf');              // Bouton "Travail à faire"
@@ -43,14 +53,12 @@
     M = moment(Jour);
     // Cacher les badges
     BADGES.hide();
-    // cacher tous les onglets
-    cacherToutLesTab();
     // Sync du label de la semaine en cours
     setPeriode();
-    // Activer l'onglet d'aujourd'hui
-    ActiverJour(getAujourdhui());
     // Charger le contenu
     CONTENUS.load();
+    // Activer l'onglet d'aujourd'hui
+    ActiverJour(getAujourdhui());
   }
   
   // Renvoie le jour d'aujourd'hui sur 2 caractères
@@ -62,17 +70,14 @@
   
   // Activation d'un onglet donné.
   function ActiverJour(j){
-    // Sélectionner celui cliqué
-    $(tabsId + '.' + j).addClass("active");
-    // Sélectionner le div de contenu corespondant
-    $(contentsId + ' div.' + j).show();
-  }
-  
-  function cacherToutLesTab(){
     // déselectionner tous les onglets
     TABS.removeClass('active');
+    // Sélectionner celui cliqué
+    $(tabsId + '.' + j).addClass("active");
     // Cacher tous les contenus
-    $(CONTENUS).hide();
+    $(contentsId + ' div').hide();
+    // Sélectionner le div de contenu corespondant
+    $(contentsId + ' div.' + j).show();
   }
   
   // Mettre à jour la période dans la barre de contrôle.
@@ -88,7 +93,6 @@
   //
   TABS.on('click', function () {
     var j = $(this).attr("class"); 
-    cacherToutLesTab();
     ActiverJour(j);
   });
 
@@ -140,23 +144,4 @@
   
   // Allez hop, init et c'est parti.
   initialize();
-
-/*
-  var o = new mapui({ 
-                  url : '/eleve/devoirs',
-                  html_elt : '#liste-eleve .LU'
-               });
-
-
-
-  o.load();
-
-/*
-  var o2 = new mapui({ 
-                  url : '/eleve/cours',
-                  html_elt : '#liste-eleve .MA'
-               });
-  o2.load();
-*/
-
 });
