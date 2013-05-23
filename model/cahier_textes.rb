@@ -1,7 +1,7 @@
 #coding: utf-8
 #
 # model for 'cahier_textes' table
-# generated 2012-12-12 15:12:21 +0100 by sequel_model_generator.rb
+# generated 2013-05-23 15:29:33 +0200 by /Users/pgl/.rvm/gems/ruby-1.9.3-p194@global/bin/rake
 #
 # ------------------------------+---------------------+----------+----------+------------+--------------------
 # COLUMN_NAME                   | DATA_TYPE           | NULL? | KEY | DEFAULT | EXTRA
@@ -17,15 +17,17 @@
 #
 class CahierTextes < Sequel::Model(:cahier_textes)
 
- # Plugins
- plugin :validation_helpers
- plugin :json_serializer
+  # Plugins
+  plugin :validation_helpers
+  plugin :json_serializer
+  plugin :composition
 
- # Referential integrity
- one_to_many :cours, :class => Cours
+  # Referential integrity
+  one_to_many :cours
 
- # Not nullable cols
- def validate
- validates_presence [:regrpnt_id, :deb_annee_scolaire, :fin_annee_scolaire]
- end
+  # Not nullable cols and unicity validation
+  def validate
+    super
+    validates_presence [:regrpnt_id, :deb_annee_scolaire, :fin_annee_scolaire]
+  end
 end

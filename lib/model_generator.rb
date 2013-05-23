@@ -1,38 +1,34 @@
-# Sequel Basic Scafolding Model Generator for MySQL
+# Sequel Basic Scafolding Model Generator for MySQL 
 # Requires sequel-3.34.0 and above.
 #
-# This routine takes all the table of a database, en generates all Sequel models for Ramaze
+# This routine takes all the table of a database, en generates all Sequel models
 # For each table model we put :
 # - A header that reminds you the table structure
 # - the plugin list you wrote in 'plugin_to_add' array
 # - The Sequel referential inegrity : one_to_many, many_to_one
-# - A "Validate" method that checks not nullable columnns and unique columns, if they have no default value
+# - A "Validate" method that checks not nullable columnns and unique columns
 # - Generates init.rb to be include in the project
 #
-# Note : db_connect.rb should already exists. Create it using Rake
-# WARNING !
+# Note : config/database should already exists. Create it using Rake
+# WARNING :
 # This script is a very very very partial implementation of Sequel features
 # It is only usefull at the beginning of a project to create all Sequel models of a database.
 #
 # StackOverflow question : http://stackoverflow.com/questions/10123818/does-a-sequel-models-generator-exists
 # Thanks to Leucos : https://github.com/leucos
-# Organisation : https://github.com/Erasme
+# Organisation : https://github.com/Erasme 
 
 require 'sequel'
-
-# Name of included file for db connection string
-db_connect = '../config/db'
-
-require_relative db_connect
+require_relative '../config/database'
 
 # Target dir
-@model_dir_target = "../model"
-
+@model_dir_target = APP_ROOT + "/model"
 
 # List of plugins to add to the model
 plugin_to_add = [
   "validation_helpers",
-  "json_serializer"
+  "json_serializer",
+  "composition"
 ]
 
 # International Error message
@@ -40,7 +36,8 @@ message_empty = "ne peut pas &ecirc;tre vide" # "cannot be empty"
 
 # List of the tables we want to create scafolding Sequel model
 models_to_create = DB.tables
-
+#Data de migration Sequel
+models_to_create.delete_if {|m| m == :schema_info}
 ############### Do not modify below ################
 
 # Creating file and retreving a file pointer
@@ -65,7 +62,7 @@ end
 
 # Write an association between two Models and manage special keys
 def write_association(f, association_type, table_name, foreign_key)
-  f.write(" #{association_type} :#{table_name}")
+  f.write("  #{association_type} :#{table_name}")
   # Specify column name if it is composite
   columns = foreign_key[:columns]
   if columns.length > 1
@@ -122,15 +119,15 @@ models_to_create.each do |m|
   #
   # Add plugins
   #
-  model.puts " # Plugins"
+  model.puts "  # Plugins"
   plugin_to_add.each do |p|
-    model.puts " plugin :#{p}"
+    model.puts "  plugin :#{p}"
   end
   model.puts ""
   #
   # Add table relationships
   #
-  model.puts " # Referential integrity"
+  model.puts "  # Referential integrity"
   # many_to_one relationships
   DB.foreign_key_list(m).each do |fk|
     write_association(model, "many_to_one", fk[:table], fk)
@@ -151,15 +148,18 @@ models_to_create.each do |m|
   #
   # Add Validate method
   #
-  model.puts " # Not nullable cols"
-  model.puts " def validate"
+  model.puts "  # Not nullable cols and unicity validation"
+  model.puts "  def validate"
+  model.puts "    super" # Don't forget to call super first
   list_of_not_nullable_cols = []
   #list_of_errors_messages = ""
   list_of_unique_val_cols = []
   # not nullable columns
   DB.schema(m).each do |c|
     info = c[1]
-    list_of_not_nullable_cols.push(c[0]) unless info[:allow_null] or info[:primary_key] or info[:default]
+    if (!info[:allow_null] and info[:default].nil?) and !info[:primary_key]
+      list_of_not_nullable_cols.push(c[0])
+    end
   end
 
   # Unique columns
@@ -172,9 +172,9 @@ models_to_create.each do |m|
     end
   end
 
-  model.puts(" validates_presence #{list_of_not_nullable_cols}") unless list_of_not_nullable_cols.empty?
-  model.puts(" validates_unique #{list_of_unique_val_cols}") unless list_of_unique_val_cols.empty?
-  model.puts(" end\n")
+  model.puts("    validates_presence #{list_of_not_nullable_cols}") unless list_of_not_nullable_cols.empty?
+  model.puts("    validates_unique #{list_of_unique_val_cols.to_s[1...-1]}") unless list_of_unique_val_cols.empty?
+  model.puts("  end\n")
   #
   # Add Referential integrity event
   #
@@ -189,12 +189,21 @@ end
 init = createfile("init.rb")
 if !init.nil?
   writeheader(init, "include file to access all models")
-  init.puts "require 'sequel'\n"
-  init.puts "require_relative '" + db_connect + "'\n"
   init.puts "# MODELS"
   models_to_create.each do |m|
+    init.puts "puts \"Loading '#{m}' model...\""
     init.puts "require_relative '#{m}'"
   end
+
+  init.puts "
+#On fait manuellement l'association table=>model car elle est impossible a faire automatiquement
+#(pas de lien 1<=>1 entre dataset et model stackoverflow 9408785)
+MODEL_MAP = {}
+DB.tables.each do |table|
+  capitalize_name = table.to_s.split(/[^a-z0-9]/i).map{|w| w.capitalize}.join
+  MODEL_MAP[table] = Kernel.const_get(capitalize_name) 
+end
+  "
   init.close
 end
 

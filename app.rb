@@ -15,21 +15,24 @@ Ramaze.options.roots = [__DIR__]
 require 'yaml'
 require 'sequel'
 require 'ramaze/helper/user'
-require 'sixpack'
 require 'json'
 #require 'fra-cas'
+#require 'sixpack'
 
 # Reading YAML Config.
 def readconf
   conf = Hash.new
-  Dir.glob('./config/*.yml').each { |f| conf.merge! YAML::load(File.open(f))} 
+  Dir.glob('./config/*.yml').each { |f| 
+    puts "Loading " + f + "..." 
+    conf.merge! YAML::load(File.open(f))    
+  } 
   conf
 end
 
 CFG = readconf
 
 # Initialize controllers and models
-require __DIR__('config/init')
+require __DIR__('config/init') 
 require __DIR__('model/init')
-require __DIR__('ctrl/init')
+require __DIR__('controller/init')
 

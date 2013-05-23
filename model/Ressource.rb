@@ -1,29 +1,29 @@
 #coding: utf-8
 #
-# model for 'Ressource' table
-# generated 2012-12-12 15:12:21 +0100 by sequel_model_generator.rb
+# model for 'ressource' table
+# generated 2013-05-23 15:29:33 +0200 by /Users/pgl/.rvm/gems/ruby-1.9.3-p194@global/bin/rake
 #
 # ------------------------------+---------------------+----------+----------+------------+--------------------
 # COLUMN_NAME                   | DATA_TYPE           | NULL? | KEY | DEFAULT | EXTRA
 # ------------------------------+---------------------+----------+----------+------------+--------------------
 # id                            | int(11)             | false    | PRI      |            | auto_increment
 # lib                           | varchar(80)         | false    |          |            | 
-# doc_id                        | int(11)             | true     |          |            | 
+# doc_id                        | int(11)             | false    |          |            | 
 # ------------------------------+---------------------+----------+----------+------------+--------------------
 #
-class Ressource < Sequel::Model(:Ressource)
+class Ressource < Sequel::Model(:ressource)
 
- # Plugins
- plugin :validation_helpers
- plugin :json_serializer
+  # Plugins
+  plugin :validation_helpers
+  plugin :json_serializer
+  plugin :composition
 
- # Referential integrity
- one_to_many :cours
- one_to_many :devoir
- one_to_many :log_visu
+  # Referential integrity
+  one_to_many :log_visu, :key=>:Ressource_id
 
- # Not nullable cols
- def validate
- validates_presence [:lib]
- end
+  # Not nullable cols and unicity validation
+  def validate
+    super
+    validates_presence [:lib, :doc_id]
+  end
 end
