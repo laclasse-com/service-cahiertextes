@@ -21,7 +21,14 @@ end
 #    require(controller)
 #  end
 #
+puts "Loading main controller..."
 require __DIR__('main')
+
+puts "Loading eleve controller..."
 require __DIR__('eleve')
+
+puts "Loading prof controller..."
 require __DIR__('prof')
+
+puts "Loading principal controller..."
 require __DIR__('principal')

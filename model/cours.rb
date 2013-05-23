@@ -1,7 +1,7 @@
 #coding: utf-8
 #
 # model for 'cours' table
-# generated 2012-12-12 15:12:21 +0100 by sequel_model_generator.rb
+# generated 2013-05-23 15:29:33 +0200 by /Users/pgl/.rvm/gems/ruby-1.9.3-p194@global/bin/rake
 #
 # ------------------------------+---------------------+----------+----------+------------+--------------------
 # COLUMN_NAME                   | DATA_TYPE           | NULL? | KEY | DEFAULT | EXTRA
@@ -10,7 +10,7 @@
 # usr_id                        | varchar(16)         | false    | MUL      |            | 
 # mat_id                        | varchar(16)         | false    | MUL      |            | 
 # cahier_textes_id              | int(11)             | false    | MUL      |            | 
-# Ressource_id                  | int(11)             | true     | MUL      |            | 
+# Ressource_id                  | int(11)             | true     |          |            | 
 # plage_horaire_id              | varchar(10)         | false    | MUL      |            | 
 # contenu                       | text                | false    |          |            | 
 # date_cours                    | datetime            | true     |          |            | 
@@ -22,18 +22,19 @@
 #
 class Cours < Sequel::Model(:cours)
 
- # Plugins
- plugin :validation_helpers
- plugin :json_serializer
+  # Plugins
+  plugin :validation_helpers
+  plugin :json_serializer
+  plugin :composition
 
- # Referential integrity
- many_to_one :Ressource
- many_to_one :cahier_textes
- many_to_one :plage_horaire
- one_to_many :devoir
+  # Referential integrity
+  many_to_one :cahier_textes
+  many_to_one :plage_horaire
+  one_to_many :devoir
 
- # Not nullable cols
- def validate
- validates_presence [:usr_id, :mat_id, :cahier_textes_id, :plage_horaire_id, :contenu]
- end
+  # Not nullable cols and unicity validation
+  def validate
+    super
+    validates_presence [:usr_id, :mat_id, :cahier_textes_id, :plage_horaire_id, :contenu]
+  end
 end

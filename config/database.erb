@@ -1,0 +1,19 @@
+#
+# Configuration de la base de données de Backend
+#
+# Generated automatically with "rake db:configure" command at <%=Time.new().strftime("%d/%m/%Y") %>.
+#
+require 'logger'
+
+DB = Sequel.mysql2(
+  '<%= print("Database name: "); STDOUT.flush; STDIN.gets.chomp %>',
+  :host=>'<%= print("Host name or IP: "); STDOUT.flush; STDIN.gets.chomp %>',
+  :user=>'<%= print("Username: "); STDOUT.flush; STDIN.gets.chomp %>',
+  :password=>'<%= print("Password: "); STDOUT.flush; STDIN.gets.chomp %>',
+  :charset=>'utf8')
+
+Sequel.extension(:pagination)
+Sequel.extension(:migration)
+
+#Uncomment this if you want to log all DB queries
+#DB.loggers << Logger.new($stdout)

@@ -8,17 +8,17 @@ gem 'sequel'
 gem 'mysql2'
 gem 'thin'
 gem 'json'  
-gem 'sixpack'   
+#gem 'sixpack'   
 
 # Gems pour le dev
 group :development do
   gem 'lolcommits'
   gem 'rack-test'
-  gem 'bacon'
+  gem 'rspec'
   gem 'nokogiri'
   gem 'simplecov'
   # Doc
-  gem 'yard'
-  gem 'rdoc'
-  gem 'rdoc-data'
+  #gem 'yard'
+  #gem 'rdoc'
+  #gem 'rdoc-data'
 end

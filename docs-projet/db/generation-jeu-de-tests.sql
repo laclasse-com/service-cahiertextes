@@ -5,6 +5,29 @@ delete from `cours`;
 delete from `type_devoir`;
 delete from `devoir`;
 
+INSERT INTO `cahiertxt`.`type_devoir` (`id`, `lib`, `description`) VALUES (1, 'DS', 'Devoir surveillé');
+INSERT INTO `cahiertxt`.`type_devoir` (`id`, `lib`, `description`) VALUES (2, 'DM', 'Devoir à la maison');
+INSERT INTO `cahiertxt`.`type_devoir` (`id`, `lib`, `description`) VALUES (3, 'Leçon', 'Leçon à apprendre');
+INSERT INTO `cahiertxt`.`type_devoir` (`id`, `lib`, `description`) VALUES (4, 'Exposé', 'Exposé à préparer');
+INSERT INTO `cahiertxt`.`type_devoir` (`id`, `lib`, `description`) VALUES (5, 'Recherche', 'Recherche à faire');
+INSERT INTO `cahiertxt`.`type_devoir` (`id`, `lib`, `description`) VALUES (6, 'Exercice', 'Exercice à faire');
+
+
+insert into ressource values (1,'Ressource #1', 12345);
+insert into ressource values (2,'Ressource #2', 67890);
+
+
+INSERT INTO `cahiertxt`.`plage_horaire` (`id`) VALUES ('M1');
+INSERT INTO `cahiertxt`.`plage_horaire` (`id`) VALUES ('M2');
+INSERT INTO `cahiertxt`.`plage_horaire` (`id`) VALUES ('M3');
+INSERT INTO `cahiertxt`.`plage_horaire` (`id`) VALUES ('M4');
+INSERT INTO `cahiertxt`.`plage_horaire` (`id`) VALUES ('M5');
+INSERT INTO `cahiertxt`.`plage_horaire` (`id`) VALUES ('S1');
+INSERT INTO `cahiertxt`.`plage_horaire` (`id`) VALUES ('S2');
+INSERT INTO `cahiertxt`.`plage_horaire` (`id`) VALUES ('S3');
+INSERT INTO `cahiertxt`.`plage_horaire` (`id`) VALUES ('S4');
+INSERT INTO `cahiertxt`.`plage_horaire` (`id`) VALUES ('S5');
+
 
 INSERT INTO `cahier_textes` VALUES ('1', '1', '6E1', '2011', '2012', now(), false);
 INSERT INTO `cahier_textes` VALUES ('2', '2', '6E2', '2011', '2012', now(), false);
@@ -17,21 +40,6 @@ INSERT INTO `cahier_textes` VALUES ('8', '8', '6E3', '2012', '2013', now(), fals
 INSERT INTO `cahier_textes` VALUES ('9', '9', '6E4', '2012', '2013', now(), false);
 INSERT INTO `cahier_textes` VALUES ('10', '10', '6E5', '2012', '2013', now(), false);
 
-insert into ressource values (1,'Ressource #1', 12345);
-insert into ressource values (2,'Ressource #2', 67890);
-
-
-
-INSERT INTO `cahiertextes`.`plage_horaire` (`id`) VALUES ('M1');
-INSERT INTO `cahiertextes`.`plage_horaire` (`id`) VALUES ('M2');
-INSERT INTO `cahiertextes`.`plage_horaire` (`id`) VALUES ('M3');
-INSERT INTO `cahiertextes`.`plage_horaire` (`id`) VALUES ('M4');
-INSERT INTO `cahiertextes`.`plage_horaire` (`id`) VALUES ('M5');
-INSERT INTO `cahiertextes`.`plage_horaire` (`id`) VALUES ('S1');
-INSERT INTO `cahiertextes`.`plage_horaire` (`id`) VALUES ('S2');
-INSERT INTO `cahiertextes`.`plage_horaire` (`id`) VALUES ('S3');
-INSERT INTO `cahiertextes`.`plage_horaire` (`id`) VALUES ('S4');
-INSERT INTO `cahiertextes`.`plage_horaire` (`id`) VALUES ('S5');
 
 
 insert into cours values('1', 'VAA60001', '1', '1', 'null', 'M1', 'item #1, CT #1, matiere #1', now(), now(), null, null, false);
@@ -48,14 +56,6 @@ insert into cours values('11', 'VAA60002', '3', '2', 'null', 'M2', 'item #11, CT
 insert into cours values('12', 'VAA60003', '3', '2', 'null', 'M3', 'item #12, CT #2, matiere #3', now() - INTERVAL 10 DAY, now() - INTERVAL 10 DAY, null, null, false);
 insert into cours values('13', 'VAA60004', '3', '2', 'null', 'M4', 'item #13, CT #2, matiere #3', now() - INTERVAL 11 DAY, now() - INTERVAL 11 DAY, null, null, false);
 insert into cours values('14', 'VAA60005', '3', '2', 'null', 'M5', 'item #14, CT #2, matiere #3', now() - INTERVAL 12 DAY, now() - INTERVAL 12 DAY, null, null, false);
-
-
-INSERT INTO `cahiertextes`.`type_devoir` (`id`, `lib`, `description`) VALUES (1, 'DS', 'Devoir surveillé');
-INSERT INTO `cahiertextes`.`type_devoir` (`id`, `lib`, `description`) VALUES (2, 'DM', 'Devoir à la maison');
-INSERT INTO `cahiertextes`.`type_devoir` (`id`, `lib`, `description`) VALUES (3, 'Leçon', 'Leçon à apprendre');
-INSERT INTO `cahiertextes`.`type_devoir` (`id`, `lib`, `description`) VALUES (4, 'Exposé', 'Exposé à préparer');
-INSERT INTO `cahiertextes`.`type_devoir` (`id`, `lib`, `description`) VALUES (5, 'Recherche', 'Recherche à faire');
-INSERT INTO `cahiertextes`.`type_devoir` (`id`, `lib`, `description`) VALUES (6, 'Exercice', 'Exercice à faire');
 
 
 
