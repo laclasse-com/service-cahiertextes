@@ -1,26 +1,27 @@
 'use strict';
 
-angular.module('publicAngularApp', ['ui.bootstrap'])
-  .config(function ($routeProvider) {
-    $routeProvider
-      .when('/', {
 angular.module('publicAngularApp', ['ui.bootstrap', 'ui.state'])
+  .config(function ($stateProvider, $urlRouterProvider) {
+    $urlRouterProvider.otherwise("/");
+    $stateProvider
+      .state('/', {
+        url: "/",
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
-      .when('/principal', {
+      .state('/principal', {
+        url: "/principal",
         templateUrl: 'views/principal.html',
         controller: 'PrincipalCtrl'
       })
-      .when('/eleve', {
+      .state('/eleve', {
+        url: "/eleve",
         templateUrl: 'views/eleve.html',
         controller: 'EleveCtrl'
       })
-      .when('/professeur', {
+      .state('/professeur', {
+        url: "/professeur",
         templateUrl: 'views/professeur.html',
         controller: 'ProfesseurCtrl'
-      })
-      .otherwise({
-        redirectTo: '/'
       });
   });
