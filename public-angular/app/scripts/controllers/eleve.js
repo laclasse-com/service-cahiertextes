@@ -7,4 +7,7 @@ angular.module('publicAngularApp')
       'AngularJS',
       'Karma'
     ];
+  })
+  .controller('EleveDisplayController', function ($scope) {
+    $scope.partToShow = 'Cours';
   });

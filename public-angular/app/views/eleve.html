@@ -1,1 +1,8 @@
 <p>This is the eleve view.</p>
+<div ng-controller="EleveDisplayController">
+  <div class="btn-group">
+    <button type="button" class="btn btn-primary" ng-model="partToShow" btn-radio="'Cours'">Cours</button>
+    <button type="button" class="btn btn-primary" ng-model="partToShow" btn-radio="'Devoirs'">Devoirs</button>
+  </div>
+{{partToShow}}
+</div>
