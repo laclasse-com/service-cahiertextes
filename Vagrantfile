@@ -25,7 +25,7 @@ Vagrant.configure("2") do |config|
     ansible.verbose = true
     ansible.limit = "192.168.123.3"
     # Change your stuff here
-    ansible.extra_vars = { ruby_version: "2.0.0-p235",
+    ansible.extra_vars = { ruby_version: "2.0.0-p247",
                            app_start_command: "bundle && bundle exec rackup",
                            mysql_db: "cahiertxt",
                            mysql_user: "root",
