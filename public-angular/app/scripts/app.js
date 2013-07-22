@@ -14,6 +14,21 @@ angular.module('publicAngularApp', ['ui.bootstrap', 'ui.state'])
         templateUrl: 'views/principal.html',
         controller: 'PrincipalCtrl'
       })
+      .state('principal.classes', { //imbriquée sous principal
+        url: "/classes",
+        templateUrl: 'views/principal.classes.html',
+        controller: 'PrincipalClassesCtrl'
+      })
+      .state('principal.enseignants', { //imbriquée sous principal
+        url: "/enseignants",
+        templateUrl: 'views/principal.enseignants.html',
+        controller: 'PrincipalEnseignantsCtrl'
+      })
+      .state('principal.enseignant', { //imbriquée sous principal
+        url: "/enseignant",
+        templateUrl: 'views/principal.enseignant.html',
+        controller: 'PrincipalEnseignantCtrl'
+      })
       .state('eleve', {
         url: "/eleve",
         templateUrl: 'views/eleve.html',
