@@ -9,17 +9,17 @@ angular.module('publicAngularApp', ['ui.bootstrap', 'ui.state'])
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
-      .state('/principal', {
+      .state('principal', {
         url: "/principal",
         templateUrl: 'views/principal.html',
         controller: 'PrincipalCtrl'
       })
-      .state('/eleve', {
+      .state('eleve', {
         url: "/eleve",
         templateUrl: 'views/eleve.html',
         controller: 'EleveCtrl'
       })
-      .state('/professeur', {
+      .state('professeur', {
         url: "/professeur",
         templateUrl: 'views/professeur.html',
         controller: 'ProfesseurCtrl'
