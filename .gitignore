@@ -23,3 +23,7 @@ doc/
 # Vagrant
 vagrant/
 .vagrant/
+
+# Yo Angular
+bower_components
+node_modules
