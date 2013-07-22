@@ -27,3 +27,4 @@ vagrant/
 # Yo Angular
 bower_components
 node_modules
+/.ruby-version
