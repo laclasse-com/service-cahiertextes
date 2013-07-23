@@ -23,7 +23,9 @@ angular.module('publicAngularApp')
 					   'October',
 					   'November',
 					   'December'];
+		$scope.moisCourant = $scope.mois[1];
 		$scope.matieres = ['Français','Mathématiques', 'Équilibrisme'];
+		$scope.matiereCourante = $scope.matieres[1];
 		$scope.chartData = [[
 			['6ème A', 12],['4ème O', 9], ['5ème L', 14], 
 			['Out of home', 16],['Commuting', 7], ['Orientation', 9]
