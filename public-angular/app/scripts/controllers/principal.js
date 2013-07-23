@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('publicAngularApp')
-  .controller('PrincipalCtrl', function ($scope) {
-	  
-  });
+	.controller('PrincipalCtrl', function ($scope) {
+		
+	});
 
 angular.module('publicAngularApp')
   .controller('PrincipalClassesCtrl', function ($scope) {
@@ -15,18 +15,18 @@ angular.module('publicAngularApp')
   });
 
 angular.module('publicAngularApp')
-  .controller('PrincipalEnseignantsCtrl', function ($scope) {
-    $scope.enseignants = [
-      'M. Raymond',
-      'Melle Roux',
-      'Maitre Hibou'
-    ];
-  });
+	.controller('PrincipalEnseignantsCtrl', function ($scope) {
+		$scope.enseignants = [
+			'M. Raymond',
+			'Melle Roux',
+			'Maitre Hibou'
+		];
+	});
 
 angular.module('publicAngularApp')
-  .controller('PrincipalEnseignantCtrl', function ($scope) {
-    $scope.classes = [
-      '3ème A',
-      '6ème ZX'
-    ];
-  });
+	.controller('PrincipalEnseignantCtrl', function ($scope) {
+		$scope.classes = [
+			'3ème A',
+			'6ème ZX'
+		];
+	});
