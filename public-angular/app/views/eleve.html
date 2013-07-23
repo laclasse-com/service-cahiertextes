@@ -1,8 +1,17 @@
-<p>This is the eleve view.</p>
 <div ng-controller="EleveDisplayController">
-  <div class="btn-group">
-    <button type="button" class="btn btn-primary" ng-model="partToShow" btn-radio="'Cours'">Cours</button>
-    <button type="button" class="btn btn-primary" ng-model="partToShow" btn-radio="'Devoirs'">Devoirs</button>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <a class="brand" href="#">Élève</a>
+      <ul class="nav">
+        <li ng-class="{active:tab=='cours'}">
+          <a href="#/eleve/cours" ng-click="tab='cours'">Cours</a>
+        </li>
+        <li ng-class="{active:tab=='devoirs'}">
+          <a href="#/eleve/devoirs" ng-click="tab='devoirs'">Devoirs</a>
+        </li>
+      </ul>
+    </div>
   </div>
-{{partToShow}}
+
+  <div ui-view="content"></div>
 </div>
