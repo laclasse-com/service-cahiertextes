@@ -28,31 +28,17 @@
   <![endif]-->
 
 
-
-
-
-
-
-
-
+  
+  <!-- Add your site or application content here -->
+  <div class="container">
+    <ng-include src="'views/partials/header.html'"></ng-include>
+    
+    <div ui-view></div>
+    
+    <ng-include src="'views/partials/footer.html'"></ng-include>
+  </div>
 
   
-  <ng-include src="'views/partials/header.html'"></ng-include>
-
-  <!-- Add your site or application content here -->
-  <div class="container" ui-view></div>
-
-  <ng-include src="'views/partials/footer.html'"></ng-include>
-
-
-
-
-
-
-
-
-
-
   
   <script src="bower_components/angular/angular.js"></script>
 
