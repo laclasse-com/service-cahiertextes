@@ -4,7 +4,7 @@ angular.module('publicAngularApp', ['ui.bootstrap', 'ui.state'])
 	.config(function ($stateProvider, $urlRouterProvider) {
 		$urlRouterProvider.otherwise("/");
 		$stateProvider
-			.state('/', {
+			.state('racine', {
 				url: "/",
 				templateUrl: 'views/main.html',
 				controller: 'MainCtrl'
