@@ -40,3 +40,6 @@ angular.module('publicAngularApp', ['ui.bootstrap', 'ui.state'])
         controller: 'ProfesseurCtrl'
       });
   });
+				parent: 'principal',
+				parent: 'principal',
+				parent: 'principal',
