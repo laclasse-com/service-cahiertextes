@@ -1,6 +1,18 @@
-<p>This is the principal view.</p>
-<a href="#/principal/classes">Validation des saisies par Classe/Groupe</a>
-<a href="#/principal/enseignants">Validation des saisies par Enseignants</a>
-<a href="#/principal/enseignant">Validation des saisies d'un Enseignant</a>
+<div class="navbar">
+  <div class="navbar-inner">
+    <a class="brand" href="#">Principal</a>
+    <ul class="nav">
+      <li ng-class="{active:tab=='classes'}">
+        <a href="#/principal/classes" ng-click="tab='classes'">Validation des saisies par Classe/Groupe</a>
+      </li>
+      <li ng-class="{active:tab=='enseignants'}">
+        <a href="#/principal/enseignants" ng-click="tab='enseignants'">Validation des saisies par Enseignants</a>
+      </li>
+      <li ng-class="{active:tab=='enseignant'}">
+        <a href="#/principal/enseignant" ng-click="tab='enseignant'">Validation des saisies d'un Enseignant</a>
+      </li>
+    </ul>
+  </div>
+</div>
 
 <div ui-view></div>
