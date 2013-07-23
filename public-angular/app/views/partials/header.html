@@ -1,1 +1,16 @@
-<h1>header partial</h1>
+<div class="navbar">
+  <div class="navbar-inner">
+    <a class="brand" href="#">Cahier de Texte</a>
+    <ul class="nav">
+      <li ng-class="{active:tab=='principal'}">
+        <a href="#/principal" ng-click="tab='principal'">Principal</a>
+      </li>
+      <li ng-class="{active:tab=='professeur'}">
+        <a href="#/professeur" ng-click="tab='professeur'">Professeur</a>
+      </li>
+      <li ng-class="{active:tab=='eleve'}">
+        <a href="#/eleve" ng-click="tab='eleve'">Élève</a>
+      </li>
+    </ul>
+  </div>
+</div>
