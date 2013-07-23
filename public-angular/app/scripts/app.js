@@ -2,7 +2,6 @@
 
 angular.module('publicAngularApp', ['ui.bootstrap',
 									'ui.state',
-									'ui.chart',
 									'ui.select2'])
 	.config(function ($stateProvider, $urlRouterProvider) {
 		$urlRouterProvider.otherwise("/");
