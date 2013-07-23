@@ -3,6 +3,7 @@
 angular.module('publicAngularApp', ['ui.bootstrap', 'ui.state'])
 	.config(function ($stateProvider, $urlRouterProvider) {
 		$urlRouterProvider.otherwise("/");
+		
 		$stateProvider
 			.state('racine', {
 				url: "/",
@@ -17,20 +18,41 @@ angular.module('publicAngularApp', ['ui.bootstrap', 'ui.state'])
 			.state('principal.classes', { //imbriquée sous principal
 				parent: 'principal',
 				url: "/classes",
-				templateUrl: 'views/principal.classes.html',
-				controller: 'PrincipalClassesCtrl'
+				views: {
+					"titre": {
+						template: "Validation des saisies par Classe/Groupe"
+					},
+					"content": {
+						templateUrl: 'views/principal.classes.html',
+						controller: 'PrincipalClassesCtrl'
+					}
+				}
 			})
 			.state('principal.enseignants', { //imbriquée sous principal
 				parent: 'principal',
 				url: "/enseignants",
-				templateUrl: 'views/principal.enseignants.html',
-				controller: 'PrincipalEnseignantsCtrl'
+				views: {
+					"titre": {
+						template: "Validation des saisies par Enseignants"
+					},
+					"content": {
+						templateUrl: 'views/principal.enseignants.html',
+						controller: 'PrincipalEnseignantsCtrl'
+					}
+				}
 			})
 			.state('principal.enseignant', { //imbriquée sous principal
 				parent: 'principal',
 				url: "/enseignant",
-				templateUrl: 'views/principal.enseignant.html',
-				controller: 'PrincipalEnseignantCtrl'
+				views: {
+					"titre": {
+						template: "Validation des saisies par Enseignant"
+					},
+					"content": {
+						templateUrl: 'views/principal.enseignant.html',
+						controller: 'PrincipalEnseignantCtrl'
+					}
+				}
 			})
 			.state('eleve', {
 				url: "/eleve",
