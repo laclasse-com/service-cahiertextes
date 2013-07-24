@@ -18,12 +18,11 @@ angular.module('publicAngularApp')
 	});
 angular.module('publicAngularApp')
 	.controller('PrincipalClassesChartCtrl', function ($scope) {
-		// $scope.data =  [[
-		// 	['Heavy Industry', 12],['Retail', 9], ['Light Industry', 14],
-		// 	['Out of home', 16],['Commuting', 7], ['Orientation', 9]
-		// ]];
 		$scope.chart = {};
-		$scope.chart.data = [ [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] ];
+		$scope.chart.data =  [[
+			['Heavy Industry', 12],['Retail', 9], ['Light Industry', 14],
+			['Out of home', 16],['Commuting', 7], ['Orientation', 9]
+		]];
 		$scope.chart.options = {
 			seriesDefaults: {
 				// Make this a pie chart.
