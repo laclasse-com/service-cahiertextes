@@ -3,6 +3,7 @@
 	"version": "0.0.0",
 	"dependencies": {
 		"angular": "~1.0.7",
+		"angular-grid": "git://github.com/angular-ui/ng-grid.git#latest",
 	    "angular-ui-chart": "git://github.com/angular-ui/ui-chart.git#latest",
 		"angular-ui-router": "~0.0.1",
 		"angular-ui-select2": "latest",
