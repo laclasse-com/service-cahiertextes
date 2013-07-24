@@ -1,6 +1,7 @@
 'use strict';
 
 angular.module('publicAngularApp', ['ui.bootstrap',
+									'ui.chart',
 									'ui.state',
 									'ui.select2'])
 	.config(function ($stateProvider, $urlRouterProvider) {
