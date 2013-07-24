@@ -5,27 +5,27 @@ angular.module('publicAngularApp', ['ui.bootstrap',
 									'ui.state',
 									'ui.select2'])
 	.config(function ($stateProvider, $urlRouterProvider) {
-		$urlRouterProvider.otherwise("/");
+		$urlRouterProvider.otherwise('/');
 		
 		$stateProvider
 			.state('racine', {
-				url: "/",
+				url: '/',
 				templateUrl: 'views/main.html',
 				controller: 'MainCtrl'
 			})
 			.state('principal', {
-				url: "/principal",
+				url: '/principal',
 				templateUrl: 'views/principal.html',
 				controller: 'PrincipalCtrl'
 			})
 			.state('principal.classes', { //imbriquée sous principal
 				parent: 'principal',
-				url: "/classes",
+				url: '/classes',
 				views: {
-					"titre": {
-						template: "Validation des saisies par Classe/Groupe"
+					'titre': {
+						template: 'Validation des saisies par Classe/Groupe'
 					},
-					"content": {
+					'content': {
 						templateUrl: 'views/principal.classes.html',
 						controller: 'PrincipalClassesCtrl'
 					}
@@ -33,12 +33,12 @@ angular.module('publicAngularApp', ['ui.bootstrap',
 			})
 			.state('principal.enseignants', { //imbriquée sous principal
 				parent: 'principal',
-				url: "/enseignants",
+				url: '/enseignants',
 				views: {
-					"titre": {
-						template: "Validation des saisies par Enseignants"
+					'titre': {
+						template: 'Validation des saisies par Enseignants'
 					},
-					"content": {
+					'content': {
 						templateUrl: 'views/principal.enseignants.html',
 						controller: 'PrincipalEnseignantsCtrl'
 					}
@@ -46,24 +46,24 @@ angular.module('publicAngularApp', ['ui.bootstrap',
 			})
 			.state('principal.enseignant', { //imbriquée sous principal
 				parent: 'principal',
-				url: "/enseignant",
+				url: '/enseignant',
 				views: {
-					"titre": {
-						template: "Validation des saisies par Enseignant"
+					'titre': {
+						template: 'Validation des saisies par Enseignant'
 					},
-					"content": {
+					'content': {
 						templateUrl: 'views/principal.enseignant.html',
 						controller: 'PrincipalEnseignantCtrl'
 					}
 				}
 			})
 			.state('eleve', {
-				url: "/eleve",
+				url: '/eleve',
 				templateUrl: 'views/eleve.html',
 				controller: 'EleveCtrl'
 			})
 			.state('professeur', {
-				url: "/professeur",
+				url: '/professeur',
 				templateUrl: 'views/professeur.html',
 				controller: 'ProfesseurCtrl'
 			});
