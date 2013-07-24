@@ -6,18 +6,27 @@ angular.module('publicAngularApp')
 	});
 
 angular.module('publicAngularApp')
-	.controller('PrincipalClassesCtrl', function ($scope) {
-		$scope.classes = ['6ème A', '4ème O', '5ème L'];
+	.controller('PrincipalClassesCtrl', function ($scope, $http) {
+		$scope.classes = [];
+		$http.get('mocks/classes.json').success( function( response ) {
+			$scope.classes = response.classes;
+		});
 		$scope.classeCourante = $scope.classes[1];
 		
-		$scope.mois = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+		$scope.mois = [];
+		$http.get('mocks/mois.json').success( function( response ) {
+			$scope.mois = response.mois;
+		});
 		$scope.moisCourant = $scope.mois[1];
 		
-		$scope.matieres = ['Français','Mathématiques', 'Équilibrisme'];
+		$scope.matieres = [];
+		$http.get('mocks/matieres.json').success( function( response ) {
+			$scope.matieres = response.matieres;
+		});
 		$scope.matiereCourante = $scope.matieres[1];
 	});
 angular.module('publicAngularApp')
-	.controller('PrincipalClassesChartCtrl', function ($scope) {
+	.controller('PrincipalClassesChartCtrl', function ($scope, $http) {
 		$scope.chart = {};
 		$scope.chart.data =  [[
 			['Heavy Industry', 12],['Retail', 9], ['Light Industry', 14],
