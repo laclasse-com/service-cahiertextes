@@ -3,7 +3,8 @@
 angular.module('publicAngularApp', ['ui.bootstrap',
 									'ui.chart',
 									'ui.state',
-									'ui.select2'])
+									'ui.select2',
+									'ngGrid'])
 	.config(function ($stateProvider, $urlRouterProvider) {
 		$urlRouterProvider.otherwise('/');
 		

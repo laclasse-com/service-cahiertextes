@@ -38,18 +38,22 @@ angular.module('publicAngularApp')
 	});
 
 angular.module('publicAngularApp')
-	.controller('PrincipalEnseignantsCtrl', function ($scope) {
-		$scope.enseignants = [
-			'M. Raymond',
-			'Melle Roux',
-			'Maitre Hibou'
-		];
+	.controller('PrincipalEnseignantsCtrl', function ($scope, $http) {
+		$scope.enseignants = [];
+		$http.get('mocks/enseignants.json').success( function( response ) {
+			$scope.enseignants = response.enseignants;
+		});
+		
+        $scope.gridEnseignants = { data: 'enseignants',
+								   enableCellEdit: true,
+								   plugins: [new ngGridFlexibleHeightPlugin()] };
+		
 	});
 
 angular.module('publicAngularApp')
-	.controller('PrincipalEnseignantCtrl', function ($scope) {
-		$scope.classes = [
-			'3ème A',
-			'6ème ZX'
-		];
+	.controller('PrincipalEnseignantCtrl', function ($scope, $http) {
+		$scope.classes = [];
+		$http.get('mocks/classes.json').success( function( response ) {
+			$scope.classes = response.classes;
+		});
 	});
