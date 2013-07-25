@@ -1,0 +1,9 @@
+{
+	"enseignants" :[
+		{"name": "Moroni", "discipline": "sport", "stats": 50},
+		{"name": "Teancum", "discipline": "anglais", "stats": 43},
+		{"name": "Jacob", "discipline": "géographie", "stats": 27},
+		{"name": "Nephi", "discipline": "français", "stats": 29},
+		{"name": "Enos", "discipline": "SVT", "stats": 34}
+	]
+}
