@@ -1,5 +1,19 @@
-<div ng-grid="gridEnseignants"></div>
+<form class="navbar-form">
+  <div class="navbar-inner">
+    <select class="span2" ui-select2 data-ng-model="enseignant.name" data-placeholder="Toute les enseignants">
+      <option value=""></option>
+      <option data-ng-repeat="enseignant in listeEnseignants.enseignants">{{enseignant.name}}</option>
+    </select>
 
-<div ng-controller="PrincipalEnseignantsRadarChartCtrl">
-  <div d3 d3-data="data" d3-renderer="renderer"></div>
+    <select class="span2" ui-select2 data-ng-model="moisCourant" data-placeholder="Toute l'année">
+      <option value=""></option>
+      <option data-ng-repeat="unmois in mois">{{unmois}}</option>
+    </select>
+  </div>
+</form>
+
+<div data-ng-controller="PrincipalEnseignantsRadarChartCtrl">
+  <div data-d3 data-d3-data="data" data-d3-renderer="renderer"></div>
 </div>
+
+<div data-ng-grid="gridEnseignants"></div>
