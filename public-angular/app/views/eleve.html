@@ -1,13 +1,13 @@
-<div ng-controller="EleveDisplayController">
+<div data-ng-controller="EleveDisplayController">
   <div class="navbar">
     <div class="navbar-inner">
       <a class="brand" href="#/eleve">Élève</a>
       <ul class="nav">
-        <li ng-class="{active:tab=='cours'}">
-          <a href="#/eleve/cours" ng-click="tab='cours'">Cours</a>
+        <li data-ng-class="{active:tab=='cours'}">
+          <a href="#/eleve/cours" data-ng-click="tab='cours'">Cours</a>
         </li>
-        <li ng-class="{active:tab=='devoirs'}">
-          <a href="#/eleve/devoirs" ng-click="tab='devoirs'">Devoirs</a>
+        <li data-ng-class="{active:tab=='devoirs'}">
+          <a href="#/eleve/devoirs" data-ng-click="tab='devoirs'">Devoirs</a>
         </li>
       </ul>
     </div>

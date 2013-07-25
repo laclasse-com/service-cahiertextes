@@ -1,23 +1,23 @@
 <form class="navbar-form">
   <div class="navbar-inner">
-    <select class="span2" ui-select2 ng-model="classeCourante" data-placeholder="Toute les classes">
+    <select class="span2" ui-select2 data-ng-model="classeCourante" data-placeholder="Toute les classes">
       <option value=""></option>
-      <option ng-repeat="classe in classes">{{classe}}</option>
+      <option data-ng-repeat="classe in classes">{{classe}}</option>
     </select>
 
-    <select class="span2" ui-select2 ng-model="moisCourant" data-placeholder="Toute l'année">
+    <select class="span2" ui-select2 data-ng-model="moisCourant" data-placeholder="Toute l'année">
       <option value=""></option>
-      <option ng-repeat="unmois in mois">{{unmois}}</option>
+      <option data-ng-repeat="unmois in mois">{{unmois}}</option>
     </select>
 
-    <select class="span2" ui-select2 ng-model="matiereCourante" data-placeholder="Toute les matières">
+    <select class="span2" ui-select2 data-ng-model="matiereCourante" data-placeholder="Toute les matières">
       <option value=""></option>
-      <option ng-repeat="matiere in matieres">{{matiere}}</option>
+      <option data-ng-repeat="matiere in matieres">{{matiere}}</option>
     </select>
 
   </div>
 </form>
 
-<div ng-controller="PrincipalClassesChartCtrl">
+<div data-ng-controller="PrincipalClassesChartCtrl">
   <div ui-chart="chart.data" chart-options="chart.options" />
 </div>
