@@ -49,13 +49,23 @@ angular.module('publicAngularApp')
 angular.module('publicAngularApp')
 	.controller('PrincipalEnseignantsCtrl', function ($scope, $http) {
 		$scope.enseignants = [];
-		$http.get('mocks/enseignants.json').success( function( response ) {
-			$scope.enseignants = response.enseignants;
-		});
-		
-        $scope.gridEnseignants = { data: 'enseignants',
-								   enableCellEdit: true,
-								   plugins: [new ngGridFlexibleHeightPlugin()] };
+		$http.get('mocks/enseignants.json').success(
+			function( response ) {
+				$scope.enseignants = response.enseignants;
+				$scope.listeEnseignants = JSON.parse( response );
+			});		
+		$scope.enseignant = "test";
+		$scope.mois = [];
+		$http.get('mocks/mois.json').success(
+			function( response ) {
+				$scope.mois = response.mois;
+			});
+		$scope.moisCourant = $scope.mois[1];
+
+        $scope.gridEnseignants = {
+			data: 'enseignants',
+			enableCellEdit: true,
+			plugins: [new ngGridFlexibleHeightPlugin()] };
 		
 	});
 angular.module('publicAngularApp')
