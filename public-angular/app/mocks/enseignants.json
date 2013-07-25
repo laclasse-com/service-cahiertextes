@@ -1,7 +1,0 @@
-{
-	"enseignants" :[{"name": "Moroni", "discipline": "aucune", "stats": 50},
-					{"name": "Teancum", "discipline": "aucune", "stats": 43},
-					{"name": "Jacob", "discipline": "aucune", "stats": 27},
-					{"name": "Nephi", "discipline": "aucune", "stats": 29},
-					{"name": "Enos", "discipline": "aucune", "stats": 34}]
-}
