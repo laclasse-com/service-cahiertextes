@@ -1,10 +1,11 @@
 'use strict';
 
-angular.module('publicAngularApp', ['ui.bootstrap',
-									'ui.chart',
-									'ui.state',
-									'ui.select2',
-									'ngGrid'])
+angular.module('publicAngularApp', [ 'ui.bootstrap',
+									 'ui.chart',
+									 'ui.state',
+									 'ui.select2',
+									 'ngGrid',
+									 'd3' ])
 	.config(function ($stateProvider, $urlRouterProvider) {
 		$urlRouterProvider.otherwise('/');
 		

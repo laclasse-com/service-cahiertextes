@@ -14,7 +14,9 @@
 		"json3": "latest",
 		"angular-cookies": "latest",
 		"es5-shim": "latest",
-		"angular-scenario": "latest"
+		"angular-scenario": "latest",
+		"d3": "latest",
+		"angular-d3": "latest"
 	},
 	"devDependencies": {
 		"angular-mocks": "latest",
