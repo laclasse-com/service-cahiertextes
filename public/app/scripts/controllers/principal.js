@@ -6,21 +6,21 @@ angular.module('publicAngularApp')
 	});
 
 angular.module('publicAngularApp')
-	.controller('PrincipalClassesCtrl', function ($scope, $http) {
+	.controller('PrincipalClassesCtrl', function ($scope, $http, EmploiDuTemps) {
 		$scope.classes = [];
-		$http.get('mocks/classes.json').success( function( response ) {
+		EmploiDuTemps.getClasses().success( function( response ) {
 			$scope.classes = response.classes;
 		});
 		$scope.classeCourante = $scope.classes[1];
 		
 		$scope.mois = [];
-		$http.get('mocks/mois.json').success( function( response ) {
+		EmploiDuTemps.getMois().success( function( response ) {
 			$scope.mois = response.mois;
 		});
 		$scope.moisCourant = $scope.mois[1];
 		
 		$scope.matieres = [];
-		$http.get('mocks/matieres.json').success( function( response ) {
+		EmploiDuTemps.getMatieres().success( function( response ) {
 			$scope.matieres = response.matieres;
 		});
 		$scope.matiereCourante = $scope.matieres[1];
@@ -47,16 +47,16 @@ angular.module('publicAngularApp')
 	});
 
 angular.module('publicAngularApp')
-	.controller('PrincipalEnseignantsCtrl', function ($scope, $http) {
+	.controller('PrincipalEnseignantsCtrl', function ($scope, $http, EmploiDuTemps) {
 		$scope.enseignants = [];
-		$http.get('mocks/enseignants.json').success(
+		EmploiDuTemps.getEnseignants().success(
 			function( response ) {
 				$scope.enseignants = response.enseignants;
 				$scope.listeEnseignants = JSON.parse( response );
 			});		
 		$scope.enseignant = "test";
 		$scope.mois = [];
-		$http.get('mocks/mois.json').success(
+		EmploiDuTemps.getMois().success(
 			function( response ) {
 				$scope.mois = response.mois;
 			});
@@ -95,9 +95,9 @@ angular.module('publicAngularApp')
 	});
 
 angular.module('publicAngularApp')
-	.controller('PrincipalEnseignantCtrl', function ($scope, $http) {
+	.controller('PrincipalEnseignantCtrl', function ($scope, $http, EmploiDuTemps) {
 		$scope.classes = [];
-		$http.get('mocks/classes.json').success( function( response ) {
+		EmploiDuTemps.getClasses().success( function( response ) {
 			$scope.classes = response.classes;
 		});
 	});
