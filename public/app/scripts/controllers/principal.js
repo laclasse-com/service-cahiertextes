@@ -65,7 +65,12 @@ angular.module('publicAngularApp')
         $scope.gridEnseignants = {
 			data: 'enseignants',
 			enableCellEdit: true,
-			plugins: [new ngGridFlexibleHeightPlugin()] };
+			plugins: [new ngGridFlexibleHeightPlugin()],
+		    columnDefs: [
+					{ field: 'name', displayName: 'Nom', cellTemplate: '<div><a href="#/principal/enseignant/{{row.getProperty(\'id\')}}">{{row.entity[col.field]}}</a></div>' },
+					{ field: 'discipline', displayName: 'Discipline' },
+					{ field: 'stats', displayName: 'Statistiques' }]
+		};
 		
 	});
 angular.module('publicAngularApp')
