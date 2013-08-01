@@ -51,10 +51,10 @@ angular.module('publicAngularApp')
 		$scope.enseignants = [];
 		EmploiDuTemps.getEnseignants().success(
 			function( response ) {
-				$scope.enseignants = response.enseignants;
-				$scope.listeEnseignants = JSON.parse( response );
-			});		
+				$scope.enseignants = response;
+			});
 		$scope.enseignant = "test";
+
 		$scope.mois = [];
 		EmploiDuTemps.getMois().success(
 			function( response ) {

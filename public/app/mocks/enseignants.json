@@ -1,9 +1,7 @@
-{
-	"enseignants" :[
-		{"name": "Moroni", "discipline": "sport", "stats": 50},
-		{"name": "Teancum", "discipline": "anglais", "stats": 43},
-		{"name": "Jacob", "discipline": "géographie", "stats": 27},
-		{"name": "Nephi", "discipline": "français", "stats": 29},
-		{"name": "Enos", "discipline": "SVT", "stats": 34}
-	]
-}
+[
+	{"id": 1, "name": "Moroni", "discipline": "sport", "stats": 50},
+	{"id": 2, "name": "Teancum", "discipline": "anglais", "stats": 43},
+	{"id": 3, "name": "Jacob", "discipline": "géographie", "stats": 27},
+	{"id": 4, "name": "Nephi", "discipline": "français", "stats": 29},
+	{"id": 5, "name": "Enos", "discipline": "SVT", "stats": 34}
+]
