@@ -2,7 +2,7 @@
   <div class="navbar-inner">
     <select class="span2" ui-select2 data-ng-model="enseignant.name" data-placeholder="Toute les enseignants">
       <option value=""></option>
-      <option data-ng-repeat="enseignant in listeEnseignants.enseignants">{{enseignant.name}}</option>
+      <option data-ng-repeat="enseignant in enseignants">{{enseignant.name}}</option>
     </select>
 
     <select class="span2" ui-select2 data-ng-model="moisCourant" data-placeholder="Toute l'année">
