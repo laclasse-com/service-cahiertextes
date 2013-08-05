@@ -3,7 +3,7 @@
 describe('Controller: PrincipalCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('publicAngularApp'));
+  beforeEach(module('cahierDeTexteApp'));
 
   var PrincipalCtrl,
     scope;

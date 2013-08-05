@@ -1,11 +1,11 @@
 'use strict';
 
-angular.module('publicAngularApp')
+angular.module('cahierDeTexteApp')
 	.controller('PrincipalCtrl', function ($scope) {
 		
 	});
 
-angular.module('publicAngularApp')
+angular.module('cahierDeTexteApp')
 	.controller('PrincipalClassesCtrl', function ($scope, $http, EmploiDuTemps) {
 		$scope.classes = [];
 		EmploiDuTemps.getClasses().success( function( response ) {
@@ -25,7 +25,7 @@ angular.module('publicAngularApp')
 		});
 		$scope.matiereCourante = $scope.matieres[1];
 	});
-angular.module('publicAngularApp')
+angular.module('cahierDeTexteApp')
 	.controller('PrincipalClassesChartCtrl', function ($scope, $http) {
 		$scope.chart = {};
 		$scope.chart.data =  [[
@@ -46,7 +46,7 @@ angular.module('publicAngularApp')
 		};
 	});
 
-angular.module('publicAngularApp')
+angular.module('cahierDeTexteApp')
 	.controller('PrincipalEnseignantsCtrl', function ($scope, $http, EmploiDuTemps) {
 		$scope.enseignants = [];
 		$scope.radar = {};
@@ -80,7 +80,7 @@ angular.module('publicAngularApp')
 		
 	});
 
-angular.module('publicAngularApp')
+angular.module('cahierDeTexteApp')
 	.controller('PrincipalEnseignantCtrl', function ($scope, $http, EmploiDuTemps) {
 		$scope.classes = [];
 		EmploiDuTemps.getClasses().success( function( response ) {

@@ -3,7 +3,7 @@
 describe('Service: EmploiDuTemps', function () {
 
   // load the service's module
-  beforeEach(module('publicAngularApp'));
+  beforeEach(module('cahierDeTexteApp'));
 
   // instantiate service
   var EmploiDuTemps;

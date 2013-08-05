@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('publicAngularApp', [ 'ui.bootstrap',
+angular.module('cahierDeTexteApp', [ 'ui.bootstrap',
 									 'ui.chart',
 									 'ui.state',
 									 'ui.select2',
