@@ -49,9 +49,15 @@ angular.module('publicAngularApp')
 angular.module('publicAngularApp')
 	.controller('PrincipalEnseignantsCtrl', function ($scope, $http, EmploiDuTemps) {
 		$scope.enseignants = [];
+		$scope.radar = {};
+		$scope.radar.data = [];
+		$scope.radar.renderer = RadarChart.draw;
+
 		EmploiDuTemps.getEnseignants().success(
 			function( response ) {
 				$scope.enseignants = response;
+				$scope.radar.data.push( $scope.enseignants.map( function(e){return {axis: e.name, value: e.total};}));
+				$scope.radar.data.push( $scope.enseignants.map( function( e ){ return { axis: e.name, value: e.stats }; } ) );
 			});
 		$scope.enseignant = "test";
 
@@ -73,31 +79,6 @@ angular.module('publicAngularApp')
 		};
 		
 	});
-angular.module('publicAngularApp')
-	.controller('PrincipalEnseignantsRadarChartCtrl', function ($scope, $http) {
-		$scope.data = [
-			[
-				{axis: "strength", value: 13},
-				{axis: "intelligence", value: 1},
-				{axis: "charisma", value: 8},
-				{axis: "dexterity", value: 4},
-				{axis: "luck", value: 9}
-			],[
-				{axis: "strength", value: 3},
-				{axis: "intelligence", value: 15},
-				{axis: "charisma", value: 4},
-				{axis: "dexterity", value: 1},
-				{axis: "luck", value: 15}
-			],[
-				{axis: "strength", value: 5},
-				{axis: "intelligence", value: 1},
-				{axis: "charisma", value: 16},
-				{axis: "dexterity", value: 10},
-				{axis: "luck", value: 5}
-			]
-		];
-		$scope.renderer = RadarChart.draw;
-	});
 
 angular.module('publicAngularApp')
 	.controller('PrincipalEnseignantCtrl', function ($scope, $http, EmploiDuTemps) {
@@ -106,3 +87,5 @@ angular.module('publicAngularApp')
 			$scope.classes = response.classes;
 		});
 	});
+
+
