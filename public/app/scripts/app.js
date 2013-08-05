@@ -64,9 +64,9 @@ angular.module('cahierDeTexteApp', [ 'ui.bootstrap',
 				templateUrl: 'views/eleve.html',
 				controller: 'EleveCtrl'
 			})
-			.state('professeur', {
-				url: '/professeur',
-				templateUrl: 'views/professeur.html',
-				controller: 'ProfesseurCtrl'
+			.state('enseignant', {
+				url: '/enseignant',
+				templateUrl: 'views/enseignant.html',
+				controller: 'EnseignantCtrl'
 			});
 	});
