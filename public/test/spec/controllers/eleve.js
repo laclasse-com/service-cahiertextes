@@ -3,7 +3,7 @@
 describe('Controller: LVeCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('publicAngularApp'));
+  beforeEach(module('cahierDeTexteApp'));
 
   var LVeCtrl,
     scope;

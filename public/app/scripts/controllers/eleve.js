@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('publicAngularApp')
+angular.module('cahierDeTexteApp')
   .controller('EleveCtrl', function ($scope) {
 	  
   })

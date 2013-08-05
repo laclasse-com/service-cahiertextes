@@ -3,7 +3,7 @@
 describe('Controller: ProfesseurCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('publicAngularApp'));
+  beforeEach(module('cahierDeTexteApp'));
 
   var ProfesseurCtrl,
     scope;

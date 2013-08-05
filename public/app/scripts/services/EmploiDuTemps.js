@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('publicAngularApp')
+angular.module('cahierDeTexteApp')
 	.service('EmploiDuTemps', function EmploiDuTemps($http) {
 		this.getMois = function() {
 			return $http.get( 'mocks/mois.json' );

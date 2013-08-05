@@ -1,5 +1,5 @@
 {
-	"name": "publicAngular",
+	"name": "cahierDeTexte",
 	"version": "0.0.0",
 	"dependencies": {
 		"angular": "latest",
