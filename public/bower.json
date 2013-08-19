@@ -16,7 +16,8 @@
 		"es5-shim": "latest",
 		"angular-scenario": "latest",
 		"d3": "latest",
-		"angular-d3": "git://github.com/beefsack/angular-d3.git#latest"
+		"angular-d3": "git://github.com/beefsack/angular-d3.git#latest",
+		"angular-ui-calendar": "latest"
 	},
 	"devDependencies": {
 		"angular-mocks": "latest",
