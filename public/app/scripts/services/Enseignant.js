@@ -1,6 +1,8 @@
 'use strict';
 
 angular.module('cahierDeTexteApp')
-  .service('Enseignant', function Enseignant() {
-    // AngularJS will instantiate a singleton by calling "new" on this function
+  .service('Enseignant', function Enseignant($http) {
+	  this.getEnseignant = function() {
+		  return $http.get( 'mocks/enseignant.json' );
+	  };
   });
