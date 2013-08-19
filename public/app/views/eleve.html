@@ -1,17 +1,17 @@
-<div data-ng-controller="EleveDisplayController">
-  <div class="navbar">
-    <div class="navbar-inner">
-      <a class="brand" href="#/eleve">Élève</a>
-      <ul class="nav">
-        <li data-ng-class="{active:tab=='cours'}">
-          <a href="#/eleve/cours" data-ng-click="tab='cours'">Cours</a>
-        </li>
-        <li data-ng-class="{active:tab=='devoirs'}">
-          <a href="#/eleve/devoirs" data-ng-click="tab='devoirs'">Devoirs</a>
-        </li>
-      </ul>
-    </div>
+<div class="navbar">
+  <div class="navbar-inner">
+    <a class="brand" href="#/eleve">Élève</a>
+    <ul class="nav">
+      <li data-ng-class="{active:tab=='cours'}">
+        <a href="#/eleve/cours" data-ng-click="tab='cours'">Cours</a>
+      </li>
+      <li data-ng-class="{active:tab=='devoirs'}">
+        <a href="#/eleve/devoirs" data-ng-click="tab='devoirs'">Devoirs</a>
+      </li>
+    </ul>
   </div>
+</div>
 
-  <div ui-view="content"></div>
+<div data-ng-controller="EleveCalendarCtrl">
+  <div data-ui-calendar="uiConfig.calendar" class="span8 calendar" ng-model="eventSources"></div>
 </div>
