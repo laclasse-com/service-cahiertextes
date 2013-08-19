@@ -1,6 +1,7 @@
 'use strict';
 
 angular.module('cahierDeTexteApp', [ 'ui.bootstrap',
+									 'ui.calendar',
 									 'ui.chart',
 									 'ui.state',
 									 'ui.select2',
