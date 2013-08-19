@@ -1,0 +1,27 @@
+{
+	"data": {"id": 1,
+			 "name": "Moroni",
+			 "email": "commander.moroni@laclasse.com",
+			 "discipline": "Physique Newtonienne",
+			 "entries": [
+				 {"classe": "3 A",
+				  "principal": true,
+				  "cours": "lsdfkjg<br /><b>hsldfkgjh</b> sldfkjgh lsdfkgjh aru ;sdlkn .,cmvn dlafgh ;aodfhj ",
+				  "work": "ldfkjg,nm<br /><em style=\"color:red\">vzxlckgyhoeirtuypqweoir</em>;<br />lmdvcxn<br />zlkjfgh<br />ai",
+				  "validated": false
+				 },
+				 {"classe": "3 B",
+				  "principal": false,
+				  "cours": "lsdfkjg hsldfkgjh sldfkjgh lsdfkgjh aru ;sdlkn .,cmvn dlafgh ;aodfhj ",
+				  "work": "ldfkjg,nm vzxlckgyhoeirtuypqweoir ;lmdvcxn zlkjfgh ai",
+				  "validated": true
+				 },
+				 {"classe": "5 T",
+				  "principal": true,
+				  "cours": "lsdfkjg hsldfkgjh sldfkjgh lsdfkgjh aru ;sdlkn .,cmvn dlafgh ;aodfhj ",
+				  "work": "ldfkjg,nm vzxlckgyhoeirtuypqweoir ;lmdvcxn zlkjfgh ai",
+				  "validated": false
+				 }
+			 ]
+			}
+}
