@@ -2,6 +2,7 @@
 source "https://rubygems.org"
 source 'http://gems.erasme.org'
 
+gem 'grape'
 gem 'nokogiri'
 gem 'sequel'
 gem 'sqlite3'
