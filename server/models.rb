@@ -12,3 +12,7 @@ Sequel::Migrator.run( DB, "migrations" )
 class TrancheHoraire < Sequel::Model(:tranche_horaire)
   plugin :json_serializer
 end
+
+class Salle < Sequel::Model(:salle)
+  plugin :json_serializer
+end

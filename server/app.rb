@@ -1,4 +1,3 @@
-#!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
 
 require 'rubygems'
@@ -28,8 +27,8 @@ module CahierDeTexte
     end
 
     resource :etablissement do
-      resource :tranche_horaire do
 
+      resource :tranche_horaire do
         #GET http://localhost:9292/etablissement/tranche_horaire/3
         desc "Renvoi une tranche horaire"
         params do
@@ -41,6 +40,20 @@ module CahierDeTexte
           end
         end
       end
+
+      resource :salle do
+        #GET http://localhost:9292/etablissement/salle/15519
+        desc "Renvoi une salle"
+        params do
+          requires :identifiant, type: String, desc: "identifiant de la salle"
+        end
+        route_param :identifiant do
+          get do
+            Salle.filter( :identifiant => params[:identifiant] )
+          end
+        end
+      end
+
     end
 
   end
