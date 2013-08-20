@@ -28,3 +28,9 @@ vagrant/
 bower_components
 node_modules
 /.ruby-version
+
+# tempoary databases
+*.sqlite3
+
+#mock data
+mocks/
