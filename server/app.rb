@@ -36,7 +36,7 @@ module CahierDeTexte
         end
         route_param :label do
           get do
-            TrancheHoraire.filter( :label => params[:label] )
+            TrancheHoraire.filter( :label => params[:label] )  #FIXME: only_time not enforced in json output
           end
         end
       end
