@@ -4,13 +4,6 @@ require 'nokogiri'
 
 require './models'
 
-# XML -> Hash avec nori
-# https://github.com/savonrb/nori
-#require 'nori'
-#parser = Nori.new(:convert_tags_to => lambda { |tag| tag.snakecase.to_sym })
-#parser.parse( File.open( "../Edt_To_LaclasseCom_0134567A_Enclair.xml" ).read )[:export_emploi_du_temps][:@uai]
-
-
 def uncrypt_ProNote_XML( xml )
   # xsd_chiffre = Nokogiri::XML::Schema( File.open( "../ConteneurExportChiffre.xsd" ) )
   # edt_chiffre = Nokogiri::XML( File.open( "../Edt_To_LaclasseCom_0134567A.xml" ) )
