@@ -96,9 +96,11 @@ module ProNote
     #   end
     # end
     
-    # edt_clair.search( "Salles" ).children.each do |salle|
-    #   print "new " + salle.name + "( " + salle["Ident"] + ", '" + salle["Nom"] + "' )\n" unless salle.name == "text"
-    # end
+    edt_clair.search( "Salles" ).children.each do |salle|
+      #print "new " + salle.name + "( " + salle["Ident"] + ", '" + salle["Nom"] + "' )\n" unless salle.name == "text"
+      Salle.create( identifiant: salle["Ident"],
+                    nom: salle["Nom"] ) unless salle.name == "text"
+    end
     
     # edt_clair.search( "Eleves" ).children.each do |eleve|
     #   print "new " + eleve.name +
