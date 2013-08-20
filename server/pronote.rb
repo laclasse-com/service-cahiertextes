@@ -51,6 +51,7 @@ module ProNote
                             fin: place["LibelleHeureFin"] ) unless place.name == "text"
     end
 
+    #Les matières sont dans l'annuaire
     # edt_clair.search( "Matieres" ).children.each do |matiere|
     #   print "new " + matiere.name + "( " +
     #     matiere["Ident"] + ", '" +
