@@ -12,4 +12,4 @@ require './models'
 require './pronote'
 
 ProNote.load_XML( File.open( "mocks/Edt_To_LaclasseCom_0134567A_Enclair.xml" ),
-                   File.open( "mocks/ExportEmploiDuTemps.xsd" ) )
+                  File.open( "mocks/ExportEmploiDuTemps.xsd" ) )
