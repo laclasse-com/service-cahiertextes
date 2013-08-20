@@ -8,11 +8,12 @@ DB = Sequel.sqlite( './cahier_de_texte.sqlite3' )
 #application des migrations
 Sequel::Migrator.run( DB, "migrations" )
 
+#tous les modèles sérialisent en JSON
+Sequel::Model.plugin :json_serializer
+
 #définition des modèles
 class TrancheHoraire < Sequel::Model(:tranche_horaire)
-  plugin :json_serializer
 end
 
 class Salle < Sequel::Model(:salle)
-  plugin :json_serializer
 end
