@@ -1,0 +1,15 @@
+GEM
+  remote: https://rubygems.org/
+  remote: http://gems.erasme.org/
+  specs:
+    mini_portile (0.5.1)
+    nokogiri (1.6.0)
+      mini_portile (~> 0.5.0)
+    sequel (4.0.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  nokogiri
+  sequel

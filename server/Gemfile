@@ -1,0 +1,7 @@
+# A sample Gemfile
+source "https://rubygems.org"
+source 'http://gems.erasme.org'
+
+gem 'nokogiri'
+gem 'sequel'
+
