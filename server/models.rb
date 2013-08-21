@@ -20,17 +20,27 @@ end
 
 class CreneauEmploiDuTemps < Sequel::Model(:creneau_emploi_du_temps)
 end
+class CreneauEmploiDuTempsSalle < Sequel::Model(:creneau_emploi_du_temps_salle)
+end
+class CreneauEmploiDuTempsEnseignant < Sequel::Model(:creneau_emploi_du_temps_enseignant)
+end
+class CreneauEmploiDuTempsRegroupement < Sequel::Model(:creneau_emploi_du_temps_regroupement)
+end
 
 class Ressource < Sequel::Model(:ressource)
 end
 
 class Cours < Sequel::Model(:cours)
 end
+class CoursRessource < Sequel::Model(:cours_ressource)
+end
 
 class TypeDevoir < Sequel::Model(:type_devoir)
 end
 
 class Devoir < Sequel::Model(:devoir)
+end
+class DevoirRessource < Sequel::Model(:devoir_ressource)
 end
 
 class CahierDeTextes < Sequel::Model(:cahier_de_textes)
