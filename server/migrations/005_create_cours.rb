@@ -10,7 +10,7 @@ Sequel.migration do
       DateTime :date_creation
       DateTime :date_modification
       DateTime :date_validation
-      String :description
+      String :contenu
       foreign_key :ressource_id, :ressource  # une seule ressource par cours ?
       TrueClass :deleted, default: false
     }
