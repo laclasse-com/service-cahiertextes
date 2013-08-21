@@ -145,30 +145,32 @@ module ProNote
         debut = PlageHoraire.filter(label: creneau_emploi_du_temps['NumeroPlaceDebut']).first[:id]
         fin = PlageHoraire.filter(label: creneau_emploi_du_temps['NumeroPlaceDebut'].to_i + creneau_emploi_du_temps['NombrePlaces'].to_i).first[:id]
         matiere_id = 0
-        enseignant = nil
-        regroupement = nil
-        salle_id = nil
 
+        creneau_emploi_du_temps.children.each do |node|  # FIXME: peut mieux faire
+          node.name == 'Matiere' && matiere_id = node['Ident']
+        end
+        creneau = CreneauEmploiDuTemps.create(jour_de_la_semaine: creneau_emploi_du_temps['Jour'], # 1: 'lundi' .. 7: 'dimanche', norme ISO-8601
+                                    debut: debut,
+                                    fin: fin,
+                                    matiere_id: matiere_id)
         creneau_emploi_du_temps.children.each do |node|
           case node.name
-          when 'Matiere'
-            matiere_id = node['Ident']
           when 'Professeur'
-            enseignant = node['Ident']
+            CreneauEmploiDuTempsEnseignant.create(creneau_emploi_du_temps_id: creneau.id,
+                                                  enseignant_id: node['Ident'],
+                                                  semaines_de_presence: node['Semaines'])
           when 'Classe', 'PartieDeClasse', 'Groupe'
             # on ne distingue pas les 3 types de regroupements
-            regroupement = node['Ident']
+            CreneauEmploiDuTempsRegroupement.create(creneau_emploi_du_temps_id: creneau.id,
+                                                    regroupement_id: node['Ident'],
+                                                    semaines_de_presence: node['Semaines'])
           when 'Salle'
-            salle_id = Salle.filter(identifiant: node['Ident']).first[:id]
+            CreneauEmploiDuTempsSalle.create(creneau_emploi_du_temps_id: creneau.id,
+                                             salle_id: Salle.filter(identifiant: node['Ident']).first[:id],
+                                             semaines_de_presence: node['Semaines'])
           end
         end
-        CreneauEmploiDuTemps.create(jour_de_la_semaine: creneau_emploi_du_temps['Jour'], # 1: 'lundi' .. 7: 'dimanche', norme ISO-8601
-                     debut: debut,
-                     fin: fin,
-                     matiere_id: matiere_id,
-                     enseignant: enseignant,
-                     regroupement: regroupement,
-                     salle_id: salle_id) unless creneau_emploi_du_temps.name == 'text'
+
       end
     end
 
