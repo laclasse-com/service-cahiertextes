@@ -5,8 +5,8 @@ Sequel.migration do
     create_table(:cours) {
       primary_key :id
       Integer :jour_de_la_semaine
-      foreign_key :debut, :tranche_horaire
-      foreign_key :fin, :tranche_horaire
+      foreign_key :debut, :plage_horaire
+      foreign_key :fin, :plage_horaire
       Integer :matiere_id, null: false
       Integer :enseignant
       Integer :regroupement
