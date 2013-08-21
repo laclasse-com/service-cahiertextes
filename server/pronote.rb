@@ -27,17 +27,16 @@ module ProNote
     #   end
     # end
 
-    code_etablissement = edt_clair.child['UAI']
-    p 'Etablissement: ' + code_etablissement
+    etablissement = Etablissement.create(UAI: edt_clair.child['UAI'])
 
-    # edt_clair.search('AnneeScolaire').each do |node|
-    #   if node.name != 'text' then
-    #     p '## ' + node.name
-    #     node.keys.each do |attr|
-    #       p '  ' + attr + ': ' + node[attr]
-    #     end
-    #   end
-    # end
+    edt_clair.search('AnneeScolaire').each do |node|
+      if node.name != 'text' then
+        etablissement.debut_annee_scolaire = node['DateDebut']
+        etablissement.fin_annee_scolaire = node['DateFin']
+        etablissement.date_premier_jour_premiere_semaine = node['DatePremierJourSemaine1']
+        etablissement.save
+      end
+    end
 
     # Inutile, calculable à partir des plages horaires
     # edt_clair.search('GrilleHoraire').each do |node|
