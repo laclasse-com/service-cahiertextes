@@ -5,12 +5,15 @@ require 'nokogiri'
 require './models'
 
 module ProNote
-  def ProNote.uncrypt_XML(xml)
-    # xsd_chiffre = Nokogiri::XML::Schema(File.open('../ConteneurExportChiffre.xsd'))
-    # edt_chiffre = Nokogiri::XML(File.open('../Edt_To_LaclasseCom_0134567A.xml'))
+  def ProNote.decrypt_XML(encrypted_xml_file, xsd_file = nil)
+    encrypted_xml = Nokogiri::XML(encrypted_xml_file)
 
-    # p xsd_chiffre.valid?(edt_chiffre) ? 'XML chiffré valide :)' : 'XML chiffré NON valide :('
+    if xsd_file != nil
+      raise 'fichier XML invalide' unless Nokogiri::XML::Schema(xsd_file).valid?(encrypted_xml)
+    end
 
+    # TODO: Here be decryption magic
+    xml = encrypted_xml_file
     xml
   end
 
