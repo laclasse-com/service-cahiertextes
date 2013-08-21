@@ -13,21 +13,21 @@ Sequel.migration do
     create_table(:creneau_emploi_du_temps_salle) {
       foreign_key :creneau_emploi_du_temps_id, :creneau_emploi_du_temps
       foreign_key :salle_id, :salle
-      Bignum :semaines_de_presence
+      Integer :semaines_de_presence
       unrestricted_primary_key [:creneau_emploi_du_temps_id, :salle_id]
     }
 
     create_table(:creneau_emploi_du_temps_enseignant) {
       foreign_key :creneau_emploi_du_temps_id, :creneau_emploi_du_temps
       Integer :enseignant_id
-      Bignum :semaines_de_presence
+      Integer :semaines_de_presence
       unrestricted_primary_key [:creneau_emploi_du_temps_id, :enseignant_id]
     }
 
     create_table(:creneau_emploi_du_temps_regroupement) {
       foreign_key :creneau_emploi_du_temps_id, :creneau_emploi_du_temps
       Integer :regroupement_id
-      Bignum :semaines_de_presence
+      Integer :semaines_de_presence
       unrestricted_primary_key [:creneau_emploi_du_temps_id, :regroupement_id]
     }
   end
