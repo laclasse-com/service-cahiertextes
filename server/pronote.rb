@@ -49,8 +49,8 @@ module ProNote
     edt_clair.search('PlacesParJour').children.each do
       |place|
       PlageHoraire.create(label: place['Numero'],
-                            debut: place['LibelleHeureDebut'],
-                            fin: place['LibelleHeureFin']) unless place.name == 'text'
+                          debut: place['LibelleHeureDebut'],
+                          fin: place['LibelleHeureFin']) unless place.name == 'text'
     end
 
     # Les matières sont dans l'annuaire
@@ -104,7 +104,7 @@ module ProNote
 
     edt_clair.search('Salles').children.each do |salle|
       Salle.create(identifiant: salle['Ident'],
-                    nom: salle['Nom']) unless salle.name == 'text'
+                   nom: salle['Nom']) unless salle.name == 'text'
     end
 
     # Les élèves sont dans l'annuaire
@@ -150,9 +150,9 @@ module ProNote
           node.name == 'Matiere' && matiere_id = node['Ident']
         end
         creneau = CreneauEmploiDuTemps.create(jour_de_la_semaine: creneau_emploi_du_temps['Jour'], # 1: 'lundi' .. 7: 'dimanche', norme ISO-8601
-                                    debut: debut,
-                                    fin: fin,
-                                    matiere_id: matiere_id)
+                                              debut: debut,
+                                              fin: fin,
+                                              matiere_id: matiere_id)
         creneau_emploi_du_temps.children.each do |node|
           case node.name
           when 'Professeur'
