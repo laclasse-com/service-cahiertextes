@@ -2,7 +2,7 @@
 
 Sequel.migration do
   change do
-    create_table(:tranche_horaire) {
+    create_table(:plage_horaire) {
       primary_key :id
       String :label
       Time :debut, only_time: true

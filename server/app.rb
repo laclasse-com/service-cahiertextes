@@ -29,15 +29,15 @@ module CahierDeTexte
 
     resource :etablissement do
 
-      resource :tranche_horaire do
-        # GET http://localhost:9292/etablissement/tranche_horaire/3
-        desc 'Renvoi une tranche horaire'
+      resource :plage_horaire do
+        # GET http://localhost:9292/etablissement/plage_horaire/3
+        desc 'Renvoi une plage horaire'
         params do
-          requires :label, type: String, desc: 'label de la tranche horaire'
+          requires :label, type: String, desc: 'label de la plage horaire'
         end
         route_param :label do
           get do
-            TrancheHoraire.filter(:label => params[:label])  # FIXME: only_time not enforced in json output
+            PlageHoraire.filter(:label => params[:label])  # FIXME: only_time not enforced in json output
           end
         end
       end

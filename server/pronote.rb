@@ -41,6 +41,7 @@ module ProNote
     #   end
     # end
 
+    # Inutile, calculable à partir des plages horaires
     # edt_clair.search('GrilleHoraire').each do |node|
     #   print 'new ' + node.name + '(' +
     #     node['NombrePlacesParJour'] + ', ' +
@@ -49,7 +50,7 @@ module ProNote
 
     edt_clair.search('PlacesParJour').children.each do
       |place|
-      TrancheHoraire.create(label: place['Numero'],
+      PlageHoraire.create(label: place['Numero'],
                             debut: place['LibelleHeureDebut'],
                             fin: place['LibelleHeureFin']) unless place.name == 'text'
     end
@@ -139,8 +140,8 @@ module ProNote
 
     edt_clair.search('Cours/Cours').each do |cours|
       unless cours.name == 'text'
-        debut = TrancheHoraire.filter(label: cours['NumeroPlaceDebut']).first[:id]
-        fin = TrancheHoraire.filter(label: cours['NumeroPlaceDebut'].to_i + cours['NombrePlaces'].to_i).first[:id]
+        debut = PlageHoraire.filter(label: cours['NumeroPlaceDebut']).first[:id]
+        fin = PlageHoraire.filter(label: cours['NumeroPlaceDebut'].to_i + cours['NombrePlaces'].to_i).first[:id]
         matiere_id = 0
         enseignant = nil
         regroupement = nil
