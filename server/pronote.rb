@@ -63,6 +63,7 @@ module ProNote
     #     matiere['Libelle'] + '')\n' unless matiere.name == 'text'
     # end
 
+    # Les enseignants sont dans l'annuaire
     # edt_clair.search('Professeurs').children.each do |professeur|
     #   print 'new ' + professeur.name + '(' +
     #     professeur['Ident'] + ', '' +
@@ -71,6 +72,7 @@ module ProNote
     #     professeur['CodePostal'] + '')\n' unless professeur.name == 'text'
     # end
 
+    # Les classes sont dans l'annuaire
     # edt_clair.search('Classes').children.each do |classe|
     #   if classe.name != 'text' then
     #     print 'new ' + classe.name + '(' +
@@ -83,6 +85,7 @@ module ProNote
     #   end
     # end
 
+    # Les groupes sont dans l'annuaire
     # edt_clair.search('Groupes').children.each do |groupe|
     #   if groupe.name != 'text' then
     #     print 'new ' + groupe.name + '(' +
@@ -106,6 +109,7 @@ module ProNote
                     nom: salle['Nom']) unless salle.name == 'text'
     end
 
+    # Les élèves sont dans l'annuaire
     # edt_clair.search('Eleves').children.each do |eleve|
     #   print 'new ' + eleve.name +
     #     '(' + eleve['Ident'] +
