@@ -4,7 +4,7 @@ Sequel.migration do
   change do
     create_table(:cours) {
       primary_key :id
-      String :jour
+      Integer :jour_de_la_semaine
       foreign_key :debut, :tranche_horaire
       foreign_key :fin, :tranche_horaire
       Integer :matiere_id, null: false
