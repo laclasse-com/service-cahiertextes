@@ -12,8 +12,8 @@ Sequel.migration do
       DateTime :date_modification
       DateTime :date_validation
       String :contenu
-      foreign_key :ressource_id, :ressource  # une seule ressource par cours ?
       TrueClass :deleted, default: false
     }
+    create_join_table(cours_id: :cours, ressource_id: :ressource)
   end
 end
