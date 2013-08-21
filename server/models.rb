@@ -48,3 +48,6 @@ end
 
 class DevoirTodoItem < Sequel::Model(:devoir_todo_item)
 end
+
+class Etablissement < Sequel::Model(:etablissement)
+end
