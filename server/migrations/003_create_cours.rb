@@ -9,9 +9,7 @@ Sequel.migration do
       foreign_key :fin, :tranche_horaire
       Integer :matiere_id, null: false
       Integer :enseignant
-      Integer :classe
-      Integer :partie_de_classe
-      Integer :groupe
+      Integer :regroupement
       foreign_key :salle_id, :salle
     }
   end

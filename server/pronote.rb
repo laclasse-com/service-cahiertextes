@@ -143,9 +143,7 @@ module ProNote
         fin = TrancheHoraire.filter(label: cours['NumeroPlaceDebut'].to_i + cours['NombrePlaces'].to_i).first[:id]
         matiere_id = 0
         enseignant = nil
-        classe = nil
-        partie_de_classe = nil
-        groupe = nil
+        regroupement = nil
         salle_id = nil
 
         cours.children.each do |node|
@@ -154,12 +152,9 @@ module ProNote
             matiere_id = node['Ident']
           when 'Professeur'
             enseignant = node['Ident']
-          when 'Classe'
-            classe = node['Ident']
-          when 'PartieDeClasse'
-            partie_de_classe = node['Ident']
-          when 'Groupe'
-            groupe = node['Ident']
+          when 'Classe', 'PartieDeClasse', 'Groupe'
+            # on ne distingue pas les 3 types de regroupements
+            regroupement = node['Ident']
           when 'Salle'
             salle_id = Salle.filter(identifiant: node['Ident']).first[:id]
           end
@@ -169,9 +164,7 @@ module ProNote
                      fin: fin,
                      matiere_id: matiere_id,
                      enseignant: enseignant,
-                     classe: classe,
-                     partie_de_classe: partie_de_classe,
-                     groupe: groupe,
+                     regroupement: regroupement,
                      salle_id: salle_id) unless cours.name == 'text'
       end
     end
