@@ -14,7 +14,7 @@ module ProNote
     xml
   end
 
-  def ProNote.load_XML(xml_file, xsd_file=nil)
+  def ProNote.load_XML(xml_file, xsd_file = nil)
     edt_clair = Nokogiri::XML(xml_file)
 
     # TODO: use XSD defined in XML
