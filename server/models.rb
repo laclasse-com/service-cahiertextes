@@ -20,3 +20,6 @@ end
 
 class Cours < Sequel::Model(:cours)
 end
+
+class Ressource < Sequel::Model(:ressource)
+end
