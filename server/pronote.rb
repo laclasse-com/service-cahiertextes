@@ -8,9 +8,7 @@ module ProNote
   def ProNote.decrypt_XML(encrypted_xml_file, xsd_file = nil)
     encrypted_xml = Nokogiri::XML(encrypted_xml_file)
 
-    if xsd_file != nil
-      raise 'fichier XML invalide' unless Nokogiri::XML::Schema(xsd_file).valid?(encrypted_xml)
-    end
+    raise 'fichier XML invalide' unless xsd_file != nil && Nokogiri::XML::Schema(xsd_file).valid?(encrypted_xml)
 
     # TODO: Here be decryption magic
     xml = encrypted_xml_file
