@@ -7,8 +7,10 @@ Sequel.migration do
       foreign_key :cours_id, :cours
       foreign_key :type_devoir_id, :type_devoir
       foreign_key :ressource_id, :ressource  # une seule ressource par cours ?
-      Date :date_creation
       String :contenu
+      DateTime :date_creation
+      DateTime :date_modification
+      DateTime :date_validation
       Date :date_due
       Integer :temps_estime
     }
