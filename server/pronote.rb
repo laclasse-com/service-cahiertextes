@@ -159,7 +159,7 @@ module ProNote
             salle_id = Salle.filter(identifiant: node['Ident']).first[:id]
           end
         end
-        Cours.create(jour: cours['Jour'],
+        Cours.create(jour_de_la_semaine: cours['Jour'], # 1: 'lundi' .. 7: 'dimanche', norme ISO-8601
                      debut: debut,
                      fin: fin,
                      matiere_id: matiere_id,
