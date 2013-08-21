@@ -135,21 +135,44 @@ module ProNote
     #   end
     # end
     
-    # edt_clair.search( "Cours" ).children.each do |cours|
-    #   print "new " + cours.name +
-    #     "(" + cours["Jour"] +
-    #     ", " + cours["NumeroPlaceDebut"] +
-    #     ", " + cours["NombrePlaces"] +
-    #     ")\n" unless cours.name == "text" || !cours.has_attribute?("Jour")
-    #   cours.children.each do |node|
-    #     case node.name
-    #     when "Matiere"
-    #       print "  :matiere => " + node["Ident"] + "\n"
-    #     else
-    #       print "  :" + node.name + "[" + node["Ident"] + "] => semaines(" + node["Semaines"] + ")\n" if node.has_attribute?("Ident")
-    #     end
-    #   end
-    # end
+    edt_clair.search( "Cours/Cours" ).each do |cours|
+      unless cours.name == "text"
+        debut = TrancheHoraire.filter(label: cours["NumeroPlaceDebut"]).first[:id]
+        fin = TrancheHoraire.filter(label: cours["NumeroPlaceDebut"].to_i + cours["NombrePlaces"].to_i).first[:id]
+        matiere_id = 0
+        enseignant = nil
+        classe = nil
+        partie_de_classe = nil
+        groupe = nil
+        salle_id = nil
+
+        cours.children.each do |node|
+          case node.name
+          when "Matiere"
+            matiere_id = node["Ident"]
+          when "Professeur"
+            enseignant = node["Ident"]
+          when "Classe"
+            classe = node["Ident"]
+          when "PartieDeClasse"
+            partie_de_classe = node["Ident"]
+          when "Groupe"
+            groupe = node["Ident"]
+          when "Salle"
+            salle_id = Salle.filter(identifiant: node["Ident"]).first[:id]
+          end
+        end
+        Cours.create(jour: cours["Jour"],
+                     debut: debut,
+                     fin: fin,
+                     matiere_id: matiere_id,
+                     enseignant: enseignant,
+                     classe: classe,
+                     partie_de_classe: partie_de_classe,
+                     groupe: groupe,
+                     salle_id: salle_id) unless cours.name == "text"
+      end
+    end
 
   end
 
