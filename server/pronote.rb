@@ -140,16 +140,16 @@ module ProNote
     #   end
     # end
 
-    edt_clair.search('Cours/Cours').each do |cours|
-      unless cours.name == 'text'
-        debut = PlageHoraire.filter(label: cours['NumeroPlaceDebut']).first[:id]
-        fin = PlageHoraire.filter(label: cours['NumeroPlaceDebut'].to_i + cours['NombrePlaces'].to_i).first[:id]
+    edt_clair.search('Cours/Cours').each do |creneau_emploi_du_temps|
+      unless creneau_emploi_du_temps.name == 'text'
+        debut = PlageHoraire.filter(label: creneau_emploi_du_temps['NumeroPlaceDebut']).first[:id]
+        fin = PlageHoraire.filter(label: creneau_emploi_du_temps['NumeroPlaceDebut'].to_i + creneau_emploi_du_temps['NombrePlaces'].to_i).first[:id]
         matiere_id = 0
         enseignant = nil
         regroupement = nil
         salle_id = nil
 
-        cours.children.each do |node|
+        creneau_emploi_du_temps.children.each do |node|
           case node.name
           when 'Matiere'
             matiere_id = node['Ident']
@@ -162,13 +162,13 @@ module ProNote
             salle_id = Salle.filter(identifiant: node['Ident']).first[:id]
           end
         end
-        Cours.create(jour_de_la_semaine: cours['Jour'], # 1: 'lundi' .. 7: 'dimanche', norme ISO-8601
+        CreneauEmploiDuTemps.create(jour_de_la_semaine: creneau_emploi_du_temps['Jour'], # 1: 'lundi' .. 7: 'dimanche', norme ISO-8601
                      debut: debut,
                      fin: fin,
                      matiere_id: matiere_id,
                      enseignant: enseignant,
                      regroupement: regroupement,
-                     salle_id: salle_id) unless cours.name == 'text'
+                     salle_id: salle_id) unless creneau_emploi_du_temps.name == 'text'
       end
     end
 
