@@ -29,3 +29,6 @@ end
 
 class TypeDevoir < Sequel::Model(:type_devoir)
 end
+
+class Devoir < Sequel::Model(:devoir)
+end
