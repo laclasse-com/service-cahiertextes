@@ -35,3 +35,6 @@ end
 
 class CahierDeTextes < Sequel::Model(:cahier_de_textes)
 end
+
+class DevoirTodoItem < Sequel::Model(:devoir_todo_item)
+end
