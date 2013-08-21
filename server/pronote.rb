@@ -165,7 +165,7 @@ module ProNote
                                                     semaines_de_presence: node['Semaines'])
           when 'Salle'
             CreneauEmploiDuTempsSalle.create(creneau_emploi_du_temps_id: creneau.id,
-                                             salle_id: Salle.filter(identifiant: node['Ident']).first[:id],
+                                             salle_id: Salle[identifiant: node['Ident']][:id],
                                              semaines_de_presence: node['Semaines'])
           end
         end
