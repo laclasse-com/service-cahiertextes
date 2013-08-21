@@ -2,16 +2,16 @@
 require 'sequel'
 require 'sequel/extensions/migration'
 
-#Connexion DB
-DB = Sequel.sqlite( './cahier_de_texte.sqlite3' )
+# Connexion DB
+DB = Sequel.sqlite('./cahier_de_texte.sqlite3')
 
-#application des migrations
-Sequel::Migrator.run( DB, "migrations" )
+# application des migrations
+Sequel::Migrator.run(DB, 'migrations')
 
-#tous les modèles sérialisent en JSON
+# tous les modèles sérialisent en JSON
 Sequel::Model.plugin :json_serializer
 
-#définition des modèles
+# définition des modèles
 class PlageHoraire < Sequel::Model(:plage_horaire)
 end
 
