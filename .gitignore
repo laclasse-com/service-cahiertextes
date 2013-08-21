@@ -32,5 +32,7 @@ node_modules
 # tempoary databases
 *.sqlite3
 
-#mock data
+# mock data
 mocks/
+
+.ruby-version
