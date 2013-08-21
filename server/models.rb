@@ -26,3 +26,6 @@ end
 
 class Cours < Sequel::Model(:cours)
 end
+
+class TypeDevoir < Sequel::Model(:type_devoir)
+end
