@@ -17,3 +17,6 @@ end
 
 class Salle < Sequel::Model(:salle)
 end
+
+class Cours < Sequel::Model(:cours)
+end
