@@ -18,9 +18,10 @@ module CahierDeTexte
 
     helpers do
       def current_user
-        #TODO: @current_user ||= User.authorize!(env)
+        # TODO: @current_user ||= User.authorize!(env)
         true
       end
+
       def authenticate!
         error!('401 Unauthorized', 401) unless current_user
       end
@@ -29,27 +30,27 @@ module CahierDeTexte
     resource :etablissement do
 
       resource :tranche_horaire do
-        #GET http://localhost:9292/etablissement/tranche_horaire/3
-        desc "Renvoi une tranche horaire"
+        # GET http://localhost:9292/etablissement/tranche_horaire/3
+        desc 'Renvoi une tranche horaire'
         params do
-          requires :label, type: String, desc: "label de la tranche horaire"
+          requires :label, type: String, desc: 'label de la tranche horaire'
         end
         route_param :label do
           get do
-            TrancheHoraire.filter( :label => params[:label] )  #FIXME: only_time not enforced in json output
+            TrancheHoraire.filter(:label => params[:label])  # FIXME: only_time not enforced in json output
           end
         end
       end
 
       resource :salle do
-        #GET http://localhost:9292/etablissement/salle/15519
-        desc "Renvoi une salle"
+        # GET http://localhost:9292/etablissement/salle/15519
+        desc 'Renvoi une salle'
         params do
-          requires :identifiant, type: String, desc: "identifiant de la salle"
+          requires :identifiant, type: String, desc: 'identifiant de la salle'
         end
         route_param :identifiant do
           get do
-            Salle.filter( :identifiant => params[:identifiant] )
+            Salle.filter(identifiant: params[:identifiant])
           end
         end
       end
@@ -59,5 +60,5 @@ module CahierDeTexte
   end
 end
 
-ProNote.load_XML( File.open( "mocks/Edt_To_LaclasseCom_0134567A_Enclair.xml" ),
-                  File.open( "mocks/ExportEmploiDuTemps.xsd" ) )
+ProNote.load_XML(File.open('mocks/Edt_To_LaclasseCom_0134567A_Enclair.xml'),
+                 File.open('mocks/ExportEmploiDuTemps.xsd'))
