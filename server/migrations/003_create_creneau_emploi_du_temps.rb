@@ -2,7 +2,7 @@
 
 Sequel.migration do
   change do
-    create_table(:cours) {
+    create_table(:creneau_emploi_du_temps) {
       primary_key :id
       Integer :jour_de_la_semaine
       foreign_key :debut, :plage_horaire

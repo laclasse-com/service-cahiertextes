@@ -18,7 +18,7 @@ end
 class Salle < Sequel::Model(:salle)
 end
 
-class Cours < Sequel::Model(:cours)
+class CreneauEmploiDuTemps < Sequel::Model(:creneau_emploi_du_temps)
 end
 
 class Ressource < Sequel::Model(:ressource)
