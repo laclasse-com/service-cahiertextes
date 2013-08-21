@@ -5,6 +5,7 @@ Sequel.migration do
     create_table(:cours) {
       primary_key :id
       foreign_key :creneau_emploi_du_temps_id, :creneau_emploi_du_temps
+      foreign_key :cahier_de_textes_id, :cahier_de_textes
       Integer :user_id  # enseignant
       Date :date_cours
       DateTime :date_creation
