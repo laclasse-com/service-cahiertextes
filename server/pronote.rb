@@ -5,22 +5,22 @@ require 'nokogiri'
 require './models'
 
 module ProNote
-  def ProNote.decrypt_XML(encrypted_xml_file, xsd_file = nil)
-    encrypted_xml = Nokogiri::XML(encrypted_xml_file)
+  def ProNote.decrypt_XML(encrypted_xml, xsd = nil)
+    encrypted_xml = Nokogiri::XML(encrypted_xml)
 
-    raise 'fichier XML invalide' unless xsd_file != nil && Nokogiri::XML::Schema(xsd_file).valid?(encrypted_xml)
+    raise 'fichier XML invalide' unless xsd != nil && Nokogiri::XML::Schema(xsd).valid?(encrypted_xml)
 
     # TODO: Here be decryption magic
-    xml = encrypted_xml_file
+    xml = encrypted_xml
     xml
   end
 
-  def ProNote.load_XML(xml_file, xsd_file = nil)
-    edt_clair = Nokogiri::XML(xml_file)
+  def ProNote.load_XML(xml, xsd = nil)
+    edt_clair = Nokogiri::XML(xml)
 
     # TODO: use XSD defined in XML
-    # if xsd_file != nil then
-    #   xsd = Nokogiri::XML::Schema(xsd_file)
+    # if xsd != nil then
+    #   xsd = Nokogiri::XML::Schema(xsd)
     #   if ! xsd.valid?(edt_clair) then
     #     p xsd.validate(edt_clair)
     #     return
