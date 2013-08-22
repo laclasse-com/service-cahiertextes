@@ -2,8 +2,7 @@
 require 'sequel'
 require 'sequel/extensions/migration'
 
-# Connexion DB
-DB = Sequel.sqlite('./cahier_de_texte.sqlite3')
+require_relative '../config/database'
 
 # application des migrations
 Sequel::Migrator.run(DB, 'migrations')
