@@ -1,5 +1,6 @@
 # coding: utf-8
-require './database_types'
+
+require_relative '../lib/database_types.rb'
 
 Sequel.migration do
   change do
