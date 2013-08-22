@@ -167,16 +167,19 @@ module ProNote
             CreneauEmploiDuTempsEnseignant.create(creneau_emploi_du_temps_id: creneau.id,
                                                   enseignant_id: node['Ident'],
                                                   semaines_de_presence: node['Semaines'])
+            CreneauEmploiDuTempsEnseignant.restrict_primary_key
           when 'Classe', 'PartieDeClasse', 'Groupe' # on ne distingue pas les 3 types de regroupements
             CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
             CreneauEmploiDuTempsRegroupement.create(creneau_emploi_du_temps_id: creneau.id,
                                                     regroupement_id: node['Ident'],
                                                     semaines_de_presence: node['Semaines'])
+            CreneauEmploiDuTempsRegroupement.restrict_primary_key
           when 'Salle'
             CreneauEmploiDuTempsSalle.unrestrict_primary_key
             CreneauEmploiDuTempsSalle.create(creneau_emploi_du_temps_id: creneau.id,
                                              salle_id: Salle[identifiant: node['Ident']][:id],
                                              semaines_de_presence: node['Semaines'])
+            CreneauEmploiDuTempsSalle.restrict_primary_key
           end
         end
         STDERR.putc '.'
