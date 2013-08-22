@@ -14,7 +14,11 @@ Sequel::Model.plugin :json_serializer
 class PlageHoraire < Sequel::Model(:plage_horaire)
 end
 
+class Etablissement < Sequel::Model(:etablissement)
+end
+
 class Salle < Sequel::Model(:salle)
+  many_to_one :etablissement
 end
 
 class CreneauEmploiDuTemps < Sequel::Model(:creneau_emploi_du_temps)
@@ -53,7 +57,4 @@ end
 
 class DevoirTodoItem < Sequel::Model(:devoir_todo_item)
   many_to_one :devoir
-end
-
-class Etablissement < Sequel::Model(:etablissement)
 end
