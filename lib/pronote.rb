@@ -27,6 +27,7 @@ module ProNote
     #   end
     # end
 
+    STDERR.puts 'chargement Etablissement'
     etablissement = Etablissement.create(UAI: edt_clair.child['UAI'])
 
     edt_clair.search('AnneeScolaire').each do |node|
@@ -45,12 +46,15 @@ module ProNote
     #     node['DureePlace'] + ')\n' unless node.name == 'text'
     # end
 
+    STDERR.puts 'chargement Plages Horaires'
     edt_clair.search('PlacesParJour').children.each do
       |place|
       PlageHoraire.create(label: place['Numero'],
                           debut: place['LibelleHeureDebut'],
                           fin: place['LibelleHeureFin']) unless place.name == 'text'
+      STDERR.putc '.'
     end
+    STDERR.puts
 
     # Les matières sont dans l'annuaire
     # edt_clair.search('Matieres').children.each do |matiere|
@@ -101,10 +105,13 @@ module ProNote
     #   end
     # end
 
+    STDERR.puts 'chargement Salles'
     edt_clair.search('Salles').children.each do |salle|
       Salle.create(identifiant: salle['Ident'],
                    nom: salle['Nom']) unless salle.name == 'text'
+      STDERR.putc '.'
     end
+    STDERR.puts
 
     # Les élèves sont dans l'annuaire
     # edt_clair.search('Eleves').children.each do |eleve|
@@ -139,6 +146,7 @@ module ProNote
     #   end
     # end
 
+    STDERR.puts 'chargement Créneaux d\'Emploi du Temps'
     edt_clair.search('Cours/Cours').each do |creneau_emploi_du_temps|
       unless creneau_emploi_du_temps.name == 'text'
         debut = PlageHoraire.filter(label: creneau_emploi_du_temps['NumeroPlaceDebut']).first[:id]
@@ -171,9 +179,12 @@ module ProNote
                                              semaines_de_presence: node['Semaines'])
           end
         end
-
+        STDERR.putc '.'
       end
     end
+    STDERR.puts
+
+    STDERR.puts 'Terminé \\o/'
 
   end
 
