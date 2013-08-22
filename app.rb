@@ -1,38 +1,66 @@
-# This file contains your application, it requires dependencies and necessary parts of 
-# the application.
-#
-# It will be required from either `config.ru` or `start.rb`
-#
-# Launch commande : bundle exec thin start -p 7000
-#
+# -*- coding: utf-8 -*-
+
 require 'rubygems'
-require 'ramaze'
+require 'bundler/setup'
 
-# Make sure that Ramaze knows where you are
-Ramaze.options.roots = [__DIR__]
-
-# Dependencies. Enable what you need.
-require 'yaml'
+require 'grape'
+require 'nokogiri'
 require 'sequel'
-require 'ramaze/helper/user'
-require 'json'
-#require 'fra-cas'
-#require 'sixpack'
+require 'sequel/extensions/migration'
 
-# Reading YAML Config.
-def readconf
-  conf = Hash.new
-  Dir.glob('./config/*.yml').each { |f| 
-    puts "Loading " + f + "..." 
-    conf.merge! YAML::load(File.open(f))    
-  } 
-  conf
+require './models'
+require './pronote'
+
+module CahierDeTexte
+  class API < Grape::API
+    version 'v0', using: :header, vendor: 'laclasse.com'
+    format :json
+
+    helpers do
+      def current_user
+        # TODO: @current_user ||= User.authorize!(env)
+        true
+      end
+
+      def authenticate!
+        error!('401 Unauthorized', 401) unless current_user
+      end
+    end
+
+    resource :etablissement do
+
+      resource :plage_horaire do
+        # GET http://localhost:9292/etablissement/plage_horaire/3
+        desc 'Renvoi une plage horaire'
+        params do
+          requires :label, type: String, desc: 'label de la plage horaire'
+        end
+        route_param :label do
+          get do
+            PlageHoraire.filter(:label => params[:label])  # FIXME: only_time not enforced in json output
+          end
+        end
+      end
+
+      resource :salle do
+        # GET http://localhost:9292/etablissement/salle/15519
+        desc 'Renvoi une salle'
+        params do
+          requires :identifiant, type: String, desc: 'identifiant de la salle'
+        end
+        route_param :identifiant do
+          get do
+            Salle.filter(identifiant: params[:identifiant])
+          end
+        end
+      end
+
+    end
+
+  end
 end
 
-CFG = readconf
-
-# Initialize controllers and models
-require __DIR__('config/init') 
-require __DIR__('model/init')
-require __DIR__('controller/init')
-
+ProNote.decrypt_XML(File.open('mocks/Edt_To_LaclasseCom_0134567A.xml'),
+                    File.open('mocks/ConteneurExportChiffre.xsd'))
+ProNote.load_XML(File.open('mocks/Edt_To_LaclasseCom_0134567A_Enclair.xml'),
+                 File.open('mocks/ExportEmploiDuTemps.xsd'))
