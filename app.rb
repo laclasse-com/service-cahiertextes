@@ -8,8 +8,8 @@ require 'nokogiri'
 require 'sequel'
 require 'sequel/extensions/migration'
 
-require './models'
-require './pronote'
+require_relative './models/models'
+require_relative './lib/pronote'
 
 module CahierDeTexte
   class API < Grape::API

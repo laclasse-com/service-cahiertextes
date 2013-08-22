@@ -2,7 +2,7 @@
 
 require 'nokogiri'
 
-require './models'
+require_relative './models/models'
 
 module ProNote
   def ProNote.decrypt_XML(encrypted_xml, xsd = nil)
