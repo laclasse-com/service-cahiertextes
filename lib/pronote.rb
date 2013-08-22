@@ -155,15 +155,17 @@ module ProNote
         creneau_emploi_du_temps.children.each do |node|
           case node.name
           when 'Professeur'
+            CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
             CreneauEmploiDuTempsEnseignant.create(creneau_emploi_du_temps_id: creneau.id,
                                                   enseignant_id: node['Ident'],
                                                   semaines_de_presence: node['Semaines'])
-          when 'Classe', 'PartieDeClasse', 'Groupe'
-            # on ne distingue pas les 3 types de regroupements
+          when 'Classe', 'PartieDeClasse', 'Groupe' # on ne distingue pas les 3 types de regroupements
+            CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
             CreneauEmploiDuTempsRegroupement.create(creneau_emploi_du_temps_id: creneau.id,
                                                     regroupement_id: node['Ident'],
                                                     semaines_de_presence: node['Semaines'])
           when 'Salle'
+            CreneauEmploiDuTempsSalle.unrestrict_primary_key
             CreneauEmploiDuTempsSalle.create(creneau_emploi_du_temps_id: creneau.id,
                                              salle_id: Salle[identifiant: node['Ident']][:id],
                                              semaines_de_presence: node['Semaines'])
