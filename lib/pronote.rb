@@ -107,7 +107,8 @@ module ProNote
 
     STDERR.puts 'chargement Salles'
     edt_clair.search('Salles').children.each do |salle|
-      Salle.create(identifiant: salle['Ident'],
+      Salle.create(etablissement_id: etablissement.id,
+                   identifiant: salle['Ident'],
                    nom: salle['Nom']) unless salle.name == 'text'
       STDERR.putc '.'
     end
