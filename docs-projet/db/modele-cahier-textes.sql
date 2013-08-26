@@ -1,207 +1,286 @@
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
-
--- -----------------------------------------------------
--- Table `cahiertxt`.`cahier_textes`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `cahiertxt`.`cahier_textes` ;
-
-CREATE  TABLE IF NOT EXISTS `cahiertxt`.`cahier_textes` (
-  `id` INT NOT NULL AUTO_INCREMENT COMMENT 'identifiant unique du cahier de textes' ,
-  `regrpnt_id` INT NOT NULL COMMENT 'identifiant unique du regroupement auquel le cahier de textes est attaché' ,
-  `lib` VARCHAR(45) NULL COMMENT 'Libellé affiché du cahier de textes : ex cahier de textes de la 6eme2.' ,
-  `deb_annee_scolaire` DECIMAL(10,0) NOT NULL COMMENT 'millésime de début de l\'année scolaire' ,
-  `fin_annee_scolaire` DECIMAL(10,0) NOT NULL COMMENT 'millésime de la fin de l\'année scolaire' ,
-  `date_creation` DATETIME NULL ,
-  `deleted` TINYINT(1) NULL DEFAULT false ,
-  PRIMARY KEY (`id`) )
-ENGINE = InnoDB;
-
+CREATE SCHEMA IF NOT EXISTS `cahierdetextes` DEFAULT CHARACTER SET latin1 ;
+USE `cahierdetextes` ;
 
 -- -----------------------------------------------------
--- Table `cahiertxt`.`plage_horaire`
+-- Table `cahierdetextes`.`cahier_de_textes`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `cahiertxt`.`plage_horaire` ;
-
-CREATE  TABLE IF NOT EXISTS `cahiertxt`.`plage_horaire` (
-  `id` VARCHAR(10) NOT NULL ,
+CREATE  TABLE IF NOT EXISTS `cahierdetextes`.`cahier_de_textes` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `regroupement_id` INT(11) NULL DEFAULT NULL ,
+  `debut_annee_scolaire` DATE NULL DEFAULT NULL ,
+  `fin_annee_scolaire` DATE NULL DEFAULT NULL ,
+  `date_creation` DATETIME NULL DEFAULT NULL ,
+  `label` VARCHAR(255) NULL DEFAULT NULL ,
+  `deleted` TINYINT(1) NULL DEFAULT '0' ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-COMMENT = 'Toutes les plage horaire de M1 à M5, et de S1 à S5';
+DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `cahiertxt`.`cours`
+-- Table `cahierdetextes`.`plage_horaire`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `cahiertxt`.`cours` ;
-
-CREATE  TABLE IF NOT EXISTS `cahiertxt`.`cours` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `usr_id` VARCHAR(16) NOT NULL COMMENT 'id de l\'utilisateur qui a saisi ce cours.' ,
-  `mat_id` VARCHAR(16) NOT NULL COMMENT 'code matière de l\'éducation nationale' ,
-  `cahier_textes_id` INT NOT NULL ,
-  `Ressource_id` INT NULL ,
-  `plage_horaire_id` VARCHAR(10) NOT NULL ,
-  `contenu` TEXT NOT NULL ,
-  `date_cours` DATETIME NULL COMMENT 'date à laquelle a eu lieu le cours' ,
-  `date_creation` DATETIME NULL COMMENT 'date de création bdd de cet enregistrement' ,
-  `date_modif` DATETIME NULL COMMENT 'date de modification bdd de cet enregistrement' ,
-  `date_valid` DATETIME NULL COMMENT 'date de validation de cette saisie par le principal' ,
-  `deleted` TINYINT(1) NOT NULL DEFAULT false COMMENT 'Flag de suppression, si true a lors l\'enregistrement est considéré comme supprimé. Cela permet d\'implémenter une suppression logique plutôt que physique.' ,
-  PRIMARY KEY (`id`) ,
-  INDEX `fk_cours_cahier_textes1` (`cahier_textes_id` ASC) ,
-  INDEX `crs_mat_id_idx` USING BTREE (`mat_id` ASC) ,
-  INDEX `crs_usr_id_idx` (`usr_id` ASC) ,
-  INDEX `fk_cours_plage_horaire1` (`plage_horaire_id` ASC) ,
-  CONSTRAINT `fk_cours_cahier_textes1`
-    FOREIGN KEY (`cahier_textes_id` )
-    REFERENCES `cahiertxt`.`cahier_textes` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_cours_plage_horaire1`
-    FOREIGN KEY (`plage_horaire_id` )
-    REFERENCES `cahiertxt`.`plage_horaire` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `cahiertxt`.`type_devoir`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `cahiertxt`.`type_devoir` ;
-
-CREATE  TABLE IF NOT EXISTS `cahiertxt`.`type_devoir` (
-  `id` INT NOT NULL ,
-  `lib` VARCHAR(80) NULL ,
-  `description` TEXT NULL ,
+CREATE  TABLE IF NOT EXISTS `cahierdetextes`.`plage_horaire` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `label` VARCHAR(255) NULL DEFAULT NULL ,
+  `debut` TIME NULL DEFAULT NULL ,
+  `fin` TIME NULL DEFAULT NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-COMMENT = 'Tpe de devoir : DS, DM, Exposé, ....';
+AUTO_INCREMENT = 21
+DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `cahiertxt`.`devoir`
+-- Table `cahierdetextes`.`creneau_emploi_du_temps`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `cahiertxt`.`devoir` ;
-
-CREATE  TABLE IF NOT EXISTS `cahiertxt`.`devoir` (
-  `id` INT NOT NULL AUTO_INCREMENT COMMENT 'clé primaire' ,
-  `Type_devoir_id` INT NOT NULL ,
-  `cours_id` INT NULL ,
-  `Ressource_id` INT NULL ,
-  `contenu` TEXT NULL COMMENT 'contenu des devoirs' ,
-  `temps_estime` INT NULL COMMENT 'temps de travail estimé en minutes' ,
-  `date_devoir` DATETIME NULL COMMENT 'date de rendu du devoir' ,
-  `date_creation` DATETIME NULL COMMENT 'date de création bdd de cet enregistrement' ,
-  `date_modif` DATETIME NULL ,
-  `date_valid` DATETIME NULL COMMENT 'date de validation de cette entrée.' ,
+CREATE  TABLE IF NOT EXISTS `cahierdetextes`.`creneau_emploi_du_temps` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `jour_de_la_semaine` INT(11) NULL DEFAULT NULL ,
+  `debut` INT(11) NULL DEFAULT NULL ,
+  `fin` INT(11) NULL DEFAULT NULL ,
+  `matiere_id` INT(11) NOT NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `fk_Devoirs_Type_devoir` (`Type_devoir_id` ASC) ,
-  INDEX `fk_devoir_cours1` (`cours_id` ASC) ,
-  CONSTRAINT `fk_Devoirs_Type_devoir`
-    FOREIGN KEY (`Type_devoir_id` )
-    REFERENCES `cahiertxt`.`type_devoir` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_devoir_cours1`
+  INDEX `debut` (`debut` ASC) ,
+  INDEX `fin` (`fin` ASC) ,
+  CONSTRAINT `creneau_emploi_du_temps_ibfk_1`
+    FOREIGN KEY (`debut` )
+    REFERENCES `cahierdetextes`.`plage_horaire` (`id` ),
+  CONSTRAINT `creneau_emploi_du_temps_ibfk_2`
+    FOREIGN KEY (`fin` )
+    REFERENCES `cahierdetextes`.`plage_horaire` (`id` ))
+ENGINE = InnoDB
+AUTO_INCREMENT = 702
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `cahierdetextes`.`cours`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `cahierdetextes`.`cours` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `creneau_emploi_du_temps_id` INT(11) NULL DEFAULT NULL ,
+  `cahier_de_textes_id` INT(11) NULL DEFAULT NULL ,
+  `enseignant_id` INT(11) NULL DEFAULT NULL ,
+  `date_cours` DATE NULL DEFAULT NULL ,
+  `date_creation` DATETIME NULL DEFAULT NULL ,
+  `date_modification` DATETIME NULL DEFAULT NULL ,
+  `date_validation` DATETIME NULL DEFAULT NULL ,
+  `contenu` VARCHAR(255) NULL DEFAULT NULL ,
+  `deleted` TINYINT(1) NULL DEFAULT '0' ,
+  PRIMARY KEY (`id`) ,
+  INDEX `creneau_emploi_du_temps_id` (`creneau_emploi_du_temps_id` ASC) ,
+  INDEX `cahier_de_textes_id` (`cahier_de_textes_id` ASC) ,
+  CONSTRAINT `cours_ibfk_1`
+    FOREIGN KEY (`creneau_emploi_du_temps_id` )
+    REFERENCES `cahierdetextes`.`creneau_emploi_du_temps` (`id` ),
+  CONSTRAINT `cours_ibfk_2`
+    FOREIGN KEY (`cahier_de_textes_id` )
+    REFERENCES `cahierdetextes`.`cahier_de_textes` (`id` ))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `cahierdetextes`.`ressource`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `cahierdetextes`.`ressource` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `label` VARCHAR(255) NULL DEFAULT NULL ,
+  `doc_id` INT(11) NULL DEFAULT NULL ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `cahierdetextes`.`cours_ressource`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `cahierdetextes`.`cours_ressource` (
+  `cours_id` INT(11) NOT NULL ,
+  `ressource_id` INT(11) NOT NULL ,
+  PRIMARY KEY (`cours_id`, `ressource_id`) ,
+  INDEX `cours_ressource_ressource_id_cours_id_index` (`ressource_id` ASC, `cours_id` ASC) ,
+  CONSTRAINT `cours_ressource_ibfk_1`
     FOREIGN KEY (`cours_id` )
-    REFERENCES `cahiertxt`.`cours` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `cahierdetextes`.`cours` (`id` ),
+  CONSTRAINT `cours_ressource_ibfk_2`
+    FOREIGN KEY (`ressource_id` )
+    REFERENCES `cahierdetextes`.`ressource` (`id` ))
 ENGINE = InnoDB
-COMMENT = 'Tables des devoirs. \nUn devoir est focément léi à un cours.';
+DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `cahiertxt`.`ressource`
+-- Table `cahierdetextes`.`creneau_emploi_du_temps_enseignant`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `cahiertxt`.`ressource` ;
+CREATE  TABLE IF NOT EXISTS `cahierdetextes`.`creneau_emploi_du_temps_enseignant` (
+  `creneau_emploi_du_temps_id` INT(11) NOT NULL DEFAULT '0' ,
+  `enseignant_id` INT(11) NOT NULL DEFAULT '0' ,
+  `semaines_de_presence` BIGINT(20) NULL DEFAULT NULL ,
+  PRIMARY KEY (`creneau_emploi_du_temps_id`, `enseignant_id`) ,
+  CONSTRAINT `creneau_emploi_du_temps_enseignant_ibfk_1`
+    FOREIGN KEY (`creneau_emploi_du_temps_id` )
+    REFERENCES `cahierdetextes`.`creneau_emploi_du_temps` (`id` ))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
 
-CREATE  TABLE IF NOT EXISTS `cahiertxt`.`ressource` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `lib` VARCHAR(80) NOT NULL ,
-  `doc_id` INT NOT NULL COMMENT 'id de la ressource émanant du service de gestion documentaire.' ,
+
+-- -----------------------------------------------------
+-- Table `cahierdetextes`.`creneau_emploi_du_temps_regroupement`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `cahierdetextes`.`creneau_emploi_du_temps_regroupement` (
+  `creneau_emploi_du_temps_id` INT(11) NOT NULL DEFAULT '0' ,
+  `regroupement_id` INT(11) NOT NULL DEFAULT '0' ,
+  `semaines_de_presence` BIGINT(20) NULL DEFAULT NULL ,
+  PRIMARY KEY (`creneau_emploi_du_temps_id`, `regroupement_id`) ,
+  CONSTRAINT `creneau_emploi_du_temps_regroupement_ibfk_1`
+    FOREIGN KEY (`creneau_emploi_du_temps_id` )
+    REFERENCES `cahierdetextes`.`creneau_emploi_du_temps` (`id` ))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `cahierdetextes`.`etablissement`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `cahierdetextes`.`etablissement` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `UAI` VARCHAR(255) NULL DEFAULT NULL ,
+  `debut_annee_scolaire` DATE NULL DEFAULT NULL ,
+  `fin_annee_scolaire` DATE NULL DEFAULT NULL ,
+  `date_premier_jour_premiere_semaine` DATE NULL DEFAULT NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-COMMENT = 'Table des ressources liées aux cahiers de textes, pour les c' /* comment truncated */;
+AUTO_INCREMENT = 2
+DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
--- Table `cahiertxt`.`log_visu`
+-- Table `cahierdetextes`.`salle`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `cahiertxt`.`log_visu` ;
-
-CREATE  TABLE IF NOT EXISTS `cahiertxt`.`log_visu` (
-  `usr_id` INT NOT NULL ,
-  `Ressource_id` INT NOT NULL ,
-  PRIMARY KEY (`usr_id`, `Ressource_id`) ,
-  INDEX `fk_log_visu_Ressource1` (`Ressource_id` ASC) ,
-  CONSTRAINT `fk_log_visu_Ressource1`
-    FOREIGN KEY (`Ressource_id` )
-    REFERENCES `cahiertxt`.`ressource` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-COMMENT = 'Logs de visualisation d\'une ressource par les élèves.';
-
-
--- -----------------------------------------------------
--- Table `cahiertxt`.`fait`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `cahiertxt`.`fait` ;
-
-CREATE  TABLE IF NOT EXISTS `cahiertxt`.`fait` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `usr_id` VARCHAR(16) NOT NULL ,
-  `devoir_id` INT NOT NULL ,
-  `date_fait` DATETIME NULL COMMENT 'date à laquelle le devoir a été coché comme fait (équivaut à la date de création en bdd)' ,
+CREATE  TABLE IF NOT EXISTS `cahierdetextes`.`salle` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `etablissement_id` INT(11) NULL DEFAULT NULL ,
+  `identifiant` VARCHAR(255) NULL DEFAULT NULL ,
+  `nom` VARCHAR(255) NULL DEFAULT NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `fk_todo_done_devoir1` (`devoir_id` ASC) ,
-  CONSTRAINT `fk_todo_done_devoir1`
-    FOREIGN KEY (`devoir_id` )
-    REFERENCES `cahiertxt`.`devoir` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  INDEX `etablissement_id` (`etablissement_id` ASC) ,
+  CONSTRAINT `salle_ibfk_1`
+    FOREIGN KEY (`etablissement_id` )
+    REFERENCES `cahierdetextes`.`etablissement` (`id` ))
 ENGINE = InnoDB
-COMMENT = 'Table des devoirs faits par élève.\ntout ce qui est à faire n' /* comment truncated */;
+AUTO_INCREMENT = 25
+DEFAULT CHARACTER SET = latin1;
 
+
+-- -----------------------------------------------------
+-- Table `cahierdetextes`.`creneau_emploi_du_temps_salle`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `cahierdetextes`.`creneau_emploi_du_temps_salle` (
+  `creneau_emploi_du_temps_id` INT(11) NOT NULL DEFAULT '0' ,
+  `salle_id` INT(11) NOT NULL DEFAULT '0' ,
+  `semaines_de_presence` BIGINT(20) NULL DEFAULT NULL ,
+  PRIMARY KEY (`creneau_emploi_du_temps_id`, `salle_id`) ,
+  INDEX `salle_id` (`salle_id` ASC) ,
+  CONSTRAINT `creneau_emploi_du_temps_salle_ibfk_1`
+    FOREIGN KEY (`creneau_emploi_du_temps_id` )
+    REFERENCES `cahierdetextes`.`creneau_emploi_du_temps` (`id` ),
+  CONSTRAINT `creneau_emploi_du_temps_salle_ibfk_2`
+    FOREIGN KEY (`salle_id` )
+    REFERENCES `cahierdetextes`.`salle` (`id` ))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `cahierdetextes`.`type_devoir`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `cahierdetextes`.`type_devoir` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `label` VARCHAR(255) NULL DEFAULT NULL ,
+  `description` VARCHAR(255) NULL DEFAULT NULL ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `cahierdetextes`.`devoir`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `cahierdetextes`.`devoir` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `cours_id` INT(11) NULL DEFAULT NULL ,
+  `type_devoir_id` INT(11) NULL DEFAULT NULL ,
+  `contenu` VARCHAR(255) NULL DEFAULT NULL ,
+  `date_creation` DATETIME NULL DEFAULT NULL ,
+  `date_modification` DATETIME NULL DEFAULT NULL ,
+  `date_validation` DATETIME NULL DEFAULT NULL ,
+  `date_due` DATE NULL DEFAULT NULL ,
+  `temps_estime` INT(11) NULL DEFAULT NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `cours_id` (`cours_id` ASC) ,
+  INDEX `type_devoir_id` (`type_devoir_id` ASC) ,
+  CONSTRAINT `devoir_ibfk_1`
+    FOREIGN KEY (`cours_id` )
+    REFERENCES `cahierdetextes`.`cours` (`id` ),
+  CONSTRAINT `devoir_ibfk_2`
+    FOREIGN KEY (`type_devoir_id` )
+    REFERENCES `cahierdetextes`.`type_devoir` (`id` ))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `cahierdetextes`.`devoir_ressource`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `cahierdetextes`.`devoir_ressource` (
+  `devoir_id` INT(11) NOT NULL ,
+  `ressource_id` INT(11) NOT NULL ,
+  PRIMARY KEY (`devoir_id`, `ressource_id`) ,
+  INDEX `devoir_ressource_ressource_id_devoir_id_index` (`ressource_id` ASC, `devoir_id` ASC) ,
+  CONSTRAINT `devoir_ressource_ibfk_1`
+    FOREIGN KEY (`devoir_id` )
+    REFERENCES `cahierdetextes`.`devoir` (`id` ),
+  CONSTRAINT `devoir_ressource_ibfk_2`
+    FOREIGN KEY (`ressource_id` )
+    REFERENCES `cahierdetextes`.`ressource` (`id` ))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `cahierdetextes`.`devoir_todo_item`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `cahierdetextes`.`devoir_todo_item` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `devoir_id` INT(11) NULL DEFAULT NULL ,
+  `eleve_id` INT(11) NULL DEFAULT NULL ,
+  `date_fait` DATETIME NULL DEFAULT NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `devoir_id` (`devoir_id` ASC) ,
+  CONSTRAINT `devoir_todo_item_ibfk_1`
+    FOREIGN KEY (`devoir_id` )
+    REFERENCES `cahierdetextes`.`devoir` (`id` ))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `cahierdetextes`.`schema_info`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `cahierdetextes`.`schema_info` (
+  `version` INT(11) NOT NULL DEFAULT '0' )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+USE `cahierdetextes` ;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
-
--- -----------------------------------------------------
--- Data for table `cahiertxt`.`plage_horaire`
--- -----------------------------------------------------
-START TRANSACTION;
-USE `cahiertxt`;
-INSERT INTO `cahiertxt`.`plage_horaire` (`id`) VALUES ('M1');
-INSERT INTO `cahiertxt`.`plage_horaire` (`id`) VALUES ('M2');
-INSERT INTO `cahiertxt`.`plage_horaire` (`id`) VALUES ('M3');
-INSERT INTO `cahiertxt`.`plage_horaire` (`id`) VALUES ('M4');
-INSERT INTO `cahiertxt`.`plage_horaire` (`id`) VALUES ('M5');
-INSERT INTO `cahiertxt`.`plage_horaire` (`id`) VALUES ('S1');
-INSERT INTO `cahiertxt`.`plage_horaire` (`id`) VALUES ('S2');
-INSERT INTO `cahiertxt`.`plage_horaire` (`id`) VALUES ('S3');
-INSERT INTO `cahiertxt`.`plage_horaire` (`id`) VALUES ('S4');
-INSERT INTO `cahiertxt`.`plage_horaire` (`id`) VALUES ('S5');
-
-COMMIT;
-
--- -----------------------------------------------------
--- Data for table `cahiertxt`.`type_devoir`
--- -----------------------------------------------------
-START TRANSACTION;
-USE `cahiertxt`;
-INSERT INTO `cahiertxt`.`type_devoir` (`id`, `lib`, `description`) VALUES (1, 'DS', 'Devoir surveillé');
-INSERT INTO `cahiertxt`.`type_devoir` (`id`, `lib`, `description`) VALUES (2, 'DM', 'Devoir à la maison');
-INSERT INTO `cahiertxt`.`type_devoir` (`id`, `lib`, `description`) VALUES (3, 'Leçon', 'Leçon à apprendre');
-INSERT INTO `cahiertxt`.`type_devoir` (`id`, `lib`, `description`) VALUES (4, 'Exposé', 'Exposé à préparer');
-INSERT INTO `cahiertxt`.`type_devoir` (`id`, `lib`, `description`) VALUES (5, 'Recherche', 'Recherche à faire');
-INSERT INTO `cahiertxt`.`type_devoir` (`id`, `lib`, `description`) VALUES (6, 'Exercice', 'Exercice à faire');
-
-COMMIT;
