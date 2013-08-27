@@ -7,7 +7,7 @@ task :todo do
 
   color = ""
 
-  Dir.glob('{controller,model,layout,view,spec,public}/**/*.{rb,xhtml,js}') do |file|
+  Dir.glob('{api,config,migrations,lib,models,spec,public/app/{index.html,scripts,styles,views}}/**/*.{rb,html,xhtml,js}') do |file|
     lastline = todo = comment = long_comment = false
 
     File.readlines(file).each_with_index do |line, lineno|
