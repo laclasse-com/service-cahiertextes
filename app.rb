@@ -32,10 +32,10 @@ module CahierDeTextesAPI
       end
     end
 
-    mount ::CahierDeTextesAPI::ProNote
-    mount ::CahierDeTextesAPI::Principal
-    mount ::CahierDeTextesAPI::Enseignant
-    mount ::CahierDeTextesAPI::Eleve
+    mount ::CahierDeTextesAPI::ProNoteAPI
+    mount ::CahierDeTextesAPI::PrincipalAPI
+    mount ::CahierDeTextesAPI::EnseignantAPI
+    mount ::CahierDeTextesAPI::EleveAPI
 
   end
 end

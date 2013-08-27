@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 module CahierDeTextesAPI
-  class Eleve < Grape::API
+  class EleveAPI < Grape::API
     format :json
 
     resource :eleve do
