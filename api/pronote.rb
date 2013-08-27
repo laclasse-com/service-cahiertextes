@@ -14,7 +14,7 @@ module CahierDeTextesAPI
       end
 
       # POST
-      desc "Upload an image."
+      desc "Upload a XML file and load it in DB."
       post 'upload_xml' do
         # Consommation du fichier reçu
         ProNote.load_XML( File.open( params[:xml_file][:tempfile] ) )
