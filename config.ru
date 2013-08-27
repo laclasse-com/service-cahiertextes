@@ -10,4 +10,4 @@
 # the same configuration.
 require ::File.expand_path('../app', __FILE__)
 
-run CahierDeTexte::API
+run CahierDeTextesAPI::API

@@ -11,7 +11,7 @@ require 'sequel/extensions/migration'
 require_relative './models/models'
 require_relative './lib/pronote'
 
-module CahierDeTexte
+module CahierDeTextesAPI
   class API < Grape::API
     version 'v0', using: :header, vendor: 'laclasse.com'
     format :json
