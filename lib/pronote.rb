@@ -196,19 +196,19 @@ module ProNote
           when 'Professeur'
             CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
             CreneauEmploiDuTempsEnseignant.create(creneau_emploi_du_temps_id: creneau.id,
-                                                  enseignant_id: node['Ident'], # TODO: remplacer par notre id annuaire
+                                                  enseignant_id: enseignants[ node['Ident'] ], # TODO: remplacer par notre id annuaire
                                                   semaines_de_presence: node['Semaines'])
             CreneauEmploiDuTempsEnseignant.restrict_primary_key
           when 'Classe', 'PartieDeClasse', 'Groupe' # on ne distingue pas les 3 types de regroupements
             CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
             CreneauEmploiDuTempsRegroupement.create(creneau_emploi_du_temps_id: creneau.id,
-                                                    regroupement_id: node['Ident'], # TODO: remplacer par notre id annuaire
+                                                    regroupement_id: regroupements[ node.name ][ node['Ident'] ], # TODO: remplacer par notre id annuaire
                                                     semaines_de_presence: node['Semaines'])
             CreneauEmploiDuTempsRegroupement.restrict_primary_key
           when 'Salle'
             CreneauEmploiDuTempsSalle.unrestrict_primary_key
             CreneauEmploiDuTempsSalle.create(creneau_emploi_du_temps_id: creneau.id,
-                                             salle_id: Salle[identifiant: node['Ident']][:id],
+                                             salle_id: Salle[ identifiant: node['Ident'] ][:id],
                                              semaines_de_presence: node['Semaines'])
             CreneauEmploiDuTempsSalle.restrict_primary_key
           end
