@@ -39,13 +39,6 @@ module ProNote
       end
     end
 
-    # Inutile, calculable à partir des plages horaires
-    # edt_clair.search('GrilleHoraire').each do |node|
-    #   print 'new ' + node.name + '(' +
-    #     node['NombrePlacesParJour'] + ', ' +
-    #     node['DureePlace'] + ')\n' unless node.name == 'text'
-    # end
-
     STDERR.puts 'chargement Plages Horaires'
     edt_clair.search('PlacesParJour').children.each do
       |place|
@@ -56,7 +49,27 @@ module ProNote
     end
     STDERR.puts
 
+    STDERR.puts 'chargement Salles'
+    edt_clair.search('Salles').children.each do |salle|
+      Salle.create(etablissement_id: etablissement.id,
+                   identifiant: salle['Ident'],
+                   nom: salle['Nom']) unless salle.name == 'text'
+      STDERR.putc '.'
+    end
+    STDERR.puts
+
+    # Inutile, calculable à partir des plages horaires
+    # edt_clair.search('GrilleHoraire').each do |node|
+    #   print 'new ' + node.name + '(' +
+    #     node['NombrePlacesParJour'] + ', ' +
+    #     node['DureePlace'] + ')\n' unless node.name == 'text'
+    # end
+
+    ####
     # Les matières sont dans l'annuaire
+    # TODO: On va interroger l'annuaire pour construire une table de correspondance temporaire
+    # entre ce que nous envoi ProNote et ce que nous avons dans l'annuaire.
+    ####
     # edt_clair.search('Matieres').children.each do |matiere|
     #   print 'new ' + matiere.name + '(' +
     #     matiere['Ident'] + ', '' +
@@ -64,7 +77,11 @@ module ProNote
     #     matiere['Libelle'] + '')\n' unless matiere.name == 'text'
     # end
 
+    ####
     # Les enseignants sont dans l'annuaire
+    # TODO: On va interroger l'annuaire pour construire une table de correspondance temporaire
+    # entre ce que nous envoi ProNote et ce que nous avons dans l'annuaire.
+    ####
     # edt_clair.search('Professeurs').children.each do |professeur|
     #   print 'new ' + professeur.name + '(' +
     #     professeur['Ident'] + ', '' +
@@ -73,7 +90,11 @@ module ProNote
     #     professeur['CodePostal'] + '')\n' unless professeur.name == 'text'
     # end
 
-    # Les classes sont dans l'annuaire
+    ####
+    # Les classes, parties de classe et groupes sont dans l'annuaire
+    # TODO: On va interroger l'annuaire pour construire une table de correspondance temporaire
+    # entre ce que nous envoi ProNote et ce que nous avons dans l'annuaire.
+    ####
     # edt_clair.search('Classes').children.each do |classe|
     #   if classe.name != 'text' then
     #     print 'new ' + classe.name + '(' +
@@ -85,8 +106,6 @@ module ProNote
     #     end
     #   end
     # end
-
-    # Les groupes sont dans l'annuaire
     # edt_clair.search('Groupes').children.each do |groupe|
     #   if groupe.name != 'text' then
     #     print 'new ' + groupe.name + '(' +
@@ -105,16 +124,12 @@ module ProNote
     #   end
     # end
 
-    STDERR.puts 'chargement Salles'
-    edt_clair.search('Salles').children.each do |salle|
-      Salle.create(etablissement_id: etablissement.id,
-                   identifiant: salle['Ident'],
-                   nom: salle['Nom']) unless salle.name == 'text'
-      STDERR.putc '.'
-    end
-    STDERR.puts
-
+    ####
     # Les élèves sont dans l'annuaire
+    # TODO: On va interroger l'annuaire pour construire une table de correspondance temporaire
+    # entre ce que nous envoi ProNote et ce que nous avons dans l'annuaire.
+    # ou pas
+    ####
     # edt_clair.search('Eleves').children.each do |eleve|
     #   print 'new ' + eleve.name +
     #     '(' + eleve['Ident'] +
@@ -146,7 +161,7 @@ module ProNote
     #     end
     #   end
     # end
-
+    
     STDERR.puts 'chargement Créneaux d\'Emploi du Temps'
     edt_clair.search('Cours/Cours').each do |creneau_emploi_du_temps|
       unless creneau_emploi_du_temps.name == 'text'
@@ -166,13 +181,13 @@ module ProNote
           when 'Professeur'
             CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
             CreneauEmploiDuTempsEnseignant.create(creneau_emploi_du_temps_id: creneau.id,
-                                                  enseignant_id: node['Ident'],
+                                                  enseignant_id: node['Ident'], # TODO: remplacer par notre id annuaire
                                                   semaines_de_presence: node['Semaines'])
             CreneauEmploiDuTempsEnseignant.restrict_primary_key
           when 'Classe', 'PartieDeClasse', 'Groupe' # on ne distingue pas les 3 types de regroupements
             CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
             CreneauEmploiDuTempsRegroupement.create(creneau_emploi_du_temps_id: creneau.id,
-                                                    regroupement_id: node['Ident'],
+                                                    regroupement_id: node['Ident'], # TODO: remplacer par notre id annuaire
                                                     semaines_de_presence: node['Semaines'])
             CreneauEmploiDuTempsRegroupement.restrict_primary_key
           when 'Salle'
