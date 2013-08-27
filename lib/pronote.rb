@@ -70,59 +70,73 @@ module ProNote
     # TODO: On va interroger l'annuaire pour construire une table de correspondance temporaire
     # entre ce que nous envoi ProNote et ce que nous avons dans l'annuaire.
     ####
-    # edt_clair.search('Matieres').children.each do |matiere|
-    #   print 'new ' + matiere.name + '(' +
-    #     matiere['Ident'] + ', '' +
-    #     matiere['Code'] + ', '' +
-    #     matiere['Libelle'] + '')\n' unless matiere.name == 'text'
-    # end
+    matieres = Hash.new
+    STDERR.puts 'chargement Matières'
+    edt_clair.search('Matieres').children.each do |matiere|
+      # FIXME: pull from Annuaire
+      code_annuaire = rand(100000..999999)
+      matieres[ matiere['Ident'] ] = code_annuaire unless matiere.name == 'text'
+      STDERR.putc '.'
+    end
+    STDERR.puts
 
     ####
     # Les enseignants sont dans l'annuaire
     # TODO: On va interroger l'annuaire pour construire une table de correspondance temporaire
     # entre ce que nous envoi ProNote et ce que nous avons dans l'annuaire.
     ####
-    # edt_clair.search('Professeurs').children.each do |professeur|
-    #   print 'new ' + professeur.name + '(' +
-    #     professeur['Ident'] + ', '' +
-    #     professeur['Nom'] + ', '' +
-    #     professeur['Prenom'] + ', '' +
-    #     professeur['CodePostal'] + '')\n' unless professeur.name == 'text'
-    # end
+    enseignants = Hash.new
+    STDERR.puts 'chargement Enseignants'
+    edt_clair.search('Professeurs').children.each do |professeur|
+      # FIXME: pull from Annuaire
+      code_annuaire = rand(100000..999999)
+      enseignants[ professeur['Ident'] ] = code_annuaire unless professeur.name == 'text'
+      STDERR.putc '.'
+    end
+    STDERR.puts
 
     ####
     # Les classes, parties de classe et groupes sont dans l'annuaire
     # TODO: On va interroger l'annuaire pour construire une table de correspondance temporaire
     # entre ce que nous envoi ProNote et ce que nous avons dans l'annuaire.
     ####
-    # edt_clair.search('Classes').children.each do |classe|
-    #   if classe.name != 'text' then
-    #     print 'new ' + classe.name + '(' +
-    #       classe['Ident'] + ', '' +
-    #       classe['Nom'] + '')\n'
-    #     classe.children.each do |partie_de_classe|
-    #       print '  new ' + partie_de_classe.name + '(:parent => ' + classe['Ident'] + ', ' +
-    #         partie_de_classe['Ident'] + ')\n' unless partie_de_classe.name == 'text'
-    #     end
-    #   end
-    # end
-    # edt_clair.search('Groupes').children.each do |groupe|
-    #   if groupe.name != 'text' then
-    #     print 'new ' + groupe.name + '(' +
-    #       groupe['Ident'] + ', '' +
-    #       groupe['Nom'] + '')\n'
-    #     groupe.children.each do |node|
-    #       case node.name
-    #       when 'PartieDeClasse'
-    #         print '  new ' + node.name + '(:parent => ' + groupe['Ident'] + ', ' +
-    #           node['Ident'] + ')\n' unless node.name == 'text'
-    #       when 'Classe'
-    #         print '  new ' + node.name + '(:parent => ' + groupe['Ident'] + ', ' +
-    #           node['Ident'] + ')\n' unless node.name == 'text'
-    #       end
-    #     end
-    #   end
-    # end
+    classes = Hash.new
+    parties_de_classes = Hash.new
+    groupes = Hash.new
+    STDERR.puts 'chargement Regroupements'
+    edt_clair.search('Classes').children.each do |classe|
+      # FIXME: pull from Annuaire
+      code_annuaire = rand(100000..999999)
+      classes[ classe['Ident'] ] = code_annuaire unless classe.name == 'text'
+      STDERR.putc '.'
+      classe.children.each do |partie_de_classe|
+        # FIXME: pull from Annuaire
+        code_annuaire = rand(100000..999999)
+        parties_de_classes[ partie_de_classe['Ident'] ] = code_annuaire unless partie_de_classe.name == 'text'
+        STDERR.putc '.'
+      end
+    end
+    edt_clair.search('Groupes').children.each do |groupe|
+      # FIXME: pull from Annuaire
+      code_annuaire = rand(100000..999999)
+      groupes[ groupe['Ident'] ] = code_annuaire unless groupe.name == 'text'
+      STDERR.putc '.'
+      groupe.children.each do  |node|
+        case node.name
+        when 'PartieDeClasse'
+          # FIXME: pull from Annuaire
+          code_annuaire = rand(100000..999999)
+          parties_de_classes[ node['Ident'] ] = code_annuaire unless node.name == 'text'
+          STDERR.putc '.'
+        when 'Classe'
+          # FIXME: pull from Annuaire
+          code_annuaire = rand(100000..999999)
+          classes[ node['Ident'] ] = code_annuaire unless node.name == 'text'
+          STDERR.putc '.'
+        end
+      end
+    end
+    STDERR.puts
 
     ####
     # Les élèves sont dans l'annuaire
@@ -169,8 +183,8 @@ module ProNote
         fin = PlageHoraire.filter(label: creneau_emploi_du_temps['NumeroPlaceDebut'].to_i + creneau_emploi_du_temps['NombrePlaces'].to_i).first[:id]
         matiere_id = 0
 
-        creneau_emploi_du_temps.children.each do |node|  # FIXME: peut mieux faire
-          node.name == 'Matiere' && matiere_id = node['Ident']
+        creneau_emploi_du_temps.children.each do |node|  # FIXME: peut sûrement mieux faire
+          node.name == 'Matiere' && matiere_id = matieres[ node['Ident'] ]
         end
         creneau = CreneauEmploiDuTemps.create(jour_de_la_semaine: creneau_emploi_du_temps['Jour'], # 1: 'lundi' .. 7: 'dimanche', norme ISO-8601
                                               debut: debut,
