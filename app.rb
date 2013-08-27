@@ -39,8 +39,3 @@ module CahierDeTextesAPI
 
   end
 end
-
-ProNote.decrypt_XML(File.open('mocks/Edt_To_LaclasseCom_0134567A.xml'),
-                    File.open('mocks/ConteneurExportChiffre.xsd'))
-ProNote.load_XML(File.open('mocks/Edt_To_LaclasseCom_0134567A_Enclair.xml'),
-                 File.open('mocks/ExportEmploiDuTemps.xsd'))
