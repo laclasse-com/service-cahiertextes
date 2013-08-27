@@ -100,38 +100,39 @@ module ProNote
     # TODO: On va interroger l'annuaire pour construire une table de correspondance temporaire
     # entre ce que nous envoi ProNote et ce que nous avons dans l'annuaire.
     ####
-    classes = Hash.new
-    parties_de_classes = Hash.new
-    groupes = Hash.new
+    regroupements = Hash.new
+    regroupements[ 'Classe' ] = Hash.new
+    regroupements[ 'PartieDeClasse' ] = Hash.new
+    regroupements[ 'Groupe' ] = Hash.new
     STDERR.puts 'chargement Regroupements'
     edt_clair.search('Classes').children.each do |classe|
       # FIXME: pull from Annuaire
       code_annuaire = rand(100000..999999)
-      classes[ classe['Ident'] ] = code_annuaire unless classe.name == 'text'
+      regroupements[ 'Classe' ][ classe['Ident'] ] = code_annuaire unless classe.name == 'text'
       STDERR.putc '.'
       classe.children.each do |partie_de_classe|
         # FIXME: pull from Annuaire
         code_annuaire = rand(100000..999999)
-        parties_de_classes[ partie_de_classe['Ident'] ] = code_annuaire unless partie_de_classe.name == 'text'
+        regroupements[ 'PartieDeClasse' ][ partie_de_classe['Ident'] ] = code_annuaire unless partie_de_classe.name == 'text'
         STDERR.putc '.'
       end
     end
     edt_clair.search('Groupes').children.each do |groupe|
       # FIXME: pull from Annuaire
       code_annuaire = rand(100000..999999)
-      groupes[ groupe['Ident'] ] = code_annuaire unless groupe.name == 'text'
+      regroupements[ 'Groupe' ][ groupe['Ident'] ] = code_annuaire unless groupe.name == 'text'
       STDERR.putc '.'
       groupe.children.each do  |node|
         case node.name
         when 'PartieDeClasse'
           # FIXME: pull from Annuaire
           code_annuaire = rand(100000..999999)
-          parties_de_classes[ node['Ident'] ] = code_annuaire unless node.name == 'text'
+          regroupements[ 'PartieDeClasse' ][ node['Ident'] ] = code_annuaire unless node.name == 'text'
           STDERR.putc '.'
         when 'Classe'
           # FIXME: pull from Annuaire
           code_annuaire = rand(100000..999999)
-          classes[ node['Ident'] ] = code_annuaire unless node.name == 'text'
+          regroupements[ 'Classe' ][ node['Ident'] ] = code_annuaire unless node.name == 'text'
           STDERR.putc '.'
         end
       end
