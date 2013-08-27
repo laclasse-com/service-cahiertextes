@@ -33,6 +33,6 @@ node_modules
 *.sqlite3
 
 # mock data
-mocks/
+spec/fixtures/
 
 .ruby-version
