@@ -188,8 +188,6 @@ module ProNote
     end
     STDERR.puts
 
-    STDERR.puts 'Terminé \\o/'
-
   end
 
 end
