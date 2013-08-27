@@ -11,6 +11,9 @@ Sequel::Migrator.run( DB, 'migrations' )
 Sequel::Model.plugin :json_serializer
 
 # définition des modèles
+
+# Emploi du temps
+
 class PlageHoraire < Sequel::Model( :plage_horaire )
 end
 
@@ -44,16 +47,26 @@ class CreneauEmploiDuTempsRegroupement < Sequel::Model( :creneau_emploi_du_temps
   include SemainesDePresenceMixin
 end
 
+# Cahier de textes
+
+class CahierDeTextes < Sequel::Model( :cahier_de_textes )
+end
+
 class Ressource < Sequel::Model( :ressource )
 end
+
+# Séquences pédagogiques
 
 class Cours < Sequel::Model( :cours )
   many_to_many :ressource
   many_to_one :creneau_emploi_du_temps
   many_to_one :cahier_de_textes
 end
+
 class CoursRessource < Sequel::Model( :cours_ressource )
 end
+
+# Devoirs
 
 class TypeDevoir < Sequel::Model( :type_devoir )
 end
@@ -61,10 +74,8 @@ end
 class Devoir < Sequel::Model( :devoir )
   many_to_many :ressource
 end
-class DevoirRessource < Sequel::Model( :devoir_ressource )
-end
 
-class CahierDeTextes < Sequel::Model( :cahier_de_textes )
+class DevoirRessource < Sequel::Model( :devoir_ressource )
 end
 
 class DevoirTodoItem < Sequel::Model( :devoir_todo_item )
