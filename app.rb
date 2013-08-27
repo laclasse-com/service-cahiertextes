@@ -11,6 +11,7 @@ require 'sequel/extensions/migration'
 require_relative './models/models'
 require_relative './lib/pronote'
 
+require_relative './api/pronote'
 require_relative './api/principal'
 require_relative './api/enseignant'
 require_relative './api/eleve'
@@ -31,6 +32,7 @@ module CahierDeTextesAPI
       end
     end
 
+    mount ::CahierDeTextesAPI::ProNote
     mount ::CahierDeTextesAPI::Principal
     mount ::CahierDeTextesAPI::Enseignant
     mount ::CahierDeTextesAPI::Eleve
