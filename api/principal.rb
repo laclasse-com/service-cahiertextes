@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 module CahierDeTextesAPI
-  class Principal < Grape::API
+  class PrincipalAPI < Grape::API
     format :json
 
     resource :principal do

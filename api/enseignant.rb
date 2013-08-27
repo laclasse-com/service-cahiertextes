@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 module CahierDeTextesAPI
-  class Enseignant < Grape::API
+  class EnseignantAPI < Grape::API
     format :json
 
     resource :enseignant do
