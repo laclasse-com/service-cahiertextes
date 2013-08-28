@@ -13,7 +13,6 @@ module CahierDeTextesAPI
       end
 
       resource :classes do
-        # GET http://localhost:9292/etablissement/plage_horaire/3
         desc 'statistiques de toutes les classes'
         get do
           PlageHoraire[label: "18"]  # == .filter().first
