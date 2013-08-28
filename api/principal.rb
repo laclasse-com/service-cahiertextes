@@ -6,12 +6,6 @@ module CahierDeTextesAPI
 
     resource :principal do
 
-      resource :ping do
-        get do
-          { ping: "pong" }
-        end
-      end
-
       resource :classes do
         desc 'statistiques de toutes les classes'
         get do
