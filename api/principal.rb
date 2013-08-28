@@ -29,6 +29,19 @@ module CahierDeTextesAPI
             CahierDeTextes[ regroupement_id: params[:id] ].statistics.to_json ||
             error!( 'Classe inconnue', 404 )
         end
+        post do
+          # TODO: validate all?
+        end
+      end
+
+      resource :enseignants do
+        desc 'statistiques des cahiers de textes par enseignants/mois'
+        # TODO
+      end
+
+      resource :enseignant do
+        desc 'statistiques des cahiers de textes d\'un enseignant par mois/classes'
+        # TODO
       end
 
     end
