@@ -6,8 +6,10 @@ module CahierDeTextesAPI
 
     resource :principal do
 
-      get '/ping' do
-        { ping: "pong" }
+      resource :ping do
+        get do
+          { ping: "pong" }
+        end
       end
 
       resource :classes do
