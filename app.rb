@@ -20,6 +20,7 @@ module CahierDeTextesAPI
   class API < Grape::API
     version 'v0', using: :header, vendor: 'laclasse.com'
     format :json
+    rescue_from :all
 
     helpers do
       def current_user
