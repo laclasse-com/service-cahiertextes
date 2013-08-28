@@ -14,7 +14,7 @@ module CahierDeTextesAPI
         # Consommation du fichier reçu
         ProNote.load_XML( File.open( params[:xml_file][:tempfile] ) )
 
-        # on renvoi un log succint des infos chargées
+        # on retourne un log succint des infos chargées
         {
           filename: params[:xml_file][:filename],
           size: params[:xml_file][:tempfile].size,
