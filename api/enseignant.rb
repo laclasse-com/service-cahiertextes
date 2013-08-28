@@ -6,6 +6,9 @@ module CahierDeTextesAPI
 
     resource :enseignant do
 
+      resource :emploi_du_temps do
+        # TODO
+      end
 
     end
 
