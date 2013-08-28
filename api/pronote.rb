@@ -8,12 +8,7 @@ module CahierDeTextesAPI
     format :json
 
     resource :pronote do
-      
-      get '/ping' do
-        { ping: "pong" }
-      end
 
-      # POST
       desc "Upload a XML file and load it in DB."
       post 'upload_xml' do
         # Consommation du fichier reçu

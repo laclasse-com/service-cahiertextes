@@ -6,9 +6,6 @@ module CahierDeTextesAPI
 
     resource :eleve do
 
-      get '/ping' do
-        { ping: "pong" }
-      end
 
     end
 
