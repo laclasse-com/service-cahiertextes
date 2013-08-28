@@ -179,8 +179,8 @@ module ProNote
     STDERR.puts 'chargement Créneaux d\'Emploi du Temps'
     edt_clair.search('Cours/Cours').each do |creneau_emploi_du_temps|
       unless creneau_emploi_du_temps.name == 'text'
-        debut = PlageHoraire.filter(label: creneau_emploi_du_temps['NumeroPlaceDebut']).first[:id]
-        fin = PlageHoraire.filter(label: creneau_emploi_du_temps['NumeroPlaceDebut'].to_i + creneau_emploi_du_temps['NombrePlaces'].to_i).first[:id]
+        debut = PlageHoraire[ label: creneau_emploi_du_temps['NumeroPlaceDebut'] ][:id]
+        fin = PlageHoraire[ label: creneau_emploi_du_temps['NumeroPlaceDebut'].to_i + creneau_emploi_du_temps['NombrePlaces'].to_i ][:id]
         matiere_id = 0
 
         creneau_emploi_du_temps.children.each do |node|  # FIXME: peut sûrement mieux faire
