@@ -7,7 +7,7 @@ module CahierDeTextesAPI
     resource :principal do
 
       resource :classes do
-        desc 'statistiques de toutes les classes'
+        desc 'statistiques des cahiers de textes par classes/mois/matières'
         get do
           #TODO: get this from actual (Principal) user
           regroupements_ids = [ 1,2,3,4,5,12 ]
@@ -20,7 +20,7 @@ module CahierDeTextesAPI
       end
 
       resource :classe do
-        desc 'statistiques d\'une classe'
+        desc 'statistiques du cahier de textes d\'une classe'
         params {
           requires :id, type: Integer
         }
