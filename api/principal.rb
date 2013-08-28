@@ -10,7 +10,7 @@ module CahierDeTextesAPI
         desc 'statistiques des cahiers de textes par classes/mois/matières'
         get do
           #TODO: get this from actual (Principal) user
-          regroupements_ids = [ 1,2,3,4,5,12 ]
+          regroupements_ids = [ 1, 2, 3, 4, 5, 12 ]
 
           regroupements_ids.map {
             |regroupement_id|
@@ -27,7 +27,7 @@ module CahierDeTextesAPI
         get do
           CahierDeTextes[ regroupement_id: params[:id] ] &&
             CahierDeTextes[ regroupement_id: params[:id] ].statistics.to_json ||
-            error!( "Classe inconnue", 404 )
+            error!( 'Classe inconnue', 404 )
         end
       end
 
