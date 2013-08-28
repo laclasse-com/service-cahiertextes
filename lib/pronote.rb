@@ -36,7 +36,9 @@ module ProNote
         etablissement.fin_annee_scolaire = node['DateFin']
         etablissement.date_premier_jour_premiere_semaine = node['DatePremierJourSemaine1']
         etablissement.save
+        STDERR.putc '.'
       end
+      STDERR.puts
     end
 
     STDERR.puts 'chargement Plages Horaires'
