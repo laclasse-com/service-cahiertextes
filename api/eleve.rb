@@ -6,7 +6,7 @@ module CahierDeTextesAPI
 
     resource :eleve do
 
-      resource :cahier_de_textes_hebdo do
+      resource :cahier_de_textes do
         desc 'contenu combiné des cahiers de textes concernant l\'élève durant l\'intervalle de dates données ou par défaut le jour courant'
         params {
           optional :debut, type: Time
