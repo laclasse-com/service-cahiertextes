@@ -102,10 +102,7 @@ module ProNote
     # TODO: On va interroger l'annuaire pour construire une table de correspondance temporaire
     # entre ce que nous envoi ProNote et ce que nous avons dans l'annuaire.
     ####
-    regroupements = Hash.new
-    regroupements[ 'Classe' ] = Hash.new
-    regroupements[ 'PartieDeClasse' ] = Hash.new
-    regroupements[ 'Groupe' ] = Hash.new
+    regroupements = { 'Classe' => Hash.new, 'PartieDeClasse' => Hash.new, 'Groupe' => Hash.new }
     STDERR.puts 'chargement Regroupements'
     edt_clair.search('Classes').children.each do |classe|
       # FIXME: pull from Annuaire
