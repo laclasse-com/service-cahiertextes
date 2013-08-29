@@ -24,6 +24,19 @@ module CahierDeTextesAPI
         end
       end
 
+      resource :devoir do
+        desc 'permet de noter un devoir comme fait/à faire'
+        params {
+          requires :id
+        }
+        put '/:id' do
+          # FIXME: get real (Élève) user
+          user_id = 1
+
+          Devoir[:id].fait_par?( user_id ) && Devoir[:id].plus_fait_par( user_id ) || Devoir[:id].fait_par( user_id )
+        end
+      end
+
     end
 
   end
