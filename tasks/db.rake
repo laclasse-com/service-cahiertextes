@@ -25,5 +25,9 @@ namespace :db do
   task :generate_model => :load_config do 
     require_relative '../lib/model_generator'
   end 
-  
+
+  desc "Apply migrations"
+  task :migrations => :load_config do
+    Sequel::Migrator.run( DB, 'migrations' )
+  end
 end
