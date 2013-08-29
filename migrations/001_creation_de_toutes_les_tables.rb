@@ -78,7 +78,7 @@ Sequel.migration do
       DateTime :date_creation
       DateTime :date_modification
       DateTime :date_validation
-      String :contenu           # séquence pédagogique
+      String :contenu, size: 4096           # séquence pédagogique
       TrueClass :deleted, default: false
     }
     drop_table?(:cours_ressource)
@@ -94,8 +94,8 @@ Sequel.migration do
       primary_key :id
       foreign_key :cours_id, :cours
       foreign_key :type_devoir_id, :type_devoir
-      String :contenu
       DateTime :date_creation
+      String :contenu, size: 4096
       DateTime :date_modification
       DateTime :date_validation
       Date :date_due
