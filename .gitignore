@@ -27,12 +27,5 @@ vagrant/
 # Yo Angular
 bower_components
 node_modules
-/.ruby-version
-
-# tempoary databases
-*.sqlite3
-
-# mock data
-spec/fixtures/
 
 .ruby-version
