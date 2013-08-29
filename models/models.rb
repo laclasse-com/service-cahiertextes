@@ -4,9 +4,6 @@ require 'sequel/extensions/migration'
 
 require_relative '../config/database'
 
-# application des migrations
-Sequel::Migrator.run( DB, 'migrations' )
-
 # tous les modèles sérialisent en JSON
 Sequel::Model.plugin :json_serializer
 
