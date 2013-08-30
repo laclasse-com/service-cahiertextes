@@ -57,11 +57,14 @@ module CahierDeTextesAPI
         }
         post do
           # FIXME: gestion des droits
-          Cours.create( cahier_de_textes_id: params[:cahier_de_textes_id],
+          cours = Cours.create( cahier_de_textes_id: params[:cahier_de_textes_id],
                         creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
                         date_cours: params[:date_cours],
                         contenu: params[:contenu] )
           # TODO: loop sur params[:ressources]
+
+          # on retourne le cours créé
+          cours
         end
 
         desc 'modifie une séquence pédagogique'
