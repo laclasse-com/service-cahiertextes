@@ -42,7 +42,7 @@ module CahierDeTextesAPI
       resource :cours do
 
         desc 'renvoi une séquence pédagogique'
-        get do
+        get '/:id' do
           # FIXME: gestion des droits
           Cours[ params[:id] ]
         end
