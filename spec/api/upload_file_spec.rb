@@ -3,11 +3,10 @@ require 'spec_helper'
 describe CahierDeTextesAPI::API do
   include Rack::Test::Methods
 
-  # before(:all) do
-  #   DB.tables.each do |table|
-  #     DB.drop_table?(table, cascade: true)
-  #   end
-  # end
+  before :each do
+    db_cleaner = TableCleaner.new DB, []
+    db_cleaner.clean
+  end
   
   def app
     CahierDeTextesAPI::API
