@@ -85,12 +85,12 @@ describe CahierDeTextesAPI::API do
 
   it 'deletes a cours' do
     cours = Cours.last
-    cours.deleted.should == false
+    cours.deleted.should be_false
 
     delete "/enseignant/cours/#{cours.id}"
 
     cours = Cours.last
-    cours.deleted.should == true
+    cours.deleted.should be_true
 
     get "/enseignant/cours/#{cours.id}"
     last_response.status.should == 404
