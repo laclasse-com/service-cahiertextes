@@ -49,10 +49,10 @@ describe CahierDeTextesAPI::API do
   it 'updates a cours' do
     cours = Cours.last
 
-    post( "/enseignant/cours/#{cours.id}",
-          { contenu: 'Mise à jour de la séquence pédagogique.'}.to_json,
-          'CONTENT_TYPE' => 'application/json' )
-    last_response.status.should == 201
+    put( "/enseignant/cours/#{cours.id}",
+         { contenu: 'Mise à jour de la séquence pédagogique.'}.to_json,
+         'CONTENT_TYPE' => 'application/json' )
+    last_response.status.should == 200
 
     response_body = JSON.parse(last_response.body)
 
