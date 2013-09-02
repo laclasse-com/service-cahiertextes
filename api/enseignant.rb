@@ -57,9 +57,6 @@ module CahierDeTextesAPI
                                 date_creation: Time.now,
                                 contenu: params[:contenu] )
           # TODO: loop sur params[:ressources]
-
-          # on retourne le cours créé
-          cours
         end
 
         desc 'renvoi une séquence pédagogique'
