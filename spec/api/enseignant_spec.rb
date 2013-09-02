@@ -33,16 +33,15 @@ describe CahierDeTextesAPI::API do
           'CONTENT_TYPE' => 'application/json' )
     last_response.status.should == 201
 
-    response_body = JSON.parse(last_response.body)
-
-    response_body['cahier_de_textes_id'].should == cahier_de_textes_id
-    response_body['creneau_emploi_du_temps_id'].should == creneau_emploi_du_temps_id
-    response_body['date_cours'].should == '2013-08-29'
-    response_body['date_creation'].should_not equal nil
-    response_body['date_modification'].should equal nil
-    response_body['date_validation'].should equal nil
-    response_body['contenu'].should == 'Exemple de séquence pédagogique.'
-    response_body['deleted'].should equal false
+    cours = Cours.last
+    cours.cahier_de_textes_id.should == cahier_de_textes_id
+    cours.creneau_emploi_du_temps_id.should == creneau_emploi_du_temps_id
+    cours.date_cours.should == Date.parse('2013-08-29')
+    cours.date_creation.should_not equal nil
+    cours.date_modification.should equal nil
+    cours.date_validation.should equal nil
+    cours.contenu.should == 'Exemple de séquence pédagogique.'
+    cours.deleted.should equal false
   end
 
   ############ PUT ############
@@ -54,16 +53,17 @@ describe CahierDeTextesAPI::API do
          'CONTENT_TYPE' => 'application/json' )
     last_response.status.should == 200
 
-    response_body = JSON.parse(last_response.body)
+    cours2 = Cours[ cours.id ]
 
-    response_body['cahier_de_textes_id'].should == cours.cahier_de_textes_id
-    response_body['creneau_emploi_du_temps_id'].should == cours.creneau_emploi_du_temps_id
-    response_body['date_cours'].should == cours.date_cours.to_s
-    response_body['date_creation'].should == cours.date_creation ? cours.date_creation.to_s : nil
-    response_body['date_modification'].should == cours.date_creation ? cours.date_creation.to_s : nil
-    response_body['date_validation'].should == cours.date_validation ? cours.date_validation.to_s : nil
-    response_body['contenu'].should == 'Mise à jour de la séquence pédagogique.'
-    response_body['deleted'].should == cours.deleted
+    cours2.cahier_de_textes_id.should == cours.cahier_de_textes_id
+    cours2.creneau_emploi_du_temps_id.should == cours.creneau_emploi_du_temps_id
+    cours2.date_cours.should == cours.date_cours
+    cours2.date_creation.should == cours.date_creation
+    cours2.date_modification.should_not equal nil
+    cours2.date_modification.should be > cours.date_modification unless cours.date_modification.nil?
+    cours2.date_validation.should == cours.date_validation
+    cours2.contenu.should == 'Mise à jour de la séquence pédagogique.'
+    cours2.deleted.should == cours.deleted
   end
 
   ############ GET ############
