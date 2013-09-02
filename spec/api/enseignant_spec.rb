@@ -20,6 +20,7 @@ describe CahierDeTextesAPI::API do
     CahierDeTextesAPI::API
   end
 
+  ############ POST ############
   it 'creates a new cours' do
     cahier_de_textes_id = CahierDeTextes.all[ rand(0 .. CahierDeTextes.count - 1) ][:id]
     creneau_emploi_du_temps_id = CreneauEmploiDuTemps.all[ rand(0 .. CreneauEmploiDuTemps.count - 1) ][:id]
@@ -44,6 +45,7 @@ describe CahierDeTextesAPI::API do
     response_body['deleted'].should equal false
   end
 
+  ############ PUT ############
   it 'updates a cours' do
     cours = Cours.last
 
@@ -64,6 +66,7 @@ describe CahierDeTextesAPI::API do
     response_body['deleted'].should == cours.deleted
   end
 
+  ############ GET ############
   it 'gets the details of a cours' do
     cours = Cours.last
 
@@ -83,6 +86,7 @@ describe CahierDeTextesAPI::API do
     response_body['deleted'].should == cours.deleted
   end
 
+  ############ DELETE ############
   it 'deletes a cours' do
     cours = Cours.last
     cours.deleted.should be_false
