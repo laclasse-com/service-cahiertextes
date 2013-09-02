@@ -80,10 +80,15 @@ module CahierDeTextesAPI
         }
         put '/:id' do
           # FIXME: gestion des droits
-          if Cours[ params[:id] ] then
-            Cours[ params[:id] ].contenu = params[:contenu]
+          cours = Cours[ params[:id] ]
+
+          if cours
+            cours.contenu = params[:contenu]
+            cours.date_modification = Time.now
             # TODO: loop sur params[:ressources]
           end
+
+          cours
         end
 
         desc 'efface une séquence pédagogique'
@@ -92,7 +97,11 @@ module CahierDeTextesAPI
         }
         delete '/:id' do
           # FIXME: gestion des droits
-          Cours[ params[:id] ].delete = true if Cours[ params[:id] ]
+          cours = Cours[ params[:id] ]
+          if cours
+            cours.update(deleted: true)
+            cours.date_modification = Time.now
+          end
         end
 
       end
