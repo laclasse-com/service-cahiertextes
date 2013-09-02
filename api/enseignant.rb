@@ -56,7 +56,7 @@ module CahierDeTextesAPI
           optional :ressources
         }
         post do
-          # FIXME: gestion des droits
+          # TODO: gestion des droits
           cours = Cours.create( cahier_de_textes_id: params[:cahier_de_textes_id],
                                 creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
                                 date_cours: params[:date_cours].to_s,
