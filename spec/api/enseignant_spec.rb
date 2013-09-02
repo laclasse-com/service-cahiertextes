@@ -13,12 +13,14 @@ describe CahierDeTextesAPI::API do
     plage_horaire_debut = PlageHoraire.create(label: 'test_debut', debut: '08:30:00', fin: '09:00:00')
     plage_horaire_fin = PlageHoraire.create(label: 'test_fin', debut: '09:30:00', fin: '10:00:00')
     CreneauEmploiDuTemps.create(debut: plage_horaire_debut.id, fin: plage_horaire_fin.id)
+    TypeDevoir.create(label: 'RSpec', description: 'Type de devoir tout spécial pour rspec')
   end
 
   def app
     CahierDeTextesAPI::API
   end
 
+  # {{{ Cours
   ############ POST ############
   it 'creates a new cours' do
     cahier_de_textes_id = CahierDeTextes.all[ rand(0 .. CahierDeTextes.count - 1) ][:id]
@@ -40,7 +42,7 @@ describe CahierDeTextesAPI::API do
     cours.date_modification.should equal nil
     cours.date_validation.should equal nil
     cours.contenu.should == 'Exemple de séquence pédagogique.'
-    cours.deleted.should equal false
+    cours.deleted.should be_false
   end
 
   ############ PUT ############
@@ -98,4 +100,69 @@ describe CahierDeTextesAPI::API do
     get "/enseignant/cours/#{cours.id}"
     last_response.status.should == 404
   end
+  # }}}
+
+  # {{{ Devoir
+  ############ POST ############
+  it 'creates a new devoir' do
+    cours_id = Cours.all[ rand(0 .. Cours.count - 1) ][:id]
+    type_devoir_id = TypeDevoir.all[ rand(0 .. TypeDevoir.count - 1) ][:id]
+    date_due = Time.now
+
+    post( "/enseignant/devoir/#{cours_id}",
+          { cours_id: cours_id,
+            type_devoir_id: type_devoir_id,
+            contenu: 'Exemple de devoir.',
+            date_due: date_due }.to_json,
+          'CONTENT_TYPE' => 'application/json' )
+    last_response.status.should == 201
+
+    devoir = Devoir.last
+    devoir.cours_id.should == cours_id
+    devoir.type_devoir_id.should == type_devoir_id
+    expect(devoir.date_due).to eq Date.parse( date_due.to_s )
+    devoir.date_creation.should_not equal nil
+    devoir.date_modification.should equal nil
+    devoir.date_validation.should equal nil
+    devoir.contenu.should == 'Exemple de devoir.'
+  end
+
+  ############ PUT ############
+  it 'updates a devoir' do
+    devoir = Devoir.last
+    type_devoir_id = TypeDevoir.all[ rand(0 .. TypeDevoir.count - 1) ][:id]
+    date_due = Time.now
+
+    put( "/enseignant/devoir/#{devoir.cours_id}",
+         { cours_id: devoir.cours_id,
+           type_devoir_id: type_devoir_id,
+           contenu: 'Exemple de devoir totalement modifié.',
+           date_due: date_due }.to_json,
+         'CONTENT_TYPE' => 'application/json' )
+    last_response.status.should == 200
+
+    devoir2 = Devoir.last
+    devoir2.cours_id.should == devoir.cours_id
+    devoir2.type_devoir_id.should == devoir.type_devoir_id
+    expect(devoir2.date_due).to eq Date.parse( devoir.date_due.to_s )
+    expect(devoir2.date_creation).to eq devoir.date_creation
+    devoir2.date_modification.should_not equal nil
+    expect(devoir2.date_validation).to eq devoir.date_validation
+    devoir2.contenu.should == 'Exemple de devoir totalement modifié.'
+  end
+
+  ############ GET ############
+  it 'gets the details of a devoir' do
+    devoir = Devoir.all[ rand(0 .. Devoir.count - 1) ]
+
+    get "/enseignant/devoir/#{devoir.cours_id}"
+    last_response.status.should == 200
+
+    response_body = JSON.parse( last_response.body )
+
+    response_body['cours_id'].should == devoir.cours_id
+    response_body['type_devoir_id'].should == devoir.type_devoir_id
+    response_body['contenu'].should be == devoir.contenu
+  end
+  # }}}
 end

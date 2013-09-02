@@ -106,6 +106,60 @@ module CahierDeTextesAPI
 
       end
 
+      resource :devoir do
+
+        desc 'renseigne un devoir'
+        params {
+          requires :cours_id
+          requires :type_devoir_id
+          requires :contenu
+          requires :date_due, type: Date
+          optional :ressources
+        }
+        post '/:cours_id' do
+          if Cours[ params[:cours_id] ].nil?
+            error!( 'Cours inconnu', 404 )
+          else
+            Devoir.create(cours_id: params[:cours_id],
+                          type_devoir_id: params[:type_devoir_id],
+                          contenu: params[:contenu],
+                          date_due: params[:date_due],
+                          date_creation: Time.now)
+            # TODO: loop sur params[:ressources]
+          end
+        end
+
+        desc 'modifie un devoir'
+        params {
+          requires :cours_id
+          requires :type_devoir_id
+          requires :contenu
+          requires :date_due, type: Date
+          optional :ressources
+        }
+        put '/:cours_id' do
+          devoir = Devoir.where(cours_id: params[:cours_id]).first
+          unless devoir.nil?
+            devoir.type_devoir_id = params[:type_devoir_id]
+            devoir.contenu = params[:contenu]
+            devoir.date_due = params[:date_due]
+            # TODO: loop sur params[:ressources]
+
+            devoir.date_modification = Time.now
+            devoir.save
+          end
+        end
+
+        desc 'renvoi le détail d\'un devoir'
+        params {
+          requires :cours_id
+        }
+        get '/:cours_id' do
+          devoir = Devoir.where(cours_id: params[:cours_id]).first
+          devoir unless devoir.nil?
+        end
+      end
+
     end
 
   end
