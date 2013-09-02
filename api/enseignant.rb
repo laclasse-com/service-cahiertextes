@@ -51,11 +51,11 @@ module CahierDeTextesAPI
         }
         post do
           # TODO: gestion des droits
-          cours = Cours.create( cahier_de_textes_id: params[:cahier_de_textes_id],
-                                creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
-                                date_cours: params[:date_cours].to_s,
-                                date_creation: Time.now,
-                                contenu: params[:contenu] )
+          Cours.create( cahier_de_textes_id: params[:cahier_de_textes_id],
+                        creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
+                        date_cours: params[:date_cours].to_s,
+                        date_creation: Time.now,
+                        contenu: params[:contenu] )
           # TODO: loop sur params[:ressources]
         end
 
