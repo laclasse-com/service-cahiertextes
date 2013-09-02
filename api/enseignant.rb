@@ -41,12 +41,6 @@ module CahierDeTextesAPI
 
       resource :cours do
 
-        desc 'renvoi une séquence pédagogique'
-        get '/:id' do
-          # FIXME: gestion des droits
-          Cours[ params[:id] ]
-        end
-
         desc 'renseigne une séquence pédagogique'
         params {
           requires :cahier_de_textes_id
@@ -65,6 +59,16 @@ module CahierDeTextesAPI
 
           # on retourne le cours créé
           cours
+        end
+
+        desc 'renvoi une séquence pédagogique'
+        get '/:id' do
+          # FIXME: gestion des droits
+          if Cours[ params[:id] ].nil? || Cours[ params[:id] ].deleted
+            error!( 'Cours inconnu', 404 )
+          else
+            Cours[ params[:id] ]
+          end
         end
 
         desc 'modifie une séquence pédagogique'
