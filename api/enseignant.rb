@@ -83,8 +83,9 @@ module CahierDeTextesAPI
             cours.contenu = params[:contenu]
             cours.date_modification = Time.now
             # TODO: loop sur params[:ressources]
+
+            cours.save
           end
-          cours.save
         end
 
         desc 'efface une séquence pédagogique'
@@ -97,6 +98,8 @@ module CahierDeTextesAPI
           if cours
             cours.update(deleted: true)
             cours.date_modification = Time.now
+
+            cours.save
           end
         end
 
