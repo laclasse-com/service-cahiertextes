@@ -79,7 +79,7 @@ describe CahierDeTextesAPI::API do
     response_body['creneau_emploi_du_temps_id'].should == cours.creneau_emploi_du_temps_id
     response_body['date_cours'].should == cours.date_cours.to_s
     # response_body['date_creation'].should == cours.date_creation ? cours.date_creation.to_s : nil
-    # response_body['date_modification'].should == cours.date_creation ? cours.date_creation.to_s : nil
+    # response_body['date_modification'].should == cours.date_modification ? cours.date_modification.to_s : nil
     # response_body['date_validation'].should == cours.date_validation ? cours.date_validation.to_s : nil
     response_body['date_creation'].should_not equal nil
     response_body['contenu'].should == cours.contenu
