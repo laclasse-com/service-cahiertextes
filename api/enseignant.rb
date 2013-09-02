@@ -79,7 +79,7 @@ module CahierDeTextesAPI
           # FIXME: gestion des droits
           cours = Cours[ params[:id] ]
 
-          if cours
+          unless cours.nil?
             cours.contenu = params[:contenu]
             cours.date_modification = Time.now
             # TODO: loop sur params[:ressources]
@@ -95,7 +95,8 @@ module CahierDeTextesAPI
         delete '/:id' do
           # FIXME: gestion des droits
           cours = Cours[ params[:id] ]
-          if cours
+
+          unless cours.nil?
             cours.update(deleted: true)
             cours.date_modification = Time.now
 
