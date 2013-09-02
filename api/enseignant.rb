@@ -27,7 +27,7 @@ module CahierDeTextesAPI
           optional :fin, type: Time
         }
         get do
-          #TODO: get this from actual (Enseignant) user
+          # TODO: get this from actual (Enseignant) user
           regroupements_ids = [ 1, 2, 3, 4, 5, 12 ]
 
           regroupements_ids.map {
