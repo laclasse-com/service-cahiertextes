@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
 
-class PlageHoraire < Sequel::Model( :plage_horaire )
+class PlageHoraire < Sequel::Model( :plages_horaires )
 
 end

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
 
-class Ressource < Sequel::Model( :ressource )
+class Ressource < Sequel::Model( :ressources )
 
 end

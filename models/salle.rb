@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
 
-class Salle < Sequel::Model( :salle )
-  many_to_one :etablissement
+class Salle < Sequel::Model( :salles )
+  many_to_one :etablissements
 end

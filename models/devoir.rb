@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-class Devoir < Sequel::Model( :devoir )
-  many_to_many :ressource
-  one_to_many :devoir_todo_item
+class Devoir < Sequel::Model( :devoirs )
+  many_to_many :ressources
+  one_to_many :devoir_todo_items
   many_to_one :type_devoir
 
   def fait_par( eleve_id )
@@ -18,14 +18,14 @@ class Devoir < Sequel::Model( :devoir )
   end
 end
 
-class TypeDevoir < Sequel::Model( :type_devoir )
-  one_to_many :devoir
+class TypeDevoir < Sequel::Model( :types_devoir )
+  one_to_many :devoirs
 end
 
-class DevoirRessource < Sequel::Model( :devoir_ressource )
+class DevoirRessource < Sequel::Model( :devoirs_ressources )
 
 end
 
-class DevoirTodoItem < Sequel::Model( :devoir_todo_item )
+class DevoirTodoItem < Sequel::Model( :devoir_todo_items )
   many_to_one :devoir
 end
