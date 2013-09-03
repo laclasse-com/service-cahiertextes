@@ -191,7 +191,7 @@ describe CahierDeTextesAPI::API do
 
     expected_ressources_size = devoir.ressources.size + ressources.size
 
-    put( "/enseignant/devoir/#{devoir.cours_id}",
+    put( "/enseignant/devoir/#{devoir.id}",
          { cours_id: devoir.cours_id,
            type_devoir_id: type_devoir_id,
            contenu: contenu,
@@ -201,7 +201,7 @@ describe CahierDeTextesAPI::API do
          'CONTENT_TYPE' => 'application/json' )
     last_response.status.should == 200
 
-    devoir2 = Devoir.last
+    devoir2 = Devoir[ devoir.id ]
 
     devoir2.cours_id.should == devoir.cours_id
     devoir2.type_devoir_id.should == devoir.type_devoir_id
@@ -218,7 +218,7 @@ describe CahierDeTextesAPI::API do
   it 'récupère les détails d\'un devoir' do
     devoir = Devoir.all[ rand(0 .. Devoir.count - 1) ]
 
-    get "/enseignant/devoir/#{devoir.cours_id}"
+    get "/enseignant/devoir/#{devoir.id}"
     last_response.status.should == 200
 
     response_body = JSON.parse( last_response.body )
