@@ -32,8 +32,11 @@ module CahierDeTextesAPI
 
           regroupements_ids.map {
             |regroupement_id|
-            CahierDeTextes[ regroupement_id: regroupement_id ].content( params[:debut] ? params[:debut] : Time.now,
-                                                                        params[:fin] ? params[:fin] : Time.now )
+            cdt = CahierDeTextes[ regroupement_id: regroupement_id ]
+            unless cdt.nil?
+              CahierDeTextes[ regroupement_id: regroupement_id ].content( params[:debut] ? params[:debut] : Time.now,
+                                                                          params[:fin] ? params[:fin] : Time.now )
+            end
           }.to_json
         end
 
