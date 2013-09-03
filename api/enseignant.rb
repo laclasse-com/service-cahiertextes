@@ -51,12 +51,17 @@ module CahierDeTextesAPI
         }
         post do
           # TODO: gestion des droits
-          Cours.create( cahier_de_textes_id: params[:cahier_de_textes_id],
-                        creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
-                        date_cours: params[:date_cours].to_s,
-                        date_creation: Time.now,
-                        contenu: params[:contenu] )
-          # TODO: loop sur params[:ressources]
+          cours = Cours.create( cahier_de_textes_id: params[:cahier_de_textes_id],
+                                creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
+                                date_cours: params[:date_cours].to_s,
+                                date_creation: Time.now,
+                                contenu: params[:contenu] )
+
+          params[:ressources] && params[:ressources].each do
+            |ressource|
+            cours.add_ressource( Ressource.create( label: ressource['label'],
+                                                   url: ressource['url'] ) )
+          end
         end
 
         desc 'renvoi une séquence pédagogique'
@@ -65,7 +70,13 @@ module CahierDeTextesAPI
           if Cours[ params[:id] ].nil? || Cours[ params[:id] ].deleted
             error!( 'Cours inconnu', 404 )
           else
-            Cours[ params[:id] ]
+            cours = Cours[ params[:id] ]
+            unless cours.nil?
+              hash = cours.to_hash
+              hash[:ressources] = cours.ressources
+
+              hash
+            end
           end
         end
 
@@ -82,7 +93,12 @@ module CahierDeTextesAPI
           unless cours.nil?
             cours.contenu = params[:contenu]
             cours.date_modification = Time.now
-            # TODO: loop sur params[:ressources]
+
+            params[:ressources] && params[:ressources].each do
+              |ressource|
+              cours.add_ressource( Ressource.create( label: ressource['label'],
+                                                     url: ressource['url'] ) )
+            end
 
             cours.save
           end
@@ -120,13 +136,18 @@ module CahierDeTextesAPI
           if Cours[ params[:cours_id] ].nil?
             error!( 'Cours inconnu', 404 )
           else
-            Devoir.create(cours_id: params[:cours_id],
-                          type_devoir_id: params[:type_devoir_id],
-                          contenu: params[:contenu],
-                          date_due: params[:date_due],
-                          temps_estime: params[:temps_estime],
-                          date_creation: Time.now)
-            # TODO: loop sur params[:ressources]
+            devoir = Devoir.create(cours_id: params[:cours_id],
+                                   type_devoir_id: params[:type_devoir_id],
+                                   contenu: params[:contenu],
+                                   date_due: params[:date_due],
+                                   temps_estime: params[:temps_estime],
+                                   date_creation: Time.now)
+
+            params[:ressources] && params[:ressources].each do
+              |ressource|
+              devoir.add_ressource( Ressource.create( label: ressource['label'],
+                                                      url: ressource['url'] ) )
+            end
           end
         end
 
@@ -145,7 +166,12 @@ module CahierDeTextesAPI
             devoir.contenu = params[:contenu]
             devoir.date_due = params[:date_due]
             devoir.temps_estime = params[:temps_estime]
-            # TODO: loop sur params[:ressources]
+
+            params[:ressources] && params[:ressources].each do
+              |ressource|
+              devoir.add_ressource( Ressource.create( label: ressource['label'],
+                                                      url: ressource['url'] ) )
+            end
 
             devoir.date_modification = Time.now
             devoir.save
@@ -158,7 +184,12 @@ module CahierDeTextesAPI
         }
         get '/:cours_id' do
           devoir = Devoir.where(cours_id: params[:cours_id]).first
-          devoir unless devoir.nil?
+          unless devoir.nil?
+            hash = devoir.to_hash
+            hash[:ressources] = devoir.ressources
+
+            hash
+          end
         end
       end
 

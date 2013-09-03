@@ -34,12 +34,15 @@ describe CahierDeTextesAPI::API do
     creneau_emploi_du_temps_id = CreneauEmploiDuTemps.all[ rand(0 .. CreneauEmploiDuTemps.count - 1) ][:id]
     date_cours = '2013-08-29'
     contenu = 'Exemple de séquence pédagogique.'
+    ressources = [ { label: 'test1', url: 'https://localhost/docs/test1' },
+                   { label: 'test2', url: 'https://localhost/docs/test2' } ]
 
     post( '/enseignant/cours',
           { cahier_de_textes_id: cahier_de_textes_id,
             creneau_emploi_du_temps_id: creneau_emploi_du_temps_id,
             date_cours: date_cours,
-            contenu:   contenu }.to_json,
+            contenu: contenu,
+            ressources: ressources }.to_json,
           'CONTENT_TYPE' => 'application/json' )
     last_response.status.should == 201
 
@@ -52,29 +55,40 @@ describe CahierDeTextesAPI::API do
     cours.date_validation.should equal nil
     cours.contenu.should == contenu
     cours.deleted.should be_false
+    cours.ressources.size.should == ressources.size
+    cours.ressources.size.times { |i|
+      cours.ressources[ i ].to_json['label'].should == ressources[ i ].to_json['label']
+      cours.ressources[ i ].to_json['url'].should == ressources[ i ].to_json['url']
+    }
   end
 
   ############ PUT ############
   it 'modifie une séquence pédagogique' do
-    cours = Cours.last
+    cours = Cours.last.clone
     contenu = 'Mise à jour de la séquence pédagogique.'
+    ressources = [ { label: 'test1', url: 'https://localhost/docs/test1' },
+                   { label: 'test2', url: 'https://localhost/docs/test2' } ]
+
+    expected_ressources_size = cours.ressources.size + ressources.size
 
     put( "/enseignant/cours/#{cours.id}",
-         { contenu: contenu }.to_json,
+         { contenu: contenu,
+           ressources: ressources }.to_json,
          'CONTENT_TYPE' => 'application/json' )
     last_response.status.should == 200
 
-    cours2 = Cours[ cours.id ]
+    new_cours = Cours[ cours.id ]
 
-    cours2.cahier_de_textes_id.should == cours.cahier_de_textes_id
-    cours2.creneau_emploi_du_temps_id.should == cours.creneau_emploi_du_temps_id
-    cours2.date_cours.should == cours.date_cours
-    cours2.date_creation.should == cours.date_creation
-    cours2.date_modification.should_not equal nil
-    cours2.date_modification.should be > cours.date_modification unless cours.date_modification.nil?
-    cours2.date_validation.should == cours.date_validation
-    cours2.contenu.should == contenu
-    cours2.deleted.should == cours.deleted
+    new_cours.cahier_de_textes_id.should == cours.cahier_de_textes_id
+    new_cours.creneau_emploi_du_temps_id.should == cours.creneau_emploi_du_temps_id
+    new_cours.date_cours.should == cours.date_cours
+    new_cours.date_creation.should == cours.date_creation
+    new_cours.date_modification.should_not equal nil
+    new_cours.date_modification.should be > cours.date_modification unless cours.date_modification.nil?
+    new_cours.date_validation.should == cours.date_validation
+    new_cours.contenu.should == contenu
+    new_cours.deleted.should == cours.deleted
+    new_cours.ressources.size.should == expected_ressources_size
   end
 
   ############ GET ############
@@ -95,6 +109,7 @@ describe CahierDeTextesAPI::API do
     response_body['date_creation'].should_not equal nil
     response_body['contenu'].should == cours.contenu
     response_body['deleted'].should be_false
+    response_body['ressources'].size.should == cours.ressources.size
   end
 
   ############ DELETE ############
@@ -120,13 +135,16 @@ describe CahierDeTextesAPI::API do
     date_due = Time.now
     contenu = 'Exemple de devoir.'
     temps_estime = rand(0..120)
+    ressources = [ { label: 'test1', url: 'https://localhost/docs/test1' },
+                   { label: 'test2', url: 'https://localhost/docs/test2' } ]
 
     post( "/enseignant/devoir/#{cours_id}",
           { cours_id: cours_id,
             type_devoir_id: type_devoir_id,
             contenu: contenu,
             date_due: date_due,
-            temps_estime: temps_estime }.to_json,
+            temps_estime: temps_estime,
+            ressources: ressources }.to_json,
           'CONTENT_TYPE' => 'application/json' )
     last_response.status.should == 201
 
@@ -140,6 +158,7 @@ describe CahierDeTextesAPI::API do
     devoir.date_validation.should equal nil
     devoir.contenu.should == contenu
     devoir.temps_estime.should == temps_estime
+    devoir.ressources.size.should equal ressources.size
   end
 
   ############ PUT ############
@@ -149,13 +168,18 @@ describe CahierDeTextesAPI::API do
     date_due = Time.now
     contenu = 'Exemple de devoir totalement modifié.'
     temps_estime = rand(0..120)
+    ressources = [ { label: 'test1', url: 'https://localhost/docs/test1' },
+                   { label: 'test2', url: 'https://localhost/docs/test2' } ]
+
+    expected_ressources_size = devoir.ressources.size + ressources.size
 
     put( "/enseignant/devoir/#{devoir.cours_id}",
          { cours_id: devoir.cours_id,
            type_devoir_id: type_devoir_id,
            contenu: contenu,
            date_due: date_due,
-           temps_estime: temps_estime }.to_json,
+           temps_estime: temps_estime,
+           ressources: ressources }.to_json,
          'CONTENT_TYPE' => 'application/json' )
     last_response.status.should == 200
 
@@ -169,6 +193,7 @@ describe CahierDeTextesAPI::API do
     expect( devoir2.date_validation ).to eq devoir.date_validation
     devoir2.contenu.should == contenu
     devoir2.temps_estime.should == temps_estime
+    devoir2.ressources.size.should == expected_ressources_size
   end
 
   ############ GET ############
