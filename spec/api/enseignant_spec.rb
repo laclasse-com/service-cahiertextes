@@ -29,15 +29,17 @@ describe CahierDeTextesAPI::API do
 
   # {{{ Cours
   ############ POST ############
-  it 'creates a new cours' do
+  it 'renseigne une nouvelle séquence pédagogique' do
     cahier_de_textes_id = CahierDeTextes.all[ rand(0 .. CahierDeTextes.count - 1) ][:id]
     creneau_emploi_du_temps_id = CreneauEmploiDuTemps.all[ rand(0 .. CreneauEmploiDuTemps.count - 1) ][:id]
+    date_cours = '2013-08-29'
+    contenu = 'Exemple de séquence pédagogique.'
 
     post( '/enseignant/cours',
           { cahier_de_textes_id: cahier_de_textes_id,
             creneau_emploi_du_temps_id: creneau_emploi_du_temps_id,
-            date_cours: '2013-08-29',
-            contenu: 'Exemple de séquence pédagogique.'}.to_json,
+            date_cours: date_cours,
+            contenu:   contenu }.to_json,
           'CONTENT_TYPE' => 'application/json' )
     last_response.status.should == 201
 
@@ -48,16 +50,17 @@ describe CahierDeTextesAPI::API do
     cours.date_creation.should_not equal nil
     cours.date_modification.should equal nil
     cours.date_validation.should equal nil
-    cours.contenu.should == 'Exemple de séquence pédagogique.'
+    cours.contenu.should == contenu
     cours.deleted.should be_false
   end
 
   ############ PUT ############
-  it 'updates a cours' do
+  it 'modifie une séquence pédagogique' do
     cours = Cours.last
+    contenu = 'Mise à jour de la séquence pédagogique.'
 
     put( "/enseignant/cours/#{cours.id}",
-         { contenu: 'Mise à jour de la séquence pédagogique.'}.to_json,
+         { contenu: contenu }.to_json,
          'CONTENT_TYPE' => 'application/json' )
     last_response.status.should == 200
 
@@ -70,12 +73,12 @@ describe CahierDeTextesAPI::API do
     cours2.date_modification.should_not equal nil
     cours2.date_modification.should be > cours.date_modification unless cours.date_modification.nil?
     cours2.date_validation.should == cours.date_validation
-    cours2.contenu.should == 'Mise à jour de la séquence pédagogique.'
+    cours2.contenu.should == contenu
     cours2.deleted.should == cours.deleted
   end
 
   ############ GET ############
-  it 'gets the details of a cours' do
+  it 'récupère le détail d\'une séquence pédagogique' do
     cours = Cours.last
 
     get "/enseignant/cours/#{cours.id}"
@@ -86,16 +89,16 @@ describe CahierDeTextesAPI::API do
     response_body['cahier_de_textes_id'].should == cours.cahier_de_textes_id
     response_body['creneau_emploi_du_temps_id'].should == cours.creneau_emploi_du_temps_id
     response_body['date_cours'].should == cours.date_cours.to_s
-    # response_body['date_creation'].should == cours.date_creation ? cours.date_creation.to_s : nil
-    # response_body['date_modification'].should == cours.date_modification ? cours.date_modification.to_s : nil
-    # response_body['date_validation'].should == cours.date_validation ? cours.date_validation.to_s : nil
+    expect( Date.parse( response_body['date_creation'] ) ).to eq Date.parse( cours.date_creation.to_s ) unless cours.date_creation.nil?
+    expect( Date.parse( response_body['date_modification'] ) ).to eq Date.parse( cours.date_modification.to_s ) unless cours.date_modification.nil?
+    expect( Date.parse( response_body['date_validation'] ) ).to eq Date.parse( cours.date_validation.to_s ) unless cours.date_validation.nil?
     response_body['date_creation'].should_not equal nil
     response_body['contenu'].should == cours.contenu
-    response_body['deleted'].should == cours.deleted
+    response_body['deleted'].should be_false
   end
 
   ############ DELETE ############
-  it 'deletes a cours' do
+  it 'efface une séquence pédagogique' do
     cours = Cours.last
     cours.deleted.should be_false
 
@@ -111,55 +114,65 @@ describe CahierDeTextesAPI::API do
 
   # {{{ Devoir
   ############ POST ############
-  it 'creates a new devoir' do
+  it 'crée un nouveau devoir' do
     cours_id = Cours.all[ rand(0 .. Cours.count - 1) ][:id]
     type_devoir_id = TypeDevoir.all[ rand(0 .. TypeDevoir.count - 1) ][:id]
     date_due = Time.now
+    contenu = 'Exemple de devoir.'
+    temps_estime = rand(0..120)
 
     post( "/enseignant/devoir/#{cours_id}",
           { cours_id: cours_id,
             type_devoir_id: type_devoir_id,
-            contenu: 'Exemple de devoir.',
-            date_due: date_due }.to_json,
+            contenu: contenu,
+            date_due: date_due,
+            temps_estime: temps_estime }.to_json,
           'CONTENT_TYPE' => 'application/json' )
     last_response.status.should == 201
 
     devoir = Devoir.last
+
     devoir.cours_id.should == cours_id
     devoir.type_devoir_id.should == type_devoir_id
-    expect(devoir.date_due).to eq Date.parse( date_due.to_s )
+    expect( devoir.date_due ).to eq Date.parse( date_due.to_s )
     devoir.date_creation.should_not equal nil
     devoir.date_modification.should equal nil
     devoir.date_validation.should equal nil
-    devoir.contenu.should == 'Exemple de devoir.'
+    devoir.contenu.should == contenu
+    devoir.temps_estime.should == temps_estime
   end
 
   ############ PUT ############
-  it 'updates a devoir' do
+  it 'modifie un devoir' do
     devoir = Devoir.last
     type_devoir_id = TypeDevoir.all[ rand(0 .. TypeDevoir.count - 1) ][:id]
     date_due = Time.now
+    contenu = 'Exemple de devoir totalement modifié.'
+    temps_estime = rand(0..120)
 
     put( "/enseignant/devoir/#{devoir.cours_id}",
          { cours_id: devoir.cours_id,
            type_devoir_id: type_devoir_id,
-           contenu: 'Exemple de devoir totalement modifié.',
-           date_due: date_due }.to_json,
+           contenu: contenu,
+           date_due: date_due,
+           temps_estime: temps_estime }.to_json,
          'CONTENT_TYPE' => 'application/json' )
     last_response.status.should == 200
 
     devoir2 = Devoir.last
+
     devoir2.cours_id.should == devoir.cours_id
     devoir2.type_devoir_id.should == devoir.type_devoir_id
-    expect(devoir2.date_due).to eq Date.parse( devoir.date_due.to_s )
-    expect(devoir2.date_creation).to eq devoir.date_creation
+    expect( devoir2.date_due ).to eq devoir.date_due
+    expect( devoir2.date_creation ).to eq devoir.date_creation
     devoir2.date_modification.should_not equal nil
-    expect(devoir2.date_validation).to eq devoir.date_validation
-    devoir2.contenu.should == 'Exemple de devoir totalement modifié.'
+    expect( devoir2.date_validation ).to eq devoir.date_validation
+    devoir2.contenu.should == contenu
+    devoir2.temps_estime.should == temps_estime
   end
 
   ############ GET ############
-  it 'gets the details of a devoir' do
+  it 'récupère les détails d\'un devoir' do
     devoir = Devoir.all[ rand(0 .. Devoir.count - 1) ]
 
     get "/enseignant/devoir/#{devoir.cours_id}"
