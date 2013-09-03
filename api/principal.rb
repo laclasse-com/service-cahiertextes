@@ -9,7 +9,7 @@ module CahierDeTextesAPI
       resource :classes do
         desc 'statistiques des cahiers de textes par classes/mois/matières'
         get do
-          #TODO: get this from actual (Principal) user
+          # TODO: get this from actual (Principal) user
           regroupements_ids = [ 1, 2, 3, 4, 5, 12 ]
 
           regroupements_ids.map {

@@ -2,6 +2,6 @@
 
 class CahierDeTextes < Sequel::Model( :cahiers_de_textes )
   def statistics
-    {name: "6⁰Q"}
+    { name: '6⁰Q' }
   end
 end
