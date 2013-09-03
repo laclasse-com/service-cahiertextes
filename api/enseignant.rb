@@ -15,6 +15,7 @@ module CahierDeTextesAPI
         }
         get do
           # TODO
+          {}
         end
 
       end
