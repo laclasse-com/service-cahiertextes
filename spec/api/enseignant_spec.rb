@@ -6,14 +6,21 @@ describe CahierDeTextesAPI::API do
   include Rack::Test::Methods
 
   before :all do
-    db_cleaner = TableCleaner.new DB, []
-    db_cleaner.clean
+    TableCleaner.new( DB, [] ).clean
 
-    CahierDeTextes.create(regroupement_id: 1, date_creation: Time.now, deleted: false)
-    plage_horaire_debut = PlageHoraire.create(label: 'test_debut', debut: '08:30:00', fin: '09:00:00')
-    plage_horaire_fin = PlageHoraire.create(label: 'test_fin', debut: '09:30:00', fin: '10:00:00')
-    CreneauEmploiDuTemps.create(debut: plage_horaire_debut.id, fin: plage_horaire_fin.id)
-    TypeDevoir.create(label: 'RSpec', description: 'Type de devoir tout spécial pour rspec')
+    CahierDeTextes.create(regroupement_id: 1,
+                          date_creation: Time.now,
+                          deleted: false)
+    plage_horaire_debut = PlageHoraire.create(label: 'test_debut',
+                                              debut: '08:30:00',
+                                              fin: '09:00:00')
+    plage_horaire_fin = PlageHoraire.create(label: 'test_fin',
+                                            debut: '09:30:00',
+                                            fin: '10:00:00')
+    CreneauEmploiDuTemps.create(debut: plage_horaire_debut.id,
+                                fin: plage_horaire_fin.id)
+    TypeDevoir.create(label: 'RSpec',
+                      description: 'Type de devoir tout spécial pour rspec')
   end
 
   def app
