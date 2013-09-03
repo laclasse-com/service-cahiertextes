@@ -157,15 +157,17 @@ module CahierDeTextesAPI
 
         desc 'modifie un devoir'
         params {
-          requires :cours_id
+          requires :id
           requires :type_devoir_id
           requires :contenu
           requires :date_due, type: Date
           optional :ressources
         }
-        put '/:cours_id' do
-          devoir = Devoir.where(cours_id: params[:cours_id]).first
-          unless devoir.nil?
+        put '/:id' do
+          devoir = Devoir[ params[:id] ]
+          if devoir.nil?
+            error!( 'Devoir inconnu', 404 )
+          else
             devoir.type_devoir_id = params[:type_devoir_id]
             devoir.contenu = params[:contenu]
             devoir.date_due = params[:date_due]
@@ -184,11 +186,13 @@ module CahierDeTextesAPI
 
         desc 'renvoi le détail d\'un devoir'
         params {
-          requires :cours_id
+          requires :id
         }
-        get '/:cours_id' do
-          devoir = Devoir.where(cours_id: params[:cours_id]).first
-          unless devoir.nil?
+        get '/:id' do
+          devoir = Devoir[ params[:id] ]
+          if devoir.nil?
+            error!( 'Devoir inconnu', 404 )
+          else
             hash = devoir.to_hash
             hash[:ressources] = devoir.ressources
 
