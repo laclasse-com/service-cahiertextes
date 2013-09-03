@@ -124,6 +124,7 @@ module CahierDeTextesAPI
                           type_devoir_id: params[:type_devoir_id],
                           contenu: params[:contenu],
                           date_due: params[:date_due],
+                          temps_estime: params[:temps_estime],
                           date_creation: Time.now)
             # TODO: loop sur params[:ressources]
           end
@@ -143,6 +144,7 @@ module CahierDeTextesAPI
             devoir.type_devoir_id = params[:type_devoir_id]
             devoir.contenu = params[:contenu]
             devoir.date_due = params[:date_due]
+            devoir.temps_estime = params[:temps_estime]
             # TODO: loop sur params[:ressources]
 
             devoir.date_modification = Time.now
