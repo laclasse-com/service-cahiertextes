@@ -20,7 +20,7 @@ module CahierDeTextesAPI
 
       end
 
-      resource :cahier_de_textes do
+      resource :cahiers_de_textes do
 
         desc 'contenu combiné des cahiers de textes concernant l\'enseignant durant l\'intervalle de dates données ou par défaut le jour courant'
         params {
