@@ -6,7 +6,7 @@ class Devoir < Sequel::Model( :devoirs )
   many_to_one :type_devoir
 
   def fait_par( eleve_id )
-    add_devoir_todo_items( eleve_id: eleve_id, date_fait: Time.now )
+    add_devoir_todo_item( eleve_id: eleve_id, date_fait: Time.now )
   end
   def fait_par?( eleve_id )
     # FIXME: peut sûrement mieux faire
