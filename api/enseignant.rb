@@ -8,7 +8,7 @@ module CahierDeTextesAPI
 
       resource :emploi_du_temps do
 
-        desc 'contenu combiné des cahiers de textes concernant l\'élève durant l\'intervalle de dates données ou par défaut le jour courant'
+        desc 'emploi du temps de l\'enseignant durant l\'intervalle de dates données ou par défaut la semaine courante'
         params {
           optional :debut, type: Time
           optional :fin, type: Time
