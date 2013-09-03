@@ -13,7 +13,7 @@ module CahierDeTextesAPI
         desc 'Upload a XML file and load it in DB.'
         post do
           # Consommation du fichier reçu
-          ProNote.load_XML( File.open( params[:xml_file][:tempfile] ) )
+          ProNote.load_xml( File.open( params[:xml_file][:tempfile] ) )
 
           # on retourne un log succint des infos chargées
           {
