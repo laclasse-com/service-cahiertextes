@@ -98,6 +98,7 @@ describe CahierDeTextesAPI::API do
   it 'note un devoir comme fait' do
     devoir = Devoir.all[ rand(0 .. Devoir.count - 1) ]
 
+    # WEBRick n'aime pat les put/post sans data, d'où le , {} ;)
     put "/eleve/devoir/#{devoir.id}", {}
     last_response.status.should == 200
 
