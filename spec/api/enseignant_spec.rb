@@ -27,6 +27,24 @@ describe CahierDeTextesAPI::API do
     CahierDeTextesAPI::API
   end
 
+  # {{{ Emploi du Temps
+  ############ GET ############
+  it 'récupère l\'emploi du temps de l\'enseignant' do
+
+    get '/enseignant/emploi_du_temps/'
+    last_response.status.should == 200
+  end
+  # }}}
+
+  # {{{ Cahiers de Textes
+  ############ GET ############
+  it 'récupère les cahiers de textes de l\'enseignant' do
+
+    get '/enseignant/cahiers_de_textes/'
+    last_response.status.should == 200
+  end
+  # }}}
+
   # {{{ Cours
   ############ POST ############
   it 'renseigne une nouvelle séquence pédagogique' do
