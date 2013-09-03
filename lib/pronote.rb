@@ -4,18 +4,19 @@ require 'nokogiri'
 
 require_relative '../models/models'
 
+# Consomme le fichier Emploi du temps exporté par Pronote
 module ProNote
-  def ProNote.decrypt_XML(encrypted_xml, xsd = nil)
+  def self.decrypt_xml(encrypted_xml, xsd = nil)
     encrypted_xml = Nokogiri::XML(encrypted_xml)
 
-    raise 'fichier XML invalide' unless xsd != nil && Nokogiri::XML::Schema(xsd).valid?(encrypted_xml)
+    raise 'fichier XML invalide' unless !xsd.nil? && Nokogiri::XML::Schema(xsd).valid?(encrypted_xml)
 
     # TODO: Here be decryption magic
     xml = encrypted_xml
     xml
   end
 
-  def ProNote.load_XML(xml, xsd = nil)
+  def self.load_xml(xml, xsd = nil)
     edt_clair = Nokogiri::XML(xml)
 
     # TODO: use XSD defined in XML
@@ -31,7 +32,7 @@ module ProNote
     etablissement = Etablissement.create(UAI: edt_clair.child['UAI'])
 
     edt_clair.search('AnneeScolaire').each do |node|
-      if node.name != 'text' then
+      if node.name != 'text'
         etablissement.debut_annee_scolaire = node['DateDebut']
         etablissement.fin_annee_scolaire = node['DateFin']
         etablissement.date_premier_jour_premiere_semaine = node['DatePremierJourSemaine1']
@@ -72,11 +73,11 @@ module ProNote
     # TODO: On va interroger l'annuaire pour construire une table de correspondance temporaire
     # entre ce que nous envoi ProNote et ce que nous avons dans l'annuaire.
     ####
-    matieres = Hash.new
+    matieres = {}
     STDERR.puts 'chargement Matières'
     edt_clair.search('Matieres').children.each do |matiere|
       # FIXME: pull from Annuaire
-      code_annuaire = rand(100000..999999)
+      code_annuaire = rand(100_000..999_999)
       matieres[ matiere['Ident'] ] = code_annuaire unless matiere.name == 'text'
       STDERR.putc '.'
     end
@@ -87,11 +88,11 @@ module ProNote
     # TODO: On va interroger l'annuaire pour construire une table de correspondance temporaire
     # entre ce que nous envoi ProNote et ce que nous avons dans l'annuaire.
     ####
-    enseignants = Hash.new
+    enseignants = {}
     STDERR.puts 'chargement Enseignants'
     edt_clair.search('Professeurs').children.each do |professeur|
       # FIXME: pull from Annuaire
-      code_annuaire = rand(100000..999999)
+      code_annuaire = rand(100_000..999_999)
       enseignants[ professeur['Ident'] ] = code_annuaire unless professeur.name == 'text'
       STDERR.putc '.'
     end
@@ -102,35 +103,35 @@ module ProNote
     # TODO: On va interroger l'annuaire pour construire une table de correspondance temporaire
     # entre ce que nous envoi ProNote et ce que nous avons dans l'annuaire.
     ####
-    regroupements = { 'Classe' => Hash.new, 'PartieDeClasse' => Hash.new, 'Groupe' => Hash.new }
+    regroupements = { 'Classe' => {}, 'PartieDeClasse' => {}, 'Groupe' => {} }
     STDERR.puts 'chargement Regroupements'
     edt_clair.search('Classes').children.each do |classe|
       # FIXME: pull from Annuaire
-      code_annuaire = rand(100000..999999)
+      code_annuaire = rand(100_000..999_999)
       regroupements[ 'Classe' ][ classe['Ident'] ] = code_annuaire unless classe.name == 'text'
       STDERR.putc '.'
       classe.children.each do |partie_de_classe|
         # FIXME: pull from Annuaire
-        code_annuaire = rand(100000..999999)
+        code_annuaire = rand(100_000..999_999)
         regroupements[ 'PartieDeClasse' ][ partie_de_classe['Ident'] ] = code_annuaire unless partie_de_classe.name == 'text'
         STDERR.putc '.'
       end
     end
     edt_clair.search('Groupes').children.each do |groupe|
       # FIXME: pull from Annuaire
-      code_annuaire = rand(100000..999999)
+      code_annuaire = rand(100_000..999_999)
       regroupements[ 'Groupe' ][ groupe['Ident'] ] = code_annuaire unless groupe.name == 'text'
       STDERR.putc '.'
       groupe.children.each do  |node|
         case node.name
         when 'PartieDeClasse'
           # FIXME: pull from Annuaire
-          code_annuaire = rand(100000..999999)
+          code_annuaire = rand(100_000..999_999)
           regroupements[ 'PartieDeClasse' ][ node['Ident'] ] = code_annuaire unless node.name == 'text'
           STDERR.putc '.'
         when 'Classe'
           # FIXME: pull from Annuaire
-          code_annuaire = rand(100000..999999)
+          code_annuaire = rand(100_000..999_999)
           regroupements[ 'Classe' ][ node['Ident'] ] = code_annuaire unless node.name == 'text'
           STDERR.putc '.'
         end
@@ -175,7 +176,7 @@ module ProNote
     #     end
     #   end
     # end
-    
+
     STDERR.puts 'chargement Créneaux d\'Emploi du Temps'
     edt_clair.search('Cours/Cours').each do |creneau_emploi_du_temps|
       unless creneau_emploi_du_temps.name == 'text'
