@@ -81,7 +81,7 @@ Sequel.migration do
       String :contenu, size: 4096           # séquence pédagogique
       TrueClass :deleted, default: false
     }
-    drop_table?(:cours_ressource)
+    drop_table?(:cours_ressources)
     create_join_table(cours_id: :cours, ressource_id: :ressource)
 
     create_table!(:type_devoir) {
