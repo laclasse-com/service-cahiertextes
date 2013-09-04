@@ -12,8 +12,8 @@ module CahierDeTextesAPI
 
         regroupements_ids.map {
           |regroupement_id|
-          CahierDeTextes[regroupement_id: regroupement_id].statistics
-        }.to_json
+          CahierDeTextes[ regroupement_id: params[:id] ] && CahierDeTextes[ regroupement_id: regroupement_id ].statistics || {}
+        }.select{ |item| !item.empty? }
       end
     end
 
@@ -24,7 +24,7 @@ module CahierDeTextesAPI
       }
       get do
         CahierDeTextes[ regroupement_id: params[:id] ] &&
-          CahierDeTextes[ regroupement_id: params[:id] ].statistics.to_json ||
+          CahierDeTextes[ regroupement_id: params[:id] ].statistics ||
           error!( 'Classe inconnue', 404 )
       end
 

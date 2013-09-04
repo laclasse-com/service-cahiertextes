@@ -19,7 +19,7 @@ module CahierDeTextesAPI
           CahierDeTextes[ regroupement_id: regroupement_id ].content( params[:debut] ? params[:debut] : Time.now,
                                                                       params[:fin] ? params[:fin] : Time.now )
         end
-      }.to_json
+      }
     end
 
   end
