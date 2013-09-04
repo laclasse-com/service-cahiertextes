@@ -5,14 +5,16 @@ class Devoir < Sequel::Model( :devoirs )
   one_to_many :devoir_todo_items
   many_to_one :type_devoir
 
-  def fait_par( eleve_id )
+  def fait_par!( eleve_id )
     add_devoir_todo_item( eleve_id: eleve_id, date_fait: Time.now )
   end
+
   def fait_par?( eleve_id )
     # FIXME: peut sûrement mieux faire
     devoir_todo_items_dataset.where(eleve_id: eleve_id).count > 0
   end
-  def plus_fait_par( eleve_id )
+
+  def a_faire_par!( eleve_id )
     # FIXME: peut sûrement mieux faire
     devoir_todo_items_dataset.where(eleve_id: eleve_id).destroy
   end
