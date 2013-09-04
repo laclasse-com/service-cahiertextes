@@ -9,7 +9,6 @@ module CahierDeTextesAPI
   class CoursAPI < Grape::API
     format :json
 
-    ############ POST ############
     desc 'renvoi le détail d\'une séquence pédagogique'
     params {
       requires :id, desc: 'id du cours'
@@ -28,7 +27,6 @@ module CahierDeTextesAPI
       end
     end
 
-    ############ POST ############
     desc 'renseigne une séquence pédagogique'
     params {
       requires :cahier_de_textes_id

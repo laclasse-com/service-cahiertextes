@@ -47,7 +47,7 @@ module CahierDeTextesAPI
     resource :enseignant do
       desc 'statistiques des cahiers de textes d\'un enseignant par mois/classes'
       params {
-        requires :classe_id
+        requires :enseignant_id
       }
       get do
         # TODO
