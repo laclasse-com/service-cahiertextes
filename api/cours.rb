@@ -76,6 +76,21 @@ module CahierDeTextesAPI
       end
     end
 
+    desc 'valide une séquence pédagogique'
+    params {
+      requires :id
+    }
+    put '/:id/valide' do
+      # FIXME: gestion des droits
+      cours = Cours[ params[:id] ]
+
+      unless cours.nil?
+        cours.date_validation = Time.now
+
+        cours.save
+      end
+    end
+
     desc 'efface une séquence pédagogique'
     params {
       requires :id
