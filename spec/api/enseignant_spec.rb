@@ -31,7 +31,7 @@ describe CahierDeTextesAPI::API do
   ############ GET ############
   it 'récupère l\'emploi du temps de l\'enseignant' do
 
-    get '/enseignant/emploi_du_temps/'
+    get '/emploi_du_temps/'
     last_response.status.should == 200
   end
   # }}}
@@ -40,7 +40,7 @@ describe CahierDeTextesAPI::API do
   ############ GET ############
   it 'récupère les cahiers de textes de l\'enseignant' do
 
-    get '/enseignant/cahiers_de_textes/'
+    get '/cahier_de_textes/'
     last_response.status.should == 200
   end
   # }}}
@@ -55,7 +55,7 @@ describe CahierDeTextesAPI::API do
     ressources = [ { label: 'test1', url: 'https://localhost/docs/test1' },
                    { label: 'test2', url: 'https://localhost/docs/test2' } ]
 
-    post( '/enseignant/cours',
+    post( '/cours',
           { cahier_de_textes_id: cahier_de_textes_id,
             creneau_emploi_du_temps_id: creneau_emploi_du_temps_id,
             date_cours: date_cours,
@@ -89,7 +89,7 @@ describe CahierDeTextesAPI::API do
 
     expected_ressources_size = cours.ressources.size + ressources.size
 
-    put( "/enseignant/cours/#{cours.id}",
+    put( "/cours/#{cours.id}",
          { contenu: contenu,
            ressources: ressources }.to_json,
          'CONTENT_TYPE' => 'application/json' )
@@ -113,7 +113,7 @@ describe CahierDeTextesAPI::API do
   it 'récupère le détail d\'une séquence pédagogique' do
     cours = Cours.last
 
-    get "/enseignant/cours/#{cours.id}"
+    get "/cours/#{cours.id}"
     last_response.status.should == 200
 
     response_body = JSON.parse(last_response.body)
@@ -135,12 +135,12 @@ describe CahierDeTextesAPI::API do
     cours = Cours.last
     cours.deleted.should be_false
 
-    delete "/enseignant/cours/#{cours.id}"
+    delete "/cours/#{cours.id}"
 
     cours2 = Cours[ cours.id ]
     cours2.deleted.should be_true
 
-    get "/enseignant/cours/#{cours.id}"
+    get "/cours/#{cours.id}"
     last_response.status.should == 404
   end
   # }}}
@@ -156,7 +156,7 @@ describe CahierDeTextesAPI::API do
     ressources = [ { label: 'test1', url: 'https://localhost/docs/test1' },
                    { label: 'test2', url: 'https://localhost/docs/test2' } ]
 
-    post( "/enseignant/devoir/#{cours_id}",
+    post( "/devoir/#{cours_id}",
           { cours_id: cours_id,
             type_devoir_id: type_devoir_id,
             contenu: contenu,
@@ -191,7 +191,7 @@ describe CahierDeTextesAPI::API do
 
     expected_ressources_size = devoir.ressources.size + ressources.size
 
-    put( "/enseignant/devoir/#{devoir.id}",
+    put( "/devoir/#{devoir.id}",
          { cours_id: devoir.cours_id,
            type_devoir_id: type_devoir_id,
            contenu: contenu,
@@ -218,7 +218,7 @@ describe CahierDeTextesAPI::API do
   it 'récupère les détails d\'un devoir' do
     devoir = Devoir.all[ rand(0 .. Devoir.count - 1) ]
 
-    get "/enseignant/devoir/#{devoir.id}"
+    get "/devoir/#{devoir.id}"
     last_response.status.should == 200
 
     response_body = JSON.parse( last_response.body )
