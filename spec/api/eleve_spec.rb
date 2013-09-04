@@ -9,8 +9,8 @@ describe CahierDeTextesAPI::API do
     TableCleaner.new( DB, [] ).clean
 
     cahier_de_textes = CahierDeTextes.create(regroupement_id: 1,
-                          date_creation: Time.now,
-                          deleted: false)
+                                             date_creation: Time.now,
+                                             deleted: false)
     plage_horaire_debut = PlageHoraire.create(label: 'test_debut',
                                               debut: '08:30:00',
                                               fin: '09:00:00')
@@ -18,14 +18,14 @@ describe CahierDeTextesAPI::API do
                                             debut: '09:30:00',
                                             fin: '10:00:00')
     creneau_emploi_du_temps = CreneauEmploiDuTemps.create(debut: plage_horaire_debut.id,
-                                fin: plage_horaire_fin.id)
+                                                          fin: plage_horaire_fin.id)
     type_devoir = TypeDevoir.create(label: 'RSpec',
-                      description: 'Type de devoir tout spécial pour rspec')
+                                    description: 'Type de devoir tout spécial pour rspec')
 
     cours = Cours.create(cahier_de_textes_id: cahier_de_textes.id,
-                 creneau_emploi_du_temps_id: creneau_emploi_du_temps.id,
-                 date_cours: '2013-08-29',
-                 contenu: 'Exemple de séquence pédagogique.' )
+                         creneau_emploi_du_temps_id: creneau_emploi_du_temps.id,
+                         date_cours: '2013-08-29',
+                         contenu: 'Exemple de séquence pédagogique.' )
     Devoir.create(cours_id: cours.id,
                   type_devoir_id: type_devoir.id,
                   date_due: Time.now,
@@ -41,7 +41,7 @@ describe CahierDeTextesAPI::API do
   ############ GET ############
   it 'récupère l\'emploi du temps de l\'élève' do
 
-    get '/eleve/emploi_du_temps/'
+    get '/emploi_du_temps/'
     last_response.status.should == 200
   end
   # }}}
@@ -50,7 +50,7 @@ describe CahierDeTextesAPI::API do
   ############ GET ############
   it 'récupère le cahier de textes de l\'élève' do
 
-    get '/eleve/cahier_de_textes/'
+    get '/cahier_de_textes/'
     last_response.status.should == 200
   end
   # }}}
@@ -60,7 +60,7 @@ describe CahierDeTextesAPI::API do
   it 'récupère le détail d\'une séquence pédagogique' do
     cours = Cours.last
 
-    get "/eleve/cours/#{cours.id}"
+    get "/cours/#{cours.id}"
     last_response.status.should == 200
 
     response_body = JSON.parse(last_response.body)
@@ -83,7 +83,7 @@ describe CahierDeTextesAPI::API do
     eleve_id = 1
     devoir = Devoir.all[ rand(0 .. Devoir.count - 1) ]
 
-    get "/eleve/devoir/#{devoir.id}"
+    get "/devoir/#{devoir.id}"
     last_response.status.should == 200
 
     response_body = JSON.parse( last_response.body )
@@ -98,8 +98,7 @@ describe CahierDeTextesAPI::API do
   it 'note un devoir comme fait' do
     devoir = Devoir.all[ rand(0 .. Devoir.count - 1) ]
 
-    # WEBRick n'aime pat les put/post sans data, d'où le , {} ;)
-    put "/eleve/devoir/#{devoir.id}", {}
+    put "/devoir/todo/#{devoir.id}", {}
     last_response.status.should == 200
 
     devoir.fait_par?( 1 ).should be_true

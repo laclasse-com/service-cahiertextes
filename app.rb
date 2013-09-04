@@ -13,8 +13,11 @@ require_relative './lib/pronote'
 
 require_relative './api/pronote'
 require_relative './api/principal'
-require_relative './api/enseignant'
-require_relative './api/eleve'
+
+require_relative './api/cours'
+require_relative './api/devoir'
+require_relative './api/emploi_du_temps'
+require_relative './api/cahier_de_textes'
 
 module CahierDeTextesAPI
   class API < Grape::API
@@ -34,9 +37,12 @@ module CahierDeTextesAPI
     end
 
     mount ::CahierDeTextesAPI::ProNoteAPI
-    mount ::CahierDeTextesAPI::PrincipalAPI
-    mount ::CahierDeTextesAPI::EnseignantAPI
-    mount ::CahierDeTextesAPI::EleveAPI
+    mount ::CahierDeTextesAPI::EtablissementAPI
+
+    mount ::CahierDeTextesAPI::CoursAPI
+    mount ::CahierDeTextesAPI::DevoirAPI
+    mount ::CahierDeTextesAPI::EmploiDuTempsAPI
+    mount ::CahierDeTextesAPI::CahierDeTextesAPI
 
   end
 end
