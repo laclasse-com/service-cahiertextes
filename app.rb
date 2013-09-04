@@ -4,6 +4,7 @@ require 'rubygems'
 require 'bundler/setup'
 
 require 'grape'
+require 'grape-swagger'
 require 'nokogiri'
 require 'sequel'
 require 'sequel/extensions/migration'
@@ -42,5 +43,6 @@ module CahierDeTextesAPI
     resource( :emploi_du_temps ) { mount ::CahierDeTextesAPI::EmploiDuTempsAPI }
     resource( :cahier_de_textes ) { mount ::CahierDeTextesAPI::CahierDeTextesAPI }
 
+    add_swagger_documentation
   end
 end

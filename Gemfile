@@ -3,6 +3,7 @@ source "https://rubygems.org"
 source 'http://gems.erasme.org'
 
 gem 'grape'
+gem 'grape-swagger'
 gem 'nokogiri'
 gem 'sequel'
 gem 'mysql2'
