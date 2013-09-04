@@ -56,6 +56,8 @@ module CahierDeTextesAPI
       desc 'valide toutes les saisies non validées de l\'enseignant'
       params {
         requires :enseignant_id
+        optional :debut, type: Time
+        optional :fin, type: Time
       }
       put '/:enseignant_id' do
         # TODO: validate all?
