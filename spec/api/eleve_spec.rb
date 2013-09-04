@@ -98,7 +98,7 @@ describe CahierDeTextesAPI::API do
   it 'note un devoir comme fait' do
     devoir = Devoir.all[ rand(0 .. Devoir.count - 1) ]
 
-    put "/devoir/todo/#{devoir.id}", {}
+    put "/devoir/#{devoir.id}/fait", {}
     last_response.status.should == 200
 
     devoir.fait_par?( 1 ).should be_true
