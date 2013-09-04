@@ -12,8 +12,7 @@ require_relative './models/models'
 require_relative './lib/pronote'
 
 require_relative './api/pronote'
-require_relative './api/principal'
-
+require_relative './api/etablissement'
 require_relative './api/cours'
 require_relative './api/devoir'
 require_relative './api/emploi_du_temps'
@@ -36,13 +35,12 @@ module CahierDeTextesAPI
       end
     end
 
-    mount ::CahierDeTextesAPI::ProNoteAPI
-    mount ::CahierDeTextesAPI::EtablissementAPI
-
-    mount ::CahierDeTextesAPI::CoursAPI
-    mount ::CahierDeTextesAPI::DevoirAPI
-    mount ::CahierDeTextesAPI::EmploiDuTempsAPI
-    mount ::CahierDeTextesAPI::CahierDeTextesAPI
+    resource( :pronote ) { mount ::CahierDeTextesAPI::ProNoteAPI }
+    resource( :etablissement ) { mount ::CahierDeTextesAPI::EtablissementAPI }
+    resource( :cours ) { mount ::CahierDeTextesAPI::CoursAPI }
+    resource( :devoir ) { mount ::CahierDeTextesAPI::DevoirAPI }
+    resource( :emploi_du_temps ) { mount ::CahierDeTextesAPI::EmploiDuTempsAPI }
+    resource( :cahier_de_textes ) { mount ::CahierDeTextesAPI::CahierDeTextesAPI }
 
   end
 end
