@@ -10,7 +10,7 @@ class Etablissement < Sequel::Model( :etablissements )
       { enseignant_id: enseignant_id,
         statistiques: (1..12).map do
           |month|
-          stats = { month: month, total: 0, filled: 0, validated: 0 }
+          stats = { month: month, filled: 0, validated: 0 }
 
           CreneauEmploiDuTempsEnseignant.where( enseignant_id: enseignant_id ).map do
             |creneau|
@@ -18,11 +18,10 @@ class Etablissement < Sequel::Model( :etablissements )
             cours = Cours.where( creneau_emploi_du_temps_id: creneau.creneau_emploi_du_temps_id ).where( 'extract( month from date_cours ) = ' + month.to_s )
 
             # TODO: calcul total attendu
-            { # total: 99,
-              filled: cours.count,
+            { filled: cours.count,
               validated: cours.where( :date_validation ).count
             }
-          end.each { |values| [:total, :filled, :validated].each { |key| stats[ key ] += values[ key ] } }
+          end.each { |values| [:filled, :validated].each { |key| stats[ key ] += values[ key ] } }
           stats
         end
       }
