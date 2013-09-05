@@ -8,6 +8,9 @@ describe CahierDeTextesAPI::API do
   before :all do
     TableCleaner.new( DB, [] ).clean
 
+    xml_filename = 'spec/fixtures/Edt_To_LaclasseCom_0134567A_Enclair.xml'
+    post '/pronote/xml', xml_file: Rack::Test::UploadedFile.new(xml_filename, 'text/xml')
+
     cahier_de_textes = CahierDeTextes.create(regroupement_id: 1,
                                              date_creation: Time.now,
                                              deleted: false)
