@@ -6,7 +6,7 @@ module CahierDeTextesAPI
 
     desc 'statistiques des cahiers de textes par classes/mois/matières'
     params {
-      requires :uai
+      requires :uai, desc: 'Code UAI de l\'établissement'
     }
     get '/:uai/classes' do
       # TODO: get this from actual etablissement
@@ -20,10 +20,11 @@ module CahierDeTextesAPI
 
     desc 'statistiques du cahier de textes d\'une classe'
     params {
-      requires :id_classe
+      requires :uai, desc: 'Code UAI de l\'établissement'
+      requires :classe_id, desc: 'identifiant annuaire de la classe'
     }
-    get '/:uai/classe/:id_classe' do
-      cdt = CahierDeTextes[ regroupement_id: params[:id_classe] ]
+    get '/:uai/classe/:classe_id' do
+      cdt = CahierDeTextes[ regroupement_id: params[:classe_id] ]
 
       error!( 'Classe inconnue', 404 ) if cdt.nil?
 
@@ -32,13 +33,17 @@ module CahierDeTextesAPI
 
     desc 'valide toutes les saisies non validées de la classe'
     params {
-      requires :classe_id
+      requires :uai, desc: 'Code UAI de l\'établissement'
+      requires :classe_id, desc: 'identifiant annuaire de la classe'
     }
     put '/:uai/classe/:id_classe' do
       # TODO: validate all?
     end
 
     desc 'statistiques des cahiers de textes par enseignants/mois'
+    params {
+      requires :uai, desc: 'Code UAI de l\'établissement'
+    }
     get '/:uai/enseignants' do
       # TODO: get this from actual etablissement
       enseignants_ids = Cours.select( :enseignant_id ).all.uniq.map { |c| c.values[ :enseignant_id ] }
@@ -67,9 +72,10 @@ module CahierDeTextesAPI
       }
     end
 
-    desc 'statistiques des cahiers de textes d\'un enseignant par mois/classes'
+    desc 'saisies détaillées d\'un enseignant dans les cahiers de textes par mois/classes'
     params {
-      requires :id_enseignant
+      requires :uai, desc: 'Code UAI de l\'établissement'
+      requires :id_enseignant, desc: 'identifiant annuaire de l\'enseignant'
     }
     get '/:uai/enseignant/:id_enseignant' do
       # TODO
