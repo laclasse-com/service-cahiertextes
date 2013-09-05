@@ -45,31 +45,7 @@ module CahierDeTextesAPI
       requires :uai, desc: 'Code UAI de l\'établissement'
     }
     get '/:uai/enseignants' do
-      # TODO: get this from actual etablissement
-      enseignants_ids = Cours.select( :enseignant_id ).all.uniq.map { |c| c.values[ :enseignant_id ] }
-
-      enseignants_ids.map {
-        |enseignant_id|
-        { enseignant_id: enseignant_id,
-          statistiques: (1..12).map {
-            |month|
-            stats = { month: month, total: 0, filled: 0, validated: 0 }
-
-            CreneauEmploiDuTempsEnseignant.where( enseignant_id: enseignant_id ).map {
-              |creneau|
-              # TODO: prendre en compte les semaine_de_presence
-              cours = Cours.where( creneau_emploi_du_temps_id: creneau.creneau_emploi_du_temps_id ).where( 'extract( month from date_cours ) = ' + month.to_s )
-
-              # FIXME: calcul total attendu
-              { total: 99,
-                filled: cours.count,
-                validated: cours.where( :date_validation ).count
-              }
-            }.each { |values| [:total, :filled, :validated].each { |key| stats[ key ] += values[ key ] } }
-            stats
-          }
-        }
-      }
+      Etablissement.where(uai: params[:uai]).first.statistiques_enseignants
     end
 
     desc 'saisies détaillées d\'un enseignant dans les cahiers de textes par mois/classes'
@@ -78,7 +54,7 @@ module CahierDeTextesAPI
       requires :id_enseignant, desc: 'identifiant annuaire de l\'enseignant'
     }
     get '/:uai/enseignant/:id_enseignant' do
-      # TODO
+      Etablissement.where(uai: params[:uai]).first.saisies_enseignant( params[:id_enseignant] )
     end
 
     desc 'valide toutes les saisies non validées de l\'enseignant'
