@@ -49,7 +49,7 @@ module CahierDeTextesAPI
           statistiques: (1..12).map {
             |month|
             stats = { month: month, total: 0, filled: 0, validated: 0 }
-            
+
             CreneauEmploiDuTempsEnseignant.where( enseignant_id: enseignant_id ).map {
               |creneau|
               # TODO: prendre en compte les semaine_de_presence
