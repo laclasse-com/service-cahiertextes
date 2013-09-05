@@ -56,20 +56,12 @@ describe CahierDeTextesAPI::API do
     last_response.status.should == 200
 
     # FIXME: des millions de détails à tester !
-  end
-  # }}}
-  # {{{ Cours
-  it 'valide une séquence pédagogique' do
-    cours = Cours.last
-    cours.date_validation = nil
-    cours.save
+    response_body = JSON.parse( last_response.body )
 
-    put "/cours/#{cours.id}/valide", {}
-    last_response.status.should == 200
-
-    cours2 = Cours[ cours.id ]
-
-    cours2.date_validation.should_not equal nil
+    response_body.reduce( true ) {
+      |are_we_good, enseignant|
+      are_we_good && enseignant['statistiques'].size == 12
+    }.should be_true
   end
   # }}}
 
