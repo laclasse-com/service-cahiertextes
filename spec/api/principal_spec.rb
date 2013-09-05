@@ -55,7 +55,6 @@ describe CahierDeTextesAPI::API do
     get "/etablissement/#{uai}/enseignants"
     last_response.status.should == 200
 
-    # FIXME: des millions de détails à tester !
     response_body = JSON.parse( last_response.body )
 
     response_body.reduce( true ) {
