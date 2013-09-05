@@ -45,8 +45,17 @@ describe CahierDeTextesAPI::API do
     CahierDeTextesAPI::API
   end
 
+  # {{{ Enseignants
+  it 'récupère les statistiques par enseignants et par mois' do
+    uai = '0134567A'
+
+    get "/etablissement/#{uai}/enseignants"
+    last_response.status.should == 200
+
+    # FIXME: des millions de détails à tester !
+  end
+  # }}}
   # {{{ Cours
-  ############ GET ############
   it 'valide une séquence pédagogique' do
     cours = Cours.last
     cours.date_validation = nil
