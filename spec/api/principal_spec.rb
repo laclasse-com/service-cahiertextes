@@ -17,8 +17,8 @@ describe CahierDeTextesAPI::API do
     plage_horaire_fin = PlageHoraire.create(label: 'test_fin',
                                             debut: '09:30:00',
                                             fin: '10:00:00')
-    creneau_emploi_du_temps = CreneauEmploiDuTemps.create(debut: plage_horaire_debut.id,
-                                                          fin: plage_horaire_fin.id)
+    CreneauEmploiDuTemps.create(debut: plage_horaire_debut.id,
+                                fin: plage_horaire_fin.id)
     type_devoir = TypeDevoir.create(label: 'RSpec',
                                     description: 'Type de devoir tout spécial pour rspec')
 
