@@ -18,11 +18,11 @@ module CahierDeTextesAPI
       requires :classe_id, desc: 'identifiant annuaire de la classe'
     }
     get '/:uai/classe/:classe_id' do
-      cdt = CahierDeTextes[ regroupement_id: params[:classe_id] ]
+      cahier_de_textes = CahierDeTextes[ regroupement_id: params[:classe_id] ]
 
-      error!( 'Classe inconnue', 404 ) if cdt.nil?
+      error!( 'Classe inconnue', 404 ) if cahier_de_textes.nil?
 
-      cdt.statistiques
+      cahier_de_textes.statistiques
     end
 
     desc 'valide toutes les saisies non validées de la classe'
