@@ -9,13 +9,7 @@ module CahierDeTextesAPI
       requires :uai, desc: 'Code UAI de l\'établissement'
     }
     get '/:uai/classes' do
-      # TODO: get this from actual etablissement
-      regroupements_ids = [ 1, 2, 3, 4, 5, 12 ] # get_classes_from_etablissement( params[:uai] )
-
-      regroupements_ids.map {
-        |regroupement_id|
-        CahierDeTextes[ regroupement_id: params[:id] ] && CahierDeTextes[ regroupement_id: regroupement_id ].statistics || {}
-      }.select{ |item| !item.empty? }
+      Etablissement.where(uai: params[:uai]).first.statistiques_classes
     end
 
     desc 'statistiques du cahier de textes d\'une classe'

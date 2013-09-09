@@ -1,6 +1,13 @@
 # -*- coding: utf-8 -*-
 
 class Etablissement < Sequel::Model( :etablissements )
+  def statistiques_classes
+    CahierDeTextes.map {
+      |cahier_de_textes|
+      cahier_de_textes.statistiques
+    }
+  end
+
   def statistiques_enseignants
     # FIXME: get this from actual etablissement
     enseignants_ids = Cours.select( :enseignant_id ).group_by( :enseignant_id ).all.map { |c| c.values[ :enseignant_id ] }
