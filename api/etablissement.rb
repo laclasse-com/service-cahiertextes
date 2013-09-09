@@ -22,7 +22,7 @@ module CahierDeTextesAPI
 
       error!( 'Classe inconnue', 404 ) if cdt.nil?
 
-      cdt.statistics
+      cdt.statistiques
     end
 
     desc 'valide toutes les saisies non validées de la classe'
