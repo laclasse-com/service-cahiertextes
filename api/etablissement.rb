@@ -59,6 +59,7 @@ module CahierDeTextesAPI
 
     desc 'valide toutes les saisies non validées de l\'enseignant'
     params {
+      requires :uai, desc: 'Code UAI de l\'établissement'
       requires :enseignant_id
       optional :debut, type: Time
       optional :fin, type: Time
