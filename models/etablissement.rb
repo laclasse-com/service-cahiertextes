@@ -36,8 +36,10 @@ class Etablissement < Sequel::Model( :etablissements )
         Cours.where( enseignant_id: enseignant_id ).where( 'extract( month from date_cours ) = ' + month.to_s ).map do
           |cours|
           devoir = Devoir.where(cours_id: cours.id).first
+
           {                     # TODO: tenir compte des semaines de présence
             classe: CreneauEmploiDuTempsRegroupement.where(creneau_emploi_du_temps_id: cours.creneau_emploi_du_temps_id).first.regroupement_id,
+            matiere_id: CreneauEmploiDuTemps[ cours.creneau_emploi_du_temps_id ].matiere_id,
             cours_id: cours.id,
             cours: cours.contenu,
             devoir_id: devoir.id,
