@@ -45,10 +45,10 @@ module CahierDeTextesAPI
     desc 'saisies détaillées d\'un enseignant dans les cahiers de textes par mois/classes'
     params {
       requires :uai, desc: 'Code UAI de l\'établissement'
-      requires :id_enseignant, desc: 'identifiant annuaire de l\'enseignant'
+      requires :enseignant_id, desc: 'identifiant annuaire de l\'enseignant'
     }
-    get '/:uai/enseignant/:id_enseignant' do
-      Etablissement.where(uai: params[:uai]).first.saisies_enseignant( params[:id_enseignant] )
+    get '/:uai/enseignant/:enseignant_id' do
+      Etablissement.where(uai: params[:uai]).first.saisies_enseignant( params[:enseignant_id] )
     end
 
     desc 'valide toutes les saisies non validées de l\'enseignant'
@@ -58,9 +58,9 @@ module CahierDeTextesAPI
       optional :debut, type: Time
       optional :fin, type: Time
     }
-    put '/:uai/enseignant/:id_enseignant' do
         # TODO: validate all?
       end
+    put '/:uai/enseignant/:enseignant_id' do
 
   end
 end
