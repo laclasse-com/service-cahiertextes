@@ -30,8 +30,12 @@ module CahierDeTextesAPI
       requires :uai, desc: 'Code UAI de l\'établissement'
       requires :classe_id, desc: 'identifiant annuaire de la classe'
     }
-    put '/:uai/classe/:id_classe' do
-      # TODO: validate all?
+    put '/:uai/classe/:classe_id' do
+      cahier_de_textes = CahierDeTextes[ regroupement_id: params[:classe_id] ]
+
+      error!( 'Classe inconnue', 404 ) if cahier_de_textes.nil?
+
+      cahier_de_textes.valide!
     end
 
     desc 'statistiques des cahiers de textes par enseignants/mois'
@@ -58,9 +62,9 @@ module CahierDeTextesAPI
       optional :debut, type: Time
       optional :fin, type: Time
     }
-        # TODO: validate all?
-      end
     put '/:uai/enseignant/:enseignant_id' do
+      Etablissement.where(uai: params[:uai]).first.valide_enseignant!( params[:enseignant_id] )
+    end
 
   end
 end
