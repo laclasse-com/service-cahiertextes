@@ -78,4 +78,48 @@ describe CahierDeTextesAPI::API do
   end
   # }}}
 
+  # {{{ Classes
+  it 'récupère les statistiques par classes / mois / matières' do
+    uai = '0134567A'
+
+    get "/etablissement/#{uai}/classes"
+    last_response.status.should == 200
+
+    response_body = JSON.parse( last_response.body )
+
+    response_body.each {
+      |classe|
+      classe['par_mois'].size.should == 12
+      classe['par_mois'].reduce( 0 ) {
+        |total, mois|
+        total + mois[ 'filled' ]
+      }.should == classe[ 'filled' ]
+      classe['par_mois'].reduce( 0 ) {
+        |total, mois|
+        total + mois[ 'validated' ]
+      }.should == classe[ 'validated' ]
+    }
+  end
+
+  it 'récupère les statistiques d\'une classe par mois / matières' do
+    uai = '0134567A'
+    classe_id = '1'
+
+    get "/etablissement/#{uai}/classe/#{classe_id}"
+    last_response.status.should == 200
+
+    response_body = JSON.parse( last_response.body )
+
+    response_body['par_mois'].size.should == 12
+    response_body['par_mois'].reduce( 0 ) {
+      |total, mois|
+      total + mois[ 'filled' ]
+    }.should == response_body[ 'filled' ]
+    response_body['par_mois'].reduce( 0 ) {
+      |total, mois|
+      total + mois[ 'validated' ]
+    }.should == response_body[ 'validated' ]
+  end
+
+  # }}}
 end
