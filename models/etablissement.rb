@@ -15,7 +15,8 @@ class Etablissement < Sequel::Model( :etablissements )
     enseignants_ids.map do
       |enseignant_id|
       { enseignant_id: enseignant_id,
-        statistiques: (1..12).map do
+        statistiques:
+        (1..12).map do
           |month|
           stats = { month: month, filled: 0, validated: 0 }
 
@@ -37,7 +38,8 @@ class Etablissement < Sequel::Model( :etablissements )
 
   def saisies_enseignant( enseignant_id )
     { enseignant_id: enseignant_id,
-      saisies: (1..12).map do
+      saisies:
+      (1..12).map do
         |month|
 
         Cours.where( enseignant_id: enseignant_id ).where( 'extract( month from date_cours ) = ' + month.to_s ).map do
