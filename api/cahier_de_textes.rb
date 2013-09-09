@@ -16,7 +16,7 @@ module CahierDeTextesAPI
         |regroupement_id|
         cdt = CahierDeTextes[ regroupement_id: regroupement_id ]
         unless cdt.nil?
-          CahierDeTextes[ regroupement_id: regroupement_id ].content( params[:debut] ? params[:debut] : Time.now,
+          CahierDeTextes[ regroupement_id: regroupement_id ].contenu( params[:debut] ? params[:debut] : Time.now,
                                                                       params[:fin] ? params[:fin] : Time.now )
         end
       }
