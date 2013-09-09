@@ -59,4 +59,8 @@ class Etablissement < Sequel::Model( :etablissements )
       end
     }
   end
+
+  def valide_enseignant!( enseignant_id )
+    Cours.where(enseignant_id: enseignant_id).where('date_validation IS NULL').update(date_validation: Time.now)
+  end
 end

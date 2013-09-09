@@ -76,6 +76,16 @@ describe CahierDeTextesAPI::API do
 
     response_body['saisies'].count.should == 12
   end
+
+  it 'valide tout le cahier de textes d\'un enseignant' do
+    uai = '0134567A'
+    enseignant_id = Cours.select(:enseignant_id).first[:enseignant_id].to_s
+
+    put "/etablissement/#{uai}/enseignant/#{enseignant_id}"
+    last_response.status.should == 200
+
+    Cours.where(enseignant_id: enseignant_id).where('date_validation IS NULL').count.should == 0
+  end
   # }}}
 
   # {{{ Classes
@@ -121,5 +131,14 @@ describe CahierDeTextesAPI::API do
     }.should == response_body[ 'validated' ]
   end
 
+  it 'valide tout le cahier de textes d\'une classe' do
+    uai = '0134567A'
+    classe_id = '1'
+
+    put "/etablissement/#{uai}/classe/#{classe_id}"
+    last_response.status.should == 200
+
+    Cours.where(cahier_de_textes_id: CahierDeTextes.where(regroupement_id: classe_id).first.id ).where('date_validation IS NULL').count.should == 0
+  end
   # }}}
 end

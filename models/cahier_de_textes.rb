@@ -37,6 +37,11 @@ class CahierDeTextes < Sequel::Model( :cahiers_de_textes )
     }
   end
 
+  # Valide tout un cahier de texte
+  def valide!
+    Cours.where(cahier_de_textes_id: id).where('date_validation IS NULL').update(date_validation: Time.now)
+  end
+
   def contenu( debut, fin )
     # TODO: return the content of this Cahier de textes during the given dates interval
     {}
