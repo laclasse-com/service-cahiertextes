@@ -62,6 +62,20 @@ describe CahierDeTextesAPI::API do
       are_we_good && enseignant['statistiques'].size == 12
     }.should be_true
   end
+
+  it 'récupère les statistiques par enseignants et par mois' do
+    uai = '0134567A'
+    enseignant_id = Cours.select(:enseignant_id).first[:enseignant_id].to_s
+
+    get "/etablissement/#{uai}/enseignant/#{enseignant_id}"
+    last_response.status.should == 200
+
+    response_body = JSON.parse( last_response.body )
+
+    response_body['enseignant_id'].should == enseignant_id
+
+    response_body['saisies'].count.should == 12
+  end
   # }}}
 
 end
