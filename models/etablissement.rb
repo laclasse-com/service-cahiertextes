@@ -38,7 +38,7 @@ class Etablissement < Sequel::Model( :etablissements )
           devoir = Devoir.where(cours_id: cours.id).first
 
           {                     # TODO: tenir compte des semaines de présence
-            classe: CreneauEmploiDuTempsRegroupement.where(creneau_emploi_du_temps_id: cours.creneau_emploi_du_temps_id).first.regroupement_id,
+            classe_id: CreneauEmploiDuTempsRegroupement.where(creneau_emploi_du_temps_id: cours.creneau_emploi_du_temps_id).first.regroupement_id,
             matiere_id: CreneauEmploiDuTemps[ cours.creneau_emploi_du_temps_id ].matiere_id,
             cours_id: cours.id,
             cours: cours.contenu,
