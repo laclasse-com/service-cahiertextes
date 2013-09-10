@@ -36,11 +36,11 @@ module CahierDeTextesAPI
       end
     end
 
-    resource( :pronote ) { mount ::CahierDeTextesAPI::ProNoteAPI }
-    resource( :etablissement ) { mount ::CahierDeTextesAPI::EtablissementAPI }
-    resource( :cours ) { mount ::CahierDeTextesAPI::CoursAPI }
-    resource( :devoir ) { mount ::CahierDeTextesAPI::DevoirAPI }
-    resource( :emploi_du_temps ) { mount ::CahierDeTextesAPI::EmploiDuTempsAPI }
+    resource( :pronote )          { mount ::CahierDeTextesAPI::ProNoteAPI }
+    resource( :etablissement )    { mount ::CahierDeTextesAPI::EtablissementAPI }
+    resource( :cours )            { mount ::CahierDeTextesAPI::CoursAPI }
+    resource( :devoir )           { mount ::CahierDeTextesAPI::DevoirAPI }
+    resource( :emploi_du_temps )  { mount ::CahierDeTextesAPI::EmploiDuTempsAPI }
     resource( :cahier_de_textes ) { mount ::CahierDeTextesAPI::CahierDeTextesAPI }
 
     add_swagger_documentation
