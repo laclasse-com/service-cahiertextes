@@ -79,8 +79,7 @@ module ProNote
     matieres = {}
     STDERR.puts 'chargement Matières'
     edt_clair.search('Matieres').children.each do |matiere|
-      code_annuaire = Annuaire.get_matiere_id
-      matieres[ matiere['Ident'] ] = code_annuaire unless matiere.name == 'text'
+      matieres[ matiere['Ident'] ] = Annuaire.get_matiere_id( etablissement.UAI, matiere['Libelle'] ) unless matiere.name == 'text'
       STDERR.putc '.'
     end
     STDERR.puts
@@ -93,7 +92,7 @@ module ProNote
     enseignants = {}
     STDERR.puts 'chargement Enseignants'
     edt_clair.search('Professeurs').children.each do |professeur|
-      code_annuaire = Annuaire.get_utilisateur_id
+      code_annuaire = Annuaire.get_utilisateur_id( etablissement.UAI, professeur['Nom'], professeur['Prenom'] , professeur['DateNaissance'].nil? ? nil : professeur['DateNaissance'] )
       enseignants[ professeur['Ident'] ] = code_annuaire unless professeur.name == 'text'
       STDERR.putc '.'
     end
@@ -107,27 +106,27 @@ module ProNote
     regroupements = { 'Classe' => {}, 'PartieDeClasse' => {}, 'Groupe' => {} }
     STDERR.puts 'chargement Regroupements'
     edt_clair.search('Classes').children.each do |classe|
-      code_annuaire = Annuaire.get_regroupement_id
+      code_annuaire = Annuaire.get_regroupement_id( etablissement.UAI, classe['Nom'] )
       regroupements[ 'Classe' ][ classe['Ident'] ] = code_annuaire unless classe.name == 'text'
       STDERR.putc '.'
       classe.children.each do |partie_de_classe|
-        code_annuaire = Annuaire.get_regroupement_id
+        code_annuaire = Annuaire.get_regroupement_id( etablissement.UAI, partie_de_classe['Nom'] )
         regroupements[ 'PartieDeClasse' ][ partie_de_classe['Ident'] ] = code_annuaire unless partie_de_classe.name == 'text'
         STDERR.putc '.'
       end
     end
     edt_clair.search('Groupes').children.each do |groupe|
-      code_annuaire = Annuaire.get_regroupement_id
+      code_annuaire = Annuaire.get_regroupement_id( etablissement.UAI, groupe['Nom'] )
       regroupements[ 'Groupe' ][ groupe['Ident'] ] = code_annuaire unless groupe.name == 'text'
       STDERR.putc '.'
       groupe.children.each do  |node|
         case node.name
         when 'PartieDeClasse'
-          code_annuaire = Annuaire.get_regroupement_id
+          code_annuaire = Annuaire.get_regroupement_id( etablissement.UAI, node['Nom'] )
           regroupements[ 'PartieDeClasse' ][ node['Ident'] ] = code_annuaire unless node.name == 'text'
           STDERR.putc '.'
         when 'Classe'
-          code_annuaire = Annuaire.get_regroupement_id
+          code_annuaire = Annuaire.get_regroupement_id( etablissement.UAI, classe['Nom'] )
           regroupements[ 'Classe' ][ node['Ident'] ] = code_annuaire unless node.name == 'text'
           STDERR.putc '.'
         end
