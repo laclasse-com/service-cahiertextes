@@ -6,7 +6,9 @@ require_relative '../models/models'
 
 # Consomme le fichier Emploi du temps exporté par Pronote
 module ProNote
-  def self.decrypt_xml(encrypted_xml, xsd = nil)
+  module_function
+
+  def decrypt_xml(encrypted_xml, xsd = nil)
     encrypted_xml = Nokogiri::XML(encrypted_xml)
 
     raise 'fichier XML invalide' unless !xsd.nil? && Nokogiri::XML::Schema(xsd).valid?(encrypted_xml)
@@ -16,7 +18,7 @@ module ProNote
     xml
   end
 
-  def self.load_xml(xml, xsd = nil)
+  def load_xml(xml, xsd = nil)
     edt_clair = Nokogiri::XML(xml)
 
     # TODO: use XSD defined in XML
