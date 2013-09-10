@@ -48,6 +48,16 @@ describe CahierDeTextesAPI::API do
     CahierDeTextesAPI::API
   end
 
+  # {{{ Cours
+  it 'valide un cours' do
+    cours_id = Cours.where( 'date_validation IS NULL' ).first.id
+
+    put "/cours/#{cours_id}/valide", {}
+
+    Cours[ cours_id ].date_validation.nil?.should be_false
+  end
+  # }}}
+
   # {{{ Enseignants
   it 'récupère les statistiques par enseignants et par mois' do
     uai = '0134567A'
