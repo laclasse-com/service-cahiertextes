@@ -2,6 +2,7 @@
 
 require 'nokogiri'
 
+require_relative './annuaire'
 require_relative '../models/models'
 
 # Consomme le fichier Emploi du temps exporté par Pronote
@@ -78,8 +79,7 @@ module ProNote
     matieres = {}
     STDERR.puts 'chargement Matières'
     edt_clair.search('Matieres').children.each do |matiere|
-      # FIXME: pull from Annuaire
-      code_annuaire = rand(100_000..999_999)
+      code_annuaire = Annuaire.get_matiere_id
       matieres[ matiere['Ident'] ] = code_annuaire unless matiere.name == 'text'
       STDERR.putc '.'
     end
@@ -93,8 +93,7 @@ module ProNote
     enseignants = {}
     STDERR.puts 'chargement Enseignants'
     edt_clair.search('Professeurs').children.each do |professeur|
-      # FIXME: pull from Annuaire
-      code_annuaire = rand(100_000..999_999)
+      code_annuaire = Annuaire.get_utilisateur_id
       enseignants[ professeur['Ident'] ] = code_annuaire unless professeur.name == 'text'
       STDERR.putc '.'
     end
@@ -108,32 +107,27 @@ module ProNote
     regroupements = { 'Classe' => {}, 'PartieDeClasse' => {}, 'Groupe' => {} }
     STDERR.puts 'chargement Regroupements'
     edt_clair.search('Classes').children.each do |classe|
-      # FIXME: pull from Annuaire
-      code_annuaire = rand(100_000..999_999)
+      code_annuaire = Annuaire.get_regroupement_id
       regroupements[ 'Classe' ][ classe['Ident'] ] = code_annuaire unless classe.name == 'text'
       STDERR.putc '.'
       classe.children.each do |partie_de_classe|
-        # FIXME: pull from Annuaire
-        code_annuaire = rand(100_000..999_999)
+        code_annuaire = Annuaire.get_regroupement_id
         regroupements[ 'PartieDeClasse' ][ partie_de_classe['Ident'] ] = code_annuaire unless partie_de_classe.name == 'text'
         STDERR.putc '.'
       end
     end
     edt_clair.search('Groupes').children.each do |groupe|
-      # FIXME: pull from Annuaire
-      code_annuaire = rand(100_000..999_999)
+      code_annuaire = Annuaire.get_regroupement_id
       regroupements[ 'Groupe' ][ groupe['Ident'] ] = code_annuaire unless groupe.name == 'text'
       STDERR.putc '.'
       groupe.children.each do  |node|
         case node.name
         when 'PartieDeClasse'
-          # FIXME: pull from Annuaire
-          code_annuaire = rand(100_000..999_999)
+          code_annuaire = Annuaire.get_regroupement_id
           regroupements[ 'PartieDeClasse' ][ node['Ident'] ] = code_annuaire unless node.name == 'text'
           STDERR.putc '.'
         when 'Classe'
-          # FIXME: pull from Annuaire
-          code_annuaire = rand(100_000..999_999)
+          code_annuaire = Annuaire.get_regroupement_id
           regroupements[ 'Classe' ][ node['Ident'] ] = code_annuaire unless node.name == 'text'
           STDERR.putc '.'
         end
@@ -198,13 +192,13 @@ module ProNote
           when 'Professeur'
             CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
             CreneauEmploiDuTempsEnseignant.create(creneau_emploi_du_temps_id: creneau.id,
-                                                  enseignant_id: enseignants[ node['Ident'] ], # TODO: remplacer par notre id annuaire
+                                                  enseignant_id: enseignants[ node['Ident'] ],
                                                   semaines_de_presence: node['Semaines'])
             CreneauEmploiDuTempsEnseignant.restrict_primary_key
           when 'Classe', 'PartieDeClasse', 'Groupe' # on ne distingue pas les 3 types de regroupements
             CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
             CreneauEmploiDuTempsRegroupement.create(creneau_emploi_du_temps_id: creneau.id,
-                                                    regroupement_id: regroupements[ node.name ][ node['Ident'] ], # TODO: remplacer par notre id annuaire
+                                                    regroupement_id: regroupements[ node.name ][ node['Ident'] ],
                                                     semaines_de_presence: node['Semaines'])
             CreneauEmploiDuTempsRegroupement.restrict_primary_key
           when 'Salle'
