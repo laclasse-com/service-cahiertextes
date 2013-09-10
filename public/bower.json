@@ -18,6 +18,8 @@
 		"d3": "latest",
 		"angular-d3": "git://github.com/beefsack/angular-d3.git#latest",
 		"angular-ui-calendar": "latest"
+		"angular-ui-calendar": "latest",
+		"radar-chart-d3": "git://github.com/alangrafu/radar-chart-d3.git#latest",
 	},
 	"devDependencies": {
 		"angular-mocks": "latest",
