@@ -1,18 +1,13 @@
 {
   "name": "angles",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/pvledoux/angles.git"
-  },
-  "homepage": "https://github.com/pvledoux/angles",
+  "homepage": "https://github.com/lgsilver/angles",
   "_release": "master",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "7d949265dce3bb4b22e6f17ee151ca5f79ef54b1"
+    "commit": "e7a0ee7c2c7abc243a0c9dec04216a4592c552b6"
   },
-  "_source": "git://github.com/pvledoux/angles.git",
+  "_source": "git://github.com/lgsilver/angles.git",
   "_target": "*",
-  "_originalSource": "angles",
-  "_direct": true
+  "_originalSource": "git://github.com/lgsilver/angles.git"
 }
