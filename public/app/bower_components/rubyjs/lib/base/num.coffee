@@ -1,0 +1,422 @@
+
+class NumericMethods
+
+  cmp: (num, other) ->
+    if num is other then 0 else null
+
+
+  # Returns true if num is NaN.
+  #
+  # @example
+  #   _n.nan(2)              // => false
+  #   _n.nan('test')         // => true
+  #   _n.nan(true)           // => false
+  #   _n.nan(NaN)            // => true
+  #
+  # @return [Boolean]
+  #
+  nan: (num) ->
+    isNaN(num)
+
+
+  # Returns the absolute value of num.
+  #
+  # @example
+  #   _n.abs(12)             // => 12
+  #   _n.abs(-34.56)         // => 34.56
+  #
+  # @return [Number]
+  #
+  abs: (num) ->
+    if num < 0 then (- num) else num
+
+
+  # Returns square of num.
+  #
+  # @example
+  #   _n.abs2(2)             // => 4
+  #   _n.abs2(-4)            // => 16
+  #
+  # @return [Number]
+  #
+  abs2: (num) ->
+    return num if _num.nan(num)
+    Math.pow(num, 2)
+
+
+  # Returns the smallest Integer greater than or equal to num. Class Numeric achieves this by converting itself to
+  # a Float then invoking Float#ceil.
+  #
+  # @example
+  #   _n.ceil(1)             // => 1
+  #   _n.ceil(1.2)           // => 2
+  #   _n.ceil(-1.2)          // => -1
+  #   _n.ceil(-1)            // => -1
+  #
+  # @return [Number]
+  #
+  ceil: (num) ->
+    Math.ceil(num)
+
+
+  # Returns an array with quotient and modulus as a result of division num by other.
+  #
+  # @example
+  #   _n.divmod(8, 4)        // => [2, 0]
+  #   _n.divmod(13, 4)       // => [3, 1]
+  #   _n.divmod(-8.5, -4)    // => [2, -0.5]
+  #
+  # @return [Array]
+  #
+  divmod: (num, other) ->
+    quotient = Math.floor(num / other)
+    modulus  = num % other
+
+    [quotient, modulus]
+
+
+  # Returns array from num to stop (inclusive) when passed no block.
+  # When passed a block, iterates block by passing decreasing values from num to stop (inclusive).
+  #
+  # @example
+  #   var print = function(i) { console.log(i);}
+  #
+  #   _n.downto(3, 1, print) // => 3\n 2\n 1\n 3
+  #   _n.downto(3, 1)        // => [3, 2, 1]
+  #
+  # @return [Array] or Number
+  #
+  downto: (num, stop, block) ->
+    return __enumerate(_num.downto, [num, stop]) unless block?.call?
+    stop = Math.ceil(stop)
+
+    idx = num
+    while idx >= stop
+      block( idx )
+      idx -= 1
+
+    num
+
+
+  # Returns true if num and other are the same type (or can be converted to the same type) and have equal values.
+  #
+  # @example
+  #     _n.eql(1, 1.0)       // => true
+  #     _n.eql(2, 1)         // => false
+  #     _n.eql(3.5, 2)       // => false
+  #
+  # @return [Boolean]
+  #
+  eql: (num, other) ->
+    num == other
+
+
+  # Returns the largest integer less than or equal to num.
+  #
+  # @example
+  #   _n.floor(1.5)   // => 1
+  #   _n.floor(-1)    // => -1
+  #   _n.floor(-2.5)  // => -3
+  #
+  # @return [Number]
+  #
+  floor: (num) ->
+    Math.floor(num)
+
+
+  # Returns num if num is not zero, null otherwise. This behavior is useful
+  # when chaining comparisons:
+  #
+  # @example
+  #   _n.nonzero(1)   // => 1
+  #   _n.nonzero(0)   // => null
+  #
+  # @return [Number] or null
+  #
+  nonzero: (num) ->
+    if num is 0 then null else num
+
+
+  # remainder: (other) ->
+  #   other = @box(other)
+  #   mod = @['%'](other)
+
+  #   if !mod.equals(0) and ((@lt(0) && other.gt(0)) or (@gt(0) && other['lt'](0)))
+  #     mod.minus(other)
+  #   else
+  #     mod
+
+
+  # When passed a block, invokes it with the sequence of numbers
+  # from num to limit that are incremented/decremented by step.
+  # Default step value is 1.
+  # If step is negative then the sequence of numbers from num to limit
+  # will be decremented by step.
+  # When no block is given, an enumerator is returned instead.
+  #
+  # @example
+  #   _n.step(5, 3, -1)   // => [5, 4, 3]
+  #   _n.step(3, 5, 1)    // => [3, 4, 5]
+  #   _n.step(3, 5, 0.5)  // => [3, 3.5, 4, 4.5, 5]
+  #
+  # @return [this] or [Array]
+  #
+  step: (num, limit, step = 1, block) ->
+    unless block?.call? or step?.call?
+      return __enumerate(_num.step, [num, limit, step])
+
+
+    unless block?.call?
+      block = step
+      step  = 1
+
+
+    if step is 0
+      _err.throw_argument()
+
+    float_mode = num % 1 is 0 or limit % 1 is 0 or step % 1 is 0
+    # eps = 0.0000000000000002220446049250313080847263336181640625
+    if float_mode
+      # For some reason the following ported code is not needed.
+      # it appears to work properly in js withouth the Float::EPSILON
+      # err = (num.abs().plus(limit.abs()).plus(limit.minus(num).abs()).divide(step.abs())).multiply(eps)
+      # err = 0.5 if err.gt(0.5)
+      # n   = (limit.minus(num)).divide(step.plus(err)).floor()
+      n = (limit - num) / step
+      i = 0
+      if step > 0
+        while i <= n
+          d = i * step + num
+          d = limit if limit < d
+          block(d)
+          i += 1
+      else
+        while i <= n
+          d = i * step + num
+          d = limit if limit > d
+          block(d)
+          i += 1
+    else
+      if step > 0
+        until num > limit
+          block(num)
+          num += step
+      else
+        until num < limit
+          block(num)
+          num += step
+    this
+
+
+
+  # truncate: (num) ->
+  #   @to_f().truncate()
+
+
+  # Returns array of numbers from num to stop (inclusive) when passed no block.
+  # When passed a block, iterates block by passing increasing values from num to stop (inclusive).
+  #
+  # @example
+  #   var print = function(i) { console.log(i);}
+  #
+  #   _n.upto(1, 3, print) // => 1\n 2\n 3\n 1
+  #   _n.upto(1, 3)        // => [1, 2, 3]
+  #
+  # @return [Array] or [Number]
+  #
+  upto: (num, stop, block) ->
+    return __enumerate(_num.upto, [num, stop]) unless block?.call?
+    stop = Math.floor(stop)
+
+    idx = num
+    while idx <= stop
+      block( idx )
+      idx += 1
+
+    num
+
+
+  # Returns true if num has a zero value.
+  #
+  # @example
+  #   _n.zero(0)      // => true
+  #   _n.zero(1)      // => false
+  #
+  # @return [Boolean]
+  #
+  zero: (num) ->
+    num is 0
+
+
+  # Returns true if num is even number. Returns false otherwise.
+  #
+  # @example
+  #   _n.even(2)      // => true
+  #   _n.even(3)      // => false
+  #
+  # @return [Boolean]
+  #
+  even: (num) ->
+    num % 2 == 0
+
+
+  # Returns number that is greatest common divisor of num and other.
+  #
+  # @example
+  #   _n.gcd(4, 2)    // => 2
+  #   _n.gcd(21, 14)  // => 7
+  #
+  # @return [Number]
+  #
+  gcd: (num, other) ->
+    t = null
+    other = __int(other)
+    while (other != 0)
+      t = other
+      other = num % other
+      num = t
+
+    if num < 0 then (- num) else num
+
+
+  # Returns an array; [int.gcd(int2), int.lcm(int2)].
+  #
+  # @example
+  #     _n.gcdlcm(2,  2)                   // => [2, 2]
+  #     _n.gcdlcm(3, -7)                   // => [1, 21]
+  #     _n.gcdlcm((1<<31)-1, (1<<61)-1)    // => [1, 4951760154835678088235319297]
+  #
+  # @return [Array<Number, Number>]
+  #
+  gcdlcm: (num, other) ->
+    other = __int(other)
+    [_num.gcd(num, other), _num.lcm(num, other)]
+
+
+  # Returns the least common multiple (always positive). 0.lcm(x) and x.lcm(0) return zero.
+  #
+  # @example
+  #   _n.lcm(2,  2)                   // => 2
+  #   _n.lcm(3, -7)                   // => 21
+  #   _n.lcm((1<<31)-1, (1<<61)-1)    // => 4951760154835678088235319297
+  #
+  # @return [Number]
+  #
+  lcm: (num, other) ->
+    other = __int(other)
+
+    lcm = num * other / _num.gcd(num, other)
+    _num.numerator(lcm)
+
+
+  # Returns int if num is positive number.
+  # Returns positive int if num is negative number.
+  #
+  # @example
+  #   _n.numerator(2)     // => 2
+  #   _n.numerator(-22)   // => 22
+  #
+  # @return [Number]
+  numerator: (num) ->
+    if num < 0 then (- num) else num
+
+
+  # Returns true if int is an odd number.
+  #
+  # @return [Boolean]
+  #
+  odd: (num) ->
+    num % 2 == 1
+
+
+  # Returns the int itself.
+  #
+  #      a.ord    // => 97
+  #
+  # This method is intended for compatibility to character constant in Ruby
+  # 1.9. For example, ?a.ord returns 97 both in 1.8 and 1.9.
+  #
+  # @return [this]
+  #
+  ord:  ->
+    this
+
+
+  # Returns Number equal to num + 1.
+  #
+  # @example
+  #   _n.next(0)     // => 1
+  #   _n.next(5)     // => 6
+  #   _n.next(-3)    // => -4
+  #
+  # @return [Number]
+  # @alias #succ
+  #
+  next: (num) ->
+    num + 1
+
+
+  # Returns Number equal to num - 1.
+  #
+  # @example
+  #   _n.pred(0)     // => -1
+  #   _n.pred(9)     // => 8
+  #   _n.pred(-3)    // => -4
+  #   _n.pred(-5.5)  // => -6.5
+  #
+  # @return [Number]
+  #
+  pred: (num) ->
+    num - 1
+
+
+  # Rounds num to a given precision n in decimal digits and returns Number.
+  # When given precision n is negative returns 0.
+  #
+  # @example
+  #   _n.round(3, 2)     // => 3
+  #   _n.round(3.12, 0)  // => 3
+  #   _n.round(3.123, 2) // => 3.12
+  #   _n.round(3.12, -2) // => 0
+  #   _n.round(-3.12, 1) // => -3.1
+  #
+  # @return [Number]
+  #
+  round: (num, n) ->
+    return num if n is undefined
+
+    multiplier = Math.pow(10, __int(n))
+    Math.round(num * multiplier) / multiplier
+
+
+  # Iterates block int times, passing in values from zero to int - 1.
+  #
+  # If no block is given, an enumerator is returned instead.
+  #
+  # @example
+  #   _n.times(5, function(i) { console.log(i) }) // => 0 1 2 3 4
+  #   _n.times(3)                                 // => [0, 1, 2]
+  #
+  # @return [this] or [Array]
+  #
+  times: (num, block) ->
+    return __enumerate(_num.times, [num]) unless block?.call?
+    if num > 0
+      idx = 0
+      while idx < num
+        block( idx )
+        idx = idx + 1
+      num
+    else
+      num
+
+
+  magnitude: @prototype.abs
+
+  succ: @prototype.next
+
+
+_num = R._num = (arr) ->
+  new Chain(arr, _num)
+
+R.extend(_num, new NumericMethods())

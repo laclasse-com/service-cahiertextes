@@ -1,0 +1,6 @@
+require('../../ruby')
+require('./helpers/SpecHelper')
+require('./corelib/string/fixtures/classes')
+require('./corelib/numeric/fixtures/classes')
+require('./corelib/enumerable/fixtures/classes')
+require('./corelib/time/fixtures/classes')
