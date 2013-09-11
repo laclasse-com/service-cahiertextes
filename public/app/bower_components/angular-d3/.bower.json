@@ -1,0 +1,13 @@
+{
+  "name": "angular-d3",
+  "homepage": "https://github.com/beefsack/angular-d3",
+  "_release": "master",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "3a37edcef1f4037aa1dee2b1a8e2937c96671df6"
+  },
+  "_source": "git://github.com/beefsack/angular-d3.git",
+  "_target": "*",
+  "_originalSource": "git://github.com/beefsack/angular-d3.git"
+}
