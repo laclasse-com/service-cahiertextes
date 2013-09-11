@@ -1,0 +1,8 @@
+{
+  "name": "angles",
+  "version": "1.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/pvledoux/angles.git"
+  }
+}
