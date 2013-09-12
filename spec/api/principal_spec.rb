@@ -62,7 +62,7 @@ describe CahierDeTextesAPI::API do
   it 'récupère les statistiques par enseignants et par mois' do
     uai = '0134567A'
 
-    get "/etablissement/#{uai}/enseignants"
+    get "/etablissement/#{uai}/enseignant"
     last_response.status.should == 200
 
     response_body = JSON.parse( last_response.body )
@@ -102,7 +102,7 @@ describe CahierDeTextesAPI::API do
   it 'récupère les statistiques par classes / mois / matières' do
     uai = '0134567A'
 
-    get "/etablissement/#{uai}/classes"
+    get "/etablissement/#{uai}/classe"
     last_response.status.should == 200
 
     response_body = JSON.parse( last_response.body )
