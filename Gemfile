@@ -9,6 +9,7 @@ gem 'nokogiri'
 gem 'sequel'
 gem 'mysql2'
 gem 'rack'
+gem 'rack-contrib'
 gem 'rest-client'
 gem 'sqlite3', group: [ :dev, :test ]
 gem 'simplecov', group: [ :dev, :test ]
