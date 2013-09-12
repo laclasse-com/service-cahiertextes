@@ -9,7 +9,7 @@ describe CahierDeTextesAPI::API do
     TableCleaner.new( DB, [] ).clean
 
     xml_filename = 'spec/fixtures/Edt_To_LaclasseCom_0134567A_Enclair.xml'
-    post '/pronote/xml', xml_file: Rack::Test::UploadedFile.new(xml_filename, 'text/xml')
+    post '/api/v0/pronote/xml', xml_file: Rack::Test::UploadedFile.new(xml_filename, 'text/xml')
 
     cahier_de_textes = CahierDeTextes.create(regroupement_id: 1,
                                              date_creation: Time.now,
@@ -52,7 +52,7 @@ describe CahierDeTextesAPI::API do
   it 'valide un cours' do
     cours_id = Cours.where( 'date_validation IS NULL' ).first.id
 
-    put "/cours/#{cours_id}/valide", {}
+    put "/api/v0/cours/#{cours_id}/valide", {}
 
     Cours[ cours_id ].date_validation.nil?.should be_false
   end
@@ -62,7 +62,7 @@ describe CahierDeTextesAPI::API do
   it 'récupère les statistiques par enseignants et par mois' do
     uai = '0134567A'
 
-    get "/etablissement/#{uai}/enseignant"
+    get "/api/v0/etablissement/#{uai}/enseignant"
     last_response.status.should == 200
 
     response_body = JSON.parse( last_response.body )
@@ -77,7 +77,7 @@ describe CahierDeTextesAPI::API do
     uai = '0134567A'
     enseignant_id = Cours.select(:enseignant_id).first[:enseignant_id].to_s
 
-    get "/etablissement/#{uai}/enseignant/#{enseignant_id}"
+    get "/api/v0/etablissement/#{uai}/enseignant/#{enseignant_id}"
     last_response.status.should == 200
 
     response_body = JSON.parse( last_response.body )
@@ -91,7 +91,7 @@ describe CahierDeTextesAPI::API do
     uai = '0134567A'
     enseignant_id = Cours.select(:enseignant_id).first[:enseignant_id].to_s
 
-    put "/etablissement/#{uai}/enseignant/#{enseignant_id}"
+    put "/api/v0/etablissement/#{uai}/enseignant/#{enseignant_id}"
     last_response.status.should == 200
 
     Cours.where(enseignant_id: enseignant_id).where('date_validation IS NULL').count.should == 0
@@ -102,7 +102,7 @@ describe CahierDeTextesAPI::API do
   it 'récupère les statistiques par classes / mois / matières' do
     uai = '0134567A'
 
-    get "/etablissement/#{uai}/classe"
+    get "/api/v0/etablissement/#{uai}/classe"
     last_response.status.should == 200
 
     response_body = JSON.parse( last_response.body )
@@ -125,7 +125,7 @@ describe CahierDeTextesAPI::API do
     uai = '0134567A'
     classe_id = '1'
 
-    get "/etablissement/#{uai}/classe/#{classe_id}"
+    get "/api/v0/etablissement/#{uai}/classe/#{classe_id}"
     last_response.status.should == 200
 
     response_body = JSON.parse( last_response.body )
@@ -145,7 +145,7 @@ describe CahierDeTextesAPI::API do
     uai = '0134567A'
     classe_id = '1'
 
-    put "/etablissement/#{uai}/classe/#{classe_id}"
+    put "/api/v0/etablissement/#{uai}/classe/#{classe_id}"
     last_response.status.should == 200
 
     Cours.where(cahier_de_textes_id: CahierDeTextes.where(regroupement_id: classe_id).first.id ).where('date_validation IS NULL').count.should == 0
