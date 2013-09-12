@@ -41,7 +41,7 @@ describe CahierDeTextesAPI::API do
   ############ GET ############
   it 'récupère l\'emploi du temps de l\'élève' do
 
-    get '/emploi_du_temps/'
+    get '/api/v0/emploi_du_temps/'
     last_response.status.should == 200
   end
   # }}}
@@ -50,7 +50,7 @@ describe CahierDeTextesAPI::API do
   ############ GET ############
   it 'récupère le cahier de textes de l\'élève' do
 
-    get '/cahier_de_textes/'
+    get '/api/v0/cahier_de_textes/'
     last_response.status.should == 200
   end
   # }}}
@@ -60,7 +60,7 @@ describe CahierDeTextesAPI::API do
   it 'récupère le détail d\'une séquence pédagogique' do
     cours = Cours.last
 
-    get "/cours/#{cours.id}"
+    get "/api/v0/cours/#{cours.id}"
     last_response.status.should == 200
 
     response_body = JSON.parse(last_response.body)
@@ -83,7 +83,7 @@ describe CahierDeTextesAPI::API do
     eleve_id = 1
     devoir = Devoir.all[ rand(0 .. Devoir.count - 1) ]
 
-    get "/devoir/#{devoir.id}"
+    get "/api/v0/devoir/#{devoir.id}"
     last_response.status.should == 200
 
     response_body = JSON.parse( last_response.body )
@@ -98,7 +98,7 @@ describe CahierDeTextesAPI::API do
   it 'note un devoir comme fait' do
     devoir = Devoir.all[ rand(0 .. Devoir.count - 1) ]
 
-    put "/devoir/#{devoir.id}/fait", {}
+    put "/api/v0/devoir/#{devoir.id}/fait", {}
     last_response.status.should == 200
 
     devoir.fait_par?( 1 ).should be_true
