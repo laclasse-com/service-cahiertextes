@@ -8,7 +8,7 @@ module CahierDeTextesAPI
     params {
       requires :uai, desc: 'Code UAI de l\'établissement'
     }
-    get '/:uai/classes' do
+    get '/:uai/classe' do
       Etablissement.where(uai: params[:uai]).first.statistiques_classes
     end
 
@@ -42,7 +42,7 @@ module CahierDeTextesAPI
     params {
       requires :uai, desc: 'Code UAI de l\'établissement'
     }
-    get '/:uai/enseignants' do
+    get '/:uai/enseignant' do
       Etablissement.where(uai: params[:uai]).first.statistiques_enseignants
     end
 
