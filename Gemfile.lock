@@ -46,6 +46,8 @@ GEM
     rack (1.5.2)
     rack-accept (0.4.5)
       rack (>= 0.4)
+    rack-contrib (1.1.0)
+      rack (>= 0.9.1)
     rack-mount (0.8.3)
       rack (>= 1.0.0)
     rack-test (0.6.2)
@@ -84,6 +86,7 @@ DEPENDENCIES
   nokogiri
   pry
   rack
+  rack-contrib
   rack-test
   rest-client
   rspec
