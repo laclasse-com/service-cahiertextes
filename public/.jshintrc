@@ -21,6 +21,8 @@
     "globals": {
 	"angular": true,
 	"ngGridFlexibleHeightPlugin": true,
-	"jQuery": true
+	"jQuery": true,
+	"console": true,
+	"RadarChart": true
     }
 }
