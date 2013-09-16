@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('cahierDeTexteApp',
-	       [ 'ui.bootstrap', 'ui.calendar', 'ui.router', 'ui.select2', 'ngGrid', 'angles' ] )
-    .config(function ($stateProvider, $urlRouterProvider) {
+angular.module( 'cahierDeTexteApp',
+		[ 'ui.bootstrap', 'ui.calendar', 'ui.router', 'ui.select2', 'ngGrid', 'angles' ] )
+    .config( function ( $stateProvider, $urlRouterProvider ) {
 	$urlRouterProvider.otherwise('/');
 
 	$stateProvider
@@ -65,4 +65,16 @@ angular.module('cahierDeTexteApp',
 		templateUrl: 'views/enseignant.html',
 		controller: 'EnseignantCtrl'
 	    });
+    })
+    .run(function ($rootScope) {
+	$rootScope.globalChartOptions = { segmentShowStroke : true,
+					  segmentStrokeColor : "#fff",
+					  segmentStrokeWidth : 24,
+					  percentageInnerCutout : 50,
+					  animation : true,
+					  animationSteps : 100,
+					  animationEasing : "easeOutBounce",
+					  animateRotate : true,
+					  animateScale : false,
+					  onAnimationComplete : null }; //global variable
     });

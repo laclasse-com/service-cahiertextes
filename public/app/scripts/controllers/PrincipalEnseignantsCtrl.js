@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('cahierDeTexteApp')
-    .controller('PrincipalEnseignantsCtrl', function ($scope, $http, EmploiDuTemps) {
+    .controller('PrincipalEnseignantsCtrl', function ($scope, $rootScope, $http, EmploiDuTemps) {
 	$scope.enseignants = [];
 	$scope.annee = [];
 	$scope.radar = {};
@@ -23,34 +23,19 @@ angular.module('cahierDeTexteApp')
 	    .success( function( response ) {
 		$scope.enseignants = [];
 
-		$scope.radar = {
-		    options: {
-			segmentShowStroke : true,
-			segmentStrokeColor : "#fff",
-			segmentStrokeWidth : 24,
-			percentageInnerCutout : 50,
-			animation : true,
-			animationSteps : 100,
-			animationEasing : "easeOutBounce",
-			animateRotate : true,
-			animateScale : false,
-			onAnimationComplete : null
-		    },
-		    data: {
-			labels: response.map( function( e ) { return e.enseignant_id; } ),
-			datasets: [
-			    // 0: saisies validées
-			    { fillColor : "#00ff00", pointColor : "#00ff00",
-			      strokeColor : "#00aa00", pointStrokeColor : "#00aa00",
-			      data: []
-			    },
-			    // 1: saisies totales
-			    { fillColor : "#aaffaa", pointColor : "#aaffaa",
-			      strokeColor : "#88aa88", pointStrokeColor : "#88aa88",
-			      data: []
-			    } ]
-		    }
-		};
+		$scope.radar = { options: $rootScope.globalChartOptions,
+				 data: { labels: response.map( function( e ) { return e.enseignant_id; } ),
+					 datasets: [
+					     // 0: saisies validées
+					     { fillColor : "#00ff00", pointColor : "#00ff00",
+					       strokeColor : "#00aa00", pointStrokeColor : "#00aa00",
+					       data: []
+					     },
+					     // 1: saisies totales
+					     { fillColor : "#aaffaa", pointColor : "#aaffaa",
+					       strokeColor : "#88aa88", pointStrokeColor : "#88aa88",
+					       data: []
+					     } ] } };
 		new R( response ).each( function( e ) {
                     $scope.enseignants.push( { id: e.enseignant_id,
 					       name: e.enseignant_id,
