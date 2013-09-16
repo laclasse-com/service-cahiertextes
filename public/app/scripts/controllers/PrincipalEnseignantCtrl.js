@@ -1,63 +1,56 @@
 'use strict';
 
 angular.module('cahierDeTexteApp')
-    .controller('PrincipalEnseignantCtrl', function ($scope, $http, Enseignant) {
+    .controller('PrincipalEnseignantCtrl', function ($scope, $http, $stateParams) {
+	$scope.process_data = function(  ) {
+	    $scope.saisies = [];
+	    if ( typeof $scope.raw_data !== 'undefined' ) {
+		$scope.raw_data.saisies.forEach( function( m ) {
+		    m.forEach( function ( e ) {
+			console.log( e.cours );
+			$scope.saisies.push( { classe: e.classe_id,
+					       cours: e.cours,
+					       devoir: e.devoir,
+					       valide: e.valide } );
+		    } );
+		} );
+	    }
+	};
+	$scope.enseignant_id = $stateParams.enseignant_id;
+	
 	// Tableau
 	$scope.gridEntries = {
-	    data: 'data.entries',
+	    data: 'saisies',
 	    enableCellEdit: false,
 	    plugins: [new ngGridFlexibleHeightPlugin()],
 	    rowHeight: 60,
 	    columnDefs: [
 		{ field: 'classe', displayName: 'Classe' },
-		{ field: 'cours', displayName: 'Cours', cellTemplate: '<span style="overflow-y:auto" ng-bind-html-unsafe="row.entity.cours"></span>' },
-		{ field: 'work', displayName: 'Travail à faire', cellTemplate: '<span style="overflow-y:auto" ng-bind-html-unsafe="row.entity.work"></span>' },
+		{ field: 'cours', displayName: 'Cours', cellTemplate: '<span style="overflow-y:auto" ng-bind-html-unsafe="row.entity.cours">{{row.entity.cours}}</span>' },
+		{ field: 'devoir', displayName: 'Travail à faire', cellTemplate: '<span style="overflow-y:auto" ng-bind-html-unsafe="row.entity.devoir">{{row.entity.devoir}}</span>' },
 		{ field: 'validated', displayName: 'Validé',
-		  cellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-model="row.entity.validated" /></div>'}
+		  cellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-model="row.entity.valide" /></div>'}
 	    ]
 	};
 
 	$scope.validateAllEntries = function() {
-	    $scope.data.entries.map( function( e ) {
-		e.validated = true;
+	    $scope.saisies.forEach( function( e ) {
+		e.valide = true;
 	    });
 	};
 	$scope.unvalidateAllEntries = function() {
-	    $scope.data.entries.map( function( e ) {
-		e.validated = false;
+	    $scope.saisies.forEach( function( e ) {
+		e.valide = false;
 	    });
 	};
 
-	// Graphiques
-	$scope.chart = {};
-	$scope.chart.data =  [[ ]];
-	$scope.chart.options = { };
-	$scope.chart.update = function() {
-	    var nbValidatedEntries = $scope.data.entries.reduce( function( x, e ) {
-		if ( e.validated ) {
-		    return x+1;
-		} else {
-		    return x;
-		}
-	    }, 0 );
-	    $scope.chart.data[0].push( [ 'Entrée(s) validée(s)', nbValidatedEntries ] );
-	    $scope.chart.data[0].push( [ 'Entrée(s) non validée(s)', $scope.data.entries.length - nbValidatedEntries ] );
-	};
-
 	// Récupération de données
-	Enseignant.getEnseignant().success( function( response ) {
-	    $scope.data = response.data;
-	    $scope.data.classes = [];
-	    $scope.data.classesPrincipal = [];
-
-	    $scope.$watch($scope.data.entries, $scope.chart.update, true);
-	    // $scope.chart.update();
-	    
-	    $scope.data.entries.map( function( e ) {
-		$scope.data.classes.push( e.classe );
-		if ( e.principal ) {
-		    $scope.data.classesPrincipal.push( e.classe );
-		}
-	    });			
-	});
+	$http({
+	    method: 'GET',
+	    url: 'http://localhost:9292/api/v0/etablissement/0134567A/enseignant/' + $scope.enseignant_id
+	})
+	    .success( function( response ) {
+		$scope.raw_data = response;
+		$scope.process_data(  );
+	    });
     });
