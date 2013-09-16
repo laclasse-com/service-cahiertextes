@@ -19,61 +19,65 @@ angular.module('cahierDeTexteApp')
 	$http({
 	    method: 'GET',
 	    url: 'http://localhost:9292/api/v0/etablissement/0134567A/enseignant'
-	}).
-	    success( function( response ) {
-		$scope.data = response;
-		$scope.enseignants = $scope.data.map( function( e ) {
-                    return { id: e.enseignant_id,
-                             name: e.enseignant_id,
-                             discipline: '<void>',
-                             stats: e.statistiques.reduce( function(total, monthly_stat) {
-                                 return { validated: total.validated + monthly_stat.validated } ;
-                             }, { validated: 0 } ).validated + '/' + e.statistiques.reduce(
-				 function(total, monthly_stat) {
-                                     return { filled: total.filled + monthly_stat.filled } ;
-				 }, { filled: 0 } ).filled
-			   };
-                } );
+	})
+	    .success( function( response ) {
+		$scope.enseignants = [];
 
-		$scope.radar.options =  {
-		    segmentShowStroke : true,  //Boolean - Whether we should show a stroke on each segment
-		    segmentStrokeColor : "#fff",  //String - The colour of each segment stroke
-		    segmentStrokeWidth : 24,  //Number - The width of each segment stroke
-		    percentageInnerCutout : 50,  //The percentage of the chart that we cut out of the middle.
-		    animation : true,  //Boolean - Whether we should animate the chart
-		    animationSteps : 100,  //Number - Amount of animation steps
-		    animationEasing : "easeOutBounce",  //String - Animation easing effect
-		    animateRotate : true,  //Boolean - Whether we animate the rotation of the Doughnut
-		    animateScale : false,  //Boolean - Whether we animate scaling the Doughnut from the centre
-		    onAnimationComplete : null  //Function - Will fire on animation completion.
+		$scope.radar = {
+		    options: {
+			segmentShowStroke : true,
+			segmentStrokeColor : "#fff",
+			segmentStrokeWidth : 24,
+			percentageInnerCutout : 50,
+			animation : true,
+			animationSteps : 100,
+			animationEasing : "easeOutBounce",
+			animateRotate : true,
+			animateScale : false,
+			onAnimationComplete : null
+		    },
+		    data: {
+			labels: response.map( function( e ) { return e.enseignant_id; } ),
+			datasets: [
+			    // 0: saisies validées
+			    { fillColor : "#00ff00", pointColor : "#00ff00",
+			      strokeColor : "#00aa00", pointStrokeColor : "#00aa00",
+			      data: []
+			    },
+			    // 1: saisies totales
+			    { fillColor : "#aaffaa", pointColor : "#aaffaa",
+			      strokeColor : "#88aa88", pointStrokeColor : "#88aa88",
+			      data: []
+			    } ]
+		    }
 		};
-		$scope.radar.data = {
-		    labels: $scope.data.map( function( e ) { return e.enseignant_id; } ),
-		    datasets: [ { fillColor : "#00ff00",
-				  strokeColor : "#00aa00",
-				  pointColor : "#00ff00",
-				  pointStrokeColor : "#00aa00",
-				  data: $scope.data.map( function( e ) {
-				      return e.statistiques.reduce( function(total, monthly_stat) {
-					  return { validated: total.validated + monthly_stat.validated } ;
-				      }, { validated: 0 } ).validated; } )
-				},
-				{ fillColor : "#aaffaa",
-				  strokeColor : "#88aa88",
-				  pointColor : "#aaffaa",
-				  pointStrokeColor : "#88aa88",
-				  data: $scope.data.map( function( e ) {
-				      return e.statistiques.reduce( function(total, monthly_stat) {
-					  return { filled: total.filled + monthly_stat.filled } ;
-				      }, { filled: 0 } ).filled; } )
-				} ]
-		};
-						   }).
-	    error( function (data, status) {
+		new R( response ).each( function( e ) {
+                    $scope.enseignants.push( { id: e.enseignant_id,
+					       name: e.enseignant_id,
+					       discipline: '<void>',
+					       stats: e.statistiques.reduce( function(total, monthly_stat) {
+						   return { validated: total.validated + monthly_stat.validated } ;
+					       }, { validated: 0 } ).validated + '/' + e.statistiques.reduce(
+						   function(total, monthly_stat) {
+						       return { filled: total.filled + monthly_stat.filled } ;
+						   }, { filled: 0 } ).filled
+					     });
+		    $scope.radar.data.labels.push( e.enseignant_id );
+		    $scope.radar.data.datasets[0].data.push( e.statistiques.reduce(
+			function(total, monthly_stat) {
+			    return { validated: total.validated + monthly_stat.validated } ;
+			}, { validated: 0 } ).validated );
+		    $scope.radar.data.datasets[1].data.push( e.statistiques.reduce(
+			function(total, monthly_stat) {
+			    return { filled: total.filled + monthly_stat.filled } ;
+			}, { filled: 0 } ).filled );
+                } );
+	    })
+	    .error( function ( response, status ) {
 		if (status === 404) {
 		    $scope.error = 'it does not exist';
 		} else {
-		    $scope.error = 'Error: ' + status + '\nData: ' + data;
+		    $scope.error = 'Error: ' + status + '\nData: ' + response;
 		}
 	    });
 
