@@ -6,7 +6,7 @@
     </select>
 
     <select class="span2" ui-select2 data-ng-model="mois" data-placeholder="Toute l'année" data-ng-change="process_data()">
-      <option value="-1"></option>
+      <option value="-1">Toute l'année</option>
       <option data-ng-repeat="mois in annee" value="{{$index + 1}}">{{mois}}</option>
     </select>
   </div>

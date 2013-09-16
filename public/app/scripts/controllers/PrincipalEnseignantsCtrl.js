@@ -32,8 +32,8 @@ angular.module('cahierDeTexteApp')
 				return { filled: total.filled + monthly_stat.filled } ;
 			    }, { filled: 0 } ).filled;
 		    } else {
-			stats.validated = e.statistiques[ $scope.mois ].validated;
-			stats.filled = e.statistiques[ $scope.mois ].filled;
+			stats.validated = e.statistiques[ $scope.mois - 1 ].validated;
+			stats.filled = e.statistiques[ $scope.mois - 1 ].filled;
 		    }
 
 		    $scope.enseignants.push( { id: e.enseignant_id,
