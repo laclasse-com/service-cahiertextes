@@ -4,7 +4,6 @@
     "dependencies": {
 	"angular": "1.2.0-rc.2",
 	"angular-grid": "git://github.com/angular-ui/ng-grid.git#latest",
-	"angular-ui-chart": "git://github.com/angular-ui/ui-chart.git#latest",
 	"angles": "git://github.com/lgsilver/angles.git#latest",
 	"chart.js": "latest",
 	"angular-ui-router": "latest",
@@ -17,10 +16,7 @@
 	"angular-cookies": "1.2.0-rc.2",
 	"es5-shim": "latest",
 	"angular-scenario": "1.2.0-rc.2",
-	"d3": "latest",
-	"angular-d3": "git://github.com/beefsack/angular-d3.git#latest",
 	"angular-ui-calendar": "latest",
-	"radar-chart-d3": "git://github.com/alangrafu/radar-chart-d3.git#latest",
 	"rubyjs": "git://github.com/rubyjs/core-lib.git#latest"
     },
     "devDependencies": {
