@@ -44,7 +44,7 @@ angular.module( 'cahierDeTexteApp',
 	    })
 	    .state('principal.enseignant', { //imbriquée sous principal
 		parent: 'principal',
-		url: '/enseignant',
+		url: '/enseignant/:enseignant_id',
 		views: {
 		    'titre': {
 			template: 'Validation des saisies par Enseignant'

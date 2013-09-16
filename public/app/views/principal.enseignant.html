@@ -6,14 +6,16 @@
     <p><span data-ng-repeat="classe in data.classes">{{classe}}{{($last != true) && ", " || ""}}</span></p>
   </div>
 
+  
   <div class="span7">
     <div ui-chart="chart.data" chart-options="chart.options" />
   </div>
 </div>
 
-<a class="btn btn-warning span2 offset10" data-ng-click="validateAllEntries()">Valider les entrées</a>
+<a class="btn btn-warning span2 offset7" data-ng-click="validateAllEntries()">Valider les entrées</a>
+<a class="btn btn-warning span2" data-ng-click="unvalidateAllEntries()">Invalider les entrées</a>
 <div class="span12">
   <div data-ng-grid="gridEntries"></div>
 </div>
-<a class="btn btn-warning span2 offset10" data-ng-click="unvalidateAllEntries()">Invalider les entrées</a>
-{{data.nbTotalEntries}}/{{data.nbValidatedEntries}}
+<a class="btn btn-warning span2 offset7" data-ng-click="validateAllEntries()">Valider les entrées</a>
+<a class="btn btn-warning span2" data-ng-click="unvalidateAllEntries()">Invalider les entrées</a>
