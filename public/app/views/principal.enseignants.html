@@ -5,13 +5,12 @@
       <option data-ng-repeat="enseignant in enseignants">{{enseignant.name}}</option>
     </select>
 
-    <select class="span2" ui-select2 data-ng-model="mois" data-placeholder="Toute l'année">
-      <option value=""></option>
-      <option data-ng-repeat="mois in annee">{{mois}}</option>
+    <select class="span2" ui-select2 data-ng-model="mois" data-placeholder="Toute l'année" data-ng-change="process_data()">
+      <option value="-1"></option>
+      <option data-ng-repeat="mois in annee" value="{{$index + 1}}">{{mois}}</option>
     </select>
   </div>
 </form>
-<!-- {{enseignants}} -->
 
 <div class="span4 offset4">
   <canvas radarchart options="radar.options" data="radar.data" width="384" height="384"></canvas>
