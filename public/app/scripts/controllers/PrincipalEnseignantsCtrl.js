@@ -30,23 +30,42 @@ angular.module('cahierDeTexteApp')
                              discipline: '<void>',
                              stats: e.statistiques.reduce( function(total, monthly_stat) {
                                  return { validated: total.validated + monthly_stat.validated } ;
-                             }, { validated: 0 } ).validated + '/' + e.statistiques.reduce( function(total, monthly_stat) {
-                                 return { filled: total.filled + monthly_stat.filled } ;
-                             }, { filled: 0 } ).filled
+                             }, { validated: 0 } ).validated + '/' + e.statistiques.reduce(
+				 function(total, monthly_stat) {
+                                     return { filled: total.filled + monthly_stat.filled } ;
+				 }, { filled: 0 } ).filled
 			   };
                 } );
 
-		$scope.radar.data.push( $scope.enseignants.map( function( e ) {
-		                          return { axis: e.name, value: e.statistiques.reduce( function(total, monthly_stat) {
-                                 return { filled: total.filled + monthly_stat.filled } ;
-                             }, { filled: 0 } ).filled };
-		                        } ) );
-		$scope.radar.data.push( $scope.enseignants.map( function( e ) {
-		                          return { axis: e.name, value: e.statistiques.reduce( function(total, monthly_stat) {
-                                 return { validated: total.validated + monthly_stat.validated } ;
-                             }, { validated: 0 } ).validated };
-		                        } ) );
-	    }).
+		$scope.radar.options =  {
+		    segmentShowStroke : true,  //Boolean - Whether we should show a stroke on each segment
+		    segmentStrokeColor : "#fff",  //String - The colour of each segment stroke
+		    segmentStrokeWidth : 24,  //Number - The width of each segment stroke
+		    percentageInnerCutout : 50,  //The percentage of the chart that we cut out of the middle.
+		    animation : true,  //Boolean - Whether we should animate the chart
+		    animationSteps : 100,  //Number - Amount of animation steps
+		    animationEasing : "easeOutBounce",  //String - Animation easing effect
+		    animateRotate : true,  //Boolean - Whether we animate the rotation of the Doughnut
+		    animateScale : false,  //Boolean - Whether we animate scaling the Doughnut from the centre
+		    onAnimationComplete : null  //Function - Will fire on animation completion.
+		};
+
+		$scope.radar.data = {
+		    labels: $scope.data.map( function( e ) { return e.enseignant_id; } ),
+		    datasets: [ { data:
+				  $scope.data.map( function( e ) {
+				      return e.statistiques.reduce( function(total, monthly_stat) {
+					  return { validated: total.validated + monthly_stat.validated } ;
+				      }, { validated: 0 } ).validated; } )
+				},
+				{ data:
+				  $scope.data.map( function( e ) {
+				      return e.statistiques.reduce( function(total, monthly_stat) {
+					  return { filled: total.filled + monthly_stat.filled } ;
+				      }, { filled: 0 } ).filled; } )
+				} ]
+		};
+						   }).
 	    error( function (data, status) {
 		if (status === 404) {
 		    $scope.error = 'it does not exist';
