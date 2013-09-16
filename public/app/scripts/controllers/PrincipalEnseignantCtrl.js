@@ -14,6 +14,10 @@ angular.module('cahierDeTexteApp')
 					       valide: e.valide } );
 		    } );
 		} );
+
+		$scope.classes = _.uniq( $scope.saisies.map( function( e ) {
+		    return e.classe;
+		} ) );
 	    }
 	};
 	$scope.enseignant_id = $stateParams.enseignant_id;
