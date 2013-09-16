@@ -2,15 +2,13 @@
 
 angular.module('cahierDeTexteApp', [ 'ui.bootstrap',
 				     'ui.calendar',
-				     'ui.chart',
 				     'ui.router',
 				     'ui.select2',
 				     'ngGrid',
-				     'd3',
 				     'angles' ])
     .config(function ($stateProvider, $urlRouterProvider) {
 	$urlRouterProvider.otherwise('/');
-	
+
 	$stateProvider
 	    .state('racine', {
 		url: '/',

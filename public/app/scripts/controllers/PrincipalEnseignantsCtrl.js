@@ -6,8 +6,7 @@ angular.module('cahierDeTexteApp')
 	$scope.annee = [];
 
 	$scope.radar = {
-	    data: [],
-	    renderer: RadarChart.draw
+	    data: []
 	};
 	$scope.gridEnseignants = {
 	    data: 'enseignants',
@@ -37,12 +36,16 @@ angular.module('cahierDeTexteApp')
 			   };
                 } );
 
-		// $scope.radar.data.push( $scope.enseignants.map( function( e ) {
-		//                           return { axis: e.name, value: e.total };
-		//                         } ) );
-		// $scope.radar.data.push( $scope.enseignants.map( function( e ) {
-		//                           return { axis: e.name, value: e.stats };
-		//                         } ) );
+		$scope.radar.data.push( $scope.enseignants.map( function( e ) {
+		                          return { axis: e.name, value: e.statistiques.reduce( function(total, monthly_stat) {
+                                 return { filled: total.filled + monthly_stat.filled } ;
+                             }, { filled: 0 } ).filled };
+		                        } ) );
+		$scope.radar.data.push( $scope.enseignants.map( function( e ) {
+		                          return { axis: e.name, value: e.statistiques.reduce( function(total, monthly_stat) {
+                                 return { validated: total.validated + monthly_stat.validated } ;
+                             }, { validated: 0 } ).validated };
+		                        } ) );
 	    }).
 	    error( function (data, status) {
 		if (status === 404) {

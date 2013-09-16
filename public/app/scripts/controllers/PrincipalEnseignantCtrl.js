@@ -29,23 +29,7 @@ angular.module('cahierDeTexteApp')
 
 	$scope.chart = {};
 	$scope.chart.data =  [[ ]];
-	$scope.chart.options = {
-	    seriesDefaults: {
-		shadow: false,
-		renderer: jQuery.jqplot.PieRenderer,
-		rendererOptions: {
-		    showDataLabels: true,
-		    sliceMargin: 4,
- 		    diameter: 128
-		}
-	    },
-	    legend: { show:false, location: 'e' },
-	    grid: {
-		drawGridLines: false,
-		background:'transparent',
-		shadow: false
-	    }
-	};
+	$scope.chart.options = { };
 	$scope.chart.update = function() {
 	    var nbValidatedEntries = $scope.data.entries.reduce(function( x, e ) {
 		if ( e.validated ) {
