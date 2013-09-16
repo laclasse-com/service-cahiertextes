@@ -13,6 +13,9 @@
 </form>
 <!-- {{enseignants}} -->
 
+{{radar.data}}
+<canvas radarchart options="radar.options" data="radar.data" width="300" height="300"></canvas>
+
 <div>
   <div data-d3 data-d3-data="radar.data" data-d3-renderer="radar.renderer"></div>
 </div>

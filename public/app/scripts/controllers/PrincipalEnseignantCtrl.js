@@ -2,6 +2,7 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantCtrl', function ($scope, $http, Enseignant) {
+	// Tableau
 	$scope.gridEntries = {
 	    data: 'data.entries',
 	    enableCellEdit: false,
@@ -27,21 +28,23 @@ angular.module('cahierDeTexteApp')
 	    });
 	};
 
+	// Graphiques
 	$scope.chart = {};
 	$scope.chart.data =  [[ ]];
 	$scope.chart.options = { };
 	$scope.chart.update = function() {
-	    var nbValidatedEntries = $scope.data.entries.reduce(function( x, e ) {
+	    var nbValidatedEntries = $scope.data.entries.reduce( function( x, e ) {
 		if ( e.validated ) {
 		    return x+1;
 		} else {
 		    return x;
 		}
-	    }, 0);
+	    }, 0 );
 	    $scope.chart.data[0].push( [ 'Entrée(s) validée(s)', nbValidatedEntries ] );
 	    $scope.chart.data[0].push( [ 'Entrée(s) non validée(s)', $scope.data.entries.length - nbValidatedEntries ] );
 	};
-	
+
+	// Récupération de données
 	Enseignant.getEnseignant().success( function( response ) {
 	    $scope.data = response.data;
 	    $scope.data.classes = [];
