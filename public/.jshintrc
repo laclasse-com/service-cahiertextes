@@ -23,7 +23,6 @@
 	"ngGridFlexibleHeightPlugin": true,
 	"jQuery": true,
 	"console": true,
-	"R": true,
 	"_": true
     }
 }
