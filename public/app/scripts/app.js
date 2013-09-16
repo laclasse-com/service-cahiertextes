@@ -73,7 +73,7 @@ angular.module( 'cahierDeTexteApp',
 					  percentageInnerCutout : 50,
 					  animation : true,
 					  animationSteps : 100,
-					  animationEasing : "easeOutBounce",
+					  animationEasing : "easeOutQuart",
 					  animateRotate : true,
 					  animateScale : false,
 					  onAnimationComplete : null }; //global variable
