@@ -1,0 +1,23 @@
+{
+  "name": "Chart.js",
+  "description": "Simple HTML5 Charts using the canvas element",
+  "keywords": [
+    "charts"
+  ],
+  "homepage": "https://github.com/nnnick/Chart.js",
+  "author": "nnnick",
+  "main": [
+    "Chart.min.js"
+  ],
+  "dependencies": {},
+  "_release": "master",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "dffb2cd6ee13e9778240e320245c2d338c5e6f8f"
+  },
+  "_source": "git://github.com/nnnick/Chart.js.git",
+  "_target": "*",
+  "_originalSource": "Chart.js",
+  "_direct": true
+}
