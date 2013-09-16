@@ -4,10 +4,8 @@ angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantsCtrl', function ($scope, $http, EmploiDuTemps) {
 	$scope.enseignants = [];
 	$scope.annee = [];
+	$scope.radar = {};
 
-	$scope.radar = {
-	    data: []
-	};
 	$scope.gridEnseignants = {
 	    data: 'enseignants',
 	    enableCellEdit: true,
@@ -49,17 +47,22 @@ angular.module('cahierDeTexteApp')
 		    animateScale : false,  //Boolean - Whether we animate scaling the Doughnut from the centre
 		    onAnimationComplete : null  //Function - Will fire on animation completion.
 		};
-
 		$scope.radar.data = {
 		    labels: $scope.data.map( function( e ) { return e.enseignant_id; } ),
-		    datasets: [ { data:
-				  $scope.data.map( function( e ) {
+		    datasets: [ { fillColor : "#00ff00",
+				  strokeColor : "#00aa00",
+				  pointColor : "#00ff00",
+				  pointStrokeColor : "#00aa00",
+				  data: $scope.data.map( function( e ) {
 				      return e.statistiques.reduce( function(total, monthly_stat) {
 					  return { validated: total.validated + monthly_stat.validated } ;
 				      }, { validated: 0 } ).validated; } )
 				},
-				{ data:
-				  $scope.data.map( function( e ) {
+				{ fillColor : "#aaffaa",
+				  strokeColor : "#88aa88",
+				  pointColor : "#aaffaa",
+				  pointStrokeColor : "#88aa88",
+				  data: $scope.data.map( function( e ) {
 				      return e.statistiques.reduce( function(total, monthly_stat) {
 					  return { filled: total.filled + monthly_stat.filled } ;
 				      }, { filled: 0 } ).filled; } )
@@ -79,6 +82,4 @@ angular.module('cahierDeTexteApp')
 		$scope.annee = response.mois;
 	    });
 	$scope.mois = $scope.annee[0];
-
-	console.log($scope.data);
     });
