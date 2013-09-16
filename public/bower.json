@@ -17,7 +17,6 @@
     "json3": "latest",
     "es5-shim": "latest",
     "angular-ui-calendar": "latest",
-    "rubyjs": "git://github.com/rubyjs/core-lib.git#latest",
     "underscore": "latest"
   },
   "devDependencies": {
