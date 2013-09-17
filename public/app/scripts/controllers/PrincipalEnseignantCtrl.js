@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('cahierDeTexteApp')
-    .controller('PrincipalEnseignantCtrl', function ($scope, $stateParams, EnseignantAPI) {
+    .controller('PrincipalEnseignantCtrl', [ '$scope', '$stateParams', 'EnseignantAPI', function ($scope, $stateParams, EnseignantAPI) {
 	$scope.enseignant_id = $stateParams.enseignant_id;
 
 	$scope.process_data = function(  ) {
@@ -56,4 +56,4 @@ angular.module('cahierDeTexteApp')
 			       $scope.raw_data = response;
 			       $scope.process_data();
 			   } );
-    });
+    } ] );

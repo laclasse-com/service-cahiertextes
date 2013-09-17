@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('cahierDeTexteApp')
-	.controller('EleveCalendarCtrl', function ($scope) {
+	.controller('EleveCalendarCtrl', [ '$scope', function ($scope) {
 		var date = new Date();
 		var d = date.getDate();
 		var m = date.getMonth();
@@ -80,7 +80,7 @@ angular.module('cahierDeTexteApp')
 		};
 		/* event sources array*/
 		$scope.eventSources = [$scope.events];
-	})
-	.controller('EleveCtrl', function ($scope) {
+	} ] )
+	.controller('EleveCtrl', [ '$scope', function ($scope) {
 		$scope.partToShow = 'Cours';
-	});
+	} ] );

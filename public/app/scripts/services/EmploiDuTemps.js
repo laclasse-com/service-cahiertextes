@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('cahierDeTexteApp')
-	.service('EmploiDuTemps', function EmploiDuTemps($http) {
+	.service('EmploiDuTemps', [ '$http', function EmploiDuTemps($http) {
 		this.getMois = function() {
 			return $http.get( 'mocks/mois.json' );
 		};
@@ -17,5 +17,4 @@ angular.module('cahierDeTexteApp')
 		this.getEnseignants = function() {
 			return $http.get( 'mocks/enseignants.json' );
 		};
-		
-	});
+	} ] );

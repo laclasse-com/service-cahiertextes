@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('cahierDeTexteApp')
-    .controller('PrincipalClassesCtrl', function ($scope, $http, EmploiDuTemps) {
+    .controller('PrincipalClassesCtrl', [ '$scope', 'EmploiDuTemps', function ($scope, EmploiDuTemps) {
 	$scope.classes = [];
 	EmploiDuTemps.getClasses().success( function( response ) {
 	    $scope.classes = response.classes;
@@ -19,4 +19,4 @@ angular.module('cahierDeTexteApp')
 	    $scope.matieres = response.matieres;
 	});
 	$scope.matiereCourante = $scope.matieres[1];
-    });
+    } ] );
