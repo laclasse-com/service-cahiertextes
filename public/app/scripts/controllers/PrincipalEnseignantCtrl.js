@@ -9,7 +9,6 @@ angular.module('cahierDeTexteApp')
 	    if ( typeof $scope.raw_data !== 'undefined' ) {
 		_.each( $scope.raw_data.saisies, function( m ) {
 		    _.each( m, function ( e ) {
-			console.log( e.cours );
 			$scope.saisies.push( { classe: e.classe_id,
 					       cours: e.cours,
 					       devoir: e.devoir,
