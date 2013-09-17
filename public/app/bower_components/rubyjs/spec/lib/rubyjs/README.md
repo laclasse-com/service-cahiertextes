@@ -1,1 +1,0 @@
-spec/lib/rubyjs contains RubyJS specific specs and additional specs not in rubyspec.
