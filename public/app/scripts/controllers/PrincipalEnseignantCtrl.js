@@ -1,7 +1,9 @@
 'use strict';
 
 angular.module('cahierDeTexteApp')
-    .controller('PrincipalEnseignantCtrl', function ($scope, $http, $stateParams) {
+    .controller('PrincipalEnseignantCtrl', function ($scope, $stateParams, EnseignantAPI) {
+	$scope.enseignant_id = $stateParams.enseignant_id;
+
 	$scope.process_data = function(  ) {
 	    $scope.saisies = [];
 	    if ( typeof $scope.raw_data !== 'undefined' ) {
@@ -20,7 +22,6 @@ angular.module('cahierDeTexteApp')
 		} ) );
 	    }
 	};
-	$scope.enseignant_id = $stateParams.enseignant_id;
 	
 	// Tableau
 	$scope.gridEntries = {
@@ -48,13 +49,11 @@ angular.module('cahierDeTexteApp')
 	    });
 	};
 
-	// Récupération de données
-	$http({
-	    method: 'GET',
-	    url: 'http://localhost:9292/api/v0/etablissement/0134567A/enseignant/' + $scope.enseignant_id
-	})
-	    .success( function( response ) {
-		$scope.raw_data = response;
-		$scope.process_data(  );
-	    });
+	// Récupération et consommation des données
+	EnseignantAPI.get( { enseignant_id: $scope.enseignant_id,
+			     etablissement_id: '0134567A' },
+			   function( response ) {
+			       $scope.raw_data = response;
+			       $scope.process_data();
+			   } );
     });
