@@ -1,3 +1,4 @@
+# -*- mode: ruby -*-
 #!/usr/bin/env rackup
 #
 # Rackup is a useful tool for running Rack applications, which uses the
