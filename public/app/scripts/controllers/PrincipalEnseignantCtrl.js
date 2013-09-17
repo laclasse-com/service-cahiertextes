@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('cahierDeTexteApp')
-    .controller('PrincipalEnseignantCtrl', [ '$scope', '$stateParams', 'EnseignantAPI', function ($scope, $stateParams, EnseignantAPI) {
+    .controller('PrincipalEnseignantCtrl', [ '$scope', '$stateParams', 'EnseignantAPI', 'CoursAPI', '$http',
+					     function ( $scope, $stateParams, EnseignantAPI, CoursAPI, $http ) {
 	$scope.enseignant_id = $stateParams.enseignant_id;
 
 	$scope.process_data = function(  ) {
@@ -12,7 +13,9 @@ angular.module('cahierDeTexteApp')
 			$scope.saisies.push( { classe: e.classe_id,
 					       cours: e.cours,
 					       devoir: e.devoir,
-					       valide: e.valide } );
+					       valide: e.valide,
+					       cours_id: e.cours_id,
+					       devoir_id: e.devoir_id } );
 		    } );
 		} );
 
@@ -33,8 +36,14 @@ angular.module('cahierDeTexteApp')
 		{ field: 'cours', displayName: 'Cours', cellTemplate: '<span style="overflow-y:auto" ng-bind-html-unsafe="row.entity.cours">{{row.entity.cours}}</span>' },
 		{ field: 'devoir', displayName: 'Travail à faire', cellTemplate: '<span style="overflow-y:auto" ng-bind-html-unsafe="row.entity.devoir">{{row.entity.devoir}}</span>' },
 		{ field: 'validated', displayName: 'Validé',
-		  cellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-model="row.entity.valide" /></div>'}
+		  cellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-model="row.entity.valide" ng-click="toggle_valide( {{row.entity.cours_id}} )" /></div>'}
 	    ]
+	};
+
+	$scope.toggle_valide = function( cours_id ) {
+	    console.log( cours_id );
+	    CoursAPI.valide({ id: cours_id }, {});
+	    // CoursAPI.save({ id: cours_id });
 	};
 
 	$scope.validateAllEntries = function() {
