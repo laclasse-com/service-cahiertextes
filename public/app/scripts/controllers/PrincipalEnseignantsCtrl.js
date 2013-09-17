@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('cahierDeTexteApp')
-    .controller('PrincipalEnseignantsCtrl', function ($scope, $rootScope, $http, EmploiDuTemps) {
+    .controller('PrincipalEnseignantsCtrl', [ '$scope', '$rootScope', '$http', 'EmploiDuTemps', function ($scope, $rootScope, $http, EmploiDuTemps) {
 	$scope.process_data = function(  ) {
 	    if ( typeof $scope.raw_data !== 'undefined' ) {
 		$scope.enseignants = [];
@@ -82,4 +82,4 @@ angular.module('cahierDeTexteApp')
 		    $scope.error = 'Error: ' + status + '\nData: ' + response;
 		}
 	    });
-    });
+    } ] );

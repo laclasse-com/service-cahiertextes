@@ -1,6 +1,6 @@
 'use strict';
 
 angular.module('cahierDeTexteApp')
-	.controller('EleveCtrl', function ($scope) {
+	.controller('EleveCtrl', [ '$scope', function ($scope) {
 		$scope.partToShow = 'Cours';
-	});
+	} ] );

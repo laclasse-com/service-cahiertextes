@@ -1,6 +1,6 @@
 'use strict';
 
 angular.module('cahierDeTexteApp')
-    .controller('PrincipalCtrl', function ($scope) {
+    .controller('PrincipalCtrl', [ '$scope', function ($scope) {
 	
-    });
+    } ] );
