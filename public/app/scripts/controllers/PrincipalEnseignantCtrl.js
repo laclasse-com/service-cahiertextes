@@ -41,9 +41,7 @@ angular.module('cahierDeTexteApp')
 	};
 
 	$scope.toggle_valide = function( cours_id ) {
-	    console.log( cours_id );
 	    CoursAPI.valide({ id: cours_id }, {});
-	    // CoursAPI.save({ id: cours_id });
 	};
 
 	$scope.validateAllEntries = function() {
