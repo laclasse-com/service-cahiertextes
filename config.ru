@@ -1,5 +1,5 @@
-# -*- mode: ruby -*-
 #!/usr/bin/env rackup
+# -*- coding: utf-8; mode: ruby -*-
 #
 # Rackup is a useful tool for running Rack applications, which uses the
 # Rack::Builder DSL to configure middleware and build up applications easily.
