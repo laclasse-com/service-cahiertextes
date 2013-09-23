@@ -67,6 +67,8 @@ angular.module('cahierDeTexteApp')
 		});
 	$scope.mois = -1;
 
+	$scope.enseignant = -1;
+
 	$http({
 	    method: 'GET',
 	    url: 'http://localhost:9292/api/v0/etablissement/0134567A/enseignant'
