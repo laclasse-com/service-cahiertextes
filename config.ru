@@ -8,13 +8,12 @@
 # application as FastCGI, CGI, or standalone with Mongrel or WEBrick -- all from
 # the same configuration.
 
-require 'rack/contrib/try_static'
-
 require ::File.expand_path('../app', __FILE__)
 
-use( Rack::TryStatic,
-     root: File.expand_path('../public/app/', __FILE__),
-     urls: %w[/],
-     try: [ '.html', 'index.html', '/index.html', '/bower_components', '/favicon.ico', '/localcdn', '/mocks', '/robots.txt', '/scripts', '/styles', '/views' ] )
+use( Rack::Static,
+     root: File.expand_path('../public', __FILE__),
+     urls: %w[/app],
+     try: [ '.html', 'index.html', '/index.html', '/bower_components', '/favicon.ico', '/localcdn', '/mocks', '/robots.txt', '/scripts', '/styles', '/views' ]
+     )
 
 run CahierDeTextesAPI::API
