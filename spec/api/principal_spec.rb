@@ -53,6 +53,7 @@ describe CahierDeTextesAPI::API do
     cours_id = Cours.where( 'date_validation IS NULL' ).first.id
 
     put "/api/v0/cours/#{cours_id}/valide", {}
+    last_response.status.should == 200
 
     Cours[ cours_id ].date_validation.nil?.should be_false
   end
