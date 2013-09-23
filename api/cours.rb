@@ -52,9 +52,9 @@ module CahierDeTextesAPI
 
     desc 'modifie une séquence pédagogique'
     params {
-      requires :id
-      requires :contenu
-      optional :ressources
+      requires :id, type: Integer
+      requires :contenu, type: String
+      optional :ressources, type: Array
     }
     put '/:id' do
       # FIXME: gestion des droits
