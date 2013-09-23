@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('cahierDeTexteApp')
-    .controller('PrincipalEnseignantCtrl', [ '$scope', '$stateParams', 'EnseignantAPI', 'CoursAPI', '$http',
-					     function ( $scope, $stateParams, EnseignantAPI, CoursAPI, $http ) {
+    .controller('PrincipalEnseignantCtrl', [ '$scope', '$stateParams', 'EnseignantAPI', 'CoursAPI',
+					     function ( $scope, $stateParams, EnseignantAPI, CoursAPI ) {
 	$scope.enseignant_id = $stateParams.enseignant_id;
 
 	$scope.process_data = function(  ) {
@@ -36,7 +36,7 @@ angular.module('cahierDeTexteApp')
 		{ field: 'cours', displayName: 'Cours', cellTemplate: '<span style="overflow-y:auto" ng-bind-html-unsafe="row.entity.cours">{{row.entity.cours}}</span>' },
 		{ field: 'devoir', displayName: 'Travail à faire', cellTemplate: '<span style="overflow-y:auto" ng-bind-html-unsafe="row.entity.devoir">{{row.entity.devoir}}</span>' },
 		{ field: 'validated', displayName: 'Validé',
-		  cellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-model="row.entity.valide" ng-click="toggle_valide( {{row.entity.cours_id}} )" /></div>'}
+		  cellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-model="row.entity.valide" ng-show="!row.entity.valide" ng-click="toggle_valide( {{row.entity.cours_id}} )" /><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" readonly checked ng-show="row.entity.valide" />{{row.entity.valide}}</div>'}
 	    ]
 	};
 
@@ -46,12 +46,8 @@ angular.module('cahierDeTexteApp')
 
 	$scope.validateAllEntries = function() {
 	    _.each( $scope.saisies, function( e ) {
+		CoursAPI.valide({ id: e.cours_id }, {});
 		e.valide = true;
-	    });
-	};
-	$scope.unvalidateAllEntries = function() {
-	    _.each( $scope.saisies, function( e ) {
-		e.valide = false;
 	    });
 	};
 
