@@ -8,8 +8,8 @@ angular.module('cahierDeTexteApp')
 	$scope.process_data = function(  ) {
 	    $scope.saisies = [];
 	    if ( typeof $scope.raw_data !== 'undefined' ) {
-		_.each( $scope.raw_data.saisies, function( m ) {
-		    _.each( m, function ( e ) {
+		angular.forEach( $scope.raw_data.saisies, function( m ) {
+		    angular.forEach( m, function ( e ) {
 			$scope.saisies.push( { classe: e.classe_id,
 					       cours: e.cours,
 					       devoir: e.devoir,
@@ -45,7 +45,7 @@ angular.module('cahierDeTexteApp')
 	};
 
 	$scope.validateAllEntries = function() {
-	    _.each( $scope.saisies, function( e ) {
+	    angular.forEach( $scope.saisies, function( e ) {
 		CoursAPI.valide({ id: e.cours_id }, {});
 		e.valide = true;
 	    });
