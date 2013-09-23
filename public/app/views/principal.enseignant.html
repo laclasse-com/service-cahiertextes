@@ -1,6 +1,6 @@
 <select class="span2" ui-select2 data-ng-model="classe" data-placeholder="Toutes les classes" data-ng-change="process_data()">
   <option value="-1">Toutes les classes</option>
-  <option data-ng-repeat="classe in classes" value="{{$index + 1}}">{{classe}}</option>
+  <option data-ng-repeat="classe in classes" value="{{classe}}">{{classe}}</option>
 </select>
 
 

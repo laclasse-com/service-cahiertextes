@@ -4,24 +4,28 @@ angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantCtrl', [ '$scope', '$stateParams', 'EnseignantAPI', 'CoursAPI',
 					     function ( $scope, $stateParams, EnseignantAPI, CoursAPI ) {
 	$scope.enseignant_id = $stateParams.enseignant_id;
+	$scope.classe = -1;
 
 	$scope.process_data = function(  ) {
 	    $scope.saisies = [];
 	    if ( typeof $scope.raw_data !== 'undefined' ) {
 		angular.forEach( $scope.raw_data.saisies, function( m ) {
 		    angular.forEach( m, function ( e ) {
-			$scope.saisies.push( { classe: e.classe_id,
-					       cours: e.cours,
-					       devoir: e.devoir,
-					       valide: e.valide,
-					       cours_id: e.cours_id,
-					       devoir_id: e.devoir_id } );
+			if ( ( $scope.classe == -1 ) || ( e.classe_id == $scope.classe ) ) {
+			    $scope.saisies.push( { classe: e.classe_id,
+						   cours: e.cours,
+						   devoir: e.devoir,
+						   valide: e.valide,
+						   cours_id: e.cours_id,
+						   devoir_id: e.devoir_id } );
+			}
 		    } );
 		} );
-
-		$scope.classes = _.uniq( $scope.saisies.map( function( e ) {
-		    return e.classe;
-		} ) );
+		if ( $scope.classe == -1 ) {
+		    $scope.classes = _.uniq( $scope.saisies.map( function( e ) {
+			return e.classe;
+		    } ) );
+		}
 	    }
 	};
 	
