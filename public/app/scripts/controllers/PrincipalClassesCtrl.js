@@ -23,7 +23,7 @@ angular.module('cahierDeTexteApp')
 
 			  // Extraction des matières
 			  $scope.matieres = _.uniq( _.flatten( $scope.raw_data.map( function( r ) {
-			      return r.par_matiere.map( function( m ) {
+			      return r.matieres.map( function( m ) {
 				  return m.matiere_id;
 			      });
 			  }) ) );
@@ -40,14 +40,14 @@ angular.module('cahierDeTexteApp')
 
 			  if ( $scope.matiereCourante != -1 ) {
 			      $scope.data = $scope.data.map( function( regroupement ) {
-				  var par_matiere = _.filter( regroupement.par_matiere,
+				  var matieres = _.filter( regroupement.matieres,
 							      function( r ) {
 								  return r.matiere_id == $scope.matiereCourante;
 							      });
 
 				  return {
 				      "regroupement_id": regroupement.regroupement_id,
-				      "par_matiere": par_matiere
+				      "matieres": matieres
 				  };
 			      });
 			  }
@@ -57,14 +57,14 @@ angular.module('cahierDeTexteApp')
 				  function( regroupement ) {
 				      return {
 					  "regroupement_id": regroupement.regroupement_id,
-					  "par_matiere": regroupement.par_matiere.map(
+					  "matieres": regroupement.matieres.map(
 					      function( matiere ) {
-						  var un_mois = _.filter( matiere.par_mois,
+						  var un_mois = _.filter( matiere.mois,
 									  function( mois ) {
 									      return mois.mois == $scope.moisCourant;
 									  });
 						  return { matiere_id: matiere.matiere_id,
-							   par_mois: un_mois };
+							   mois: un_mois };
 					      })
 				      };
 				  });
@@ -72,8 +72,8 @@ angular.module('cahierDeTexteApp')
 
 			  // Calcul des statistiques globales
 			  $scope.global_stats = $scope.data.reduce( function( totaux, regroupement ) {
-			      var stats_regroupement = regroupement.par_matiere.reduce( function( totaux, matiere ) {
-				  var stats_matiere = matiere.par_mois.reduce( function( stats, mois ) {
+			      var stats_regroupement = regroupement.matieres.reduce( function( totaux, matiere ) {
+				  var stats_matiere = matiere.mois.reduce( function( stats, mois ) {
 				      return { filled: stats.filled + mois.filled,
 					       validated: stats.validated + mois.validated };
 				  }, { filled: 0, validated: 0 });

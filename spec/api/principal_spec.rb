@@ -110,12 +110,12 @@ describe CahierDeTextesAPI::API do
 
     response_body.each {
       |classe|
-      classe['par_mois'].size.should == 12
-      classe['par_mois'].reduce( 0 ) {
+      classe['mois'].size.should == 12
+      classe['mois'].reduce( 0 ) {
         |total, mois|
         total + mois[ 'filled' ]
       }.should == classe[ 'filled' ]
-      classe['par_mois'].reduce( 0 ) {
+      classe['mois'].reduce( 0 ) {
         |total, mois|
         total + mois[ 'validated' ]
       }.should == classe[ 'validated' ]
@@ -131,12 +131,12 @@ describe CahierDeTextesAPI::API do
 
     response_body = JSON.parse( last_response.body )
 
-    response_body['par_mois'].size.should == 12
-    response_body['par_mois'].reduce( 0 ) {
+    response_body['mois'].size.should == 12
+    response_body['mois'].reduce( 0 ) {
       |total, mois|
       total + mois[ 'filled' ]
     }.should == response_body[ 'filled' ]
-    response_body['par_mois'].reduce( 0 ) {
+    response_body['mois'].reduce( 0 ) {
       |total, mois|
       total + mois[ 'validated' ]
     }.should == response_body[ 'validated' ]
