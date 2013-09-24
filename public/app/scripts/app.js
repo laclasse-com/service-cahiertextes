@@ -69,7 +69,7 @@ angular.module( 'cahierDeTexteApp',
     .run( [ '$rootScope', function ($rootScope) {
 	$rootScope.globalChartOptions = { segmentShowStroke : true,
 					  segmentStrokeColor : "#fff",
-					  segmentStrokeWidth : 24,
+					  segmentStrokeWidth : 0,
 					  percentageInnerCutout : 50,
 					  animation : true,
 					  animationSteps : 100,
