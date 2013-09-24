@@ -153,7 +153,7 @@ describe CahierDeTextesAPI::API do
   # }}}
 
   # {{{ Classes
-  it 'récupère les statistiques par classes / mois / matières' do
+  it 'récupère les statistiques des classes d\'un établissement' do
     uai = '0134567A'
 
     get "/api/v0/etablissement/#{uai}/classe"
@@ -162,20 +162,15 @@ describe CahierDeTextesAPI::API do
     response_body = JSON.parse( last_response.body )
 
     response_body.each {
-      |classe|
-      classe['mois'].size.should == 12
-      classe['mois'].reduce( 0 ) {
-        |total, mois|
-        total + mois[ 'filled' ]
-      }.should == classe[ 'filled' ]
-      classe['mois'].reduce( 0 ) {
-        |total, mois|
-        total + mois[ 'validated' ]
-      }.should == classe[ 'validated' ]
+      |regroupement|
+      regroupement['matieres'].each {
+        |matiere|
+        matiere['mois'].size.should == 12
+      }
     }
   end
 
-  it 'récupère les statistiques d\'une classe par mois / matières' do
+  it 'récupère les statistiques d\'une classe' do
     uai = '0134567A'
     classe_id = '1'
 
@@ -184,15 +179,10 @@ describe CahierDeTextesAPI::API do
 
     response_body = JSON.parse( last_response.body )
 
-    response_body['mois'].size.should == 12
-    response_body['mois'].reduce( 0 ) {
-      |total, mois|
-      total + mois[ 'filled' ]
-    }.should == response_body[ 'filled' ]
-    response_body['mois'].reduce( 0 ) {
-      |total, mois|
-      total + mois[ 'validated' ]
-    }.should == response_body[ 'validated' ]
+    response_body['matieres'].each {
+      |matiere|
+      matiere['mois'].size.should == 12
+    }
   end
 
   it 'valide tout le cahier de textes d\'une classe' do
