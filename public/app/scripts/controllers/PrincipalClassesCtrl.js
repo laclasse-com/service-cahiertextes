@@ -5,7 +5,7 @@ angular.module('cahierDeTexteApp')
 		[ '$scope', 'EmploiDuTemps', 'ClasseAPI',
 		  function ($scope, EmploiDuTemps, ClasseAPI) {
 		      $scope.uai = '0134567A';
-		      
+
 		      $scope.raw_data = [];
 
 		      $scope.classes = [];
@@ -17,6 +17,7 @@ angular.module('cahierDeTexteApp')
 
 		      $scope.process_data = function(  ) {
 			  $scope.data = $scope.raw_data;
+
 			  if ( $scope.classeCourante !== '' ) {
 			      $scope.data = _.filter( $scope.data,
 						      function( r ) {
@@ -34,15 +35,31 @@ angular.module('cahierDeTexteApp')
 					  return { filled: total.filled + monthly_stat.filled,
 						   validated: total.validated + monthly_stat.validated } ;
 				  }, { filled: 0, validated: 0 } );
+
 				  return {
 				      "regroupement_id": regroupement.regroupement_id,
 				      "par_matiere": par_matiere,
 				      "filled":  stats.filled,
 				      "validated": stats.validated
 				  };
-			      });			      
+			      });
 			  }
-			  
+
+			  if ( $scope.moisCourant != -1 ) {
+			      $scope.data = $scope.data.map(
+				  function( regroupement ) {
+				      return regroupement.par_matiere.map(
+					  function( matiere ) {
+					      var un_mois = _.filter( matiere.par_mois,
+								      function( mois ) {
+									  return mois.mois == $scope.moisCourant;
+								      });
+					      return { matiere_id: matiere.matiere_id,
+						       par_mois: un_mois };
+					  });
+				  });
+			  }
+
 			  $scope.classes = $scope.raw_data.map( function( r ) {
 			      return r.regroupement_id;
 			  });
