@@ -49,9 +49,9 @@ angular.module('cahierDeTexteApp')
 			  if ( $scope.matiereCourante != -1 ) {
 			      $scope.data = $scope.data.map( function( regroupement ) {
 				  var matieres = _.filter( regroupement.matieres,
-							      function( r ) {
-								  return r.matiere_id == $scope.matiereCourante;
-							      });
+							   function( r ) {
+							       return r.matiere_id == $scope.matiereCourante;
+							   });
 
 				  return {
 				      "regroupement_id": regroupement.regroupement_id,
@@ -78,21 +78,37 @@ angular.module('cahierDeTexteApp')
 				  });
 			  }
 
-			  // Calcul des statistiques globales
+			  // Calcul des statistiques
+			  angular.forEach( $scope.data,
+					   function( regroupement ) {
+					       var stats_regroupement = regroupement.matieres.reduce( function( totaux, matiere ) {
+						   var stats_matiere = matiere.mois.reduce( function( totaux, mois ) {
+						       return { filled: totaux.filled + mois.filled,
+								validated: totaux.validated + mois.validated };
+						   }, { filled: 0, validated: 0 });
+						   
+						   return { filled: totaux.filled + stats_matiere.filled,
+							    validated: totaux.validated + stats_matiere.validated };
+					       }, { filled: 0, validated: 0 });
+
+					       regroupement.filled = stats_regroupement.filled;
+					       regroupement.validated = stats_regroupement.validated;
+					   });
+			  $scope.individualPieCharts = $scope.data.map( function( regroupement ) {
+			      return {
+				  regroupement_id: regroupement.regroupement_id,
+				  options: $rootScope.globalChartOptions,
+				  data: [ { color : "#00ff00",
+					    value: regroupement.validated },
+					  { color : "#aaffaa",
+					    value: regroupement.filled - regroupement.validated } ] };
+			  });
+
 			  $scope.global_stats = $scope.data.reduce( function( totaux, regroupement ) {
-			      var stats_regroupement = regroupement.matieres.reduce( function( totaux, matiere ) {
-				  var stats_matiere = matiere.mois.reduce( function( stats, mois ) {
-				      return { filled: stats.filled + mois.filled,
-					       validated: stats.validated + mois.validated };
-				  }, { filled: 0, validated: 0 });
-				  
-				  return { filled: totaux.filled + stats_matiere.filled,
-					   validated: totaux.validated + stats_matiere.validated };
-			      }, { filled: 0, validated: 0 });
-			      
-			      return { filled: totaux.filled + stats_regroupement.filled,
-				       validated: totaux.validated + stats_regroupement.validated };
+			      return { filled: totaux.filled + regroupement.filled,
+				       validated: totaux.validated + regroupement.validated };
 			  }, { filled: 0, validated: 0 });
+
 			  $scope.pieChart.data[0].value = $scope.global_stats.validated;
 			  $scope.pieChart.data[1].value = $scope.global_stats.filled - $scope.global_stats.validated;
 		      };
