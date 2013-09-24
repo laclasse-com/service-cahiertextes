@@ -1,4 +1,4 @@
-<form class="navbar-form span12">
+<form class="navbar-form">
   <div class="navbar-inner">
     <select class="span2" ui-select2 data-ng-model="classeCourante" data-placeholder="Toute les classes" data-ng-change="process_data()">
       <option value="" selected>Toute les classes</option>
@@ -18,7 +18,7 @@
   </div>
 </form>
 
-<div class="span12" style="background-color:#dcd">
+<div style="background-color:#dcd">
   <canvas piechart data="pieChart.data" options="pieChart.options" width="300" height="300"></canvas>
   <span class="badge badge-info">{{global_stats.validated}} / {{global_stats.filled}}</span>
 </div>
@@ -31,10 +31,6 @@
   <span class="badge badge-info">{{regroupement.data[0].value}} / {{regroupement.data[0].value + regroupement.data[1].value}}</span>
 </div>
 
-<div class="span12" style="background-color:#fdd">
-  {{global_stats}}
-  <br>
-  <br>
-  <br>
+<div style="background-color:#fdd">
 {{data}}
 </div>
