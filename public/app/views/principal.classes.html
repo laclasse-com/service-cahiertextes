@@ -7,7 +7,7 @@
 
     <select class="span2" ui-select2 data-ng-model="moisCourant" data-placeholder="Toute l'année" data-ng-change="process_data()">
       <option value="-1">Toute l'année</option>
-      <option data-ng-repeat="unmois in mois">{{unmois}}</option>
+      <option data-ng-repeat="unmois in mois" value="{{$index + 1}}">{{unmois}}</option>
     </select>
 
     <select class="span2" ui-select2 data-ng-model="matiereCourante" data-placeholder="Toute les matières" data-ng-change="process_data()">
