@@ -24,16 +24,6 @@ class CahierDeTextes < Sequel::Model( :cahiers_de_textes )
           end
         }
       end,
-      par_mois:
-      (1..12).map do
-        |month|
-        tmp_cours = cours.where( 'extract( month from date_cours ) = ' + month.to_s )
-
-        {
-          filled: tmp_cours.count,
-          validated: tmp_cours.where( :date_validation ).count
-        }
-      end
     }
   end
 
