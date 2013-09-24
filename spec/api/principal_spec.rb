@@ -11,37 +11,90 @@ describe CahierDeTextesAPI::API do
     xml_filename = 'spec/fixtures/Edt_To_LaclasseCom_0134567A_Enclair.xml'
     post '/api/v0/pronote/xml', xml_file: Rack::Test::UploadedFile.new(xml_filename, 'text/xml')
 
+    STDERR.puts 'Remplissage des Cahiers de textes'
     cahier_de_textes = CahierDeTextes.create(regroupement_id: 1,
                                              date_creation: Time.now,
                                              deleted: false)
+    STDERR.putc '.'
+    cahier_de_textes2 = CahierDeTextes.create(regroupement_id: 2,
+                                              date_creation: Time.now,
+                                              deleted: false)
+    STDERR.putc '.'
+    cahier_de_textes3 = CahierDeTextes.create(regroupement_id: 3,
+                                              date_creation: Time.now,
+                                              deleted: false)
+    STDERR.putc '.'
     plage_horaire_debut = PlageHoraire.create(label: 'test_debut',
                                               debut: '08:30:00',
                                               fin: '09:00:00')
+    STDERR.putc '.'
     plage_horaire_fin = PlageHoraire.create(label: 'test_fin',
                                             debut: '09:30:00',
                                             fin: '10:00:00')
+    STDERR.putc '.'
     CreneauEmploiDuTemps.create(debut: plage_horaire_debut.id,
                                 fin: plage_horaire_fin.id)
+    STDERR.putc '.'
     type_devoir = TypeDevoir.create(label: 'RSpec',
                                     description: 'Type de devoir tout spécial pour rspec')
+    STDERR.putc '.'
 
     12.times {
       |month|
-      rand(2..9).times {
-        CreneauEmploiDuTempsEnseignant.select( :creneau_emploi_du_temps_id, :enseignant_id ).limit( 32 ).each { |item|
+      rand(2..4).times {
+        CreneauEmploiDuTempsEnseignant.select( :creneau_emploi_du_temps_id, :enseignant_id ).limit( 32 ).each {
+          |item|
           cours = Cours.create(cahier_de_textes_id: cahier_de_textes.id,
                                creneau_emploi_du_temps_id: item.values[ :creneau_emploi_du_temps_id ],
                                date_cours: '2013-' + (month + 1).to_s + '-29',
                                contenu: 'Exemple de séquence pédagogique.',
                                enseignant_id: item.values[:enseignant_id] )
+          STDERR.putc '.'
           Devoir.create(cours_id: cours.id,
                         type_devoir_id: type_devoir.id,
                         date_due: Time.now,
                         contenu: 'Exemple de devoir.',
                         temps_estime: rand(0..120) )
+          STDERR.putc '.'
+        }
+      }
+      rand(2..4).times {
+        CreneauEmploiDuTempsEnseignant.select( :creneau_emploi_du_temps_id, :enseignant_id ).limit( 32 ).each {
+          |item|
+          cours = Cours.create(cahier_de_textes_id: cahier_de_textes2.id,
+                               creneau_emploi_du_temps_id: item.values[ :creneau_emploi_du_temps_id ],
+                               date_cours: '2013-' + (month + 1).to_s + '-29',
+                               contenu: 'Exemple de séquence pédagogique.',
+                               enseignant_id: item.values[:enseignant_id] )
+          STDERR.putc '.'
+          Devoir.create(cours_id: cours.id,
+                        type_devoir_id: type_devoir.id,
+                        date_due: Time.now,
+                        contenu: 'Exemple de devoir.',
+                        temps_estime: rand(0..120) )
+          STDERR.putc '.'
+        }
+      }
+      rand(2..4).times {
+        CreneauEmploiDuTempsEnseignant.select( :creneau_emploi_du_temps_id, :enseignant_id ).limit( 32 ).each {
+          |item|
+          cours = Cours.create(cahier_de_textes_id: cahier_de_textes3.id,
+                               creneau_emploi_du_temps_id: item.values[ :creneau_emploi_du_temps_id ],
+                               date_cours: '2013-' + (month + 1).to_s + '-29',
+                               contenu: 'Exemple de séquence pédagogique.',
+                               enseignant_id: item.values[:enseignant_id] )
+          STDERR.putc '.'
+          Devoir.create(cours_id: cours.id,
+                        type_devoir_id: type_devoir.id,
+                        date_due: Time.now,
+                        contenu: 'Exemple de devoir.',
+                        temps_estime: rand(0..120) )
+          STDERR.putc '.'
         }
       }
     }
+    STDERR.puts ''
+
   end
 
   def app
