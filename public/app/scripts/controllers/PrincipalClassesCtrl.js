@@ -2,18 +2,26 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalClassesCtrl',
-		[ '$scope', 'EmploiDuTemps', 'ClasseAPI',
-		  function ($scope, EmploiDuTemps, ClasseAPI) {
+		[ '$scope', '$rootScope', 'EmploiDuTemps', 'ClasseAPI',
+		  function ($scope, $rootScope, EmploiDuTemps, ClasseAPI) {
 		      $scope.uai = '0134567A';
 
-		      $scope.raw_data = [];
+		      $scope.raw_data		=     [];
+		      $scope.data		=    [  ];
+		      $scope.mois		=   [    ];
+		      $scope.classes		=  [      ];
+		      $scope.matieres		= [        ]; // bientôt Noël !
+		      $scope.global_stats	=     {};
 
-		      $scope.classes = [];
-		      $scope.matieres = [];
-		      $scope.mois = [];
-		      $scope.classeCourante = '';
-		      $scope.moisCourant = -1;
-		      $scope.matiereCourante = -1;
+		      $scope.classeCourante	= '';
+		      $scope.moisCourant	= -1;
+		      $scope.matiereCourante	= -1;
+
+		      $scope.pieChart = { options: $rootScope.globalChartOptions,
+					  data: [ { color : "#00ff00",
+						    value: 0 },
+						  { color : "#aaffaa",
+						    value: 0 } ] };
 
 		      $scope.process_data = function(  ) {
 			  // Extraction des classes
@@ -85,6 +93,8 @@ angular.module('cahierDeTexteApp')
 			      return { filled: totaux.filled + stats_regroupement.filled,
 				       validated: totaux.validated + stats_regroupement.validated };
 			  }, { filled: 0, validated: 0 });
+			  $scope.pieChart.data[0].value = $scope.global_stats.validated;
+			  $scope.pieChart.data[1].value = $scope.global_stats.filled - $scope.global_stats.validated;
 		      };
 
 		      EmploiDuTemps.getMois().success( function( response ) {
