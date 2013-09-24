@@ -18,12 +18,7 @@
   </div>
 </form>
 
-<div data-ng-controller="PrincipalClassesChartCtrl">
-  <div ui-chart="chart.data" chart-options="chart.options" />
+<div class="span7">
+  <canvas piechart data="pieChart.data" options="pieChart.options" width="300" height="300"></canvas>
 </div>
-
-{{classeCourante}}
-<br>
-<br>
-<br>
 {{data}}
