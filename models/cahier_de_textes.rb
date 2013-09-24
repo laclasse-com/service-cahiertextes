@@ -5,8 +5,6 @@ class CahierDeTextes < Sequel::Model( :cahiers_de_textes )
     cours = Cours.where(cahier_de_textes_id: id).where(:date_cours)
     {
       regroupement_id: regroupement_id,
-      filled: cours.count,
-      validated: cours.where( :date_validation ).count,
       par_matiere:
       cours.join(:creneaux_emploi_du_temps, id: :creneau_emploi_du_temps_id).select(:matiere_id).group_by(:matiere_id).map do
         |record|
