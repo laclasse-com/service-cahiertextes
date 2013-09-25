@@ -19,10 +19,10 @@
 </form>
 
 <div style="background-color:#dcd">
-  <canvas piechart data="pieChart.data" options="pieChart.options" width="300" height="300"></canvas>
+  <canvas piechart data="pieChart.data" options="pieChart.options" width="256" height="256"></canvas>
   <span class="badge badge-info">{{global_stats.validated}} / {{global_stats.filled}}</span>
 
-  <canvas linechart data="monthlyLineChart.data" options="monthlyLineChart.options" width="600" height="300"></canvas>
+  <canvas linechart data="monthlyLineChart.data" options="monthlyLineChart.options" width="768" height="256" style="float:right"></canvas>
 </div>
 
 <div class="span2" x-ng-show="classeCourante == ''" x-ng-repeat="regroupement in individualPieCharts" style="background-color:#ede">
