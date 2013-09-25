@@ -18,7 +18,8 @@
     "es5-shim": "latest",
     "angular-ui-calendar": "latest",
     "underscore": "latest",
-    "bootstrap": "latest"
+    "bootstrap": "latest",
+    "select2-bootstrap-css": "latest"
   },
   "devDependencies": {
     "angular-mocks": "1.2.0-rc.2",
