@@ -112,7 +112,7 @@ angular.module('cahierDeTexteApp')
 			  var monthlyLineChart_data = $scope.data.reduce( function( monthly_stats, regroupement ) {
 			      var regroupement_stats = regroupement.matieres.reduce(
 				  function( monthly_stats, matiere ) {
-				      for ( var i=0 ; i<12 ; ++i ) {
+				      for ( var i=0 ; i<matiere.mois.length ; ++i ) {
 					  monthly_stats.filled[i] += matiere.mois[i].filled;
 					  monthly_stats.validated[i] += matiere.mois[i].validated;
 				      }
@@ -120,7 +120,7 @@ angular.module('cahierDeTexteApp')
 				  },
 				  { filled: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 				    validated:  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] });
-			      for ( var i=0 ; i<12 ; ++i ) {
+			      for ( var i=0 ; i<regroupement_stats.filled.length ; ++i ) {
 				  monthly_stats.filled[i] += regroupement_stats.filled[i];
 				  monthly_stats.validated[i] += regroupement_stats.validated[i];
 			      }
