@@ -67,6 +67,7 @@ angular.module( 'cahierDeTexteApp',
 	    });
     } ] )
     .run( [ '$rootScope', function ($rootScope) {
+	// TODO: différencier en pieChartOptions, lineChartOptions, ...
 	$rootScope.globalChartOptions = { segmentShowStroke : true,
 					  segmentStrokeColor : "#fff",
 					  segmentStrokeWidth : 0,
