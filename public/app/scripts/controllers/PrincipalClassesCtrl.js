@@ -83,7 +83,7 @@ angular.module('cahierDeTexteApp')
 			  }
 
 			  // Calcul des statistiques
-			  angular.forEach( $scope.data,
+			  _.each( $scope.data,
 					   function( regroupement ) {
 					       var stats_regroupement = regroupement.matieres.reduce( function( totaux, matiere ) {
 						   var stats_matiere = matiere.mois.reduce( function( totaux, mois ) {
@@ -112,7 +112,7 @@ angular.module('cahierDeTexteApp')
 			  var monthlyLineChart_data = $scope.data.reduce( function( monthly_stats, regroupement ) {
 			      var regroupement_stats = regroupement.matieres.reduce(
 				  function( monthly_stats, matiere ) {
-				      angular.forEach( matiere.mois,
+				      _.each( matiere.mois,
 						       function( mois ) {
 							   monthly_stats.filled[ mois.mois - 1 ] += mois.filled;
 							   monthly_stats.validated[ mois.mois - 1 ] += mois.validated;

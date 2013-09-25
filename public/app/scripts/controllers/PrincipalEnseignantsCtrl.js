@@ -19,7 +19,7 @@ angular.module('cahierDeTexteApp')
 					       data: []
 					     } ] } };
 
-		angular.forEach( $scope.raw_data, function( e ) {
+		_.each( $scope.raw_data, function( e ) {
 		    var stats = { filled: 0,
 				  validated: 0};
 		    if ( $scope.mois < 0 ) {

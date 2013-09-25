@@ -36,7 +36,7 @@ angular.module('cahierDeTexteApp')
 		/* add and removes an event source of choice */
 		$scope.addRemoveEventSource = function(sources,source) {
 			var canAdd = 0;
-			angular.forEach(sources,function(value, key){
+			_.each(sources,function(value, key){
 				if(sources[key] === source){
 					sources.splice(key,1);
 					canAdd = 1;
