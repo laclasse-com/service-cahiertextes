@@ -34,28 +34,29 @@ angular.module('cahierDeTexteApp')
 			  });
 
 			  // Extraction des matières
-			  $scope.matieres = _.uniq( _.flatten( $scope.raw_data.map( function( r ) {
-			      return r.matieres.map( function( m ) {
-				  return m.matiere_id;
-			      });
-			  }) ) );
+			  $scope.matieres = _.chain($scope.raw_data)
+			      .map( function( r ) {
+				  return r.matieres.map( function( m ) {
+				      return m.matiere_id;
+				  }); })
+			      .flatten()
+			      .uniq()
+			      .value();
 
 			  // Filtrage des données
 			  $scope.data = $scope.raw_data;
 
 			  if ( $scope.classeCourante !== '' ) {
-			      $scope.data = _.filter( $scope.data,
-						      function( r ) {
-							  return r.regroupement_id == $scope.classeCourante;
-						      });
+			      $scope.data = _($scope.data).filter( function( r ) {
+				  return r.regroupement_id == $scope.classeCourante;
+			      });
 			  }
 
 			  if ( $scope.matiereCourante != -1 ) {
 			      $scope.data = $scope.data.map( function( regroupement ) {
-				  var matieres = _.filter( regroupement.matieres,
-							   function( r ) {
-							       return r.matiere_id == $scope.matiereCourante;
-							   });
+				  var matieres = _(regroupement.matieres).filter( function( r ) {
+				      return r.matiere_id == $scope.matiereCourante;
+				  });
 
 				  return {
 				      "regroupement_id": regroupement.regroupement_id,
@@ -71,10 +72,9 @@ angular.module('cahierDeTexteApp')
 					  "regroupement_id": regroupement.regroupement_id,
 					  "matieres": regroupement.matieres.map(
 					      function( matiere ) {
-						  var un_mois = _.filter( matiere.mois,
-									  function( mois ) {
-									      return mois.mois == $scope.moisCourant;
-									  });
+						  var un_mois = _(matiere.mois).filter( function( mois ) {
+						      return mois.mois == $scope.moisCourant;
+						  });
 						  return { matiere_id: matiere.matiere_id,
 							   mois: un_mois };
 					      })
@@ -83,21 +83,20 @@ angular.module('cahierDeTexteApp')
 			  }
 
 			  // Calcul des statistiques
-			  _.each( $scope.data,
-					   function( regroupement ) {
-					       var stats_regroupement = regroupement.matieres.reduce( function( totaux, matiere ) {
-						   var stats_matiere = matiere.mois.reduce( function( totaux, mois ) {
-						       return { filled: totaux.filled + mois.filled,
-								validated: totaux.validated + mois.validated };
-						   }, { filled: 0, validated: 0 });
+			  _($scope.data).each( function( regroupement ) {
+			      var stats_regroupement = regroupement.matieres.reduce( function( totaux, matiere ) {
+				  var stats_matiere = matiere.mois.reduce( function( totaux, mois ) {
+				      return { filled: totaux.filled + mois.filled,
+					       validated: totaux.validated + mois.validated };
+				  }, { filled: 0, validated: 0 });
+				  
+				  return { filled: totaux.filled + stats_matiere.filled,
+					   validated: totaux.validated + stats_matiere.validated };
+			      }, { filled: 0, validated: 0 });
 
-						   return { filled: totaux.filled + stats_matiere.filled,
-							    validated: totaux.validated + stats_matiere.validated };
-					       }, { filled: 0, validated: 0 });
-
-					       regroupement.filled = stats_regroupement.filled;
-					       regroupement.validated = stats_regroupement.validated;
-					   });
+			      regroupement.filled = stats_regroupement.filled;
+			      regroupement.validated = stats_regroupement.validated;
+			  });
 
 			  $scope.individualPieCharts = $scope.data.map( function( regroupement ) {
 			      return {
@@ -112,11 +111,10 @@ angular.module('cahierDeTexteApp')
 			  var monthlyLineChart_data = $scope.data.reduce( function( monthly_stats, regroupement ) {
 			      var regroupement_stats = regroupement.matieres.reduce(
 				  function( monthly_stats, matiere ) {
-				      _.each( matiere.mois,
-						       function( mois ) {
-							   monthly_stats.filled[ mois.mois - 1 ] += mois.filled;
-							   monthly_stats.validated[ mois.mois - 1 ] += mois.validated;
-						       });
+				      _(matiere.mois).each( function( mois ) {
+					  monthly_stats.filled[ mois.mois - 1 ] += mois.filled;
+					  monthly_stats.validated[ mois.mois - 1 ] += mois.validated;
+				      });
 				      return monthly_stats;
 				  },
 				  { filled: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -128,6 +126,7 @@ angular.module('cahierDeTexteApp')
 			      return monthly_stats;
 			  }, { filled: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 			       validated:  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] });
+
 			  $scope.monthlyLineChart = { options: $rootScope.globalChartOptions,
 						      data: { labels: $scope.mois,
 							      datasets: [
