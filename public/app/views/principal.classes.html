@@ -1,38 +1,35 @@
-<form class="navbar-form">
-  <div class="navbar-inner">
-    <select class="span2" ui-select2 data-ng-model="classeCourante" data-placeholder="Toute les classes" data-ng-change="process_data()">
-      <option value="" selected>Toute les classes</option>
-      <option data-ng-repeat="classe in classes">{{classe}}</option>
-    </select>
+<form class="col-md-12 navbar">
+  <select class="col-md-2" ui-select2 data-ng-model="classeCourante" data-placeholder="Toute les classes" data-ng-change="process_data()">
+    <option value="" selected>Toute les classes</option>
+    <option data-ng-repeat="classe in classes">{{classe}}</option>
+  </select>
 
-    <select class="span2" ui-select2 data-ng-model="moisCourant" data-placeholder="Toute l'année" data-ng-change="process_data()">
-      <option value="-1">Toute l'année</option>
-      <option data-ng-repeat="unmois in mois" value="{{$index + 1}}">{{unmois}}</option>
-    </select>
+  <select class="col-md-2" ui-select2 data-ng-model="moisCourant" data-placeholder="Toute l'année" data-ng-change="process_data()">
+    <option value="-1">Toute l'année</option>
+    <option data-ng-repeat="unmois in mois" value="{{$index + 1}}">{{unmois}}</option>
+  </select>
 
-    <select class="span2" ui-select2 data-ng-model="matiereCourante" data-placeholder="Toute les matières" data-ng-change="process_data()">
-      <option value="-1">Toute les matières</option>
-      <option data-ng-repeat="matiere in matieres">{{matiere}}</option>
-    </select>
+  <select class="col-md-2" ui-select2 data-ng-model="matiereCourante" data-placeholder="Toute les matières" data-ng-change="process_data()">
+    <option value="-1">Toute les matières</option>
+    <option data-ng-repeat="matiere in matieres">{{matiere}}</option>
+  </select>
 
-  </div>
 </form>
 
-<div style="background-color:#dcd">
+<div class="col-md-12" style="background-color:#dcd">
   <canvas piechart data="pieChart.data" options="pieChart.options" width="256" height="256"></canvas>
   <span class="badge badge-info">{{global_stats.validated}} / {{global_stats.filled}}</span>
 
-  <canvas linechart data="monthlyLineChart.data" options="monthlyLineChart.options" width="768" height="256" style="float:right"></canvas>
+  <canvas linechart data="monthlyLineChart.data" options="monthlyLineChart.options" width="640" height="256" style="float:right"></canvas>
 </div>
 
-<div class="span2" x-ng-show="classeCourante == ''" x-ng-repeat="regroupement in individualPieCharts" style="background-color:#ede">
-  <span class="label label-info">{{regroupement.regroupement_id}}</span>
-  
-  <canvas piechart data="regroupement.data" options="regroupement.options" width="60" height="60"></canvas>
+<div class="col-md-12">
+  <div class="col-md-2" x-ng-show="classeCourante == ''" x-ng-repeat="regroupement in individualCharts" style="background-color:#ede">
+    <span class="label label-info">{{regroupement.regroupement_id}}</span>
+    
+    <canvas piechart data="regroupement.pieChart.data" options="regroupement.pieChart.options" width="64" height="64"></canvas>
+    <!-- canvas linechart data="regroupement.lineChart.data" options="regroupement.lineChart.options" width="192" height="64" style="float:right"></canvas -->
 
-  <span class="badge badge-info">{{regroupement.data[0].value}} / {{regroupement.data[0].value + regroupement.data[1].value}}</span>
-</div>
-
-<div style="background-color:#fdd">
-{{data}}
+    <span class="badge badge-info">{{regroupement.pieChart.data[0].value}} / {{regroupement.pieChart.data[0].value + regroupement.pieChart.data[1].value}}</span>
+  </div>
 </div>
