@@ -1,24 +1,40 @@
-<form class="navbar col-md-12">
-  <select class="col-md-2" ui-select2 data-ng-model="classe" data-placeholder="Toutes les classes" data-ng-change="process_data()">
-    <option value="-1">Toutes les classes</option>
-    <option data-ng-repeat="classe in classes" value="{{classe}}">{{classe}}</option>
-  </select>
-</form>
-
-<div class="col-md-12">
-  <div class="col-md-4" style="margin:9px;border:2px solid red;">
-    <p><a href="mailto:{{data.email}}">{{data.email}}</a></p>
-    <p>{{data.discipline}}</p>
-    <p>Professeur principal en <span data-ng-repeat="classe in data.classesPrincipal">{{classe}}{{($last != true) && ", " || ""}}</span></p>
-    <p><span data-ng-repeat="classe in data.classes">{{classe}}{{($last != true) && ", " || ""}}</span></p>
-  </div>
-
-  
-  <div class="col-md-7">
-    <div ui-chart="chart.data" chart-options="chart.options" />
+<div class="panel panel-default">
+  <div class="panel-body">
+    <select class="col-md-3" ui-select2 data-ng-model="classe" data-placeholder="Toutes les classes" data-ng-change="process_data()">
+      <option value="-1">Toutes les classes</option>
+      <option data-ng-repeat="classe in classes" value="{{classe}}">{{classe}}</option>
+    </select>
   </div>
 </div>
 
-<a class="btn btn-warning col-md-2 col-md-offset-10" data-ng-click="validateAllEntries()">Valider les entrées</a>
-<div class="col-md-12" style="float:left" data-ng-grid="gridEntries"></div>
-<a class="btn btn-warning col-md-2 col-md-offset-10" data-ng-click="validateAllEntries()">Valider les entrées</a>
+<div class="panel panel-default">
+  <div class="panel-body">
+
+    <div class="col-md-4">
+      <div class="panel panel-default">
+	<div class="panel-body">
+	  <p><a href="mailto:{{data.email}}">{{data.email}}</a></p>
+	  <p>{{data.discipline}}</p>
+	  <p>Professeur principal en <span data-ng-repeat="classe in data.classesPrincipal">{{classe}}{{($last != true) && ", " || ""}}</span></p>
+	  <p><span data-ng-repeat="classe in data.classes">{{classe}}{{($last != true) && ", " || ""}}</span></p>
+	</div>
+      </div>
+    </div>  
+    <div class="col-md-8">
+      <div class="panel panel-default">
+	<div class="panel-body">
+	  <canvas piechart data="chart.data" options="chart.options" width="256" height="256"></canvas>
+	</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-body">
+    <a class="btn btn-warning col-md-2 col-md-offset-10" data-ng-click="validateAllEntries()">Valider les entrées</a>
+    <div class="col-md-12" style="float:left" data-ng-grid="gridEntries"></div>
+    <a class="btn btn-warning col-md-2 col-md-offset-10" data-ng-click="validateAllEntries()">Valider les entrées</a>
+  </div>
+</div>
+
