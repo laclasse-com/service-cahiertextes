@@ -84,32 +84,8 @@ angular.module('cahierDeTexteApp')
 
 			  // Calcul des statistiques
 			  _($scope.data).each( function( regroupement ) {
-			      var stats_regroupement = regroupement.matieres.reduce( function( totaux, matiere ) {
-				  var stats_matiere = matiere.mois.reduce( function( totaux, mois ) {
-				      return { filled: totaux.filled + mois.filled,
-					       validated: totaux.validated + mois.validated };
-				  }, { filled: 0, validated: 0 });
-				  
-				  return { filled: totaux.filled + stats_matiere.filled,
-					   validated: totaux.validated + stats_matiere.validated };
-			      }, { filled: 0, validated: 0 });
-
-			      regroupement.filled = stats_regroupement.filled;
-			      regroupement.validated = stats_regroupement.validated;
-			  });
-
-			  $scope.individualPieCharts = $scope.data.map( function( regroupement ) {
-			      return {
-				  regroupement_id: regroupement.regroupement_id,
-				  options: $rootScope.globalChartOptions,
-				  data: [ { color : "#00ff00",
-					    value: regroupement.validated },
-					  { color : "#aaffaa",
-					    value: regroupement.filled - regroupement.validated } ] };
-			  });
-
-			  var monthlyLineChart_data = $scope.data.reduce( function( monthly_stats, regroupement ) {
-			      var regroupement_stats = regroupement.matieres.reduce(
+			      // stats mensuelles
+			      regroupement.mensuel = regroupement.matieres.reduce(
 				  function( monthly_stats, matiere ) {
 				      _(matiere.mois).each( function( mois ) {
 					  monthly_stats.filled[ mois.mois - 1 ] += mois.filled;
@@ -119,13 +95,47 @@ angular.module('cahierDeTexteApp')
 				  },
 				  { filled: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 				    validated:  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] });
-			      _(regroupement_stats.filled.length).times( function( i ) {
-				  monthly_stats.filled[i] += regroupement_stats.filled[i];
-				  monthly_stats.validated[i] += regroupement_stats.validated[i];
-			      });
-			      return monthly_stats;
-			  }, { filled: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-			       validated:  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] });
+
+			      // sommes
+			      regroupement.filled = regroupement.mensuel.filled.reduce( function(total, mensuel) {
+				  return total + mensuel;
+			      }, 0);
+			      regroupement.validated = regroupement.mensuel.validated.reduce( function(total, mensuel) {
+				  return total + mensuel;
+			      }, 0);
+			  });
+
+			  $scope.individualCharts = $scope.data.map( function( regroupement ) {
+			      return {
+				  regroupement_id: regroupement.regroupement_id,
+				  pieChart: { options: $rootScope.globalChartOptions,
+					      data: [ { color : "#00ff00",
+							value: regroupement.validated },
+						      { color : "#aaffaa",
+							value: regroupement.filled - regroupement.validated } ] },
+				  lineChart: { options: $rootScope.globalChartOptions,
+					       data: { labels: $scope.mois,
+						       datasets: [
+							   { fillColor : "#aaffaa", pointColor : "#aaffaa",
+							     strokeColor : "#88aa88", pointStrokeColor : "#88aa88",
+							     data: regroupement.mensuel.filled
+							   },
+							   { fillColor : "#00ff00", pointColor : "#00ff00",
+							     strokeColor : "#00aa00", pointStrokeColor : "#00aa00",
+							     data: regroupement.mensuel.validated
+							   } ] } }
+			      };
+			  });
+
+			  var monthlyLineChart_data = $scope.data.reduce(
+			      function( monthly_stats, regroupement ) {
+				  _(regroupement.mensuel.filled.length).times( function( i ) {
+				      monthly_stats.filled[i] += regroupement.mensuel.filled[i];
+				      monthly_stats.validated[i] += regroupement.mensuel.validated[i];
+				  });
+				  return monthly_stats;
+			      }, { filled: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				   validated:  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] });
 
 			  $scope.monthlyLineChart = { options: $rootScope.globalChartOptions,
 						      data: { labels: $scope.mois,
