@@ -23,6 +23,10 @@ angular.module('cahierDeTexteApp')
 						  { color : "#aaffaa",
 						    value: 0 } ] };
 
+		      EmploiDuTemps.getMois().success( function( response ) {
+			  $scope.mois = response.mois;
+		      });
+
 		      $scope.process_data = function(  ) {
 			  // Extraction des classes
 			  $scope.classes = $scope.raw_data.map( function( r ) {
@@ -86,7 +90,7 @@ angular.module('cahierDeTexteApp')
 						       return { filled: totaux.filled + mois.filled,
 								validated: totaux.validated + mois.validated };
 						   }, { filled: 0, validated: 0 });
-						   
+
 						   return { filled: totaux.filled + stats_matiere.filled,
 							    validated: totaux.validated + stats_matiere.validated };
 					       }, { filled: 0, validated: 0 });
@@ -94,6 +98,7 @@ angular.module('cahierDeTexteApp')
 					       regroupement.filled = stats_regroupement.filled;
 					       regroupement.validated = stats_regroupement.validated;
 					   });
+
 			  $scope.individualPieCharts = $scope.data.map( function( regroupement ) {
 			      return {
 				  regroupement_id: regroupement.regroupement_id,
@@ -104,6 +109,39 @@ angular.module('cahierDeTexteApp')
 					    value: regroupement.filled - regroupement.validated } ] };
 			  });
 
+			  var monthlyLineChart_data = $scope.data.reduce( function( monthly_stats, regroupement ) {
+			      var regroupement_stats = regroupement.matieres.reduce(
+				  function( monthly_stats, matiere ) {
+				      for ( var i=0 ; i<12 ; ++i ) {
+					  monthly_stats.filled[i] += matiere.mois[i].filled;
+					  monthly_stats.validated[i] += matiere.mois[i].validated;
+				      }
+				      return monthly_stats;
+				  },
+				  { filled: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				    validated:  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] });
+			      for ( var i=0 ; i<12 ; ++i ) {
+				  monthly_stats.filled[i] += regroupement_stats.filled[i];
+				  monthly_stats.validated[i] += regroupement_stats.validated[i];
+			      }
+			      return monthly_stats;
+			  }, { filled: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			       validated:  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] });
+			  $scope.monthlyLineChart = { options: $rootScope.globalChartOptions,
+						      data: { labels: $scope.mois,
+							      datasets: [
+								  // 0: saisies totales
+								  { fillColor : "#aaffaa", pointColor : "#aaffaa",
+								    strokeColor : "#88aa88", pointStrokeColor : "#88aa88",
+								    data: monthlyLineChart_data.filled
+								  },
+								  // 1: saisies validées
+								  { fillColor : "#00ff00", pointColor : "#00ff00",
+								    strokeColor : "#00aa00", pointStrokeColor : "#00aa00",
+								    data: monthlyLineChart_data.validated
+								  } ] } };
+
+
 			  $scope.global_stats = $scope.data.reduce( function( totaux, regroupement ) {
 			      return { filled: totaux.filled + regroupement.filled,
 				       validated: totaux.validated + regroupement.validated };
@@ -112,10 +150,6 @@ angular.module('cahierDeTexteApp')
 			  $scope.pieChart.data[0].value = $scope.global_stats.validated;
 			  $scope.pieChart.data[1].value = $scope.global_stats.filled - $scope.global_stats.validated;
 		      };
-
-		      EmploiDuTemps.getMois().success( function( response ) {
-			  $scope.mois = response.mois;
-		      });
 
 		      ClasseAPI.query( { uai: $scope.uai, id: '' },
 				       function( response ) {
