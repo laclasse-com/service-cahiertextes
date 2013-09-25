@@ -1,19 +1,14 @@
-<form class="navbar-form">
-  <div class="navbar-inner">
-    <select class="span2" ui-select2 data-ng-model="enseignant" data-placeholder="Tous les enseignants">
-      <option value="-1">Tous les enseignants</option>
-      <option data-ng-repeat="enseignant in enseignants" value="{{enseignant.id}}">{{enseignant.name}}</option>
-    </select>
-
-    <select class="span2" ui-select2 data-ng-model="mois" data-placeholder="Toute l'année" data-ng-change="process_data()">
-      <option value="-1">Toute l'année</option>
-      <option data-ng-repeat="mois in annee" value="{{$index + 1}}">{{mois}}</option>
-    </select>
-  </div>
+<form class="navbar col-md-12">
+  <select class="col-md-2" ui-select2 data-ng-model="mois" data-placeholder="Toute l'année" data-ng-change="process_data()">
+    <option value="-1">Toute l'année</option>
+    <option data-ng-repeat="mois in annee" value="{{$index + 1}}">{{mois}}</option>
+  </select>
 </form>
 
-<div class="span4 offset4">
-  <canvas radarchart options="radar.options" data="radar.data" width="384" height="384"></canvas>
+<div class="col-md-12">
+  <div class="col-md-4 col-md-offset-4">
+    <canvas radarchart options="radar.options" data="radar.data" width="384" height="384"></canvas>
+  </div>
 </div>
 
-<div data-ng-grid="gridEnseignants"></div>
+<div class="col-md-12" style="float:left" data-ng-grid="gridEnseignants"></div>

@@ -1,11 +1,12 @@
-<select class="span2" ui-select2 data-ng-model="classe" data-placeholder="Toutes les classes" data-ng-change="process_data()">
-  <option value="-1">Toutes les classes</option>
-  <option data-ng-repeat="classe in classes" value="{{classe}}">{{classe}}</option>
-</select>
+<form class="navbar col-md-12">
+  <select class="col-md-2" ui-select2 data-ng-model="classe" data-placeholder="Toutes les classes" data-ng-change="process_data()">
+    <option value="-1">Toutes les classes</option>
+    <option data-ng-repeat="classe in classes" value="{{classe}}">{{classe}}</option>
+  </select>
+</form>
 
-
-<div>
-  <div class="span4" style="margin:9px;border:2px solid red;">
+<div class="col-md-12">
+  <div class="col-md-4" style="margin:9px;border:2px solid red;">
     <p><a href="mailto:{{data.email}}">{{data.email}}</a></p>
     <p>{{data.discipline}}</p>
     <p>Professeur principal en <span data-ng-repeat="classe in data.classesPrincipal">{{classe}}{{($last != true) && ", " || ""}}</span></p>
@@ -13,13 +14,11 @@
   </div>
 
   
-  <div class="span7">
+  <div class="col-md-7">
     <div ui-chart="chart.data" chart-options="chart.options" />
   </div>
 </div>
 
-<a class="btn btn-warning span2 offset10" data-ng-click="validateAllEntries()">Valider les entrées</a>
-<div class="span12">
-  <div data-ng-grid="gridEntries"></div>
-</div>
-<a class="btn btn-warning span2 offset10" data-ng-click="validateAllEntries()">Valider les entrées</a>
+<a class="btn btn-warning col-md-2 col-md-offset-10" data-ng-click="validateAllEntries()">Valider les entrées</a>
+<div class="col-md-12" style="float:left" data-ng-grid="gridEntries"></div>
+<a class="btn btn-warning col-md-2 col-md-offset-10" data-ng-click="validateAllEntries()">Valider les entrées</a>
