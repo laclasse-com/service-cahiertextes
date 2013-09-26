@@ -5,7 +5,7 @@ angular.module('cahierDeTexteApp')
 	$scope.process_data = function(  ) {
 	    if ( typeof $scope.raw_data !== 'undefined' ) {
 		$scope.enseignants = [];
-		$scope.radar = { options: $rootScope.globalChartOptions,
+		$scope.radar = { options: $rootScope.globalRadarChartOptions,
 				 data: { labels: [],
 					 datasets: [
 					     // 0: saisies validées
