@@ -29,16 +29,11 @@ angular.module('cahierDeTexteApp')
 
 		      $scope.process_data = function(  ) {
 			  // Extraction des classes
-			  $scope.classes = $scope.raw_data.map( function( r ) {
-			      return r.regroupement_id;
-			  });
+			  $scope.classes = _($scope.raw_data).pluck( 'regroupement_id' );
 
 			  // Extraction des matières
 			  $scope.matieres = _.chain($scope.raw_data)
-			      .map( function( r ) {
-				  return r.matieres.map( function( m ) {
-				      return m.matiere_id;
-				  }); })
+			      .pluck( 'matiere_id' )
 			      .flatten()
 			      .uniq()
 			      .value();
