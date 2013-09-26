@@ -17,7 +17,7 @@ angular.module('cahierDeTexteApp')
 		      $scope.moisCourant	= -1;
 		      $scope.matiereCourante	= -1;
 
-		      $scope.pieChart = { options: $rootScope.globalChartOptions,
+		      $scope.pieChart = { options: $rootScope.globalPieChartOptions,
 					  data: [ { color : "#00ff00",
 						    value: 0 },
 						  { color : "#aaffaa",
@@ -108,12 +108,12 @@ angular.module('cahierDeTexteApp')
 			  $scope.individualCharts = $scope.data.map( function( regroupement ) {
 			      return {
 				  regroupement_id: regroupement.regroupement_id,
-				  pieChart: { options: $rootScope.globalChartOptions,
+				  pieChart: { options: $rootScope.globalPieChartOptions,
 					      data: [ { color : "#00ff00",
 							value: regroupement.validated },
 						      { color : "#aaffaa",
 							value: regroupement.filled - regroupement.validated } ] },
-				  lineChart: { options: $rootScope.globalChartOptions,
+				  lineChart: { options: $rootScope.globalLineChartOptions,
 					       data: { labels: $scope.mois,
 						       datasets: [
 							   { fillColor : "#aaffaa", pointColor : "#aaffaa",
@@ -137,7 +137,7 @@ angular.module('cahierDeTexteApp')
 			      }, { filled: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 				   validated:  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] });
 
-			  $scope.monthlyLineChart = { options: $rootScope.globalChartOptions,
+			  $scope.monthlyLineChart = { options: $rootScope.globalLineChartOptions,
 						      data: { labels: $scope.mois,
 							      datasets: [
 								  // 0: saisies totales
