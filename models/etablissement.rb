@@ -42,7 +42,8 @@ class Etablissement < Sequel::Model( :etablissements )
       (1..12).map do
         |month|
 
-        Cours.where( enseignant_id: enseignant_id ).where( 'extract( month from date_cours ) = ' + month.to_s ).map do
+        Cours.where( enseignant_id: enseignant_id ).where( 'extract( month from date_cours ) = ' + month.to_s )
+          .map do
           |cours|
           devoir = Devoir.where(cours_id: cours.id).first
 
