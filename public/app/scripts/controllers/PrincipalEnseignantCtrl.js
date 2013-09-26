@@ -2,10 +2,12 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantCtrl',
-		[ '$scope', '$rootScope', '$stateParams', 'EnseignantAPI', 'CoursAPI',
-		  function ( $scope, $rootScope, $stateParams, EnseignantAPI, CoursAPI ) {
+		[ '$scope', '$rootScope', '$stateParams', 'EnseignantAPI', 'CoursAPI', 'EmploiDuTemps',
+		  function ( $scope, $rootScope, $stateParams, EnseignantAPI, CoursAPI, EmploiDuTemps ) {
 		      $scope.enseignant_id = $stateParams.enseignant_id;
 		      $scope.classe = -1;
+		      $scope.mois = [];
+		      $scope.moisCourant = -1;
 
 		      $scope.process_data = function(  ) {
 			  $scope.saisies = [];
@@ -90,6 +92,9 @@ angular.module('cahierDeTexteApp')
 
 			  $scope.gridEntries.columnDefs[0].visible = $scope.classe == -1; // FIXME: nggrid ne prends pas ceci en compte, affecté trop tard...
 		      };
+		      EmploiDuTemps.getMois().success( function( response ) {
+			  $scope.mois = response.mois;
+		      });
 
 		      // Tableau
 		      $scope.gridEntries = {
