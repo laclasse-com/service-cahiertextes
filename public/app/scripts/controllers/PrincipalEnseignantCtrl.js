@@ -57,16 +57,15 @@ angular.module('cahierDeTexteApp')
 			  }
 
 			  // Filtrage des données
-			  $scope.data = $scope.raw_data; //??????
-			  
+			  var saisies = [];
 			  if ( $scope.moisCourant != -1 ) {
-			      $scope.data.saisies = $scope.data.saisies[ $scope.moisCourant - 1 ];
+			      saisies = _($scope.raw_data.saisies[ $scope.moisCourant - 1 ]).flatten();
+			  } else {
+			      saisies = _($scope.raw_data.saisies).flatten();
 			  }
-			  console.log(_($scope.data.saisies).size());
-			  $scope.data.saisies = _($scope.data.saisies).flatten();
 
 			  // population de gridSaisies
-			  _($scope.data.saisies).each( function ( saisie ) {
+			  _(saisies).each( function ( saisie ) {
 			      if ( ( $scope.classe == -1 ) || ( saisie.classe_id == $scope.classe ) ) {
 				  $scope.gridSaisies.push( { classe: saisie.classe_id,
 							     matiere: saisie.matiere_id,
@@ -98,7 +97,7 @@ angular.module('cahierDeTexteApp')
 						      } ] } }
 			  };
 
-			  _.chain($scope.data.saisies)
+			  _.chain(saisies)
 			      .groupBy('classe')
 			      .map( function( classe ) {
 				  return { classe: classe[0].classe,
