@@ -33,8 +33,9 @@ angular.module('cahierDeTexteApp')
 
 			  // Extraction des matières
 			  $scope.matieres = _.chain($scope.raw_data)
-			      .pluck( 'matiere_id' )
+			      .pluck( 'matieres' )
 			      .flatten()
+			      .pluck( 'matiere_id' )
 			      .uniq()
 			      .value();
 
