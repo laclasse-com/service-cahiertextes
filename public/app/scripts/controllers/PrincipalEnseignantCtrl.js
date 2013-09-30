@@ -30,7 +30,6 @@ angular.module('cahierDeTexteApp')
 			      { field: 'devoir', displayName: 'Travail à faire',
 				cellTemplate: '<span style="overflow-y:auto" ng-bind-html-unsafe="row.entity.devoir">{{row.entity.devoir}}</span>' },
 			      { field: 'validated', displayName: 'Validé',
-				// TODO: better
 				cellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-model="row.entity.valide" ng-show="!row.entity.valide" ng-click="valide( {{row.entity.cours_id}} )" /><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" disabled checked ng-show="row.entity.valide" /></div>'}
 			  ]
 		      };
