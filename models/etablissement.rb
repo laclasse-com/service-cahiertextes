@@ -10,28 +10,52 @@ class Etablissement < Sequel::Model( :etablissements )
 
   def statistiques_enseignants
     # FIXME: get this from actual etablissement
-    enseignants_ids = Cours.select( :enseignant_id ).group_by( :enseignant_id ).all.map { |c| c.values[ :enseignant_id ] }
+    enseignants_ids = Cours.select( :enseignant_id ).group_by( :enseignant_id ).all.map {
+      |cours|
+      cours.values[ :enseignant_id ]
+    }
 
     enseignants_ids.map do
       |enseignant_id|
       { enseignant_id: enseignant_id,
-        statistiques:
-        (1..12).map do
-          |month|
-          stats = { month: month, filled: 0, validated: 0 }
+        classes: CreneauEmploiDuTempsRegroupement
+          .join( :creneaux_emploi_du_temps_enseignants, creneau_emploi_du_temps_id: :creneau_emploi_du_temps_id )
+          .select( :regroupement_id ).where( enseignant_id: enseignant_id )
+          .group_by( :regroupement_id )
+          .map { |regroupement_id|
+          {
+            regroupement: regroupement_id.values[ :regroupement_id ],
+            statistiques: (1..12).map do
+              |month|
+              stats = { month: month, filled: 0, validated: 0 }
 
-          CreneauEmploiDuTempsEnseignant.where( enseignant_id: enseignant_id ).map do
-            |creneau|
-            # TODO: prendre en compte les semaine_de_presence
-            cours = Cours.where( creneau_emploi_du_temps_id: creneau.creneau_emploi_du_temps_id ).where( 'extract( month from date_cours ) = ' + month.to_s )
+              CreneauEmploiDuTempsEnseignant
+                .join( :creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :creneau_emploi_du_temps_id )
+                .where( enseignant_id: enseignant_id )
+                .where( regroupement_id: regroupement_id.values[ :regroupement_id ] )
+                .map do
+                |creneau|
+                # TODO: prendre en compte les semaine_de_presence
+                cours = Cours
+                  .where( creneau_emploi_du_temps_id: creneau.creneau_emploi_du_temps_id )
+                  .where( 'extract( month from date_cours ) = ' + month.to_s )
 
-            # TODO: calcul total attendu
-            { filled: cours.count,
-              validated: cours.where( :date_validation ).count
-            }
-          end.each { |values| [:filled, :validated].each { |key| stats[ key ] += values[ key ] } }
-          stats
-        end
+                # TODO: calcul total attendu
+                { filled: cours.count,
+                  validated: cours.where( :date_validation ).count
+                }
+              end.each {
+                |values|
+                [:filled, :validated].each {
+                  |key|
+                  stats[ key ] += values[ key ]
+                }
+              }
+
+              stats
+            end
+          }
+        }
       }
     end
   end

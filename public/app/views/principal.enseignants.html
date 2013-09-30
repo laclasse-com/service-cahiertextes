@@ -4,6 +4,10 @@
       <option value="-1">Toute l'année</option>
       <option data-ng-repeat="mois in annee" value="{{$index + 1}}">{{mois}}</option>
     </select>
+    <select class="col-md-2" ui-select2 data-ng-model="classe" data-placeholder="Toutes les classes" data-ng-change="process_data()">
+      <option value="-1">Toutes les classes</option>
+      <option data-ng-repeat="classe in classes" value="{{classe}}">{{classe}}</option>
+    </select>
   </div>
 </div>
 
