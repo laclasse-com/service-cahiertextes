@@ -120,7 +120,7 @@ angular.module('cahierDeTexteApp')
 			  $scope.populate_graphs( $scope.gridSaisies );
 
 			  // FIXME: nggrid ne prends pas ceci en compte, affecté trop tard...
-			  // $scope.gridEntries.columnDefs[0].visible = $scope.classe == -1;
+			  // $scope.grid.columnDefs[0].visible = $scope.classe == -1;
 		      };
 
 		      // Récupération et consommation des données
