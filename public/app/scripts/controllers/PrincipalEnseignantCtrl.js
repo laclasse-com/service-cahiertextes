@@ -75,7 +75,7 @@ angular.module('cahierDeTexteApp')
 			      })
 			      .each( function( classe ) {
 				  $scope.graphiques.barChart.data.labels.push( classe.classe );
-				  $scope.graphiques.barChart.data.datasets[0].data.push( classe.filled );
+				  $scope.graphiques.barChart.data.datasets[0].data.push( classe.filled - classe.validated );
 				  $scope.graphiques.barChart.data.datasets[1].data.push( classe.validated );
 			      });
 			  _($scope.graphiques.pieChart.data.length).times( function( i ) {
