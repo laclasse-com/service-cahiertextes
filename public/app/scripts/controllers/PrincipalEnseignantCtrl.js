@@ -46,40 +46,7 @@ angular.module('cahierDeTexteApp')
 			  $scope.populate_graphs( $scope.gridSaisies );
 		      };
 
-		      $scope.process_data = function(  ) {
-			  $scope.gridSaisies = [];
-
-			  // Extraction des classes
-			  if ( $scope.classe == -1 ) {
-			      $scope.classes = _.chain( $scope.raw_data.saisies )
-				  .flatten()
-				  .groupBy('classe_id')
-				  .keys()
-				  .value();
-			  }
-
-			  // Filtrage des données
-			  var saisies = [];
-			  if ( $scope.moisCourant != -1 ) {
-			      saisies = _($scope.raw_data.saisies[ $scope.moisCourant - 1 ]).flatten();
-			  } else {
-			      saisies = _($scope.raw_data.saisies).flatten();
-			  }
-
-			  // population de gridSaisies
-			  _(saisies).each( function ( saisie ) {
-			      if ( ( $scope.classe == -1 ) || ( saisie.classe_id == $scope.classe ) ) {
-				  $scope.gridSaisies.push( { classe: saisie.classe_id,
-							     matiere: saisie.matiere_id,
-							     cours: saisie.cours,
-							     devoir: saisie.devoir,
-							     valide: saisie.valide,
-							     cours_id: saisie.cours_id,
-							     devoir_id: saisie.devoir_id } );
-			      }
-			  } );
-
-			  // population des données des graphiques
+		      $scope.populate_graphs = function( saisies ) {
 			  $scope.graphiques = {
 			      pieChart: { options: $rootScope.globalPieChartOptions,
 					  data: [ { color : "#aaffaa",
