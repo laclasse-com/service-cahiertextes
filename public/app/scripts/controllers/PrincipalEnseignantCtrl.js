@@ -100,7 +100,7 @@ angular.module('cahierDeTexteApp')
 			  _.chain(saisies)
 			      .groupBy('classe')
 			      .map( function( classe ) {
-				  return { classe: classe[0].classe,
+				  return { classe: classe[0].classe_id,
 					   filled: _(classe).size(),
 					   validated: _(classe).where({valide: true}).length };
 			      })
