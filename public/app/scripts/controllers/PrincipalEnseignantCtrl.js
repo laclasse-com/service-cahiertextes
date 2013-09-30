@@ -10,15 +10,16 @@ angular.module('cahierDeTexteApp')
 		      $scope.moisCourant = -1;
 		      $scope.raw_data = [];
 		      $scope.data = [];
-		      
+		      $scope.selectedSaisies = [];
 
 		      EmploiDuTemps.getMois().success( function( response ) {
 			  $scope.mois = response.mois;
 		      });
 
 		      // Tableau
-		      $scope.gridEntries = {
+		      $scope.grid = {
 			  data: 'gridSaisies',
+			  selectedItems: $scope.selectedSaisies,
 			  enableCellEdit: false,
 			  plugins: [new ngGridFlexibleHeightPlugin()],
 			  rowHeight: 60,
@@ -36,10 +37,10 @@ angular.module('cahierDeTexteApp')
 		      $scope.valide = function( cours_id ) {
 			  CoursAPI.valide({ id: cours_id }, {});
 		      };
-		      $scope.validateAllEntries = function() {
-			  _($scope.gridSaisies).each( function( e ) {
-			      CoursAPI.valide({ id: e.cours_id }, {});
-			      e.valide = true;
+		      $scope.valideSelection = function() {
+			  _($scope.selectedSaisies).each( function( saisie ) {
+			      CoursAPI.valide({ id: saisie.cours_id }, {});
+			      saisie.valide = true;
 			  });
 		      };
 
