@@ -114,7 +114,7 @@ angular.module('cahierDeTexteApp')
 				  return compteur + valeur;
 			      }, 0);
 			  });
-			  
+
 			  // FIXME: nggrid ne prends pas ceci en compte, affecté trop tard...
 			  // $scope.gridEntries.columnDefs[0].visible = $scope.classe == -1;
 		      };
