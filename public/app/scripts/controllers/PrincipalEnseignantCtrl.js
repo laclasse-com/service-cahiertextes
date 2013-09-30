@@ -79,9 +79,9 @@ angular.module('cahierDeTexteApp')
 			  // population des données des graphiques
 			  $scope.graphiques = {
 			      pieChart: { options: $rootScope.globalPieChartOptions,
-					  data: [ { color : "#00ff00",
+					  data: [ { color : "#aaffaa",
 						    value: 0 },
-						  { color : "#aaffaa",
+						  { color : "#00ff00",
 						    value: 0 } ] },
 			      barChart: { options: $rootScope.globalLineChartOptions,
 					  data: { labels: [],
