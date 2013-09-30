@@ -36,12 +36,14 @@ angular.module('cahierDeTexteApp')
 		      };
 		      $scope.valide = function( cours_id ) {
 			  CoursAPI.valide({ id: cours_id }, {});
+			  $scope.populate_graphs( $scope.gridSaisies );
 		      };
 		      $scope.valideSelection = function() {
 			  _($scope.selectedSaisies).each( function( saisie ) {
 			      CoursAPI.valide({ id: saisie.cours_id }, {});
 			      saisie.valide = true;
 			  });
+			  $scope.populate_graphs( $scope.gridSaisies );
 		      };
 
 		      $scope.process_data = function(  ) {
@@ -114,6 +116,41 @@ angular.module('cahierDeTexteApp')
 				  return compteur + valeur;
 			      }, 0);
 			  });
+		      };
+		      $scope.process_data = function(  ) {
+			  $scope.gridSaisies = [];
+
+			  // Extraction des classes
+			  if ( $scope.classe == -1 ) {
+			      $scope.classes = _.chain( $scope.raw_data.saisies )
+				  .flatten()
+				  .groupBy('classe_id')
+				  .keys()
+				  .value();
+			  }
+
+			  // Filtrage des données
+			  var saisies = [];
+			  if ( $scope.moisCourant != -1 ) {
+			      saisies = _($scope.raw_data.saisies[ $scope.moisCourant - 1 ]).flatten();
+			  } else {
+			      saisies = _($scope.raw_data.saisies).flatten();
+			  }
+
+			  // population de gridSaisies
+			  _(saisies).each( function ( saisie ) {
+			      if ( ( $scope.classe == -1 ) || ( saisie.classe_id == $scope.classe ) ) {
+				  $scope.gridSaisies.push( { classe: saisie.classe_id,
+							     matiere: saisie.matiere_id,
+							     cours: saisie.cours,
+							     devoir: saisie.devoir,
+							     valide: saisie.valide,
+							     cours_id: saisie.cours_id,
+							     devoir_id: saisie.devoir_id } );
+			      }
+			  } );
+
+			  $scope.populate_graphs( $scope.gridSaisies );
 
 			  // FIXME: nggrid ne prends pas ceci en compte, affecté trop tard...
 			  // $scope.gridEntries.columnDefs[0].visible = $scope.classe == -1;
