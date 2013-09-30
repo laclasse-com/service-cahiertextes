@@ -37,7 +37,7 @@ angular.module('cahierDeTexteApp')
 			  CoursAPI.valide({ id: cours_id }, {});
 		      };
 		      $scope.validateAllEntries = function() {
-			  _($scope.saisies).each( function( e ) {
+			  _($scope.gridSaisies).each( function( e ) {
 			      CoursAPI.valide({ id: e.cours_id }, {});
 			      e.valide = true;
 			  });
