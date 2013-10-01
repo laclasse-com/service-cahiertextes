@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('cahierDeTexteApp')
-  .factory('EnseignantsAPI',
+  .factory('APIEnseignants',
 	   [ '$resource',
 	     function($resource) {
 		 return $resource( '/api/v0/etablissement/:etablissement_id/enseignant/',
