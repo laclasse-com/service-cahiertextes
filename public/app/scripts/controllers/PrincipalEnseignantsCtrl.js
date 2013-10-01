@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantsCtrl',
-		[ '$scope', '$rootScope', 'Etablissement', 'EnseignantsAPI',
-		  function ($scope, $rootScope, Etablissement, EnseignantsAPI) {
+		[ '$scope', '$rootScope', 'Etablissement', 'APIEnseignants',
+		  function ($scope, $rootScope, Etablissement, APIEnseignants) {
 		      $scope.classe = -1;
 		      $scope.mois = -1;
 		      
@@ -110,7 +110,7 @@ angular.module('cahierDeTexteApp')
 		      $scope.enseignant = -1;
 
 		      // Récupération et consommation des données
-		      EnseignantsAPI.query( { etablissement_id: '0134567A' },
+		      APIEnseignants.query( { etablissement_id: '0134567A' },
 					    function success( response ) {
 						$scope.raw_data = response;
 						$scope.process_data();

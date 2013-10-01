@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantCtrl',
-		[ '$scope', '$rootScope', '$stateParams', 'EnseignantAPI', 'CoursAPI', 'Etablissement',
-		  function( $scope, $rootScope, $stateParams, EnseignantAPI, CoursAPI, Etablissement ) {
+		[ '$scope', '$rootScope', '$stateParams', 'APIEnseignant', 'APICours', 'Etablissement',
+		  function( $scope, $rootScope, $stateParams, APIEnseignant, APICours, Etablissement ) {
 		      $scope.enseignant_id = $stateParams.enseignant_id;
 		      $scope.classe = -1;
 		      $scope.mois = [];
@@ -35,12 +35,12 @@ angular.module('cahierDeTexteApp')
 			  ]
 		      };
 		      $scope.valide = function( cours_id ) {
-			  CoursAPI.valide({ id: cours_id }, {});
+			  APICours.valide({ id: cours_id }, {});
 			  $scope.populate_graphs( $scope.gridSaisies );
 		      };
 		      $scope.valideSelection = function() {
 			  _($scope.selectedSaisies).each( function( saisie ) {
-			      CoursAPI.valide({ id: saisie.cours_id }, {});
+			      APICours.valide({ id: saisie.cours_id }, {});
 			      saisie.valide = true;
 			  });
 			  $scope.populate_graphs( $scope.gridSaisies );
@@ -134,7 +134,7 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      // Récupération et consommation des données
-		      EnseignantAPI.get( { enseignant_id: $scope.enseignant_id,
+		      APIEnseignant.get( { enseignant_id: $scope.enseignant_id,
 					   etablissement_id: '0134567A' },
 					 function( response ) {
 					     $scope.raw_data = response;

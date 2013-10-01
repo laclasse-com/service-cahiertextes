@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalClassesCtrl',
-		[ '$scope', '$rootScope', 'Etablissement', 'ClasseAPI',
-		  function ($scope, $rootScope, Etablissement, ClasseAPI) {
+		[ '$scope', '$rootScope', 'Etablissement', 'APIClasse',
+		  function ($scope, $rootScope, Etablissement, APIClasse) {
 		      $scope.uai = '0134567A';
 
 		      $scope.raw_data		=     [];
@@ -165,7 +165,7 @@ angular.module('cahierDeTexteApp')
 			  $scope.pieChart.data[1].value = $scope.global_stats.filled - $scope.global_stats.validated;
 		      };
 
-		      ClasseAPI.query( { uai: $scope.uai, id: '' },
+		      APIClasse.query( { uai: $scope.uai, id: '' },
 				       function( response ) {
 					   $scope.raw_data = response;
 					   $scope.process_data();
