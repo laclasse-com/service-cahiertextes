@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantsCtrl',
-		[ '$scope', '$rootScope', 'EmploiDuTemps', 'EnseignantsAPI',
-		  function ($scope, $rootScope, EmploiDuTemps, EnseignantsAPI) {
+		[ '$scope', '$rootScope', 'Etablissement', 'EnseignantsAPI',
+		  function ($scope, $rootScope, Etablissement, EnseignantsAPI) {
 		      $scope.classe = -1;
 		      $scope.mois = -1;
 		      
@@ -101,7 +101,7 @@ angular.module('cahierDeTexteApp')
 		      $scope.annee = [];
 
 		      // Récupération et consommation des données
-		      EmploiDuTemps.getMois()
+		      Etablissement.getMois()
 			  .success(
 			      function( response ) {
 				  $scope.annee = response.mois;

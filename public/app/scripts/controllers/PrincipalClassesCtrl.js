@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalClassesCtrl',
-		[ '$scope', '$rootScope', 'EmploiDuTemps', 'ClasseAPI',
-		  function ($scope, $rootScope, EmploiDuTemps, ClasseAPI) {
+		[ '$scope', '$rootScope', 'Etablissement', 'ClasseAPI',
+		  function ($scope, $rootScope, Etablissement, ClasseAPI) {
 		      $scope.uai = '0134567A';
 
 		      $scope.raw_data		=     [];
@@ -23,7 +23,7 @@ angular.module('cahierDeTexteApp')
 						  { color : $rootScope.theme.filled.base,
 						    value: 0 } ] };
 
-		      EmploiDuTemps.getMois().success( function( response ) {
+		      Etablissement.getMois().success( function( response ) {
 			  $scope.mois = response.mois;
 		      });
 
