@@ -81,20 +81,19 @@ angular.module('cahierDeTexteApp')
 			      .groupBy('classe')
 			      .map( function( classe ) {
 				  return { classe: classe[0].classe,
-					   filled: _(classe).size(),
+					   filled: classe.length,
 					   validated: _(classe).where({valide: true}).length };
 			      })
 			      .each( function( classe ) {
 				  $scope.graphiques.barChart.data.labels.push( classe.classe );
-				  $scope.graphiques.barChart.data.datasets[0].data.push( classe.filled - classe.validated );
+				  $scope.graphiques.barChart.data.datasets[0].data.push( classe.filled );
 				  $scope.graphiques.barChart.data.datasets[1].data.push( classe.validated );
+
+				  $scope.graphiques.pieChart.data[0].value += classe.filled - classe.validated;
+				  $scope.graphiques.pieChart.data[1].value = classe.validated;
 			      });
-			  _($scope.graphiques.pieChart.data.length).times( function( i ) {
-			      $scope.graphiques.pieChart.data[i].value = $scope.graphiques.barChart.data.datasets[i].data.reduce( function( compteur, valeur ) {
-				  return compteur + valeur;
-			      }, 0);
-			  });
 		      };
+
 		      $scope.process_data = function(  ) {
 			  $scope.gridSaisies = [];
 
