@@ -30,17 +30,25 @@ module CahierDeTextesAPI
         plage_fin = PlageHoraire[ creneau.fin ].fin
         lundi = date_of_last 'monday' # FIXME: pas forcément un lundi, respecter conf Pronote!
         jour = lundi + ( creneau.jour_de_la_semaine - 1)
-        Cours
-          .where(creneau_emploi_du_temps_id: creneau.id)
-          .map {
-          |cours|
-          { title: cours ? cours.contenu : '',
-            start: Time.new( jour.year, jour.month, jour.mday, plage_debut.hour, plage_debut.min ).iso8601,
-            end: Time.new( jour.year, jour.month, jour.mday, plage_fin.hour, plage_fin.min ).iso8601,
-            allDay: false,
-            url: 'http://laclasse.com',
-            color: '#778899' }
-        }
+
+        { title: 'test',
+          start: Time.new( jour.year, jour.month, jour.mday, plage_debut.hour, plage_debut.min ).iso8601,
+          end: Time.new( jour.year, jour.month, jour.mday, plage_fin.hour, plage_fin.min ).iso8601,
+          allDay: false,
+          url: 'http://laclasse.com',
+          color: '#778899' }
+
+        # Cours
+        #   .where(creneau_emploi_du_temps_id: creneau.id)
+        #   .map {
+        #   |cours|
+        #   { title: cours ? cours.contenu : '',
+        #     start: Time.new( jour.year, jour.month, jour.mday, plage_debut.hour, plage_debut.min ).iso8601,
+        #     end: Time.new( jour.year, jour.month, jour.mday, plage_fin.hour, plage_fin.min ).iso8601,
+        #     allDay: false,
+        #     url: 'http://laclasse.com',
+        #     color: '#778899' }
+        # }
       }.flatten
     end
 
