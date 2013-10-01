@@ -67,6 +67,13 @@ angular.module( 'cahierDeTexteApp',
 	    });
     } ] )
     .run( [ '$rootScope', function ($rootScope) {
+	// définition des couleurs
+	$rootScope.theme = {
+	    filled: { base: '#aaffaa',
+		      stroke: '#88aa88' },
+	    validated: { base: '#00ff00',
+			 stroke: '#00aa00' }
+	};
 	$rootScope.globalPieChartOptions = { // segmentShowStroke : true,
 					     // segmentStrokeColor : "#fff",
 					     // segmentStrokeWidth : 0,

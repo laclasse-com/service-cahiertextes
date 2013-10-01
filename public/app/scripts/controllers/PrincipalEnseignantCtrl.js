@@ -49,19 +49,23 @@ angular.module('cahierDeTexteApp')
 		      $scope.populate_graphs = function( saisies ) {
 			  $scope.graphiques = {
 			      pieChart: { options: $rootScope.globalPieChartOptions,
-					  data: [ { color : "#aaffaa",
+					  data: [ { color : $rootScope.theme.filled.base,
 						    value: 0 },
-						  { color : "#00ff00",
+						  { color : $rootScope.theme.validated.base,
 						    value: 0 } ] },
 			      barChart: { options: $rootScope.globalLineChartOptions,
 					  data: { labels: [],
 						  datasets: [
-						      { fillColor : "#aaffaa", pointColor : "#aaffaa",
-							strokeColor : "#88aa88", pointStrokeColor : "#88aa88",
+						      { fillColor : $rootScope.theme.filled.base,
+							pointColor : $rootScope.theme.filled.base,
+							strokeColor : $rootScope.theme.filled.stroke,
+							pointStrokeColor : $rootScope.theme.filled.stroke,
 							data: []
 						      },
-						      { fillColor : "#00ff00", pointColor : "#00ff00",
-							strokeColor : "#00aa00", pointStrokeColor : "#00aa00",
+						      { fillColor : $rootScope.theme.validated.base,
+							pointColor : $rootScope.theme.validated.base,
+							strokeColor : $rootScope.theme.validated.stroke,
+							pointStrokeColor : $rootScope.theme.validated.stroke,
 							data: []
 						      } ] } }
 			  };

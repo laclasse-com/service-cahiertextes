@@ -18,9 +18,9 @@ angular.module('cahierDeTexteApp')
 		      $scope.matiereCourante	= -1;
 
 		      $scope.pieChart = { options: $rootScope.globalPieChartOptions,
-					  data: [ { color : "#00ff00",
+					  data: [ { color : $rootScope.theme.validated.base,
 						    value: 0 },
-						  { color : "#aaffaa",
+						  { color : $rootScope.theme.filled.base,
 						    value: 0 } ] };
 
 		      EmploiDuTemps.getMois().success( function( response ) {
@@ -105,19 +105,23 @@ angular.module('cahierDeTexteApp')
 			      return {
 				  regroupement_id: regroupement.regroupement_id,
 				  pieChart: { options: $rootScope.globalPieChartOptions,
-					      data: [ { color : "#00ff00",
+					      data: [ { color : $rootScope.theme.validated.base,
 							value: regroupement.validated },
-						      { color : "#aaffaa",
+						      { color : $rootScope.theme.filled.base,
 							value: regroupement.filled - regroupement.validated } ] },
 				  lineChart: { options: $rootScope.globalLineChartOptions,
 					       data: { labels: $scope.mois,
 						       datasets: [
-							   { fillColor : "#aaffaa", pointColor : "#aaffaa",
-							     strokeColor : "#88aa88", pointStrokeColor : "#88aa88",
+							   { fillColor : $rootScope.theme.filled.base,
+							     pointColor : $rootScope.theme.filled.base,
+							     strokeColor : $rootScope.theme.filled.stroke,
+							     pointStrokeColor : $rootScope.theme.filled.stroke,
 							     data: regroupement.mensuel.filled
 							   },
-							   { fillColor : "#00ff00", pointColor : "#00ff00",
-							     strokeColor : "#00aa00", pointStrokeColor : "#00aa00",
+							   { fillColor : $rootScope.theme.validated.base,
+							     pointColor : $rootScope.theme.validated.base,
+							     strokeColor : $rootScope.theme.validated.stroke,
+							     pointStrokeColor : $rootScope.theme.validated.stroke,
 							     data: regroupement.mensuel.validated
 							   } ] } }
 			      };
@@ -137,13 +141,17 @@ angular.module('cahierDeTexteApp')
 						      data: { labels: $scope.mois,
 							      datasets: [
 								  // 0: saisies totales
-								  { fillColor : "#aaffaa", pointColor : "#aaffaa",
-								    strokeColor : "#88aa88", pointStrokeColor : "#88aa88",
+								  { fillColor : $rootScope.theme.filled.base,
+								    pointColor : $rootScope.theme.filled.base,
+								    strokeColor : $rootScope.theme.filled.stroke,
+								    pointStrokeColor : $rootScope.theme.filled.stroke,
 								    data: monthlyLineChart_data.filled
 								  },
 								  // 1: saisies validées
-								  { fillColor : "#00ff00", pointColor : "#00ff00",
-								    strokeColor : "#00aa00", pointStrokeColor : "#00aa00",
+								  { fillColor : $rootScope.theme.validated.base,
+								    pointColor : $rootScope.theme.validated.base,
+								    strokeColor : $rootScope.theme.validated.stroke,
+								    pointStrokeColor : $rootScope.theme.validated.stroke,
 								    data: monthlyLineChart_data.validated
 								  } ] } };
 
