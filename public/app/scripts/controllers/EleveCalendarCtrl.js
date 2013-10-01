@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EleveCalendarCtrl',
-		[ '$scope', '$rootScope', 'EmploiDuTempsAPI',
-		  function ( $scope, $rootScope, EmploiDuTempsAPI ) {
+		[ '$scope', '$rootScope', 'APIEmploiDuTemps',
+		  function ( $scope, $rootScope, APIEmploiDuTemps ) {
 		      /* config object */
 		      $scope.calendar = {
 			  options: $rootScope.globalCalendarOptions,
@@ -15,7 +15,7 @@ angular.module('cahierDeTexteApp')
 							 center: 'agendaDay agendaWeek month',
 							 right: 'today prev,next' };
 
-		      EmploiDuTempsAPI.query( function( response ) {
+		      APIEmploiDuTemps.query( function( response ) {
 			  $scope.calendar.events.push( response.map( function( event ) {
 			      return { title: event.title,
 				       start: new Date( event.start ),
