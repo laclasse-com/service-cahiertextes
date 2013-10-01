@@ -45,6 +45,13 @@ angular.module('cahierDeTexteApp')
 			  });
 			  $scope.populate_graphs( $scope.gridSaisies );
 		      };
+		      $scope.selectionneNonValides = function() {
+			  _($scope.gridSaisies).each( function( saisie, index ){
+			      if( saisie.valide === false ) {
+				  $scope.grid.selectItem( index, true );
+			      }
+			  });
+		      };
 
 		      $scope.populate_graphs = function( saisies ) {
 			  $scope.graphiques = {
