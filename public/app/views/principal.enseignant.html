@@ -41,9 +41,11 @@
 
 <div class="panel panel-default">
   <div class="panel-body">
-    <a class="btn btn-warning col-md-2 col-md-offset-10" data-ng-click="valideSelection()">Valider la sélection</a>
+    <div class="btn-group btn-group-xs col-md-offset-8">
+      <a class="btn btn-default" data-ng-click="selectionneNonValides()">Sélectionne les non validés</a>
+      <a class="btn btn-default" data-ng-click="valideSelection()">Valider la sélection</a>
+    </div>
     <div class="col-md-12" style="float:left" data-ng-grid="grid"></div>
-    <!-- a class="btn btn-warning col-md-2 col-md-offset-8" data-ng-click="selectionneTout()">Tout sélectionner</a -->
   </div>
 </div>
 
