@@ -3,7 +3,7 @@
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantCtrl',
 		[ '$scope', '$rootScope', '$stateParams', 'EnseignantAPI', 'CoursAPI', 'EmploiDuTemps',
-		  function ( $scope, $rootScope, $stateParams, EnseignantAPI, CoursAPI, EmploiDuTemps ) {
+		  function( $scope, $rootScope, $stateParams, EnseignantAPI, CoursAPI, EmploiDuTemps ) {
 		      $scope.enseignant_id = $stateParams.enseignant_id;
 		      $scope.classe = -1;
 		      $scope.mois = [];
