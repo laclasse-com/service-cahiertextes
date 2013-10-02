@@ -16,6 +16,9 @@ end
 
 require_relative '../app'
 
+# # Example usage.
+# cleaner = TableCleaner.new DB, [:spatial_ref_sys]
+# cleaner.clean
 class TableCleaner
   def initialize db, excluded_tables
     @db = db
@@ -50,6 +53,3 @@ class TableCleaner
   end
 end
 
-# # Example usage.
-# cleaner = TableCleaner.new DB, [:spatial_ref_sys]
-# cleaner.clean
