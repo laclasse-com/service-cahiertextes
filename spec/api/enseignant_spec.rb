@@ -39,8 +39,8 @@ describe CahierDeTextesAPI::API do
   # {{{ Cours
   ############ POST ############
   it 'renseigne une nouvelle séquence pédagogique' do
-    cahier_de_textes_id = CahierDeTextes.all[ rand(0 .. CahierDeTextes.count - 1) ][:id]
-    creneau_emploi_du_temps_id = CreneauEmploiDuTemps.all[ rand(0 .. CreneauEmploiDuTemps.count - 1) ][:id]
+    cahier_de_textes_id = CahierDeTextes.all.sample.id
+    creneau_emploi_du_temps_id = CreneauEmploiDuTemps.all.sample.id
     date_cours = '2013-08-29'
     contenu = 'Exemple de séquence pédagogique.'
     ressources = [ { label: 'test1', url: 'https://localhost/docs/test1' },
@@ -139,8 +139,8 @@ describe CahierDeTextesAPI::API do
   # {{{ Devoir
   ############ POST ############
   it 'crée un nouveau devoir' do
-    cours_id = Cours.all[ rand(0 .. Cours.count - 1) ][:id]
-    type_devoir_id = TypeDevoir.all[ rand(0 .. TypeDevoir.count - 1) ][:id]
+    cours_id = Cours.all.sample.id
+    type_devoir_id = TypeDevoir.all.sample.id
     date_due = Time.now
     contenu = 'Exemple de devoir.'
     temps_estime = rand(0..120)
@@ -173,7 +173,8 @@ describe CahierDeTextesAPI::API do
   ############ PUT ############
   it 'modifie un devoir' do
     devoir = Devoir.last
-    type_devoir_id = TypeDevoir.all[ rand(0 .. TypeDevoir.count - 1) ][:id]
+
+    type_devoir_id = TypeDevoir.all.sample.id
     date_due = Time.now
     contenu = 'Exemple de devoir totalement modifié.'
     temps_estime = rand(0..120)
@@ -195,8 +196,8 @@ describe CahierDeTextesAPI::API do
     devoir2 = Devoir[ devoir.id ]
 
     devoir2.cours_id.should == devoir.cours_id
-    devoir2.type_devoir_id.should == devoir.type_devoir_id
-    expect( devoir2.date_due ).to eq devoir.date_due
+    devoir2.type_devoir_id.should == type_devoir_id
+    expect( Date.parse( devoir2.date_due.to_s ) ).to eq Date.parse( date_due.to_s )
     expect( devoir2.date_creation ).to eq devoir.date_creation
     devoir2.date_modification.should_not equal nil
     expect( devoir2.date_validation ).to eq devoir.date_validation
@@ -207,7 +208,7 @@ describe CahierDeTextesAPI::API do
 
   ############ GET ############
   it 'récupère les détails d\'un devoir' do
-    devoir = Devoir.all[ rand(0 .. Devoir.count - 1) ]
+    devoir = Devoir.all.sample
 
     get "/api/v0/devoir/#{devoir.id}"
     last_response.status.should == 200
