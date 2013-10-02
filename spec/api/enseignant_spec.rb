@@ -8,10 +8,7 @@ describe CahierDeTextesAPI::API do
   before :all do
     TableCleaner.new( DB, [] ).clean
 
-    xml_filename = 'spec/fixtures/Edt_To_LaclasseCom_0134567A_Enclair.xml'
-    post '/api/v0/pronote/xml', xml_file: Rack::Test::UploadedFile.new(xml_filename, 'text/xml')
-
-    generate_test_data
+    load_test_data
   end
 
   def app

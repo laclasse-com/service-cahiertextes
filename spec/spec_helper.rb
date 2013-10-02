@@ -54,6 +54,10 @@ class TableCleaner
   end
 end
 
+def load_test_data
+  system 'mysql -u ' + DB_CONFIG[:user] + ' -p' + DB_CONFIG[:password] + ' ' + DB_CONFIG[:name] + ' < spec/fixtures/db_dump.sql'
+end
+
 def generate_test_data
   STDERR.puts 'Remplissage des Cahiers de textes'
   [ [ 'DS', 'Devoir surveillé' ],
@@ -67,23 +71,25 @@ def generate_test_data
     STDERR.putc '.'
   }
 
-  12.times {
-    |month|
-    rand(2..4).times {
-      CreneauEmploiDuTempsEnseignant.select( :creneau_emploi_du_temps_id, :enseignant_id ).limit( 32 ).each {
-        |item|
-        cours = Cours.create(cahier_de_textes_id: CahierDeTextes.all.sample.id,
-                             creneau_emploi_du_temps_id: item.values[ :creneau_emploi_du_temps_id ],
-                             date_cours: '2013-' + (month + 1).to_s + '-29',
-                             contenu: 'Exemple de séquence pédagogique.',
-                             enseignant_id: item.values[:enseignant_id] )
-        STDERR.putc '.'
-        Devoir.create(cours_id: cours.id,
-                      type_devoir_id: TypeDevoir.all.sample.id,
-                      date_due: Time.now,
-                      contenu: 'Exemple de devoir.',
-                      temps_estime: rand(0..120) )
-        STDERR.putc '.'
+  CahierDeTextes.all.each { |cahier_de_textes|
+    12.times {
+      |month|
+      rand(2..4).times {
+        CreneauEmploiDuTempsEnseignant.select( :creneau_emploi_du_temps_id, :enseignant_id ).limit( 2 ).each {
+          |item|
+          cours = Cours.create(cahier_de_textes_id: cahier_de_textes.id,
+                               creneau_emploi_du_temps_id: item.values[ :creneau_emploi_du_temps_id ],
+                               date_cours: '2013-' + (month + 1).to_s + '-29',
+                               contenu: 'Exemple de séquence pédagogique.',
+                               enseignant_id: item.values[:enseignant_id] )
+          STDERR.putc '.'
+          Devoir.create(cours_id: cours.id,
+                        type_devoir_id: TypeDevoir.all.sample.id,
+                        date_due: Time.now,
+                        contenu: 'Exemple de devoir.',
+                        temps_estime: rand(0..120) )
+          STDERR.putc '.'
+        }
       }
     }
   }
