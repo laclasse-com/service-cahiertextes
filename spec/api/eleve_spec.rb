@@ -62,7 +62,7 @@ describe CahierDeTextesAPI::API do
   ############ GET ############
   it 'récupère les détails d\'un devoir' do
     eleve_id = 1
-    devoir = Devoir.all[ rand(0 .. Devoir.count - 1) ]
+    devoir = Devoir.all.sample
 
     get "/api/v0/devoir/#{devoir.id}"
     last_response.status.should == 200
@@ -77,7 +77,7 @@ describe CahierDeTextesAPI::API do
 
   ############ PUT ############
   it 'note un devoir comme fait' do
-    devoir = Devoir.all[ rand(0 .. Devoir.count - 1) ]
+    devoir = Devoir.all.sample
 
     put "/api/v0/devoir/#{devoir.id}/fait", {}
     last_response.status.should == 200
