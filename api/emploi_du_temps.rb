@@ -32,8 +32,8 @@ module CahierDeTextesAPI
         |creneau|
         plage_debut = PlageHoraire[ creneau.debut ].debut
         plage_fin = PlageHoraire[ creneau.fin ].fin
-        lundi = date_of_last 'monday' # FIXME: pas forcément un lundi, respecter conf Pronote!
-        jour = lundi + ( creneau.jour_de_la_semaine - 1)
+        lundi = date_of_last 'monday' # FIXME: pas forcément un lundi ?
+        jour = lundi + ( creneau.jour_de_la_semaine - 2)
 
         { title: 'test',
           start: Time.new( jour.year, jour.month, jour.mday, plage_debut.hour, plage_debut.min ).iso8601,
