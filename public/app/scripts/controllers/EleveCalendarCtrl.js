@@ -17,12 +17,12 @@ angular.module('cahierDeTexteApp')
 
 		      APIEmploiDuTemps.query( function( response ) {
 			  $scope.calendar.events.push( response.map( function( event ) {
-			      return { title: event.title,
+			      return { allDay: false,
+				       title: ''+event.matiere_id,
 				       start: new Date( event.start ),
 				       end: new Date( event.end ),
-				       allDay: event.allDay,
-				       url: event.url,
-				       color: event.color };
+				       url: (event.cours_id > 0) ? 'javascript:alert(' + event.cours_id + ')' : '',
+				       color: (event.cours_id > 0) ? $rootScope.theme.calendar.saisie : $rootScope.theme.calendar.vide };
 			  } ) );
 		      });
 		  }
