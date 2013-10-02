@@ -12,7 +12,7 @@ module CahierDeTextesAPI
       # TODO: prendre en compte debut et fin
 
       # TODO: get this from actual (Élève) user
-      regroupements_ids = [ 1, 2, 3, 4, 5, 12 ]
+      regroupements_ids = CreneauEmploiDuTempsRegroupement.all.sample( 5 ).map {|r| r.regroupement_id}
 
       regroupements_ids.map {
         |regroupement_id|
