@@ -8,19 +8,10 @@ describe CahierDeTextesAPI::API do
   before :all do
     TableCleaner.new( DB, [] ).clean
 
-    CahierDeTextes.create(regroupement_id: 1,
-                          date_creation: Time.now,
-                          deleted: false)
-    plage_horaire_debut = PlageHoraire.create(label: 'test_debut',
-                                              debut: '08:30:00',
-                                              fin: '09:00:00')
-    plage_horaire_fin = PlageHoraire.create(label: 'test_fin',
-                                            debut: '09:30:00',
-                                            fin: '10:00:00')
-    CreneauEmploiDuTemps.create(debut: plage_horaire_debut.id,
-                                fin: plage_horaire_fin.id)
-    TypeDevoir.create(label: 'RSpec',
-                      description: 'Type de devoir tout spécial pour rspec')
+    xml_filename = 'spec/fixtures/Edt_To_LaclasseCom_0134567A_Enclair.xml'
+    post '/api/v0/pronote/xml', xml_file: Rack::Test::UploadedFile.new(xml_filename, 'text/xml')
+
+    generate_test_data
   end
 
   def app
