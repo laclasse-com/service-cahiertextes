@@ -72,7 +72,9 @@ angular.module( 'cahierDeTexteApp',
 	    filled: { base: '#aaffaa',
 		      stroke: '#88aa88' },
 	    validated: { base: '#00ff00',
-			 stroke: '#00aa00' }
+			 stroke: '#00aa00' },
+	    calendar: { vide: '#a0a0a0',
+			saisie: '#aaaaff' }
 	};
 
 	// options des calendriers
