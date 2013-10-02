@@ -35,12 +35,18 @@ module CahierDeTextesAPI
         lundi = date_of_last 'monday' # FIXME: pas forcément un lundi ?
         jour = lundi + ( creneau.jour_de_la_semaine - 2)
 
-        cours = Cours.where(creneau_emploi_du_temps_id: creneau.id).where(cahier_de_textes_id: CahierDeTextes.where( regroupement_id: dummy_regroupement_id ).first.id )
+        # TODO: test qu'il n'y a qu'un seul cahier de textes
+        cahier_de_textes = CahierDeTextes.where( regroupement_id: dummy_regroupement_id ).first
+        cours = Cours.where(creneau_emploi_du_temps_id: creneau.id).where(cahier_de_textes_id: cahier_de_textes.id ).first
+        cours_id = cours.nil? ? -1 : cours.id
+        devoir = Devoir.where(cours_id: cours_id).first unless cours_id == -1
+        devoir_id = devoir.nil? ? -1 : devoir.id
 
         { matiere_id: creneau.matiere_id,
           start: Time.new( jour.year, jour.month, jour.mday, plage_debut.hour, plage_debut.min ).iso8601,
           end: Time.new( jour.year, jour.month, jour.mday, plage_fin.hour, plage_fin.min ).iso8601,
-          cours_id: cours.count > 0 ? cours.first.id : -1 }
+          cours_id: cours_id,
+          devoir_id: devoir_id }
       }.flatten
     end
 
