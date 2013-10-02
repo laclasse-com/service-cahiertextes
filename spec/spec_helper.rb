@@ -75,21 +75,21 @@ def generate_test_data
     12.times {
       |month|
       rand(2..4).times {
-        CreneauEmploiDuTempsEnseignant.select( :creneau_emploi_du_temps_id, :enseignant_id ).limit( 2 ).each {
-          |item|
-          cours = Cours.create(cahier_de_textes_id: cahier_de_textes.id,
-                               creneau_emploi_du_temps_id: item.values[ :creneau_emploi_du_temps_id ],
-                               date_cours: '2013-' + (month + 1).to_s + '-29',
-                               contenu: 'Exemple de séquence pédagogique.',
-                               enseignant_id: item.values[:enseignant_id] )
-          STDERR.putc '.'
-          Devoir.create(cours_id: cours.id,
-                        type_devoir_id: TypeDevoir.all.sample.id,
-                        date_due: Time.now,
-                        contenu: 'Exemple de devoir.',
-                        temps_estime: rand(0..120) )
-          STDERR.putc '.'
-        }
+        creneau = CreneauEmploiDuTempsEnseignant.all.sample
+
+        cours = Cours.create(cahier_de_textes_id: cahier_de_textes.id,
+                             creneau_emploi_du_temps_id: creneau.id,
+                             date_cours: '2013-' + (month + 1).to_s + '-29',
+                             contenu: 'Exemple de séquence pédagogique.',
+                             enseignant_id: creneau.enseignant_id )
+        STDERR.putc '.'
+
+        Devoir.create(cours_id: cours.id,
+                      type_devoir_id: TypeDevoir.all.sample.id,
+                      date_due: Time.now,
+                      contenu: 'Exemple de devoir.',
+                      temps_estime: rand(0..120) )
+        STDERR.putc '.'
       }
     }
   }
