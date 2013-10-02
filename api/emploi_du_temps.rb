@@ -20,7 +20,11 @@ module CahierDeTextesAPI
     }
     get do
       # TODO
-      dummy_regroupement_id = 352345
+      dummy_regroupement_id = CreneauEmploiDuTempsRegroupement
+        .select(:regroupement_id)
+        .map {|r| r.regroupement_id}
+        .sample
+
       CreneauEmploiDuTemps
         .join(:creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :id)
         .where( regroupement_id: dummy_regroupement_id)
