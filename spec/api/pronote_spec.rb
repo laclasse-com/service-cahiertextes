@@ -26,6 +26,15 @@ describe CahierDeTextesAPI::API do
       'nb_plages_horaires' => 20,
       'nb_creneau_emploi_du_temps' => 701,
     }.to_json
+
+    CreneauEmploiDuTempsRegroupement
+      .select(:regroupement_id)
+      .map {|r| r.regroupement_id }
+      .uniq
+      .sort
+      .each { |regroupement_id|
+      CahierDeTextes.where( regroupement_id: regroupement_id ).count.should == 1
+    }
   end
 
 end

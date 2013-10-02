@@ -213,6 +213,18 @@ module ProNote
     end
     STDERR.puts
 
+    STDERR.puts 'création des Cahier de Textes nécessaires'
+    CreneauEmploiDuTempsRegroupement
+      .select(:regroupement_id)
+      .map {|r| r.regroupement_id}
+      .uniq
+      .each {
+      |regroupement_id|
+      CahierDeTextes.create( regroupement_id: regroupement_id ) unless CahierDeTextes.where( regroupement_id: regroupement_id ).count > 0
+        STDERR.putc '.'
+    }
+    STDERR.puts
+
   end
 
 end
