@@ -44,7 +44,7 @@ describe CahierDeTextesAPI::API do
     }.should be_true
   end
 
-  it 'récupère les statistiques par enseignants et par mois' do
+  it 'récupère les statistiques d\'un enseignant par mois' do
     uai = '0134567A'
     enseignant_id = Cours.select(:enseignant_id).first[:enseignant_id].to_s
 
