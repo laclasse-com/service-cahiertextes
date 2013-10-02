@@ -18,8 +18,11 @@ describe CahierDeTextesAPI::API do
   # {{{ Emploi du Temps
   ############ GET ############
   it 'récupère l\'emploi du temps de l\'élève' do
+    debut = Date.today
+    fin = debut + 7
 
-    get '/api/v0/emploi_du_temps/'
+    get "/api/v0/emploi_du_temps?debut=#{debut}&fin=#{fin}"
+
     last_response.status.should == 200
   end
   # }}}
@@ -27,8 +30,11 @@ describe CahierDeTextesAPI::API do
   # {{{ Cahier de Textes
   ############ GET ############
   it 'récupère le cahier de textes de l\'élève' do
+    debut = Date.today
+    fin = debut + 7
 
-    get '/api/v0/cahier_de_textes/'
+    get "/api/v0/cahier_de_textes?debut=#{debut}&fin=#{fin}"
+
     last_response.status.should == 200
   end
   # }}}

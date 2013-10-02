@@ -63,6 +63,8 @@ module CahierDeTextesAPI
       optional :fin, type: Time
     }
     put '/:uai/enseignant/:enseignant_id' do
+      # TODO: prendre en compte debut et fin
+
       Etablissement.where(uai: params[:uai]).first.valide_enseignant!( params[:enseignant_id] )
     end
 
