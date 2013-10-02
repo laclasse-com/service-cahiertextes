@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'rubygems'
 
 ENV["RACK_ENV"] ||= 'test'
