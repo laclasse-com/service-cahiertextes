@@ -18,7 +18,9 @@ module CahierDeTextesAPI
       optional :debut, type: Time
       optional :fin, type: Time
     }
-    get do
+    get  do
+      # TODO: prendre en compte debut et fin
+
       # TODO
       dummy_regroupement_id = CreneauEmploiDuTempsRegroupement
         .select(:regroupement_id)

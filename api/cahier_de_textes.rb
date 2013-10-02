@@ -8,7 +8,9 @@ module CahierDeTextesAPI
       optional :debut, type: Time
       optional :fin, type: Time
     }
-    get do
+    get  do
+      # TODO: prendre en compte debut et fin
+
       # TODO: get this from actual (Élève) user
       regroupements_ids = [ 1, 2, 3, 4, 5, 12 ]
 
