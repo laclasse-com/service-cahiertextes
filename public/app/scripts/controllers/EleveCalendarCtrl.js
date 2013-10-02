@@ -22,7 +22,7 @@ angular.module('cahierDeTexteApp')
 				       start: new Date( event.start ),
 				       end: new Date( event.end ),
 				       url: (event.cours_id > 0) ? 'javascript:alert(' + event.cours_id + ')' : '',
-				       color: (event.cours_id > 0) ? $rootScope.theme.calendar.saisie : $rootScope.theme.calendar.vide };
+				       color: (event.devoir_id > 0) ? $rootScope.theme.calendar.devoir : (event.cours_id > 0) ? $rootScope.theme.calendar.saisie : $rootScope.theme.calendar.vide };
 			  } ) );
 		      });
 		  }
