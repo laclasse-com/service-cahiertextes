@@ -10,12 +10,21 @@ require 'tsort'
 require_relative '../config/environment'
 require_relative '../config/database'
 
+require_relative '../app'
+
 RSpec.configure do |config|
   config.mock_with :rspec
   config.expect_with :rspec
-end
 
-require_relative '../app'
+  # Use color in STDOUT
+  config.color_enabled = true
+
+  # Use color not only in STDOUT but also in pagers and files
+  config.tty = true
+
+  # Use the specified formatter
+  config.formatter = :documentation # :progress, :html, :textmate
+end
 
 # # Example usage.
 # cleaner = TableCleaner.new DB, [:spatial_ref_sys]
