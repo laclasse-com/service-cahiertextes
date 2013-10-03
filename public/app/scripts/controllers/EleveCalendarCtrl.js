@@ -22,6 +22,10 @@ angular.module('cahierDeTexteApp')
 			  $scope.cours = cours;
 			  $scope.devoir = devoir;
 
+			  $scope.fait = function() {
+			      APIDevoir.fait({ id: devoir.id });
+			  };
+
 			  $scope.close = function() {
 			      $modalInstance.close();
 			  };
