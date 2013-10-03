@@ -38,17 +38,21 @@ module CahierDeTextesAPI
         jour = lundi + ( creneau.jour_de_la_semaine - 2)
 
         # TODO: test qu'il n'y a qu'un seul cahier de textes
-        cahier_de_textes = CahierDeTextes.where( regroupement_id: dummy_regroupement_id ).first
-        cours = Cours.where(creneau_emploi_du_temps_id: creneau.id).where(cahier_de_textes_id: cahier_de_textes.id ).first
-        cours_id = cours.nil? ? -1 : cours.id
-        devoir = Devoir.where(cours_id: cours_id).first unless cours_id == -1
-        devoir_id = devoir.nil? ? -1 : devoir.id
+        data = CahierDeTextes.where( regroupement_id: dummy_regroupement_id )
+        # raise '/!\ Incohérence dans les cahier de textes !' unless data.count == 1
+        cahier_de_textes = data.first
+        data = Cours.where(creneau_emploi_du_temps_id: creneau.id).where(cahier_de_textes_id: cahier_de_textes.id )
+        # raise '/!\ Incohérence dans les cours !' unless data.count == 1
+        cours = data.first
+        data = Devoir.where(cours_id: cours.id) unless cours.nil?
+        # raise '/!\ Incohérence dans les devoirs !' unless data.count == 1
+        devoir = data.first
 
         { matiere_id: creneau.matiere_id,
           start: Time.new( jour.year, jour.month, jour.mday, plage_debut.hour, plage_debut.min ).iso8601,
           end: Time.new( jour.year, jour.month, jour.mday, plage_fin.hour, plage_fin.min ).iso8601,
-          cours_id: cours_id,
-          devoir_id: devoir_id }
+          cours: cours.nil? ? {} : cours,
+          devoir: devoir.nil? ? {} : devoir }
       }.flatten
     end
 
