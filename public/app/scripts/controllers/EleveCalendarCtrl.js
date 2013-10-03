@@ -60,11 +60,13 @@ angular.module('cahierDeTexteApp')
 			      var couleur = '';
 			      if ( _(event.cours).size() > 0 ) {
 				  couleur = $rootScope.theme.calendar.saisie;
-			      } else if ( _(event.devoir).size() > 0 ) {
-				  if ( event.devoir.fait )
-				      couleur = $rootScope.theme.calendar.devoir_fait;
-				  else
-				      couleur = $rootScope.theme.calendar.devoir;
+				  if ( _(event.devoir).size() > 0 ) {
+				      if ( event.devoir.fait ) {
+					  couleur = $rootScope.theme.calendar.devoir_fait;
+				      } else {
+					  couleur = $rootScope.theme.calendar.devoir;
+				      }
+				  }
 			      } else {
 				  couleur = $rootScope.theme.calendar.vide;
 			      }
