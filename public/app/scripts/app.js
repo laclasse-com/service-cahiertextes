@@ -75,7 +75,8 @@ angular.module( 'cahierDeTexteApp',
 			 stroke: '#00aa00' },
 	    calendar: { vide: '#a0a0a0',
 			saisie: '#aaaaff',
-			devoir: '#ff6666'}
+			devoir: '#ff6666',
+			devoir_fait: '#66cc66'}
 	};
 
 	// options des calendriers

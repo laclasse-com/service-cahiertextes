@@ -22,14 +22,17 @@ module CahierDeTextesAPI
       # TODO: prendre en compte debut et fin
 
       # TODO
-      dummy_regroupement_id = CreneauEmploiDuTempsRegroupement
+      eleve_id = 1
+
+      # TODO
+      regroupement_id = CreneauEmploiDuTempsRegroupement
         .select(:regroupement_id)
         .map {|r| r.regroupement_id}
         .sample
 
       CreneauEmploiDuTemps
         .join(:creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :id)
-        .where( regroupement_id: dummy_regroupement_id)
+        .where( regroupement_id: regroupement_id)
         .map {
         |creneau|
         plage_debut = PlageHoraire[ creneau.debut ].debut
@@ -38,21 +41,34 @@ module CahierDeTextesAPI
         jour = lundi + ( creneau.jour_de_la_semaine - 2)
 
         # TODO: test qu'il n'y a qu'un seul cahier de textes
-        data = CahierDeTextes.where( regroupement_id: dummy_regroupement_id )
+        data = CahierDeTextes.where( regroupement_id: regroupement_id )
         # raise '/!\ Incohérence dans les cahier de textes !' unless data.count == 1
         cahier_de_textes = data.first
+
         data = Cours.where(creneau_emploi_du_temps_id: creneau.id).where(cahier_de_textes_id: cahier_de_textes.id )
         # raise '/!\ Incohérence dans les cours !' unless data.count == 1
-        cours = data.first
-        data = Devoir.where(cours_id: cours.id) unless cours.nil?
+        if data.first.nil?
+          cours = {}
+        else
+          cours = data.first.to_hash # data.first.to_hash_complet
+          cours[:ressources] = data.first.ressources
+        end
+
+        data = Devoir.where(cours_id: cours[:id]) if cours.key?( :id )
         # raise '/!\ Incohérence dans les devoirs !' unless data.count == 1
-        devoir = data.first
+        if data.first.nil?
+          devoir = {}
+        else
+          devoir = data.first.to_hash # data.first.to_hash_complet
+          devoir[:ressources] = data.first.ressources
+          devoir[:fait] = data.first.fait_par?( eleve_id )
+        end
 
         { matiere_id: creneau.matiere_id,
           start: Time.new( jour.year, jour.month, jour.mday, plage_debut.hour, plage_debut.min ).iso8601,
           end: Time.new( jour.year, jour.month, jour.mday, plage_fin.hour, plage_fin.min ).iso8601,
-          cours: cours.nil? ? {} : cours,
-          devoir: devoir.nil? ? {} : devoir }
+          cours: cours,
+          devoir: devoir }
       }.flatten
     end
 
