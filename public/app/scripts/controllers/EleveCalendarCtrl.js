@@ -8,7 +8,6 @@ angular.module('cahierDeTexteApp')
 		      $scope.cours = {};
 		      $scope.devoir = {};
 		      $scope.affiche_details = function(  ) {
-			  // var modalInstance = 
 			  $modal.open({ templateUrl: 'views/modals/eleve.detail_emploi_du_temps.html',
 					controller: modalInstanceCtrl,
 					resolve: {
@@ -39,17 +38,19 @@ angular.module('cahierDeTexteApp')
 							 right: 'today prev,next' };
 		      $scope.calendar.options.eventClick = function( event ) {
 			  var event_data = _(event.source.events).findWhere({_id: event._id});
-			  console.log( event_data.details );
 			  $scope.cours = event_data.details.cours;
-			  $scope.devoir = event_data.details.devoir;
-			  $scope.affiche_details(  );
+			  if ( _($scope.cours).size() > 0 ) {
+			      $scope.devoir = event_data.details.devoir;
+
+			      $scope.affiche_details(  );
+			  }
 		      };
 
-		      
+
 		      // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
 		      APIEmploiDuTemps.query( function( response ) {
 			  $scope.calendar.events.push( response.map( function( event ) {
-			      
+
 			      // TODO: mettre les détails cours et devoir dans un tableau à part pour popup
 			      return { details: { cours: event.cours,
 						  devoir: event.devoir },
