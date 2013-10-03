@@ -75,7 +75,7 @@ describe CahierDeTextesAPI::API do
     response_body['cours_id'].should == devoir.cours_id
     response_body['type_devoir_id'].should == devoir.type_devoir_id
     response_body['contenu'].should == devoir.contenu
-    # response_body['fait'].should == devoir.fait_par?( eleve_id )
+    response_body['fait'].should == devoir.fait_par?( eleve_id )
   end
 
   ############ PUT ############

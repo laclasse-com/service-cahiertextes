@@ -57,15 +57,24 @@ angular.module('cahierDeTexteApp')
 		      // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
 		      APIEmploiDuTemps.query( function( response ) {
 			  $scope.calendar.events.push( response.map( function( event ) {
-
-			      // TODO: mettre les détails cours et devoir dans un tableau à part pour popup
+			      var couleur = '';
+			      if ( _(event.cours).size() > 0 ) {
+				  couleur = $rootScope.theme.calendar.saisie;
+			      } else if ( _(event.devoir).size() > 0 ) {
+				  if ( event.devoir.fait )
+				      couleur = $rootScope.theme.calendar.devoir_fait;
+				  else
+				      couleur = $rootScope.theme.calendar.devoir;
+			      } else {
+				  couleur = $rootScope.theme.calendar.vide;
+			      }
 			      return { details: { cours: event.cours,
 						  devoir: event.devoir },
 				       allDay: false,
 				       title: ''+event.matiere_id,
 				       start: new Date( event.start ),
 				       end: new Date( event.end ),
-				       color: (_(event.devoir).size() > 0) ? $rootScope.theme.calendar.devoir : (_(event.cours).size() > 0) ? $rootScope.theme.calendar.saisie : $rootScope.theme.calendar.vide };
+				       color: couleur };
 			  } ) );
 		      });
 		  }

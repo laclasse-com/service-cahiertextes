@@ -73,8 +73,12 @@ module CahierDeTextesAPI
       if devoir.nil?
         error!( 'Devoir inconnu', 404 )
       else
+        # TODO: replace with real ID
+        eleve_id = 1
+
         hash = devoir.to_hash
         hash[:ressources] = devoir.ressources
+        hash[:fait] = devoir.fait_par?( eleve_id )
 
         hash
       end
