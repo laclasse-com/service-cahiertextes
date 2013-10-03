@@ -8,14 +8,18 @@ angular.module('cahierDeTexteApp')
 		      $scope.cours = {};
 		      $scope.devoir = {};
 		      $scope.affiche_details = function(  ) {
-			  $modal.open({ templateUrl: 'views/modals/eleve.detail_emploi_du_temps.html',
-					controller: modalInstanceCtrl,
-					resolve: {
-					    matiere: function() { return $scope.matiere; },
-					    cours: function() { return $scope.cours; },
-					    devoir: function() { return $scope.devoir; }
-					}
-				      });
+			  var modalInstance = $modal.open({ templateUrl: 'views/modals/eleve.detail_emploi_du_temps.html',
+							    controller: modalInstanceCtrl,
+							    resolve: {
+								matiere: function() { return $scope.matiere; },
+								cours: function() { return $scope.cours; },
+								devoir: function() { return $scope.devoir; }
+							    }
+							  });
+			  modalInstance.result.then( function ( fait ) {
+			      $scope.creneau.color = fait ? $rootScope.theme.calendar.devoir_fait : $rootScope.theme.calendar.devoir;
+			      $scope.emploi_du_temps.fullCalendar( 'renderEvent', $scope.creneau );
+			  });
 		      };
 		      var modalInstanceCtrl = function( $scope, $modalInstance, APIDevoir, matiere, cours, devoir ) {
 			  $scope.matiere = matiere;
@@ -23,11 +27,18 @@ angular.module('cahierDeTexteApp')
 			  $scope.devoir = devoir;
 
 			  $scope.fait = function() {
-			      APIDevoir.fait({ id: devoir.id });
+			      APIDevoir.fait({ id: devoir.id },
+					     function() {
+						 devoir.fait = true;
+					     });
 			  };
 
 			  $scope.close = function() {
-			      $modalInstance.close();
+			      if ( _(devoir).size() > 0 ) {
+				  $modalInstance.close( devoir.fait );
+			      } else {
+				  $modalInstance.close();
+			      }
 			  };
 		      };
 
@@ -43,16 +54,15 @@ angular.module('cahierDeTexteApp')
 							 center: 'agendaDay agendaWeek month',
 							 right: 'today prev,next' };
 		      $scope.calendar.options.eventClick = function( event ) {
-			  var event_data = _(event.source.events).findWhere({_id: event._id});
+			  $scope.creneau = _(event.source.events).findWhere({_id: event._id});
 			  $scope.matiere = event.title;
-			  $scope.cours = event_data.details.cours;
+			  $scope.cours = $scope.creneau.details.cours;
 			  if ( _($scope.cours).size() > 0 ) {
-			      $scope.devoir = event_data.details.devoir;
+			      $scope.devoir = $scope.creneau.details.devoir;
 
 			      $scope.affiche_details(  );
 			  }
 		      };
-
 
 		      // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
 		      APIEmploiDuTemps.query( function( response ) {
