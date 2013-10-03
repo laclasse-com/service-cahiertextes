@@ -11,12 +11,14 @@ angular.module('cahierDeTexteApp')
 			  $modal.open({ templateUrl: 'views/modals/eleve.detail_emploi_du_temps.html',
 					controller: modalInstanceCtrl,
 					resolve: {
+					    matiere: function() { return $scope.matiere; },
 					    cours: function() { return $scope.cours; },
 					    devoir: function() { return $scope.devoir; }
 					}
 				      });
 		      };
-		      var modalInstanceCtrl = function( $scope, $modalInstance, cours, devoir ) {
+		      var modalInstanceCtrl = function( $scope, $modalInstance, APIDevoir, matiere, cours, devoir ) {
+			  $scope.matiere = matiere;
 			  $scope.cours = cours;
 			  $scope.devoir = devoir;
 
@@ -38,6 +40,7 @@ angular.module('cahierDeTexteApp')
 							 right: 'today prev,next' };
 		      $scope.calendar.options.eventClick = function( event ) {
 			  var event_data = _(event.source.events).findWhere({_id: event._id});
+			  $scope.matiere = event.title;
 			  $scope.cours = event_data.details.cours;
 			  if ( _($scope.cours).size() > 0 ) {
 			      $scope.devoir = event_data.details.devoir;
