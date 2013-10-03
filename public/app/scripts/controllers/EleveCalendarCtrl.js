@@ -9,6 +9,7 @@ angular.module('cahierDeTexteApp')
 			  options: $rootScope.globalCalendarOptions,
 			  events: [  ]
 		      };
+		      $scope.calendar.options.defaultView = 'agendaWeek';
 		      $scope.calendar.options.height = 600;
 		      $scope.calendar.options.editable = false;
 		      $scope.calendar.options.header = { left: 'title',
