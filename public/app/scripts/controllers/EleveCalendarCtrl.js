@@ -55,15 +55,18 @@ angular.module('cahierDeTexteApp')
 							 right: 'today prev,next' };
 		      $scope.calendar.options.eventRender = function( event, element ) {
 			  if ( $scope.emploi_du_temps.fullCalendar( 'getView' ).name == 'agendaDay') {
-			      var contenu_cellule = '<div class="col-md-12">';
-
-			      contenu_cellule += '<button type="button" disabled class="btn btn-primary btn-xs col-md-2">' + event.title + '</button>';
 			      if ( _(event.details.cours).size() > 0 ) {
-				  contenu_cellule += '<div class="col-md-5 col-md-offset-1 cdt-agendaDay-cours">';
+				  var contenu_cellule = '<div class="cdt-agendaDay-container col-md-12">';
+				  contenu_cellule += '  <div class="cdt-agendaDay-event col-md-12">';
+				  contenu_cellule += '    <button type="button" disabled class="btn btn-primary btn-xs col-md-1">' + event.title + '</button>';
+				  contenu_cellule += '    <div id="cours' + event.details.cours.id + '" class="col-md-4 cdt-agendaDay-cours">';
 				  contenu_cellule += event.details.cours.contenu;
-				  contenu_cellule += '</div>';
+				  contenu_cellule += '    </div>';
+
 				  if ( _(event.details.devoir).size() > 0 ) {
-				      contenu_cellule += '<div class="col-md-5 col-md-offset-1 ';
+				      contenu_cellule += '    <span class="col-md-1">Taf <span class="glyphicon glyphicon-chevron-right"></span></span>';
+				      contenu_cellule += '    <span class="col-md-1"><span class="glyphicon glyphicon-chevron-left"> Cours</span></span>';
+				      contenu_cellule += '    <div id="devoir' + event.details.devoir.id + '" class="col-md-5 ';
 				      if ( event.details.devoir.fait ) {
 					  contenu_cellule += 'cdt-agendaDay-devoir-fait';
 				      } else {
@@ -71,18 +74,20 @@ angular.module('cahierDeTexteApp')
 				      }
 				      contenu_cellule += '">';
 				      contenu_cellule += event.details.devoir.contenu;
-				      contenu_cellule += '</div>';
+				      contenu_cellule += '    </div>';
 				  }
+
+				  contenu_cellule += '  </div>';
+				  contenu_cellule += '</div>';
+
+				  element.find('.fc-event-title').html( contenu_cellule );
 			      }
-
-			      contenu_cellule += '</div>';
-
-			      element.find('.fc-event-title').html( contenu_cellule );
 			  } else  {
 			      element.find('.fc-event-title').append( event.description );
 			  }
 		      };
-		      $scope.calendar.options.eventClick = function( event ) {
+		      $scope.calendar.options.eventClick = function( event, jsEvent ) {
+			  console.log( jsEvent )
 			  $scope.creneau = _(event.source.events).findWhere({_id: event._id});
 			  $scope.matiere = event.title;
 			  $scope.cours = $scope.creneau.details.cours;
