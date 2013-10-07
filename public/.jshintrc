@@ -18,6 +18,7 @@
     // "trailing": true,
     "smarttabs": true,
     "camelcase" : false,
+    "globalstrict": true,
     "globals": {
 	"angular": true,
 	"ngGridFlexibleHeightPlugin": true,
