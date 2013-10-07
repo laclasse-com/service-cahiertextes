@@ -24,6 +24,8 @@ body {
 
 /* Cahier de Textes */
 /* Calendrier */
-.cdt-agendaDay-cours {background-color:#aaaaff}
-.cdt-agendaDay-devoir {background-color:#ff6666}
-.cdt-agendaDay-devoir-fait {background-color:#66cc66}
+.cdt-agendaDay-container{overflow:auto}
+.cdt-agendaDay-event{width:220%}
+.cdt-agendaDay-cours{background-color:#aaaaff}
+.cdt-agendaDay-devoir{background-color:#ff6666}
+.cdt-agendaDay-devoir-fait{background-color:#66cc66}
