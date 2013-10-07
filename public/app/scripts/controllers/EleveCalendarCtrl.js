@@ -54,8 +54,33 @@ angular.module('cahierDeTexteApp')
 							 center: 'agendaDay agendaWeek month',
 							 right: 'today prev,next' };
 		      $scope.calendar.options.eventRender = function( event, element ) {
-			  // TODO: détails si view == 'agendaDay'
-			  element.find('.fc-event-title').append( event.description ); 
+			  if ( $scope.emploi_du_temps.fullCalendar( 'getView' ).name == 'agendaDay') {
+			      var contenu_cellule = '<div class="col-md-12">';
+
+			      contenu_cellule += '<button type="button" disabled class="btn btn-primary btn-xs col-md-2">' + event.title + '</button>';
+			      if ( _(event.details.cours).size() > 0 ) {
+				  contenu_cellule += '<div class="col-md-5 col-md-offset-1 cdt-agendaDay-cours">';
+				  contenu_cellule += event.details.cours.contenu;
+				  contenu_cellule += '</div>';
+				  if ( _(event.details.devoir).size() > 0 ) {
+				      contenu_cellule += '<div class="col-md-5 col-md-offset-1 ';
+				      if ( event.details.devoir.fait ) {
+					  contenu_cellule += 'cdt-agendaDay-devoir-fait';
+				      } else {
+					  contenu_cellule += 'cdt-agendaDay-devoir';
+				      }
+				      contenu_cellule += '">';
+				      contenu_cellule += event.details.devoir.contenu;
+				      contenu_cellule += '</div>';
+				  }
+			      }
+
+			      contenu_cellule += '</div>';
+
+			      element.find('.fc-event-title').html( contenu_cellule );
+			  } else  {
+			      element.find('.fc-event-title').append( event.description );
+			  }
 		      };
 		      $scope.calendar.options.eventClick = function( event ) {
 			  $scope.creneau = _(event.source.events).findWhere({_id: event._id});
@@ -92,12 +117,12 @@ angular.module('cahierDeTexteApp')
 				  description += event.cours.contenu.substring( 0, $rootScope.calendar.cours_max_length );
 				  description += event.cours.contenu.length > $rootScope.calendar.cours_max_length ? '…' : '';
 				  description += '</span>';
-			      }
-			      if ( _(event.devoir).size() > 0 ) {
-				  description += '<br><span style="color:' + $rootScope.calendar.couleurs.devoir + '">';
-				  description += event.devoir.contenu.substring( 0, $rootScope.calendar.devoir_max_length );
-				  description += event.devoir.contenu.length > $rootScope.calendar.devoir_max_length ? '…' : '';
-				  description += '</span>';
+				  if ( _(event.devoir).size() > 0 ) {
+				      description += '<br><span style="color:' + $rootScope.calendar.couleurs.devoir + '">';
+				      description += event.devoir.contenu.substring( 0, $rootScope.calendar.devoir_max_length );
+				      description += event.devoir.contenu.length > $rootScope.calendar.devoir_max_length ? '…' : '';
+				      description += '</span>';
+				  }
 			      }
 
 			      return { details: { cours: event.cours,

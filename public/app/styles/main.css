@@ -20,3 +20,10 @@ body {
     line-height: 1;
     letter-spacing: -1px;
 }
+
+
+/* Cahier de Textes */
+/* Calendrier */
+.cdt-agendaDay-cours {background-color:#aaaaff}
+.cdt-agendaDay-devoir {background-color:#ff6666}
+.cdt-agendaDay-devoir-fait {background-color:#66cc66}
