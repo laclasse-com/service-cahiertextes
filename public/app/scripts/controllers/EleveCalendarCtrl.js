@@ -53,6 +53,10 @@ angular.module('cahierDeTexteApp')
 		      $scope.calendar.options.header = { left: 'title',
 							 center: 'agendaDay agendaWeek month',
 							 right: 'today prev,next' };
+		      $scope.calendar.options.eventRender = function( event, element ) {
+			  // TODO: détails si view == 'agendaDay'
+			  element.find('.fc-event-title').append( event.description ); 
+		      };
 		      $scope.calendar.options.eventClick = function( event ) {
 			  $scope.creneau = _(event.source.events).findWhere({_id: event._id});
 			  $scope.matiere = event.title;
@@ -84,20 +88,23 @@ angular.module('cahierDeTexteApp')
 
 			      var description = '';
 			      if ( _(event.cours).size() > 0 ) {
-				  description += '<br>';
+				  description += '<br><span style="color:' + $rootScope.calendar.couleurs.cours + '">';
 				  description += event.cours.contenu.substring( 0, $rootScope.calendar.cours_max_length );
-				  description += _(event.cours).size() > $rootScope.calendar.cours_max_length ? '[…]' : '';
+				  description += event.cours.contenu.length > $rootScope.calendar.cours_max_length ? '…' : '';
+				  description += '</span>';
 			      }
 			      if ( _(event.devoir).size() > 0 ) {
-				  description += '<br>';
+				  description += '<br><span style="color:' + $rootScope.calendar.couleurs.devoir + '">';
 				  description += event.devoir.contenu.substring( 0, $rootScope.calendar.devoir_max_length );
-				  description += _(event.devoir).size() > $rootScope.calendar.devoir_max_length ? '[…]' : '';
+				  description += event.devoir.contenu.length > $rootScope.calendar.devoir_max_length ? '…' : '';
+				  description += '</span>';
 			      }
 
 			      return { details: { cours: event.cours,
 						  devoir: event.devoir },
 				       allDay: false,
-				       title: '' + event.matiere_id + description,
+				       title: '' + event.matiere_id,
+				       description: description,
 				       start: new Date( event.start ),
 				       end: new Date( event.end ),
 				       color: couleur };
