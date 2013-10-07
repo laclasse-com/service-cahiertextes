@@ -80,8 +80,8 @@ angular.module( 'cahierDeTexteApp',
 	};
 
 	// options des calendriers
-	$rootScope.calendar = {	cours_max_length: 64,
-				devoir_max_length: 64,
+	$rootScope.calendar = {	cours_max_length: 16,
+				devoir_max_length: 16,
 				couleurs: {
 				    cours: '#0000ff',
 				    devoir: '#ff00ff'
