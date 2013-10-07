@@ -87,7 +87,6 @@ angular.module('cahierDeTexteApp')
 			  }
 		      };
 		      $scope.calendar.options.eventClick = function( event, jsEvent ) {
-			  console.log( jsEvent )
 			  $scope.creneau = _(event.source.events).findWhere({_id: event._id});
 			  $scope.matiere = event.title;
 			  $scope.cours = $scope.creneau.details.cours;
