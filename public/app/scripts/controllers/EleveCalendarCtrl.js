@@ -17,7 +17,9 @@ angular.module('cahierDeTexteApp')
 							    }
 							  });
 			  modalInstance.result.then( function ( fait ) {
-			      $scope.creneau.color = fait ? $rootScope.theme.calendar.devoir_fait : $rootScope.theme.calendar.devoir;
+			      if ( fait != -1 ) {
+				  $scope.creneau.color = fait ? $rootScope.theme.calendar.devoir_fait : $rootScope.theme.calendar.devoir;
+			      }
 			      $scope.emploi_du_temps.fullCalendar( 'renderEvent', $scope.creneau );
 			  });
 		      };
@@ -35,7 +37,7 @@ angular.module('cahierDeTexteApp')
 			      if ( _(devoir).size() > 0 ) {
 				  $modalInstance.close( devoir.fait );
 			      } else {
-				  $modalInstance.close();
+				  $modalInstance.close( -1 );
 			      }
 			  };
 		      };
@@ -67,13 +69,14 @@ angular.module('cahierDeTexteApp')
 			  $scope.calendar.events.push( response.map( function( event ) {
 			      var couleur = '';
 			      if ( _(event.cours).size() > 0 ) {
-				  couleur = $rootScope.theme.calendar.saisie;
 				  if ( _(event.devoir).size() > 0 ) {
 				      if ( event.devoir.fait ) {
 					  couleur = $rootScope.theme.calendar.devoir_fait;
 				      } else {
 					  couleur = $rootScope.theme.calendar.devoir;
 				      }
+				  } else {
+				      couleur = $rootScope.theme.calendar.saisie;
 				  }
 			      } else {
 				  couleur = $rootScope.theme.calendar.vide;
