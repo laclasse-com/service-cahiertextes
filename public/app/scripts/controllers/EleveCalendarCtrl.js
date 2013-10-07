@@ -28,9 +28,7 @@ angular.module('cahierDeTexteApp')
 
 			  $scope.fait = function() {
 			      APIDevoir.fait({ id: devoir.id },
-					     function() {
-						 devoir.fait = true;
-					     });
+					     function() { devoir.fait = true; });
 			  };
 
 			  $scope.close = function() {
