@@ -78,10 +78,23 @@ angular.module('cahierDeTexteApp')
 			      } else {
 				  couleur = $rootScope.theme.calendar.vide;
 			      }
+
+			      var description = '';
+			      if ( _(event.cours).size() > 0 ) {
+				  description += '<br>';
+				  description += event.cours.contenu.substring( 0, $rootScope.calendar.cours_max_length );
+				  description += _(event.cours).size() > $rootScope.calendar.cours_max_length ? '[…]' : '';
+			      }
+			      if ( _(event.devoir).size() > 0 ) {
+				  description += '<br>';
+				  description += event.devoir.contenu.substring( 0, $rootScope.calendar.devoir_max_length );
+				  description += _(event.devoir).size() > $rootScope.calendar.devoir_max_length ? '[…]' : '';
+			      }
+
 			      return { details: { cours: event.cours,
 						  devoir: event.devoir },
 				       allDay: false,
-				       title: ''+event.matiere_id,
+				       title: '' + event.matiere_id + description,
 				       start: new Date( event.start ),
 				       end: new Date( event.end ),
 				       color: couleur };
