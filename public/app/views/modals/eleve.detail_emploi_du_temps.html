@@ -11,7 +11,8 @@
     <div class="panel-body">
       {{devoir.contenu}}
     </div>
-    <button class="btn btn-success pull-right" ng-click="fait()" ng-show="devoir.fait == false">Fait !</button>
+    <button class="btn btn-success pull-right" ng-click="fait()" ng-show="devoir.fait == false"><span class="glyphicon glyphicon-unchecked"></span> Fait !</button>
+    <button class="btn btn-default pull-right" ng-show="devoir.fait == true" disabled><span class="glyphicon glyphicon-check"></span> Fait !</button>
   </div>
   <div class="panel panel-default col-md-12" ng-show="devoir.contenu == null">
     <h3>pas de devoir :)</h3>
