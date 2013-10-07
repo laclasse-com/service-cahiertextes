@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantCtrl',
-		[ '$scope', '$rootScope', '$stateParams', 'APIEnseignant', 'APICours', 'Etablissement',
-		  function( $scope, $rootScope, $stateParams, APIEnseignant, APICours, Etablissement ) {
+		[ '$scope', '$rootScope', '$stateParams', 'APIEnseignant', 'APICours', 'APIAnnuaire', 'Etablissement',
+		  function( $scope, $rootScope, $stateParams, APIEnseignant, APICours, APIAnnuaire, Etablissement ) {
 		      $scope.enseignant_id = $stateParams.enseignant_id;
 		      $scope.classe = -1;
 		      $scope.mois = [];
@@ -11,6 +11,15 @@ angular.module('cahierDeTexteApp')
 		      $scope.raw_data = [];
 		      $scope.data = [];
 		      $scope.selectedSaisies = [];
+
+		      APIAnnuaire.getUser( $scope.enseignant_id )
+			  .then( function( response ) {
+			      $scope.enseignant = response.data;
+			      $scope.enseignant.matieres = _.chain($scope.enseignant.classes)
+				  .pluck( 'matiere_libelle' )
+				  .uniq()
+				  .value();
+			  });
 
 		      Etablissement.getMois().success( function( response ) {
 			  $scope.mois = response.mois;

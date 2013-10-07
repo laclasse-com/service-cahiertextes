@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EleveCalendarCtrl',
-		[ '$scope', '$rootScope', '$modal', 'APIEmploiDuTemps',
-		  function ( $scope, $rootScope, $modal, APIEmploiDuTemps ) {
+		[ '$scope', '$rootScope', '$modal', 'APIEmploiDuTemps', 'APIAnnuaire',
+		  function ( $scope, $rootScope, $modal, APIEmploiDuTemps, APIAnnuaire ) {
 		      // popup d'affichage des détails
 		      $scope.cours = {};
 		      $scope.devoir = {};
@@ -86,7 +86,7 @@ angular.module('cahierDeTexteApp')
 			      element.find('.fc-event-title').append( event.description );
 			  }
 		      };
-		      $scope.calendar.options.eventClick = function( event, jsEvent ) {
+		      $scope.calendar.options.eventClick = function( event ) {
 			  $scope.creneau = _(event.source.events).findWhere({_id: event._id});
 			  $scope.matiere = event.title;
 			  $scope.cours = $scope.creneau.details.cours;
@@ -129,10 +129,12 @@ angular.module('cahierDeTexteApp')
 				  }
 			      }
 
+			      var matiere = APIAnnuaire.getMatiere( event.matiere_id );
+
 			      return { details: { cours: event.cours,
 						  devoir: event.devoir },
 				       allDay: false,
-				       title: '' + event.matiere_id,
+				       title: '' + matiere.libelle_long,
 				       description: description,
 				       start: new Date( event.start ),
 				       end: new Date( event.end ),
