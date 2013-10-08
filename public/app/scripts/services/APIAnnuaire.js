@@ -20,6 +20,6 @@ angular.module('cahierDeTexteApp')
   .factory('APIUsers',
 	   [ '$resource',
 	     function( $resource ) {
-		 return $resource( 'http://www.dev.laclasse.com/api/app/users/:user_id',
+		 return $resource( 'http://www.dev.laclasse.com/api/app/users/:user_id?expand=true',
 				   { user_id: '@user_id' } );
 	     } ] );
