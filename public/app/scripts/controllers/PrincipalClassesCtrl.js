@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalClassesCtrl',
-		[ '$scope', '$rootScope', 'APIClasse',
-		  function ($scope, $rootScope, APIClasse) {
+		[ '$scope', '$rootScope', 'APIClasse', 'APIRegroupements', 'APIMatieres',
+		  function ($scope, $rootScope, APIClasse, APIRegroupements, APIMatieres) {
 		      $scope.uai = '0134567A';
 
 		      $scope.raw_data		=   [];
@@ -15,19 +15,22 @@ angular.module('cahierDeTexteApp')
 		      $scope.moisCourant	= -1;
 		      $scope.matiereCourante	= -1;
 
+		      $scope.global_stats = { filled: 0,
+					      validated: 0 };
+
 		      $scope.pieChart = { options: $rootScope.globalPieChartOptions,
 					  data: [ { color : $rootScope.theme.validated.base,
 						    value: 0 },
 						  { color : $rootScope.theme.filled.base,
 						    value: 0 } ],
 					  populate: function( data ) {
-					      var global_stats = data.reduce( function( totaux, regroupement ) {
+					      $scope.global_stats = data.reduce( function( totaux, regroupement ) {
 						  return { filled: totaux.filled + regroupement.filled,
 							   validated: totaux.validated + regroupement.validated };
 					      }, { filled: 0, validated: 0 });
 
-					      $scope.pieChart.data[0].value = global_stats.validated;
-					      $scope.pieChart.data[1].value = global_stats.filled - global_stats.validated;
+					      $scope.pieChart.data[0].value = $scope.global_stats.validated;
+					      $scope.pieChart.data[1].value = $scope.global_stats.filled - $scope.global_stats.validated;
 					  } };
 
 		      $scope.monthlyLineChart = { options: $rootScope.globalLineChartOptions,
@@ -62,7 +65,7 @@ angular.module('cahierDeTexteApp')
 						  } };
 
 		      $scope.individualCharts = { classes: [],
-						  populate: function( data ) {
+						  populate: function( data, classes ) {
 						      // Calcul des statistiques
 						      _(data).each( function( regroupement ) {
 							  // stats mensuelles
@@ -85,8 +88,11 @@ angular.module('cahierDeTexteApp')
 						      });
 
 						      $scope.individualCharts.classes = data.map( function( regroupement ) {
+							  // FIXME: dummy value
+							  regroupement.regroupement_id = 5
+							  var classe = _(classes).findWhere({ id: regroupement.regroupement_id });
 							  return {
-							      regroupement_id: regroupement.regroupement_id,
+							      regroupement: classe,
 							      pieChart: { options: $rootScope.globalPieChartOptions,
 									  data: [ { color : $rootScope.theme.validated.base,
 										    value: regroupement.validated },
@@ -114,7 +120,20 @@ angular.module('cahierDeTexteApp')
 			  $scope.data = $scope.raw_data;
 
 			  // Extraction des classes
-			  $scope.classes = _($scope.data).pluck( 'regroupement_id' );
+			  $scope.classes = _.chain($scope.data)
+			      .pluck( 'regroupement_id' )
+			      .map( function( regroupement_id ) {
+				  // FIXME: dummy value
+				  regroupement_id = 5;
+				  var regroupement = { id: regroupement_id,
+						       libelle: 'classe inconnue !' };
+				  APIRegroupements.get({ regroupement_id: regroupement_id },
+						       function success( response ) {
+							   regroupement.libelle = response.libelle_aaf;
+						       });
+				  return regroupement;
+			      })
+			      .value();
 
 			  // filtrage sur un mois
 			  if ( $scope.moisCourant != -1 ) {
@@ -142,6 +161,18 @@ angular.module('cahierDeTexteApp')
 			      .flatten()
 			      .pluck( 'matiere_id' )
 			      .uniq()
+			      .map( function( matiere_id ) {
+				  // FIXME: dummy value
+				  matiere_id = '032101';
+
+				  var matiere = { id: matiere_id,
+						  libelle: 'Matière inconnue !' };
+				  APIMatieres.get({ matiere_id: matiere_id },
+						       function success( response ) {
+							   matiere.libelle = response.libelle_long;
+						       });
+				  return matiere;
+			      })
 			      .value();
 
 			  // Filtrage sur une matière
@@ -156,7 +187,7 @@ angular.module('cahierDeTexteApp')
 			      });
 			  }
 
-			  $scope.individualCharts.populate( $scope.data );
+			  $scope.individualCharts.populate( $scope.data, $scope.classes );
 			  $scope.monthlyLineChart.populate( $scope.data );
 			  $scope.pieChart.populate( $scope.data );
 		      };

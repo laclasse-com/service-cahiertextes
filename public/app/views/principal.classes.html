@@ -2,7 +2,7 @@
   <div class="panel-body">
     <select class="col-md-3" ui-select2 data-ng-model="classeCourante" data-placeholder="Toute les classes" data-ng-change="process_data()">
       <option value="" selected>Toute les classes</option>
-      <option data-ng-repeat="classe in classes">{{classe}}</option>
+      <option data-ng-repeat="classe in classes" value="{{classe.id}}">{{classe.libelle}}</option>
     </select>
 
     <select class="col-md-3" ui-select2 data-ng-model="moisCourant" data-placeholder="Toute l'année" data-ng-change="process_data()">
@@ -12,7 +12,7 @@
 
     <select class="col-md-3" ui-select2 data-ng-model="matiereCourante" data-placeholder="Toute les matières" data-ng-change="process_data()">
       <option value="-1">Toute les matières</option>
-      <option data-ng-repeat="matiere in matieres">{{matiere}}</option>
+      <option data-ng-repeat="matiere in matieres" value="{{matiere.id}}">{{matiere.libelle}}</option>
     </select>
   </div>
 </div>
@@ -26,13 +26,13 @@
 </div>
 
 <div class="col-md-12">
-  <div class="col-md-3" x-ng-show="classeCourante==''" x-ng-repeat="regroupement in individualCharts.classes">
+  <div class="col-md-3" x-ng-show="classeCourante==''" x-ng-repeat="classe in individualCharts.classes">
     <div class="panel panel-default">
-      <div class="panel-heading"><h3 class="panel-title">{{regroupement.regroupement_id}}</h3></div>
+      <div class="panel-heading"><h3 class="panel-title">{{classe.regroupement.libelle}}</h3></div>
       <div class="panel-body">
-	<canvas piechart data="regroupement.pieChart.data" options="regroupement.pieChart.options" width="64" height="64"></canvas>
+	<canvas piechart data="classe.pieChart.data" options="classe.pieChart.options" width="64" height="64"></canvas>
 	<!-- canvas linechart data="regroupement.lineChart.data" options="regroupement.lineChart.options" width="192" height="64" style="float:right"></canvas -->
-	<span class="badge badge-info">{{regroupement.pieChart.data[0].value}} / {{regroupement.pieChart.data[0].value + regroupement.pieChart.data[1].value}}</span>
+	<span class="badge badge-info">{{classe.pieChart.data[0].value}} / {{classe.pieChart.data[0].value + classe.pieChart.data[1].value}}</span>
       </div>
     </div>
   </div>
