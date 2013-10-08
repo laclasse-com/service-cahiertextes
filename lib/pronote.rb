@@ -216,7 +216,7 @@ module ProNote
     STDERR.puts 'création des Cahier de Textes nécessaires'
     CreneauEmploiDuTempsRegroupement
       .select(:regroupement_id)
-      .map {|r| r.regroupement_id}
+      .map { |r| r.regroupement_id }
       .uniq
       .each {
       |regroupement_id|
