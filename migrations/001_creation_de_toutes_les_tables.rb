@@ -56,12 +56,12 @@ Sequel.migration do
     create_table!(:ressources) {
       primary_key :id
       String :label
-      Integer :url, null: false
+      String :url, null: false
     }
 
     create_table!(:cahiers_de_textes) {
       primary_key :id
-      Integer :regroupement_id, null: false    # tiré depuis l'annuaire en fonction de (établissement, nom)
+      String :regroupement_id, null: false    # tiré depuis l'annuaire en fonction de (établissement, nom)
       Date :debut_annee_scolaire
       Date :fin_annee_scolaire
       DateTime :date_creation, null: false
@@ -73,7 +73,7 @@ Sequel.migration do
       primary_key :id
       foreign_key :creneau_emploi_du_temps_id, :creneaux_emploi_du_temps
       foreign_key :cahier_de_textes_id, :cahiers_de_textes
-      Integer :enseignant_id, null: false    # tiré depuis l'annuaire en fonction de (etablissement, nom, prénom)
+      String :enseignant_id, null: false    # tiré depuis l'annuaire en fonction de (etablissement, nom, prénom)
       Date :date_cours, null: false
       DateTime :date_creation, null: false
       DateTime :date_modification
@@ -107,7 +107,7 @@ Sequel.migration do
     create_table!(:devoir_todo_items) {
       primary_key :id
       foreign_key :devoir_id, :devoirs
-      Integer :eleve_id, null: false    # tiré depuis l'annuaire en fonction de (etablissement, nom, prénom, sexe, date_de_naissance)
+      String :eleve_id, null: false    # tiré depuis l'annuaire en fonction de (etablissement, nom, prénom, sexe, date_de_naissance)
       DateTime :date_fait, null: false
     }
   end
