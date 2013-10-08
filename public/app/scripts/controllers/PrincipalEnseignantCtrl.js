@@ -6,7 +6,7 @@ angular.module('cahierDeTexteApp')
 		  function( $scope, $rootScope, $stateParams, APIEnseignant, APICours, APIAnnuaire, Etablissement ) {
 		      $scope.enseignant_id = $stateParams.enseignant_id;
 		      $scope.classe = -1;
-		      $scope.mois = [];
+		      $scope.mois = $rootScope.mois;
 		      $scope.moisCourant = -1;
 		      $scope.raw_data = [];
 		      $scope.data = [];
@@ -20,10 +20,6 @@ angular.module('cahierDeTexteApp')
 				  .uniq()
 				  .value();
 			  });
-
-		      Etablissement.getMois().success( function( response ) {
-			  $scope.mois = response.mois;
-		      });
 
 		      // Tableau
 		      $scope.grid = {
