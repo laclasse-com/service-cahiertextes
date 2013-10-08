@@ -5,13 +5,11 @@ angular.module('cahierDeTexteApp')
 		[ '$scope', '$rootScope', 'APIClasse',
 		  function ($scope, $rootScope, APIClasse) {
 		      $scope.uai = '0134567A';
-		      $scope.mois = $rootScope.mois;
 
-		      $scope.raw_data		=    [];
-		      $scope.data		=   [  ];
-		      $scope.classes		=  [    ];
-		      $scope.matieres		= [      ]; // bientôt Noël !
-		      $scope.global_stats	=    {};
+		      $scope.raw_data		=   [];
+		      $scope.data		=  [  ];
+		      $scope.classes		= [    ];
+		      $scope.matieres		=   []; // bientôt Noël !
 
 		      $scope.classeCourante	= '';
 		      $scope.moisCourant	= -1;
@@ -21,7 +19,96 @@ angular.module('cahierDeTexteApp')
 					  data: [ { color : $rootScope.theme.validated.base,
 						    value: 0 },
 						  { color : $rootScope.theme.filled.base,
-						    value: 0 } ] };
+						    value: 0 } ],
+					  populate: function( data ) {
+					      var global_stats = data.reduce( function( totaux, regroupement ) {
+						  return { filled: totaux.filled + regroupement.filled,
+							   validated: totaux.validated + regroupement.validated };
+					      }, { filled: 0, validated: 0 });
+
+					      $scope.pieChart.data[0].value = global_stats.validated;
+					      $scope.pieChart.data[1].value = global_stats.filled - global_stats.validated;
+					  } };
+
+		      $scope.monthlyLineChart = { options: $rootScope.globalLineChartOptions,
+						  data: { labels: $rootScope.mois,
+							  datasets: [
+							      // 0: saisies totales
+							      { fillColor : $rootScope.theme.filled.base,
+								pointColor : $rootScope.theme.filled.base,
+								strokeColor : $rootScope.theme.filled.stroke,
+								pointStrokeColor : $rootScope.theme.filled.stroke,
+								data: []
+							      },
+							      // 1: saisies validées
+							      { fillColor : $rootScope.theme.validated.base,
+								pointColor : $rootScope.theme.validated.base,
+								strokeColor : $rootScope.theme.validated.stroke,
+								pointStrokeColor : $rootScope.theme.validated.stroke,
+								data: []
+							      } ] },
+						  populate: function( data ) {
+						      var monthlyLineChart_data = data.reduce( function( monthly_stats, regroupement ) {
+							  _(regroupement.mensuel.filled.length).times( function( i ) {
+							      monthly_stats.filled[i] += regroupement.mensuel.filled[i];
+							      monthly_stats.validated[i] += regroupement.mensuel.validated[i];
+							  });
+							  return monthly_stats;
+						      }, { filled: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+							   validated:  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] });
+
+						      $scope.monthlyLineChart.data.datasets[0].data = monthlyLineChart_data.filled;
+						      $scope.monthlyLineChart.data.datasets[1].data = monthlyLineChart_data.validated;
+						  } };
+
+		      $scope.individualCharts = { classes: [],
+						  populate: function( data ) {
+						      // Calcul des statistiques
+						      _(data).each( function( regroupement ) {
+							  // stats mensuelles
+							  regroupement.mensuel = regroupement.matieres.reduce( function( monthly_stats, matiere ) {
+							      _(matiere.mois).each( function( mois ) {
+								  monthly_stats.filled[ mois.mois - 1 ] += mois.filled;
+								  monthly_stats.validated[ mois.mois - 1 ] += mois.validated;
+							      });
+							      return monthly_stats;
+							  }, { filled: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+							       validated:  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] });
+
+							  // sommes
+							  regroupement.filled = regroupement.mensuel.filled.reduce( function(total, mensuel) {
+							      return total + mensuel;
+							  }, 0);
+							  regroupement.validated = regroupement.mensuel.validated.reduce( function(total, mensuel) {
+							      return total + mensuel;
+							  }, 0);
+						      });
+
+						      $scope.individualCharts.classes = data.map( function( regroupement ) {
+							  return {
+							      regroupement_id: regroupement.regroupement_id,
+							      pieChart: { options: $rootScope.globalPieChartOptions,
+									  data: [ { color : $rootScope.theme.validated.base,
+										    value: regroupement.validated },
+										  { color : $rootScope.theme.filled.base,
+										    value: regroupement.filled - regroupement.validated } ] },
+							      lineChart: { options: $rootScope.globalLineChartOptions,
+									   data: { labels: $rootScope.mois,
+										   datasets: [
+										       { fillColor : $rootScope.theme.filled.base,
+											 pointColor : $rootScope.theme.filled.base,
+											 strokeColor : $rootScope.theme.filled.stroke,
+											 pointStrokeColor : $rootScope.theme.filled.stroke,
+											 data: regroupement.mensuel.filled
+										       },
+										       { fillColor : $rootScope.theme.validated.base,
+											 pointColor : $rootScope.theme.validated.base,
+											 strokeColor : $rootScope.theme.validated.stroke,
+											 pointStrokeColor : $rootScope.theme.validated.stroke,
+											 data: regroupement.mensuel.validated
+										       } ] } } };
+						      });
+						  } };
 
 		      $scope.process_data = function(  ) {
 			  $scope.data = $scope.raw_data;
@@ -69,91 +156,9 @@ angular.module('cahierDeTexteApp')
 			      });
 			  }
 
-			  // Calcul des statistiques
-			  _($scope.data).each( function( regroupement ) {
-			      // stats mensuelles
-			      regroupement.mensuel = regroupement.matieres.reduce(
-				  function( monthly_stats, matiere ) {
-				      _(matiere.mois).each( function( mois ) {
-					  monthly_stats.filled[ mois.mois - 1 ] += mois.filled;
-					  monthly_stats.validated[ mois.mois - 1 ] += mois.validated;
-				      });
-				      return monthly_stats;
-				  },
-				  { filled: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				    validated:  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] });
-
-			      // sommes
-			      regroupement.filled = regroupement.mensuel.filled.reduce( function(total, mensuel) {
-				  return total + mensuel;
-			      }, 0);
-			      regroupement.validated = regroupement.mensuel.validated.reduce( function(total, mensuel) {
-				  return total + mensuel;
-			      }, 0);
-			  });
-
-			  $scope.individualCharts = $scope.data.map( function( regroupement ) {
-			      return {
-				  regroupement_id: regroupement.regroupement_id,
-				  pieChart: { options: $rootScope.globalPieChartOptions,
-					      data: [ { color : $rootScope.theme.validated.base,
-							value: regroupement.validated },
-						      { color : $rootScope.theme.filled.base,
-							value: regroupement.filled - regroupement.validated } ] },
-				  lineChart: { options: $rootScope.globalLineChartOptions,
-					       data: { labels: $scope.mois,
-						       datasets: [
-							   { fillColor : $rootScope.theme.filled.base,
-							     pointColor : $rootScope.theme.filled.base,
-							     strokeColor : $rootScope.theme.filled.stroke,
-							     pointStrokeColor : $rootScope.theme.filled.stroke,
-							     data: regroupement.mensuel.filled
-							   },
-							   { fillColor : $rootScope.theme.validated.base,
-							     pointColor : $rootScope.theme.validated.base,
-							     strokeColor : $rootScope.theme.validated.stroke,
-							     pointStrokeColor : $rootScope.theme.validated.stroke,
-							     data: regroupement.mensuel.validated
-							   } ] } }
-			      };
-			  });
-
-			  var monthlyLineChart_data = $scope.data.reduce(
-			      function( monthly_stats, regroupement ) {
-				  _(regroupement.mensuel.filled.length).times( function( i ) {
-				      monthly_stats.filled[i] += regroupement.mensuel.filled[i];
-				      monthly_stats.validated[i] += regroupement.mensuel.validated[i];
-				  });
-				  return monthly_stats;
-			      }, { filled: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				   validated:  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] });
-
-			  $scope.monthlyLineChart = { options: $rootScope.globalLineChartOptions,
-						      data: { labels: $scope.mois,
-							      datasets: [
-								  // 0: saisies totales
-								  { fillColor : $rootScope.theme.filled.base,
-								    pointColor : $rootScope.theme.filled.base,
-								    strokeColor : $rootScope.theme.filled.stroke,
-								    pointStrokeColor : $rootScope.theme.filled.stroke,
-								    data: monthlyLineChart_data.filled
-								  },
-								  // 1: saisies validées
-								  { fillColor : $rootScope.theme.validated.base,
-								    pointColor : $rootScope.theme.validated.base,
-								    strokeColor : $rootScope.theme.validated.stroke,
-								    pointStrokeColor : $rootScope.theme.validated.stroke,
-								    data: monthlyLineChart_data.validated
-								  } ] } };
-
-
-			  $scope.global_stats = $scope.data.reduce( function( totaux, regroupement ) {
-			      return { filled: totaux.filled + regroupement.filled,
-				       validated: totaux.validated + regroupement.validated };
-			  }, { filled: 0, validated: 0 });
-
-			  $scope.pieChart.data[0].value = $scope.global_stats.validated;
-			  $scope.pieChart.data[1].value = $scope.global_stats.filled - $scope.global_stats.validated;
+			  $scope.individualCharts.populate( $scope.data );
+			  $scope.monthlyLineChart.populate( $scope.data );
+			  $scope.pieChart.populate( $scope.data );
 		      };
 
 		      APIClasse.query( { uai: $scope.uai, id: '' },
