@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EleveCalendarCtrl',
-		[ '$scope', '$rootScope', '$modal', 'APIEmploiDuTemps', 'APIAnnuaire',
-		  function ( $scope, $rootScope, $modal, APIEmploiDuTemps, APIAnnuaire ) {
+		[ '$scope', '$rootScope', '$modal', 'APIEmploiDuTemps', 'APIMatieres',
+		  function ( $scope, $rootScope, $modal, APIEmploiDuTemps, APIMatieres ) {
 		      // popup d'affichage des détails
 		      $scope.cours = {};
 		      $scope.devoir = {};
@@ -53,6 +53,7 @@ angular.module('cahierDeTexteApp')
 		      $scope.calendar.options.header = { left: 'title',
 							 center: 'agendaDay agendaWeek month',
 							 right: 'today prev,next' };
+		      // TODO: serait-il possible d'utiliser un template à la place de cette série de concaténations ?
 		      $scope.calendar.options.eventRender = function( event, element ) {
 			  if ( $scope.emploi_du_temps.fullCalendar( 'getView' ).name == 'agendaDay') {
 			      if ( _(event.details.cours).size() > 0 ) {
@@ -92,7 +93,6 @@ angular.module('cahierDeTexteApp')
 			  $scope.cours = $scope.creneau.details.cours;
 			  if ( _($scope.cours).size() > 0 ) {
 			      $scope.devoir = $scope.creneau.details.devoir;
-
 			      $scope.affiche_details(  );
 			  }
 		      };
@@ -100,45 +100,54 @@ angular.module('cahierDeTexteApp')
 		      // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
 		      APIEmploiDuTemps.query( function( response ) {
 			  $scope.calendar.events.push( response.map( function( event ) {
-			      var couleur = '';
+			      var calendar_event = { details: { cours: event.cours,
+								devoir: event.devoir },
+						     allDay: false,
+						     title: '',
+						     description: '',
+						     start: new Date( event.start ),
+						     end: new Date( event.end ),
+						     color: '' };
+
+			      // choix de la couleur
 			      if ( _(event.cours).size() > 0 ) {
 				  if ( _(event.devoir).size() > 0 ) {
 				      if ( event.devoir.fait ) {
-					  couleur = $rootScope.theme.calendar.devoir_fait;
+					  calendar_event.color = $rootScope.theme.calendar.devoir_fait;
 				      } else {
-					  couleur = $rootScope.theme.calendar.devoir;
+					  calendar_event.color = $rootScope.theme.calendar.devoir;
 				      }
 				  } else {
-				      couleur = $rootScope.theme.calendar.saisie;
+				      calendar_event.color = $rootScope.theme.calendar.saisie;
 				  }
 			      } else {
-				  couleur = $rootScope.theme.calendar.vide;
+				  calendar_event.color = $rootScope.theme.calendar.vide;
 			      }
 
-			      var description = '';
+			      // composition de la description
 			      if ( _(event.cours).size() > 0 ) {
-				  description += '<br><span style="color:' + $rootScope.calendar.couleurs.cours + '">';
-				  description += event.cours.contenu.substring( 0, $rootScope.calendar.cours_max_length );
-				  description += event.cours.contenu.length > $rootScope.calendar.cours_max_length ? '…' : '';
-				  description += '</span>';
+				  calendar_event.description += '<br><span style="color:' + $rootScope.calendar.couleurs.cours + '">';
+				  calendar_event.description += event.cours.contenu.substring( 0, $rootScope.calendar.cours_max_length );
+				  calendar_event.description += event.cours.contenu.length > $rootScope.calendar.cours_max_length ? '…' : '';
+				  calendar_event.description += '</span>';
 				  if ( _(event.devoir).size() > 0 ) {
-				      description += '<br><span style="color:' + $rootScope.calendar.couleurs.devoir + '">';
-				      description += event.devoir.contenu.substring( 0, $rootScope.calendar.devoir_max_length );
-				      description += event.devoir.contenu.length > $rootScope.calendar.devoir_max_length ? '…' : '';
-				      description += '</span>';
+				      calendar_event.description += '<br><span style="color:' + $rootScope.calendar.couleurs.devoir + '">';
+				      calendar_event.description += event.devoir.contenu.substring( 0, $rootScope.calendar.devoir_max_length );
+				      calendar_event.description += event.devoir.contenu.length > $rootScope.calendar.devoir_max_length ? '…' : '';
+				      calendar_event.description += '</span>';
 				  }
 			      }
 
-			      var matiere = APIAnnuaire.getMatiere( event.matiere_id );
+			      // composition du titre
+			      APIMatieres.get({ matiere_id: event.matiere_id },
+					      function success( response ) {
+						  calendar_event.title = response.libelle_long;
+					      },
+					      function error(  ) {
+						  calendar_event.title = 'Matière inconnue';
+					      });
 
-			      return { details: { cours: event.cours,
-						  devoir: event.devoir },
-				       allDay: false,
-				       title: '' + matiere.libelle_long,
-				       description: description,
-				       start: new Date( event.start ),
-				       end: new Date( event.end ),
-				       color: couleur };
+			      return calendar_event;
 			  } ) );
 		      });
 		  }

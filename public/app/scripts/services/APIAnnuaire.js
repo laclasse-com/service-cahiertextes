@@ -1,21 +1,25 @@
 'use strict';
 
 angular.module('cahierDeTexteApp')
-    .service('APIAnnuaire',
-	     [ '$http',
-	       function($http) {
-		   this.getMatiere = function( matiere_id ) {
-		       return { id: matiere_id,
-				libelle_long: 'Matiere_' + matiere_id };
-		   };
-		   
-		   this.getUser = function( user_id ) {
-		       user_id = 'VAA60462';
-		       return $http.get( 'http://www.dev.laclasse.com/api/app/users/' + user_id );
-		   };
-		   
-		   this.getRegroupement = function( regroupement_id ) {
-		       return { id: regroupement_id,
-				libelle: 'Regr_' + regroupement_id };
-		   };
-	       } ] );
+  .factory('APIMatieres',
+	   [ '$resource',
+	     function( $resource ) {
+		 return $resource( 'http://www.dev.laclasse.com/api/app/matieres/:matiere_id',
+				   { matiere_id: '@matiere_id' } );
+	     } ] );
+
+angular.module('cahierDeTexteApp')
+  .factory('APIRegroupements',
+	   [ '$resource',
+	     function( $resource ) {
+		 return $resource( 'http://www.dev.laclasse.com/api/app/regroupements/:regroupement_id',
+				   { regroupement_id: '@regroupement_id' } );
+	     } ] );
+
+angular.module('cahierDeTexteApp')
+  .factory('APIUsers',
+	   [ '$resource',
+	     function( $resource ) {
+		 return $resource( 'http://www.dev.laclasse.com/api/app/users/:user_id',
+				   { user_id: '@user_id' } );
+	     } ] );

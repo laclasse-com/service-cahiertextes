@@ -3,7 +3,7 @@
 
     <select class="col-md-3" ui-select2 data-ng-model="classe" data-placeholder="Toutes les classes" data-ng-change="process_data()">
       <option value="-1">Toutes les classes</option>
-      <option data-ng-repeat="classe in classes" value="{{classe}}">{{classe}}</option>
+      <option data-ng-repeat="classe in classes" value="{{classe.id}}">{{classe.libelle}}</option>
     </select>
 
 
@@ -45,8 +45,8 @@
 <div class="panel panel-default">
   <div class="panel-body">
     <div class="btn-group btn-group-xs col-md-offset-8">
-      <a class="btn btn-default" data-ng-click="selectionneNonValides()">Sélectionne les non validés</a>
-      <a class="btn btn-default" data-ng-click="valideSelection()">Valider la sélection</a>
+      <a class="btn btn-default" data-ng-click="grid.selectionneNonValides()">Sélectionne les non validés</a>
+      <a class="btn btn-default" data-ng-click="grid.valideSelection()">Valider la sélection</a>
     </div>
     <div class="col-md-12" style="float:left" data-ng-grid="grid"></div>
   </div>
