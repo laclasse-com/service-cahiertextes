@@ -10,12 +10,9 @@ angular.module('cahierDeTexteApp')
 		      $scope.affiche_details = function(  ) {
 			  var modalInstance = $modal.open({ templateUrl: 'views/modals/eleve.detail_emploi_du_temps.html',
 							    controller: modalInstanceCtrl,
-							    resolve: {
-								matiere: function() { return $scope.matiere; },
-								cours: function() { return $scope.cours; },
-								devoir: function() { return $scope.devoir; }
-							    }
-							  });
+							    resolve: { matiere: function() { return $scope.matiere; },
+								       cours: function() { return $scope.cours; },
+								       devoir: function() { return $scope.devoir; } } });
 			  modalInstance.result.then( function ( fait ) {
 			      if ( fait != -1 ) {
 				  $scope.creneau.color = fait ? $rootScope.theme.calendar.devoir_fait : $rootScope.theme.calendar.devoir;
@@ -23,6 +20,7 @@ angular.module('cahierDeTexteApp')
 			      $scope.emploi_du_temps.fullCalendar( 'renderEvent', $scope.creneau );
 			  });
 		      };
+
 		      var modalInstanceCtrl = function( $scope, $modalInstance, APIDevoir, matiere, cours, devoir ) {
 			  $scope.matiere = matiere;
 			  $scope.cours = cours;
@@ -34,19 +32,13 @@ angular.module('cahierDeTexteApp')
 			  };
 
 			  $scope.close = function() {
-			      if ( _(devoir).size() > 0 ) {
-				  $modalInstance.close( devoir.fait );
-			      } else {
-				  $modalInstance.close( -1 );
-			      }
+			      $modalInstance.close( ( _(devoir).size() > 0 ) ? devoir.fait : -1 );
 			  };
 		      };
 
 		      // configuration du composant calendrier
-		      $scope.calendar = {
-			  options: $rootScope.globalCalendarOptions,
-			  events: [  ]
-		      };
+		      $scope.calendar = { options: $rootScope.globalCalendarOptions,
+					  events: [  ] };
 		      $scope.calendar.options.defaultView = 'agendaWeek';
 		      $scope.calendar.options.height = 600;
 		      $scope.calendar.options.editable = false;
@@ -68,19 +60,13 @@ angular.module('cahierDeTexteApp')
 				      contenu_cellule += '    <span class="col-md-1">Taf <span class="glyphicon glyphicon-chevron-right"></span></span>';
 				      contenu_cellule += '    <span class="col-md-1"><span class="glyphicon glyphicon-chevron-left"> Cours</span></span>';
 				      contenu_cellule += '    <div id="devoir' + event.details.devoir.id + '" class="col-md-5 ';
-				      if ( event.details.devoir.fait ) {
-					  contenu_cellule += 'cdt-agendaDay-devoir-fait';
-				      } else {
-					  contenu_cellule += 'cdt-agendaDay-devoir';
-				      }
+				      contenu_cellule += ( event.details.devoir.fait ) ? 'cdt-agendaDay-devoir-fait' : 'cdt-agendaDay-devoir';
 				      contenu_cellule += '">';
 				      contenu_cellule += event.details.devoir.contenu;
 				      contenu_cellule += '    </div>';
 				  }
-
 				  contenu_cellule += '  </div>';
 				  contenu_cellule += '</div>';
-
 				  element.find('.fc-event-title').html( contenu_cellule );
 			      }
 			  } else  {
