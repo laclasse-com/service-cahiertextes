@@ -5,13 +5,13 @@ angular.module('cahierDeTexteApp')
 		[ '$scope', '$rootScope', 'Etablissement', 'APIClasse',
 		  function ($scope, $rootScope, Etablissement, APIClasse) {
 		      $scope.uai = '0134567A';
+		      $scope.mois		= $rootScope.mois;
 
-		      $scope.raw_data		=     [];
-		      $scope.data		=    [  ];
-		      $scope.mois		=   [    ];
-		      $scope.classes		=  [      ];
-		      $scope.matieres		= [        ]; // bientôt Noël !
-		      $scope.global_stats	=     {};
+		      $scope.raw_data		=    [];
+		      $scope.data		=   [  ];
+		      $scope.classes		=  [    ];
+		      $scope.matieres		= [      ]; // bientôt Noël !
+		      $scope.global_stats	=    {};
 
 		      $scope.classeCourante	= '';
 		      $scope.moisCourant	= -1;
@@ -22,10 +22,6 @@ angular.module('cahierDeTexteApp')
 						    value: 0 },
 						  { color : $rootScope.theme.filled.base,
 						    value: 0 } ] };
-
-		      Etablissement.getMois().success( function( response ) {
-			  $scope.mois = response.mois;
-		      });
 
 		      $scope.process_data = function(  ) {
 			  // Extraction des classes

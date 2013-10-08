@@ -4,6 +4,7 @@ angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantsCtrl',
 		[ '$scope', '$rootScope', 'Etablissement', 'APIEnseignants',
 		  function ($scope, $rootScope, Etablissement, APIEnseignants) {
+		      $scope.annee = $rootScope.mois;
 		      $scope.classe = -1;
 		      $scope.mois = -1;
 		      
@@ -99,13 +100,6 @@ angular.module('cahierDeTexteApp')
 			      { field: 'stats', displayName: 'Statistiques' }]
 		      };
 		      $scope.annee = [];
-
-		      // Récupération et consommation des données
-		      Etablissement.getMois()
-			  .success(
-			      function( response ) {
-				  $scope.annee = response.mois;
-			      });
 
 		      $scope.enseignant = -1;
 
