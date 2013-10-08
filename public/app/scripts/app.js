@@ -108,8 +108,7 @@ angular.module( 'cahierDeTexteApp',
 			  day:      'jour' }
 	};
 	// options des graphiques
-	$rootScope.globalPieChartOptions = { animationSteps : 24,
-					     animationEasing : "easeOutQuart" };
-	$rootScope.globalLineChartOptions = { animationSteps : 24 };
-	$rootScope.globalRadarChartOptions = { animationSteps : 24 };
+	$rootScope.globalPieChartOptions = { animation : false };
+	$rootScope.globalLineChartOptions = { animation : false };
+	$rootScope.globalRadarChartOptions = { animation : false };
     } ] );
