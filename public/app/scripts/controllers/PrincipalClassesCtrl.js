@@ -88,8 +88,6 @@ angular.module('cahierDeTexteApp')
 						      });
 
 						      $scope.individualCharts.classes = data.map( function( regroupement ) {
-							  // FIXME: dummy value
-							  regroupement.regroupement_id = 5
 							  var classe = _(classes).findWhere({ id: regroupement.regroupement_id });
 							  return {
 							      regroupement: classe,
@@ -123,8 +121,6 @@ angular.module('cahierDeTexteApp')
 			  $scope.classes = _.chain($scope.data)
 			      .pluck( 'regroupement_id' )
 			      .map( function( regroupement_id ) {
-				  // FIXME: dummy value
-				  regroupement_id = 5;
 				  var regroupement = { id: regroupement_id,
 						       libelle: 'classe inconnue !' };
 				  APIRegroupements.get({ regroupement_id: regroupement_id },
@@ -162,9 +158,6 @@ angular.module('cahierDeTexteApp')
 			      .pluck( 'matiere_id' )
 			      .uniq()
 			      .map( function( matiere_id ) {
-				  // FIXME: dummy value
-				  matiere_id = '032101';
-
 				  var matiere = { id: matiere_id,
 						  libelle: 'Matière inconnue !' };
 				  APIMatieres.get({ matiere_id: matiere_id },

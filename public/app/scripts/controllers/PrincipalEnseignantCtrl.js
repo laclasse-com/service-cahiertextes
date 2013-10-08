@@ -4,9 +4,7 @@ angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantCtrl',
 		[ '$scope', '$rootScope', '$stateParams', 'APIEnseignant', 'APICours', 'APIUsers',
 		  function( $scope, $rootScope, $stateParams, APIEnseignant, APICours, APIUsers ) {
-		      // FIXME: dummy enseignant_id
-		      $scope.enseignant_id = 'VAA60462';
-		      //console.log($stateParams.enseignant_id)
+		      $scope.enseignant_id = $stateParams.enseignant_id;
 		      $scope.classe = -1;
 		      $scope.mois = $rootScope.mois;
 		      $scope.moisCourant = -1;
@@ -51,10 +49,6 @@ angular.module('cahierDeTexteApp')
 			      $scope.gridSaisies = [];
 
 			      _(saisies).each( function ( saisie ) {
-				  // FIXME: dummy values
-				  saisie.classe_id = 5;
-				  saisie.matiere_id = '070800';
-
 				  var classe = _($scope.classes).findWhere({id: saisie.classe_id});
 				  var matiere = _($scope.enseignant.matieres).findWhere({ id: saisie.matiere_id });
 				  $scope.gridSaisies.push( { classe: classe === undefined ? 'UNK' : classe.libelle,
