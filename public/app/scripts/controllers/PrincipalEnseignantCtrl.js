@@ -135,21 +135,22 @@ angular.module('cahierDeTexteApp')
 		      APIUsers.get({ user_id: $scope.enseignant_id },
 				   function( response ) {
 				       $scope.enseignant = response;
-				       $scope.enseignant.matieres = _.chain($scope.enseignant.classes)
-					   .map( function( classe ) {
-					       return { id: classe.matiere_enseignee_id,
-							libelle: classe.matiere_libelle };
+				       // FIXME: plucké depuis les saisies?
+				       $scope.enseignant.matieres = _.chain(response.matieres_enseignees)
+					   .map( function( matiere ) {
+					       return { id: matiere.matiere_enseignee_id,
+							libelle: matiere.libelle_long };
 					   })
-					   .uniq( function( matiere ) {
+					   .uniq(function( matiere ) {
 					       return matiere.id;
 					   })
 					   .value();
-				       $scope.classes = _.chain($scope.enseignant.classes)
+				       // FIXME: plucké depuis les saisies?
+				       $scope.classes = _(response.classes)
 					   .map( function( classe ) {
 					       return { id: classe.classe_id,
 							libelle: classe.classe_libelle };
-					   })
-					   .value();
+					   });
 				   },
 				   function error() {
 				       console.log( 'Erreur d\'apppel de l\'API Users' );
