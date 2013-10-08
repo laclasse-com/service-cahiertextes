@@ -2,10 +2,10 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalClassesCtrl',
-		[ '$scope', '$rootScope', 'Etablissement', 'APIClasse',
-		  function ($scope, $rootScope, Etablissement, APIClasse) {
+		[ '$scope', '$rootScope', 'APIClasse',
+		  function ($scope, $rootScope, APIClasse) {
 		      $scope.uai = '0134567A';
-		      $scope.mois		= $rootScope.mois;
+		      $scope.mois = $rootScope.mois;
 
 		      $scope.raw_data		=    [];
 		      $scope.data		=   [  ];
@@ -24,54 +24,49 @@ angular.module('cahierDeTexteApp')
 						    value: 0 } ] };
 
 		      $scope.process_data = function(  ) {
-			  // Extraction des classes
-			  $scope.classes = _($scope.raw_data).pluck( 'regroupement_id' );
-
-			  // Extraction des matières
-			  $scope.matieres = _.chain($scope.raw_data)
-			      .pluck( 'matieres' )
-			      .flatten()
-			      .pluck( 'matiere_id' )
-			      .uniq()
-			      .value();
-
-			  // Filtrage des données
 			  $scope.data = $scope.raw_data;
 
+			  // Extraction des classes
+			  $scope.classes = _($scope.data).pluck( 'regroupement_id' );
+
+			  // filtrage sur un mois
+			  if ( $scope.moisCourant != -1 ) {
+			      $scope.data = $scope.data.map( function( regroupement ) {
+				  return { regroupement_id: regroupement.regroupement_id,
+					   matieres: regroupement.matieres.map( function( matiere ) {
+					       return { matiere_id: matiere.matiere_id,
+							mois: _(matiere.mois).filter( function( mois ) {
+							    return mois.mois == $scope.moisCourant;
+							}) };
+					   }) };
+			      });
+			  }
+
+			  // Filtrage sur une classe
 			  if ( $scope.classeCourante !== '' ) {
 			      $scope.data = _($scope.data).filter( function( r ) {
 				  return r.regroupement_id == $scope.classeCourante;
 			      });
 			  }
 
+			  // Extraction des matières
+			  $scope.matieres = _.chain($scope.data)
+			      .pluck( 'matieres' )
+			      .flatten()
+			      .pluck( 'matiere_id' )
+			      .uniq()
+			      .value();
+
+			  // Filtrage sur une matière
 			  if ( $scope.matiereCourante != -1 ) {
 			      $scope.data = $scope.data.map( function( regroupement ) {
 				  var matieres = _(regroupement.matieres).filter( function( r ) {
 				      return r.matiere_id == $scope.matiereCourante;
 				  });
 
-				  return {
-				      "regroupement_id": regroupement.regroupement_id,
-				      "matieres": matieres
-				  };
+				  return { regroupement_id: regroupement.regroupement_id,
+					   matieres: matieres };
 			      });
-			  }
-
-			  if ( $scope.moisCourant != -1 ) {
-			      $scope.data = $scope.data.map(
-				  function( regroupement ) {
-				      return {
-					  "regroupement_id": regroupement.regroupement_id,
-					  "matieres": regroupement.matieres.map(
-					      function( matiere ) {
-						  var un_mois = _(matiere.mois).filter( function( mois ) {
-						      return mois.mois == $scope.moisCourant;
-						  });
-						  return { matiere_id: matiere.matiere_id,
-							   mois: un_mois };
-					      })
-				      };
-				  });
 			  }
 
 			  // Calcul des statistiques
