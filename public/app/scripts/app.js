@@ -67,6 +67,7 @@ angular.module( 'cahierDeTexteApp',
 	    });
     } ] )
     .run( [ '$rootScope', function ($rootScope) {
+	$rootScope.mois = [ 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre' ];
 	// définition des couleurs
 	$rootScope.theme = {
 	    filled: { base: '#aaffaa',
@@ -94,7 +95,7 @@ angular.module( 'cahierDeTexteApp',
 	    titleFormat: { month: 'MMMM yyyy',
 			   week: "d MMM[ yyyy]{ '&#8212;' d [ MMM] yyyy}",
 			   day: 'dddd d MMMM yyyy' },
-	    monthNames: [ 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre' ],
+	    monthNames: $rootScope.mois,
 	    monthNamesShort: [ 'Jan.', 'Fév.', 'Mar.', 'Avr.', 'Mai', 'Juin', 'Juil.', 'Août', 'Sep.', 'Oct.', 'Nov.', 'Déc.' ],
 	    dayNames: [ 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche' ],
 	    dayNamesShort: [ 'Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.', 'Dim.' ],
