@@ -47,7 +47,7 @@ angular.module('cahierDeTexteApp')
 				      columnDefs: [
 					  { field: 'name', displayName: 'Nom',
 					    cellTemplate: '<div><a href="#/principal/enseignant/{{row.getProperty(\'id\')}}">{{row.entity[col.field]}}</a></div>' },
-					  { field: 'discipline', displayName: 'Discipline' },
+					  { field: 'disciplines', displayName: 'Matières enseignées' },
 					  { field: 'stats', displayName: 'Statistiques' }],
 				      populate: function( enseignants ) {
 					  $scope.enseignants = _(enseignants).map( function( enseignant ) {
@@ -62,17 +62,15 @@ angular.module('cahierDeTexteApp')
 					      }, { filled: 0, validated: 0});
 
 					      var row = { id: enseignant.enseignant_id,
-							  name: 'UNK',
+							  name: '',
 							  discipline: [],
 							  stats: stats.validated + '/' + stats.filled };
 
-					      // FIXME: debug data
-					      APIUsers.get({ user_id: 'VAA60462' },
-							   // APIUsers.get({ user_id: enseignant.enseignant_id },
+					      APIUsers.get({ user_id: enseignant.enseignant_id },
 							   function( response ) {
 							       row.name = response.full_name;
-							       row.discipline = _.chain(response.classes)
-								   .pluck( 'matiere_libelle' )
+							       row.disciplines = _.chain(response.matieres_enseignees)
+								   .pluck( 'libelle_long' )
 								   .uniq()
 								   .value();
 							   },
@@ -90,7 +88,6 @@ angular.module('cahierDeTexteApp')
 		      $scope.enseignant = -1;
 
 		      $scope.process_data = function(  ) {
-			  console.log('$scope.process_data called !')
 			  if ( $scope.raw_data !== undefined ) {
 			      $scope.displayed_data = $scope.raw_data;
 			      // extraction des classes
