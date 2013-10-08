@@ -29,7 +29,7 @@ Sequel.migration do
       foreign_key :debut, :plages_horaires
       foreign_key :fin, :plages_horaires
       Integer :jour_de_la_semaine, null: false
-      Integer :matiere_id, null: false # tiré de l'annuaire en fonction de (établissement, code, libellé)
+      String :matiere_id, null: false # tiré de l'annuaire en fonction de (établissement, code, libellé)
     }
 
     create_table!(:creneaux_emploi_du_temps_salles) {
@@ -42,14 +42,14 @@ Sequel.migration do
     create_table!(:creneaux_emploi_du_temps_enseignants) {
       primary_key [:creneau_emploi_du_temps_id, :enseignant_id]
       foreign_key :creneau_emploi_du_temps_id, :creneaux_emploi_du_temps
-      Integer :enseignant_id    # tiré depuis l'annuaire en fonction de (etablissement, nom, prénom)
+      String :enseignant_id    # tiré depuis l'annuaire en fonction de (etablissement, nom, prénom)
       Bignum :semaines_de_presence, unsigned: true, default: 2**53 - 1
     }
 
     create_table!(:creneaux_emploi_du_temps_regroupements) {
       primary_key [:creneau_emploi_du_temps_id, :regroupement_id]
       foreign_key :creneau_emploi_du_temps_id, :creneaux_emploi_du_temps
-      Integer :regroupement_id    # tiré depuis l'annuaire en fonction de (établissement, nom)
+      String :regroupement_id    # tiré depuis l'annuaire en fonction de (établissement, nom)
       Bignum :semaines_de_presence, unsigned: true, default: 2**53 - 1
     }
 
