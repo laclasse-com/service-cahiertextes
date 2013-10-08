@@ -2,25 +2,26 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantCtrl',
-		[ '$scope', '$rootScope', '$stateParams', 'APIEnseignant', 'APICours', 'APIMatieres', 'APIRegroupements', 'APIUsers',
-		  function( $scope, $rootScope, $stateParams, APIEnseignant, APICours, APIMatieres, APIRegroupements, APIUsers ) {
+		[ '$scope', '$rootScope', '$stateParams', 'APIEnseignant', 'APICours', 'APIUsers',
+		  function( $scope, $rootScope, $stateParams, APIEnseignant, APICours, APIUsers ) {
 		      // FIXME: dummy enseignant_id
 		      $scope.enseignant_id = 'VAA60462';
-		      console.log($stateParams.enseignant_id)
+		      //console.log($stateParams.enseignant_id)
 		      $scope.classe = -1;
 		      $scope.mois = $rootScope.mois;
 		      $scope.moisCourant = -1;
+		      $scope.selectedSaisies = [];
 
 		      // Tableau
 		      $scope.grid = {
 			  data: 'gridSaisies',
-			  selectedItems: 'selectedSaisies',
+			  selectedItems: $scope.selectedSaisies,
 			  enableCellEdit: false,
 			  plugins: [new ngGridFlexibleHeightPlugin()],
 			  rowHeight: 60,
 			  columnDefs: [
-			      { field: 'classe.libelle', displayName: 'Classe' },
-			      { field: 'matiere.libelle_long', displayName: 'Matière' },
+			      { field: 'classe', displayName: 'Classe' },
+			      { field: 'matiere', displayName: 'Matière' },
 			      { field: 'cours', displayName: 'Cours',
 				cellTemplate: '<span style="overflow-y:auto" ng-bind-html-unsafe="row.entity.cours">{{row.entity.cours}}</span>' },
 			      { field: 'devoir', displayName: 'Travail à faire',
@@ -30,14 +31,14 @@ angular.module('cahierDeTexteApp')
 			  ],
 			  valide: function( cours_id ) {
 			      APICours.valide({ id: cours_id }, {});
-			      $scope.populate_graphs( $scope.gridSaisies );
+			      $scope.graphiques.populate( $scope.gridSaisies );
 			  },
 			  valideSelection: function() {
 			      _($scope.selectedSaisies).each( function( saisie ) {
 				  APICours.valide({ id: saisie.cours_id }, {});
 				  saisie.valide = true;
 			      });
-			      $scope.populate_graphs( $scope.gridSaisies );
+			      $scope.graphiques.populate( $scope.gridSaisies );
 			  },
 			  selectionneNonValides: function() {
 			      _($scope.gridSaisies).each( function( saisie, index ){
@@ -48,34 +49,21 @@ angular.module('cahierDeTexteApp')
 			  },
 			  populate: function( saisies ) {
 			      $scope.gridSaisies = [];
-			      $scope.selectedSaisies = [];
 
 			      _(saisies).each( function ( saisie ) {
-				  if ( ( $scope.classe == -1 ) || ( saisie.classe_id == $scope.classe ) ) {
-				      var record = { classe: '',
-						     matiere: '',
-						     cours: saisie.cours,
-						     devoir: saisie.devoir,
-						     valide: saisie.valide,
-						     cours_id: saisie.cours_id,
-						     devoir_id: saisie.devoir_id };
-				      APIMatieres.get({ matiere_id: saisie.matiere_id },
-						      function success( response ) {
-							  record.matiere = response.libelle_long;
-						      },
-						      function error(  ) {
-							  record.matiere = 'Matière inconnue';
-						      });
-				      APIRegroupements.get({ regroupement_id: saisie.classe_id },
-							   function success( response ) {
-							       record.regroupement = response.libelle;
-							   },
-							   function error(  ) {
-							       record.regroupement = 'Classe inconnue';
-							   });
-				      
-				      $scope.gridSaisies.push( record );
-				  }
+				  // FIXME: dummy values
+				  saisie.classe_id = 5;
+				  saisie.matiere_id = '070800';
+
+				  var classe = _($scope.classes).findWhere({id: saisie.classe_id});
+				  var matiere = _($scope.enseignant.matieres).findWhere({ id: saisie.matiere_id });
+				  $scope.gridSaisies.push( { classe: classe === undefined ? 'UNK' : classe.libelle,
+							     matiere: matiere === undefined ? 'UNK' : matiere.libelle,
+							     cours: saisie.cours,
+							     devoir: saisie.devoir,
+							     valide: saisie.valide,
+							     cours_id: saisie.cours_id,
+							     devoir_id: saisie.devoir_id } );
 			      } );
 			  }
 		      };
@@ -127,34 +115,25 @@ angular.module('cahierDeTexteApp')
 			  }
 		      };
 
-		      $scope.process_data = function( data ) {
-			  if ( data !== undefined ) {
-			      // Extraction des classes
-			      if ( $scope.classe == -1 ) {
-				  $scope.classes = _.chain( data.saisies )
-				      .flatten()
-				      .groupBy('classe_id')
-				      .keys()
-				      .map( function( key ) {
-					  var regroupement = APIRegroupements.get({ regroupement_id: key });
-					  return regroupement.libelle;
-				      })
-				      .value();
-			      }
+		      $scope.process_data = function(  ) {
+			  if ( $scope.raw_data !== undefined ) {
+			      $scope.displayed_data = $scope.raw_data.saisies;
 
-			      // Filtrage des données
-			      var saisies = [];
+			      // Filtrage par mois
 			      if ( $scope.moisCourant != -1 ) {
-				  saisies = _(data.saisies[ $scope.moisCourant - 1 ]).flatten();
-			      } else {
-				  saisies = _(data.saisies).flatten();
+				  $scope.displayed_data = _($scope.displayed_data[ $scope.moisCourant - 1 ]);
+			      }
+			      $scope.displayed_data = _($scope.displayed_data).flatten();
+
+			      // Filtrage par classe
+			      if ( $scope.classe != -1 ) {
+				  $scope.displayed_data = _($scope.displayed_data).reject( function( saisie ) {
+				      return ( saisie.classe_id != $scope.classe );
+				  });
 			      }
 
-			      $scope.grid.populate( saisies );
+			      $scope.grid.populate( $scope.displayed_data );
 			      $scope.graphiques.populate( $scope.gridSaisies );
-
-			      // FIXME: nggrid ne prends pas ceci en compte, affecté trop tard...
-			      // $scope.grid.columnDefs[0].visible = $scope.classe == -1;
 			  }
 		      };
 
@@ -163,8 +142,19 @@ angular.module('cahierDeTexteApp')
 				   function( response ) {
 				       $scope.enseignant = response;
 				       $scope.enseignant.matieres = _.chain($scope.enseignant.classes)
-					   .pluck( 'matiere_libelle' )
-					   .uniq()
+					   .map( function( classe ) {
+					       return { id: classe.matiere_enseignee_id,
+							libelle: classe.matiere_libelle };
+					   })
+					   .uniq( function( matiere ) {
+					       return matiere.id;
+					   })
+					   .value();
+				       $scope.classes = _.chain($scope.enseignant.classes)
+					   .map( function( classe ) {
+					       return { id: classe.classe_id,
+							libelle: classe.classe_libelle };
+					   })
 					   .value();
 				   },
 				   function error() {
@@ -174,7 +164,8 @@ angular.module('cahierDeTexteApp')
 		      APIEnseignant.get({ enseignant_id: $stateParams.enseignant_id, //$scope.enseignant_id,
 					  etablissement_id: '0134567A' },
 					function success( response ) {
-					    $scope.process_data( response );
+					    $scope.raw_data = response;
+					    $scope.process_data();
 					},
 					function error() {
 					    console.log( 'Erreur d\'apppel de l\'API Enseignant' );

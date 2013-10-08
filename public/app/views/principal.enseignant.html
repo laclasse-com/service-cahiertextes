@@ -26,7 +26,7 @@
 	<div class="panel-body">
 	  <p><a href="mailto:{{enseignant.emails[0].adresse}}">{{enseignant.emails[0].adresse}}</a></p>
 	  <p>{{enseignant.discipline}}</p>
-	  <ul><li data-ng-repeat="matiere in enseignant.matieres">{{matiere}}{{($last != true) && ", " || ""}}</li></ul>
+	  <ul><li data-ng-repeat="matiere in enseignant.matieres">{{matiere.libelle}}{{($last != true) && ", " || ""}}</li></ul>
 	  <p><span data-ng-repeat="classe in enseignant.classes">{{classe.classe_libelle}}{{($last != true) && ", " || ""}}</span></p>
 	</div>
       </div>
