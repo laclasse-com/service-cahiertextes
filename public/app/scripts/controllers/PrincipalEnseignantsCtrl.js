@@ -89,11 +89,12 @@ angular.module('cahierDeTexteApp')
 		      $scope.mois = -1;
 		      $scope.enseignant = -1;
 
-		      $scope.process_data = function( data ) {
+		      $scope.process_data = function(  ) {
 			  console.log('$scope.process_data called !')
-			  if ( data !== undefined ) {
+			  if ( $scope.raw_data !== undefined ) {
+			      $scope.displayed_data = $scope.raw_data;
 			      // extraction des classes
-			      $scope.classes = _.chain(data)
+			      $scope.classes = _.chain($scope.displayed_data)
 				  .pluck('classes')
 				  .flatten()
 				  .pluck('regroupement')
@@ -102,7 +103,7 @@ angular.module('cahierDeTexteApp')
 
 			      // filtrage sur la classe sélectionnée
 			      if ( $scope.classe != -1 ) {
-				  data = _.chain(data)
+				  $scope.displayed_data = _.chain($scope.displayed_data)
 				      .map( function( enseignant ) {
 					  return { enseignant_id: enseignant.enseignant_id,
 						   classes: _(enseignant.classes).reject( function( classe ) {
@@ -118,7 +119,7 @@ angular.module('cahierDeTexteApp')
 
 			      // filtrage sur le mois sélectionné
 			      if ( $scope.mois != -1 ) {
-				  data = _(data).map( function( enseignant ) {
+				  $scope.displayed_data = _($scope.displayed_data).map( function( enseignant ) {
 				      return { enseignant_id: enseignant.enseignant_id,
 					       classes: _(enseignant.classes).map( function( classe ) {
 						   return { regroupement: classe.regroupement,
@@ -131,14 +132,15 @@ angular.module('cahierDeTexteApp')
 				  });
 			      }
 
-			      $scope.radar.populate( data );
-			      $scope.grid.populate( data );
+			      $scope.radar.populate( $scope.displayed_data );
+			      $scope.grid.populate( $scope.displayed_data );
 			  }
 		      };
 
 		      // Récupération et consommation des données
 		      APIEnseignants.query( { etablissement_id: '0134567A' },
 					    function success( response ) {
-						$scope.process_data( response );
+						$scope.raw_data = response;
+						$scope.process_data();
 					    } );
 		  } ] );
