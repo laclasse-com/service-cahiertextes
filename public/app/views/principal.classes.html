@@ -1,8 +1,8 @@
 <div class="panel panel-default">
   <div class="panel-body">
-    <select class="col-md-3" ui-select2 data-ng-model="classeCourante" data-placeholder="Toute les classes" data-ng-change="process_data()">
-      <option value="" selected>Toute les classes</option>
-      <option data-ng-repeat="classe in classes" value="{{classe.id}}">{{classe.libelle}}</option>
+    <select class="col-md-3" ui-select2 data-ng-model="classe" data-placeholder="Toute les classes" data-ng-change="process_data()">
+      <option value="-1" selected>Toute les classes</option>
+      <option data-ng-repeat="classe in classes">{{classe}}</option>
     </select>
 
     <select class="col-md-3" ui-select2 data-ng-model="moisCourant" data-placeholder="Toute l'année" data-ng-change="process_data()">
@@ -20,19 +20,18 @@
 <div class="panel panel-default">
   <div class="panel-body">
     <canvas piechart data="pieChart.data" options="pieChart.options" width="256" height="256"></canvas>
-    <span class="badge badge-info">{{global_stats.validated}} / {{global_stats.filled}}</span>
+    <span class="badge badge-info">{{displayed_data.validated}} / {{displayed_data.filled}}</span>
     <canvas linechart data="monthlyLineChart.data" options="monthlyLineChart.options" width="640" height="256" style="float:right"></canvas>
   </div>
 </div>
 
 <div class="col-md-12">
-  <div class="col-md-3" x-ng-show="classeCourante==''" x-ng-repeat="classe in individualCharts.classes">
+  <div class="col-md-3" x-ng-show="classe==-1" x-ng-repeat="individualChart in individualCharts.classes">
     <div class="panel panel-default">
-      <div class="panel-heading"><h3 class="panel-title">{{classe.regroupement.libelle}}</h3></div>
+      <div class="panel-heading"><h3 class="panel-title">{{individualChart.libelle}}</h3></div>
       <div class="panel-body">
-	<canvas piechart data="classe.pieChart.data" options="classe.pieChart.options" width="64" height="64"></canvas>
-	<!-- canvas linechart data="regroupement.lineChart.data" options="regroupement.lineChart.options" width="192" height="64" style="float:right"></canvas -->
-	<span class="badge badge-info">{{classe.pieChart.data[0].value}} / {{classe.pieChart.data[0].value + classe.pieChart.data[1].value}}</span>
+	<canvas piechart data="individualChart.pieChart.data" options="individualChart.pieChart.options" width="64" height="64"></canvas>
+	<span class="badge badge-info">{{individualChart.pieChart.data[0].value}} / {{individualChart.pieChart.data[0].value + individualChart.pieChart.data[1].value}}</span>
       </div>
     </div>
   </div>
