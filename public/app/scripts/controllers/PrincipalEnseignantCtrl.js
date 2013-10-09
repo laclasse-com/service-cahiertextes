@@ -121,6 +121,7 @@ angular.module('cahierDeTexteApp')
 
 			      // Filtrage par classe
 			      if ( $scope.classe != -1 ) {
+				  // .invert() suppose que les valeurs sont uniques
 				  var id = _($scope.classes).invert()[$scope.classe];
 				  $scope.displayed_data = _($scope.displayed_data).reject( function( saisie ) {
 				      return ( saisie.classe_id != id );
@@ -163,9 +164,6 @@ angular.module('cahierDeTexteApp')
 		      APIUsers.get({ user_id: $scope.enseignant_id },
 				   function( response ) {
 				       $scope.enseignant = response;
-				   },
-				   function error() {
-				       console.log( 'Erreur d\'apppel de l\'API Users' );
 				   });
 
 		      APIEnseignant.get({ enseignant_id: $stateParams.enseignant_id,
@@ -186,8 +184,5 @@ angular.module('cahierDeTexteApp')
 						    });
 						    $scope.process_data();
 						});
-					},
-					function error() {
-					    console.log( 'Erreur d\'apppel de l\'API Enseignant' );
 					});
 		  } ] );
