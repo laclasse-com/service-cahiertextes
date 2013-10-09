@@ -172,6 +172,7 @@ angular.module('cahierDeTexteApp')
 			      $scope.displayed_data.filled = global_stats.filled;
 			      $scope.displayed_data.validated = global_stats.validated;
 
+			      // consommation des données dans les graphiques
 			      $scope.individualCharts.populate( $scope.displayed_data, $scope.classes );
 			      $scope.pieChart.populate( $scope.displayed_data );
 			      $scope.monthlyLineChart.populate( $scope.displayed_data );
