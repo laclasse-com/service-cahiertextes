@@ -2,13 +2,16 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantCtrl',
-		[ '$scope', '$rootScope', '$stateParams', 'APIEnseignant', 'APICours', 'APIUsers',
-		  function( $scope, $rootScope, $stateParams, APIEnseignant, APICours, APIUsers ) {
+		[ '$scope', '$rootScope', '$stateParams', 'APIEnseignant', 'APICours', 'APIUsers', 'APIMatieres', 'APIRegroupements',
+		  function( $scope, $rootScope, $stateParams, APIEnseignant, APICours, APIUsers, APIMatieres, APIRegroupements ) {
 		      $scope.enseignant_id = $stateParams.enseignant_id;
 		      $scope.classe = -1;
 		      $scope.mois = $rootScope.mois;
 		      $scope.moisCourant = -1;
 		      $scope.selectedSaisies = [];
+		      $scope.matieres = {};
+		      $scope.classes = {};
+
 
 		      // Tableau
 		      $scope.grid = {
@@ -18,8 +21,10 @@ angular.module('cahierDeTexteApp')
 			  plugins: [new ngGridFlexibleHeightPlugin()],
 			  rowHeight: 60,
 			  columnDefs: [
-			      { field: 'classe', displayName: 'Classe' },
-			      { field: 'matiere', displayName: 'Matière' },
+			      { field: 'classe', displayName: 'Classe',
+				cellTemplate: '<span ng-bind-html-unsafe="row.entity.classe_id">{{classes[row.entity.classe_id]}}</span>' },
+			      { field: 'matiere', displayName: 'Matière',
+				cellTemplate: '<span ng-bind-html-unsafe="row.entity.matiere_id">{{matieres[row.entity.matiere_id]}}</span>' },
 			      { field: 'cours', displayName: 'Cours',
 				cellTemplate: '<span style="overflow-y:auto" ng-bind-html-unsafe="row.entity.cours">{{row.entity.cours}}</span>' },
 			      { field: 'devoir', displayName: 'Travail à faire',
@@ -47,14 +52,11 @@ angular.module('cahierDeTexteApp')
 			  },
 			  populate: function( saisies ) {
 			      $scope.gridSaisies = [];
-
 			      _(saisies).each( function ( saisie ) {
-				  var classe = _($scope.classes).findWhere({id: saisie.classe_id});
-				  var matiere = _($scope.enseignant.matieres).findWhere({ id: saisie.matiere_id });
-				  $scope.gridSaisies.push( { classe: classe === undefined ? 'UNK' : classe.libelle,
-							     matiere: matiere === undefined ? 'UNK' : matiere.libelle,
-							     cours: saisie.cours,
-							     devoir: saisie.devoir,
+				  $scope.gridSaisies.push( { classe_id: saisie.classe_id,
+							     matiere_id: saisie.matiere_id,
+							     cours: saisie.cours == -1 ? '' : saisie.cours,
+							     devoir: saisie.devoir == -1 ? '' : saisie.devoir,
 							     valide: saisie.valide,
 							     cours_id: saisie.cours_id,
 							     devoir_id: saisie.devoir_id } );
@@ -92,14 +94,14 @@ angular.module('cahierDeTexteApp')
 			      $scope.graphiques.pieChart.data[1].value = 0;
 
 			      _.chain(saisies)
-				  .groupBy('classe')
+				  .groupBy('classe_id')
 				  .map( function( classe ) {
-				      return { classe: classe[0].classe,
+				      return { classe_id: classe[0].classe_id,
 					       filled: classe.length,
 					       validated: _(classe).where({valide: true}).length };
 				  })
 				  .each( function( classe ) {
-				      $scope.graphiques.barChart.data.labels.push( classe.classe );
+				      $scope.graphiques.barChart.data.labels.push( $scope.classes[classe.classe_id] );
 				      $scope.graphiques.barChart.data.datasets[0].data.push( classe.filled );
 				      $scope.graphiques.barChart.data.datasets[1].data.push( classe.validated );
 
@@ -121,13 +123,15 @@ angular.module('cahierDeTexteApp')
 
 			      // Filtrage par classe
 			      if ( $scope.classe != -1 ) {
+				  var id = _($scope.classes).invert()[$scope.classe];
 				  $scope.displayed_data = _($scope.displayed_data).reject( function( saisie ) {
-				      return ( saisie.classe_id != $scope.classe );
+				      return ( saisie.classe_id != id );
 				  });
 			      }
 
 			      $scope.grid.populate( $scope.displayed_data );
-			      $scope.graphiques.populate( $scope.gridSaisies );
+			      // TODO: compiler à partir de $scope.displayed_data
+			      $scope.graphiques.populate( $scope.displayed_data );
 			  }
 		      };
 
@@ -135,31 +139,40 @@ angular.module('cahierDeTexteApp')
 		      APIUsers.get({ user_id: $scope.enseignant_id },
 				   function( response ) {
 				       $scope.enseignant = response;
-				       // FIXME: plucké depuis les saisies?
-				       $scope.enseignant.matieres = _.chain(response.matieres_enseignees)
-					   .map( function( matiere ) {
-					       return { id: matiere.matiere_enseignee_id,
-							libelle: matiere.libelle_long };
-					   })
-					   .uniq(function( matiere ) {
-					       return matiere.id;
-					   })
-					   .value();
-				       // FIXME: plucké depuis les saisies?
-				       $scope.classes = _(response.classes)
-					   .map( function( classe ) {
-					       return { id: classe.classe_id,
-							libelle: classe.classe_libelle };
-					   });
 				   },
 				   function error() {
 				       console.log( 'Erreur d\'apppel de l\'API Users' );
 				   });
 
-		      APIEnseignant.get({ enseignant_id: $stateParams.enseignant_id, //$scope.enseignant_id,
+		      APIEnseignant.get({ enseignant_id: $stateParams.enseignant_id,
 					  etablissement_id: '0134567A' },
 					function success( response ) {
 					    $scope.raw_data = response;
+
+					    // extraction des matières
+					    _.chain($scope.raw_data.saisies)
+						.flatten()
+						.pluck('matiere_id')
+						.uniq()
+						.each(function( matiere_id ) {
+						    APIMatieres.get({matiere_id: matiere_id},
+								    function( response ) {
+									$scope.matieres[matiere_id] = response.libelle_long;
+								    });
+						});
+
+					    // extraction des classes
+					    _.chain($scope.raw_data.saisies)
+						.flatten()
+						.pluck('classe_id')
+						.uniq()
+						.each(function( regroupement_id ) {
+						    APIRegroupements.get({regroupement_id: regroupement_id},
+									 function( response ) {
+									     $scope.classes[regroupement_id] = response.libelle_aaf;
+									 });
+						});
+
 					    $scope.process_data();
 					},
 					function error() {
