@@ -115,7 +115,7 @@ angular.module('cahierDeTexteApp')
 							  })
 							  .reject(function( classe ) {
 							      return _(classe.pieChart.data).reduce(function( useless, slice ) {
-								  return useless && slice.value == 0;
+								  return useless && slice.value === 0;
 							      }, true);
 							  })
 							  .value();
