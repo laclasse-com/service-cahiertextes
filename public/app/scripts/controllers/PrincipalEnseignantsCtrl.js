@@ -2,8 +2,14 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantsCtrl',
-		[ '$scope', '$rootScope', 'APIEnseignants', 'APIUsers',
-		  function( $scope, $rootScope, APIEnseignants, APIUsers ) {
+		[ '$scope', '$rootScope', '$q', 'APIEnseignants', 'APIUsers', 'APIRegroupements',
+		  function( $scope, $rootScope, $q, APIEnseignants, APIUsers, APIRegroupements ) {
+		      $scope.annee = $rootScope.mois;
+		      $scope.classe = -1;
+		      $scope.mois = -1;
+		      $scope.enseignant = -1;
+		      $scope.classes = {};
+
 		      $scope.radar = { options: $rootScope.globalRadarChartOptions,
 				       data: { labels: [],
 					       datasets: [
@@ -82,29 +88,32 @@ angular.module('cahierDeTexteApp')
 					  });
 				      }
 				    };
-		      $scope.annee = $rootScope.mois;
-		      $scope.classe = -1;
-		      $scope.mois = -1;
-		      $scope.enseignant = -1;
+
+		      $scope.extract_classes_promises = function( data ) {
+			  return _.chain(data)
+			      .pluck('classes')
+			      .flatten()
+			      .pluck('regroupement')
+			      .uniq()
+			      .map(function( regroupement_id ) {
+				  return APIRegroupements.get({regroupement_id: regroupement_id}).$promise;
+			      })
+			      .value();
+		      };
 
 		      $scope.process_data = function(  ) {
 			  if ( $scope.raw_data !== undefined ) {
 			      $scope.displayed_data = $scope.raw_data;
-			      // extraction des classes
-			      $scope.classes = _.chain($scope.displayed_data)
-				  .pluck('classes')
-				  .flatten()
-				  .pluck('regroupement')
-				  .uniq()
-				  .value();
 
 			      // filtrage sur la classe sélectionnée
 			      if ( $scope.classe != -1 ) {
+				  // .invert() suppose que les valeurs sont uniques
+				  var id = _($scope.classes).invert()[$scope.classe];
 				  $scope.displayed_data = _.chain($scope.displayed_data)
 				      .map( function( enseignant ) {
 					  return { enseignant_id: enseignant.enseignant_id,
 						   classes: _(enseignant.classes).reject( function( classe ) {
-						       return classe.regroupement != $scope.classe;
+						       return classe.regroupement != id;
 						   })
 						 };
 				      })
@@ -138,6 +147,13 @@ angular.module('cahierDeTexteApp')
 		      APIEnseignants.query( { etablissement_id: '0134567A' },
 					    function success( response ) {
 						$scope.raw_data = response;
-						$scope.process_data();
+
+						$q.all( $scope.extract_classes_promises( $scope.raw_data ) )
+						    .then( function( classes ) {
+							_(classes).each(function( classe ) {
+							    $scope.classes[classe.id] = classe.libelle !== null ? classe.libelle : classe.libelle_aaf;
+							});
+							$scope.process_data();
+						    });
 					    } );
 		  } ] );
