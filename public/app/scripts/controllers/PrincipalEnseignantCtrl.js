@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantCtrl',
-		[ '$scope', '$rootScope', '$stateParams', 'APIEnseignant', 'APICours', 'APIUsers', 'APIMatieres', 'APIRegroupements',
-		  function( $scope, $rootScope, $stateParams, APIEnseignant, APICours, APIUsers, APIMatieres, APIRegroupements ) {
+		[ '$scope', '$rootScope', '$stateParams', '$q', 'APIEnseignant', 'APICours', 'APIUsers', 'APIMatieres', 'APIRegroupements',
+		  function( $scope, $rootScope, $stateParams, $q, APIEnseignant, APICours, APIUsers, APIMatieres, APIRegroupements ) {
 		      $scope.enseignant_id = $stateParams.enseignant_id;
 		      $scope.classe = -1;
 		      $scope.mois = $rootScope.mois;
@@ -99,8 +99,7 @@ angular.module('cahierDeTexteApp')
 				      var filled = classe.length;
 				      var validated = _(classe).where({valide: true}).length;
 
-				      // $scope.graphiques.barChart.data.labels.push( $scope.classes[ classe[0].classe_id ] );
-				      $scope.graphiques.barChart.data.labels.push( '' );
+				      $scope.graphiques.barChart.data.labels.push( $scope.classes[ classe[0].classe_id ] );
 				      $scope.graphiques.barChart.data.datasets[0].data.push( filled );
 				      $scope.graphiques.barChart.data.datasets[1].data.push( validated );
 
@@ -128,10 +127,36 @@ angular.module('cahierDeTexteApp')
 				  });
 			      }
 
+			      // TODO: externaliser ?
 			      $scope.grid.populate( $scope.displayed_data );
-			      // TODO: compiler à partir de $scope.displayed_data
 			      $scope.graphiques.populate( $scope.displayed_data );
 			  }
+		      };
+
+		      $scope.extract_matieres = function( saisies ) {
+			  var matieres = {};
+			  _.chain( saisies )
+			      .flatten()
+			      .pluck('matiere_id')
+			      .uniq()
+			      .each(function( matiere_id ) {
+				  APIMatieres.get({matiere_id: matiere_id},
+						       function( response ) {
+							   matieres[matiere_id] = response.libelle_long;
+						       });
+			      });
+			  return matieres;
+		      };
+
+		      $scope.extract_classes_promises = function( saisies ) {
+			  return _.chain( saisies )
+			      .flatten()
+			      .pluck('classe_id')
+			      .uniq()
+			      .map(function( regroupement_id ) {
+				  return APIRegroupements.get({regroupement_id: regroupement_id}).$promise;
+			      })
+			      .value();
 		      };
 
 		      // Récupération et consommation des données
@@ -146,33 +171,21 @@ angular.module('cahierDeTexteApp')
 		      APIEnseignant.get({ enseignant_id: $stateParams.enseignant_id,
 					  etablissement_id: '0134567A' },
 					function success( response ) {
-
-					    // extraction des matières
-					    _.chain($scope.raw_data.saisies)
-						.flatten()
-						.pluck('matiere_id')
-						.uniq()
-						.each(function( matiere_id ) {
-						    APIMatieres.get({matiere_id: matiere_id},
-								    function( response ) {
-									$scope.matieres[matiere_id] = response.libelle_long;
-								    });
-						});
-
-					    // extraction des classes
-					    _.chain($scope.raw_data.saisies)
-						.flatten()
-						.pluck('classe_id')
-						.uniq()
-						.each(function( regroupement_id ) {
-						    APIRegroupements.get({regroupement_id: regroupement_id},
-									 function( response ) {
-									     $scope.classes[regroupement_id] = response.libelle_aaf;
-									 });
 					    $scope.raw_data = response.saisies;
-						});
 
-					    $scope.process_data();
+					    $scope.matieres = $scope.extract_matieres( $scope.raw_data );
+					    // $q.all() permet d'attendre que tout les appels d'API soient résolus avant de
+					    //   - remplir $scope.classes
+					    //   - puis d'appeler $scope.process_data() qui va pouvoir consommer $scope.classes
+					    //     pour passer les noms des classes aux graphiques qui ne peuvent pas profiter
+					    //     du data-binding d'angularJS car ils dessinent des canvas.
+					    $q.all( $scope.extract_classes_promises( $scope.raw_data ) )
+						.then( function( classes ) {
+						    _(classes).each(function( classe ) {
+							$scope.classes[classe.id] = classe.libelle_aaf;
+						    });
+						    $scope.process_data();
+						});
 					},
 					function error() {
 					    console.log( 'Erreur d\'apppel de l\'API Enseignant' );
