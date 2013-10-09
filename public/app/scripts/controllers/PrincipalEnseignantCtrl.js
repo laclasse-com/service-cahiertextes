@@ -95,18 +95,17 @@ angular.module('cahierDeTexteApp')
 
 			      _.chain(saisies)
 				  .groupBy('classe_id')
-				  .map( function( classe ) {
-				      return { classe_id: classe[0].classe_id,
-					       filled: classe.length,
-					       validated: _(classe).where({valide: true}).length };
-				  })
 				  .each( function( classe ) {
-				      $scope.graphiques.barChart.data.labels.push( $scope.classes[classe.classe_id] );
-				      $scope.graphiques.barChart.data.datasets[0].data.push( classe.filled );
-				      $scope.graphiques.barChart.data.datasets[1].data.push( classe.validated );
+				      var filled = classe.length;
+				      var validated = _(classe).where({valide: true}).length;
 
-				      $scope.graphiques.pieChart.data[0].value += classe.filled - classe.validated;
-				      $scope.graphiques.pieChart.data[1].value = classe.validated;
+				      // $scope.graphiques.barChart.data.labels.push( $scope.classes[ classe[0].classe_id ] );
+				      $scope.graphiques.barChart.data.labels.push( '' );
+				      $scope.graphiques.barChart.data.datasets[0].data.push( filled );
+				      $scope.graphiques.barChart.data.datasets[1].data.push( validated );
+
+				      $scope.graphiques.pieChart.data[0].value += filled - validated;
+				      $scope.graphiques.pieChart.data[1].value += validated;
 				  });
 			  }
 		      };
