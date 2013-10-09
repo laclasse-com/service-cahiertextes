@@ -123,8 +123,8 @@ angular.module('cahierDeTexteApp')
 			      if ( $scope.classe != -1 ) {
 				  // .invert() suppose que les valeurs sont uniques
 				  var id = _($scope.classes).invert()[$scope.classe];
-				  $scope.displayed_data = _($scope.displayed_data).reject( function( saisie ) {
-				      return ( saisie.classe_id != id );
+				  $scope.displayed_data = _($scope.displayed_data).filter( function( saisie ) {
+				      return ( saisie.classe_id == id );
 				  });
 			      }
 
