@@ -128,7 +128,7 @@ angular.module('cahierDeTexteApp')
 				  });
 			      }
 
-			      // TODO: externaliser ?
+			      // consommation des données dans les graphiques et le grid
 			      $scope.grid.populate( $scope.displayed_data );
 			      $scope.graphiques.populate( $scope.displayed_data );
 			  }
