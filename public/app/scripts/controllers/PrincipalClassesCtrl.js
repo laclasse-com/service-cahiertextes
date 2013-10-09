@@ -87,31 +87,38 @@ angular.module('cahierDeTexteApp')
 							  }, 0);
 						      });
 
-						      $scope.individualCharts.classes = data.map( function( regroupement ) {
-							  var classe = _(classes).findWhere({ id: regroupement.regroupement_id });
-							  return {
-							      regroupement: classe,
-							      pieChart: { options: $rootScope.globalPieChartOptions,
-									  data: [ { color : $rootScope.theme.validated.base,
-										    value: regroupement.validated },
-										  { color : $rootScope.theme.filled.base,
-										    value: regroupement.filled - regroupement.validated } ] },
-							      lineChart: { options: $rootScope.globalLineChartOptions,
-									   data: { labels: $rootScope.mois,
-										   datasets: [
-										       { fillColor : $rootScope.theme.filled.base,
-											 pointColor : $rootScope.theme.filled.base,
-											 strokeColor : $rootScope.theme.filled.stroke,
-											 pointStrokeColor : $rootScope.theme.filled.stroke,
-											 data: regroupement.mensuel.filled
-										       },
-										       { fillColor : $rootScope.theme.validated.base,
-											 pointColor : $rootScope.theme.validated.base,
-											 strokeColor : $rootScope.theme.validated.stroke,
-											 pointStrokeColor : $rootScope.theme.validated.stroke,
-											 data: regroupement.mensuel.validated
-										       } ] } } };
-						      });
+						      $scope.individualCharts.classes = _.chain(data)
+							  .map( function( regroupement ) {
+							      var classe = _(classes).findWhere({ id: regroupement.regroupement_id });
+							      return {
+								  regroupement: classe,
+								  pieChart: { options: $rootScope.globalPieChartOptions,
+									      data: [ { color : $rootScope.theme.validated.base,
+											value: regroupement.validated },
+										      { color : $rootScope.theme.filled.base,
+											value: regroupement.filled - regroupement.validated } ] },
+								  lineChart: { options: $rootScope.globalLineChartOptions,
+									       data: { labels: $rootScope.mois,
+										       datasets: [
+											   { fillColor : $rootScope.theme.filled.base,
+											     pointColor : $rootScope.theme.filled.base,
+											     strokeColor : $rootScope.theme.filled.stroke,
+											     pointStrokeColor : $rootScope.theme.filled.stroke,
+											     data: regroupement.mensuel.filled
+											   },
+											   { fillColor : $rootScope.theme.validated.base,
+											     pointColor : $rootScope.theme.validated.base,
+											     strokeColor : $rootScope.theme.validated.stroke,
+											     pointStrokeColor : $rootScope.theme.validated.stroke,
+											     data: regroupement.mensuel.validated
+											   } ] } } };
+							  })
+							  .reject(function( classe ) {
+							      return _(classe.pieChart.data).reduce(function( useless, slice ) {
+								  return useless && slice.value == 0;
+							      }, true);
+							  })
+							  .value();
 						  } };
 
 		      $scope.process_data = function(  ) {
