@@ -182,7 +182,7 @@ angular.module('cahierDeTexteApp')
 					    $q.all( $scope.extract_classes_promises( $scope.raw_data ) )
 						.then( function( classes ) {
 						    _(classes).each(function( classe ) {
-							$scope.classes[classe.id] = classe.libelle_aaf;
+							$scope.classes[classe.id] = classe.libelle !== null ? classe.libelle : classe.libelle_aaf;
 						    });
 						    $scope.process_data();
 						});
