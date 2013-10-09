@@ -112,7 +112,7 @@ angular.module('cahierDeTexteApp')
 
 		      $scope.process_data = function(  ) {
 			  if ( $scope.raw_data !== undefined ) {
-			      $scope.displayed_data = $scope.raw_data.saisies;
+			      $scope.displayed_data = $scope.raw_data;
 
 			      // Filtrage par mois
 			      if ( $scope.moisCourant != -1 ) {
@@ -146,7 +146,6 @@ angular.module('cahierDeTexteApp')
 		      APIEnseignant.get({ enseignant_id: $stateParams.enseignant_id,
 					  etablissement_id: '0134567A' },
 					function success( response ) {
-					    $scope.raw_data = response;
 
 					    // extraction des matières
 					    _.chain($scope.raw_data.saisies)
@@ -170,6 +169,7 @@ angular.module('cahierDeTexteApp')
 									 function( response ) {
 									     $scope.classes[regroupement_id] = response.libelle_aaf;
 									 });
+					    $scope.raw_data = response.saisies;
 						});
 
 					    $scope.process_data();
