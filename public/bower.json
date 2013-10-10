@@ -1,36 +1,37 @@
 {
-  "name": "cahierDeTexte",
-  "version": "0.0.0",
-  "dependencies": {
-    "angular": "1.2.0-rc.2",
-    "angular-resource": "1.2.0-rc.2",
-    "angular-mocks": "1.2.0-rc.2",
-    "angular-sanitize": "1.2.0-rc.2",
-    "angular-cookies": "1.2.0-rc.2",
-    "angular-scenario": "1.2.0-rc.2",
-    "angular-grid": "git://github.com/angular-ui/ng-grid.git#latest",
-    "angles": "git://github.com/lgsilver/angles.git#latest",
-    "Chart.js": "latest",
-    "angular-ui-router": "latest",
-    "angular-ui-select2": "latest",
-    "angular-bootstrap": "latest",
-    "json3": "latest",
-    "es5-shim": "latest",
-    "angular-ui-calendar": "latest",
-    "underscore": "latest",
-    "bootstrap": "latest",
-    "select2-bootstrap-css": "latest"
-  },
-  "devDependencies": {
-    "angular-mocks": "1.2.0-rc.2",
-    "angular-scenario": "1.2.0-rc.2"
-  },
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "components",
-    "bower_components",
-    "test",
-    "tests"
-  ]
+    "name": "cahierDeTexte",
+    "version": "0.0.0",
+    "dependencies": {
+	"angular": "1.2.0-rc.2",
+	"angular-resource": "1.2.0-rc.2",
+	"angular-mocks": "1.2.0-rc.2",
+	"angular-sanitize": "1.2.0-rc.2",
+	"angular-cookies": "1.2.0-rc.2",
+	"angular-scenario": "1.2.0-rc.2",
+	"angular-grid": "git://github.com/angular-ui/ng-grid.git#latest",
+	"angles": "git://github.com/lgsilver/angles.git#latest",
+	"Chart.js": "latest",
+	"angular-ui-router": "latest",
+	"angular-ui-select2": "latest",
+	"angular-bootstrap": "latest",
+	"json3": "latest",
+	"es5-shim": "latest",
+	"angular-ui-calendar": "latest",
+	"angular-ui-tinymce": "latest",
+	"underscore": "latest",
+	"bootstrap": "latest",
+	"select2-bootstrap-css": "latest"
+    },
+    "devDependencies": {
+	"angular-mocks": "1.2.0-rc.2",
+	"angular-scenario": "1.2.0-rc.2"
+    },
+    "ignore": [
+	"**/.*",
+	"node_modules",
+	"components",
+	"bower_components",
+	"test",
+	"tests"
+    ]
 }
