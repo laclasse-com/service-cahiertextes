@@ -1,12 +1,12 @@
 <div class="panel panel-default">
   <div class="panel-body">
-    <select class="col-md-2" ui-select2 data-ng-model="mois" data-placeholder="Toute l'année" data-ng-change="process_data()">
+    <select class="col-md-2" x-ui-select2 x-ng-model="mois" x-placeholder="Toute l'année" x-ng-change="process_data()">
       <option value="-1">Toute l'année</option>
-      <option data-ng-repeat="mois in annee" value="{{$index + 1}}">{{mois}}</option>
+      <option x-ng-repeat="mois in annee" value="{{$index + 1}}">{{mois}}</option>
     </select>
-    <select class="col-md-2" ui-select2 data-ng-model="classe" data-placeholder="Toutes les classes" data-ng-change="process_data()">
+    <select class="col-md-2" x-ui-select2 x-ng-model="classe" x-placeholder="Toutes les classes" x-ng-change="process_data()">
       <option value="-1">Toutes les classes</option>
-      <option data-ng-repeat="classe in classes" value="{{classe}}">{{classe}}</option>
+      <option x-ng-repeat="classe in classes" value="{{classe}}">{{classe}}</option>
     </select>
   </div>
 </div>
@@ -14,7 +14,7 @@
 <div class="col-md-12">
   <div class="panel panel-default">
     <div class="panel-body">
-	<canvas radarchart options="radar.options" data="radar.data" class="col-md-12" width="992" height="400"></canvas>
+	<canvas x-radarchart x-options="radar.options" x-data="radar.data" class="col-md-12" width="992" height="400"></canvas>
     </div>
   </div>
 </div>
@@ -22,7 +22,7 @@
 <div class="col-md-12">
   <div class="panel panel-default">
     <div class="panel-body">
-      <div data-ng-grid="grid"></div>
+      <div x-ng-grid="grid"></div>
     </div>
   </div>
 </div>
