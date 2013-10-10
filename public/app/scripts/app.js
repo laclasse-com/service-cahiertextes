@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module( 'cahierDeTexteApp',
-		[ 'ngResource', 'ui.bootstrap', 'ui.calendar', 'ui.router', 'ui.select2', 'ngGrid', 'angles' ] )
+		[ 'ngResource', 'ngSanitize', 'ui.bootstrap', 'ui.calendar', 'ui.router', 'ui.select2', 'ngGrid', 'angles', 'ui.tinymce' ] )
     .config( [ '$stateProvider', '$urlRouterProvider', function ( $stateProvider, $urlRouterProvider ) {
 	$urlRouterProvider.otherwise('/');
 
