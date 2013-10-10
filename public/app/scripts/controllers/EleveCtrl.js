@@ -4,38 +4,6 @@ angular.module('cahierDeTexteApp')
     .controller('EleveCtrl',
 		[ '$scope', '$rootScope', '$modal', 'APIEmploiDuTemps', 'APIMatieres',
 		  function ( $scope, $rootScope, $modal, APIEmploiDuTemps, APIMatieres ) {
-		      // popup d'affichage des détails
-		      $scope.cours = {};
-		      $scope.devoir = {};
-		      $scope.affiche_details = function(  ) {
-			  var modalInstance = $modal.open({ templateUrl: 'views/modals/eleve/detail_emploi_du_temps.html',
-							    controller: modalInstanceCtrl,
-							    resolve: { matiere: function() { return $scope.matiere; },
-								       cours: function() { return $scope.cours; },
-								       devoir: function() { return $scope.devoir; } } });
-			  modalInstance.result.then( function ( fait ) {
-			      if ( fait != -1 ) {
-				  $scope.creneau.color = fait ? $rootScope.theme.calendar.devoir_fait : $rootScope.theme.calendar.devoir;
-			      }
-			      $scope.emploi_du_temps.fullCalendar( 'renderEvent', $scope.creneau );
-			  });
-		      };
-
-		      var modalInstanceCtrl = function( $scope, $modalInstance, APIDevoir, matiere, cours, devoir ) {
-			  $scope.matiere = matiere;
-			  $scope.cours = cours;
-			  $scope.devoir = devoir;
-
-			  $scope.fait = function() {
-			      APIDevoir.fait({ id: devoir.id },
-					     function() { devoir.fait = true; });
-			  };
-
-			  $scope.close = function() {
-			      $modalInstance.close( ( _(devoir).size() > 0 ) ? devoir.fait : -1 );
-			  };
-		      };
-
 		      // configuration du composant calendrier
 		      $scope.calendar = { options: $rootScope.globalCalendarOptions,
 					  events: [  ] };
@@ -81,6 +49,38 @@ angular.module('cahierDeTexteApp')
 			      $scope.devoir = $scope.creneau.details.devoir;
 			      $scope.affiche_details(  );
 			  }
+		      };
+
+		      // popup d'affichage des détails
+		      $scope.cours = {};
+		      $scope.devoir = {};
+		      $scope.affiche_details = function(  ) {
+			  $modal.open({ templateUrl: 'views/modals/eleve/detail_emploi_du_temps.html',
+					controller: modalInstanceCtrl,
+					resolve: { matiere: function() { return $scope.matiere; },
+						   cours: function() { return $scope.cours; },
+						   devoir: function() { return $scope.devoir; } } })
+			      .result.then( function ( fait ) {
+				  if ( fait != -1 ) {
+				      $scope.creneau.color = fait ? $rootScope.theme.calendar.devoir_fait : $rootScope.theme.calendar.devoir;
+				  }
+				  $scope.emploi_du_temps.fullCalendar( 'renderEvent', $scope.creneau );
+			      });
+		      };
+
+		      var modalInstanceCtrl = function( $scope, $modalInstance, APIDevoir, matiere, cours, devoir ) {
+			  $scope.matiere = matiere;
+			  $scope.cours = cours;
+			  $scope.devoir = devoir;
+
+			  $scope.fait = function() {
+			      APIDevoir.fait({ id: devoir.id },
+					     function() { devoir.fait = true; });
+			  };
+
+			  $scope.close = function() {
+			      $modalInstance.close( ( _(devoir).size() > 0 ) ? devoir.fait : -1 );
+			  };
 		      };
 
 		      // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
