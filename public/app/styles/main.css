@@ -21,6 +21,8 @@ body {
     letter-spacing: -1px;
 }
 
+/* Modal */
+.modal-dialog{width:800px}
 
 /* Cahier de Textes */
 /* Calendrier */
