@@ -27,7 +27,7 @@ module CahierDeTextesAPI
       # TODO
       regroupement_id = CreneauEmploiDuTempsRegroupement
         .select(:regroupement_id)
-        .map {|r| r.regroupement_id}
+        .map { |r| r.regroupement_id }
         .sample
 
       CreneauEmploiDuTemps
@@ -64,7 +64,9 @@ module CahierDeTextesAPI
           devoir[:fait] = data.first.fait_par?( eleve_id )
         end
 
-        { matiere_id: creneau.matiere_id,
+        { cahier_de_textes_id: cahier_de_textes.id,
+          creneau_emploi_du_temps_id: creneau.id,
+          matiere_id: creneau.matiere_id,
           start: Time.new( jour.year, jour.month, jour.mday, plage_debut.hour, plage_debut.min ).iso8601,
           end: Time.new( jour.year, jour.month, jour.mday, plage_fin.hour, plage_fin.min ).iso8601,
           cours: cours,
