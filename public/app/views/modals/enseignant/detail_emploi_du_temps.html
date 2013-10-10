@@ -1,0 +1,23 @@
+<div class="modal-header">
+  <button type="button" class="close pull-right" aria-hidden="true" x-ng-click="close()">&times;</button>
+  <h3>{{matiere}}</h3>
+</div>
+<div class="modal-body">
+  <div class="panel panel-default col-md-12">
+    <div class="panel-body">
+      <textarea x-ui-tinymce x-ng-model="cours.contenu"></textarea>
+      <span x-ng-bind-html="cours.contenu"></span>
+    </div>
+  </div>
+  <div class="panel panel-default col-md-12">
+    <div class="panel-body">
+      <textarea x-ui-tinymce x-ng-model="devoir.contenu"></textarea>
+      <span x-ng-bind-html="devoir.contenu"></span>
+    </div>
+    <button class="btn btn-success pull-right" x-ng-click="enregistrer()">
+      <span class="glyphicon glyphicon-save"></span> Enregistrer
+    </button>
+  </div>
+</div>
+<div class="modal-footer">
+</div>
