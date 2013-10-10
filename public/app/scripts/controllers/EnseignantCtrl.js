@@ -53,12 +53,20 @@ angular.module('cahierDeTexteApp')
 			  $scope.devoir = devoir;
 
 			  $scope.fermer = function() {
-			      $modalInstance.close( { cours: cours,
-						      devoir: devoir} );
+			      $modalInstance.close( { cours: $scope.cours,
+						      devoir: $scope.devoir} );
 			  };
 			  $scope.valider = function() {
-			      $scope.cours.$update();
-			      $scope.devoir.$update();
+			      if ( $scope.cours.id !== null ) {
+				  $scope.cours.$update();
+			      } else {
+				  $scope.cours.$save();
+			      }
+			      if ( $scope.devoir.id !== null ) {
+				  $scope.devoir.$update();
+			      } else {
+				  $scope.devoir.$save();
+			      }
 
 			      $scope.fermer();
 			  };
