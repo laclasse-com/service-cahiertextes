@@ -13,7 +13,7 @@ angular.module( 'cahierDeTexteApp',
 	    })
 	    .state('principal', {
 		url: '/principal',
-		templateUrl: 'views/principal.html',
+		templateUrl: 'views/principal/index.html',
 		controller: 'PrincipalCtrl'
 	    })
 	    .state('principal.classes', { //imbriquée sous principal
@@ -24,7 +24,7 @@ angular.module( 'cahierDeTexteApp',
 			template: 'Validation des saisies par Classe/Groupe'
 		    },
 		    'content': {
-			templateUrl: 'views/principal.classes.html',
+			templateUrl: 'views/principal/classes.html',
 			controller: 'PrincipalClassesCtrl'
 		    }
 		}
@@ -37,7 +37,7 @@ angular.module( 'cahierDeTexteApp',
 			template: 'Validation des saisies par Enseignants'
 		    },
 		    'content': {
-			templateUrl: 'views/principal.enseignants.html',
+			templateUrl: 'views/principal/enseignants.html',
 			controller: 'PrincipalEnseignantsCtrl'
 		    }
 		}
@@ -50,19 +50,19 @@ angular.module( 'cahierDeTexteApp',
 			template: 'Validation des saisies par Enseignant'
 		    },
 		    'content': {
-			templateUrl: 'views/principal.enseignant.html',
+			templateUrl: 'views/principal/enseignant.html',
 			controller: 'PrincipalEnseignantCtrl'
 		    }
 		}
 	    })
 	    .state('eleve', {
 		url: '/eleve',
-		templateUrl: 'views/eleve.html',
+		templateUrl: 'views/emploi_du_temps.html',
 		controller: 'EleveCtrl'
 	    })
 	    .state('enseignant', {
 		url: '/enseignant',
-		templateUrl: 'views/enseignant.html',
+		templateUrl: 'views/emploi_du_temps.html',
 		controller: 'EnseignantCtrl'
 	    });
     } ] )

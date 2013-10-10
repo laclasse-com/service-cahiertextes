@@ -8,7 +8,7 @@ angular.module('cahierDeTexteApp')
 		      $scope.cours = {};
 		      $scope.devoir = {};
 		      $scope.affiche_details = function(  ) {
-			  var modalInstance = $modal.open({ templateUrl: 'views/modals/eleve.detail_emploi_du_temps.html',
+			  var modalInstance = $modal.open({ templateUrl: 'views/modals/eleve/detail_emploi_du_temps.html',
 							    controller: modalInstanceCtrl,
 							    resolve: { matiere: function() { return $scope.matiere; },
 								       cours: function() { return $scope.cours; },
