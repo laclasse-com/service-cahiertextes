@@ -31,33 +31,31 @@ angular.module('cahierDeTexteApp')
 				      .$promise
 				      .then( function( devoir ) {
 					  $scope.devoir = devoir;
-					  $scope.affiche_details(  );
+					  $scope.ouvre_popup(  );
 				      });
 			      });
 		      };
 
 		      // popup de création/édition
-		      $scope.cours = {};
-		      $scope.devoir = {};
-
 		      var modalInstanceCtrl = function( $scope, $modalInstance, matiere, cours, devoir ) {
 			  // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
 			  $scope.matiere = matiere;
 			  $scope.cours = cours;
 			  $scope.devoir = devoir;
 
-			  $scope.enregistrer = function() {
-			      cours.$update();
-			      devoir.$update();
-			  };
-
-			  $scope.close = function() {
+			  $scope.fermer = function() {
 			      $modalInstance.close( { cours: cours,
 						      devoir: devoir} );
 			  };
+			  $scope.valider = function() {
+			      cours.$update();
+			      devoir.$update();
+
+			      $scope.fermer();
+			  };
 		      };
 
-		      $scope.affiche_details = function(  ) {
+		      $scope.ouvre_popup = function(  ) {
 			  $modal.open({ templateUrl: 'views/modals/enseignant/detail_emploi_du_temps.html',
 					controller: modalInstanceCtrl,
 					resolve: { matiere: function() { return $scope.matiere; },
