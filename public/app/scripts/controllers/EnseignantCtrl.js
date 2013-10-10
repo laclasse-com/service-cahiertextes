@@ -2,28 +2,25 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EnseignantCtrl',
-		[ '$scope', '$rootScope', '$modal', 'APIEmploiDuTemps', 'APIMatieres',
-		  function ( $scope, $rootScope, $modal, APIEmploiDuTemps, APIMatieres ) {
+		[ '$scope', '$rootScope', '$modal', 'APIEmploiDuTemps', 'APIMatieres', 'APICours', 'APIDevoir',
+		  function ( $scope, $rootScope, $modal, APIEmploiDuTemps, APIMatieres, APICours, APIDevoir ) {
 		      // popup d'affichage des détails
 		      $scope.cours = {};
 		      $scope.devoir = {};
 
-		      var modalInstanceCtrl = function( $scope, $modalInstance, APIDevoir, matiere, cours, devoir ) {
+		      var modalInstanceCtrl = function( $scope, $modalInstance, matiere, cours, devoir ) {
 			  $scope.matiere = matiere;
 			  $scope.cours = cours;
 			  $scope.devoir = devoir;
 
 			  $scope.enregistrer = function() {
-			      console.log(cours.id)
-			      console.log(cours.contenu)
-			      console.log(devoir.id)
-			      console.log(devoir.contenu)
-			      // APIDevoir.fait({ id: devoir.id },
-			      // 		     function() { devoir.fait = true; });
+			      cours.$update();
+			      devoir.$update();
 			  };
 
 			  $scope.close = function() {
-			      $modalInstance.close( { cours: cours, devoir: devoir} );
+			      $modalInstance.close( { cours: cours,
+						      devoir: devoir} );
 			  };
 		      };
 
@@ -35,8 +32,6 @@ angular.module('cahierDeTexteApp')
 								       devoir: function() { return $scope.devoir; } } });
 			  modalInstance.result.then( function ( objets ) {
 			      // TODO: recalculer les couleurs
-			      console.log(objets.cours)
-			      console.log(objets.devoir)
 			  });
 		      };
 
@@ -78,9 +73,15 @@ angular.module('cahierDeTexteApp')
 		      $scope.calendar.options.eventClick = function( event ) {
 			  $scope.creneau = _(event.source.events).findWhere({_id: event._id});
 			  $scope.matiere = event.title;
-			  $scope.cours = $scope.creneau.details.cours;
-			  $scope.devoir = $scope.creneau.details.devoir;
-			  $scope.affiche_details(  );
+			  APICours.get( { id: $scope.creneau.details.cours.id } )
+			      .$promise.then( function( cours ) {
+				  $scope.cours = cours;
+				  APIDevoir.get( { id: $scope.creneau.details.devoir.id } )
+				      .$promise.then( function( devoir ) {
+					  $scope.devoir = devoir;
+					  $scope.affiche_details(  );
+				      });
+			      });
 		      };
 
 		      // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
