@@ -3,21 +3,32 @@
   <h3>{{matiere}}</h3>
 </div>
 <div class="modal-body">
-  <div class="panel panel-default col-md-12">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Séquence pédagogique</h3>
+    </div>
     <div class="panel-body">
       <textarea x-ui-tinymce x-ng-model="cours.contenu"></textarea>
+    </div>
+    <div class="panel-footer">
       <span x-ng-bind-html="cours.contenu"></span>
     </div>
   </div>
-  <div class="panel panel-default col-md-12">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Travail à faire</h3>
+      <input x-ui-date x-ui-date-format="yy-mm-dd" x-ng-model="devoir.date_due"> {{devoir.date_due}}
+    </div>
     <div class="panel-body">
       <textarea x-ui-tinymce x-ng-model="devoir.contenu"></textarea>
+    </div>
+    <div class="panel-footer">
       <span x-ng-bind-html="devoir.contenu"></span>
     </div>
-    <button class="btn btn-success pull-right" x-ng-click="enregistrer()">
-      <span class="glyphicon glyphicon-save"></span> Enregistrer
-    </button>
   </div>
 </div>
 <div class="modal-footer">
+  <button class="btn btn-success pull-right" x-ng-click="enregistrer()">
+    <span class="glyphicon glyphicon-save"></span> Enregistrer
+  </button>
 </div>
