@@ -4,6 +4,8 @@ angular.module('cahierDeTexteApp')
     .controller('EnseignantCtrl',
 		[ '$scope', '$rootScope', '$modal', 'APIEmploiDuTemps', 'APIMatieres', 'APICours', 'APIDevoir',
 		  function ( $scope, $rootScope, $modal, APIEmploiDuTemps, APIMatieres, APICours, APIDevoir ) {
+		      $scope.matieres = {};
+
 		      // configuration du composant calendrier
 		      $scope.calendar = { options: $rootScope.globalCalendarOptions,
 					  events: [  ] };
@@ -143,14 +145,12 @@ angular.module('cahierDeTexteApp')
 			  }
 
 			  // composition du titre
-			  APIMatieres.get({ matiere_id: item_emploi_du_temps.matiere_id },
-					  function success( response ) {
-					      calendar_event.title = response.libelle_long;
-					  },
-					  function error(  ) {
-					      calendar_event.title = 'Matière inconnue';
-					  });
-
+			  if ( $scope.matieres[ item_emploi_du_temps.matiere_id ] === undefined ) {
+			      $scope.matieres[ item_emploi_du_temps.matiere_id ] = APIMatieres.get({ matiere_id: item_emploi_du_temps.matiere_id }).$promise;
+			  }
+			  $scope.matieres[ item_emploi_du_temps.matiere_id ].then( function success( response ) {
+			      calendar_event.title = response.libelle_long;
+			  });
 			  return calendar_event;
 		      };
 
