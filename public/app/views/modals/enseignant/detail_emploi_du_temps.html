@@ -11,7 +11,10 @@
       <textarea x-ui-tinymce x-ng-model="cours.contenu"></textarea>
     </div>
     <div class="panel-footer">
-      <span x-ng-bind-html="cours.contenu"></span>
+      <ul>
+	<li x-ng-repeat="ressource in cours.ressources">{{ressource.url}}</li>
+      </ul>
+      <input type="file">
     </div>
   </div>
   <div class="panel panel-default">
@@ -23,7 +26,10 @@
       <textarea x-ui-tinymce x-ng-model="devoir.contenu"></textarea>
     </div>
     <div class="panel-footer">
-      <span x-ng-bind-html="devoir.contenu"></span>
+      <ul>
+	<li x-ng-repeat="ressource in devoir.ressources">{{ressource.url}}</li>
+      </ul>
+      <input type="file">
     </div>
   </div>
 </div>
