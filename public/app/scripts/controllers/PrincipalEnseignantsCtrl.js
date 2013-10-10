@@ -53,7 +53,8 @@ angular.module('cahierDeTexteApp')
 				      columnDefs: [
 					  { field: 'name', displayName: 'Nom',
 					    cellTemplate: '<div><a href="#/principal/enseignant/{{row.getProperty(\'id\')}}">{{row.entity[col.field]}}</a></div>' },
-					  { field: 'disciplines', displayName: 'Matières enseignées' },
+					  { field: 'matieres', displayName: 'Matières enseignées',
+					    cellTemplate: '<span data-ng-repeat="matiere in row.entity.matieres">{{matiere}}{{($last != true) && ", " || ""}}</span>' },
 					  { field: 'stats', displayName: 'Statistiques' }],
 				      populate: function( enseignants ) {
 					  $scope.enseignants = _(enseignants).map( function( enseignant ) {
