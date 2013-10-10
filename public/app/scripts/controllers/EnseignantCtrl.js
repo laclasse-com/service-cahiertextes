@@ -47,8 +47,8 @@ angular.module('cahierDeTexteApp')
 						      devoir: devoir} );
 			  };
 			  $scope.valider = function() {
-			      cours.$update();
-			      devoir.$update();
+			      $scope.cours.$update();
+			      $scope.devoir.$update();
 
 			      $scope.fermer();
 			  };
