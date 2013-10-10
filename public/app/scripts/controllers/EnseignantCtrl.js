@@ -37,11 +37,21 @@ angular.module('cahierDeTexteApp')
 					     function error( raison ) {
 						 console.log( 'Erreur ' + raison.status )
 						 // TODO: peut-être créer un nouveau Devoir puis ouvrir la popup
+						 $scope.devoir = new APIDevoir({ cours_id: $scope.cours.id,
+										 // FIXME: dummy value
+										 type_devoir: 1 });
+						 $scope.ouvre_popup(  );
 					     });
 			      },
 				   function error( raison ) {
 				       console.log( 'Erreur ' + raison.status )
-				       // TODO: créer un nouveau Cours, peut-être un nouveau Devoir puis ouvrir la popup
+				       $scope.cours = new APICours({
+					   cahier_de_textes_id: $scope.creneau.details.cahier_de_textes_id,
+					   creneau_emploi_du_temps_id: $scope.creneau.details.creneau_emploi_du_temps_id,
+					   date_cours: $scope.creneau.start
+				       });
+				       // TODO: peut-être créer un nouveau Devoir, mais avec quel cours.id ? puis ouvrir la popup
+				       $scope.ouvre_popup(  );
 				   });
 		      };
 
@@ -60,12 +70,15 @@ angular.module('cahierDeTexteApp')
 			      if ( $scope.cours.id !== null ) {
 				  $scope.cours.$update();
 			      } else {
+				  // FIXME: broken
 				  $scope.cours.$save();
 			      }
-			      if ( $scope.devoir.id !== null ) {
+
+			      // TODO: la création de voir devrait être faite ici seulement si besoin sinon on pollu la DB avec des devoirs vides
+			      if ( ( $scope.devoir !== undefined ) && ( $scope.devoir.id !== undefined ) ) {
 				  $scope.devoir.$update();
 			      } else {
-				  $scope.devoir.$save();
+				  // $scope.devoir.$save();
 			      }
 
 			      $scope.fermer();
@@ -92,7 +105,9 @@ angular.module('cahierDeTexteApp')
 
 		      // helper
 		      $scope.update_fullCalendar_event = function( event, cours, devoir ) {
-			  var calendar_event = { details: { matiere_id: event.matiere_id,
+			  var calendar_event = { details: { matiere_id: event.details.matiere_id,
+							    cahier_de_textes_id: event.details.cahier_de_textes_id,
+							    creneau_emploi_du_temps_id: event.details.creneau_emploi_du_temps_id,
 							    cours: cours,
 							    devoir: devoir },
 						 allDay: false,
@@ -135,7 +150,9 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      $scope.assemble_fullCalendar_event = function( item_emploi_du_temps ) {
-			  return $scope.update_fullCalendar_event( { details: { matiere_id: item_emploi_du_temps.matiere_id },
+			  return $scope.update_fullCalendar_event( { details: { matiere_id: item_emploi_du_temps.matiere_id,
+										cahier_de_textes_id: item_emploi_du_temps.cahier_de_textes_id,
+										creneau_emploi_du_temps_id: item_emploi_du_temps.creneau_emploi_du_temps_id },
 								     start: new Date( item_emploi_du_temps.start ),
 								     end: new Date( item_emploi_du_temps.end ) },
 								   item_emploi_du_temps.cours,
