@@ -18,6 +18,7 @@
 	"es5-shim": "latest",
 	"angular-ui-calendar": "latest",
 	"angular-ui-tinymce": "latest",
+	"angular-ui-date": "latest",
 	"underscore": "latest",
 	"bootstrap": "latest",
 	"select2-bootstrap-css": "latest"
