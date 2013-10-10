@@ -9,6 +9,7 @@ angular.module('cahierDeTexteApp')
 		      $scope.mois = -1;
 		      $scope.enseignant = -1;
 		      $scope.classes = {};
+		      $scope.details_enseignants = {};
 
 		      $scope.radar = { options: $rootScope.globalRadarChartOptions,
 				       data: { labels: [],
@@ -43,7 +44,8 @@ angular.module('cahierDeTexteApp')
 					       $scope.radar.data.datasets[0].data.push( stats.filled );
 					       $scope.radar.data.datasets[1].data.push( stats.validated );
 
-					       $scope.radar.data.labels.push( 'UNK' );
+					       // $scope.radar.data.labels.push( $scope.details_enseignants[enseignant.enseignant_id].nom );
+					       $scope.radar.data.labels.push( '' );
 					   });
 				       }
 				     };
@@ -51,7 +53,7 @@ angular.module('cahierDeTexteApp')
 				      enableCellEdit: true,
 				      plugins: [new ngGridFlexibleHeightPlugin()],
 				      columnDefs: [
-					  { field: 'name', displayName: 'Nom',
+					  { field: 'nom', displayName: 'Nom',
 					    cellTemplate: '<div><a href="#/principal/enseignant/{{row.getProperty(\'id\')}}">{{row.entity[col.field]}}</a></div>' },
 					  { field: 'matieres', displayName: 'Matières enseignées',
 					    cellTemplate: '<span data-ng-repeat="matiere in row.entity.matieres">{{matiere}}{{($last != true) && ", " || ""}}</span>' },
@@ -68,24 +70,10 @@ angular.module('cahierDeTexteApp')
 							   validated: totaux.validated + stats.validated};
 					      }, { filled: 0, validated: 0});
 
-					      var row = { id: enseignant.enseignant_id,
-							  name: '',
-							  discipline: [],
-							  stats: stats.validated + '/' + stats.filled };
-
-					      APIUsers.get({ user_id: enseignant.enseignant_id },
-							   function( response ) {
-							       row.name = response.full_name;
-							       row.disciplines = _.chain(response.matieres_enseignees)
-								   .pluck( 'libelle_long' )
-								   .uniq()
-								   .value();
-							   },
-							   function error() {
-							       console.log( 'Erreur d\'apppel de l\'API Users' );
-							   });
-
-					      return row;
+					      return { id: enseignant.enseignant_id,
+						       nom: $scope.details_enseignants[enseignant.enseignant_id].nom,
+						       matieres: $scope.details_enseignants[enseignant.enseignant_id].matieres,
+						       stats: stats.validated + '/' + stats.filled };
 					  });
 				      }
 				    };
@@ -100,6 +88,13 @@ angular.module('cahierDeTexteApp')
 				  return APIRegroupements.get({regroupement_id: regroupement_id}).$promise;
 			      })
 			      .value();
+		      };
+
+		      $scope.extract_enseignants_promises = function( data ) {
+			  return _(data).pluck('enseignant_id')
+			      .map(function ( enseignant_id ) {
+				  return APIUsers.get({ user_id: enseignant_id }).$promise;
+			      });
 		      };
 
 		      $scope.process_data = function(  ) {
@@ -149,12 +144,23 @@ angular.module('cahierDeTexteApp')
 					    function success( response ) {
 						$scope.raw_data = response;
 
-						$q.all( $scope.extract_classes_promises( $scope.raw_data ) )
-						    .then( function( classes ) {
-							_(classes).each(function( classe ) {
-							    $scope.classes[classe.id] = classe.libelle !== null ? classe.libelle : classe.libelle_aaf;
+						$q.all( $scope.extract_enseignants_promises( $scope.raw_data ) )
+						    .then( function( enseignants ) {
+							_(enseignants).each(function( enseignant ) {
+							    $scope.details_enseignants[enseignant.id_ent] = { nom: enseignant.full_name,
+													  matieres: _.chain(enseignant.matieres_enseignees)
+													  .pluck( 'libelle_long' )
+													  .uniq()
+													  .value() };
 							});
-							$scope.process_data();
+
+							$q.all( $scope.extract_classes_promises( $scope.raw_data ) )
+							    .then( function( classes ) {
+								_(classes).each(function( classe ) {
+								    $scope.classes[classe.id] = classe.libelle !== null ? classe.libelle : classe.libelle_aaf;
+								});
+								$scope.process_data();
+							    });
 						    });
 					    } );
 		  } ] );
