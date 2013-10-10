@@ -26,15 +26,23 @@ angular.module('cahierDeTexteApp')
 			  $scope.matiere = event.title;
 			  APICours.get( { id: $scope.creneau.details.cours.id } )
 			      .$promise
-			      .then( function( cours ) {
+			      .then( function success( cours ) {
 				  $scope.cours = cours;
 				  APIDevoir.get( { id: $scope.creneau.details.devoir.id } )
 				      .$promise
-				      .then( function( devoir ) {
+				      .then( function success( devoir ) {
 					  $scope.devoir = devoir;
 					  $scope.ouvre_popup(  );
-				      });
-			      });
+				      },
+					     function error( raison ) {
+						 console.log( 'Erreur ' + raison.status )
+						 // TODO: peut-être créer un nouveau Devoir puis ouvrir la popup
+					     });
+			      },
+				   function error( raison ) {
+				       console.log( 'Erreur ' + raison.status )
+				       // TODO: créer un nouveau Cours, peut-être un nouveau Devoir puis ouvrir la popup
+				   });
 		      };
 
 		      // popup de création/édition
