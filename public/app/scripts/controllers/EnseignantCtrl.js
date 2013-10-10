@@ -63,7 +63,6 @@ angular.module('cahierDeTexteApp')
 						   cours: function() { return $scope.cours; },
 						   devoir: function() { return $scope.devoir; } } })
 			      .result.then( function ( objets ) {
-				  // TODO: recalculer les couleurs
 				  var index = _($scope.calendar.events[0]).indexOf($scope.creneau);
 				  var updated_event = $scope.update_fullCalendar_event( $scope.creneau, objets.cours, objets.devoir );
 				  _.chain(updated_event)
