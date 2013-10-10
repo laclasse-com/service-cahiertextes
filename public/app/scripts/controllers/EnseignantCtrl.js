@@ -4,37 +4,6 @@ angular.module('cahierDeTexteApp')
     .controller('EnseignantCtrl',
 		[ '$scope', '$rootScope', '$modal', 'APIEmploiDuTemps', 'APIMatieres', 'APICours', 'APIDevoir',
 		  function ( $scope, $rootScope, $modal, APIEmploiDuTemps, APIMatieres, APICours, APIDevoir ) {
-		      // popup d'affichage des détails
-		      $scope.cours = {};
-		      $scope.devoir = {};
-
-		      var modalInstanceCtrl = function( $scope, $modalInstance, matiere, cours, devoir ) {
-			  $scope.matiere = matiere;
-			  $scope.cours = cours;
-			  $scope.devoir = devoir;
-
-			  $scope.enregistrer = function() {
-			      cours.$update();
-			      devoir.$update();
-			  };
-
-			  $scope.close = function() {
-			      $modalInstance.close( { cours: cours,
-						      devoir: devoir} );
-			  };
-		      };
-
-		      $scope.affiche_details = function(  ) {
-			  var modalInstance = $modal.open({ templateUrl: 'views/modals/enseignant/detail_emploi_du_temps.html',
-							    controller: modalInstanceCtrl,
-							    resolve: { matiere: function() { return $scope.matiere; },
-								       cours: function() { return $scope.cours; },
-								       devoir: function() { return $scope.devoir; } } });
-			  modalInstance.result.then( function ( objets ) {
-			      // TODO: recalculer les couleurs
-			  });
-		      };
-
 		      // configuration du composant calendrier
 		      $scope.calendar = { options: $rootScope.globalCalendarOptions,
 					  events: [  ] };
@@ -70,8 +39,10 @@ angular.module('cahierDeTexteApp')
 			      element.find('.fc-event-title').append( event.description );
 			  }
 		      };
+		      // ouverture de la popup de création/édition
 		      $scope.calendar.options.eventClick = function( event ) {
 			  $scope.creneau = _(event.source.events).findWhere({_id: event._id});
+			  console.log($scope.creneau)
 			  $scope.matiere = event.title;
 			  APICours.get( { id: $scope.creneau.details.cours.id } )
 			      .$promise.then( function( cours ) {
@@ -84,57 +55,86 @@ angular.module('cahierDeTexteApp')
 			      });
 		      };
 
+		      // popup de création/édition
+		      $scope.cours = {};
+		      $scope.devoir = {};
+
+		      var modalInstanceCtrl = function( $scope, $modalInstance, matiere, cours, devoir ) {
+			  // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
+			  $scope.matiere = matiere;
+			  $scope.cours = cours;
+			  $scope.devoir = devoir;
+
+			  $scope.enregistrer = function() {
+			      cours.$update();
+			      devoir.$update();
+			  };
+
+			  $scope.close = function() {
+			      $modalInstance.close( { cours: cours,
+						      devoir: devoir} );
+			  };
+		      };
+
+		      $scope.affiche_details = function(  ) {
+			  $modal.open({ templateUrl: 'views/modals/enseignant/detail_emploi_du_temps.html',
+					controller: modalInstanceCtrl,
+					resolve: { matiere: function() { return $scope.matiere; },
+						   cours: function() { return $scope.cours; },
+						   devoir: function() { return $scope.devoir; } } })
+			      .result.then( function ( objets ) {
+				  // TODO: recalculer les couleurs
+			      });
+		      };
+
+		      // helper
+		      $scope.assemble_fullCalendar_event = function( item_emploi_du_temps ) {
+			  var calendar_event = { details: { cours: item_emploi_du_temps.cours,
+							    devoir: item_emploi_du_temps.devoir },
+						 allDay: false,
+						 title: '',
+						 description: '',
+						 start: new Date( item_emploi_du_temps.start ),
+						 end: new Date( item_emploi_du_temps.end ),
+						 color: '' };
+
+			  // choix de la couleur
+			  if ( _(item_emploi_du_temps.cours).size() > 0 ) {
+			      calendar_event.color = ( _(item_emploi_du_temps.devoir).size() > 0 ) ? $rootScope.theme.calendar.devoir : $rootScope.theme.calendar.saisie;
+			  } else {
+			      calendar_event.color = $rootScope.theme.calendar.vide;
+			  }
+
+			  // composition de la description
+			  if ( _(item_emploi_du_temps.cours).size() > 0 ) {
+			      calendar_event.description += '<br><span style="color:' + $rootScope.calendar.couleurs.cours + '">';
+			      calendar_event.description += item_emploi_du_temps.cours.contenu.substring( 0, $rootScope.calendar.cours_max_length );
+			      calendar_event.description += item_emploi_du_temps.cours.contenu.length > $rootScope.calendar.cours_max_length ? '…' : '';
+			      calendar_event.description += '</span>';
+			      if ( _(item_emploi_du_temps.devoir).size() > 0 ) {
+				  calendar_event.description += '<br><span style="color:' + $rootScope.calendar.couleurs.devoir + '">';
+				  calendar_event.description += item_emploi_du_temps.devoir.contenu.substring( 0, $rootScope.calendar.devoir_max_length );
+				  calendar_event.description += item_emploi_du_temps.devoir.contenu.length > $rootScope.calendar.devoir_max_length ? '…' : '';
+				  calendar_event.description += '</span>';
+			      }
+			  }
+
+			  // composition du titre
+			  APIMatieres.get({ matiere_id: item_emploi_du_temps.matiere_id },
+					  function success( response ) {
+					      calendar_event.title = response.libelle_long;
+					  },
+					  function error(  ) {
+					      calendar_event.title = 'Matière inconnue';
+					  });
+
+			  return calendar_event;
+		      };
+
 		      // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
 		      APIEmploiDuTemps.query( function( response ) {
 			  $scope.calendar.events.push( response.map( function( event ) {
-			      var calendar_event = { details: { cours: event.cours,
-								devoir: event.devoir },
-						     allDay: false,
-						     title: '',
-						     description: '',
-						     start: new Date( event.start ),
-						     end: new Date( event.end ),
-						     color: '' };
-
-			      // choix de la couleur
-			      if ( _(event.cours).size() > 0 ) {
-				  if ( _(event.devoir).size() > 0 ) {
-				      if ( event.devoir.fait ) {
-					  calendar_event.color = $rootScope.theme.calendar.devoir_fait;
-				      } else {
-					  calendar_event.color = $rootScope.theme.calendar.devoir;
-				      }
-				  } else {
-				      calendar_event.color = $rootScope.theme.calendar.saisie;
-				  }
-			      } else {
-				  calendar_event.color = $rootScope.theme.calendar.vide;
-			      }
-
-			      // composition de la description
-			      if ( _(event.cours).size() > 0 ) {
-				  calendar_event.description += '<br><span style="color:' + $rootScope.calendar.couleurs.cours + '">';
-				  calendar_event.description += event.cours.contenu.substring( 0, $rootScope.calendar.cours_max_length );
-				  calendar_event.description += event.cours.contenu.length > $rootScope.calendar.cours_max_length ? '…' : '';
-				  calendar_event.description += '</span>';
-				  if ( _(event.devoir).size() > 0 ) {
-				      calendar_event.description += '<br><span style="color:' + $rootScope.calendar.couleurs.devoir + '">';
-				      calendar_event.description += event.devoir.contenu.substring( 0, $rootScope.calendar.devoir_max_length );
-				      calendar_event.description += event.devoir.contenu.length > $rootScope.calendar.devoir_max_length ? '…' : '';
-				      calendar_event.description += '</span>';
-				  }
-			      }
-
-			      // composition du titre
-			      APIMatieres.get({ matiere_id: event.matiere_id },
-					      function success( response ) {
-						  calendar_event.title = response.libelle_long;
-					      },
-					      function error(  ) {
-						  calendar_event.title = 'Matière inconnue';
-					      });
-
-			      return calendar_event;
+			      return $scope.assemble_fullCalendar_event( event );
 			  } ) );
 		      });
 		  } ] );
