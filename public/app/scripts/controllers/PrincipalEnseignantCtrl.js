@@ -164,6 +164,17 @@ angular.module('cahierDeTexteApp')
 		      APIUsers.get({ user_id: $scope.enseignant_id },
 				   function( response ) {
 				       $scope.enseignant = response;
+				       $scope.enseignant.matieres = _($scope.enseignant.matieres_enseignees).uniq( function( matiere ) {
+					   return matiere.matiere_enseignee_id;
+				       });
+				       $scope.enseignant.prof_principal = _.chain($scope.enseignant.matieres_enseignees)
+					   .filter( function( matiere ) {
+					       return matiere.prof_principal == 'O';
+					   })
+				       .map( function( matiere ) {
+					   return matiere.libelle_aaf;
+				       })
+				       .value();
 				   });
 
 		      APIEnseignant.get({ enseignant_id: $stateParams.enseignant_id,
