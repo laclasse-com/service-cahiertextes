@@ -108,6 +108,11 @@ angular.module( 'cahierDeTexteApp',
 			  week:     'semaine',
 			  day:      'jour' }
 	};
+
+	// options de tinyMCE
+	$rootScope.tinyMCEOptions = { menubar: false,
+				      statusbar: false };
+
 	// options des graphiques
 	$rootScope.globalPieChartOptions = { animation : false };
 	$rootScope.globalLineChartOptions = { animation : false };
