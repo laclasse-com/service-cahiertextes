@@ -16,7 +16,7 @@ module CahierDeTextesAPI
       requires :date_due, type: Date
       optional :ressources
     }
-    post '/:cours_id' do
+    post  do
       if Cours[ params[:cours_id] ].nil?
         error!( 'Cours inconnu', 404 )
       else
