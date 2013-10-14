@@ -48,6 +48,8 @@ module CahierDeTextesAPI
         cours.add_ressource( Ressource.create( label: ressource['label'],
                                                url: ressource['url'] ) )
       end
+
+      cours
     end
 
     desc 'modifie une séquence pédagogique'
@@ -71,6 +73,8 @@ module CahierDeTextesAPI
         end
 
         cours.save
+
+        cours
       end
     end
 
@@ -86,6 +90,8 @@ module CahierDeTextesAPI
         cours.date_validation = Time.now
 
         cours.save
+
+        cours
       end
     end
 
@@ -102,6 +108,8 @@ module CahierDeTextesAPI
         cours.date_modification = Time.now
 
         cours.save
+
+        cours
       end
     end
 
