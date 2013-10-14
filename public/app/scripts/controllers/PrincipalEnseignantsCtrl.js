@@ -142,7 +142,9 @@ angular.module('cahierDeTexteApp')
 		      // Récupération et consommation des données
 		      APIEnseignants.query( { etablissement_id: '0134567A' },
 					    function success( response ) {
-						$scope.raw_data = response;
+						$scope.raw_data = _(response).reject( function( enseignant ) {
+						    return enseignant.enseignant_id === ''; 
+						});
 
 						$q.all( $scope.extract_enseignants_promises( $scope.raw_data ) )
 						    .then( function( enseignants ) {
