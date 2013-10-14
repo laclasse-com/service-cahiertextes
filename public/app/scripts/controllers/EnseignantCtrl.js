@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EnseignantCtrl',
-		[ '$scope', '$rootScope', '$modal', 'APIEmploiDuTemps', 'APIMatieres', 'APICours', 'APIDevoir',
-		  function ( $scope, $rootScope, $modal, APIEmploiDuTemps, APIMatieres, APICours, APIDevoir ) {
+		[ '$scope', '$rootScope', '$modal', '$q', 'APIEmploiDuTemps', 'APIMatieres', 'APICours', 'APIDevoir', 'APITypesDeDevoir',
+		  function ( $scope, $rootScope, $modal, $q, APIEmploiDuTemps, APIMatieres, APICours, APIDevoir, APITypesDeDevoir ) {
 		      $scope.matieres = {};
 
 		      // configuration du composant calendrier
@@ -24,62 +24,85 @@ angular.module('cahierDeTexteApp')
 		      $scope.calendar.options.eventClick = function( event ) {
 			  $scope.creneau = _(event.source.events).findWhere({_id: event._id});
 			  $scope.matiere = event.title;
-			  APICours.get( { id: $scope.creneau.details.cours.id } )
-			      .$promise
-			      .then( function success( cours ) {
-				  $scope.cours = cours;
-				  APIDevoir.get( { id: $scope.creneau.details.devoir.id } )
+
+			  APITypesDeDevoir.query()
+			      .$promise.then( function( response ) {
+				  $scope.types_de_devoir = response;
+
+				  APICours.get( { id: $scope.creneau.details.cours.id } )
 				      .$promise
-				      .then( function success( devoir ) {
-					  $scope.devoir = devoir;
-					  $scope.ouvre_popup(  );
+				      .then( function success( cours ) {
+					  $scope.cours = cours;
+					  $scope.cours.create = false;
+
+					  APIDevoir.get( { id: $scope.creneau.details.devoir.id } )
+					      .$promise
+					      .then( function success( devoir ) {
+						  $scope.devoir = devoir;
+						  $scope.devoir.create = false;
+
+						  $scope.ouvre_popup(  );
+					      },
+						     function error( raison ) {
+							 console.log( 'Erreur ' + raison.status );
+							 $scope.devoir = new APIDevoir({ cours_id: $scope.cours.id,
+											 type_devoir_id: $scope.types_de_devoir[0].id });
+							 $scope.devoir.create = true;
+							 $scope.ouvre_popup(  );
+						     });
 				      },
 					     function error( raison ) {
-						 console.log( 'Erreur ' + raison.status )
-						 // TODO: peut-être créer un nouveau Devoir puis ouvrir la popup
-						 $scope.devoir = new APIDevoir({ cours_id: $scope.cours.id,
-										 // FIXME: dummy value
-										 type_devoir: 1 });
+						 console.log( 'Erreur ' + raison.status );
+						 $scope.cours = new APICours({
+						     cahier_de_textes_id: $scope.creneau.details.cahier_de_textes_id,
+						     creneau_emploi_du_temps_id: $scope.creneau.details.creneau_emploi_du_temps_id,
+						     date_cours: $scope.creneau.start
+						 });
+						 $scope.cours.create = true;
+						 $scope.devoir = new APIDevoir({ type_devoir_id: $scope.types_de_devoir[0].id });
+						 $scope.devoir.create = true;
 						 $scope.ouvre_popup(  );
 					     });
-			      },
-				   function error( raison ) {
-				       console.log( 'Erreur ' + raison.status )
-				       $scope.cours = new APICours({
-					   cahier_de_textes_id: $scope.creneau.details.cahier_de_textes_id,
-					   creneau_emploi_du_temps_id: $scope.creneau.details.creneau_emploi_du_temps_id,
-					   date_cours: $scope.creneau.start
-				       });
-				       // TODO: peut-être créer un nouveau Devoir, mais avec quel cours.id ? puis ouvrir la popup
-				       $scope.ouvre_popup(  );
-				   });
+			      });
 		      };
 
 		      // popup de création/édition
-		      var modalInstanceCtrl = function( $scope, $modalInstance, matiere, cours, devoir ) {
+		      var modalInstanceCtrl = function( $scope, $rootScope, $modalInstance, matiere, cours, devoir, types_de_devoir ) {
 			  // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
 			  $scope.matiere = matiere;
 			  $scope.cours = cours;
 			  $scope.devoir = devoir;
+			  $scope.types_de_devoir = types_de_devoir;
+			  $scope.tinyMCEOptions = $rootScope.tinyMCEOptions;
 
 			  $scope.fermer = function() {
 			      $modalInstance.close( { cours: $scope.cours,
 						      devoir: $scope.devoir} );
 			  };
+
 			  $scope.valider = function() {
-			      if ( $scope.cours.id !== null ) {
-				  $scope.cours.$update();
-			      } else {
-				  // FIXME: broken
-				  $scope.cours.$save();
+			      var promesse = $q.when(true);
+
+			      if ( $scope.cours.contenu !== '' ) {
+				  if ( $scope.cours.create ) {
+				      promesse = $scope.cours.$save();
+				  } else {
+				      promesse = $scope.cours.$update();
+				  }
 			      }
 
-			      // TODO: la création de voir devrait être faite ici seulement si besoin sinon on pollu la DB avec des devoirs vides
-			      if ( ( $scope.devoir !== undefined ) && ( $scope.devoir.id !== undefined ) ) {
-				  $scope.devoir.$update();
-			      } else {
-				  // $scope.devoir.$save();
-			      }
+			      promesse.then( function( cours ) {
+				  $scope.cours = cours;
+				  if ( $scope.devoir.contenu !== '' ) {
+				      if ( $scope.devoir.create ) {
+					  $scope.devoir.cours_id = $scope.cours.id;
+					  console.log($scope.devoir)
+					  $scope.devoir.$save();
+				      } else {
+					  $scope.devoir.$update();
+				      }
+				  }
+			      });
 
 			      $scope.fermer();
 			  };
@@ -90,7 +113,8 @@ angular.module('cahierDeTexteApp')
 					controller: modalInstanceCtrl,
 					resolve: { matiere: function() { return $scope.matiere; },
 						   cours: function() { return $scope.cours; },
-						   devoir: function() { return $scope.devoir; } } })
+						   devoir: function() { return $scope.devoir; },
+						   types_de_devoir: function() { return $scope.types_de_devoir; } } })
 			      .result.then( function ( objets ) {
 				  var index = _($scope.calendar.events[0]).indexOf($scope.creneau);
 				  var updated_event = $scope.update_fullCalendar_event( $scope.creneau, objets.cours, objets.devoir );

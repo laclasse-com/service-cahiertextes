@@ -20,10 +20,17 @@
   <div class="panel panel-default">
     <div class="panel-heading">
       <h3 class="panel-title">Travail à faire</h3>
-      <input x-ui-date x-ui-date-format="yy-mm-dd" x-ng-model="devoir.date_due"> {{devoir.date_due}}
     </div>
     <div class="panel-body">
       <textarea x-ui-tinymce x-ng-model="devoir.contenu"></textarea>
+      <div style="height:2.5em">
+	<select class="col-md-4" x-ui-select2 x-ng-model="devoir.type_devoir_id" x-placeholder="Type de devoir">
+	  <option x-ng-repeat="type_de_devoir in types_de_devoir" value="{{type_de_devoir.id}}">
+	    {{type_de_devoir.description}}
+	  </option>
+	</select>
+	<input class="col-md-7" x-ui-date x-ui-date-format="yy-mm-dd" x-ng-model="devoir.date_due">
+      </div>
     </div>
     <div class="panel-footer">
       <ul>
