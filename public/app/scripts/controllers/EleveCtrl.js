@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EleveCtrl',
-		[ '$scope', '$rootScope', '$modal', 'APIEmploiDuTemps', 'APIMatieres',
-		  function ( $scope, $rootScope, $modal, APIEmploiDuTemps, APIMatieres ) {
+		[ '$scope', '$rootScope', '$modal', 'EmploiDuTemps', 'Matieres',
+		  function ( $scope, $rootScope, $modal, EmploiDuTemps, Matieres ) {
 		      $scope.matieres = {};
 
 		      // configuration du composant calendrier
@@ -70,13 +70,13 @@ angular.module('cahierDeTexteApp')
 			      });
 		      };
 
-		      var modalInstanceCtrl = function( $scope, $modalInstance, APIDevoir, matiere, cours, devoir ) {
+		      var modalInstanceCtrl = function( $scope, $modalInstance, Devoir, matiere, cours, devoir ) {
 			  $scope.matiere = matiere;
 			  $scope.cours = cours;
 			  $scope.devoir = devoir;
 
 			  $scope.fait = function() {
-			      APIDevoir.fait({ id: devoir.id },
+			      Devoir.fait({ id: devoir.id },
 					     function() { devoir.fait = true; });
 			  };
 
@@ -126,7 +126,7 @@ angular.module('cahierDeTexteApp')
 			  
 			  // composition du titre
 			  if ( $scope.matieres[ item_emploi_du_temps.matiere_id ] === undefined ) {
-			      $scope.matieres[ item_emploi_du_temps.matiere_id ] = APIMatieres.get({ matiere_id: item_emploi_du_temps.matiere_id }).$promise;
+			      $scope.matieres[ item_emploi_du_temps.matiere_id ] = Matieres.get({ matiere_id: item_emploi_du_temps.matiere_id }).$promise;
 			  }
 			  $scope.matieres[ item_emploi_du_temps.matiere_id ].then( function success( response ) {
 			      calendar_event.title = response.libelle_long;
@@ -136,7 +136,7 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
-		      APIEmploiDuTemps.query( function( response ) {
+		      EmploiDuTemps.query( function( response ) {
 			  $scope.calendar.events.push( response.map( function( event ) {
 			      return $scope.assemble_fullCalendar_event( event );
 			  } ) );

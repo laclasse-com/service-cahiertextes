@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantCtrl',
-		[ '$scope', '$rootScope', '$stateParams', '$q', 'APIEnseignant', 'APICours', 'APIUsers', 'APIMatieres', 'APIRegroupements',
-		  function( $scope, $rootScope, $stateParams, $q, APIEnseignant, APICours, APIUsers, APIMatieres, APIRegroupements ) {
+		[ '$scope', '$rootScope', '$stateParams', '$q', 'Enseignant', 'Cours', 'Users', 'Matieres', 'Regroupements',
+		  function( $scope, $rootScope, $stateParams, $q, Enseignant, Cours, Users, Matieres, Regroupements ) {
 		      $scope.enseignant_id = $stateParams.enseignant_id;
 		      $scope.classe = -1;
 		      $scope.mois = $rootScope.mois;
@@ -124,8 +124,8 @@ angular.module('cahierDeTexteApp')
 			      $scope.raw_data = _($scope.raw_data).map( function( saisie, index ) {
 				  // on référence l'index d'origine dans chaque élément pour propager la validation
 				  saisie.index = index;
-				  saisie.cours = new APICours( saisie.cours );
-				  // saisie.devoir = new APIDevoir( saisie.devoir );
+				  saisie.cours = new Cours( saisie.cours );
+				  // saisie.devoir = new Devoir( saisie.devoir );
 				  return saisie;
 			      });
 
@@ -142,7 +142,7 @@ angular.module('cahierDeTexteApp')
 			      .pluck('matiere_id')
 			      .uniq()
 			      .each(function( matiere_id ) {
-				  APIMatieres.get({matiere_id: matiere_id},
+				  Matieres.get({matiere_id: matiere_id},
 						       function( response ) {
 							   matieres[matiere_id] = response.libelle_long;
 						       });
@@ -156,13 +156,13 @@ angular.module('cahierDeTexteApp')
 			      .pluck('classe_id')
 			      .uniq()
 			      .map(function( regroupement_id ) {
-				  return APIRegroupements.get({regroupement_id: regroupement_id}).$promise;
+				  return Regroupements.get({regroupement_id: regroupement_id}).$promise;
 			      })
 			      .value();
 		      };
 
 		      // Récupération et consommation des données
-		      APIUsers.get({ user_id: $scope.enseignant_id },
+		      Users.get({ user_id: $scope.enseignant_id },
 				   function( response ) {
 				       $scope.enseignant = response;
 				       $scope.enseignant.matieres = _($scope.enseignant.matieres_enseignees).uniq( function( matiere ) {
@@ -178,13 +178,13 @@ angular.module('cahierDeTexteApp')
 				       .value();
 				   });
 
-		      APIEnseignant.get({ enseignant_id: $stateParams.enseignant_id,
+		      Enseignant.get({ enseignant_id: $stateParams.enseignant_id,
 					  etablissement_id: '0134567A' },
 					function success( response ) {
 					    $scope.raw_data = response.saisies;
 
 					    $scope.matieres = $scope.extract_matieres( $scope.raw_data );
-					    // $q.all() permet d'attendre que tout les appels d'API soient résolus avant de
+					    // $q.all() permet d'attendre que tout les appels d' soient résolus avant de
 					    //   - remplir $scope.classes
 					    //   - puis d'appeler $scope.process_data() qui va pouvoir consommer $scope.classes
 					    //     pour passer les noms des classes aux graphiques qui ne peuvent pas profiter

@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantsCtrl',
-		[ '$scope', '$rootScope', '$q', 'APIEnseignants', 'APIUsers', 'APIRegroupements',
-		  function( $scope, $rootScope, $q, APIEnseignants, APIUsers, APIRegroupements ) {
+		[ '$scope', '$rootScope', '$q', 'Enseignants', 'Users', 'Regroupements',
+		  function( $scope, $rootScope, $q, Enseignants, Users, Regroupements ) {
 		      $scope.annee = $rootScope.mois;
 		      $scope.classe = -1;
 		      $scope.mois = -1;
@@ -85,7 +85,7 @@ angular.module('cahierDeTexteApp')
 			      .pluck('regroupement')
 			      .uniq()
 			      .map(function( regroupement_id ) {
-				  return APIRegroupements.get({regroupement_id: regroupement_id}).$promise;
+				  return Regroupements.get({regroupement_id: regroupement_id}).$promise;
 			      })
 			      .value();
 		      };
@@ -93,7 +93,7 @@ angular.module('cahierDeTexteApp')
 		      $scope.extract_enseignants_promises = function( data ) {
 			  return _(data).pluck('enseignant_id')
 			      .map(function ( enseignant_id ) {
-				  return APIUsers.get({ user_id: enseignant_id }).$promise;
+				  return Users.get({ user_id: enseignant_id }).$promise;
 			      });
 		      };
 
@@ -140,7 +140,7 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      // Récupération et consommation des données
-		      APIEnseignants.query( { etablissement_id: '0134567A' },
+		      Enseignants.query( { etablissement_id: '0134567A' },
 					    function success( response ) {
 						$scope.raw_data = _(response).reject( function( enseignant ) {
 						    return enseignant.enseignant_id === ''; 

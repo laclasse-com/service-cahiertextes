@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalClassesCtrl',
-		[ '$scope', '$rootScope', '$q', 'APIClasse', 'APIRegroupements', 'APIMatieres',
-		  function ($scope, $rootScope, $q, APIClasse, APIRegroupements, APIMatieres) {
+		[ '$scope', '$rootScope', '$q', 'Classe', 'Regroupements', 'Matieres',
+		  function ($scope, $rootScope, $q, Classe, Regroupements, Matieres) {
 		      $scope.uai = '0134567A';
 
 		      $scope.raw_data		=   [];
@@ -87,7 +87,7 @@ angular.module('cahierDeTexteApp')
 			      .map( function( matiere_id ) {
 				  var matiere = { id: matiere_id,
 						  libelle: 'Matière inconnue !' };
-				  APIMatieres.get({ matiere_id: matiere_id },
+				  Matieres.get({ matiere_id: matiere_id },
 						  function success( response ) {
 						      matiere.libelle = response.libelle_long;
 						  });
@@ -100,7 +100,7 @@ angular.module('cahierDeTexteApp')
 			  return _.chain( data )
 			      .pluck( 'regroupement_id' )
 			      .map( function( regroupement_id ) {
-				  return APIRegroupements.get({ regroupement_id: regroupement_id }).$promise;
+				  return Regroupements.get({ regroupement_id: regroupement_id }).$promise;
 			      })
 			      .value();
 		      };
@@ -179,7 +179,7 @@ angular.module('cahierDeTexteApp')
 			  }
 		      };
 
-		      APIClasse.query( { uai: $scope.uai, id: '' },
+		      Classe.query( { uai: $scope.uai, id: '' },
 				       function( response ) {
 					   $scope.raw_data = response;
 
