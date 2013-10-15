@@ -175,16 +175,24 @@ angular.module('cahierDeTexteApp')
 			      calendar_event.color = $rootScope.theme.calendar.vide;
 			  }
 
+			  var clever_truncate = function( text, length ) {
+			      if ( text.length > length ) {
+				  var result = text.substring( 0, length );
+				  result = result.substring( 0, result.lastIndexOf(' ') );
+				  result += '…';
+				  return result;
+			      } else {
+				  return text;
+			      }
+			  };
 			  // composition de la description
 			  if ( _(cours).size() > 0 ) {
 			      calendar_event.description += '<br><span style="color:' + $rootScope.calendar.couleurs.cours + '">';
-			      calendar_event.description += cours.contenu.substring( 0, $rootScope.calendar.cours_max_length );
-			      calendar_event.description += cours.contenu.length > $rootScope.calendar.cours_max_length ? '…' : '';
+			      calendar_event.description += clever_truncate( cours.contenu, $rootScope.calendar.cours_max_length );
 			      calendar_event.description += '</span>';
 			      if ( _(devoir).size() > 0 ) {
 				  calendar_event.description += '<br><span style="color:' + $rootScope.calendar.couleurs.devoir + '">';
-				  calendar_event.description += devoir.contenu.substring( 0, $rootScope.calendar.devoir_max_length );
-				  calendar_event.description += devoir.contenu.length > $rootScope.calendar.devoir_max_length ? '…' : '';
+				  calendar_event.description += clever_truncate( devoir.contenu, $rootScope.calendar.devoir_max_length );
 				  calendar_event.description += '</span>';
 			      }
 			  }
