@@ -66,11 +66,7 @@ angular.module('cahierDeTexteApp')
 			  populate: function( saisies ) {
 			      var data = $scope.filtre( saisies );
 			      $scope.gridSaisies = _(data).map( function ( saisie ) {
-				  return { classe_id: saisie.classe_id,
-					   matiere_id: saisie.matiere_id,
-					   cours: saisie.cours,
-					   devoir: saisie.devoir == -1 ? { contenu: '' } : saisie.devoir,
-					   valide: saisie.valide };
+				  return saisie;
 			      } );
 			  }
 		      };
