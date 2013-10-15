@@ -12,33 +12,32 @@ angular.module('cahierDeTexteApp')
 		      $scope.matieres = {};
 		      $scope.classes = {};
 
-
 		      // Tableau
 		      $scope.grid = {
 			  data: 'gridSaisies',
 			  selectedItems: $scope.selectedSaisies,
 			  enableCellEdit: false,
 			  plugins: [new ngGridFlexibleHeightPlugin()],
-			  rowHeight: 60,
+			  rowHeight: 64,
 			  columnDefs: [
 			      { field: 'classe', displayName: 'Classe',
 				cellTemplate: '<span ng-bind-html-unsafe="row.entity.classe_id">{{classes[row.entity.classe_id]}}</span>' },
 			      { field: 'matiere', displayName: 'Matière',
 				cellTemplate: '<span ng-bind-html-unsafe="row.entity.matiere_id">{{matieres[row.entity.matiere_id]}}</span>' },
 			      { field: 'cours', displayName: 'Cours',
-				cellTemplate: '<span style="overflow-y:auto" ng-bind-html-unsafe="row.entity.cours">{{row.entity.cours}}</span>' },
+				cellTemplate: '<span style="overflow-y:auto" ng-bind-html-unsafe="row.entity.cours.contenu">{{row.entity.cours.contenu}}</span>' },
 			      { field: 'devoir', displayName: 'Travail à faire',
-				cellTemplate: '<span style="overflow-y:auto" ng-bind-html-unsafe="row.entity.devoir">{{row.entity.devoir}}</span>' },
+				cellTemplate: '<span style="overflow-y:auto" ng-bind-html-unsafe="row.entity.devoir.contenu">{{row.entity.devoir.contenu}}</span>' },
 			      { field: 'validated', displayName: 'Validé',
-				cellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-model="row.entity.valide" ng-show="!row.entity.valide" ng-click="grid.valide( {{row.entity.cours_id}} )" /><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" disabled checked ng-show="row.entity.valide" /></div>'}
+				cellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-model="row.entity.valide" ng-show="!row.entity.valide" ng-click="grid.valide( {{row.entity.cours}} )" /><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" disabled checked ng-show="row.entity.valide" /></div>'}
 			  ],
-			  valide: function( cours_id ) {
-			      APICours.valide({ id: cours_id }, {});
+			  valide: function( cours ) {
+			      APICours.valide({ id: cours.id }, {});
 			      $scope.graphiques.populate( $scope.gridSaisies );
 			  },
 			  valideSelection: function() {
 			      _($scope.selectedSaisies).each( function( saisie ) {
-				  APICours.valide({ id: saisie.cours_id }, {});
+				  APICours.valide({ id: saisie.cours.id }, {});
 				  saisie.valide = true;
 			      });
 			      $scope.graphiques.populate( $scope.gridSaisies );
@@ -55,11 +54,9 @@ angular.module('cahierDeTexteApp')
 			      _(saisies).each( function ( saisie ) {
 				  $scope.gridSaisies.push( { classe_id: saisie.classe_id,
 							     matiere_id: saisie.matiere_id,
-							     cours: saisie.cours == -1 ? '' : saisie.cours,
-							     devoir: saisie.devoir == -1 ? '' : saisie.devoir,
-							     valide: saisie.valide,
-							     cours_id: saisie.cours_id,
-							     devoir_id: saisie.devoir_id } );
+							     cours: saisie.cours,
+							     devoir: saisie.devoir == -1 ? { contenu: '' } : saisie.devoir,
+							     valide: saisie.valide } );
 			      } );
 			  }
 		      };
@@ -110,6 +107,8 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      $scope.process_data = function(  ) {
+			  console.log($scope.raw_data)
+			      
 			  if ( $scope.raw_data !== undefined ) {
 			      $scope.displayed_data = $scope.raw_data;
 
