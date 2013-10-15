@@ -2,9 +2,11 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EnseignantCtrl',
-		[ '$scope', '$rootScope', '$modal', '$q', 'EmploiDuTemps', 'Matieres', 'Cours', 'Devoir', 'TypesDeDevoir',
-		  function ( $scope, $rootScope, $modal, $q, EmploiDuTemps, Matieres, Cours, Devoir, TypesDeDevoir ) {
+		[ '$scope', '$rootScope', '$modal', '$q', 'EmploiDuTemps', 'Matieres', 'Cours', 'Devoir', 'TypesDeDevoir', 'Regroupements',
+		  function ( $scope, $rootScope, $modal, $q, EmploiDuTemps, Matieres, Cours, Devoir, TypesDeDevoir, Regroupements ) {
 		      $scope.matieres = {};
+		      $scope.classes = {};
+		      $scope.classe = -1;
 
 		      // configuration du composant calendrier
 		      $scope.calendar = { options: $rootScope.globalCalendarOptions,
@@ -34,7 +36,7 @@ angular.module('cahierDeTexteApp')
 			  };
 			  var create_devoir = function( cours, types_de_devoir ) {
 			      var devoir = new Devoir({ cours_id: cours.id,
-							   type_devoir_id: types_de_devoir[1].id });
+							type_devoir_id: types_de_devoir[1].id });
 			      devoir.create = true;
 
 			      return devoir;
@@ -209,6 +211,24 @@ angular.module('cahierDeTexteApp')
 			  return calendar_event;
 		      };
 
+		      $scope.process_data = function() {
+			  var filtered_data = $scope.raw_data;
+
+			  // Filtrage par classe
+			  if ( $scope.classe != -1 ) {
+			      // .invert() suppose que les valeurs sont uniques
+			      var id = _($scope.classes).invert()[$scope.classe];
+			      filtered_data = _($scope.raw_data).filter( function( creneau ) {
+				  return creneau.regroupement_id == id;
+			      });
+			  }
+
+			  $scope.calendar.events = [];
+			  $scope.calendar.events.push( filtered_data.map( function( event ) {
+			      return $scope.assemble_fullCalendar_event( event );
+			  } ) );
+		      };
+
 		      $scope.assemble_fullCalendar_event = function( item_emploi_du_temps ) {
 			  return $scope.update_fullCalendar_event( { details: { matiere_id: item_emploi_du_temps.matiere_id,
 										cahier_de_textes_id: item_emploi_du_temps.cahier_de_textes_id,
@@ -221,10 +241,28 @@ angular.module('cahierDeTexteApp')
 
 		      $scope.types_de_devoir = TypesDeDevoir.query();
 
+		      $scope.extract_classes_promises = function( data ) {
+			  return _.chain( data )
+			      .pluck( 'regroupement_id' )
+			      .uniq()
+			      .map( function( regroupement_id ) {
+				  return Regroupements.get({ regroupement_id: regroupement_id }).$promise;
+			      })
+			      .value();
+		      };
+
 		      // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
 		      EmploiDuTemps.query( function( response ) {
-			  $scope.calendar.events.push( response.map( function( event ) {
-			      return $scope.assemble_fullCalendar_event( event );
-			  } ) );
+			  $scope.raw_data = response;
+
+			  // Extraction des classes
+			  $q.all( $scope.extract_classes_promises( $scope.raw_data ) )
+			      .then( function( classes ) {
+				  _(classes).each(function( classe ) {
+				      $scope.classes[classe.id] = classe.libelle !== null ? classe.libelle : classe.libelle_aaf;
+				  });
+			      });
+
+			  $scope.process_data();
 		      });
 		  } ] );
