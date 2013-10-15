@@ -1,9 +1,8 @@
 'use strict';
 
 angular.module('cahierDeTexteApp')
-  .factory('APITypesDeDevoir',
+  .factory('EmploiDuTemps',
 	   [ '$resource',
 	     function($resource) {
-		 return $resource( '/api/v0/types_de_devoir/:id',
-				   { id: '@id' });
+		 return $resource( '/api/v0/emploi_du_temps' );
 	     } ] );

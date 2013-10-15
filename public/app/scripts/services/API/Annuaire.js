@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('cahierDeTexteApp')
-  .factory('APIMatieres',
+  .factory('Matieres',
 	   [ '$resource',
 	     function( $resource ) {
 		 return $resource( 'http://www.dev.laclasse.com/api/app/matieres/:matiere_id',
@@ -9,7 +9,7 @@ angular.module('cahierDeTexteApp')
 	     } ] );
 
 angular.module('cahierDeTexteApp')
-  .factory('APIRegroupements',
+  .factory('Regroupements',
 	   [ '$resource',
 	     function( $resource ) {
 		 return $resource( 'http://www.dev.laclasse.com/api/app/regroupements/:regroupement_id',
@@ -17,7 +17,7 @@ angular.module('cahierDeTexteApp')
 	     } ] );
 
 angular.module('cahierDeTexteApp')
-  .factory('APIUsers',
+  .factory('Users',
 	   [ '$resource',
 	     function( $resource ) {
 		 return $resource( 'http://www.dev.laclasse.com/api/app/users/:user_id?expand=true',
