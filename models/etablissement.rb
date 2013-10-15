@@ -73,6 +73,7 @@ class Etablissement < Sequel::Model( :etablissements )
           devoir = -1 if devoir.nil?
 
           {                     # TODO: tenir compte des semaines de présence
+            mois: month,
             classe_id: CreneauEmploiDuTempsRegroupement.where(creneau_emploi_du_temps_id: cours.creneau_emploi_du_temps_id).first.regroupement_id,
             matiere_id: CreneauEmploiDuTemps[ cours.creneau_emploi_du_temps_id ].matiere_id,
             cours: cours,
@@ -80,7 +81,7 @@ class Etablissement < Sequel::Model( :etablissements )
             valide: !cours.date_validation.nil?
           }
         end
-      end
+      end.flatten
     }
   end
 
