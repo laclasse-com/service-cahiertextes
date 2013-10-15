@@ -47,12 +47,14 @@ angular.module('cahierDeTexteApp')
 			  valide: function( row ) {
 			      row.entity.cours.$valide();
 			      row.entity.valide = true;
+			      $scope.raw_data[ row.entity.index ].valide = true;
 			      $scope.graphiques.populate( $scope.gridSaisies );
 			  },
 			  valideSelection: function() {
 			      _($scope.selectedSaisies).each( function( saisie ) {
 				  saisie.cours.$valide();
 				  saisie.valide = true;
+				  $scope.raw_data[ saisie.index ].valide = true;
 			      });
 			      $scope.graphiques.populate( $scope.gridSaisies );
 			  },
