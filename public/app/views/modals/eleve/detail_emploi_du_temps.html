@@ -4,19 +4,19 @@
 </div>
 <div class="modal-body">
   <div class="panel panel-default col-md-12">
-    <div class="panel-body">
-      {{cours.contenu}}
-    </div>
+    <div class="panel-body" x-ng-bind-html="cours.contenu"></div>
   </div>
   <div class="panel panel-default col-md-12" x-ng-show="devoir.contenu != null">
-    <div class="panel-body">
-      {{devoir.contenu}}
-    </div>
-    <button class="btn btn-success pull-right" x-ng-click="fait()" x-ng-show="devoir.fait == false"><span class="glyphicon glyphicon-unchecked"></span> Fait !</button>
-    <button class="btn btn-default pull-right" x-ng-show="devoir.fait == true" disabled><span class="glyphicon glyphicon-check"></span> Fait !</button>
+    <div class="panel-body" x-ng-bind-html="devoir.contenu"></div>
+    <button class="btn btn-success pull-right" x-ng-click="fait()" x-ng-show="devoir.fait == false">
+      <span class="glyphicon glyphicon-unchecked"></span> Fait
+    </button>
+    <button class="btn btn-default pull-right" x-ng-show="devoir.fait == true" disabled>
+      <span class="glyphicon glyphicon-check"></span> Fait
+    </button>
   </div>
   <div class="panel panel-default col-md-12" x-ng-show="devoir.contenu == null">
-    <h3>pas de devoir :)</h3>
+    pas de devoir
   </div>
 </div>
 <div class="modal-footer">
