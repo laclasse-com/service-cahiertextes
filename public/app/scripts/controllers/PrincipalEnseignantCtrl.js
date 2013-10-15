@@ -29,15 +29,16 @@ angular.module('cahierDeTexteApp')
 			      { field: 'devoir', displayName: 'Travail à faire',
 				cellTemplate: '<span style="overflow-y:auto" ng-bind-html-unsafe="row.entity.devoir.contenu">{{row.entity.devoir.contenu}}</span>' },
 			      { field: 'validated', displayName: 'Validé',
-				cellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-model="row.entity.valide" ng-show="!row.entity.valide" ng-click="grid.valide( {{row.entity.cours}} )" /><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" disabled checked ng-show="row.entity.valide" /></div>'}
+				cellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-model="row.entity.valide" ng-show="!row.entity.valide" ng-click="grid.valide( row )" /><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" disabled checked ng-show="row.entity.valide" /></div>'}
 			  ],
-			  valide: function( cours ) {
-			      APICours.valide({ id: cours.id }, {});
+			  valide: function( row ) {
+			      row.entity.cours.$valide();
 			      $scope.graphiques.populate( $scope.gridSaisies );
 			  },
 			  valideSelection: function() {
 			      _($scope.selectedSaisies).each( function( saisie ) {
-				  APICours.valide({ id: saisie.cours.id }, {});
+				  // APICours.valide({ id: saisie.cours.id }, {});
+				  saisie.cours.$valide();
 				  saisie.valide = true;
 			      });
 			      $scope.graphiques.populate( $scope.gridSaisies );
@@ -50,13 +51,12 @@ angular.module('cahierDeTexteApp')
 			      });
 			  },
 			  populate: function( saisies ) {
-			      $scope.gridSaisies = [];
-			      _(saisies).each( function ( saisie ) {
-				  $scope.gridSaisies.push( { classe_id: saisie.classe_id,
-							     matiere_id: saisie.matiere_id,
-							     cours: saisie.cours,
-							     devoir: saisie.devoir == -1 ? { contenu: '' } : saisie.devoir,
-							     valide: saisie.valide } );
+			      $scope.gridSaisies = _(saisies).map( function ( saisie ) {
+				  return { classe_id: saisie.classe_id,
+					   matiere_id: saisie.matiere_id,
+					   cours: saisie.cours,
+					   devoir: saisie.devoir == -1 ? { contenu: '' } : saisie.devoir,
+					   valide: saisie.valide };
 			      } );
 			  }
 		      };
@@ -107,7 +107,6 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      $scope.process_data = function(  ) {
-			  console.log($scope.raw_data)
 			      
 			  if ( $scope.raw_data !== undefined ) {
 			      $scope.displayed_data = $scope.raw_data;
@@ -117,6 +116,11 @@ angular.module('cahierDeTexteApp')
 				  $scope.displayed_data = _($scope.displayed_data[ $scope.moisCourant - 1 ]);
 			      }
 			      $scope.displayed_data = _($scope.displayed_data).flatten();
+			      $scope.displayed_data = _($scope.displayed_data).map( function( saisie ) {
+				  saisie.cours = new APICours( saisie.cours );
+				  // saisie.devoir = new APIDevoir( saisie.devoir );
+				  return saisie;
+			      });
 
 			      // Filtrage par classe
 			      if ( $scope.classe != -1 ) {
