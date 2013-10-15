@@ -65,6 +65,7 @@ module CahierDeTextesAPI
         end
 
         { cahier_de_textes_id: cahier_de_textes.id,
+          regroupement_id: cahier_de_textes.regroupement_id,
           creneau_emploi_du_temps_id: creneau.id,
           matiere_id: creneau.matiere_id,
           start: Time.new( jour.year, jour.month, jour.mday, plage_debut.hour, plage_debut.min ).iso8601,
