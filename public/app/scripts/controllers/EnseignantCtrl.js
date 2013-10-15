@@ -118,12 +118,15 @@ angular.module('cahierDeTexteApp')
 			      .result.then( function ( objets ) {
 				  var index = _($scope.calendar.events[0]).indexOf($scope.creneau);
 				  var updated_event = $scope.update_fullCalendar_event( $scope.creneau, objets.cours, objets.devoir );
-				  _.chain(updated_event)
-				      .keys()
-				      .each( function( propriete ) {
-					  $scope.calendar.events[0][ index ][ propriete ] = updated_event[ propriete ];
-				      });
 				  $scope.emploi_du_temps.fullCalendar( 'renderEvent', $scope.calendar.events[0][ index ] );
+				      _.chain(updated_event)
+					  .keys()
+					  .reject(function( key ) {
+					      return key == "title";
+					  })
+					  .each( function( propriete ) {
+					      $scope.calendar.events[0][ index ][ propriete ] = updated_event[ propriete ];
+					  });
 			      });
 		      };
 
