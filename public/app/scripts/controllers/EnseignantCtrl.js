@@ -132,14 +132,14 @@ angular.module('cahierDeTexteApp')
 						   cours: function() { return $scope.cours; },
 						   devoir: function() { return $scope.devoir; },
 						   types_de_devoir: function() { return $scope.types_de_devoir; } } })
-			      .result.then( function ( objets ) {
+			      .result.then( function ( objets ) { //évécuté à la fermeture de la popup
 				  if ( ( objets.cours.dirty ) || ( objets.devoir.dirty ) ) {
 				      var index = _($scope.calendar.events[0]).indexOf($scope.creneau);
 				      var updated_event = $scope.update_fullCalendar_event( $scope.creneau, objets.cours, objets.devoir );
 
 				      _.chain(updated_event)
 					  .keys()
-					  .reject(function( key ) {
+					  .reject(function( key ) { //updated_event n'a pas de title
 					      return key == "title";
 					  })
 					  .each( function( propriete ) {
@@ -185,6 +185,7 @@ angular.module('cahierDeTexteApp')
 				  return text;
 			      }
 			  };
+
 			  // composition de la description
 			  if ( _(cours).size() > 0 ) {
 			      calendar_event.description += '<br><span style="color:' + $rootScope.calendar.couleurs.cours + '">';
