@@ -63,7 +63,7 @@ angular.module('cahierDeTexteApp')
 						  populate: function( data, classes ) {
 						      $scope.individualCharts.classes = _.chain(data)
 							  .map( function( regroupement ) {
-							      return { libelle: classes[ regroupement.regroupement_id ].libelle,
+							      return { libelle: classes[ regroupement.regroupement_id ],
 								       pieChart: { options: $rootScope.globalPieChartOptions,
 										   data: [ { color : $rootScope.theme.validated.base,
 											     value: regroupement.validated },
