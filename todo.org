@@ -1,0 +1,27 @@
+* client
+** global
+*** animation pendant le chargement des données
+** principal/enseignant
+*** DONE répercussion des validation sur les raw_data
+- State "DONE"       from "STARTED"    [2013-10-15 Tue 16:06]
+    - filtre sur une classe A et valide toute les saisies
+    - filtre sur toutes les classes
+    => les saisies de la classe A ne sont pas affichées comme validées
+*** filtre pour n'afficher que ce qui n'est pas validé
+*** pagination de la grid
+** principal/classes
+*** DONE bug d'affichage des noms des classes
+- State "DONE"       from "STARTED"    [2013-10-15 Tue 14:07]
+** enseignant
+*** DONE éviter une erreur 405 s'il n'y a pas de cours
+- State "DONE"       from "STARTED"    [2013-10-15 Tue 12:38]
+*** DONE saisie sans rien ou juste sans devoir
+- State "DONE"       from "STARTED"    [2013-10-15 Tue 10:48]
+    => à la fermeture de la popup la saisie est rouge
+*** DONE tronquer le texte entre les mots
+- State "DONE"       from "STARTED"    [2013-10-15 Tue 13:53]
+*** DONE disparition de la matière à la fermeture de la popup
+- State "DONE"       from "STARTED"    [2013-10-15 Tue 12:38]
+*** copier les saisies entre classes/groupes
+*** filtrer par classe
+*** attacher plusieurs à un cours
