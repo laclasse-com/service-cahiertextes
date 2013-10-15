@@ -12,6 +12,19 @@ angular.module('cahierDeTexteApp')
 		      $scope.matieres = {};
 		      $scope.classes = {};
 
+		      $scope.filtre = function( saisies ) {
+			  var data = saisies;
+			  if ( $scope.moisCourant != -1 ) {
+			      data = _(data).where({ mois: $scope.moisCourant + 1 });
+			  }
+			  if ( $scope.classe != -1 ) {
+			      // .invert() suppose que les valeurs sont uniques
+			      var id = _($scope.classes).invert()[$scope.classe];
+			      data = _(data).where({ classe_id: id });
+			  }
+			  return data;
+		      };
+
 		      // Tableau
 		      $scope.grid = {
 			  data: 'gridSaisies',
@@ -33,11 +46,11 @@ angular.module('cahierDeTexteApp')
 			  ],
 			  valide: function( row ) {
 			      row.entity.cours.$valide();
+			      row.entity.valide = true;
 			      $scope.graphiques.populate( $scope.gridSaisies );
 			  },
 			  valideSelection: function() {
 			      _($scope.selectedSaisies).each( function( saisie ) {
-				  // APICours.valide({ id: saisie.cours.id }, {});
 				  saisie.cours.$valide();
 				  saisie.valide = true;
 			      });
@@ -51,7 +64,8 @@ angular.module('cahierDeTexteApp')
 			      });
 			  },
 			  populate: function( saisies ) {
-			      $scope.gridSaisies = _(saisies).map( function ( saisie ) {
+			      var data = $scope.filtre( saisies );
+			      $scope.gridSaisies = _(data).map( function ( saisie ) {
 				  return { classe_id: saisie.classe_id,
 					   matiere_id: saisie.matiere_id,
 					   cours: saisie.cours,
@@ -90,7 +104,8 @@ angular.module('cahierDeTexteApp')
 			      $scope.graphiques.pieChart.data[0].value = 0;
 			      $scope.graphiques.pieChart.data[1].value = 0;
 
-			      _.chain(saisies)
+			      var data = $scope.filtre( saisies );
+			      _.chain(data)
 				  .groupBy('classe_id')
 				  .each( function( classe ) {
 				      var filled = classe.length;
@@ -107,33 +122,32 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      $scope.process_data = function(  ) {
-			      
 			  if ( $scope.raw_data !== undefined ) {
-			      $scope.displayed_data = $scope.raw_data;
+			      // $scope.displayed_data = $scope.raw_data;
 
-			      // Filtrage par mois
-			      if ( $scope.moisCourant != -1 ) {
-				  $scope.displayed_data = _($scope.displayed_data[ $scope.moisCourant - 1 ]);
-			      }
-			      $scope.displayed_data = _($scope.displayed_data).flatten();
-			      $scope.displayed_data = _($scope.displayed_data).map( function( saisie ) {
+			      // // Filtrage par mois
+			      // if ( $scope.moisCourant != -1 ) {
+			      //	  $scope.displayed_data = _($scope.displayed_data[ $scope.moisCourant - 1 ]);
+			      // }
+			      // $scope.displayed_data = _($scope.displayed_data).flatten();
+			      $scope.raw_data = _($scope.raw_data).map( function( saisie ) {
 				  saisie.cours = new APICours( saisie.cours );
 				  // saisie.devoir = new APIDevoir( saisie.devoir );
 				  return saisie;
 			      });
 
-			      // Filtrage par classe
-			      if ( $scope.classe != -1 ) {
-				  // .invert() suppose que les valeurs sont uniques
-				  var id = _($scope.classes).invert()[$scope.classe];
-				  $scope.displayed_data = _($scope.displayed_data).filter( function( saisie ) {
-				      return ( saisie.classe_id == id );
-				  });
-			      }
+			      // // Filtrage par classe
+			      // if ( $scope.classe != -1 ) {
+			      //	  // .invert() suppose que les valeurs sont uniques
+			      //	  var id = _($scope.classes).invert()[$scope.classe];
+			      //	  $scope.displayed_data = _($scope.displayed_data).filter( function( saisie ) {
+			      //	      return ( saisie.classe_id == id );
+			      //	  });
+			      // }
 
 			      // consommation des données dans les graphiques et le grid
-			      $scope.grid.populate( $scope.displayed_data );
-			      $scope.graphiques.populate( $scope.displayed_data );
+			      $scope.grid.populate( $scope.raw_data );
+			      $scope.graphiques.populate( $scope.raw_data );
 			  }
 		      };
 
