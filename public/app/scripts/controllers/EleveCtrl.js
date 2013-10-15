@@ -80,7 +80,7 @@ angular.module('cahierDeTexteApp')
 					     function() { devoir.fait = true; });
 			  };
 
-			  $scope.close = function() {
+			  $scope.fermer = function() {
 			      $modalInstance.close( ( _(devoir).size() > 0 ) ? devoir.fait : -1 );
 			  };
 		      };
