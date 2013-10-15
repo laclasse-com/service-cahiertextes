@@ -22,47 +22,63 @@ angular.module('cahierDeTexteApp')
 
 		      // ouverture de la popup de création/édition
 		      $scope.calendar.options.eventClick = function( event ) {
+			  var create_cours = function( creneau ) {
+			      var cours = new APICours({
+				  cahier_de_textes_id: creneau.details.cahier_de_textes_id,
+				  creneau_emploi_du_temps_id: creneau.details.creneau_emploi_du_temps_id,
+				  date_cours: creneau.start
+			      });
+			      cours.create = true;
+
+			      return cours;
+			  };
+			  var create_devoir = function( cours, types_de_devoir ) {
+			      var devoir = new APIDevoir({ cours_id: cours.id,
+							   type_devoir_id: types_de_devoir[1].id });
+			      devoir.create = true;
+
+			      return devoir;
+			  };
+
 			  $scope.creneau = _(event.source.events).findWhere({_id: event._id});
 			  $scope.matiere = event.title;
 
-			  APITypesDeDevoir.query()
-			      .$promise.then( function( response ) {
-				  $scope.types_de_devoir = response;
-
-				  APICours.get( { id: $scope.creneau.details.cours.id } )
-				      .$promise
-				      .then( function success( cours ) {
-					  $scope.cours = cours;
-					  $scope.cours.create = false;
-
-					  APIDevoir.get( { id: $scope.creneau.details.devoir.id } )
-					      .$promise
-					      .then( function success( devoir ) {
-						  $scope.devoir = devoir;
-						  $scope.devoir.create = false;
-
-						  $scope.ouvre_popup(  );
-					      },
-						     function error( raison ) {
-							 console.log( 'Erreur ' + raison.status );
-							 $scope.devoir = new APIDevoir({ cours_id: $scope.cours.id,
-											 type_devoir_id: $scope.types_de_devoir[0].id });
-							 $scope.devoir.create = true;
-							 $scope.ouvre_popup(  );
-						     });
-				      },
-					     function error( raison ) {
-						 console.log( 'Erreur ' + raison.status );
-						 $scope.cours = new APICours({
-						     cahier_de_textes_id: $scope.creneau.details.cahier_de_textes_id,
-						     creneau_emploi_du_temps_id: $scope.creneau.details.creneau_emploi_du_temps_id,
-						     date_cours: $scope.creneau.start
+			  // 1. cours
+			  if ( $scope.creneau.details.cours.id !== undefined ) {
+			      $scope.cours = APICours.get( { id: $scope.creneau.details.cours.id } ).$promise;
+			      $scope.cours.then( function success() {
+				  $scope.cours.create = false;
+			      },
+						 function error() {
+						     $scope.cours = create_cours( $scope.creneau );
 						 });
-						 $scope.cours.create = true;
-						 $scope.devoir = new APIDevoir({ type_devoir_id: $scope.types_de_devoir[0].id });
-						 $scope.devoir.create = true;
-						 $scope.ouvre_popup(  );
-					     });
+			  } else {
+			      $scope.cours = create_cours( $scope.creneau );
+			  }
+
+			  // 2. devoir
+			  if ( $scope.creneau.details.devoir.id !== undefined ) {
+			      $scope.devoir = APIDevoir.get( { id: $scope.creneau.details.devoir.id } ).$promise;
+			      $scope.devoir.then( function success() {
+				  $scope.devoir.create = false;
+			      },
+						  function error() {
+						      $q.all( $scope.types_de_devoir, $scope.cours )
+							  .then( function() {
+							      $scope.devoir = create_devoir( $scope.cours, $scope.types_de_devoir );
+							  });
+						  });
+			  } else {
+			      $q.all( $scope.types_de_devoir, $scope.cours )
+				  .then( function() {
+				      $scope.devoir = create_devoir( $scope.cours, $scope.types_de_devoir );
+				  });
+			  }
+
+			  // 3. ouverture de la popup
+			  $q.all( $scope.types_de_devoir, $scope.cours, $scope.devoir )
+			      .then( function() {
+				  $scope.ouvre_popup(  );
 			      });
 		      };
 
@@ -83,7 +99,8 @@ angular.module('cahierDeTexteApp')
 			  $scope.valider = function() {
 			      var promesse = $q.when(true);
 
-			      if ( $scope.cours.contenu !== '' ) {
+			      if ( $scope.cours.contenu.length > 0 ) {
+				  $scope.cours.dirty = true;
 				  if ( $scope.cours.create ) {
 				      promesse = $scope.cours.$save();
 				  } else {
@@ -93,10 +110,10 @@ angular.module('cahierDeTexteApp')
 
 			      promesse.then( function( cours ) {
 				  $scope.cours = cours;
-				  if ( $scope.devoir.contenu !== '' ) {
+				  if ( $scope.devoir.contenu.length > 0 ) {
+				      $scope.devoir.dirty = true;
 				      if ( $scope.devoir.create ) {
 					  $scope.devoir.cours_id = $scope.cours.id;
-					  console.log($scope.devoir)
 					  $scope.devoir.$save();
 				      } else {
 					  $scope.devoir.$update();
@@ -116,9 +133,10 @@ angular.module('cahierDeTexteApp')
 						   devoir: function() { return $scope.devoir; },
 						   types_de_devoir: function() { return $scope.types_de_devoir; } } })
 			      .result.then( function ( objets ) {
-				  var index = _($scope.calendar.events[0]).indexOf($scope.creneau);
-				  var updated_event = $scope.update_fullCalendar_event( $scope.creneau, objets.cours, objets.devoir );
-				  $scope.emploi_du_temps.fullCalendar( 'renderEvent', $scope.calendar.events[0][ index ] );
+				  if ( ( objets.cours.dirty ) || ( objets.devoir.dirty ) ) {
+				      var index = _($scope.calendar.events[0]).indexOf($scope.creneau);
+				      var updated_event = $scope.update_fullCalendar_event( $scope.creneau, objets.cours, objets.devoir );
+
 				      _.chain(updated_event)
 					  .keys()
 					  .reject(function( key ) {
@@ -127,6 +145,8 @@ angular.module('cahierDeTexteApp')
 					  .each( function( propriete ) {
 					      $scope.calendar.events[0][ index ][ propriete ] = updated_event[ propriete ];
 					  });
+				      $scope.emploi_du_temps.fullCalendar( 'renderEvent', $scope.calendar.events[0][ index ] );
+				  }
 			      });
 		      };
 
@@ -145,8 +165,12 @@ angular.module('cahierDeTexteApp')
 						 color: '' };
 
 			  // choix de la couleur
-			  if ( _(cours).size() > 0 ) {
-			      calendar_event.color = ( _(devoir).size() > 0 ) ? $rootScope.theme.calendar.devoir : $rootScope.theme.calendar.saisie;
+			  if ( ( cours.contenu !== undefined ) && ( cours.contenu.length > 0 ) ) {
+			      if ( ( devoir.contenu !== undefined ) && ( devoir.contenu.length > 0 ) ) {
+				  calendar_event.color = $rootScope.theme.calendar.devoir;
+			      } else {
+				  calendar_event.color = $rootScope.theme.calendar.saisie;
+			      }
 			  } else {
 			      calendar_event.color = $rootScope.theme.calendar.vide;
 			  }
@@ -185,6 +209,8 @@ angular.module('cahierDeTexteApp')
 								   item_emploi_du_temps.cours,
 								   item_emploi_du_temps.devoir );
 		      };
+
+		      $scope.types_de_devoir = APITypesDeDevoir.query();
 
 		      // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
 		      APIEmploiDuTemps.query( function( response ) {
