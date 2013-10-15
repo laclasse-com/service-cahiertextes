@@ -56,12 +56,12 @@ angular.module( 'cahierDeTexteApp' )
 	    })
 	    .state('eleve', {
 		url: '/eleve',
-		templateUrl: 'views/emploi_du_temps.html',
+		templateUrl: 'views/eleve.html',
 		controller: 'EleveCtrl'
 	    })
 	    .state('enseignant', {
 		url: '/enseignant',
-		templateUrl: 'views/emploi_du_temps.html',
+		templateUrl: 'views/enseignant.html',
 		controller: 'EnseignantCtrl'
 	    });
     } ] );
