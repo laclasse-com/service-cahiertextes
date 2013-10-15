@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <button type="button" class="close pull-right" aria-hidden="true" x-ng-click="close()">&times;</button>
+  <button type="button" class="close pull-right" aria-hidden="true" x-ng-click="fermer()">&times;</button>
   <h3>{{matiere}}</h3>
 </div>
 <div class="modal-body">
@@ -20,4 +20,7 @@
   </div>
 </div>
 <div class="modal-footer">
+  <button class="btn btn-info pull-right" x-ng-click="fermer()">
+    <span class="glyphicon glyphicon-remove-sign"></span> Fermer
+  </button>
 </div>
