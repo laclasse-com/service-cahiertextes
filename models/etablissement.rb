@@ -70,16 +70,13 @@ class Etablissement < Sequel::Model( :etablissements )
           .map do
           |cours|
           devoir = Devoir.where(cours_id: cours.id).first
-          devoir_id = devoir.nil? ? -1 : devoir.id
-          devoir_contenu = devoir.nil? ? -1 : devoir.contenu
+          devoir = -1 if devoir.nil?
 
           {                     # TODO: tenir compte des semaines de présence
             classe_id: CreneauEmploiDuTempsRegroupement.where(creneau_emploi_du_temps_id: cours.creneau_emploi_du_temps_id).first.regroupement_id,
             matiere_id: CreneauEmploiDuTemps[ cours.creneau_emploi_du_temps_id ].matiere_id,
-            cours_id: cours.id,
-            cours: cours.contenu,
-            devoir_id: devoir_id,
-            devoir: devoir_contenu,
+            cours: cours,
+            devoir: devoir,
             valide: !cours.date_validation.nil?
           }
         end
