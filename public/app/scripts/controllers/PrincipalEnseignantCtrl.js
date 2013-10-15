@@ -11,6 +11,7 @@ angular.module('cahierDeTexteApp')
 		      $scope.selectedSaisies = [];
 		      $scope.matieres = {};
 		      $scope.classes = {};
+		      $scope.montre_valides = false;
 
 		      $scope.filtre = function( saisies ) {
 			  var data = saisies;
@@ -21,6 +22,9 @@ angular.module('cahierDeTexteApp')
 			      // .invert() suppose que les valeurs sont uniques
 			      var id = _($scope.classes).invert()[$scope.classe];
 			      data = _(data).where({ classe_id: id });
+			  }
+			  if ( ! $scope.montre_valides ) {
+			      data = _(data).where({ valide: false });
 			  }
 			  return data;
 		      };

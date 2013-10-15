@@ -7,7 +7,8 @@
     - filtre sur une classe A et valide toute les saisies
     - filtre sur toutes les classes
     => les saisies de la classe A ne sont pas affichées comme validées
-*** filtre pour n'afficher que ce qui n'est pas validé
+*** DONE filtre pour n'afficher que ce qui n'est pas validé
+- State "DONE"       from "STARTED"    [2013-10-15 Tue 17:25]
 *** pagination de la grid
 ** principal/classes
 *** DONE bug d'affichage des noms des classes
