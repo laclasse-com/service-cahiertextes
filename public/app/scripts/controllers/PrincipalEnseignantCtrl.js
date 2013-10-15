@@ -119,27 +119,13 @@ angular.module('cahierDeTexteApp')
 
 		      $scope.process_data = function(  ) {
 			  if ( $scope.raw_data !== undefined ) {
-			      // $scope.displayed_data = $scope.raw_data;
-
-			      // // Filtrage par mois
-			      // if ( $scope.moisCourant != -1 ) {
-			      //	  $scope.displayed_data = _($scope.displayed_data[ $scope.moisCourant - 1 ]);
-			      // }
-			      // $scope.displayed_data = _($scope.displayed_data).flatten();
-			      $scope.raw_data = _($scope.raw_data).map( function( saisie ) {
+			      $scope.raw_data = _($scope.raw_data).map( function( saisie, index ) {
+				  // on référence l'index d'origine dans chaque élément pour propager la validation
+				  saisie.index = index;
 				  saisie.cours = new APICours( saisie.cours );
 				  // saisie.devoir = new APIDevoir( saisie.devoir );
 				  return saisie;
 			      });
-
-			      // // Filtrage par classe
-			      // if ( $scope.classe != -1 ) {
-			      //	  // .invert() suppose que les valeurs sont uniques
-			      //	  var id = _($scope.classes).invert()[$scope.classe];
-			      //	  $scope.displayed_data = _($scope.displayed_data).filter( function( saisie ) {
-			      //	      return ( saisie.classe_id == id );
-			      //	  });
-			      // }
 
 			      // consommation des données dans les graphiques et le grid
 			      $scope.grid.populate( $scope.raw_data );
