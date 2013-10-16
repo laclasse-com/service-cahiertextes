@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('cahierDeTexteApp')
-  .factory('EmploiDuTemps',
+  .factory('EmploisDuTemps',
 	   [ '$resource',
 	     function($resource) {
-		 return $resource( '/api/v0/emploi_du_temps' );
+		 return $resource( '/api/v0/emplois_du_temps' );
 	     } ] );

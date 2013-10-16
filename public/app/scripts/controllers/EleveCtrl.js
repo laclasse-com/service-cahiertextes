@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EleveCtrl',
-		[ '$scope', '$rootScope', '$modal', 'EmploiDuTemps', 'Matieres',
-		  function ( $scope, $rootScope, $modal, EmploiDuTemps, Matieres ) {
+		[ '$scope', '$rootScope', '$modal', 'EmploisDuTemps', 'Matieres',
+		  function ( $scope, $rootScope, $modal, EmploisDuTemps, Matieres ) {
 		      $scope.matieres = {};
 
 		      // configuration du composant calendrier
@@ -136,7 +136,7 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
-		      EmploiDuTemps.query( function( response ) {
+		      EmploisDuTemps.query( function( response ) {
 			  $scope.calendar.events.push( response.map( function( event ) {
 			      return $scope.assemble_fullCalendar_event( event );
 			  } ) );
