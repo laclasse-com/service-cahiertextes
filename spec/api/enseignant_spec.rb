@@ -150,7 +150,7 @@ describe CahierDeTextesAPI::API do
     ressources = [ { label: 'test1', url: 'https://localhost/docs/test1' },
                    { label: 'test2', url: 'https://localhost/docs/test2' } ]
 
-    post( "/api/v0/devoir/#{cours_id}",
+    post( "/api/v0/devoirs/",
           { cours_id: cours_id,
             type_devoir_id: type_devoir_id,
             contenu: contenu,
@@ -186,7 +186,7 @@ describe CahierDeTextesAPI::API do
 
     expected_ressources_size = devoir.ressources.size + ressources.size
 
-    put( "/api/v0/devoir/#{devoir.id}",
+    put( "/api/v0/devoirs/#{devoir.id}",
          { cours_id: devoir.cours_id,
            type_devoir_id: type_devoir_id,
            contenu: contenu,
@@ -213,7 +213,7 @@ describe CahierDeTextesAPI::API do
   it 'récupère les détails d\'un devoir' do
     devoir = Devoir.all.sample
 
-    get "/api/v0/devoir/#{devoir.id}"
+    get "/api/v0/devoirs/#{devoir.id}"
     last_response.status.should == 200
 
     response_body = JSON.parse( last_response.body )

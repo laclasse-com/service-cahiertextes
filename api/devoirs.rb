@@ -6,7 +6,7 @@ module CahierDeTextesAPI
   #   - élèves pour consultation et gestion todo-list
   #   - enseignants pour consultation et édition
   #   - principaux pour consultation
-  class DevoirAPI < Grape::API
+  class DevoirsAPI < Grape::API
 
     desc 'renseigne un devoir'
     params {

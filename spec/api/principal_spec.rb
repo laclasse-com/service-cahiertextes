@@ -54,8 +54,6 @@ describe CahierDeTextesAPI::API do
     response_body = JSON.parse( last_response.body )
 
     response_body['enseignant_id'].should == enseignant_id
-
-    response_body['saisies'].count.should == 12
   end
 
   it 'valide tout le cahier de textes d\'un enseignant' do

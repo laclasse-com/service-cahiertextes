@@ -39,4 +39,4 @@
 *** NEXT séparer cours et devoir en 2 événements ?
 
 ** eleve
-*** page todo-list
+*** TODO page todo-list

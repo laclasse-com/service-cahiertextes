@@ -67,7 +67,7 @@ describe CahierDeTextesAPI::API do
     eleve_id = 1
     devoir = Devoir.all.sample
 
-    get "/api/v0/devoir/#{devoir.id}"
+    get "/api/v0/devoirs/#{devoir.id}"
     last_response.status.should == 200
 
     response_body = JSON.parse( last_response.body )
@@ -82,7 +82,7 @@ describe CahierDeTextesAPI::API do
   it 'note un devoir comme fait' do
     devoir = Devoir.all.sample
 
-    put "/api/v0/devoir/#{devoir.id}/fait", {}
+    put "/api/v0/devoirs/#{devoir.id}/fait", {}
     last_response.status.should == 200
 
     devoir.fait_par?( 1 ).should be_true

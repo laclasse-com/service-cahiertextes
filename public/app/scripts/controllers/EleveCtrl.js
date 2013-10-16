@@ -70,13 +70,13 @@ angular.module('cahierDeTexteApp')
 			      });
 		      };
 
-		      var modalInstanceCtrl = function( $scope, $modalInstance, Devoir, matiere, cours, devoir ) {
+		      var modalInstanceCtrl = function( $scope, $modalInstance, Devoirs, matiere, cours, devoir ) {
 			  $scope.matiere = matiere;
 			  $scope.cours = cours;
 			  $scope.devoir = devoir;
 
 			  $scope.fait = function() {
-			      Devoir.fait({ id: devoir.id },
+			      Devoirs.fait({ id: devoir.id },
 					     function() { devoir.fait = true; });
 			  };
 
