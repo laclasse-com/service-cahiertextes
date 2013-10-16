@@ -12,19 +12,17 @@
       <option x-ng-repeat="unmois in mois" value="{{$index + 1}}">{{unmois}}</option>
     </select>
 
-    <input type="checkbox" x-ng-model="montre_valides" name="montre_valides" id="montre_valides" x-ng-change="process_data()" />
-    <label for="montre_valides">afficher les saisies validées</label>
   </div>
 </div>
 
 <div class="panel panel-default">
-  <div class="panel-body">
+  <div class="panel-heading">
+    <h4>{{enseignant.prenom}} {{enseignant.nom}}</h4>
+  </div>
 
+  <div class="panel-body">
     <div class="col-md-4">
       <div class="panel panel-default">
-	<div class="panel-heading">
-	  <h4>{{enseignant.prenom}} {{enseignant.nom}}</h4>
-	</div>
 	<div class="panel-body">
 	  <p><a href="mailto:{{enseignant.emails[0].adresse}}">{{enseignant.emails[0].adresse}}</a></p>
 	  <label x-ng-show="enseignant.prof_principal.length > 0">Professeur principal en</label>
@@ -52,12 +50,18 @@
 </div>
 
 <div class="panel panel-default">
-  <div class="panel-body">
-    <div class="btn-group btn-group-xs col-md-offset-8">
-      <a class="btn btn-default" x-ng-click="grid.selectionneNonValides()">Sélectionne les non validés</a>
-      <a class="btn btn-default" x-ng-click="grid.valideSelection()">Valider la sélection</a>
+  <div class="panel-heading">
+    <div class="col-md-12">
+      <input type="checkbox" x-ng-model="montre_valides" name="montre_valides" id="montre_valides" x-ng-change="process_data()" />
+      <label for="montre_valides">afficher les saisies validées</label>
+      <div class="btn-group btn-group-xs pull-right">
+	<a class="btn btn-default" x-ng-click="grid.selectionneNonValides()">Sélectionne les non validés</a>
+	<a class="btn btn-default" x-ng-click="grid.valideSelection()">Valider la sélection</a>
+      </div>
     </div>
-    <div class="col-md-12" style="float:left" x-ng-grid="grid"></div>
+  </div>
+  <div class="panel-body">
+    <div x-ng-grid="grid"></div>
   </div>
 </div>
 

@@ -23,9 +23,6 @@ angular.module('cahierDeTexteApp')
 			      var id = _($scope.classes).invert()[$scope.classe];
 			      data = _(data).where({ classe_id: id });
 			  }
-			  if ( ! $scope.montre_valides ) {
-			      data = _(data).where({ valide: false });
-			  }
 			  return data;
 		      };
 
@@ -71,6 +68,10 @@ angular.module('cahierDeTexteApp')
 			  },
 			  populate: function( saisies ) {
 			      var data = $scope.filtre( saisies );
+			      if ( ! $scope.montre_valides ) {
+				  data = _(data).where({ valide: false });
+			      }
+
 			      $scope.gridSaisies = _(data).map( function ( saisie ) {
 				  return saisie;
 			      } );
