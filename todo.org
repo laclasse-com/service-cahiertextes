@@ -4,8 +4,7 @@
 *** TODO configure grunt
 *** TODO animation pendant le chargement des données
 
-** DONE principal/enseignant
-- State "DONE"       from "STARTED"    [2013-10-16 Wed 14:08]
+** principal/enseignant
 *** DONE répercussion des validation sur les raw_data
 - State "DONE"       from "STARTED"    [2013-10-15 Tue 16:06]
     - filtre sur une classe A et valide toute les saisies
@@ -17,9 +16,10 @@
 *** DONE remplacer la grid par des blocs comme pour principal/classes
 - State "DONE"       from "STARTED"    [2013-10-16 Wed 12:31]
 
+*** NEXT bug dans le bargraph quand il n'y a qu'une classe
+*** NEXT bug dans la persistance de la visualisation des validations
 
-** DONE principal/classes
-- State "DONE"       from "STARTED"    [2013-10-16 Wed 14:08]
+** principal/classes
 *** DONE bug d'affichage des noms des classes
 - State "DONE"       from "STARTED"    [2013-10-15 Tue 14:07]
 
@@ -38,7 +38,7 @@
 - State "DONE"       from "STARTED"    [2013-10-16 Wed 10:02]
 *** TODO copier les saisies entre classes/groupes
 *** TODO attacher plusieurs à un cours
-*** NEXT séparer cours et devoir en 2 événements ?
+*** TODO séparer cours et devoir en 2 événements ?
 
 ** eleve
 *** TODO page todo-list
