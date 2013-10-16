@@ -211,6 +211,26 @@ angular.module('cahierDeTexteApp')
 			  return calendar_event;
 		      };
 
+		      $scope.assemble_fullCalendar_event = function( item_emploi_du_temps ) {
+			  return $scope.update_fullCalendar_event( { details: { matiere_id: item_emploi_du_temps.matiere_id,
+										cahier_de_textes_id: item_emploi_du_temps.cahier_de_textes_id,
+										creneau_emploi_du_temps_id: item_emploi_du_temps.creneau_emploi_du_temps_id },
+								     start: new Date( item_emploi_du_temps.start ),
+								     end: new Date( item_emploi_du_temps.end ) },
+								   item_emploi_du_temps.cours,
+								   item_emploi_du_temps.devoir );
+		      };
+
+		      $scope.extract_classes_promises = function( data ) {
+			  return _.chain( data )
+			      .pluck( 'regroupement_id' )
+			      .uniq()
+			      .map( function( regroupement_id ) {
+				  return Regroupements.get({ regroupement_id: regroupement_id }).$promise;
+			      })
+			      .value();
+		      };
+
 		      $scope.process_data = function() {
 			  var filtered_data = $scope.raw_data;
 
@@ -223,33 +243,13 @@ angular.module('cahierDeTexteApp')
 			      });
 			  }
 
-		      };
-
-		      $scope.assemble_fullCalendar_event = function( item_emploi_du_temps ) {
-			  return $scope.update_fullCalendar_event( { details: { matiere_id: item_emploi_du_temps.matiere_id,
-										cahier_de_textes_id: item_emploi_du_temps.cahier_de_textes_id,
-										creneau_emploi_du_temps_id: item_emploi_du_temps.creneau_emploi_du_temps_id },
-								     start: new Date( item_emploi_du_temps.start ),
-								     end: new Date( item_emploi_du_temps.end ) },
-								   item_emploi_du_temps.cours,
-								   item_emploi_du_temps.devoir );
+			  $scope.calendar.events[0] = _(filtered_data).map( function( event ) {
+			      return $scope.assemble_fullCalendar_event( event );
+			  } );
 		      };
 
 		      $scope.types_de_devoir = TypesDeDevoir.query();
 
-		      $scope.extract_classes_promises = function( data ) {
-			  return _.chain( data )
-			      .pluck( 'regroupement_id' )
-			      .uniq()
-			      .map( function( regroupement_id ) {
-				  return Regroupements.get({ regroupement_id: regroupement_id }).$promise;
-			      })
-			      .value();
-		      };
-
-			  $scope.calendar.events[0] = _(filtered_data).map( function( event ) {
-			      return $scope.assemble_fullCalendar_event( event );
-			  } );
 		      // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
 		      EmploiDuTemps.query( function( response ) {
 			  $scope.raw_data = response;
