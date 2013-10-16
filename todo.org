@@ -1,5 +1,7 @@
 * client
 ** global
+*** TODO tests
+*** TODO configure grunt
 *** TODO animation pendant le chargement des données
 
 ** DONE principal/enseignant
