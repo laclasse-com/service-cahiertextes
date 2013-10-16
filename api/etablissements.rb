@@ -8,7 +8,7 @@ module CahierDeTextesAPI
     params {
       requires :uai, desc: 'Code UAI de l\'établissement'
     }
-    get '/:uai/classe' do
+    get '/:uai/classes' do
       Etablissement.where(uai: params[:uai]).first.statistiques_classes
     end
 
@@ -17,7 +17,7 @@ module CahierDeTextesAPI
       requires :uai, desc: 'Code UAI de l\'établissement'
       requires :classe_id, desc: 'identifiant annuaire de la classe'
     }
-    get '/:uai/classe/:classe_id' do
+    get '/:uai/classes/:classe_id' do
       cahier_de_textes = CahierDeTextes[ regroupement_id: params[:classe_id] ]
 
       error!( 'Classe inconnue', 404 ) if cahier_de_textes.nil?
@@ -30,7 +30,7 @@ module CahierDeTextesAPI
       requires :uai, desc: 'Code UAI de l\'établissement'
       requires :classe_id, desc: 'identifiant annuaire de la classe'
     }
-    put '/:uai/classe/:classe_id' do
+    put '/:uai/classes/:classe_id' do
       cahier_de_textes = CahierDeTextes[ regroupement_id: params[:classe_id] ]
 
       error!( 'Classe inconnue', 404 ) if cahier_de_textes.nil?
@@ -42,7 +42,7 @@ module CahierDeTextesAPI
     params {
       requires :uai, desc: 'Code UAI de l\'établissement'
     }
-    get '/:uai/enseignant' do
+    get '/:uai/enseignants' do
       Etablissement.where(uai: params[:uai]).first.statistiques_enseignants
     end
 
@@ -51,7 +51,7 @@ module CahierDeTextesAPI
       requires :uai, desc: 'Code UAI de l\'établissement'
       requires :enseignant_id, desc: 'identifiant annuaire de l\'enseignant'
     }
-    get '/:uai/enseignant/:enseignant_id' do
+    get '/:uai/enseignants/:enseignant_id' do
       Etablissement.where(uai: params[:uai]).first.saisies_enseignant( params[:enseignant_id] )
     end
 
@@ -62,7 +62,7 @@ module CahierDeTextesAPI
       optional :debut, type: Time
       optional :fin, type: Time
     }
-    put '/:uai/enseignant/:enseignant_id' do
+    put '/:uai/enseignants/:enseignant_id' do
       # TODO: prendre en compte debut et fin
 
       Etablissement.where(uai: params[:uai]).first.valide_enseignant!( params[:enseignant_id] )
