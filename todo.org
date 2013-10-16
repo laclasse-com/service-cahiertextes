@@ -27,7 +27,8 @@
 - State "DONE"       from "STARTED"    [2013-10-15 Tue 13:53]
 *** DONE disparition de la matière à la fermeture de la popup
 - State "DONE"       from "STARTED"    [2013-10-15 Tue 12:38]
-*** STARTED filtrer par classe
+*** DONE filtrer par classe
+- State "DONE"       from "STARTED"    [2013-10-16 Wed 10:02]
 *** TODO copier les saisies entre classes/groupes
 *** TODO attacher plusieurs à un cours
 *** NEXT séparer cours et devoir en 2 événements ?
