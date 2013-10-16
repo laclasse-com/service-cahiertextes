@@ -11,7 +11,8 @@
 *** DONE filtre pour n'afficher que ce qui n'est pas validé
 - State "DONE"       from "STARTED"    [2013-10-15 Tue 17:25]
 *** CANCELLED pagination de la grid
-*** NEXT remplacer la grid par des blocs comme pour principal/classes
+*** DONE remplacer la grid par des blocs comme pour principal/classes
+- State "DONE"       from "STARTED"    [2013-10-16 Wed 12:31]
 
 ** principal/classes
 *** DONE bug d'affichage des noms des classes
