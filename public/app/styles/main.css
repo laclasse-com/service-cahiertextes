@@ -36,3 +36,5 @@ body {
 /** Enseignants **/
 .bloc-enseignant .panel-heading{padding-top:0;padding-bottom:0}
 .bloc-enseignant .panel-body{height:12em;overflow:auto}
+/** Enseignant **/
+.principal-enseignant-grid{padding:0}
