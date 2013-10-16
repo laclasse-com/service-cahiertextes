@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('cahierDeTexteApp')
-    .factory('Devoir',
+    .factory('Devoirs',
 	     [ '$resource', function($resource) {
-		 return $resource( '/api/v0/devoir/:id',
+		 return $resource( '/api/v0/devoirs/:id',
 				   { id: '@id' },
 				   { update: { method: 'PUT' },
 				     fait: { method: 'PUT',
-					     url: '/api/v0/devoir/:id/fait' }});
+					     url: '/api/v0/devoirs/:id/fait' }});
 	     } ] );

@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EnseignantCtrl',
-		[ '$scope', '$rootScope', '$modal', '$q', 'EmploiDuTemps', 'Matieres', 'Cours', 'Devoir', 'TypesDeDevoir', 'Regroupements',
-		  function ( $scope, $rootScope, $modal, $q, EmploiDuTemps, Matieres, Cours, Devoir, TypesDeDevoir, Regroupements ) {
+		[ '$scope', '$rootScope', '$modal', '$q', 'EmploiDuTemps', 'Matieres', 'Cours', 'Devoirs', 'TypesDeDevoir', 'Regroupements',
+		  function ( $scope, $rootScope, $modal, $q, EmploiDuTemps, Matieres, Cours, Devoirs, TypesDeDevoir, Regroupements ) {
 		      $scope.matieres = {};
 		      $scope.classes = {};
 		      $scope.classe = -1;
@@ -35,7 +35,7 @@ angular.module('cahierDeTexteApp')
 			      return cours;
 			  };
 			  var create_devoir = function( cours, types_de_devoir ) {
-			      var devoir = new Devoir({ cours_id: cours.id,
+			      var devoir = new Devoirs({ cours_id: cours.id,
 							type_devoir_id: types_de_devoir[1].id });
 			      devoir.create = true;
 
@@ -60,7 +60,7 @@ angular.module('cahierDeTexteApp')
 
 			  // 2. devoir
 			  if ( $scope.creneau.details.devoir.id !== undefined ) {
-			      $scope.devoir = Devoir.get( { id: $scope.creneau.details.devoir.id } ).$promise;
+			      $scope.devoir = Devoirs.get( { id: $scope.creneau.details.devoir.id } ).$promise;
 			      $scope.devoir.then( function success() {
 				  $scope.devoir.create = false;
 			      },

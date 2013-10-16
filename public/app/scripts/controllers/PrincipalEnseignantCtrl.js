@@ -130,7 +130,7 @@ angular.module('cahierDeTexteApp')
 				  // on référence l'index d'origine dans chaque élément pour propager la validation
 				  saisie.index = index;
 				  saisie.cours = new Cours( saisie.cours );
-				  // saisie.devoir = new Devoir( saisie.devoir );
+				  // saisie.devoir = new Devoirs( saisie.devoir );
 				  return saisie;
 			      });
 
