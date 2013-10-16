@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantCtrl',
-		[ '$scope', '$rootScope', '$stateParams', '$q', 'Enseignant', 'Cours', 'Users', 'Matieres', 'Regroupements',
-		  function( $scope, $rootScope, $stateParams, $q, Enseignant, Cours, Users, Matieres, Regroupements ) {
+		[ '$scope', '$rootScope', '$stateParams', '$q', 'Enseignants', 'Cours', 'Users', 'Matieres', 'Regroupements',
+		  function( $scope, $rootScope, $stateParams, $q, Enseignants, Cours, Users, Matieres, Regroupements ) {
 		      $scope.enseignant_id = $stateParams.enseignant_id;
 		      $scope.classe = -1;
 		      $scope.mois = $rootScope.mois;
@@ -183,7 +183,7 @@ angular.module('cahierDeTexteApp')
 				       .value();
 				   });
 
-		      Enseignant.get({ enseignant_id: $stateParams.enseignant_id,
+		      Enseignants.get({ enseignant_id: $stateParams.enseignant_id,
 					  etablissement_id: '0134567A' },
 					function success( response ) {
 					    $scope.raw_data = response.saisies;

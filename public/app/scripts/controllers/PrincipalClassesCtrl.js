@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalClassesCtrl',
-		[ '$scope', '$rootScope', '$q', 'Classe', 'Regroupements', 'Matieres',
-		  function ($scope, $rootScope, $q, Classe, Regroupements, Matieres) {
+		[ '$scope', '$rootScope', '$q', 'Classes', 'Regroupements', 'Matieres',
+		  function ($scope, $rootScope, $q, Classes, Regroupements, Matieres) {
 		      $scope.uai = '0134567A';
 
 		      $scope.raw_data		=   [];
@@ -179,7 +179,7 @@ angular.module('cahierDeTexteApp')
 			  }
 		      };
 
-		      Classe.query( { uai: $scope.uai, id: '' },
+		      Classes.query( { uai: $scope.uai, id: '' },
 				       function( response ) {
 					   $scope.raw_data = response;
 
