@@ -11,34 +11,30 @@
   </div>
 </div>
 
-<div class="col-md-12">
-  <div class="panel panel-default">
-    <div class="panel-body">
-	<canvas x-piechart x-options="pieChart.options" x-data="pieChart.data" width="256" height="256"></canvas>
-	<canvas x-barchart x-options="barChart.options" x-data="barChart.data" width="768" height="256"></canvas>
-    </div>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <canvas x-piechart x-options="pieChart.options" x-data="pieChart.data" width="256" height="256"></canvas>
+    <canvas x-barchart x-options="barChart.options" x-data="barChart.data" width="768" height="256"></canvas>
   </div>
 </div>
 
-<div class="col-md-12">
-  <div class="col-md-4" x-ng-repeat="individualChart in individualCharts.enseignants">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-	<h4>
-	  <a href="#/principal/enseignant/{{individualChart.enseignant.id_ent}}">
-	    {{individualChart.enseignant.full_name}}
-	  </a>
-	</h4>
+<div class="col-md-3 bloc-enseignant" x-ng-repeat="individualChart in individualCharts.enseignants">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4>
+	<a href="#/principal/enseignant/{{individualChart.enseignant.id_ent}}">
+	  {{individualChart.enseignant.full_name}}
+	</a>
+      </h4>
+    </div>
+    <div class="panel-body">
+      <div class="col-md-12">
+	<canvas x-piechart x-data="individualChart.pieChart.data" x-options="individualChart.pieChart.options" width="64" height="64"></canvas>
+	<span class="badge badge-info">{{individualChart.pieChart.data[0].value}} / {{individualChart.pieChart.data[0].value + individualChart.pieChart.data[1].value}}</span>
       </div>
-      <div class="panel-body bloc-enseignant">
-	<div class="col-md-12">
-	  <canvas x-piechart x-data="individualChart.pieChart.data" x-options="individualChart.pieChart.options" width="64" height="64"></canvas>
-	  <span class="badge badge-info">{{individualChart.pieChart.data[0].value}} / {{individualChart.pieChart.data[0].value + individualChart.pieChart.data[1].value}}</span>
-	</div>
-	<ul class="col-md-12">
-	  <li x-ng-repeat="matiere in individualChart.enseignant.matieres">{{matiere}}</li>
-	</ul>
-      </div>
+      <ul class="col-md-12">
+	<li x-ng-repeat="matiere in individualChart.enseignant.matieres">{{matiere}}</li>
+      </ul>
     </div>
   </div>
 </div>
