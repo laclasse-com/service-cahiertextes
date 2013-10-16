@@ -29,7 +29,7 @@ describe CahierDeTextesAPI::API do
 
     CreneauEmploiDuTempsRegroupement
       .select(:regroupement_id)
-      .map {|r| r.regroupement_id }
+      .map { |r| r.regroupement_id }
       .uniq
       .sort
       .each { |regroupement_id|
