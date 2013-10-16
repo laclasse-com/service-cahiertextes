@@ -25,7 +25,7 @@
     <link rel="stylesheet" type="text/css" href="styles/main.css">
     <!-- endbuild -->
   </head>
-  <body x-ng-app="cahierDeTexteApp">
+  <body data-ng-app="cahierDeTexteApp">
     <!--[if lt IE 7]>
     <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
     <![endif]-->
@@ -39,11 +39,11 @@
 
     <!-- Add your site or application content here -->
     <div class="container">
-      <x-ng-include src="'views/partials/header.html'"></x-ng-include>
+      <data-ng-include src="'views/partials/header.html'"></data-ng-include>
 
-      <div x-ui-view></div>
+      <div data-ui-view></div>
 
-      <!-- x-ng-include src="'views/partials/footer.html'"></x-ng-include -->
+      <!-- data-ng-include src="'views/partials/footer.html'"></data-ng-include -->
     </div>
 
 

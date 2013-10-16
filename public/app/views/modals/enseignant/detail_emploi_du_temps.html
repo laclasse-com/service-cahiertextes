@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <button type="button" class="close pull-right" aria-hidden="true" x-ng-click="fermer()">&times;</button>
+  <button type="button" class="close pull-right" aria-hidden="true" data-ng-click="fermer()">&times;</button>
   <h3>{{matiere}}</h3>
 </div>
 <div class="modal-body">
@@ -8,11 +8,11 @@
       <h3 class="panel-title">Séquence pédagogique</h3>
     </div>
     <div class="panel-body">
-      <textarea x-ui-tinymce="tinyMCEOptions" x-ng-model="cours.contenu"></textarea>
+      <textarea data-ui-tinymce="tinyMCEOptions" data-ng-model="cours.contenu"></textarea>
     </div>
     <div class="panel-footer">
       <ul>
-	<li x-ng-repeat="ressource in cours.ressources">{{ressource.url}}</li>
+	<li data-ng-repeat="ressource in cours.ressources">{{ressource.url}}</li>
       </ul>
       <input type="file">
     </div>
@@ -23,28 +23,28 @@
     </div>
     <div class="panel-body">
       <div style="height:2.5em">
-	<select class="col-md-4" x-ui-select2 x-ng-model="devoir.type_devoir_id" x-placeholder="Type de devoir">
-	  <option x-ng-repeat="type_de_devoir in types_de_devoir" value="{{type_de_devoir.id}}">
+	<select class="col-md-4" data-ui-select2 data-ng-model="devoir.type_devoir_id" data-placeholder="Type de devoir">
+	  <option data-ng-repeat="type_de_devoir in types_de_devoir" value="{{type_de_devoir.id}}">
 	    {{type_de_devoir.description}}
 	  </option>
 	</select>
-	<input class="col-md-7" x-ui-date x-ui-date-format="yy-mm-dd" x-ng-model="devoir.date_due">
+	<input class="col-md-7" data-ui-date data-ui-date-format="yy-mm-dd" data-ng-model="devoir.date_due">
       </div>
-      <textarea x-ui-tinymce="tinyMCEOptions" x-ng-model="devoir.contenu"></textarea>
+      <textarea data-ui-tinymce="tinyMCEOptions" data-ng-model="devoir.contenu"></textarea>
     </div>
     <div class="panel-footer">
       <ul>
-	<li x-ng-repeat="ressource in devoir.ressources">{{ressource.url}}</li>
+	<li data-ng-repeat="ressource in devoir.ressources">{{ressource.url}}</li>
       </ul>
       <input type="file">
     </div>
   </div>
 </div>
 <div class="modal-footer">
-  <button class="btn btn-info pull-right" x-ng-click="fermer()">
+  <button class="btn btn-info pull-right" data-ng-click="fermer()">
     <span class="glyphicon glyphicon-remove-sign"></span> Fermer
   </button>
-  <button class="btn btn-success pull-right" x-ng-click="valider()">
+  <button class="btn btn-success pull-right" data-ng-click="valider()">
     <span class="glyphicon glyphicon-ok-sign"></span> Valider
   </button>
 </div>

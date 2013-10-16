@@ -1,36 +1,36 @@
 <div class="panel panel-default">
   <div class="panel-body">
-    <select class="col-md-3" x-ui-select2 x-ng-model="classe" x-placeholder="Toute les classes" x-ng-change="process_data()">
+    <select class="col-md-3" data-ui-select2 data-ng-model="classe" data-placeholder="Toute les classes" data-ng-change="process_data()">
       <option value="-1" selected>Toute les classes</option>
-      <option x-ng-repeat="classe in classes">{{classe}}</option>
+      <option data-ng-repeat="classe in classes">{{classe}}</option>
     </select>
 
-    <select class="col-md-3" x-ui-select2 x-ng-model="moisCourant" x-placeholder="Toute l'année" x-ng-change="process_data()">
+    <select class="col-md-3" data-ui-select2 data-ng-model="moisCourant" data-placeholder="Toute l'année" data-ng-change="process_data()">
       <option value="-1">Toute l'année</option>
-      <option x-ng-repeat="unmois in mois" value="{{$index + 1}}">{{unmois}}</option>
+      <option data-ng-repeat="unmois in mois" value="{{$index + 1}}">{{unmois}}</option>
     </select>
 
-    <select class="col-md-3" x-ui-select2 x-ng-model="matiereCourante" x-placeholder="Toute les matières" x-ng-change="process_data()">
+    <select class="col-md-3" data-ui-select2 data-ng-model="matiereCourante" data-placeholder="Toute les matières" data-ng-change="process_data()">
       <option value="-1">Toute les matières</option>
-      <option x-ng-repeat="matiere in matieres" value="{{matiere.id}}">{{matiere.libelle}}</option>
+      <option data-ng-repeat="matiere in matieres" value="{{matiere.id}}">{{matiere.libelle}}</option>
     </select>
   </div>
 </div>
 
 <div class="panel panel-default">
   <div class="panel-body">
-    <canvas x-piechart x-data="pieChart.data" x-options="pieChart.options" width="256" height="256"></canvas>
+    <canvas data-piechart data-data="pieChart.data" data-options="pieChart.options" width="256" height="256"></canvas>
     <span class="badge badge-info">{{displayed_data.validated}} / {{displayed_data.filled}}</span>
-    <canvas x-linechart x-data="monthlyLineChart.data" x-options="monthlyLineChart.options" width="640" height="256" style="float:right"></canvas>
+    <canvas data-linechart data-data="monthlyLineChart.data" data-options="monthlyLineChart.options" width="640" height="256" style="float:right"></canvas>
   </div>
 </div>
 
 <div class="col-md-12">
-  <div class="col-md-3" x-ng-show="classe==-1" x-ng-repeat="individualChart in individualCharts.classes">
+  <div class="col-md-3" data-ng-show="classe==-1" data-ng-repeat="individualChart in individualCharts.classes">
     <div class="panel panel-default">
       <div class="panel-heading"><h3 class="panel-title">{{individualChart.libelle}}</h3></div>
       <div class="panel-body">
-	<canvas x-piechart x-data="individualChart.pieChart.data" x-options="individualChart.pieChart.options" width="64" height="64"></canvas>
+	<canvas data-piechart data-data="individualChart.pieChart.data" data-options="individualChart.pieChart.options" width="64" height="64"></canvas>
 	<span class="badge badge-info">{{individualChart.pieChart.data[0].value}} / {{individualChart.pieChart.data[0].value + individualChart.pieChart.data[1].value}}</span>
       </div>
     </div>

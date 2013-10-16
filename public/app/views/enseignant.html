@@ -1,15 +1,15 @@
 <div class="panel panel-default">
   <div class="panel-body">
-    <select class="col-md-3" x-ui-select2 x-ng-model="classe" x-placeholder="Toute les classes" x-ng-change="process_data()">
+    <select class="col-md-3" data-ui-select2 data-ng-model="classe" data-placeholder="Toute les classes" data-ng-change="process_data()">
       <option value="-1" selected>Toute les classes</option>
-      <option x-ng-repeat="classe in classes">{{classe}}</option>
+      <option data-ng-repeat="classe in classes">{{classe}}</option>
     </select>
   </div>
 </div>
 
 <div class="panel panel-default">
   <div class="panel-body">
-    <div x-calendar="emploi_du_temps" x-ui-calendar="calendar.options" class="col-md-12 calendar" x-ng-model="calendar.events"></div>
+    <div data-calendar="emploi_du_temps" data-ui-calendar="calendar.options" class="col-md-12 calendar" data-ng-model="calendar.events"></div>
   </div>
 </div>
 
