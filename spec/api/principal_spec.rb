@@ -89,7 +89,7 @@ describe CahierDeTextesAPI::API do
 
   it 'récupère les statistiques d\'une classe' do
     uai = '0134567A'
-    classe_id = CreneauEmploiDuTempsRegroupement.select(:regroupement_id).map {|r| r.regroupement_id}.uniq.sample
+    classe_id = CreneauEmploiDuTempsRegroupement.select(:regroupement_id).map { |r| r.regroupement_id }.uniq.sample
 
     get "/api/v0/etablissements/#{uai}/classes/#{classe_id}"
     last_response.status.should == 200
@@ -104,7 +104,7 @@ describe CahierDeTextesAPI::API do
 
   it 'valide tout le cahier de textes d\'une classe' do
     uai = '0134567A'
-    classe_id = CreneauEmploiDuTempsRegroupement.select(:regroupement_id).map {|r| r.regroupement_id}.uniq.sample
+    classe_id = CreneauEmploiDuTempsRegroupement.select(:regroupement_id).map { |r| r.regroupement_id }.uniq.sample
 
     put "/api/v0/etablissements/#{uai}/classes/#{classe_id}"
     last_response.status.should == 200
