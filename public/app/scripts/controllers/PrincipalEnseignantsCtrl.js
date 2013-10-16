@@ -11,8 +11,18 @@ angular.module('cahierDeTexteApp')
 		      $scope.classes = {};
 		      $scope.details_enseignants = {};
 
-		      $scope.radar = {
-			  options: $rootScope.globalRadarChartOptions,
+		      $scope.pieChart = { options: $rootScope.globalPieChartOptions,
+					  data: [ { color : $rootScope.theme.validated.base,
+						    value: 0 },
+						  { color : $rootScope.theme.filled.base,
+						    value: 0 } ],
+					  populate: function( data ) {
+					      $scope.pieChart.data[0].value = data.validated;
+					      $scope.pieChart.data[1].value = data.filled - data.validated;
+					  } };
+
+		      $scope.barChart = {
+			  options: $rootScope.globalBarChartOptions,
 			  data: { labels: [],
 				  datasets: [
 				      { fillColor : $rootScope.theme.filled.base,
@@ -28,25 +38,15 @@ angular.module('cahierDeTexteApp')
 					data: []
 				      } ] },
 			  populate: function( enseignants ) {
-			      $scope.radar.data.datasets[0].data = [];
-			      $scope.radar.data.datasets[1].data = [];
+			      $scope.barChart.data.labels = [];
+			      $scope.barChart.data.datasets[0].data = [];
+			      $scope.barChart.data.datasets[1].data = [];
 
 			      _(enseignants).each( function( enseignant ) {
-				  var stats = _(enseignant.classes).reduce( function( totaux, classe ) {
-				      var stats = _(classe.statistiques).reduce( function( totaux, mois ) {
-					  return { filled: totaux.filled + mois.filled,
-						   validated: totaux.validated + mois.validated};
-				      }, { filled: 0, validated: 0});
+				  $scope.barChart.data.datasets[0].data.push( enseignant.filled );
+				  $scope.barChart.data.datasets[1].data.push( enseignant.validated );
 
-				      return { filled: totaux.filled + stats.filled,
-					       validated: totaux.validated + stats.validated};
-				  }, { filled: 0, validated: 0});
-
-				  $scope.radar.data.datasets[0].data.push( stats.filled );
-				  $scope.radar.data.datasets[1].data.push( stats.validated );
-
-				  // $scope.radar.data.labels.push( $scope.details_enseignants[enseignant.enseignant_id].nom );
-				  $scope.radar.data.labels.push( '' );
+				  $scope.barChart.data.labels.push( $scope.details_enseignants[enseignant.enseignant_id].full_name );
 			      });
 			  }
 		      };
@@ -56,22 +56,12 @@ angular.module('cahierDeTexteApp')
 			  populate: function( data, details_enseignants ) {
 			      $scope.individualCharts.enseignants = _.chain(data)
 				  .map( function( enseignant ) {
-				      var stats = _(enseignant.classes).reduce( function( totaux, classe ) {
-					  var stats = _(classe.statistiques).reduce( function( totaux, mois ) {
-					      return { filled: totaux.filled + mois.filled,
-						       validated: totaux.validated + mois.validated};
-					  }, { filled: 0, validated: 0});
-					  
-					  return { filled: totaux.filled + stats.filled,
-						   validated: totaux.validated + stats.validated};
-				      }, { filled: 0, validated: 0});
-
 				      return { enseignant: details_enseignants[ enseignant.enseignant_id ],
 					       pieChart: { options: $rootScope.globalPieChartOptions,
 							   data: [ { color : $rootScope.theme.validated.base,
-								     value: stats.validated },
+								     value: enseignant.validated },
 								   { color : $rootScope.theme.filled.base,
-								     value: stats.filled - stats.validated } ] } };
+								     value: enseignant.filled - enseignant.validated } ] } };
 				  })
 				  .reject( function( enseignant ) {
 				      return _(enseignant.pieChart.data).reduce(function( useless, slice ) {
@@ -137,9 +127,30 @@ angular.module('cahierDeTexteApp')
 				  });
 			      }
 
+			      // augmentation des données
+			      $scope.displayed_data.filled = 0;
+			      $scope.displayed_data.validated = 0;
+			      _($scope.displayed_data).each( function( enseignant ) {
+				  var stats = _(enseignant.classes).reduce( function( totaux, classe ) {
+				      var stats = _(classe.statistiques).reduce( function( totaux, mois ) {
+					  return { filled: totaux.filled + mois.filled,
+						   validated: totaux.validated + mois.validated};
+				      }, { filled: 0, validated: 0});
+
+				      return { filled: totaux.filled + stats.filled,
+					       validated: totaux.validated + stats.validated};
+				  }, { filled: 0, validated: 0});
+				  enseignant.filled = stats.filled;
+				  enseignant.validated = stats.validated;
+
+				  $scope.displayed_data.filled += stats.filled;
+				  $scope.displayed_data.validated += stats.validated;
+			      });
+
 			      // consommation des données dans les graphiques
+			      $scope.pieChart.populate( $scope.displayed_data );
 			      $scope.individualCharts.populate( $scope.displayed_data, $scope.details_enseignants );
-			      $scope.radar.populate( $scope.displayed_data );
+			      $scope.barChart.populate( $scope.displayed_data );
 			  }
 		      };
 
@@ -147,7 +158,7 @@ angular.module('cahierDeTexteApp')
 		      Enseignants.query( { etablissement_id: '0134567A' },
 					 function success( response ) {
 					     $scope.raw_data = _(response).reject( function( enseignant ) {
-						 return enseignant.enseignant_id === ''; 
+						 return enseignant.enseignant_id === '';
 					     });
 
 					     $q.all( $scope.extract_details_enseignants_promises( $scope.raw_data ) )
