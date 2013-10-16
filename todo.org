@@ -3,6 +3,7 @@
 *** TODO tests
 *** TODO configure grunt
 *** TODO animation pendant le chargement des données
+*** TODO filtre sur l'établissement
 
 ** principal/enseignant
 *** DONE répercussion des validation sur les raw_data
