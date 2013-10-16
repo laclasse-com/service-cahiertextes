@@ -26,6 +26,9 @@
 	  {{individualChart.enseignant.full_name}}
 	</a>
       </h4>
+      <h6 x-ng-show="individualChart.enseignant.classes.length > 0">
+	<span x-ng-repeat="classe in individualChart.enseignant.classes">{{($first == true) && "(" || ""}}{{classe.classe_libelle}}{{($last != true) && ", " || ")"}}</span>
+      </h6>
     </div>
     <div class="panel-body">
       <div class="col-md-12">
