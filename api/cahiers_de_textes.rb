@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 module CahierDeTextesAPI
-  class CahierDeTextesAPI < Grape::API
+  class CahiersDeTextesAPI < Grape::API
 
     desc 'contenu combiné des cahiers de textes concernant l\'utilisateur durant l\'intervalle de dates donné'
     params {

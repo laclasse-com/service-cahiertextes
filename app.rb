@@ -13,12 +13,12 @@ require_relative './models/models'
 require_relative './lib/pronote'
 
 require_relative './api/pronote'
-require_relative './api/etablissement'
+require_relative './api/etablissements'
 require_relative './api/cours'
 require_relative './api/devoirs'
-require_relative './api/type_de_devoir'
-require_relative './api/emploi_du_temps'
-require_relative './api/cahier_de_textes'
+require_relative './api/types_de_devoir'
+require_relative './api/emplois_du_temps'
+require_relative './api/cahiers_de_textes'
 
 module CahierDeTextesAPI
   class API < Grape::API
@@ -39,12 +39,12 @@ module CahierDeTextesAPI
     end
 
     resource( :pronote )          { mount ::CahierDeTextesAPI::ProNoteAPI }
-    resource( :etablissement )    { mount ::CahierDeTextesAPI::EtablissementAPI }
+    resource( :etablissements )    { mount ::CahierDeTextesAPI::EtablissementsAPI }
     resource( :cours )            { mount ::CahierDeTextesAPI::CoursAPI }
     resource( :devoirs )           { mount ::CahierDeTextesAPI::DevoirsAPI }
-    resource( :types_de_devoir )   { mount ::CahierDeTextesAPI::TypeDeDevoirAPI }
-    resource( :emploi_du_temps )  { mount ::CahierDeTextesAPI::EmploiDuTempsAPI }
-    resource( :cahier_de_textes ) { mount ::CahierDeTextesAPI::CahierDeTextesAPI }
+    resource( :types_de_devoir )   { mount ::CahierDeTextesAPI::TypesDeDevoirAPI }
+    resource( :emplois_du_temps )  { mount ::CahierDeTextesAPI::EmploisDuTempsAPI }
+    resource( :cahiers_de_textes ) { mount ::CahierDeTextesAPI::CahiersDeTextesAPI }
 
     add_swagger_documentation
   end

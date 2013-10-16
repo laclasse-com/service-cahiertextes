@@ -3,7 +3,7 @@
 require 'date'
 
 module CahierDeTextesAPI
-  class EmploiDuTempsAPI < Grape::API
+  class EmploisDuTempsAPI < Grape::API
 
     helpers do
       def date_of_last(day)

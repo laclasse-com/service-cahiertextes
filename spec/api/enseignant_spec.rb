@@ -21,7 +21,7 @@ describe CahierDeTextesAPI::API do
     debut = Date.today
     fin = debut + 7
 
-    get "/api/v0/emploi_du_temps?debut=#{debut}&fin=#{fin}"
+    get "/api/v0/emplois_du_temps?debut=#{debut}&fin=#{fin}"
 
     last_response.status.should == 200
   end
@@ -33,7 +33,7 @@ describe CahierDeTextesAPI::API do
     debut = Date.today
     fin = debut + 7
 
-    get "/api/v0/cahier_de_textes?debut=#{debut}&fin=#{fin}"
+    get "/api/v0/cahiers_de_textes?debut=#{debut}&fin=#{fin}"
 
     last_response.status.should == 200
   end
@@ -150,7 +150,7 @@ describe CahierDeTextesAPI::API do
     ressources = [ { label: 'test1', url: 'https://localhost/docs/test1' },
                    { label: 'test2', url: 'https://localhost/docs/test2' } ]
 
-    post( "/api/v0/devoirs/",
+    post( '/api/v0/devoirs/',
           { cours_id: cours_id,
             type_devoir_id: type_devoir_id,
             contenu: contenu,

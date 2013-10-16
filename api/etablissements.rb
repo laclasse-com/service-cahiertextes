@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 module CahierDeTextesAPI
-  class EtablissementAPI < Grape::API
+  class EtablissementsAPI < Grape::API
     format :json
 
     desc 'statistiques des cahiers de textes par classes/mois/matières'

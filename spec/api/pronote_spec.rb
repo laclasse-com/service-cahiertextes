@@ -24,7 +24,7 @@ describe CahierDeTextesAPI::API do
       'size' => File.size(xml_filename),
       'nb_salles' => 24,
       'nb_plages_horaires' => 20,
-      'nb_creneau_emploi_du_temps' => 701,
+      'nb_creneau_emplois_du_temps' => 701,
     }.to_json
 
     CreneauEmploiDuTempsRegroupement

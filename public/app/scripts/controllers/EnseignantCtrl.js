@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EnseignantCtrl',
-		[ '$scope', '$rootScope', '$modal', '$q', 'EmploiDuTemps', 'Matieres', 'Cours', 'Devoirs', 'TypesDeDevoir', 'Regroupements',
-		  function ( $scope, $rootScope, $modal, $q, EmploiDuTemps, Matieres, Cours, Devoirs, TypesDeDevoir, Regroupements ) {
+		[ '$scope', '$rootScope', '$modal', '$q', 'EmploisDuTemps', 'Matieres', 'Cours', 'Devoirs', 'TypesDeDevoir', 'Regroupements',
+		  function ( $scope, $rootScope, $modal, $q, EmploisDuTemps, Matieres, Cours, Devoirs, TypesDeDevoir, Regroupements ) {
 		      $scope.matieres = {};
 		      $scope.classes = {};
 		      $scope.classe = -1;
@@ -251,7 +251,7 @@ angular.module('cahierDeTexteApp')
 		      $scope.types_de_devoir = TypesDeDevoir.query();
 
 		      // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
-		      EmploiDuTemps.query( function( response ) {
+		      EmploisDuTemps.query( function( response ) {
 			  $scope.raw_data = response;
 
 			  // Extraction des classes
