@@ -223,10 +223,6 @@ angular.module('cahierDeTexteApp')
 			      });
 			  }
 
-			  $scope.calendar.events = [];
-			  $scope.calendar.events.push( filtered_data.map( function( event ) {
-			      return $scope.assemble_fullCalendar_event( event );
-			  } ) );
 		      };
 
 		      $scope.assemble_fullCalendar_event = function( item_emploi_du_temps ) {
@@ -251,6 +247,9 @@ angular.module('cahierDeTexteApp')
 			      .value();
 		      };
 
+			  $scope.calendar.events[0] = _(filtered_data).map( function( event ) {
+			      return $scope.assemble_fullCalendar_event( event );
+			  } );
 		      // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
 		      EmploiDuTemps.query( function( response ) {
 			  $scope.raw_data = response;
