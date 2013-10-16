@@ -1,6 +1,7 @@
 * client
 ** global
-*** animation pendant le chargement des données
+*** TODO animation pendant le chargement des données
+
 ** principal/enseignant
 *** DONE répercussion des validation sur les raw_data
 - State "DONE"       from "STARTED"    [2013-10-15 Tue 16:06]
@@ -9,10 +10,13 @@
     => les saisies de la classe A ne sont pas affichées comme validées
 *** DONE filtre pour n'afficher que ce qui n'est pas validé
 - State "DONE"       from "STARTED"    [2013-10-15 Tue 17:25]
-*** pagination de la grid
+*** CANCELLED pagination de la grid
+*** NEXT remplacer la grid par des blocs comme pour principal/classes
+
 ** principal/classes
 *** DONE bug d'affichage des noms des classes
 - State "DONE"       from "STARTED"    [2013-10-15 Tue 14:07]
+
 ** enseignant
 *** DONE éviter une erreur 405 s'il n'y a pas de cours
 - State "DONE"       from "STARTED"    [2013-10-15 Tue 12:38]
@@ -23,6 +27,7 @@
 - State "DONE"       from "STARTED"    [2013-10-15 Tue 13:53]
 *** DONE disparition de la matière à la fermeture de la popup
 - State "DONE"       from "STARTED"    [2013-10-15 Tue 12:38]
-*** copier les saisies entre classes/groupes
-*** filtrer par classe
-*** attacher plusieurs à un cours
+*** STARTED filtrer par classe
+*** TODO copier les saisies entre classes/groupes
+*** TODO attacher plusieurs à un cours
+*** NEXT séparer cours et devoir en 2 événements ?
