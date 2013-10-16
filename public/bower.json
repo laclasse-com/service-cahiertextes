@@ -21,7 +21,8 @@
     "angular-ui-date": "latest",
     "underscore": "latest",
     "bootstrap": "latest",
-    "select2-bootstrap-css": "latest"
+    "select2-bootstrap-css": "latest",
+    "bootstrap-theme-white-plum": "latest"
   },
   "devDependencies": {
     "angular-mocks": "1.2.0-rc.3",
