@@ -31,3 +31,7 @@ body {
 .cdt-agendaDay-cours{background-color:#aaaaff}
 .cdt-agendaDay-devoir{background-color:#ff6666}
 .cdt-agendaDay-devoir-fait{background-color:#66cc66}
+
+/* Principal */
+/** Enseignants **/
+.bloc-enseignant{height:12em;overflow:auto}
