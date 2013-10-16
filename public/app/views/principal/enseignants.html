@@ -1,24 +1,24 @@
 <div class="panel panel-default">
   <div class="panel-body">
-    <select class="col-md-2" x-ui-select2 x-ng-model="mois" x-placeholder="Toute l'année" x-ng-change="process_data()">
+    <select class="col-md-2" data-ui-select2 data-ng-model="mois" data-placeholder="Toute l'année" data-ng-change="process_data()">
       <option value="-1">Toute l'année</option>
-      <option x-ng-repeat="mois in annee" value="{{$index + 1}}">{{mois}}</option>
+      <option data-ng-repeat="mois in annee" value="{{$index + 1}}">{{mois}}</option>
     </select>
-    <select class="col-md-2" x-ui-select2 x-ng-model="classe" x-placeholder="Toutes les classes" x-ng-change="process_data()">
+    <select class="col-md-2" data-ui-select2 data-ng-model="classe" data-placeholder="Toutes les classes" data-ng-change="process_data()">
       <option value="-1">Toutes les classes</option>
-      <option x-ng-repeat="classe in classes" value="{{classe}}">{{classe}}</option>
+      <option data-ng-repeat="classe in classes" value="{{classe}}">{{classe}}</option>
     </select>
   </div>
 </div>
 
 <div class="panel panel-default">
   <div class="panel-body">
-    <canvas x-piechart x-options="pieChart.options" x-data="pieChart.data" width="256" height="256"></canvas>
-    <canvas x-barchart x-options="barChart.options" x-data="barChart.data" width="768" height="256"></canvas>
+    <canvas data-piechart data-options="pieChart.options" data-data="pieChart.data" width="256" height="256"></canvas>
+    <canvas data-barchart data-options="barChart.options" data-data="barChart.data" width="768" height="256"></canvas>
   </div>
 </div>
 
-<div class="col-md-3 bloc-enseignant" x-ng-repeat="individualChart in individualCharts.enseignants">
+<div class="col-md-3 bloc-enseignant" data-ng-repeat="individualChart in individualCharts.enseignants">
   <div class="panel panel-default">
     <div class="panel-heading">
       <h4>
@@ -26,17 +26,17 @@
 	  {{individualChart.enseignant.full_name}}
 	</a>
       </h4>
-      <h6 x-ng-show="individualChart.enseignant.classes.length > 0">
-	<span x-ng-repeat="classe in individualChart.enseignant.classes">{{($first == true) && "(" || ""}}{{classe.classe_libelle}}{{($last != true) && ", " || ")"}}</span>
+      <h6 data-ng-show="individualChart.enseignant.classes.length > 0">
+	<span data-ng-repeat="classe in individualChart.enseignant.classes">{{($first == true) && "(" || ""}}{{classe.classe_libelle}}{{($last != true) && ", " || ")"}}</span>
       </h6>
     </div>
     <div class="panel-body">
       <div class="col-md-12">
-	<canvas x-piechart x-data="individualChart.pieChart.data" x-options="individualChart.pieChart.options" width="64" height="64"></canvas>
+	<canvas data-piechart data-data="individualChart.pieChart.data" data-options="individualChart.pieChart.options" width="64" height="64"></canvas>
 	<span class="badge badge-info">{{individualChart.pieChart.data[0].value}} / {{individualChart.pieChart.data[0].value + individualChart.pieChart.data[1].value}}</span>
       </div>
       <ul class="col-md-12">
-	<li x-ng-repeat="matiere in individualChart.enseignant.matieres">{{matiere}}</li>
+	<li data-ng-repeat="matiere in individualChart.enseignant.matieres">{{matiere}}</li>
       </ul>
     </div>
   </div>
