@@ -35,8 +35,10 @@ angular.module('cahierDeTexteApp')
 			      return cours;
 			  };
 			  var create_devoir = function( cours, types_de_devoir ) {
+			      var date = new Date();
 			      var devoir = new Devoirs({ cours_id: cours.id,
-							type_devoir_id: types_de_devoir[1].id });
+							 date_due: date.getFullYear() + '-' + date.getMonth() + '-' + date.getDay(),
+							 type_devoir_id: types_de_devoir[1].id });
 			      devoir.create = true;
 
 			      return devoir;

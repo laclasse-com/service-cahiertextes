@@ -24,7 +24,8 @@
 	    {{type_de_devoir.description}}
 	  </option>
 	</select>
-	<input data-ui-date data-ui-date-format="yy-mm-dd" data-ng-model="devoir.date_due">
+	<!-- input data-ui-date="{ dateFormat: 'd M yy' }" data-ui-date-format="d M yy" data-ng-model="devoir.date_due" -->
+	<input data-ui-date="{ dateFormat: 'yy-mm-dd' }" data-ui-date-format="yy-mm-dd" data-ng-model="devoir.date_due">
       </div>
     </div>
     <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="devoir.contenu"></textarea>
