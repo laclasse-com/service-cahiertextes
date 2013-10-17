@@ -49,6 +49,11 @@ angular.module( 'cahierDeTexteApp' )
 				      statusbar: false };
 
 	// options des graphiques
+	$rootScope.globalBarChartOptions = { animation : false,
+					     scaleOverride: true,
+					     scaleSteps : 0,
+					     scaleStepWidth : 0,
+					     scaleStartValue: 0 };
 	$rootScope.globalPieChartOptions = { animation : false };
 	$rootScope.globalLineChartOptions = { animation : false };
 	$rootScope.globalRadarChartOptions = { animation : false };
