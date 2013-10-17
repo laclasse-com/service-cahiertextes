@@ -44,3 +44,4 @@ body {
 .panel-heading.enseignant-saisie select,
 .panel-heading.enseignant-saisie .panel-title{display:inline}
 .panel-heading.enseignant-saisie .panel-title{width:33%}
+.panel-heading.enseignant-saisie input{border:1px solid #aaa}
