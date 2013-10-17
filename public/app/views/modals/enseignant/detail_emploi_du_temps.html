@@ -7,9 +7,7 @@
     <div class="panel-heading">
       <h3 class="panel-title">Séquence pédagogique</h3>
     </div>
-    <div class="panel-body">
-      <textarea data-ui-tinymce="tinyMCEOptions" data-ng-model="cours.contenu"></textarea>
-    </div>
+    <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="cours.contenu"></textarea>
     <div class="panel-footer">
       <ul>
 	<li data-ng-repeat="ressource in cours.ressources">{{ressource.url}}</li>
@@ -18,20 +16,18 @@
     </div>
   </div>
   <div class="panel panel-default">
-    <div class="panel-heading">
+    <div class="panel-heading enseignant-saisie">
       <h3 class="panel-title">Travail à faire</h3>
-    </div>
-    <div class="panel-body">
-      <div style="height:2.5em">
-	<select class="col-md-4" data-ui-select2 data-ng-model="devoir.type_devoir_id" data-placeholder="Type de devoir">
+      <div class="pull-right">
+	<select data-ui-select2 data-ng-model="devoir.type_devoir_id" data-placeholder="Type de devoir">
 	  <option data-ng-repeat="type_de_devoir in types_de_devoir" value="{{type_de_devoir.id}}">
 	    {{type_de_devoir.description}}
 	  </option>
 	</select>
-	<input class="col-md-7" data-ui-date data-ui-date-format="yy-mm-dd" data-ng-model="devoir.date_due">
+	<input data-ui-date data-ui-date-format="yy-mm-dd" data-ng-model="devoir.date_due">
       </div>
-      <textarea data-ui-tinymce="tinyMCEOptions" data-ng-model="devoir.contenu"></textarea>
     </div>
+    <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="devoir.contenu"></textarea>
     <div class="panel-footer">
       <ul>
 	<li data-ng-repeat="ressource in devoir.ressources">{{ressource.url}}</li>
