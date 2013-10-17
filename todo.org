@@ -18,7 +18,8 @@
 - State "DONE"       from "STARTED"    [2013-10-16 Wed 12:31]
 
 *** NEXT bug dans le bargraph quand il n'y a qu'une classe
-*** NEXT bug dans la persistance de la visualisation des validations
+    bug de Charts.js
+*** CANCELLED bug dans la persistance de la visualisation des validations
 
 ** principal/classes
 *** DONE bug d'affichage des noms des classes
