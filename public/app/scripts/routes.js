@@ -10,6 +10,8 @@ angular.module( 'cahierDeTexteApp' )
 		templateUrl: 'views/main.html',
 		controller: 'MainCtrl'
 	    })
+
+	// Principal ///////////////////////////////////////////////////////////
 	    .state('principal', {
 		url: '/principal',
 		templateUrl: 'views/principal/index.html',
@@ -54,11 +56,35 @@ angular.module( 'cahierDeTexteApp' )
 		    }
 		}
 	    })
+
+	// Élève ///////////////////////////////////////////////////////////////
 	    .state('eleve', {
 		url: '/eleve',
-		templateUrl: 'views/eleve.html',
+		templateUrl: 'views/eleve/index.html',
 		controller: 'EleveCtrl'
 	    })
+	    .state('eleve.emploi_du_temps', {
+		parent: 'eleve',
+		url: '/emploi_du_temps',
+		views: {
+		    'content': {
+			templateUrl: 'views/eleve/emploi_du_temps.html',
+			controller: 'EleveEmploiDuTempsCtrl'
+		    }
+		}
+	    })
+	    .state('eleve.devoirs', {
+		parent: 'eleve',
+		url: '/devoirs',
+		views: {
+		    'content': {
+			templateUrl: 'views/eleve/devoirs.html',
+			controller: 'EleveDevoirsCtrl'
+		    }
+		}
+	    })
+
+	// Enseignant //////////////////////////////////////////////////////////
 	    .state('enseignant', {
 		url: '/enseignant',
 		templateUrl: 'views/enseignant.html',
