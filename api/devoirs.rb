@@ -22,7 +22,15 @@ module CahierDeTextesAPI
         .map { |r| r.regroupement_id }
         .sample
 
-      Devoir
+      Devoir.select(:devoirs__id,
+                    :devoirs__cours_id,
+                    :devoirs__type_devoir_id,
+                    :devoirs__contenu,
+                    :devoirs__date_creation,
+                    :devoirs__date_modification,
+                    :devoirs__date_validation,
+                    :devoirs__date_due,
+                    :devoirs__temps_estime)
         .join(:cours, id: :cours_id)
         .join(:creneaux_emploi_du_temps, id: :creneau_emploi_du_temps_id)
         .join(:creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :id)
