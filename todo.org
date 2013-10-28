@@ -5,6 +5,7 @@
 *** TODO animation pendant le chargement des données
 *** TODO filtre sur l'établissement
 
+
 ** principal/enseignant
 *** DONE répercussion des validation sur les raw_data
 - State "DONE"       from "STARTED"    [2013-10-15 Tue 16:06]
@@ -16,10 +17,11 @@
 *** CANCELLED pagination de la grid
 *** DONE remplacer la grid par des blocs comme pour principal/classes
 - State "DONE"       from "STARTED"    [2013-10-16 Wed 12:31]
-
+        
 *** NEXT bug dans le bargraph quand il n'y a qu'une classe
     bug de Charts.js
 *** CANCELLED bug dans la persistance de la visualisation des validations
+
 
 ** principal/classes
 *** DONE bug d'affichage des noms des classes
@@ -41,6 +43,7 @@
 *** TODO copier les saisies entre classes/groupes
 *** TODO attacher plusieurs à un cours
 *** TODO séparer cours et devoir en 2 événements ?
+
 
 ** eleve
 *** TODO page todo-list
