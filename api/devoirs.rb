@@ -8,6 +8,33 @@ module CahierDeTextesAPI
   #   - principaux pour consultation
   class DevoirsAPI < Grape::API
 
+    desc 'renvoi le détail d\'un devoir'
+    params {
+      requires :eleve_id
+      optional :from, type: Date
+      optional :to, type: Date
+    }
+    get '/' do
+
+      # TODO: get from eleve
+      regroupement_id = CreneauEmploiDuTempsRegroupement
+        .select(:regroupement_id)
+        .map { |r| r.regroupement_id }
+        .sample
+
+      Devoir
+        .join(:cours, id: :cours_id)
+        .join(:creneaux_emploi_du_temps, id: :creneau_emploi_du_temps_id)
+        .join(:creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :id)
+        .where( regroupement_id: regroupement_id )
+        .map { |devoir|
+        hash = devoir.to_hash
+        hash[:ressources] = devoir.ressources
+        hash[:fait] = devoir.fait_par?( params[ :eleve_id ] )
+
+        hash
+      }
+    end
 
     desc 'renvoi le détail d\'un devoir'
     params {
