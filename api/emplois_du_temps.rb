@@ -22,7 +22,7 @@ module CahierDeTextesAPI
       # TODO: prendre en compte debut et fin
 
       # TODO
-      eleve_id = 1
+      user_id = 1
 
       # TODO
       regroupement_id = CreneauEmploiDuTempsRegroupement
@@ -61,7 +61,7 @@ module CahierDeTextesAPI
         else
           devoir = data.first.to_hash # data.first.to_hash_complet
           devoir[:ressources] = data.first.ressources
-          devoir[:fait] = data.first.fait_par?( eleve_id )
+          devoir[:fait] = data.first.fait_par?( user_id )
         end
 
         { cahier_de_textes_id: cahier_de_textes.id,
