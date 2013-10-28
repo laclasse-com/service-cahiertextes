@@ -8,6 +8,27 @@ module CahierDeTextesAPI
   #   - principaux pour consultation
   class DevoirsAPI < Grape::API
 
+
+    desc 'renvoi le détail d\'un devoir'
+    params {
+      requires :id
+    }
+    get '/:id' do
+      devoir = Devoir[ params[:id] ]
+      if devoir.nil?
+        error!( 'Devoir inconnu', 404 )
+      else
+        # TODO: replace with real ID
+        eleve_id = 1
+
+        hash = devoir.to_hash
+        hash[:ressources] = devoir.ressources
+        hash[:fait] = devoir.fait_par?( eleve_id )
+
+        hash
+      end
+    end
+
     desc 'renseigne un devoir'
     params {
       requires :cours_id
@@ -61,26 +82,6 @@ module CahierDeTextesAPI
 
         devoir.date_modification = Time.now
         devoir.save
-      end
-    end
-
-    desc 'renvoi le détail d\'un devoir'
-    params {
-      requires :id
-    }
-    get '/:id' do
-      devoir = Devoir[ params[:id] ]
-      if devoir.nil?
-        error!( 'Devoir inconnu', 404 )
-      else
-        # TODO: replace with real ID
-        eleve_id = 1
-
-        hash = devoir.to_hash
-        hash[:ressources] = devoir.ressources
-        hash[:fait] = devoir.fait_par?( eleve_id )
-
-        hash
       end
     end
 
