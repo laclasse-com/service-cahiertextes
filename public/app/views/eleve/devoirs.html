@@ -1,6 +1,18 @@
 <div class="panel panel-default">
   <div class="panel-body">
-    <div data-ng-repeat="devoir in devoirs">{{devoir}}</div>
+
+    <div class="panel panel-default col-md-12"  data-ng-repeat="devoir in devoirs">
+      <div class="panel-body">
+	<span data-ng-bind-html="devoir.contenu"></span>
+	<button class="btn btn-success pull-right" data-ng-click="fait( {{devoir.id}} )" data-ng-show="devoir.fait == false">
+	  <span class="glyphicon glyphicon-unchecked"></span> Fait
+	</button>
+	<button class="btn btn-default pull-right" data-ng-show="devoir.fait == true" disabled>
+	  <span class="glyphicon glyphicon-check"></span> Fait
+	</button>
+      </div>
+    </div>
+
   </div>
 </div>
 
