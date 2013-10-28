@@ -2,11 +2,14 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EleveDevoirsCtrl',
-		[ '$scope',
-		  function ( $scope ) {
-		      $scope.devoirs = [ 'test1',
-					 'test2',
-					 'test3',
-					 'test4',
-					 'test5' ];
+		[ '$scope', 'Devoirs',
+		  function ( $scope, Devoirs ) {
+		      $scope.fait = function( id ) {
+			  Devoirs.fait({ id: id },
+				       function() {
+					   $scope.devoirs.where({ id: id }).fait = true;
+				       });
+		      };
+
+		      $scope.devoirs = Devoirs.query({ eleve_id: 1 });
 		  } ] );
