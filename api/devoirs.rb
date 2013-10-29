@@ -122,10 +122,10 @@ module CahierDeTextesAPI
     desc 'marque un devoir comme fait'
     params {
       requires :id
+      requires :eleve_id
     }
     put '/:id/fait' do
-      # FIXME: get real (Élève) user
-      eleve_id = 1
+      eleve_id = params[ :eleve_id ]
 
       Devoir[ params[:id] ].fait_par!( eleve_id )
     end

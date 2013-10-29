@@ -6,7 +6,8 @@ angular.module('cahierDeTexteApp')
 		  function( $scope, Devoirs, TypesDeDevoir ) {
 		      var eleve_id = 1;
 		      $scope.fait = function( id ) {
-			  Devoirs.fait({ id: id }).$promise
+			  Devoirs.fait({ id: id,
+					 eleve_id: eleve_id }).$promise
 			      .then( function() {
 				  _($scope.devoirs).findWhere({ id: id }).fait = true;
 			      });

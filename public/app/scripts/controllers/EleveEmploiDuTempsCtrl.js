@@ -4,6 +4,8 @@ angular.module('cahierDeTexteApp')
     .controller('EleveEmploiDuTempsCtrl',
 		[ '$scope', '$rootScope', '$modal', 'EmploisDuTemps', 'Matieres',
 		  function ( $scope, $rootScope, $modal, EmploisDuTemps, Matieres ) {
+		      var eleve_id = 1;
+
 		      $scope.matieres = {};
 
 		      // configuration du composant calendrier
@@ -76,8 +78,11 @@ angular.module('cahierDeTexteApp')
 			  $scope.devoir = devoir;
 
 			  $scope.fait = function() {
-			      Devoirs.fait({ id: devoir.id },
-					     function() { devoir.fait = true; });
+			      Devoirs.fait({ id: devoir.id,
+					     eleve_id: eleve_id },
+					   function() {
+					       devoir.fait = true;
+					   });
 			  };
 
 			  $scope.fermer = function() {
