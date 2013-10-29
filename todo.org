@@ -8,6 +8,8 @@
     . types de devoirs
     . matières
     . ...
+**** service d'interrogation des APIs
+**** variables globales ou services pour l'accès aux données
 
 
 ** principal/enseignant
@@ -50,4 +52,5 @@
 
 
 ** eleve
-*** TODO page todo-list
+*** DONE page todo-list
+- State "DONE"       from "STARTED"    [2013-10-29 Tue 12:14]
