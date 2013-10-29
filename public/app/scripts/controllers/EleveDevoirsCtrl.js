@@ -2,14 +2,21 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EleveDevoirsCtrl',
-		[ '$scope', 'Devoirs',
-		  function ( $scope, Devoirs ) {
+		[ '$scope', 'Devoirs', 'TypesDeDevoir',
+		  function( $scope, Devoirs, TypesDeDevoir ) {
 		      $scope.fait = function( id ) {
 			  Devoirs.fait({ id: id },
 				       function() {
-					   $scope.devoirs.where({ id: id }).fait = true;
+					   _($scope.devoirs).where({ id: id }).fait = true;
 				       });
 		      };
 
-		      $scope.devoirs = Devoirs.query({ eleve_id: 1 });
+		      $scope.types_de_devoir = TypesDeDevoir.query();
+		      Devoirs.query({ eleve_id: 1 },
+				    function( response ) {
+					$scope.devoirs = _(response).map( function( devoir ) {
+					    devoir.type_devoir = _($scope.types_de_devoir).findWhere({id: devoir.type_devoir_id}).label;
+					    return devoir;
+					});
+				    });
 		  } ] );

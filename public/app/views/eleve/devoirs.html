@@ -3,6 +3,7 @@
 
     <div class="panel panel-default col-md-12"  data-ng-repeat="devoir in devoirs">
       <div class="panel-body">
+	<span class="badge badge-info" data-ng-bind="devoir.type_devoir"></span>
 	<span data-ng-bind-html="devoir.contenu"></span>
 	<button class="btn btn-success pull-right" data-ng-click="fait( {{devoir.id}} )" data-ng-show="devoir.fait == false">
 	  <span class="glyphicon glyphicon-unchecked"></span> Fait
