@@ -1,9 +1,13 @@
 * client
 ** global
 *** TODO tests
-*** TODO configure grunt
+*** TODO configurer grunt
 *** TODO animation pendant le chargement des données
-*** TODO filtre sur l'établissement
+*** NEXT filtre sur l'établissement
+*** NEXT factoriser la récupération des données géneŕiques de l'annuaire
+    . types de devoirs
+    . matières
+    . ...
 
 
 ** principal/enseignant
