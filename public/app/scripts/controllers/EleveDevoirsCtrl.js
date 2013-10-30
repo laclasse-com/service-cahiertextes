@@ -5,6 +5,8 @@ angular.module('cahierDeTexteApp')
 		[ '$scope', 'Devoirs', 'TypesDeDevoir',
 		  function( $scope, Devoirs, TypesDeDevoir ) {
 		      var eleve_id = 1;
+
+		      $scope.affiche_faits = false;
 		      $scope.fait = function( id ) {
 			  Devoirs.fait({ id: id,
 					 eleve_id: eleve_id }).$promise
@@ -14,12 +16,22 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      $scope.types_de_devoir = TypesDeDevoir.query();
+		      $scope.filtre = function() {
+			  if ( ! $scope.affiche_faits ) {
+			      $scope.devoirs = _($scope.all_devoirs).reject(function( devoir ) {
+				  return devoir.fait;
+			      });
+			  } else {
+			      $scope.devoirs = $scope.all_devoirs;
+			  }
+		      };
 		      Devoirs.query({ eleve_id: eleve_id },
 				    function( response ) {
-					$scope.devoirs = _(response).map( function( devoir ) {
+					$scope.all_devoirs = _(response).map( function( devoir ) {
 					    devoir.type_devoir = _($scope.types_de_devoir)
 						.findWhere({id: devoir.type_devoir_id}).label;
 					    return devoir;
 					});
+					$scope.filtre();
 				    });
 		  } ] );
