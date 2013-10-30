@@ -4,6 +4,8 @@
 *** TODO configurer grunt
 *** TODO animation pendant le chargement des données
 *** NEXT filtre sur l'établissement
+**** API
+**** client
 *** NEXT factoriser la récupération des données géneŕiques de l'annuaire
     . types de devoirs
     . matières
