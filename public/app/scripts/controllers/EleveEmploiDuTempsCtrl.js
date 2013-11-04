@@ -17,6 +17,7 @@ angular.module('cahierDeTexteApp')
 		      $scope.calendar.options.header = { left: 'title',
 							 center: 'agendaDay agendaWeek month',
 							 right: 'today prev,next' };
+
 		      // TODO: serait-il possible d'utiliser un template à la place de cette série de concaténations ?
 		      $scope.calendar.options.eventRender = function( event, element ) {
 			  if ( $scope.emploi_du_temps.fullCalendar( 'getView' ).name == 'agendaDay') {
@@ -90,6 +91,7 @@ angular.module('cahierDeTexteApp')
 			  };
 		      };
 
+		      // consommation des données
 		      $scope.assemble_fullCalendar_event = function( item_emploi_du_temps ) {
 			  var calendar_event = { details: { cours: item_emploi_du_temps.cours,
 							    devoir: item_emploi_du_temps.devoir },
