@@ -42,10 +42,13 @@ angular.module('cahierDeTexteApp')
 					resolve: { matiere: function() { return $scope.matiere; },
 						   cours: function() { return $scope.cours; },
 						   devoirs: function() { return $scope.devoirs; } } })
-			      .result.then( function ( fait ) {
-				  if ( fait != -1 ) {
-				      $scope.creneau.color = fait ? $rootScope.theme.calendar.devoir_fait : $rootScope.theme.calendar.devoir;
-				  }
+			      .result.then( function ( devoirs ) {
+				  _(devoirs).each(function(devoir) {
+				      _($scope.calendar.events[0]).findWhere({type: 'devoir', id: devoir.id}).color = devoir.fait ? $rootScope.theme.calendar.devoir_fait : $rootScope.theme.calendar.devoir;
+				  });
+				  // if ( fait != -1 ) {
+				  //     $scope.creneau.color = fait ? $rootScope.theme.calendar.devoir_fait : $rootScope.theme.calendar.devoir;
+				  // }
 				  $scope.emploi_du_temps.fullCalendar( 'renderEvent', $scope.creneau );
 			      });
 		      };
@@ -60,12 +63,12 @@ angular.module('cahierDeTexteApp')
 					     eleve_id: eleve_id },
 					   function() {
 					       // FIXME
-					       devoirs.fait = true;
+					       _(devoirs).findWhere({id: devoir_id}).fait = true;
 					   });
 			  };
 
 			  $scope.fermer = function() {
-			      $modalInstance.close( ( _(devoirs).size() > 0 ) ? devoirs.fait : -1 );
+			      $modalInstance.close( devoirs );
 			  };
 		      };
 
@@ -83,6 +86,8 @@ angular.module('cahierDeTexteApp')
 
 			  // traitement du cours
 			  var cours_event = new Calendar_event_template();
+			  cours_event.type = 'cours';
+			  cours_event.id = item_emploi_du_temps.cours.id;
 
 			  // choix de la couleur
 			  if ( _(item_emploi_du_temps.cours).size() > 0 ) {
@@ -113,6 +118,8 @@ angular.module('cahierDeTexteApp')
 			  if ( _(item_emploi_du_temps.devoirs).size() > 0 ) {
 			      _(item_emploi_du_temps.devoirs).each( function( devoir ) {
 				  var devoir_event = new Calendar_event_template();
+				  devoir_event.type = 'devoir';
+				  devoir_event.id = devoir.id;
 
 				  devoir_event.color = devoir.fait ? $rootScope.theme.calendar.devoir_fait : $rootScope.theme.calendar.devoir;
 				  devoir_event.allDay = true;
@@ -133,7 +140,6 @@ angular.module('cahierDeTexteApp')
 				      devoir_event.title = response.label;
 				  });
 
-				  // TODO: allDay: true & date due comme date
 				  events.push( devoir_event );
 			      });
 			  }
