@@ -19,53 +19,29 @@ angular.module('cahierDeTexteApp')
 							 center: 'agendaDay agendaWeek month',
 							 right: 'today prev,next' };
 
-		      // TODO: serait-il possible d'utiliser un template à la place de cette série de concaténations ?
+		      // ajouter la description ici permet que l'HTML soit interprété
 		      $scope.calendar.options.eventRender = function( event, element ) {
-			  if ( $scope.emploi_du_temps.fullCalendar( 'getView' ).name == 'agendaDay') {
-			      if ( _(event.details.cours).size() > 0 ) {
-				  var contenu_cellule = '<div class="cdt-agendaDay-container col-md-12">';
-				  contenu_cellule += '  <div class="cdt-agendaDay-event col-md-12">';
-				  contenu_cellule += '    <button type="button" disabled class="btn btn-primary btn-xs col-md-1">' + event.title + '</button>';
-				  contenu_cellule += '    <div id="cours' + event.details.cours.id + '" class="col-md-4 cdt-agendaDay-cours">';
-				  contenu_cellule += event.details.cours.contenu;
-				  contenu_cellule += '    </div>';
-
-				  if ( _(event.details.devoir).size() > 0 ) {
-				      contenu_cellule += '    <span class="col-md-1">Taf <span class="glyphicon glyphicon-chevron-right"></span></span>';
-				      contenu_cellule += '    <span class="col-md-1"><span class="glyphicon glyphicon-chevron-left"> Cours</span></span>';
-				      contenu_cellule += '    <div id="devoir' + event.details.devoir.id + '" class="col-md-5 ';
-				      contenu_cellule += ( event.details.devoir.fait ) ? 'cdt-agendaDay-devoir-fait' : 'cdt-agendaDay-devoir';
-				      contenu_cellule += '">';
-				      contenu_cellule += event.details.devoir.contenu;
-				      contenu_cellule += '    </div>';
-				  }
-				  contenu_cellule += '  </div>';
-				  contenu_cellule += '</div>';
-				  element.find('.fc-event-title').html( contenu_cellule );
-			      }
-			  } else  {
-			      element.find('.fc-event-title').append( event.description );
-			  }
+			  element.find('.fc-event-title').append( event.description );
 		      };
 		      $scope.calendar.options.eventClick = function( event ) {
 			  $scope.creneau = _(event.source.events).findWhere({_id: event._id});
 			  $scope.matiere = event.title;
 			  $scope.cours = $scope.creneau.details.cours;
 			  if ( _($scope.cours).size() > 0 ) {
-			      $scope.devoir = $scope.creneau.details.devoir;
+			      $scope.devoirs = $scope.creneau.details.devoirs;
 			      $scope.affiche_details(  );
 			  }
 		      };
 
 		      // popup d'affichage des détails
 		      $scope.cours = {};
-		      $scope.devoir = {};
+		      $scope.devoirs = [];
 		      $scope.affiche_details = function(  ) {
 			  $modal.open({ templateUrl: 'views/modals/eleve/detail_emploi_du_temps.html',
 					controller: modalInstanceCtrl,
 					resolve: { matiere: function() { return $scope.matiere; },
 						   cours: function() { return $scope.cours; },
-						   devoir: function() { return $scope.devoir; } } })
+						   devoirs: function() { return $scope.devoirs; } } })
 			      .result.then( function ( fait ) {
 				  if ( fait != -1 ) {
 				      $scope.creneau.color = fait ? $rootScope.theme.calendar.devoir_fait : $rootScope.theme.calendar.devoir;
@@ -74,28 +50,29 @@ angular.module('cahierDeTexteApp')
 			      });
 		      };
 
-		      var modalInstanceCtrl = function( $scope, $modalInstance, Devoirs, matiere, cours, devoir ) {
+		      var modalInstanceCtrl = function( $scope, $modalInstance, Devoirs, matiere, cours, devoirs ) {
 			  $scope.matiere = matiere;
 			  $scope.cours = cours;
-			  $scope.devoir = devoir;
+			  $scope.devoirs = devoirs;
 
-			  $scope.fait = function() {
-			      Devoirs.fait({ id: devoir.id,
+			  $scope.fait = function( devoir_id ) {
+			      Devoirs.fait({ id: devoir_id,
 					     eleve_id: eleve_id },
 					   function() {
-					       devoir.fait = true;
+					       // FIXME
+					       devoirs.fait = true;
 					   });
 			  };
 
 			  $scope.fermer = function() {
-			      $modalInstance.close( ( _(devoir).size() > 0 ) ? devoir.fait : -1 );
+			      $modalInstance.close( ( _(devoirs).size() > 0 ) ? devoirs.fait : -1 );
 			  };
 		      };
 
 		      // consommation des données
 		      $scope.assemble_fullCalendar_event = function( item_emploi_du_temps ) {
 			  var Calendar_event_template = function() { this.details = { cours: item_emploi_du_temps.cours,
-										      devoir: item_emploi_du_temps.devoir };
+										      devoirs: item_emploi_du_temps.devoirs };
 								     this.allDay = false;
 								     this.title = '';
 								     this.description = '';
@@ -132,31 +109,33 @@ angular.module('cahierDeTexteApp')
 
 			  events.push( cours_event );
 
-			  // // traitement des devoirs
-			  if ( _(item_emploi_du_temps.devoir).size() > 0 ) {
-			      var devoir_event = new Calendar_event_template();
+			  // traitement des devoirs
+			  if ( _(item_emploi_du_temps.devoirs).size() > 0 ) {
+			      _(item_emploi_du_temps.devoirs).each( function( devoir ) {
+				  var devoir_event = new Calendar_event_template();
 
-			      devoir_event.color = item_emploi_du_temps.devoir.fait ? $rootScope.theme.calendar.devoir_fait : $rootScope.theme.calendar.devoir;
-			      devoir_event.allDay = true;
-			      devoir_event.start = item_emploi_du_temps.devoir.date_due;
-			      devoir_event.end = null;
+				  devoir_event.color = devoir.fait ? $rootScope.theme.calendar.devoir_fait : $rootScope.theme.calendar.devoir;
+				  devoir_event.allDay = true;
+				  devoir_event.start = devoir.date_due;
+				  devoir_event.end = null;
 
-			      // composition de la description
-			      devoir_event.description += '<br><span style="color:' + $rootScope.calendar.couleurs.devoir + '">';
-			      devoir_event.description += item_emploi_du_temps.devoir.contenu.substring( 0, $rootScope.calendar.devoir_max_length );
-			      devoir_event.description += item_emploi_du_temps.devoir.contenu.length > $rootScope.calendar.devoir_max_length ? '…' : '';
-			      devoir_event.description += '</span>';
+				  // composition de la description
+				  devoir_event.description += '<br><span style="color:' + $rootScope.calendar.couleurs.devoir + '">';
+				  devoir_event.description += devoir.contenu.substring( 0, $rootScope.calendar.devoir_max_length );
+				  devoir_event.description += devoir.contenu.length > $rootScope.calendar.devoir_max_length ? '…' : '';
+				  devoir_event.description += '</span>';
 
-			      // composition du titre
-			      if ( $scope.types_de_devoir[ item_emploi_du_temps.devoir.type_devoir_id ] === undefined ) {
-				  $scope.types_de_devoir[ item_emploi_du_temps.devoir.type_devoir_id ] = TypesDeDevoir.get({ id: item_emploi_du_temps.devoir.type_devoir_id }).$promise;
-			      }
-			      $scope.types_de_devoir[ item_emploi_du_temps.devoir.type_devoir_id ].then( function success( response ) {
-				  devoir_event.title = response.label;
+				  // composition du titre
+				  if ( $scope.types_de_devoir[ devoir.type_devoir_id ] === undefined ) {
+				      $scope.types_de_devoir[ devoir.type_devoir_id ] = TypesDeDevoir.get({ id: devoir.type_devoir_id }).$promise;
+				  }
+				  $scope.types_de_devoir[ devoir.type_devoir_id ].then( function success( response ) {
+				      devoir_event.title = response.label;
+				  });
+
+				  // TODO: allDay: true & date due comme date
+				  events.push( devoir_event );
 			      });
-
-			      // TODO: allDay: true & date due comme date
-			      events.push( devoir_event );
 			  }
 
 			  return events;
