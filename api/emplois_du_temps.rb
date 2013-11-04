@@ -55,23 +55,28 @@ module CahierDeTextesAPI
         end
 
         data = Devoir.where(cours_id: cours[:id]) if cours.key?( :id )
-        # raise '/!\ Incohérence dans les devoirs !' unless data.count == 1
         if data.first.nil?
-          devoir = {}
+          devoirs = []
         else
-          devoir = data.first.to_hash # data.first.to_hash_complet
-          devoir[:ressources] = data.first.ressources
-          devoir[:fait] = data.first.fait_par?( user_id )
+          devoirs = data.map { |devoir|
+            d = devoir.to_hash # data.first.to_hash_complet
+            d[:ressources] = devoir.ressources
+            d[:fait] = devoir.fait_par?( user_id )
+
+            d
+          }
         end
 
-        { cahier_de_textes_id: cahier_de_textes.id,
+        {
+          cahier_de_textes_id: cahier_de_textes.id,
           regroupement_id: cahier_de_textes.regroupement_id,
           creneau_emploi_du_temps_id: creneau.id,
           matiere_id: creneau.matiere_id,
           start: Time.new( jour.year, jour.month, jour.mday, plage_debut.hour, plage_debut.min ).iso8601,
           end: Time.new( jour.year, jour.month, jour.mday, plage_fin.hour, plage_fin.min ).iso8601,
           cours: cours,
-          devoir: devoir }
+          devoirs: devoirs
+        }
       }.flatten
     end
 
