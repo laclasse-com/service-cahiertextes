@@ -80,12 +80,13 @@ describe CahierDeTextesAPI::API do
 
   ############ PUT ############
   it 'note un devoir comme fait' do
+    eleve_id = 1
     devoir = Devoir.all.sample
 
-    put "/api/v0/devoirs/#{devoir.id}/fait", {}
+    put "/api/v0/devoirs/#{devoir.id}/fait", { eleve_id: eleve_id }
     last_response.status.should == 200
 
-    devoir.fait_par?( 1 ).should be_true
+    devoir.fait_par?( eleve_id ).should be_true
   end
   # }}}
 end
