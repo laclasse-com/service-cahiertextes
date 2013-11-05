@@ -46,9 +46,6 @@ angular.module('cahierDeTexteApp')
 				  _(devoirs).each(function(devoir) {
 				      _($scope.calendar.events[0]).findWhere({type: 'devoir', id: devoir.id}).color = devoir.fait ? $rootScope.theme.calendar.devoir_fait : $rootScope.theme.calendar.devoir;
 				  });
-				  // if ( fait != -1 ) {
-				  //     $scope.creneau.color = fait ? $rootScope.theme.calendar.devoir_fait : $rootScope.theme.calendar.devoir;
-				  // }
 				  $scope.emploi_du_temps.fullCalendar( 'renderEvent', $scope.creneau );
 			      });
 		      };
