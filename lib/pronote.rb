@@ -176,7 +176,7 @@ module ProNote
     edt_clair.search('Cours/Cours').each do |creneau_emploi_du_temps|
       unless creneau_emploi_du_temps.name == 'text'
         debut = PlageHoraire[ label: creneau_emploi_du_temps['NumeroPlaceDebut'] ][:id]
-        fin = PlageHoraire[ label: creneau_emploi_du_temps['NumeroPlaceDebut'].to_i + creneau_emploi_du_temps['NombrePlaces'].to_i ][:id]
+        fin = PlageHoraire[ label: creneau_emploi_du_temps['NumeroPlaceDebut'].to_i + creneau_emploi_du_temps['NombrePlaces'].to_i - 1 ][:id]
         matiere_id = 0
 
         creneau_emploi_du_temps.children.each do |node|  # FIXME: peut sûrement mieux faire
