@@ -8,7 +8,7 @@ angular.module('cahierDeTexteApp')
 		      $scope.classes = {};
 		      $scope.classe = -1;
 
-		      // configuration du composant calendrier
+		      // configuration du composant calendrier /////////////////
 		      $scope.calendar = { options: $rootScope.globalCalendarOptions,
 					  events: [  ] };
 		      $scope.calendar.options.defaultView = 'agendaWeek';
@@ -22,7 +22,7 @@ angular.module('cahierDeTexteApp')
 			  element.find('.fc-event-title').append( event.description );
 		      };
 
-		      // ouverture de la popup de création/édition
+		      // // ouverture de la popup de création/édition //////////
 		      $scope.calendar.options.eventClick = function( event ) {
 			  var create_cours = function( creneau ) {
 			      var cours = new Cours({
@@ -90,7 +90,7 @@ angular.module('cahierDeTexteApp')
 			      });
 		      };
 
-		      // popup de création/édition
+		      // popup de création/édition /////////////////////////////
 		      var modalInstanceCtrl = function( $scope, $rootScope, $modalInstance, matiere, cours, devoirs, types_de_devoir ) {
 			  // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
 			  $scope.matiere = matiere;
@@ -158,6 +158,7 @@ angular.module('cahierDeTexteApp')
 			      });
 		      };
 
+		      // consommation des données //////////////////////////////
 		      // helper
 		      $scope.update_fullCalendar_event = function( event, cours, devoirs ) {
 			  var calendar_event = { details: { matiere_id: event.details.matiere_id,
