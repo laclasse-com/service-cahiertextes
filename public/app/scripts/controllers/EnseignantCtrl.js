@@ -34,15 +34,6 @@ angular.module('cahierDeTexteApp')
 
 			      return cours;
 			  };
-			  var create_devoir = function( cours, types_de_devoir ) {
-			      var date = new Date();
-			      var devoir = new Devoirs({ cours_id: cours.id,
-							 date_due: date.getFullYear() + '-' + date.getMonth() + '-' + date.getDay(),
-							 type_devoir_id: types_de_devoir[1].id });
-			      devoir.create = true;
-
-			      return devoir;
-			  };
 
 			  $scope.creneau = _(event.source.events).findWhere({_id: event._id});
 			  $scope.matiere = event.title;
@@ -72,14 +63,12 @@ angular.module('cahierDeTexteApp')
 						      $q.all( $scope.types_de_devoir, $scope.cours )
 							  .then( function() {
 							      $scope.devoirs = [];
-							      $scope.devoirs.push( create_devoir( $scope.cours, $scope.types_de_devoir ) );
 							  });
 						  });
 			  } else {
 			      $q.all( $scope.types_de_devoir, $scope.cours )
 				  .then( function() {
 				      $scope.devoirs = [];
-				      // $scope.devoirs.push( create_devoir( $scope.cours, $scope.types_de_devoir ) );
 				  });
 			  }
 
@@ -98,6 +87,20 @@ angular.module('cahierDeTexteApp')
 			  $scope.devoirs = devoirs;
 			  $scope.types_de_devoir = types_de_devoir;
 			  $scope.tinyMCEOptions = $rootScope.tinyMCEOptions;
+
+			  var create_devoir = function( cours, types_de_devoir ) {
+			      var date = new Date();
+			      var devoir = new Devoirs({ cours_id: cours.id,
+							 date_due: date.getFullYear() + '-' + date.getMonth() + '-' + date.getDay(),
+							 type_devoir_id: types_de_devoir[1].id });
+			      devoir.create = true;
+
+			      return devoir;
+			  };
+
+			  $scope.ajout_devoir = function() {
+			      $scope.devoirs.push( create_devoir( $scope.cours, $scope.types_de_devoir ) );
+			  };
 
 			  $scope.fermer = function() {
 			      $modalInstance.close( { cours: $scope.cours,
