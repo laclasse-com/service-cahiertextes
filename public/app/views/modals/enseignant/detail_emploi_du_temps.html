@@ -3,6 +3,7 @@
   <h3>{{matiere}}</h3>
 </div>
 <div class="modal-body">
+
   <div class="panel panel-default">
     <div class="panel-heading">
       <h3 class="panel-title">Séquence pédagogique</h3>
@@ -15,7 +16,8 @@
       <input type="file">
     </div>
   </div>
-  <div class="panel panel-default">
+
+  <div class="panel panel-default" data-ng-repeat="devoir in devoirs">
     <div class="panel-heading enseignant-saisie">
       <h3 class="panel-title">Travail à faire</h3>
       <div class="pull-right">
@@ -36,6 +38,7 @@
       <input type="file">
     </div>
   </div>
+
 </div>
 <div class="modal-footer">
   <button class="btn btn-info pull-right" data-ng-click="fermer()">
