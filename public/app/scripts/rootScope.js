@@ -19,8 +19,8 @@ angular.module( 'cahierDeTexteApp' )
 	$rootScope.calendar = {	cours_max_length: 16,
 				devoir_max_length: 16,
 				couleurs: {
-				    cours: '#0000ff',
-				    devoir: '#ff00ff'
+				    cours: '#ffc',
+				    devoir: '#eff'
 				}};
 	$rootScope.globalCalendarOptions = {
 	    timeFormat: 'H:mm{ - H:mm}',
