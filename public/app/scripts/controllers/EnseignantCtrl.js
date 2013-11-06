@@ -121,15 +121,17 @@ angular.module('cahierDeTexteApp')
 
 			      promesse.then( function( cours ) {
 				  $scope.cours = cours;
-				  // if ( $scope.devoirs.contenu.length > 0 ) {
-				  //     $scope.devoir.dirty = true;
-				  //     if ( $scope.devoir.create ) {
-				  //	  $scope.devoir.cours_id = $scope.cours.id;
-				  //	  $scope.devoir.$save();
-				  //     } else {
-				  //	  $scope.devoir.$update();
-				  //     }
-				  // }
+				  _($scope.devoirs).each(function( devoir ) {
+				      if ( devoir.contenu.length > 0 ) {
+					  devoir.dirty = true;
+					  if ( devoir.create ) {
+					      devoir.cours_id = $scope.cours.id;
+					      devoir.$save();
+					  } else {
+					      devoir.$update();
+					  }
+				      }
+				  });
 			      });
 
 			      $scope.fermer();
