@@ -48,14 +48,12 @@
 - State "DONE"       from "STARTED"    [2013-10-15 Tue 12:38]
 *** DONE filtrer par classe
 - State "DONE"       from "STARTED"    [2013-10-16 Wed 10:02]
+*** DONE attacher plusieurs devoirs à un cours
+- State "DONE"       from "STARTED"    [2013-11-06 Wed 15:53]
+*** DONE séparer cours et devoir en 2 événements ?
+- State "DONE"       from "STARTED"    [2013-11-06 Wed 15:53]
+
 *** TODO copier les saisies entre classes/groupes
-
-** Emploi du temps
-*** TODO attacher plusieurs devoirs à un cours
-*** STARTED séparer cours et devoir en 2 événements
-**** TODO pour l'affichage élève rattacher le devoir au cours de la même matière/prof à la date due
-
-**** TODO pour l'affichage enseignant rattacher le devoir au cours durant lequel le devoir a été donné
 
 
 ** eleve
