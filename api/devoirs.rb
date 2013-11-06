@@ -87,6 +87,8 @@ module CahierDeTextesAPI
           devoir.add_ressource( Ressource.create( label: ressource['label'],
                                                   url: ressource['url'] ) )
         end
+
+        devoir
       end
     end
 
