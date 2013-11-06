@@ -121,16 +121,20 @@ angular.module('cahierDeTexteApp')
 
 			      promesse.then( function( cours ) {
 				  $scope.cours = cours;
-				  _($scope.devoirs).each(function( devoir ) {
+				  $scope.devoirs = _($scope.devoirs).map(function( devoir ) {
 				      if ( devoir.contenu.length > 0 ) {
 					  devoir.dirty = true;
 					  if ( devoir.create ) {
 					      devoir.cours_id = $scope.cours.id;
-					      devoir.$save();
+					      devoir.$save().then(function( new_devoir ) {
+						  devoir.id = new_devoir.id;
+					      });
+					      // TODO: récupérer l'id du devoir
 					  } else {
 					      devoir.$update();
 					  }
 				      }
+				      return devoir;
 				  });
 			      });
 
