@@ -10,7 +10,7 @@ namespace :db do
       new_file.write ERB.new(File.read(File.join(APP_ROOT, 'config', 'database.erb'))).result(binding)
     end
   end
-    
+
   desc "Dumps the schema to db/schema/sequel_schema.db"
   task :schemadump => :load_config do
     #foreign_key dump is sometimes wrong with non autoincrmente type (ie char)
@@ -20,14 +20,26 @@ namespace :db do
     fk = DB.dump_foreign_key_migration
     fk_file = File.open(File.join(APP_ROOT, 'db', 'scripts', 'dump_fk.sql'), "w"){|f| f.write(fk)}
   end
-  
+
   desc "Generating Sequel model from database."
-  task :generate_model => :load_config do 
+  task :generate_model => :load_config do
     require_relative '../lib/model_generator'
-  end 
+  end
 
   desc "Apply migrations"
   task :migrations => :load_config do
     Sequel::Migrator.run( DB, 'migrations' )
   end
+
+  desc 'Open pry with DB environment setup'
+  task pry: :load_config do
+    require 'pry'
+
+    require 'sequel'
+    require './config/database'
+    require './models/models'
+
+    pry.binding
+  end
+
 end
