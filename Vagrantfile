@@ -1,57 +1,55 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-Vagrant.configure("2") do |config|
+Vagrant.configure('2') do |config|
   # All Vagrant configuration is done here. The most common configuration
   # options are documented and commented below. For a complete reference,
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "precise64"
-  
+  config.vm.box = 'precise64'
+
   #
   # INSTALL THE GRAPE CUSTOM DEPENDENCIES
-  # 
-  config.vm.provision :shell, :path => "bootstrap.sh"
+  #
+  config.vm.provision :shell, path: 'bootstrap.sh'
 
   # Share an additional folder to the guest VM. The first argument is
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
-  #config.vm.synced_folder ".", "/vagrant", :nfs => true
-  
+  #config.vm.synced_folder '.', '/vagrant', :nfs => true
+
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
   # Example for VirtualBox:
   #
   config.vm.provider :virtualbox do |vb|
-    vb.name = "CahierDeTextes"
+    vb.name = 'CahierDeTextes'
     # Don't boot with headless mode
     #   vb.gui = true
     #
     # Use VBoxManage to customize the VM. For example to change memory:
-    #   vb.customize ["modifyvm", :id, "--memory", "1024"]
+    #   vb.customize ['modifyvm', :id, '--memory', '1024']
   end
-
 
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
-  config.vm.box_url = "http://files.vagrantup.com/precise64.box"
+  config.vm.box_url = 'http://files.vagrantup.com/precise64.box'
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
-  # accessing "localhost:8080" will access port 80 on the guest machine.
+  # accessing 'localhost:8080' will access port 80 on the guest machine.
   # config.vm.network :forwarded_port, guest: 80, host: 8080
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
-  #config.vm.network :private_network, ip: "192.168.33.10"
+  config.vm.network :private_network, ip: '192.168.33.10'
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
   # your network.
   # config.vm.network :public_network
-
 
   #
   # View the documentation for the provider you're using for more
@@ -64,20 +62,20 @@ Vagrant.configure("2") do |config|
   #
   # An example Puppet manifest to provision the message of the day:
   #
-  # # group { "puppet":
-  # #   ensure => "present",
+  # # group { 'puppet':
+  # #   ensure => 'present',
   # # }
   # #
   # # File { owner => 0, group => 0, mode => 0644 }
   # #
   # # file { '/etc/motd':
-  # #   content => "Welcome to your Vagrant-built virtual machine!
-  # #               Managed by Puppet.\n"
+  # #   content => 'Welcome to your Vagrant-built virtual machine!
+  # #               Managed by Puppet.\n'
   # # }
   #
   # config.vm.provision :puppet do |puppet|
-  #   puppet.manifests_path = "manifests"
-  #   puppet.manifest_file  = "init.pp"
+  #   puppet.manifests_path = 'manifests'
+  #   puppet.manifest_file  = 'init.pp'
   # end
 
   # Enable provisioning with chef solo, specifying a cookbooks path, roles
@@ -85,14 +83,14 @@ Vagrant.configure("2") do |config|
   # some recipes and/or roles.
   #
   # config.vm.provision :chef_solo do |chef|
-  #   chef.cookbooks_path = "../my-recipes/cookbooks"
-  #   chef.roles_path = "../my-recipes/roles"
-  #   chef.data_bags_path = "../my-recipes/data_bags"
-  #   chef.add_recipe "mysql"
-  #   chef.add_role "web"
+  #   chef.cookbooks_path = '../my-recipes/cookbooks'
+  #   chef.roles_path = '../my-recipes/roles'
+  #   chef.data_bags_path = '../my-recipes/data_bags'
+  #   chef.add_recipe 'mysql'
+  #   chef.add_role 'web'
   #
   #   # You may also specify custom JSON attributes:
-  #   chef.json = { :mysql_password => "foo" }
+  #   chef.json = { :mysql_password => 'foo' }
   # end
 
   # Enable provisioning with chef server, specifying the chef server URL,
@@ -106,8 +104,8 @@ Vagrant.configure("2") do |config|
   # validation key to validation.pem.
   #
   # config.vm.provision :chef_client do |chef|
-  #   chef.chef_server_url = "https://api.opscode.com/organizations/ORGNAME"
-  #   chef.validation_key_path = "ORGNAME-validator.pem"
+  #   chef.chef_server_url = 'https://api.opscode.com/organizations/ORGNAME'
+  #   chef.validation_key_path = 'ORGNAME-validator.pem'
   # end
   #
   # If you're using the Opscode platform, your validator client is
@@ -116,5 +114,5 @@ Vagrant.configure("2") do |config|
   # If you have your own Chef Server, the default validation client name is
   # chef-validator, unless you changed the configuration.
   #
-  #   chef.validation_client_name = "ORGNAME-validator"
+  #   chef.validation_client_name = 'ORGNAME-validator'
 end
