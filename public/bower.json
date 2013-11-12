@@ -2,12 +2,12 @@
   "name": "cahierDeTexte",
   "version": "0.0.0",
   "dependencies": {
-    "angular": "1.2.0",
-    "angular-resource": "1.2.0",
-    "angular-mocks": "1.2.0",
-    "angular-sanitize": "1.2.0",
-    "angular-cookies": "1.2.0",
-    "angular-scenario": "1.2.0",
+    "angular": "latest",
+    "angular-resource": "latest",
+    "angular-mocks": "latest",
+    "angular-sanitize": "latest",
+    "angular-cookies": "latest",
+    "angular-scenario": "latest",
     "angular-grid": "git://github.com/angular-ui/ng-grid.git#latest",
     "angles": "git://github.com/lgsilver/angles.git#latest",
     "Chart.js": "latest",
@@ -21,12 +21,11 @@
     "angular-ui-date": "latest",
     "underscore": "latest",
     "bootstrap": "latest",
-    "select2-bootstrap-css": "latest",
-    "bootstrap-theme-white-plum": "latest"
+    "select2-bootstrap-css": "latest"
   },
   "devDependencies": {
-    "angular-mocks": "1.2.0",
-    "angular-scenario": "1.2.0"
+    "angular-mocks": "latest",
+    "angular-scenario": "latest"
   },
   "ignore": [
     "**/.*",
@@ -35,9 +34,5 @@
     "bower_components",
     "test",
     "tests"
-  ],
-  "resolutions": {
-    "angular": "1.2.0",
-    "bootstrap": "3.0.2"
-  }
+  ]
 }
