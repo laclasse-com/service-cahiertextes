@@ -46,19 +46,47 @@ EOF
     cat $TMPFILE | mysql --user=root --password=tartempion
     rm $TMPFILE
 
-    cat <<EOF | bundle exec rake db:configure
-cahierdetextes
-localhost
-cahierdetextes
-$PASSWORD
-EOF
-
     #
     # Symlink app
     #
     ln -s /vagrant cahier-de-textes
     cd cahier-de-textes/
 
+    [ -e config/database.rb ] && cp config/database.rb config/database.rb.before
+#     cat <<EOF | bundle exec rake db:configure
+# cahierdetextes
+# localhost
+# cahierdetextes
+# $PASSWORD
+# EOF
+    cat <<EOF > config/database.rb
+#
+# Configuration de la base de données de Backend
+#
+# Generated automatically with "rake db:configure" command at <%=Time.new().strftime("%d/%m/%Y") %>.
+#
+require 'logger'
+
+DB_CONFIG = {
+  name: 'cahierdetextes',
+  host: 'localhost',
+  user: 'cahierdetextes',
+  password: '$PASSWORD',
+  charset: 'utf8'
+}
+
+DB = Sequel.mysql2( DB_CONFIG[:name],
+                    host: DB_CONFIG[:host],
+                    user: DB_CONFIG[:user],
+                    password: DB_CONFIG[:password],
+                    charset: DB_CONFIG[:charset] )
+
+Sequel.extension(:pagination)
+Sequel.extension(:migration)
+
+# Uncomment this if you want to log all DB queries
+# DB.loggers << Logger.new($stdout)
+EOF
     echo 'running bundle install'
     bundle install
 } 
