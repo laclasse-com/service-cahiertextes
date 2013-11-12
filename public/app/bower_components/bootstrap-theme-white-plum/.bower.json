@@ -20,7 +20,6 @@
     "commit": "7452e4bba70187998785788533998697fa42ebbe"
   },
   "_source": "git://github.com/divshot/bootstrap-theme-white-plum.git",
-  "_target": "~0.3.0",
-  "_originalSource": "bootstrap-theme-white-plum",
-  "_direct": true
+  "_target": "*",
+  "_originalSource": "bootstrap-theme-white-plum"
 }
