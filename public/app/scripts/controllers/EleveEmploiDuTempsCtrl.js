@@ -119,9 +119,8 @@ angular.module('cahierDeTexteApp')
 				  devoir_event.id = devoir.id;
 
 				  devoir_event.color = devoir.fait ? $rootScope.theme.calendar.devoir_fait : $rootScope.theme.calendar.devoir;
-				  devoir_event.allDay = true;
-				  devoir_event.start = devoir.date_due;
-				  devoir_event.end = null;
+				  devoir_event.start = new Date( devoir.start );
+				  devoir_event.end = new Date( devoir.end );
 
 				  // composition de la description
 				  devoir_event.description += '<br><span style="color:' + $rootScope.calendar.couleurs.devoir + '">';

@@ -59,9 +59,13 @@ module CahierDeTextesAPI
           devoirs = []
         else
           devoirs = data.map { |devoir|
+            hstart = PlageHoraire[ CreneauEmploiDuTemps[ devoir.creneau_emploi_du_temps_id ].debut ].debut
+            hend = PlageHoraire[ CreneauEmploiDuTemps[ devoir.creneau_emploi_du_temps_id ].fin ].fin
             d = devoir.to_hash # data.first.to_hash_complet
             d[:ressources] = devoir.ressources
             d[:fait] = devoir.fait_par?( user_id )
+            d[:start] = Time.new( devoir.date_due.year, devoir.date_due.month, devoir.date_due.mday, hstart.hour, hstart.min ).iso8601
+            d[:end] = Time.new( devoir.date_due.year, devoir.date_due.month, devoir.date_due.mday, hend.hour, hend.min ).iso8601
 
             d
           }
