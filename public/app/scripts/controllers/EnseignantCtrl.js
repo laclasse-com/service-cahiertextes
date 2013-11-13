@@ -129,7 +129,6 @@ angular.module('cahierDeTexteApp')
 					      devoir.$save().then(function( new_devoir ) {
 						  devoir.id = new_devoir.id;
 					      });
-					      // TODO: récupérer l'id du devoir
 					  } else {
 					      devoir.$update();
 					  }
@@ -150,6 +149,9 @@ angular.module('cahierDeTexteApp')
 						   devoirs: function() { return $scope.devoirs; },
 						   types_de_devoir: function() { return $scope.types_de_devoir; } } })
 			      .result.then( function ( objets ) { //évécuté à la fermeture de la popup
+				  objets.devoirs = _(objets.devoirs).filter(function(devoir) {
+				      return _(devoir).has( 'id' );
+				  });
 				  if ( ( objets.cours.dirty ) || ( objets.devoirs.dirty ) ) {
 				      var index = _($scope.calendar.events[0]).indexOf($scope.creneau);
 				      var updated_event = $scope.update_fullCalendar_event( $scope.creneau, objets.cours, objets.devoirs );
