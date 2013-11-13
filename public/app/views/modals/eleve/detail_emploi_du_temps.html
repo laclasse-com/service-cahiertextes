@@ -10,7 +10,7 @@
 
   <div class="panel panel-default col-md-12" data-ng-repeat="devoir in devoirs">
     <div class="panel-body" data-ng-bind-html="devoir.contenu"></div>
-    <button class="btn btn-success pull-right" data-ng-click="fait( {{devoir.id}} )" data-ng-show="devoir.fait == false">
+    <button class="btn btn-success pull-right" data-ng-click="fait( devoir.id )" data-ng-show="devoir.fait == false">
       <span class="glyphicon glyphicon-unchecked"></span> Fait
     </button>
     <button class="btn btn-default pull-right" data-ng-show="devoir.fait == true" disabled>
