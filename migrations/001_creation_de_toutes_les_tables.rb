@@ -93,6 +93,7 @@ Sequel.migration do
     create_table!(:devoirs) {
       primary_key :id
       foreign_key :cours_id, :cours
+      foreign_key :creneau_emploi_du_temps_id, :creneaux_emploi_du_temps
       foreign_key :type_devoir_id, :types_devoir
       String :contenu, size: 4096
       DateTime :date_creation, null: false

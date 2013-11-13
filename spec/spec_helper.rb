@@ -93,12 +93,20 @@ def generate_test_data
                              enseignant_id: creneau.enseignant_id )
         STDERR.putc '.'
 
-        if ( rand > 0.25 ) then
+        if rand > 0.25
+          creneau_emploi_du_temps = CreneauEmploiDuTemps
+            .where(matiere_id: CreneauEmploiDuTemps[ creneau.creneau_emploi_du_temps_id ].matiere_id)
+            .where(jour_de_la_semaine: Date.tomorrow.wday)
+            .join(:creneaux_emploi_du_temps_enseignants, creneau_emploi_du_temps_id: :id)
+            .where(enseignant_id: cours.enseignant_id)
+            .first                # FIXME: arbitrairement on choisi d'attacher le devoir au premier créneau
+
           Devoir.create(cours_id: cours.id,
                         type_devoir_id: TypeDevoir.all.sample.id,
-                        date_due: Time.now,
+                        creneau_emploi_du_temps_id: creneau_emploi_du_temps.id,
+                        date_due: Date.tomorrow,
                         contenu: 'Exemple de devoir.',
-                        temps_estime: rand(0..120) )
+                        temps_estime: rand(0..120) ) unless creneau_emploi_du_temps.nil?
           STDERR.putc '.'
         end
       }
