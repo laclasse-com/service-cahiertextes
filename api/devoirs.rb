@@ -15,7 +15,6 @@ module CahierDeTextesAPI
       optional :to, type: Date
     }
     get '/' do
-
       # TODO: get from eleve
       regroupement_id = CreneauEmploiDuTempsRegroupement
         .select(:regroupement_id)
@@ -75,20 +74,35 @@ module CahierDeTextesAPI
       if Cours[ params[:cours_id] ].nil?
         error!( 'Cours inconnu', 404 )
       else
-        devoir = Devoir.create(cours_id: params[:cours_id],
-                               type_devoir_id: params[:type_devoir_id],
-                               contenu: params[:contenu],
-                               date_due: params[:date_due],
-                               temps_estime: params[:temps_estime],
-                               date_creation: Time.now)
+        # 1. trouver le créneau cible
+        creneau_emploi_du_temps = CreneauEmploiDuTemps
+          .where(matiere_id: CreneauEmploiDuTemps[ Cours[ params[:cours_id] ].creneau_emploi_du_temps_id ].matiere_id)
+          .where(jour_de_la_semaine: params[:date_due].wday)
+          .join(:creneaux_emploi_du_temps_enseignants, creneau_emploi_du_temps_id: :id)
+          .where(enseignant_id: Cours[ params[:cours_id] ].enseignant_id)
+          .first                # FIXME: arbitrairement on choisi d'attacher le devoir au premier créneau
 
-        params[:ressources] && params[:ressources].each do
-          |ressource|
-          devoir.add_ressource( Ressource.create( label: ressource['label'],
-                                                  url: ressource['url'] ) )
+        # 2. création du devoir
+        if creneau_emploi_du_temps.nil?
+          error!( 'Date due impossible', 418 ) # FIXME: trouver un meilleur code
+        else
+          devoir = Devoir.create( cours_id: params[:cours_id],
+                                  type_devoir_id: params[:type_devoir_id],
+                                  creneau_emploi_du_temps_id: creneau_emploi_du_temps.id,
+                                  contenu: params[:contenu],
+                                  date_due: params[:date_due],
+                                  temps_estime: params[:temps_estime],
+                                  date_creation: Time.now)
+
+          # 3. traitement des ressources
+          params[:ressources] && params[:ressources].each do
+            |ressource|
+            devoir.add_ressource( Ressource.create( label: ressource['label'],
+                                                    url: ressource['url'] ) )
+          end
+
+          devoir
         end
-
-        devoir
       end
     end
 
@@ -105,9 +119,24 @@ module CahierDeTextesAPI
       if devoir.nil?
         error!( 'Devoir inconnu', 404 )
       else
+        if devoir.date_due != params[:date_due]
+          creneau_emploi_du_temps = CreneauEmploiDuTemps
+          .where(matiere_id: CreneauEmploiDuTemps[ Cours[ params[:cours_id] ].creneau_emploi_du_temps_id ].matiere_id)
+          .where(jour_de_la_semaine: params[:date_due].wday)
+          .join(:creneaux_emploi_du_temps_enseignants, creneau_emploi_du_temps_id: :id)
+          .where(enseignant_id: Cours[ params[:cours_id] ].enseignant_id)
+          .first                # FIXME: arbitrairement on choisi d'attacher le devoir au premier créneau
+
+          if creneau_emploi_du_temps.nil?
+            error!( 'Date due impossible', 418 ) # FIXME: trouver un meilleur code
+          else
+            devoir.date_due = params[:date_due]
+            devoir.creneau_emploi_du_temps_id = creneau_emploi_du_temps.id
+          end
+        end
+
         devoir.type_devoir_id = params[:type_devoir_id]
         devoir.contenu = params[:contenu]
-        devoir.date_due = params[:date_due]
         devoir.temps_estime = params[:temps_estime]
 
         params[:ressources] && params[:ressources].each do
