@@ -118,6 +118,18 @@ module CahierDeTextesAPI
           new_cours.add_ressource( ressource )
         end
 
+        Devoir.where( cours_id: cours.id ).all.each {
+          |devoir|
+          Devoir.create( cours_id: new_cours.id,
+                         creneau_emploi_du_temps_id: devoir.creneau_emploi_du_temps_id, # FIXME: à recalculer
+                         type_devoir_id: devoir.type_devoir_id,
+                         contenu: devoir.contenu,
+                         date_creation: Time.now,
+                         date_modification: nil,
+                         date_validation: nil,
+                         date_due: devoir.date_due, # FIXME: à recalculer
+                         temps_estime: devoir.temps_estime )
+        }
         new_cours
       end
     end
