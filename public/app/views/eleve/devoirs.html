@@ -12,7 +12,7 @@
     <div class="panel-body">
       <span class="badge badge-info">{{devoir.type_devoir}}</span>
       <span data-ng-bind-html="devoir.contenu"></span>
-      <button class="btn btn-success pull-right" data-ng-click="fait( {{devoir.id}} )" data-ng-show="devoir.fait == false">
+      <button class="btn btn-success pull-right" data-ng-click="fait( devoir.id )" data-ng-show="devoir.fait == false">
 	<span class="glyphicon glyphicon-unchecked"></span> Fait
       </button>
       <button class="btn btn-default pull-right" data-ng-show="devoir.fait == true" disabled>
