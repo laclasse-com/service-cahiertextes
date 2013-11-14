@@ -95,6 +95,33 @@ module CahierDeTextesAPI
       end
     end
 
+    desc 'copie une séquence pédagogique'
+    params {
+      requires :id, type: Integer
+      requires :creneau_emploi_du_temps_id
+      requires :regroupement_id
+    }
+    put '/:id/copie/regroupement/:regroupement_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id' do
+      # FIXME: gestion des droits
+      cours = Cours[ params[:id] ]
+
+      unless cours.nil?
+        new_cours = Cours.create( cahier_de_textes_id: CahierDeTextes.where(regroupement_id: params[:regroupement_id]).first.id,
+                                  creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
+                                  date_cours: cours.date_cours, # FIXME: comment la calculer ?
+                                  date_creation: Time.now,
+                                  contenu: params[:contenu],
+                                  enseignant_id: cours.enseignant_id )
+
+        cours.ressources.each do
+          |ressource|
+          new_cours.add_ressource( ressource )
+        end
+
+        new_cours
+      end
+    end
+
     desc 'efface une séquence pédagogique'
     params {
       requires :id
