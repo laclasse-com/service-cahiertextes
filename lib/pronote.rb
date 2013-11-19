@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+require 'base64'
+
 require 'nokogiri'
 
 require_relative './annuaire'
@@ -12,10 +14,23 @@ module ProNote
   def decrypt_xml(encrypted_xml, xsd = nil)
     encrypted_xml = Nokogiri::XML(encrypted_xml)
 
-    fail 'fichier XML invalide' unless !xsd.nil? && Nokogiri::XML::Schema(xsd).valid?(encrypted_xml)
+    fail 'fichier XML invalide' unless !xsd.nil? && Nokogiri::XML::Schema( xsd ).valid?( encrypted_xml )
+
+    xml = Nokogiri::XML( encrypted_xml )
+
+    content = xml
+
+    xml_debase64 = Base64.decode64 content.children[0].to_s
+
+    xml_dechiffre = xml_debase64
+
+    xml_dezippe = xml_dechiffre
 
     # TODO: Here be decryption magic
-    xml = encrypted_xml
+
+    # TODO: Here be dezipping magic
+    xml = xml_dezippe
+
     xml
   end
 
