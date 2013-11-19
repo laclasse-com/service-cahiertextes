@@ -35,33 +35,33 @@ module ProNote
     etablissement = Etablissement.create(UAI: edt_clair.child['UAI'])
 
     edt_clair.search('AnneeScolaire').each do |node|
-      if node.name != 'text'
-        etablissement.debut_annee_scolaire = node['DateDebut']
-        etablissement.fin_annee_scolaire = node['DateFin']
-        etablissement.date_premier_jour_premiere_semaine = node['DatePremierJourSemaine1']
-        etablissement.save
-        STDERR.putc '.'
+        if node.name != 'text'
+          etablissement.debut_annee_scolaire = node['DateDebut']
+          etablissement.fin_annee_scolaire = node['DateFin']
+          etablissement.date_premier_jour_premiere_semaine = node['DatePremierJourSemaine1']
+          etablissement.save
+          STDERR.putc '.'
+        end
+        STDERR.puts
       end
-      STDERR.puts
-    end
 
     STDERR.puts 'chargement Plages Horaires'
     edt_clair.search('PlacesParJour').children.each do
-      |place|
-      PlageHoraire.create(label: place['Numero'],
-                          debut: place['LibelleHeureDebut'],
-                          fin: place['LibelleHeureFin']) unless place.name == 'text'
-      STDERR.putc '.'
-    end
+        |place|
+        PlageHoraire.create(label: place['Numero'],
+                            debut: place['LibelleHeureDebut'],
+                            fin: place['LibelleHeureFin']) unless place.name == 'text'
+        STDERR.putc '.'
+      end
     STDERR.puts
 
     STDERR.puts 'chargement Salles'
     edt_clair.search('Salles').children.each do |salle|
-      Salle.create(etablissement_id: etablissement.id,
-                   identifiant: salle['Ident'],
-                   nom: salle['Nom']) unless salle.name == 'text'
-      STDERR.putc '.'
-    end
+        Salle.create(etablissement_id: etablissement.id,
+                     identifiant: salle['Ident'],
+                     nom: salle['Nom']) unless salle.name == 'text'
+        STDERR.putc '.'
+      end
     STDERR.puts
 
     # Inutile, calculable à partir des plages horaires
@@ -77,9 +77,9 @@ module ProNote
     matieres = {}
     STDERR.puts 'chargement Matières'
     edt_clair.search('Matieres').children.each do |matiere|
-      matieres[ matiere['Ident'] ] = Annuaire.get_matiere( matiere['Libelle'] )['id'] unless matiere.name == 'text'
-      STDERR.putc '.'
-    end
+        matieres[ matiere['Ident'] ] = Annuaire.search_matiere( matiere['Libelle'] )['id'] unless matiere.name == 'text'
+        STDERR.putc '.'
+      end
     STDERR.puts
 
     ####
@@ -90,9 +90,9 @@ module ProNote
     enseignants = {}
     STDERR.puts 'chargement Enseignants'
     edt_clair.search('Professeurs').children.each do |professeur|
-      enseignants[ professeur['Ident'] ] = Annuaire.get_utilisateur_id( etablissement.UAI, professeur['Nom'], professeur['Prenom'] )['id_ent'] unless professeur.name == 'text'
-      STDERR.putc '.'
-    end
+        enseignants[ professeur['Ident'] ] = Annuaire.search_utilisateur( etablissement.UAI, professeur['Nom'], professeur['Prenom'] )['id_ent'] unless professeur.name == 'text'
+        STDERR.putc '.'
+      end
     STDERR.puts
 
     ####
@@ -103,32 +103,32 @@ module ProNote
     regroupements = { 'Classe' => {}, 'PartieDeClasse' => {}, 'Groupe' => {} }
     STDERR.puts 'chargement Regroupements'
     edt_clair.search('Classes').children.each do |classe|
-      code_annuaire = Annuaire.get_regroupement_id( etablissement.UAI, classe['Nom'] )['id']
-      regroupements[ 'Classe' ][ classe['Ident'] ] = code_annuaire unless classe.name == 'text'
-      STDERR.putc '.'
-      classe.children.each do |partie_de_classe|
-        code_annuaire = Annuaire.get_regroupement_id( etablissement.UAI, partie_de_classe['Nom'] )['id']
-        regroupements[ 'PartieDeClasse' ][ partie_de_classe['Ident'] ] = code_annuaire unless partie_de_classe.name == 'text'
+        code_annuaire = Annuaire.search_regroupement( etablissement.UAI, classe['Nom'] )['id']
+        regroupements[ 'Classe' ][ classe['Ident'] ] = code_annuaire unless classe.name == 'text'
         STDERR.putc '.'
+        classe.children.each do |partie_de_classe|
+            code_annuaire = Annuaire.search_regroupement( etablissement.UAI, partie_de_classe['Nom'] )['id']
+            regroupements[ 'PartieDeClasse' ][ partie_de_classe['Ident'] ] = code_annuaire unless partie_de_classe.name == 'text'
+            STDERR.putc '.'
+          end
       end
-    end
     edt_clair.search('Groupes').children.each do |groupe|
-      code_annuaire = Annuaire.get_regroupement_id( etablissement.UAI, groupe['Nom'] )['id']
-      regroupements[ 'Groupe' ][ groupe['Ident'] ] = code_annuaire unless groupe.name == 'text'
-      STDERR.putc '.'
-      groupe.children.each do  |node|
-        case node.name
-        when 'PartieDeClasse'
-          code_annuaire = Annuaire.get_regroupement_id( etablissement.UAI, node['Nom'] )['id']
-          regroupements[ 'PartieDeClasse' ][ node['Ident'] ] = code_annuaire unless node.name == 'text'
-          STDERR.putc '.'
-        when 'Classe'
-          code_annuaire = Annuaire.get_regroupement_id( etablissement.UAI, classe['Nom'] )['id']
-          regroupements[ 'Classe' ][ node['Ident'] ] = code_annuaire unless node.name == 'text'
-          STDERR.putc '.'
-        end
+        code_annuaire = Annuaire.search_regroupement( etablissement.UAI, groupe['Nom'] )['id']
+        regroupements[ 'Groupe' ][ groupe['Ident'] ] = code_annuaire unless groupe.name == 'text'
+        STDERR.putc '.'
+        groupe.children.each do  |node|
+            case node.name
+            when 'PartieDeClasse'
+              code_annuaire = Annuaire.search_regroupement( etablissement.UAI, node['Nom'] )['id']
+              regroupements[ 'PartieDeClasse' ][ node['Ident'] ] = code_annuaire unless node.name == 'text'
+              STDERR.putc '.'
+            when 'Classe'
+              code_annuaire = Annuaire.search_regroupement( etablissement.UAI, classe['Nom'] )['id']
+              regroupements[ 'Classe' ][ node['Ident'] ] = code_annuaire unless node.name == 'text'
+              STDERR.putc '.'
+            end
+          end
       end
-    end
     STDERR.puts
 
     ####
@@ -171,57 +171,57 @@ module ProNote
 
     STDERR.puts 'chargement Créneaux d\'Emploi du Temps'
     edt_clair.search('Cours/Cours').each do |creneau_emploi_du_temps|
-      unless creneau_emploi_du_temps.name == 'text'
-        debut = PlageHoraire[ label: creneau_emploi_du_temps['NumeroPlaceDebut'] ][:id]
-        fin = PlageHoraire[ label: creneau_emploi_du_temps['NumeroPlaceDebut'].to_i + creneau_emploi_du_temps['NombrePlaces'].to_i - 1 ][:id]
-        matiere_id = nil
+        unless creneau_emploi_du_temps.name == 'text'
+          debut = PlageHoraire[ label: creneau_emploi_du_temps['NumeroPlaceDebut'] ][:id]
+          fin = PlageHoraire[ label: creneau_emploi_du_temps['NumeroPlaceDebut'].to_i + creneau_emploi_du_temps['NombrePlaces'].to_i - 1 ][:id]
+          matiere_id = nil
 
-        creneau_emploi_du_temps.children.each do |node|  # FIXME: peut sûrement mieux faire
-          node.name == 'Matiere' && matiere_id = matieres[ node['Ident'] ]
-        end
-        unless matiere_id.nil?
-          creneau = CreneauEmploiDuTemps.create(jour_de_la_semaine: creneau_emploi_du_temps['Jour'], # 1: 'lundi' .. 7: 'dimanche', norme ISO-8601
-                                                debut: debut,
-                                                fin: fin,
-                                                matiere_id: matiere_id)
-          creneau_emploi_du_temps.children.each do |node|
-            case node.name
-            when 'Professeur'
-              CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
-              CreneauEmploiDuTempsEnseignant.create(creneau_emploi_du_temps_id: creneau.id,
-                                                    enseignant_id: enseignants[ node['Ident'] ],
-                                                    semaines_de_presence: node['Semaines'])
-              CreneauEmploiDuTempsEnseignant.restrict_primary_key
-            when 'Classe', 'PartieDeClasse', 'Groupe' # on ne distingue pas les 3 types de regroupements
-              CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
-              CreneauEmploiDuTempsRegroupement.create(creneau_emploi_du_temps_id: creneau.id,
-                                                      regroupement_id: regroupements[ node.name ][ node['Ident'] ],
-                                                      semaines_de_presence: node['Semaines'])
-              CreneauEmploiDuTempsRegroupement.restrict_primary_key
-            when 'Salle'
-              CreneauEmploiDuTempsSalle.unrestrict_primary_key
-              CreneauEmploiDuTempsSalle.create(creneau_emploi_du_temps_id: creneau.id,
-                                               salle_id: Salle[ identifiant: node['Ident'] ][:id],
-                                               semaines_de_presence: node['Semaines'])
-              CreneauEmploiDuTempsSalle.restrict_primary_key
+          creneau_emploi_du_temps.children.each do |node|  # FIXME: peut sûrement mieux faire
+              node.name == 'Matiere' && matiere_id = matieres[ node['Ident'] ]
             end
+          unless matiere_id.nil?
+            creneau = CreneauEmploiDuTemps.create(jour_de_la_semaine: creneau_emploi_du_temps['Jour'], # 1: 'lundi' .. 7: 'dimanche', norme ISO-8601
+                                                  debut: debut,
+                                                  fin: fin,
+                                                  matiere_id: matiere_id)
+            creneau_emploi_du_temps.children.each do |node|
+                case node.name
+                when 'Professeur'
+                  CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
+                  CreneauEmploiDuTempsEnseignant.create(creneau_emploi_du_temps_id: creneau.id,
+                                                        enseignant_id: enseignants[ node['Ident'] ],
+                                                        semaines_de_presence: node['Semaines'])
+                  CreneauEmploiDuTempsEnseignant.restrict_primary_key
+                when 'Classe', 'PartieDeClasse', 'Groupe' # on ne distingue pas les 3 types de regroupements
+                  CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
+                  CreneauEmploiDuTempsRegroupement.create(creneau_emploi_du_temps_id: creneau.id,
+                                                          regroupement_id: regroupements[ node.name ][ node['Ident'] ],
+                                                          semaines_de_presence: node['Semaines'])
+                  CreneauEmploiDuTempsRegroupement.restrict_primary_key
+                when 'Salle'
+                  CreneauEmploiDuTempsSalle.unrestrict_primary_key
+                  CreneauEmploiDuTempsSalle.create(creneau_emploi_du_temps_id: creneau.id,
+                                                   salle_id: Salle[ identifiant: node['Ident'] ][:id],
+                                                   semaines_de_presence: node['Semaines'])
+                  CreneauEmploiDuTempsSalle.restrict_primary_key
+                end
+              end
+            STDERR.putc '.'
           end
-          STDERR.putc '.'
         end
       end
-    end
     STDERR.puts
 
     STDERR.puts 'création des Cahier de Textes nécessaires'
     CreneauEmploiDuTempsRegroupement
       .select(:regroupement_id)
       .map { |r| r.regroupement_id }
-      .uniq
-      .each {
-      |regroupement_id|
-      CahierDeTextes.create( regroupement_id: regroupement_id ) unless CahierDeTextes.where( regroupement_id: regroupement_id ).count > 0
-        STDERR.putc '.'
-    }
+         .uniq
+         .each {
+           |regroupement_id|
+           CahierDeTextes.create( regroupement_id: regroupement_id ) unless CahierDeTextes.where( regroupement_id: regroupement_id ).count > 0
+           STDERR.putc '.'
+         }
     STDERR.puts
 
   end
