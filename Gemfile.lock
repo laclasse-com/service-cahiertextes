@@ -79,6 +79,7 @@ GEM
     virtus (0.5.5)
       backports (~> 3.3)
       descendants_tracker (~> 0.0.1)
+    zipruby (0.3.6)
 
 PLATFORMS
   ruby
@@ -97,3 +98,4 @@ DEPENDENCIES
   simplecov
   sqlite3
   thin
+  zipruby
