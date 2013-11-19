@@ -9,7 +9,7 @@ module Annuaire
 
   URL_ANNUAIRE = 'http://www.dev.laclasse.com/api/app'
 
-  def get_matiere( label )
+  def search_matiere( label )
     RestClient.get( URI.encode( "#{URL_ANNUAIRE}/matieres/libelle/#{label}" ) ) do
       |response, request, result|
       if response.code == 200
@@ -21,7 +21,7 @@ module Annuaire
     end
   end
 
-  def get_regroupement_id( code_uai, nom )
+  def search_regroupement( code_uai, nom )
     RestClient.get( URI.encode( "#{URL_ANNUAIRE}/regroupement?etablissement=#{code_uai}nom=#{nom}" ) ) do
       |response, request, result|
       if response.code == 200
@@ -33,7 +33,7 @@ module Annuaire
     end
   end
 
-  def get_utilisateur_id( code_uai, nom, prenom )
+  def search_utilisateur( code_uai, nom, prenom )
     RestClient.get( URI.encode( "#{URL_ANNUAIRE}/users?nom=#{nom}&prenom=#{prenom}&etablissement=#{code_uai}" ) ) do
       |response, request, result|
       if response.code == 200
