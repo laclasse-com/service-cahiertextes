@@ -16,6 +16,7 @@ module Annuaire
         return JSON.parse( response )
       else
         STDERR.puts "Matière inconnue : #{label} ; l'annuaire a répondu #{response}"
+        STDERR.puts 'URL fautive: ' + URI.encode( "#{URL_ANNUAIRE}/matieres/libelle/#{label}" )
         return { 'id' => nil }
       end
     end
