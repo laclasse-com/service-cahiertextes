@@ -37,6 +37,8 @@ angular.module('cahierDeTexteApp')
 
 			  $scope.creneau = _(event.source.events).findWhere({_id: event._id});
 			  $scope.matiere = event.title;
+			  $scope.matiere_id = event.details.matiere_id;
+			  $scope.regroupement_id = event.details.regroupement_id;
 
 			  // 1. cours
 			  if ( $scope.creneau.details.cours.id !== undefined ) {
@@ -80,13 +82,26 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      // popup de création/édition /////////////////////////////
-		      var modalInstanceCtrl = function( $scope, $rootScope, $modalInstance, matiere, cours, devoirs, types_de_devoir ) {
+		      var modalInstanceCtrl = function( $scope, $rootScope, $modalInstance, matiere, cours, devoirs, types_de_devoir, matiere_id, regroupement_id, raw_data, classes, matieres ) {
 			  // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
+			  $scope.matieres = matieres;
+			  $scope.classes = classes;
 			  $scope.matiere = matiere;
 			  $scope.cours = cours;
 			  $scope.devoirs = devoirs;
 			  $scope.types_de_devoir = types_de_devoir;
+			  $scope.matiere_id = matiere_id;
+			  $scope.regroupement_id = regroupement_id;
 			  $scope.tinyMCEOptions = $rootScope.tinyMCEOptions;
+
+			  $scope.creneaux_similaires = _.chain(raw_data)
+			      .where({matiere_id: $scope.matiere_id})
+			  // FIXME: uncomment next 3 lines with real data
+			      // .reject(function( creneau ) {
+			      // 	  return creneau.regroupement_id == $scope.regroupement_id;
+			      // })
+			      .value();
+			  console.log($scope.creneaux_similaires)
 
 			  var create_devoir = function( cours, types_de_devoir ) {
 			      var date = new Date();
@@ -105,6 +120,10 @@ angular.module('cahierDeTexteApp')
 			  $scope.fermer = function() {
 			      $modalInstance.close( { cours: $scope.cours,
 						      devoirs: $scope.devoirs} );
+			  };
+
+			  $scope.dupliquer = function() {
+			      console.log('TODO: la duplication en action !')
 			  };
 
 			  $scope.valider = function() {
@@ -144,7 +163,12 @@ angular.module('cahierDeTexteApp')
 		      $scope.ouvre_popup = function(  ) {
 			  $modal.open({ templateUrl: 'views/modals/enseignant/detail_emploi_du_temps.html',
 					controller: modalInstanceCtrl,
-					resolve: { matiere: function() { return $scope.matiere; },
+					resolve: { raw_data: function() { return $scope.raw_data; },
+						   matiere: function() { return $scope.matiere; },
+						   matieres: function() { return $scope.matieres; },
+						   classes: function() { return $scope.classes; },
+						   matiere_id: function() { return $scope.matiere_id; },
+						   regroupement_id: function() { return $scope.regroupement_id; },
 						   cours: function() { return $scope.cours; },
 						   devoirs: function() { return $scope.devoirs; },
 						   types_de_devoir: function() { return $scope.types_de_devoir; } } })
@@ -173,6 +197,7 @@ angular.module('cahierDeTexteApp')
 		      // helper
 		      $scope.update_fullCalendar_event = function( event, cours, devoirs ) {
 			  var calendar_event = { details: { matiere_id: event.details.matiere_id,
+							    regroupement_id: event.details.regroupement_id,
 							    cahier_de_textes_id: event.details.cahier_de_textes_id,
 							    creneau_emploi_du_temps_id: event.details.creneau_emploi_du_temps_id,
 							    cours: cours,
@@ -211,11 +236,6 @@ angular.module('cahierDeTexteApp')
 			      calendar_event.description += '<br><span style="color:' + $rootScope.calendar.couleurs.cours + '">';
 			      calendar_event.description += clever_truncate( cours.contenu, $rootScope.calendar.cours_max_length );
 			      calendar_event.description += '</span>';
-			      // if ( _(devoirs).size() > 0 ) {
-			      //	  calendar_event.description += '<br><span style="color:' + $rootScope.calendar.couleurs.devoir + '">';
-			      //	  calendar_event.description += clever_truncate( devoirs.contenu, $rootScope.calendar.devoir_max_length );
-			      //	  calendar_event.description += '</span>';
-			      // }
 			  }
 
 			  // composition du titre
@@ -231,6 +251,7 @@ angular.module('cahierDeTexteApp')
 
 		      $scope.assemble_fullCalendar_event = function( item_emploi_du_temps ) {
 			  return $scope.update_fullCalendar_event( { details: { matiere_id: item_emploi_du_temps.matiere_id,
+										regroupement_id: item_emploi_du_temps.regroupement_id,
 										cahier_de_textes_id: item_emploi_du_temps.cahier_de_textes_id,
 										creneau_emploi_du_temps_id: item_emploi_du_temps.creneau_emploi_du_temps_id },
 								     start: new Date( item_emploi_du_temps.start ),
