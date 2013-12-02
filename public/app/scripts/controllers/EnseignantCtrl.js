@@ -4,6 +4,8 @@ angular.module('cahierDeTexteApp')
     .controller('EnseignantCtrl',
 		[ '$scope', '$rootScope', '$modal', '$q', 'EmploisDuTemps', 'Matieres', 'Cours', 'Devoirs', 'TypesDeDevoir', 'Regroupements',
 		  function ( $scope, $rootScope, $modal, $q, EmploisDuTemps, Matieres, Cours, Devoirs, TypesDeDevoir, Regroupements ) {
+		      $scope.build_EdT_from_scratch = true;
+		      
 		      $scope.matieres = {};
 		      $scope.classes = {};
 		      $scope.classe = -1;
@@ -13,7 +15,28 @@ angular.module('cahierDeTexteApp')
 					  events: [  ] };
 		      $scope.calendar.options.defaultView = 'agendaWeek';
 		      $scope.calendar.options.height = 600;
-		      $scope.calendar.options.editable = false;
+
+		      if ( $scope.build_EdT_from_scratch ) {
+			  $scope.calendar.options.editable = true;
+			  $scope.calendar.options.selectable = true;
+			  $scope.calendar.options.selectHelper = true;
+			  $scope.calendar.options.select = function(start, end, allDay) {
+			      var title = prompt('Event Title:')
+			      if (title) {
+				  $scope.emploi_du_temps.fullCalendar('renderEvent',
+								      { title: title,
+									start: start,
+									end: end,
+									allDay: allDay },
+								      true // make the event "stick"
+								     );
+			      }
+			      $scope.emploi_du_temps.fullCalendar('unselect');
+			  };
+		      }
+		      else {
+			  $scope.calendar.options.editable = false;
+		      }
 		      $scope.calendar.options.header = { left: 'title',
 							 center: 'agendaDay agendaWeek month',
 							 right: 'today prev,next' };
