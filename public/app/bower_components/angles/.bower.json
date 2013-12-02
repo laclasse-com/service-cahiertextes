@@ -1,11 +1,28 @@
 {
   "name": "angles",
+  "authors": [
+    "Lindsay Silver"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "libs/angular",
+    "libs/chartjs",
+    "libs/Chart.js"
+  ],
+  "dependencies": {
+    "angular": "~1.2.0",
+    "nnnick-chartjs": "*"
+  },
   "homepage": "https://github.com/lgsilver/angles",
-  "_release": "master",
+  "_release": "cda2406b0f",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "e7a0ee7c2c7abc243a0c9dec04216a4592c552b6"
+    "commit": "cda2406b0fa05d7adab2e9b193f2af4b6c9a4bb5"
   },
   "_source": "git://github.com/lgsilver/angles.git",
   "_target": "*",
