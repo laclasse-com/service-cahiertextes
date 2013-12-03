@@ -37,6 +37,7 @@ angular.module('cahierDeTexteApp')
 		      else {
 			  $scope.calendar.options.editable = false;
 		      }
+
 		      $scope.calendar.options.header = { left: 'title',
 							 center: 'agendaDay agendaWeek month',
 							 right: 'today prev,next' };
