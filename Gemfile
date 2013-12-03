@@ -13,8 +13,10 @@ gem 'rack'
 gem 'rest-client'
 gem 'zipruby'
 
-gem 'sqlite3', group: [ :dev, :test ]
-gem 'simplecov', group: [ :dev, :test ]
-gem 'rspec', group: [ :dev, :test ]
-gem 'rack-test', group: [ :dev, :test ]
-gem 'pry', group: [ :dev, :test ]
+group :development do
+  gem 'sqlite3'
+  gem 'simplecov'
+  gem 'rspec'
+  gem 'rack-test'
+  gem 'pry'
+end
