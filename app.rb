@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
 
 require 'rubygems'
-require 'bundler/setup'
+require 'bundler'
 
-require 'grape'
-require 'grape-swagger'
-require 'nokogiri'
-require 'sequel'
-require 'sequel/extensions/migration'
+Bundler.require( :default, ENV['RACK_ENV'].to_sym )     # require tout les gems définis dans Gemfile
 
 require_relative './models/models'
 require_relative './lib/pronote'

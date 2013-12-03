@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
 
-require 'base64'
-
-require 'nokogiri'
-
 require_relative './annuaire'
 require_relative '../models/models'
 

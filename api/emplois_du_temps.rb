@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-require 'date'
-
 module CahierDeTextesAPI
   class EmploisDuTempsAPI < Grape::API
 

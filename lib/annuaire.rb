@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-require 'open-uri'
-require 'rest-client'           # https://github.com/rest-client/rest-client
-
 # Module d'interfaçage avec l'annuaire
 module Annuaire
   module_function
