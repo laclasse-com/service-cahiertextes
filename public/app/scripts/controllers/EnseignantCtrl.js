@@ -5,7 +5,7 @@ angular.module('cahierDeTexteApp')
 		[ '$scope', '$rootScope', '$modal', '$q', 'EmploisDuTemps', 'Matieres', 'Cours', 'Devoirs', 'TypesDeDevoir', 'Regroupements',
 		  function ( $scope, $rootScope, $modal, $q, EmploisDuTemps, Matieres, Cours, Devoirs, TypesDeDevoir, Regroupements ) {
 		      $scope.build_EdT_from_scratch = true;
-		      
+
 		      $scope.matieres = {};
 		      $scope.classes = {};
 		      $scope.classe = -1;
@@ -21,6 +21,8 @@ angular.module('cahierDeTexteApp')
 			  $scope.calendar.options.selectable = true;
 			  $scope.calendar.options.selectHelper = true;
 			  $scope.calendar.options.select = function(start, end, allDay) {
+			      $scope.ouvre_popup_cours_devoirs(  );
+
 			      var title = prompt('Event Title:')
 			      if (title) {
 				  $scope.emploi_du_temps.fullCalendar('renderEvent',
@@ -101,11 +103,11 @@ angular.module('cahierDeTexteApp')
 			  // 3. ouverture de la popup
 			  $q.all( $scope.types_de_devoir, $scope.cours, $scope.devoirs )
 			      .then( function() {
-				  $scope.ouvre_popup(  );
+				  $scope.ouvre_popup_cours_devoirs(  );
 			      });
 		      };
 
-		      // popup de création/édition /////////////////////////////
+		      // popup de création/édition des cours et devoirs ////////
 		      var modalInstanceCtrl = function( $scope, $rootScope, $modalInstance, matiere, cours, devoirs, types_de_devoir, matiere_id, regroupement_id, raw_data, classes, matieres ) {
 			  // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
 			  $scope.matieres = matieres;
@@ -120,10 +122,9 @@ angular.module('cahierDeTexteApp')
 
 			  $scope.creneaux_similaires = _.chain(raw_data)
 			      .where({matiere_id: $scope.matiere_id})
-			  // FIXME: uncomment next 3 lines with real data
-			      // .reject(function( creneau ) {
-			      // 	  return creneau.regroupement_id == $scope.regroupement_id;
-			      // })
+			      .reject(function( creneau ) {
+				  return false // creneau.regroupement_id == $scope.regroupement_id;
+			      })
 			      .value();
 			  console.log($scope.creneaux_similaires)
 
@@ -184,7 +185,7 @@ angular.module('cahierDeTexteApp')
 			  };
 		      };
 
-		      $scope.ouvre_popup = function(  ) {
+		      $scope.ouvre_popup_cours_devoirs = function(  ) {
 			  $modal.open({ templateUrl: 'views/modals/enseignant/detail_emploi_du_temps.html',
 					controller: modalInstanceCtrl,
 					resolve: { raw_data: function() { return $scope.raw_data; },
