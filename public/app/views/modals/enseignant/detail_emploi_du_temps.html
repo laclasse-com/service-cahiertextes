@@ -16,7 +16,10 @@
       <input type="file">
 
       <ul>
-	<li data-ng-repeat="creneau in creneaux_similaires">{{classes[ creneau.regroupement_id ]}}</li>
+	<li data-ng-repeat="creneau in creneaux_similaires">
+	  <input type="checkbox" />
+	  {{classes[ creneau.regroupement_id ]}} . {{creneau.creneau_emploi_du_temps_id}}
+	</li>
       </ul>
       <button class="btn btn-primary" data-ng-click="dupliquer()">
 	<span class="glyphicon glyphicon-plus-sign"></span> Copier vers d'autres classes
