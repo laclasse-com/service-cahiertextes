@@ -5,6 +5,8 @@ require 'bundler'
 
 Bundler.require( :default, ENV['RACK_ENV'].to_sym )     # require tout les gems définis dans Gemfile
 
+require_relative './lib/AuthenticationHelpers'
+
 require_relative './models/models'
 require_relative './lib/pronote'
 
@@ -23,6 +25,8 @@ module CahierDeTextesAPI
     prefix 'api'
     format :json
     rescue_from :all
+
+    helpers AuthenticationHelpers
 
     resource( :pronote )           { mount ::CahierDeTextesAPI::ProNoteAPI }
     resource( :etablissements )    { mount ::CahierDeTextesAPI::EtablissementsAPI }
