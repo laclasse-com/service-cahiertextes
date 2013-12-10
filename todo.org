@@ -1,16 +1,17 @@
 * client
 ** global
-*** TODO tests
-*** TODO configurer grunt
-*** TODO animation pendant le chargement des données
+*** NEXT Intégration CAS
 *** NEXT filtre sur l'établissement
 **** API
 **** client
+*** TODO tests
+*** TODO configurer grunt
+*** TODO animation pendant le chargement des données
 *** NEXT factoriser la récupération des données géneŕiques de l'annuaire
     . types de devoirs
     . matières
     . ...
-**** service d'interrogation des APIs
+**** DONE service d'interrogation des APIs
 **** variables globales ou services pour l'accès aux données
 
 
