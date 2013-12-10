@@ -53,6 +53,15 @@ module CahierDeTextesAPI
       logout! 'http://localhost:9292/'
     end
 
+    get '/login' do
+      login! '/'
+    end
+
+    get '/cahier_de_textes' do
+      login! '/app/index.html' unless is_logged?
+
+      redirect '/app/index.html'
+    end
   end
 end
 
@@ -62,31 +71,31 @@ __END__
 
 @@ layout
 <html>
-<head>
-<link href='//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css' rel='stylesheet' />
-</head>
-<body>
-<div class="navbar col-md-12">
-<div class="navbar-header">
-<a class="navbar-brand" href="/">POC GAR</a>
-</div>
-<ul class="navbar-nav nav pull-right">
+  <head>
+    <link href='//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css' rel='stylesheet' />
+  </head>
+  <body>
+    <div class="navbar col-md-12">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/">Authentification</a>
+      </div>
+      <ul class="navbar-nav nav pull-right">
 <% unless is_logged? %>
-<li>
-<a href='/auth/cas'>Login with Laclasse.com</a><br>
-</li>
+        <li>
+          <a href='/login'>S'identifier dans Laclasse.com</a><br>
+        </li>
 <% else %>
-<li>
-<a href='/logout'>Log out</a>
-</li>
+        <li>
+          <a href='/logout'>Déconnexion</a>
+        </li>
 <% end %>
-</ul>
-</div>
-<h1>Démonstrateur connexion laclasse.com <-> GAR</h1>
-<div class='container'>
-<div class='content'>
-<%= yield %>
-</div>
-</div>
-</body>
+      </ul>
+    </div>
+    <h1>Couche d'authentification du Cahier de Textes</h1>
+    <div class='container'>
+      <div class='content'>
+        <%= yield %>
+      </div>
+    </div>
+  </body>
 </html>
