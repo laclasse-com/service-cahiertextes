@@ -11,7 +11,7 @@ module AuthenticationHelpers
   #   d'initialiser la session et de rediriger vers l'url passée en paramètre
   #
   def login!( route )
-    redirect "/auth/cas?url=#{URI.encode( 'http://localhost:4567' + route )}"
+    redirect "/auth/cas?url=#{URI.encode( 'http://localhost:9292' + route )}"
   end
 
   #
