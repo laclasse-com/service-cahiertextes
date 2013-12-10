@@ -25,12 +25,12 @@ angular.module('cahierDeTexteApp')
 
 			      var title = prompt('Event Title:')
 			      if (title) {
-				  $scope.emploi_du_temps.fullCalendar('renderEvent',
-								      { title: title,
-									start: start,
-									end: end,
-									allDay: allDay },
-								      true // make the event "stick"
+				  $scope.emploi_du_temps.fullCalendar('renderEvent'
+								      , { title: title
+									  , start: start
+									  , end: end
+									  , allDay: allDay }
+								      , true // make the event "stick"
 								     );
 			      }
 			      $scope.emploi_du_temps.fullCalendar('unselect');
@@ -87,12 +87,12 @@ angular.module('cahierDeTexteApp')
 			      $q.all( $scope.devoirs ).then( function success() {
 				  $scope.devoirs.create = false;
 			      },
-						  function error() {
-						      $q.all( $scope.types_de_devoir, $scope.cours )
-							  .then( function() {
-							      $scope.devoirs = [];
-							  });
-						  });
+							     function error() {
+								 $q.all( $scope.types_de_devoir, $scope.cours )
+								     .then( function() {
+									 $scope.devoirs = [];
+								     });
+							     });
 			  } else {
 			      $q.all( $scope.types_de_devoir, $scope.cours )
 				  .then( function() {
