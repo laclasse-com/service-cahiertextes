@@ -11,8 +11,11 @@
 require 'securerandom'
 require 'digest'
 
-require ::File.expand_path( '../api', __FILE__ )
 require ::File.expand_path( '../config/CASLaclasseCom', __FILE__ )
+require ::File.expand_path( '../config/environment', __FILE__ )
+
+require ::File.expand_path( '../auth-app', __FILE__ )
+require ::File.expand_path( '../api', __FILE__ )
 
 APP_VIRTUAL_PATH = '/'
 
@@ -33,21 +36,17 @@ use Rack::Static,
 
 use Rack::Session::Cookie,
     key: 'rack.session',
-    path: APP_VIRTUAL_PATH,
+    path: '/',
     expire_after: 3600, # In seconds
-    secret: Digest::SHA1.hexdigest( SecureRandom.base64 )
-    # domain: 'foo.com',
+    secret: Digest::SHA1.hexdigest( SecureRandom.base64 ) # test only
+
+use OmniAuth::Builder do
+  provider :cas, CASLaclasseCom::OPTIONS
+end
 
 if %W[ 'development', 'test' ].include? ENV['RACK_ENV']
   api.logger.info 'Enabling Developer authentication.'
   use OmniAuth::Strategies::Developer
 end
 
-use OmniAuth::Builder do
-  configure do |config|
-    config.path_prefix = "#{APP_VIRTUAL_PATH}/auth"
-  end
-  provider :cas, CASLaclasseCom::OPTIONS
-end
-
-run CahierDeTextesAPI::API
+run Rack::Cascade.new [ CahierDeTextesAPI::API, CahierDeTextesAPI::AuthApp ]
