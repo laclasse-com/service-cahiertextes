@@ -28,6 +28,10 @@ module CahierDeTextesAPI
 
     helpers AuthenticationHelpers
 
+    before do
+      error!( '401 Unauthorized', 401 ) unless is_logged?
+    end
+
     resource( :pronote )           { mount ::CahierDeTextesAPI::ProNoteAPI }
     resource( :etablissements )    { mount ::CahierDeTextesAPI::EtablissementsAPI }
     resource( :cours )             { mount ::CahierDeTextesAPI::CoursAPI }
