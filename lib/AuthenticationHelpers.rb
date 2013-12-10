@@ -3,7 +3,7 @@
 module AuthenticationHelpers
 
   def is_logged?
-    session[:authenticated]
+    env['rack.session'][:authenticated]
   end
 
   #
@@ -11,15 +11,20 @@ module AuthenticationHelpers
   #   d'initialiser la session et de rediriger vers l'url passée en paramètre
   #
   def login!( route )
-    redirect "/auth/cas?url=#{URI.encode( 'http://localhost:9292' + route )}"
+    if !route.empty?
+      route += "?" + env['QUERY_STRING'] if !env['QUERY_STRING'].empty?
+      route = URI.escape(env['rack.url_scheme'] + "://" + env['HTTP_HOST'] + route)
+      redirect  "/auth/cas?url=#{URI.encode( route )}"
+    end
+    redirect "/auth/cas"
   end
 
   #
   # Délogue l'utilisateur du serveur CAS et de l'application
   #
   def logout!( url )
-    session[:authenticated] = false
-    session[:current_user] = nil
+    env['rack.session'][:authenticated] = false
+    env['rack.session'][:current_user] = nil
 
     CASLaclasseCom::OPTIONS[:ssl] ? protocol = 'https://' : protocol = 'http://'
     redirect protocol + CASLaclasseCom::OPTIONS[:host] + CASLaclasseCom::OPTIONS[:logout_url] + '?url=' + URI.encode( url )
@@ -29,13 +34,13 @@ module AuthenticationHelpers
   # récupération des données envoyée par CAS
   #
   def set_current_user( env )
-    session[:current_user] = { user: nil, info: nil }
+    env['rack.session'][:current_user] = { user: nil, info: nil }
     if env['rack.session'][:user]
-      session[:current_user][:user] ||= env['rack.session'][:user]
-      session[:current_user][:info] ||= env['rack.session'][:extra]
-      session[:current_user][:info][:ENTStructureNomCourant] ||= session[:current_user][:extra][:ENTPersonStructRattachRNE]
+      env['rack.session'][:current_user][:user] ||= env['rack.session'][:user]
+      env['rack.session'][:current_user][:info] ||= env['rack.session'][:extra]
+      env['rack.session'][:current_user][:info][:ENTStructureNomCourant] ||= env['rack.session'][:current_user][:extra][:ENTPersonStructRattachRNE]
     end
-    session[:current_user]
+    env['rack.session'][:current_user]
   end
 
   #
@@ -45,7 +50,7 @@ module AuthenticationHelpers
     if env['rack.session']
       env['rack.session'][:user] = env['omniauth.auth'].extra.user
       env['rack.session'][:extra] = env['omniauth.auth'].extra
-      session[:authenticated] = true
+      env['rack.session'][:authenticated] = true
     end
     set_current_user env
   end
