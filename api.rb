@@ -33,6 +33,6 @@ module CahierDeTextesAPI
     resource( :cahiers_de_textes ) { mount ::CahierDeTextesAPI::CahiersDeTextesAPI }
     resource( :annuaire )          { mount ::CahierDeTextesAPI::AnnuaireAPI }
 
-    add_swagger_documentation
+    add_swagger_documentation api_version: 'v0'
   end
 end
