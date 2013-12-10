@@ -16,21 +16,6 @@ require ::File.expand_path( '../api', __FILE__ )
 
 APP_VIRTUAL_PATH = '/'
 
-use Rack::Static,
-    root: File.expand_path('../public', __FILE__),
-    urls: %w[/app],
-    try: [ '.html',
-           'index.html',
-           '/index.html',
-           '/bower_components',
-           '/favicon.ico',
-           '/localcdn',
-           '/mocks',
-           '/robots.txt',
-           '/scripts',
-           '/styles',
-           '/views' ]
-
 use Rack::Session::Cookie,
     key: 'rack.session',
     path: '/',
