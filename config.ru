@@ -11,7 +11,7 @@
 require 'securerandom'
 require 'digest'
 
-require ::File.expand_path( '../app', __FILE__ )
+require ::File.expand_path( '../api', __FILE__ )
 require ::File.expand_path( '../config/CASLaclasseCom', __FILE__ )
 
 APP_VIRTUAL_PATH = '/'
