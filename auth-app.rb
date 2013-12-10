@@ -17,6 +17,7 @@ module CahierDeTextesAPI
   class AuthApp < Sinatra::Base
 
     configure do
+      set :protection, true
       set :inline_templates, true
     end
 
