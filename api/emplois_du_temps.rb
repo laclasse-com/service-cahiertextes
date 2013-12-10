@@ -17,6 +17,8 @@ module CahierDeTextesAPI
       optional :fin, type: Time
     }
     get  do
+      error!( '401 Unauthorized', 401 ) unless is_logged?
+
       # TODO: prendre en compte debut et fin
 
       # TODO
