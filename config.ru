@@ -8,9 +8,6 @@
 # application as FastCGI, CGI, or standalone with Mongrel or WEBrick -- all from
 # the same configuration.
 
-require 'securerandom'
-require 'digest'
-
 require ::File.expand_path( '../config/CASLaclasseCom', __FILE__ )
 require ::File.expand_path( '../config/environment', __FILE__ )
 
@@ -38,7 +35,7 @@ use Rack::Session::Cookie,
     key: 'rack.session',
     path: '/',
     expire_after: 3600, # In seconds
-    secret: Digest::SHA1.hexdigest( SecureRandom.base64 ) # test only
+    secret: 'e862960f7140cc24c8e933fd0bfa5f3bd8cdc6c3' # Digest::SHA1.hexdigest( SecureRandom.base64 )
 
 use OmniAuth::Builder do
   provider :cas, CASLaclasseCom::OPTIONS
