@@ -23,12 +23,8 @@ module CahierDeTextesAPI
 
     helpers AuthenticationHelpers
 
-    use OmniAuth::Builder do
-      provider :cas, CASLaclasseCom::OPTIONS
-    end
-
     get '/' do
-      erb "<a href='/app/index.html'>OH HAI!</a>"
+      erb "<a href='/cahier_de_textes'>Vers l'application Cahier de Textes</a>"
     end
 
     get '/auth/:provider/callback' do
