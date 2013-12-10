@@ -24,17 +24,6 @@ module CahierDeTextesAPI
     format :json
     rescue_from :all
 
-    helpers do
-      def current_user
-        # TODO: @current_user ||= User.authorize!(env)
-        true
-      end
-
-      def authenticate!
-        error!('401 Unauthorized', 401) unless current_user
-      end
-    end
-
     resource( :pronote )           { mount ::CahierDeTextesAPI::ProNoteAPI }
     resource( :etablissements )    { mount ::CahierDeTextesAPI::EtablissementsAPI }
     resource( :cours )             { mount ::CahierDeTextesAPI::CoursAPI }
