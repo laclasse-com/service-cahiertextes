@@ -30,7 +30,9 @@ module Annuaire
   end
 
   def search_matiere( label )
-    RestClient.get( sign( ANNUAIRE[:url], "/matieres/libelle/#{label}", {}, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
+    label = URI.escape( label )
+
+    RestClient.get( sign( ANNUAIRE[:url], "matieres/libelle/#{label}", {}, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
       |response, request, result|
       if response.code == 200
         return JSON.parse( response )
@@ -43,7 +45,10 @@ module Annuaire
   end
 
   def search_regroupement( code_uai, nom )
-    RestClient.get( sign( ANNUAIRE[:url], "/regroupement?etablissement=#{code_uai}nom=#{nom}", {}, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
+    code_uai = URI.escape( code_uai )
+    nom = URI.escape( nom )
+
+    RestClient.get( sign( ANNUAIRE[:url], 'regroupement', { etablissement: code_uai, nom: nom }, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
       |response, request, result|
       if response.code == 200
         return JSON.parse( response )[0]
@@ -55,7 +60,11 @@ module Annuaire
   end
 
   def search_utilisateur( code_uai, nom, prenom )
-    RestClient.get( sign( ANNUAIRE[:url], '/users', { nom: nom, prenom: prenom, etablissement: code_uai }, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
+    code_uai = URI.escape( code_uai )
+    nom = URI.escape( nom )
+    prenom = URI.escape( prenom )
+
+    RestClient.get( sign( ANNUAIRE[:url], 'users', { nom: nom, prenom: prenom, etablissement: code_uai }, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
       |response, request, result|
       if response.code == 200
         return JSON.parse( response )[0]
@@ -68,7 +77,9 @@ module Annuaire
 
   # API d'interfaçage avec l'annuaire à destination du client
   def get_matiere( id )
-    RestClient.get( sign( ANNUAIRE[:url], "/matieres/#{id}", {}, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
+    id = URI.escape( id )
+
+    RestClient.get( sign( ANNUAIRE[:url], "matieres/#{id}", {}, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
       |response, request, result|
       if response.code == 200
         return JSON.parse( response )
@@ -79,7 +90,9 @@ module Annuaire
   end
 
   def get_regroupement( id )
-    RestClient.get( sign( ANNUAIRE[:url], "/regroupements/#{id}", {}, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
+    id = URI.escape( id )
+
+    RestClient.get( sign( ANNUAIRE[:url], "regroupements/#{id}", {}, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
       |response, request, result|
       if response.code == 200
         return JSON.parse( response )
@@ -90,7 +103,9 @@ module Annuaire
   end
 
   def get_user( id )
-    RestClient.get( sign( ANNUAIRE[:url], "/users/#{id}", { expand: 'true' }, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
+    id = URI.escape( id )
+
+    RestClient.get( sign( ANNUAIRE[:url], "users/#{id}", { expand: 'true' }, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
       |response, request, result|
       if response.code == 200
         return JSON.parse( response )
