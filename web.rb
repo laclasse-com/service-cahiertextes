@@ -14,7 +14,7 @@ require_relative './lib/AuthenticationHelpers'
 
 # Application Sinatra servant de base
 module CahierDeTextesAPI
-  class AuthApp < Sinatra::Base
+  class Web < Sinatra::Base
 
     configure do
       set :protection, true
