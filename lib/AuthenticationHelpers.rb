@@ -11,12 +11,12 @@ module AuthenticationHelpers
   #   d'initialiser la session et de rediriger vers l'url passée en paramètre
   #
   def login!( route )
-    if !route.empty?
-      route += "?" + env['QUERY_STRING'] if !env['QUERY_STRING'].empty?
-      route = URI.escape(env['rack.url_scheme'] + "://" + env['HTTP_HOST'] + route)
-      redirect  "/auth/cas?url=#{URI.encode( route )}"
+    unless route.empty?
+      route += "?#{env['QUERY_STRING']}" unless env['QUERY_STRING'].empty?
+      route = URI.escape( "#{env['rack.url_scheme']}://#{env['HTTP_HOST']}#{route}" )
+      redirect "/auth/cas?url=#{URI.encode( route )}"
     end
-    redirect "/auth/cas"
+    redirect '/auth/cas'
   end
 
   #
