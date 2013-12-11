@@ -1,7 +1,5 @@
-class Annuaire
-  include Ramaze::Optioned
+# -*- encoding: utf-8 -*-
 
-  options.dsl do
-    o "This is a test options", :foo_bar, "Hello World!"
-  end
-end
+ANNUAIRE = { url: 'http://www.dev.laclasse.com/api/app',
+             app_id: 'test',
+             secret: 'veryverysecret' }
