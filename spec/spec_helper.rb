@@ -10,7 +10,13 @@ require 'tsort'
 require_relative '../config/environment'
 require_relative '../config/database'
 
-require_relative '../app'
+require_relative '../api'
+
+module AuthenticationHelpers
+  def is_logged?
+    true
+  end
+end
 
 RSpec.configure do |config|
   config.mock_with :rspec
