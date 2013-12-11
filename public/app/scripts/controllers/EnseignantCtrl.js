@@ -186,7 +186,7 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      $scope.ouvre_popup_cours_devoirs = function(  ) {
-			  $modal.open({ templateUrl: 'views/modals/enseignant/detail_emploi_du_temps.html',
+			  $modal.open({ templateUrl: 'app/views/modals/enseignant/detail_emploi_du_temps.html',
 					controller: modalInstanceCtrl,
 					resolve: { raw_data: function() { return $scope.raw_data; },
 						   matiere: function() { return $scope.matiere; },
