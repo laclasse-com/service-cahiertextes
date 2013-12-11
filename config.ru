@@ -11,8 +11,8 @@
 require ::File.expand_path( '../config/CASLaclasseCom', __FILE__ )
 require ::File.expand_path( '../config/environment', __FILE__ )
 
-require ::File.expand_path( '../auth-app', __FILE__ )
 require ::File.expand_path( '../api', __FILE__ )
+require ::File.expand_path( '../web', __FILE__ )
 
 APP_VIRTUAL_PATH = '/'
 
@@ -26,9 +26,5 @@ use OmniAuth::Builder do
   provider :cas, CASLaclasseCom::OPTIONS
 end
 
-if %W[ 'development', 'test' ].include? ENV['RACK_ENV']
-  api.logger.info 'Enabling Developer authentication.'
-  use OmniAuth::Strategies::Developer
-end
-
-run Rack::Cascade.new [ CahierDeTextesAPI::API, CahierDeTextesAPI::AuthApp ]
+run Rack::Cascade.new [ CahierDeTextesAPI::API,
+                        CahierDeTextesAPI::Web ]
