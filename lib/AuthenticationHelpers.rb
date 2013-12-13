@@ -51,8 +51,9 @@ module AuthenticationHelpers
       env['rack.session'][:user] = env['omniauth.auth'].extra.user
       env['rack.session'][:extra] = env['omniauth.auth'].extra
       env['rack.session'][:authenticated] = true
+
+      set_current_user env
     end
-    set_current_user env
   end
 
 end
