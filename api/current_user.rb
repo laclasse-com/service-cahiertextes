@@ -3,8 +3,8 @@
 module CahierDeTextesAPI
   class CurrentUserAPI < Grape::API
 
-    desc 'renvoi les infos de l\'utilisateur indentifié'
-    get '/' do
+    desc 'renvoi les infos de l\'utilisateur identifié'
+    get  do
       env['rack.session'][:current_user]
     end
 
