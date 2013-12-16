@@ -6,6 +6,7 @@ require 'bundler'
 Bundler.require( :default, ENV['RACK_ENV'].to_sym )     # require tout les gems définis dans Gemfile
 
 require_relative './lib/AuthenticationHelpers'
+require_relative './lib/UserHelpers'
 
 require_relative './models/models'
 require_relative './lib/pronote'
@@ -29,21 +30,22 @@ module CahierDeTextesAPI
     rescue_from :all
 
     helpers AuthenticationHelpers
+    helpers UserHelpers
 
     before do
       error!( '401 Unauthorized', 401 ) unless is_logged?
     end
 
-    resource( :current_user )      { mount ::CahierDeTextesAPI::CurrentUserAPI }
+    resource( :current_user      ) { mount ::CahierDeTextesAPI::CurrentUserAPI }
 
-    resource( :pronote )           { mount ::CahierDeTextesAPI::ProNoteAPI }
-    resource( :etablissements )    { mount ::CahierDeTextesAPI::EtablissementsAPI }
-    resource( :cours )             { mount ::CahierDeTextesAPI::CoursAPI }
-    resource( :devoirs )           { mount ::CahierDeTextesAPI::DevoirsAPI }
-    resource( :types_de_devoir )   { mount ::CahierDeTextesAPI::TypesDeDevoirAPI }
-    resource( :emplois_du_temps )  { mount ::CahierDeTextesAPI::EmploisDuTempsAPI }
+    resource( :pronote           ) { mount ::CahierDeTextesAPI::ProNoteAPI }
+    resource( :etablissements    ) { mount ::CahierDeTextesAPI::EtablissementsAPI }
+    resource( :cours             ) { mount ::CahierDeTextesAPI::CoursAPI }
+    resource( :devoirs           ) { mount ::CahierDeTextesAPI::DevoirsAPI }
+    resource( :types_de_devoir   ) { mount ::CahierDeTextesAPI::TypesDeDevoirAPI }
+    resource( :emplois_du_temps  ) { mount ::CahierDeTextesAPI::EmploisDuTempsAPI }
     resource( :cahiers_de_textes ) { mount ::CahierDeTextesAPI::CahiersDeTextesAPI }
-    resource( :annuaire )          { mount ::CahierDeTextesAPI::AnnuaireAPI }
+    resource( :annuaire          ) { mount ::CahierDeTextesAPI::AnnuaireAPI }
 
     add_swagger_documentation api_version: 'v0'
   end
