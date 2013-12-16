@@ -57,6 +57,7 @@
 	    <a class="btn btn-lg btn-danger" href="/logout">Déconnexion</a>
 	  </div>
 	</div>
+	<div data-ng-controller="HeaderCtrl">{{current_user}}</div>
       </header>
 
       <div data-ui-view></div>
@@ -98,6 +99,7 @@
     <script type="text/javascript" src="app/scripts/rootScope.js"></script>
 
     <script type="text/javascript" src="app/scripts/controllers/MainCtrl.js"></script>
+    <script type="text/javascript" src="app/scripts/controllers/HeaderCtrl.js"></script>
 
     <script type="text/javascript" src="app/scripts/controllers/PrincipalCtrl.js"></script>
     <script type="text/javascript" src="app/scripts/controllers/PrincipalEnseignantCtrl.js"></script>
@@ -118,6 +120,7 @@
     <script type="text/javascript" src="app/scripts/services/API/EmploisDuTemps.js"></script>
 
     <script type="text/javascript" src="app/scripts/services/API/Annuaire.js"></script>
+    <script type="text/javascript" src="app/scripts/services/API/CurrentUser.js"></script>
     <!-- endbuild -->
 
   </body>
