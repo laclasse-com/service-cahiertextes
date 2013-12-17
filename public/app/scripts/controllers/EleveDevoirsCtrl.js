@@ -4,12 +4,9 @@ angular.module('cahierDeTexteApp')
     .controller('EleveDevoirsCtrl',
 		[ '$scope', 'Devoirs', 'TypesDeDevoir',
 		  function( $scope, Devoirs, TypesDeDevoir ) {
-		      var eleve_id = 1;
-
 		      $scope.affiche_faits = false;
 		      $scope.fait = function( id ) {
-			  Devoirs.fait({ id: id,
-					 eleve_id: eleve_id }).$promise
+			  Devoirs.fait({ id: id }).$promise
 			      .then( function() {
 				  _($scope.devoirs).findWhere({ id: id }).fait = true;
 			      });
@@ -25,8 +22,7 @@ angular.module('cahierDeTexteApp')
 			      $scope.devoirs = $scope.all_devoirs;
 			  }
 		      };
-		      Devoirs.query({ eleve_id: eleve_id },
-				    function( response ) {
+		      Devoirs.query(function( response ) {
 					$scope.all_devoirs = _(response).map( function( devoir ) {
 					    devoir.type_devoir = _($scope.types_de_devoir)
 						.findWhere({id: devoir.type_devoir_id}).label;

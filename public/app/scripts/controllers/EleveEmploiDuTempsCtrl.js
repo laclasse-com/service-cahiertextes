@@ -4,8 +4,6 @@ angular.module('cahierDeTexteApp')
     .controller('EleveEmploiDuTempsCtrl',
 		[ '$scope', '$rootScope', '$modal', 'EmploisDuTemps', 'Matieres', 'TypesDeDevoir',
 		  function ( $scope, $rootScope, $modal, EmploisDuTemps, Matieres, TypesDeDevoir ) {
-		      var eleve_id = 1;
-
 		      $scope.matieres = {};
 		      $scope.types_de_devoir = {};
 
@@ -56,8 +54,7 @@ angular.module('cahierDeTexteApp')
 			  $scope.devoirs = devoirs;
 
 			  $scope.fait = function( devoir_id ) {
-			      Devoirs.fait({ id: devoir_id,
-					     eleve_id: eleve_id },
+			      Devoirs.fait({ id: devoir_id },
 					   function() {
 					       // FIXME
 					       _(devoirs).findWhere({id: devoir_id}).fait = true;
