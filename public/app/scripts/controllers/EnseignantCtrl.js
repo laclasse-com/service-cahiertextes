@@ -108,7 +108,7 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      // popup de création/édition des cours et devoirs ////////
-		      var modalInstanceCtrl = function( $scope, $rootScope, $modalInstance, matiere, cours, devoirs, types_de_devoir, matiere_id, regroupement_id, raw_data, classes, matieres ) {
+		      var editionModalInstanceCtrl = function( $scope, $rootScope, $modalInstance, matiere, cours, devoirs, types_de_devoir, matiere_id, regroupement_id, raw_data, classes, matieres ) {
 			  // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
 			  $scope.matieres = matieres;
 			  $scope.classes = classes;
@@ -187,7 +187,7 @@ angular.module('cahierDeTexteApp')
 
 		      $scope.ouvre_popup_cours_devoirs = function(  ) {
 			  $modal.open({ templateUrl: 'app/views/modals/enseignant/detail_emploi_du_temps.html',
-					controller: modalInstanceCtrl,
+					controller: editionModalInstanceCtrl,
 					resolve: { raw_data: function() { return $scope.raw_data; },
 						   matiere: function() { return $scope.matiere; },
 						   matieres: function() { return $scope.matieres; },
