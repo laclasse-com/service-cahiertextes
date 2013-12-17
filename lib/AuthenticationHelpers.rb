@@ -34,7 +34,7 @@ module AuthenticationHelpers
    # Initialisation de la session après l'authentification
    #
    def init_session( env )
-      if env['rack.session'] && env['omniauth.auth']
+      if env['rack.session'] && env['omniauth.auth'] && env['omniauth.auth'].extra
          env['rack.session'][:authenticated] = true
          env['rack.session'][:current_user] ||= env['omniauth.auth'].extra.to_hash if env['omniauth.auth'].extra
 
