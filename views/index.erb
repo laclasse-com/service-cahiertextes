@@ -53,11 +53,11 @@
 	      <a href="#/eleve" data-ng-click="tab='eleve'">Élève</a>
 	    </li>
 	  </ul>
-	  <div class="pull-right">
-	    <a class="btn btn-lg btn-danger" href="/logout">Déconnexion</a>
+	  <div class="pull-right" data-ng-controller="HeaderCtrl">
+	    {{current_user['user']}} ({{current_user['uid']}})
+	    <a class="btn btn-danger" href="/logout">Déconnexion</a>
 	  </div>
 	</div>
-	<div data-ng-controller="HeaderCtrl">{{current_user}}</div>
       </header>
 
       <div data-ui-view></div>
