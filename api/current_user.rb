@@ -5,7 +5,7 @@ module CahierDeTextesAPI
 
     desc 'renvoi les infos de l\'utilisateur identifié'
     get  do
-      env['rack.session'][:current_user]
+      user
     end
 
   end
