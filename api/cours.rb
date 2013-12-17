@@ -14,7 +14,6 @@ module CahierDeTextesAPI
       requires :id, desc: 'id du cours'
     }
     get '/:id' do
-      # FIXME: gestion des droits
       if Cours[ params[:id] ].nil? || Cours[ params[:id] ].deleted
         error!( 'Cours inconnu', 404 )
       else
@@ -36,7 +35,11 @@ module CahierDeTextesAPI
       optional :ressources
     }
     post do
-      # TODO: gestion des droits
+       error!( '401 Unauthorized', 401 ) unless user['profils'].map {
+          |profil|
+          profil['profil_id']
+       }.include? 'ENS'
+
       cours = Cours.create( cahier_de_textes_id: params[:cahier_de_textes_id],
                             creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
                             date_cours: params[:date_cours].to_s,
