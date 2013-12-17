@@ -7,17 +7,17 @@ module UserHelpers
    end
 
    def user_profils
-      user[:info].to_hash['profils'] unless user[:info].to_hash['profils']
+      user['profils'] unless user[:info].to_hash['profils']
       []
    end
 
    def user_classes
-      user[:info].to_hash['classes'] unless user[:info].to_hash['classes'].nil?
+      user['classes'] unless user[:info].to_hash['classes'].nil?
       []
    end
 
    def user_uid
-      user[:info].to_hash['uid']
+      user['uid']
    end
 
 end
