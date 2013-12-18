@@ -21,6 +21,7 @@ require_relative './api/types_de_devoir'
 require_relative './api/emplois_du_temps'
 require_relative './api/cahiers_de_textes'
 require_relative './api/annuaire'
+require_relative './api/creneaux_emploi_du_temps'
 
 module CahierDeTextesAPI
   class API < Grape::API
@@ -36,16 +37,17 @@ module CahierDeTextesAPI
       error!( '401 Unauthorized', 401 ) unless is_logged?
     end
 
-    resource( :current_user      ) { mount ::CahierDeTextesAPI::CurrentUserAPI }
+    resource( :current_user             ) { mount ::CahierDeTextesAPI::CurrentUserAPI }
 
-    resource( :pronote           ) { mount ::CahierDeTextesAPI::ProNoteAPI }
-    resource( :etablissements    ) { mount ::CahierDeTextesAPI::EtablissementsAPI }
-    resource( :cours             ) { mount ::CahierDeTextesAPI::CoursAPI }
-    resource( :devoirs           ) { mount ::CahierDeTextesAPI::DevoirsAPI }
-    resource( :types_de_devoir   ) { mount ::CahierDeTextesAPI::TypesDeDevoirAPI }
-    resource( :emplois_du_temps  ) { mount ::CahierDeTextesAPI::EmploisDuTempsAPI }
-    resource( :cahiers_de_textes ) { mount ::CahierDeTextesAPI::CahiersDeTextesAPI }
-    resource( :annuaire          ) { mount ::CahierDeTextesAPI::AnnuaireAPI }
+    resource( :pronote                  ) { mount ::CahierDeTextesAPI::ProNoteAPI }
+    resource( :etablissements           ) { mount ::CahierDeTextesAPI::EtablissementsAPI }
+    resource( :cours                    ) { mount ::CahierDeTextesAPI::CoursAPI }
+    resource( :devoirs                  ) { mount ::CahierDeTextesAPI::DevoirsAPI }
+    resource( :types_de_devoir          ) { mount ::CahierDeTextesAPI::TypesDeDevoirAPI }
+    resource( :emplois_du_temps         ) { mount ::CahierDeTextesAPI::EmploisDuTempsAPI }
+    resource( :cahiers_de_textes        ) { mount ::CahierDeTextesAPI::CahiersDeTextesAPI }
+    resource( :annuaire                 ) { mount ::CahierDeTextesAPI::AnnuaireAPI }
+    resource( :creneaux_emploi_du_temps ) { mount ::CahierDeTextesAPI::CreneauxEmploiDuTempsAPI }
 
     add_swagger_documentation api_version: 'v0'
   end
