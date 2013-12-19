@@ -54,7 +54,7 @@ describe CahierDeTextesAPI::API do
       matiere_id = CreneauEmploiDuTemps.all.sample.matiere_id
       regroupement_id = CreneauEmploiDuTempsRegroupement.all.sample.regroupement_id
 
-      post "/api/v0/creneaux_emploi_du_temps/jour/#{jour}/debut/#{heure_debut}/fin/#{heure_fin}/matiere/#{matiere_id}/regroupement/#{regroupement_id}"
+      post "/api/v0/creneaux_emploi_du_temps/jour_de_la_semaine/#{jour}/debut/#{heure_debut}/fin/#{heure_fin}/matiere/#{matiere_id}/regroupement/#{regroupement_id}"
 
       last_response.status.should == 201
 
@@ -74,7 +74,7 @@ describe CahierDeTextesAPI::API do
       matiere_id = CreneauEmploiDuTemps.all.sample.matiere_id
       regroupement_id = CreneauEmploiDuTempsRegroupement.all.sample.regroupement_id
 
-      put "/api/v0/creneaux_emploi_du_temps/#{creneau.id}/jour/#{jour}/debut/#{heure_debut}/fin/#{heure_fin}/matiere/#{matiere_id}/regroupement/#{regroupement_id}"
+      put "/api/v0/creneaux_emploi_du_temps/#{creneau.id}/jour_de_la_semaine/#{jour}/debut/#{heure_debut}/fin/#{heure_fin}/matiere/#{matiere_id}/regroupement/#{regroupement_id}"
 
       p last_response
 
