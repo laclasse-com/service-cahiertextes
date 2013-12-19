@@ -18,6 +18,12 @@ module AuthenticationHelpers
   end
 end
 
+module UserHelpers
+   def user
+      {"user"=>"gwenhael", "idEnt"=>"Laclasse", "ENT_id"=>"1182", "uid"=>"VAA61181", "LaclasseNom"=>"Le Moine", "LaclassePrenom"=>"Gwenhael", "LaclasseCivilite"=>"Mr", "ENTPersonStructRattachRNE"=>"0699999Z", "ENTStructureNomCourant"=>"ERASME", "ENTPersonProfils"=>"DIR:0699999Z", "ENTPersonRoles"=>"DIR_ETB:0699999Z:1"}
+   end
+end
+
 RSpec.configure do |config|
   config.mock_with :rspec
   config.expect_with :rspec
@@ -31,6 +37,7 @@ RSpec.configure do |config|
   # Use the specified formatter
   config.formatter = :documentation # :progress, :html, :textmate
 end
+
 
 # # Example usage.
 # cleaner = TableCleaner.new DB, [:spatial_ref_sys]
