@@ -21,7 +21,7 @@ module CahierDeTextesAPI
 
     desc 'crée un créneau s\'il n\'existe pas déjà un semblable'
     params {
-      requires :jour, type: Integer
+      requires :jour_de_la_semaine, type: Integer
       requires :heure_debut, type: Time
       requires :heure_fin, type: Time
       requires :matiere_id
@@ -29,7 +29,7 @@ module CahierDeTextesAPI
 
       optional :salle_id
     }
-    post '/jour/:jour/debut/:heure_debut/fin/:heure_fin/matiere/:matiere_id/regroupement/:regroupement_id' do
+    post '/jour_de_la_semaine/:jour_de_la_semaine/debut/:heure_debut/fin/:heure_fin/matiere/:matiere_id/regroupement/:regroupement_id' do
       plage_horaire_debut = PlageHoraire.where(debut: params[:heure_debut] ).first
       if plage_horaire_debut.nil?
         plage_horaire_debut = PlageHoraire.create( label: '',
@@ -44,12 +44,9 @@ module CahierDeTextesAPI
                                                  fin: params[:heure_fin] )
       end
 
-      # FIXME: hack sale pour passer le test pendant lequel il n'y a pas d'user
-      user = {'uid' => 'VAA60001'} if user.nil?
-
       creneau = CreneauEmploiDuTemps.create( debut: plage_horaire_debut.id,
                                              fin: plage_horaire_fin.id,
-                                             jour_de_la_semaine: params[:jour],
+                                             jour_de_la_semaine: params[:jour_de_la_semaine],
                                              matiere_id: params[:matiere_id] )
       CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
       CreneauEmploiDuTempsEnseignant.create( creneau_emploi_du_temps_id: creneau.id,
@@ -73,7 +70,7 @@ module CahierDeTextesAPI
     desc 'mets à jour un créneau'
     params {
       requires :id
-      requires :jour, type: Integer
+      requires :jour_de_la_semaine, type: Integer
       requires :heure_debut, type: Time
       requires :heure_fin, type: Time
       requires :matiere_id
@@ -81,7 +78,7 @@ module CahierDeTextesAPI
 
       optional :salle_id
     }
-    put '/:id/jour/:jour/debut/:heure_debut/fin/:heure_fin/matiere/:matiere_id/regroupement/:regroupement_id' do
+    put '/:id/jour_de_la_semaine/:jour_de_la_semaine/debut/:heure_debut/fin/:heure_fin/matiere/:matiere_id/regroupement/:regroupement_id' do
       params.each { |pm|
         p pm.class
         p pm }
@@ -101,7 +98,7 @@ module CahierDeTextesAPI
       end
 
       creneau = CreneauEmploiDuTemps[ params[:id] ]
-      creneau.jour_de_la_semaine = params[:jour]
+      creneau.jour_de_la_semaine = params[:jour_de_la_semaine]
       creneau.debut = plage_horaire_debut.id
       creneau.fin = plage_horaire_fin.id
       creneau.matiere_id = params[:matiere_id].to_s
