@@ -4,109 +4,8 @@ angular.module('cahierDeTexteApp')
     .controller('EnseignantCtrl',
 		[ '$scope', '$rootScope', '$modal', '$q', 'EmploisDuTemps', 'Matieres', 'Cours', 'Devoirs', 'TypesDeDevoir', 'Regroupements',
 		  function ( $scope, $rootScope, $modal, $q, EmploisDuTemps, Matieres, Cours, Devoirs, TypesDeDevoir, Regroupements ) {
-		      $scope.build_EdT_from_scratch = true;
 
-		      $scope.matieres = {};
-		      $scope.classes = {};
-		      $scope.classe = -1;
-
-		      // configuration du composant calendrier /////////////////
-		      $scope.calendar = { options: $rootScope.globalCalendarOptions,
-					  events: [  ] };
-		      $scope.calendar.options.defaultView = 'agendaWeek';
-		      $scope.calendar.options.height = 600;
-
-		      if ( $scope.build_EdT_from_scratch ) {
-			  $scope.calendar.options.editable = true;
-			  $scope.calendar.options.selectable = true;
-			  $scope.calendar.options.selectHelper = true;
-			  $scope.calendar.options.select = function(start, end, allDay) {
-			      $scope.ouvre_popup_cours_devoirs(  );
-
-			      var title = prompt('Event Title:')
-			      if (title) {
-				  $scope.emploi_du_temps.fullCalendar('renderEvent'
-								      , { title: title
-									  , start: start
-									  , end: end
-									  , allDay: allDay }
-								      , true // make the event "stick"
-								     );
-			      }
-			      $scope.emploi_du_temps.fullCalendar('unselect');
-			  };
-		      }
-		      else {
-			  $scope.calendar.options.editable = false;
-		      }
-
-		      $scope.calendar.options.header = { left: 'title',
-							 center: 'agendaDay agendaWeek month',
-							 right: 'today prev,next' };
-
-		      $scope.calendar.options.eventRender = function( event, element ) {
-			  element.find('.fc-event-title').append( event.description );
-		      };
-
-		      // // ouverture de la popup de création/édition //////////
-		      $scope.calendar.options.eventClick = function( event ) {
-			  var create_cours = function( creneau ) {
-			      var cours = new Cours({
-				  cahier_de_textes_id: creneau.details.cahier_de_textes_id,
-				  creneau_emploi_du_temps_id: creneau.details.creneau_emploi_du_temps_id,
-				  date_cours: creneau.start
-			      });
-			      cours.create = true;
-
-			      return cours;
-			  };
-
-			  $scope.creneau = _(event.source.events).findWhere({_id: event._id});
-			  $scope.matiere = event.title;
-			  $scope.matiere_id = event.details.matiere_id;
-			  $scope.regroupement_id = event.details.regroupement_id;
-
-			  // 1. cours
-			  if ( $scope.creneau.details.cours.id !== undefined ) {
-			      $scope.cours = Cours.get( { id: $scope.creneau.details.cours.id } ).$promise;
-			      $scope.cours.then( function success() {
-				  $scope.cours.create = false;
-			      },
-						 function error() {
-						     $scope.cours = create_cours( $scope.creneau );
-						 });
-			  } else {
-			      $scope.cours = create_cours( $scope.creneau );
-			  }
-
-			  // 2. devoir
-			  if ( $scope.creneau.details.devoirs.length > 0 ) {
-			      $scope.devoirs = $scope.creneau.details.devoirs.map(function(devoir) {
-				  return Devoirs.get( { id: devoir.id } );
-			      });
-			      $q.all( $scope.devoirs ).then( function success() {
-				  $scope.devoirs.create = false;
-			      },
-							     function error() {
-								 $q.all( $scope.types_de_devoir, $scope.cours )
-								     .then( function() {
-									 $scope.devoirs = [];
-								     });
-							     });
-			  } else {
-			      $q.all( $scope.types_de_devoir, $scope.cours )
-				  .then( function() {
-				      $scope.devoirs = [];
-				  });
-			  }
-
-			  // 3. ouverture de la popup
-			  $q.all( $scope.types_de_devoir, $scope.cours, $scope.devoirs )
-			      .then( function() {
-				  $scope.ouvre_popup_cours_devoirs(  );
-			      });
-		      };
-
+		      ///////////////////////////////////////// Sous-contrôleurs
 		      // popup de création/édition des cours et devoirs ////////
 		      var editionModalInstanceCtrl = function( $scope, $rootScope, $modalInstance, matiere, cours, devoirs, types_de_devoir, matiere_id, regroupement_id, raw_data, classes, matieres ) {
 			  // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
@@ -183,6 +82,128 @@ angular.module('cahierDeTexteApp')
 
 			      $scope.fermer();
 			  };
+		      };
+
+		      //////////////////////// Code du contrôleur proprement dit
+		      $scope.build_EdT_from_scratch = true;
+
+		      $scope.matieres = {};
+		      $scope.classes = {};
+		      $scope.classe = -1;
+
+		      // configuration du composant calendrier /////////////////
+		      $scope.calendar = { options: $rootScope.globalCalendarOptions,
+					  events: [  ] };
+		      $scope.calendar.options.defaultView = 'agendaWeek';
+		      $scope.calendar.options.height = 600;
+		      $scope.calendar.options.header = { left: 'title',
+							 center: 'agendaDay agendaWeek month',
+							 right: 'today prev,next' };
+		      $scope.calendar.options.eventRender = function( event, element ) {
+			  element.find('.fc-event-title').append( event.description );
+		      };
+
+		      if ( $scope.build_EdT_from_scratch ) {
+			  $scope.calendar.options.editable = true;
+			  $scope.calendar.options.selectable = true;
+			  $scope.calendar.options.selectHelper = true;
+			  $scope.calendar.options.select = function(start, end, allDay) {
+			      console.log('TODO: création plage horaire')
+			      console.log('weekDay: ' + ( start.getDay() + 1 ) )
+			      console.log('Start: ' + start)
+			      console.log('End: ' + end)
+			      console.log('Allday long?: ' + allDay)
+			      console.log('Demander matiere')
+			      console.log('Demander classe')
+			      console.log('passer id')
+
+			      $scope.ouvre_popup_cours_devoirs(  );
+
+			      $scope.emploi_du_temps.fullCalendar('unselect');
+			  };
+			  $scope.calendar.options.eventResize = function(event,dayDelta,minuteDelta,revertFunc) {
+			      console.log( "The end date of " + event.title + "has been moved " +
+					   dayDelta + " days and " +
+					   minuteDelta + " minutes." );
+			      if (!confirm("is this okay?")) {
+				  revertFunc();
+			      }
+			  };
+			  $scope.calendar.options.eventDrop = function(event,dayDelta,minuteDelta,allDay,revertFunc) {
+			      console.log( event.title + " was moved " +
+					   dayDelta + " days and " +
+					   minuteDelta + " minutes." );
+			      if (allDay) {
+				  console.log("Event is now all-day");
+			      }else{
+				  console.log("Event has a time-of-day");
+			      }
+			      if (!confirm("Are you sure about this change?")) {
+				  revertFunc();
+			      }
+			  };
+		      }
+		      else {
+			  $scope.calendar.options.editable = false;
+		      }
+
+		      // // ouverture de la popup de création/édition //////////
+		      $scope.calendar.options.eventClick = function( event ) {
+			  var create_cours = function( creneau ) {
+			      var cours = new Cours({
+				  cahier_de_textes_id: creneau.details.cahier_de_textes_id,
+				  creneau_emploi_du_temps_id: creneau.details.creneau_emploi_du_temps_id,
+				  date_cours: creneau.start
+			      });
+			      cours.create = true;
+
+			      return cours;
+			  };
+
+			  $scope.creneau = _(event.source.events).findWhere({_id: event._id});
+			  $scope.matiere = event.title;
+			  $scope.matiere_id = event.details.matiere_id;
+			  $scope.regroupement_id = event.details.regroupement_id;
+
+			  // 1. cours
+			  if ( $scope.creneau.details.cours.id !== undefined ) {
+			      $scope.cours = Cours.get( { id: $scope.creneau.details.cours.id } ).$promise;
+			      $scope.cours.then( function success() {
+				  $scope.cours.create = false;
+			      },
+						 function error() {
+						     $scope.cours = create_cours( $scope.creneau );
+						 });
+			  } else {
+			      $scope.cours = create_cours( $scope.creneau );
+			  }
+
+			  // 2. devoir
+			  if ( $scope.creneau.details.devoirs.length > 0 ) {
+			      $scope.devoirs = $scope.creneau.details.devoirs.map(function(devoir) {
+				  return Devoirs.get( { id: devoir.id } );
+			      });
+			      $q.all( $scope.devoirs ).then( function success() {
+				  $scope.devoirs.create = false;
+			      },
+							     function error() {
+								 $q.all( $scope.types_de_devoir, $scope.cours )
+								     .then( function() {
+									 $scope.devoirs = [];
+								     });
+							     });
+			  } else {
+			      $q.all( $scope.types_de_devoir, $scope.cours )
+				  .then( function() {
+				      $scope.devoirs = [];
+				  });
+			  }
+
+			  // 3. ouverture de la popup
+			  $q.all( $scope.types_de_devoir, $scope.cours, $scope.devoirs )
+			      .then( function() {
+				  $scope.ouvre_popup_cours_devoirs(  );
+			      });
 		      };
 
 		      $scope.ouvre_popup_cours_devoirs = function(  ) {
