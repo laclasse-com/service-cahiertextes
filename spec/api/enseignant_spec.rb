@@ -65,6 +65,27 @@ describe CahierDeTextesAPI::API do
       CreneauEmploiDuTemps[response_body['id']].matiere_id.should == matiere_id
       # CreneauEmploiDuTemps[response_body['id']].regroupement_id.should == regroupement_id
    end
+
+   it 'met à jour un créneau' do
+      creneau = CreneauEmploiDuTemps.all.sample
+      jour = rand 1..7
+      heure_debut = Time.now.beginning_of_hour.iso8601
+      heure_fin = (Time.now.beginning_of_hour + ( (rand 1..5) * 1800 )).iso8601
+      matiere_id = CreneauEmploiDuTemps.all.sample.matiere_id
+      regroupement_id = CreneauEmploiDuTempsRegroupement.all.sample.regroupement_id
+
+      put "/api/v0/creneaux_emploi_du_temps/#{creneau.id}/jour/#{jour}/debut/#{heure_debut}/fin/#{heure_fin}/matiere/#{matiere_id}/regroupement/#{regroupement_id}"
+
+      p last_response
+
+      last_response.status.should == 200
+
+      CreneauEmploiDuTemps[creneau.id].jour_de_la_semaine.should == jour
+      # CreneauEmploiDuTemps[creneau.id].heure_debut.should == heure_debut
+      # CreneauEmploiDuTemps[creneau.id.heure_fin.should == heure_fin
+      CreneauEmploiDuTemps[creneau.id].matiere_id.should == matiere_id
+      # CreneauEmploiDuTemps[creneau.id].regroupement_id.should == regroupement_id
+   end
    # }}}
 
    # {{{ Cahiers de Textes
