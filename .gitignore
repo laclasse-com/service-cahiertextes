@@ -26,3 +26,7 @@ vagrant/
 
 # modules node.js
 public/node_modules
+
+#config
+/config/options.rb
+/config/database.rb*
