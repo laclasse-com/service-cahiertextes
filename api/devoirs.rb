@@ -16,6 +16,8 @@ module CahierDeTextesAPI
       get '/' do
          # TODO: prendre en compte debut et fin
 
+         return [] if user['classes'].nil?
+
          regroupements_ids = user['classes'].map {
             |classe|
             classe['classe_id']
