@@ -8,7 +8,7 @@ module CahierDeTextesAPI
    #   - principaux pour consultation
    class DevoirsAPI < Grape::API
 
-      desc 'renvoi tous les devoirs concernsnt l\'utilisateur durant la période donnée'
+      desc 'renvoi tous les devoirs concernant l\'utilisateur durant la période donnée'
       params {
          optional :from, type: Date
          optional :to, type: Date
