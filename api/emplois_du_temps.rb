@@ -21,10 +21,10 @@ module CahierDeTextesAPI
       get  do
          # TODO: prendre en compte debut et fin
 
-         # if user['classes'].nil?
+         # if user.classes.nil?
          #    []
          # else
-         #    regroupements_ids = user['classes'].map {
+         #    regroupements_ids = user.classes.map {
          #       |classe|
          #       classe['classe_id']
          #    }.uniq
@@ -65,7 +65,7 @@ module CahierDeTextesAPI
                      hend = PlageHoraire[ CreneauEmploiDuTemps[ devoir.creneau_emploi_du_temps_id ].fin ].fin
                      d = devoir.to_hash
                      d[:ressources] = devoir.ressources
-                     d[:fait] = devoir.fait_par?( user['uid'] )
+                     d[:fait] = devoir.fait_par?( user.uid )
                      d[:start] = Time.new( devoir.date_due.year, devoir.date_due.month, devoir.date_due.mday, hstart.hour, hstart.min ).iso8601
                      d[:end] = Time.new( devoir.date_due.year, devoir.date_due.month, devoir.date_due.mday, hend.hour, hend.min ).iso8601
 
