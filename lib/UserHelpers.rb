@@ -6,10 +6,8 @@ module UserHelpers
       env['rack.session'][:current_user]
    end
 
-   def user_is_prof?( uai )
-      # if user['ENTPersonProfils'].index("ENS:#{uai}")
-      # FIXME: DEBUG: remove right for DIR
-      if user['ENTPersonProfils'].index("ENS:#{uai}") || user['ENTPersonProfils'].index("DIR:#{uai}")
+   def user_is?( profil, uai )
+      if user['ENTPersonProfils'].index("#{profil}:#{uai}")
          true
       else
          false
