@@ -35,10 +35,11 @@ module CahierDeTextesAPI
       optional :ressources
     }
     post do
-       error!( '401 Unauthorized', 401 ) unless user['profils'].map {
-          |profil|
-          profil['profil_id']
-       }.include? 'ENS'
+       error!( '401 Unauthorized', 401 ) unless user_is_prof? '0699999Z'
+       # error!( '401 Unauthorized', 401 ) unless user['profils'].map {
+       #    |profil|
+       #    profil['profil_id']
+       # }.include? 'ENS'
 
       cours = Cours.create( cahier_de_textes_id: params[:cahier_de_textes_id],
                             creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
@@ -62,7 +63,8 @@ module CahierDeTextesAPI
       optional :ressources, type: Array
     }
     put '/:id' do
-      # FIXME: gestion des droits
+       error!( '401 Unauthorized', 401 ) unless user_is_prof? '0699999Z'
+
       cours = Cours[ params[:id] ]
 
       unless cours.nil?
@@ -86,8 +88,9 @@ module CahierDeTextesAPI
       requires :id
     }
     put '/:id/valide' do
-      # FIXME: gestion des droits
-      cours = Cours[ params[:id] ]
+       error!( '401 Unauthorized', 401 ) unless user_is_prof? '0699999Z'
+
+       cours = Cours[ params[:id] ]
 
       unless cours.nil?
         cours.date_validation = Time.now
@@ -105,8 +108,9 @@ module CahierDeTextesAPI
       requires :regroupement_id
     }
     put '/:id/copie/regroupement/:regroupement_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id' do
-      # FIXME: gestion des droits
-      cours = Cours[ params[:id] ]
+       error!( '401 Unauthorized', 401 ) unless user_is_prof? '0699999Z'
+
+       cours = Cours[ params[:id] ]
 
       unless cours.nil?
         new_cours = Cours.create( cahier_de_textes_id: CahierDeTextes.where(regroupement_id: params[:regroupement_id]).first.id,
@@ -142,8 +146,9 @@ module CahierDeTextesAPI
       requires :id
     }
     delete '/:id' do
-      # FIXME: gestion des droits
-      cours = Cours[ params[:id] ]
+       error!( '401 Unauthorized', 401 ) unless user_is_prof? '0699999Z'
+
+       cours = Cours[ params[:id] ]
 
       unless cours.nil?
         cours.update(deleted: true)
