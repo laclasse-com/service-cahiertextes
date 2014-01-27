@@ -53,7 +53,7 @@ module CahierDeTextesAPI
          if devoir.nil?
             error!( 'Devoir inconnu', 404 )
          else
-            eleve_id = user['uid']
+            eleve_id = user.uid
 
             hash = devoir.to_hash
             hash[:ressources] = devoir.ressources

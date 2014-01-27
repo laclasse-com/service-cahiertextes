@@ -13,7 +13,7 @@ module CahierDeTextesAPI
       get  do
          # TODO: prendre en compte debut et fin
 
-         regroupements_ids = user['classes'].map {
+         regroupements_ids = user.classes.map {
             |classe|
             classe['classe_id']
          }.uniq

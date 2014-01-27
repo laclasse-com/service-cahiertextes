@@ -36,7 +36,7 @@ module CahierDeTextesAPI
     }
     post do
        error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS', '0699999Z' ) || user.is?( 'DIR', '0699999Z' )
-       # error!( '401 Unauthorized', 401 ) unless user['profils'].map {
+       # error!( '401 Unauthorized', 401 ) unless user.profils.map {
        #    |profil|
        #    profil['profil_id']
        # }.include? 'ENS'
