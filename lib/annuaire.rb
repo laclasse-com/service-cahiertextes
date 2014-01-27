@@ -1,3 +1,4 @@
+# encoding: utf-8
 # -*- coding: utf-8 -*-
 
 require 'base64'
@@ -37,7 +38,7 @@ module Annuaire
       if response.code == 200
         return JSON.parse( response )
       else
-        STDERR.puts "Matière inconnue : #{label} ; l'annuaire a répondu #{response}"
+        STDERR.puts "Matière inconnue : #{label}"
         STDERR.puts 'URL fautive: ' + sign( ANNUAIRE[:url], "/matieres/libelle/#{label}", {}, ANNUAIRE[:secret], ANNUAIRE[:app_id] )
         return { 'id' => nil }
       end
@@ -53,7 +54,7 @@ module Annuaire
       if response.code == 200
         return JSON.parse( response )[0]
       else
-        STDERR.puts "Regroupement inconnu : #{nom} ; l'annuaire a répondu #{response}"
+        STDERR.puts "Regroupement inconnu : #{nom}"
         return { 'id' => rand( 1 .. 59 ) } # nil }
       end
     end
@@ -69,7 +70,7 @@ module Annuaire
       if response.code == 200
         return JSON.parse( response )[0]
       else
-        STDERR.puts "Utilisateur inconnu : #{prenom} #{nom} ; l'annuaire a répondu #{response}"
+        STDERR.puts "Utilisateur inconnu : #{prenom} #{nom}"
         return { 'id_ent' => 'VAA' + rand( 60_400 .. 60_500 ).to_s } # nil }
       end
     end
@@ -84,7 +85,7 @@ module Annuaire
       if response.code == 200
         return JSON.parse( response )
       else
-        STDERR.puts "Matière inconnue : #{nom} ; l'annuaire a répondu #{response}"
+        STDERR.puts "Matière inconnue : #{id}"
       end
     end
   end
@@ -97,7 +98,7 @@ module Annuaire
       if response.code == 200
         return JSON.parse( response )
       else
-        STDERR.puts "Regroupement inconnu : #{nom} ; l'annuaire a répondu #{response}"
+        STDERR.puts "Regroupement inconnu : #{id}"
       end
     end
   end
@@ -110,7 +111,7 @@ module Annuaire
       if response.code == 200
         return JSON.parse( response )
       else
-        STDERR.puts "User inconnu : #{nom} ; l'annuaire a répondu #{response}"
+        STDERR.puts "User inconnu : #{id}"
       end
     end
   end
