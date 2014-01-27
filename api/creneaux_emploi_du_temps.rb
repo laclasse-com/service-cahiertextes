@@ -50,7 +50,7 @@ module CahierDeTextesAPI
                                              matiere_id: params[:matiere_id] )
       CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
       CreneauEmploiDuTempsEnseignant.create( creneau_emploi_du_temps_id: creneau.id,
-                                             enseignant_id: user['uid'] )
+                                             enseignant_id: user.uid )
       CreneauEmploiDuTempsEnseignant.restrict_primary_key
       CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
       CreneauEmploiDuTempsRegroupement.create( creneau_emploi_du_temps_id: creneau.id,
