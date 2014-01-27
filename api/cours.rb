@@ -35,7 +35,7 @@ module CahierDeTextesAPI
       optional :ressources
     }
     post do
-       error!( '401 Unauthorized', 401 ) unless user_is_prof? '0699999Z'
+       error!( '401 Unauthorized', 401 ) unless user_is?( 'ENS', '0699999Z' ) || user_is?( 'DIR', '0699999Z' )
        # error!( '401 Unauthorized', 401 ) unless user['profils'].map {
        #    |profil|
        #    profil['profil_id']
@@ -63,7 +63,7 @@ module CahierDeTextesAPI
       optional :ressources, type: Array
     }
     put '/:id' do
-       error!( '401 Unauthorized', 401 ) unless user_is_prof? '0699999Z'
+       error!( '401 Unauthorized', 401 ) unless user_is?( 'ENS', '0699999Z' ) || user_is?( 'DIR', '0699999Z' )
 
       cours = Cours[ params[:id] ]
 
@@ -88,7 +88,7 @@ module CahierDeTextesAPI
       requires :id
     }
     put '/:id/valide' do
-       error!( '401 Unauthorized', 401 ) unless user_is_prof? '0699999Z'
+       error!( '401 Unauthorized', 401 ) unless user_is?( 'ENS', '0699999Z' ) || user_is?( 'DIR', '0699999Z' )
 
        cours = Cours[ params[:id] ]
 
@@ -108,7 +108,7 @@ module CahierDeTextesAPI
       requires :regroupement_id
     }
     put '/:id/copie/regroupement/:regroupement_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id' do
-       error!( '401 Unauthorized', 401 ) unless user_is_prof? '0699999Z'
+       error!( '401 Unauthorized', 401 ) unless user_is?( 'ENS', '0699999Z' ) || user_is?( 'DIR', '0699999Z' )
 
        cours = Cours[ params[:id] ]
 
@@ -146,7 +146,7 @@ module CahierDeTextesAPI
       requires :id
     }
     delete '/:id' do
-       error!( '401 Unauthorized', 401 ) unless user_is_prof? '0699999Z'
+       error!( '401 Unauthorized', 401 ) unless user_is?( 'ENS', '0699999Z' ) || user_is?( 'DIR', '0699999Z' )
 
        cours = Cours[ params[:id] ]
 

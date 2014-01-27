@@ -72,6 +72,8 @@ module CahierDeTextesAPI
          optional :ressources
       }
       post  do
+         error!( '401 Unauthorized', 401 ) unless user_is?( 'ENS', '0699999Z' ) || user_is?( 'DIR', '0699999Z' )
+
          if Cours[ params[:cours_id] ].nil?
             error!( 'Cours inconnu', 404 )
          else
@@ -116,6 +118,8 @@ module CahierDeTextesAPI
          optional :ressources
       }
       put '/:id' do
+         error!( '401 Unauthorized', 401 ) unless user_is?( 'ENS', '0699999Z' ) || user_is?( 'DIR', '0699999Z' )
+
          devoir = Devoir[ params[:id] ]
          if devoir.nil?
             error!( 'Devoir inconnu', 404 )
@@ -156,6 +160,8 @@ module CahierDeTextesAPI
          requires :id
       }
       put '/:id/fait' do
+         error!( '401 Unauthorized', 401 ) unless user_is? 'ELV', '0699999Z'
+
          eleve_id = user['uid']
 
          Devoir[ params[:id] ].fait_par!( eleve_id )
