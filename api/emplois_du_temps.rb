@@ -21,13 +21,11 @@ module CahierDeTextesAPI
       get  do
          # TODO: prendre en compte debut et fin
 
-         # if user.classes.nil?
-         #    []
-         # else
-         #    regroupements_ids = user.classes.map {
-         #       |classe|
-         #       classe['classe_id']
-         #    }.uniq
+         if user.is?( 'ENS', '0699999Z' ) || user.is?( 'ELV', '0699999Z' ) || user.is?( 'DIR', '0699999Z' )
+            # regroupements_ids = user.classes.map {
+            #    |classe|
+            #    classe['classe_id']
+            # }.uniq
 
             # FIXME: DEBUG
             regroupements_ids = CreneauEmploiDuTempsRegroupement.all.map{|r| r.regroupement_id}.sample rand 1..3
@@ -84,7 +82,9 @@ module CahierDeTextesAPI
                    devoirs: devoirs
                }
             }.flatten
-         # end
+         else
+            []
+         end
       end
 
    end
