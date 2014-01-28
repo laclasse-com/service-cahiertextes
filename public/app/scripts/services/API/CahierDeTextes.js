@@ -87,8 +87,8 @@ angular.module('cahierDeTexteApp')
 
 angular.module('cahierDeTexteApp')
     .service('API',
-	     [ 'TypesDeDevoir', 'Classes', 'Cours', 'Devoirs', 'Enseignants', 'EmploisDuTemps',
-	       function( TypesDeDevoir, Classes, Cours, Devoirs, Enseignants, EmploisDuTemps ) {
+	     [ 'Classes', 'Cours', 'CreneauEmploiDuTemps', 'Devoirs', 'EmploisDuTemps', 'Enseignants', 'TypesDeDevoir',
+	       function( Classes, Cours, CreneauEmploiDuTemps, Devoirs, EmploisDuTemps, Enseignants, TypesDeDevoir ) {
 		   this.query_classes = _.memoize( function( uai ) {
 		       return Classes.query({ uai: uai }).$promise;
 		   } );
