@@ -1,16 +1,16 @@
 {
   "name": "angular-cookies",
-  "version": "1.2.6",
+  "version": "1.2.10",
   "main": "./angular-cookies.js",
   "dependencies": {
-    "angular": "1.2.6"
+    "angular": "1.2.10"
   },
   "homepage": "https://github.com/angular/bower-angular-cookies",
-  "_release": "1.2.6",
+  "_release": "1.2.10",
   "_resolution": {
     "type": "version",
-    "tag": "v1.2.6",
-    "commit": "460db53b7fea906fc55f9a52f544f122995dc4e6"
+    "tag": "v1.2.10",
+    "commit": "8dfda517cdea400055cc76b6af77056217370ed1"
   },
   "_source": "git://github.com/angular/bower-angular-cookies.git",
   "_target": "*",
