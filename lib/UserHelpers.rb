@@ -6,9 +6,9 @@ module UserHelpers
    class HashIt
       def initialize( hash )
          hash.each do |k, v|
-            self.instance_variable_set( "@#{k}", v )
+            instance_variable_set( "@#{k}", v )
             # create the getter
-            self.class.send(:define_method, k, proc{ self.instance_variable_get( "@#{k}" ) } )
+            self.class.send(:define_method, k, proc{ instance_variable_get( "@#{k}" ) } )
             # create the setter
             # self.class.send(:define_method, "#{k}=", proc{|v| self.instance_variable_set("@#{k}", v)})
          end
