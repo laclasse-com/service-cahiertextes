@@ -336,6 +336,8 @@ angular.module('cahierDeTexteApp')
 		      $scope.types_de_devoir = API.query_types_de_devoir();
 
 		      // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
+
+		      // API.query_emplois_du_temps().then( function(response) {
 		      EmploisDuTemps.query( function( response ) {
 			  $scope.raw_data = response;
 

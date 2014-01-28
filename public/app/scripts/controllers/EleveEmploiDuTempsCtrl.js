@@ -142,6 +142,8 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
+
+		      // API.query_emplois_du_temps().then( function(response) {
 		      EmploisDuTemps.query( function( response ) {
 			  $scope.calendar.events.push( response.map( function( event ) {
 			      return $scope.assemble_fullCalendar_event( event );
