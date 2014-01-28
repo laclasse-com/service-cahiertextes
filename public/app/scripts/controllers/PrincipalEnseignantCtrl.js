@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantCtrl',
-		[ '$scope', '$rootScope', '$stateParams', '$q', 'Enseignants', 'Cours', 'Users', 'Matieres', 'Regroupements',
-		  function( $scope, $rootScope, $stateParams, $q, Enseignants, Cours, Users, Matieres, Regroupements ) {
+		[ '$scope', '$rootScope', '$stateParams', '$q', 'Enseignants', 'Cours', 'Annuaire',
+		  function( $scope, $rootScope, $stateParams, $q, Enseignants, Cours, Annuaire ) {
 		      $scope.enseignant_id = $stateParams.enseignant_id;
 		      $scope.classe = -1;
 		      $scope.mois = $rootScope.mois;
@@ -147,7 +147,7 @@ angular.module('cahierDeTexteApp')
 			      .pluck('matiere_id')
 			      .uniq()
 			      .each(function( matiere_id ) {
-				  Matieres.get({matiere_id: matiere_id},
+		  Annuaire.get_matiere( matiere_id ).then(
 						       function( response ) {
 							   matieres[matiere_id] = response.libelle_long;
 						       });
@@ -161,13 +161,13 @@ angular.module('cahierDeTexteApp')
 			      .pluck('classe_id')
 			      .uniq()
 			      .map(function( regroupement_id ) {
-				  return Regroupements.get({regroupement_id: regroupement_id}).$promise;
+		  return Annuaire.get_regroupement( regroupement_id );
 			      })
 			      .value();
 		      };
 
 		      // Récupération et consommation des données
-		      Users.get({ user_id: $scope.enseignant_id },
+		  Annuaire.get_user( $scope.enseignant_id ).then(
 				   function( response ) {
 				       $scope.enseignant = response;
 				       $scope.enseignant.matieres = _($scope.enseignant.matieres_enseignees).uniq( function( matiere ) {

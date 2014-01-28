@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantsCtrl',
-		[ '$scope', '$rootScope', '$q', 'Enseignants', 'Users', 'Regroupements',
-		  function( $scope, $rootScope, $q, Enseignants, Users, Regroupements ) {
+		[ '$scope', '$rootScope', '$q', 'Enseignants', 'Annuaire',
+		  function( $scope, $rootScope, $q, Enseignants, Annuaire ) {
 		      $scope.annee = $rootScope.mois;
 		      $scope.classe = -1;
 		      $scope.mois = -1;
@@ -78,7 +78,7 @@ angular.module('cahierDeTexteApp')
 			      .pluck('regroupement')
 			      .uniq()
 			      .map(function( regroupement_id ) {
-				  return Regroupements.get({regroupement_id: regroupement_id}).$promise;
+				  return Annuaire.get_regroupement( regroupement_id );
 			      })
 			      .value();
 		      };
@@ -86,7 +86,7 @@ angular.module('cahierDeTexteApp')
 		      $scope.extract_details_enseignants_promises = function( data ) {
 			  return _(data).pluck('enseignant_id')
 			      .map(function ( enseignant_id ) {
-				  return Users.get({ user_id: enseignant_id }).$promise;
+				  return Annuaire.get_user( enseignant_id );
 			      });
 		      };
 
