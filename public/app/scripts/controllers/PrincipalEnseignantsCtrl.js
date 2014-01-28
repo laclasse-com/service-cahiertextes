@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantsCtrl',
-		[ '$scope', '$rootScope', '$q', 'Enseignants', 'Annuaire',
-		  function( $scope, $rootScope, $q, Enseignants, Annuaire ) {
+		[ '$scope', '$rootScope', '$q', 'API', 'Annuaire',
+		  function( $scope, $rootScope, $q, API, Annuaire ) {
 		      $scope.annee = $rootScope.mois;
 		      $scope.classe = -1;
 		      $scope.mois = -1;
@@ -155,7 +155,7 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      // Récupération et consommation des données
-		      Enseignants.query( { etablissement_id: '0134567A' },
+		      API.query_enseignants( '0134567A' ).then(
 					 function success( response ) {
 					     $scope.raw_data = _(response).reject( function( enseignant ) {
 						 return enseignant.enseignant_id === '';

@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EnseignantCtrl',
-		[ '$scope', '$rootScope', '$modal', '$q', 'EmploisDuTemps', 'Cours', 'Devoirs', 'TypesDeDevoir', 'Annuaire',
-		  function ( $scope, $rootScope, $modal, $q, EmploisDuTemps, Cours, Devoirs, TypesDeDevoir, Annuaire ) {
+		[ '$scope', '$rootScope', '$modal', '$q', 'API', 'Annuaire', 'Cours', 'Devoirs', 'EmploisDuTemps',
+		  function ( $scope, $rootScope, $modal, $q, API, Annuaire, Cours, Devoirs, EmploisDuTemps ) {
 
 		      ///////////////////////////////////////// Sous-contrôleurs
 		      // popup de création/édition des cours et devoirs ////////
@@ -167,7 +167,7 @@ angular.module('cahierDeTexteApp')
 
 			  // 1. cours
 			  if ( $scope.creneau.details.cours.id !== undefined ) {
-			      $scope.cours = Cours.get( { id: $scope.creneau.details.cours.id } ).$promise;
+			      $scope.cours = API.get_cours( $scope.creneau.details.cours.id );
 			      $scope.cours.then( function success() {
 				  $scope.cours.create = false;
 			      },
@@ -181,7 +181,7 @@ angular.module('cahierDeTexteApp')
 			  // 2. devoir
 			  if ( $scope.creneau.details.devoirs.length > 0 ) {
 			      $scope.devoirs = $scope.creneau.details.devoirs.map(function(devoir) {
-				  return Devoirs.get( { id: devoir.id } );
+				  return API.get_devoir( devoir.id );
 			      });
 			      $q.all( $scope.devoirs ).then( function success() {
 				  $scope.devoirs.create = false;
@@ -333,7 +333,7 @@ angular.module('cahierDeTexteApp')
 			  } );
 		      };
 
-		      $scope.types_de_devoir = TypesDeDevoir.query();
+		      $scope.types_de_devoir = API.query_types_de_devoir();
 
 		      // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
 		      EmploisDuTemps.query( function( response ) {
