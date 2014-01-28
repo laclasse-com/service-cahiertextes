@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EnseignantCtrl',
-		[ '$scope', '$rootScope', '$modal', '$q', 'EmploisDuTemps', 'Matieres', 'Cours', 'Devoirs', 'TypesDeDevoir', 'Regroupements',
-		  function ( $scope, $rootScope, $modal, $q, EmploisDuTemps, Matieres, Cours, Devoirs, TypesDeDevoir, Regroupements ) {
+		[ '$scope', '$rootScope', '$modal', '$q', 'EmploisDuTemps', 'Cours', 'Devoirs', 'TypesDeDevoir', 'Annuaire',
+		  function ( $scope, $rootScope, $modal, $q, EmploisDuTemps, Cours, Devoirs, TypesDeDevoir, Annuaire ) {
 
 		      ///////////////////////////////////////// Sous-contrôleurs
 		      // popup de création/édition des cours et devoirs ////////
@@ -286,7 +286,7 @@ angular.module('cahierDeTexteApp')
 
 			  // composition du titre
 			  if ( $scope.matieres[ event.details.matiere_id ] === undefined ) {
-			      $scope.matieres[ event.details.matiere_id ] = Matieres.get({ matiere_id: event.details.matiere_id }).$promise;
+			      $scope.matieres[ event.details.matiere_id ] = Annuaire.get_matiere( event.details.matiere_id );
 			  }
 			  $scope.matieres[ event.details.matiere_id ].then( function success( response ) {
 			      calendar_event.title = response.libelle_long;
@@ -311,7 +311,7 @@ angular.module('cahierDeTexteApp')
 			      .pluck( 'regroupement_id' )
 			      .uniq()
 			      .map( function( regroupement_id ) {
-				  return Regroupements.get({ regroupement_id: regroupement_id }).$promise;
+				  return Annuaire.get_regroupement( regroupement_id );
 			      })
 			      .value();
 		      };

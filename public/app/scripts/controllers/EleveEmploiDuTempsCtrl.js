@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EleveEmploiDuTempsCtrl',
-		[ '$scope', '$rootScope', '$modal', 'EmploisDuTemps', 'Matieres', 'TypesDeDevoir',
-		  function ( $scope, $rootScope, $modal, EmploisDuTemps, Matieres, TypesDeDevoir ) {
+		[ '$scope', '$rootScope', '$modal', 'EmploisDuTemps', 'Annuaire', 'TypesDeDevoir',
+		  function ( $scope, $rootScope, $modal, EmploisDuTemps, Annuaire, TypesDeDevoir ) {
 		      $scope.matieres = {};
 		      $scope.types_de_devoir = {};
 
@@ -100,7 +100,7 @@ angular.module('cahierDeTexteApp')
 
 			  // composition du titre
 			  if ( $scope.matieres[ item_emploi_du_temps.matiere_id ] === undefined ) {
-			      $scope.matieres[ item_emploi_du_temps.matiere_id ] = Matieres.get({ matiere_id: item_emploi_du_temps.matiere_id }).$promise;
+			      $scope.matieres[ item_emploi_du_temps.matiere_id ] = Annuaire.get_matiere( item_emploi_du_temps.matiere_id );
 			  }
 			  $scope.matieres[ item_emploi_du_temps.matiere_id ].then( function success( response ) {
 			      cours_event.title = response.libelle_long;
