@@ -90,7 +90,7 @@ angular.module('cahierDeTexteApp')
 	     [ 'TypesDeDevoir', 'Classes', 'Cours', 'Devoirs', 'Enseignants', 'EmploisDuTemps',
 	       function( TypesDeDevoir, Classes, Cours, Devoirs, Enseignants, EmploisDuTemps ) {
 		   this.query_classes = _.memoize( function( uai ) {
-		       return Classes.query({ etablissement_id: uai }).$promise;
+		       return Classes.query({ uai: uai }).$promise;
 		   } );
 
 		   this.query_types_de_devoir = _.memoize( function() {
