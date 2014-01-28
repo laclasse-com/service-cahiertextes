@@ -4,117 +4,117 @@ require_relative '../models/plage_horaire'
 require_relative '../models/creneau_emploi_du_temps'
 
 module CahierDeTextesAPI
-  class CreneauxEmploiDuTempsAPI < Grape::API
+   class CreneauxEmploiDuTempsAPI < Grape::API
 
-    desc 'renvoi les créneaux'
-    get  do
-      CreneauEmploiDuTemps.all
-    end
-
-    desc 'renvoi un créneau'
-    params {
-      requires :id
-    }
-    get '/:id' do
-      CreneauEmploiDuTemps[ params[:id] ]
-    end
-
-    desc 'crée un créneau s\'il n\'existe pas déjà un semblable'
-    params {
-      requires :jour_de_la_semaine, type: Integer
-      requires :heure_debut, type: Time
-      requires :heure_fin, type: Time
-      requires :matiere_id
-      requires :regroupement_id
-
-      optional :salle_id
-    }
-    post '/jour_de_la_semaine/:jour_de_la_semaine/debut/:heure_debut/fin/:heure_fin/matiere/:matiere_id/regroupement/:regroupement_id' do
-      plage_horaire_debut = PlageHoraire.where(debut: params[:heure_debut] ).first
-      if plage_horaire_debut.nil?
-        plage_horaire_debut = PlageHoraire.create( label: '',
-                                                   debut: params[:heure_debut],
-                                                   fin: params[:heure_debut] + 1800 )
+      desc 'renvoi les créneaux'
+      get  do
+         CreneauEmploiDuTemps.all
       end
 
-      plage_horaire_fin = PlageHoraire.where(fin: params[:heure_fin] ).first
-      if plage_horaire_fin.nil?
-        plage_horaire_fin = PlageHoraire.create( label: '',
-                                                 debut: params[:heure_fin] - 1800,
-                                                 fin: params[:heure_fin] )
+      desc 'renvoi un créneau'
+      params {
+         requires :id
+      }
+      get '/:id' do
+         CreneauEmploiDuTemps[ params[:id] ]
       end
 
-      creneau = CreneauEmploiDuTemps.create( debut: plage_horaire_debut.id,
-                                             fin: plage_horaire_fin.id,
-                                             jour_de_la_semaine: params[:jour_de_la_semaine],
-                                             matiere_id: params[:matiere_id] )
-      CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
-      CreneauEmploiDuTempsEnseignant.create( creneau_emploi_du_temps_id: creneau.id,
-                                             enseignant_id: user.uid )
-      CreneauEmploiDuTempsEnseignant.restrict_primary_key
-      CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
-      CreneauEmploiDuTempsRegroupement.create( creneau_emploi_du_temps_id: creneau.id,
-                                               regroupement_id: params[:regroupement_id] )
-      CreneauEmploiDuTempsRegroupement.restrict_primary_key
+      desc 'crée un créneau s\'il n\'existe pas déjà un semblable'
+      params {
+         requires :jour_de_la_semaine, type: Integer
+         requires :heure_debut, type: Time
+         requires :heure_fin, type: Time
+         requires :matiere_id
+         requires :regroupement_id
 
-      if params[:salle_id]
-        CreneauEmploiDuTempsSalle.unrestrict_primary_key
-        CreneauEmploiDuTempsSalle.create( creneau_emploi_du_temps_id: creneau.id,
-                                          salle_id: params[:salle_id] )
-        CreneauEmploiDuTempsSalle.restrict_primary_key
+         optional :salle_id
+      }
+      post '/jour_de_la_semaine/:jour_de_la_semaine/debut/:heure_debut/fin/:heure_fin/matiere/:matiere_id/regroupement/:regroupement_id' do
+         plage_horaire_debut = PlageHoraire.where(debut: params[:heure_debut] ).first
+         if plage_horaire_debut.nil?
+            plage_horaire_debut = PlageHoraire.create( label: '',
+                                                         debut: params[:heure_debut],
+                                                         fin: params[:heure_debut] + 1800 )
+         end
+
+         plage_horaire_fin = PlageHoraire.where(fin: params[:heure_fin] ).first
+         if plage_horaire_fin.nil?
+            plage_horaire_fin = PlageHoraire.create( label: '',
+                                                       debut: params[:heure_fin] - 1800,
+                                                       fin: params[:heure_fin] )
+         end
+
+         creneau = CreneauEmploiDuTemps.create( debut: plage_horaire_debut.id,
+                                                  fin: plage_horaire_fin.id,
+                                                  jour_de_la_semaine: params[:jour_de_la_semaine],
+                                                  matiere_id: params[:matiere_id] )
+         CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
+         CreneauEmploiDuTempsEnseignant.create( creneau_emploi_du_temps_id: creneau.id,
+                                                  enseignant_id: user.uid )
+         CreneauEmploiDuTempsEnseignant.restrict_primary_key
+         CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
+         CreneauEmploiDuTempsRegroupement.create( creneau_emploi_du_temps_id: creneau.id,
+                                                    regroupement_id: params[:regroupement_id] )
+         CreneauEmploiDuTempsRegroupement.restrict_primary_key
+
+         if params[:salle_id]
+            CreneauEmploiDuTempsSalle.unrestrict_primary_key
+            CreneauEmploiDuTempsSalle.create( creneau_emploi_du_temps_id: creneau.id,
+                                                salle_id: params[:salle_id] )
+            CreneauEmploiDuTempsSalle.restrict_primary_key
+         end
+
+         creneau
       end
 
-      creneau
-    end
+      desc 'mets à jour un créneau'
+      params {
+         requires :id
+         requires :jour_de_la_semaine, type: Integer
+         requires :heure_debut, type: Time
+         requires :heure_fin, type: Time
+         requires :matiere_id
+         requires :regroupement_id
 
-    desc 'mets à jour un créneau'
-    params {
-      requires :id
-      requires :jour_de_la_semaine, type: Integer
-      requires :heure_debut, type: Time
-      requires :heure_fin, type: Time
-      requires :matiere_id
-      requires :regroupement_id
+         optional :salle_id
+      }
+      put '/:id/jour_de_la_semaine/:jour_de_la_semaine/debut/:heure_debut/fin/:heure_fin/matiere/:matiere_id/regroupement/:regroupement_id' do
+         params.each { |pm|
+            p pm.class
+            p pm }
 
-      optional :salle_id
-    }
-    put '/:id/jour_de_la_semaine/:jour_de_la_semaine/debut/:heure_debut/fin/:heure_fin/matiere/:matiere_id/regroupement/:regroupement_id' do
-      params.each { |pm|
-        p pm.class
-        p pm }
+         plage_horaire_debut = PlageHoraire.where(debut: params[:heure_debut] ).first
+         if plage_horaire_debut.nil?
+            plage_horaire_debut = PlageHoraire.create( label: '',
+                                                         debut: params[:heure_debut],
+                                                         fin: params[:heure_debut] + 1800 )
+         end
 
-      plage_horaire_debut = PlageHoraire.where(debut: params[:heure_debut] ).first
-      if plage_horaire_debut.nil?
-        plage_horaire_debut = PlageHoraire.create( label: '',
-                                                   debut: params[:heure_debut],
-                                                   fin: params[:heure_debut] + 1800 )
+         plage_horaire_fin = PlageHoraire.where(fin: params[:heure_fin] ).first
+         if plage_horaire_fin.nil?
+            plage_horaire_fin = PlageHoraire.create( label: '',
+                                                       debut: params[:heure_fin] - 1800,
+                                                       fin: params[:heure_fin] )
+         end
+
+         creneau = CreneauEmploiDuTemps[ params[:id] ]
+         creneau.jour_de_la_semaine = params[:jour_de_la_semaine]
+         creneau.debut = plage_horaire_debut.id
+         creneau.fin = plage_horaire_fin.id
+         creneau.matiere_id = params[:matiere_id].to_s
+
+         # FIXME: traiter regroupement
+
+         creneau.save
       end
 
-      plage_horaire_fin = PlageHoraire.where(fin: params[:heure_fin] ).first
-      if plage_horaire_fin.nil?
-        plage_horaire_fin = PlageHoraire.create( label: '',
-                                                 debut: params[:heure_fin] - 1800,
-                                                 fin: params[:heure_fin] )
-      end
+      # desc 'efface un créneau'
+      # params {
+      #   requires :id
+      # }
+      # delete '/:id' do
+      #   { todo: true } # TODO
+      # end
 
-      creneau = CreneauEmploiDuTemps[ params[:id] ]
-      creneau.jour_de_la_semaine = params[:jour_de_la_semaine]
-      creneau.debut = plage_horaire_debut.id
-      creneau.fin = plage_horaire_fin.id
-      creneau.matiere_id = params[:matiere_id].to_s
-
-      # FIXME: traiter regroupement
-
-      creneau.save
-    end
-
-    # desc 'efface un créneau'
-    # params {
-    #   requires :id
-    # }
-    # delete '/:id' do
-    #   { todo: true } # TODO
-    # end
-
-  end
+   end
 end
