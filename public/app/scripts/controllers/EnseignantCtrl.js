@@ -260,7 +260,11 @@ angular.module('cahierDeTexteApp')
 			      if ( devoirs.length > 0 ) {
 				  calendar_event.color = $rootScope.theme.calendar.devoir;
 			      } else {
-				  calendar_event.color = $rootScope.theme.calendar.saisie;
+				  if ( cours.date_validation != null ) {
+				      calendar_event.color = $rootScope.theme.validated.base;
+				  } else {
+				      calendar_event.color = $rootScope.theme.calendar.saisie;
+				  }
 			      }
 			  } else {
 			      calendar_event.color = $rootScope.theme.calendar.vide;
