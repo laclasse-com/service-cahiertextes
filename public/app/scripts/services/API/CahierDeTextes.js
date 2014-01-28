@@ -100,9 +100,9 @@ angular.module('cahierDeTexteApp')
 		       return TypesDeDevoir.get({ id: id }).$promise;
 		   } );
 
-		   // this.query_emplois_du_temps = _.memoize( function() {
-		   //     return EmploisDuTemps.query().$promise;
-		   // } );
+		   this.query_emplois_du_temps = _.memoize( function() {
+		       return EmploisDuTemps.query().$promise;
+		   } );
 
 		   this.query_enseignants = _.memoize( function( uai ) {
 		       return Enseignants.query({ etablissement_id: uai }).$promise;
