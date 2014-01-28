@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantCtrl',
-		[ '$scope', '$rootScope', '$stateParams', '$q', 'Enseignants', 'Cours', 'Annuaire',
-		  function( $scope, $rootScope, $stateParams, $q, Enseignants, Cours, Annuaire ) {
+		[ '$scope', '$rootScope', '$stateParams', '$q', 'API', 'Cours', 'Annuaire',
+		  function( $scope, $rootScope, $stateParams, $q, API, Cours, Annuaire ) {
 		      $scope.enseignant_id = $stateParams.enseignant_id;
 		      $scope.classe = -1;
 		      $scope.mois = $rootScope.mois;
@@ -147,10 +147,10 @@ angular.module('cahierDeTexteApp')
 			      .pluck('matiere_id')
 			      .uniq()
 			      .each(function( matiere_id ) {
-		  Annuaire.get_matiere( matiere_id ).then(
-						       function( response ) {
-							   matieres[matiere_id] = response.libelle_long;
-						       });
+				  Annuaire.get_matiere( matiere_id ).then(
+				      function( response ) {
+					  matieres[matiere_id] = response.libelle_long;
+				      });
 			      });
 			  return matieres;
 		      };
@@ -161,45 +161,44 @@ angular.module('cahierDeTexteApp')
 			      .pluck('classe_id')
 			      .uniq()
 			      .map(function( regroupement_id ) {
-		  return Annuaire.get_regroupement( regroupement_id );
+				  return Annuaire.get_regroupement( regroupement_id );
 			      })
 			      .value();
 		      };
 
 		      // Récupération et consommation des données
-		  Annuaire.get_user( $scope.enseignant_id ).then(
-				   function( response ) {
-				       $scope.enseignant = response;
-				       $scope.enseignant.matieres = _($scope.enseignant.matieres_enseignees).uniq( function( matiere ) {
-					   return matiere.matiere_enseignee_id;
-				       });
-				       $scope.enseignant.prof_principal = _.chain($scope.enseignant.matieres_enseignees)
-					   .filter( function( matiere ) {
-					       return matiere.prof_principal == 'O';
-					   })
-				       .map( function( matiere ) {
-					   return matiere.libelle_aaf;
-				       })
-				       .value();
-				   });
+		      Annuaire.get_user( $scope.enseignant_id ).then(
+			  function( response ) {
+			      $scope.enseignant = response;
+			      $scope.enseignant.matieres = _($scope.enseignant.matieres_enseignees).uniq( function( matiere ) {
+				  return matiere.matiere_enseignee_id;
+			      });
+			      $scope.enseignant.prof_principal = _.chain($scope.enseignant.matieres_enseignees)
+				  .filter( function( matiere ) {
+				      return matiere.prof_principal == 'O';
+				  })
+				  .map( function( matiere ) {
+				      return matiere.libelle_aaf;
+				  })
+				  .value();
+			  });
 
-		      Enseignants.get({ enseignant_id: $stateParams.enseignant_id,
-					  etablissement_id: '0134567A' },
-					function success( response ) {
-					    $scope.raw_data = response.saisies;
+		      API.get_enseignant( $stateParams.enseignant_id, '0134567A' ).then(
+				      function success( response ) {
+					  $scope.raw_data = response.saisies;
 
-					    $scope.matieres = $scope.extract_matieres( $scope.raw_data );
-					    // $q.all() permet d'attendre que tout les appels d' soient résolus avant de
-					    //   - remplir $scope.classes
-					    //   - puis d'appeler $scope.process_data() qui va pouvoir consommer $scope.classes
-					    //     pour passer les noms des classes aux graphiques qui ne peuvent pas profiter
-					    //     du data-binding d'angularJS car ils dessinent des canvas.
-					    $q.all( $scope.extract_classes_promises( $scope.raw_data ) )
-						.then( function( classes ) {
-						    _(classes).each(function( classe ) {
-							$scope.classes[classe.id] = classe.libelle !== null ? classe.libelle : classe.libelle_aaf;
-						    });
-						    $scope.process_data();
-						});
-					});
+					  $scope.matieres = $scope.extract_matieres( $scope.raw_data );
+					  // $q.all() permet d'attendre que tout les appels d' soient résolus avant de
+					  //   - remplir $scope.classes
+					  //   - puis d'appeler $scope.process_data() qui va pouvoir consommer $scope.classes
+					  //     pour passer les noms des classes aux graphiques qui ne peuvent pas profiter
+					  //     du data-binding d'angularJS car ils dessinent des canvas.
+					  $q.all( $scope.extract_classes_promises( $scope.raw_data ) )
+					      .then( function( classes ) {
+						  _(classes).each(function( classe ) {
+						      $scope.classes[classe.id] = classe.libelle !== null ? classe.libelle : classe.libelle_aaf;
+						  });
+						  $scope.process_data();
+					      });
+				      });
 		  } ] );
