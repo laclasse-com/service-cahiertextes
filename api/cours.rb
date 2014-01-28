@@ -36,10 +36,6 @@ module CahierDeTextesAPI
     }
     post do
        error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS', '0699999Z' ) || user.is?( 'DIR', '0699999Z' )
-       # error!( '401 Unauthorized', 401 ) unless user.profils.map {
-       #    |profil|
-       #    profil['profil_id']
-       # }.include? 'ENS'
 
       cours = Cours.create( cahier_de_textes_id: params[:cahier_de_textes_id],
                             creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
