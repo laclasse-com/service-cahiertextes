@@ -28,7 +28,7 @@ module CahierDeTextesAPI
     end
 
     get '/' do
-      erb :index # '<a href="/app/index.html">Mon cahier de textes</a>'
+      erb :index
     end
 
     # routes pour la gestion de l'authentification
