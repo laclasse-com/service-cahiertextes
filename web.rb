@@ -39,7 +39,7 @@ module CahierDeTextesAPI
     end
 
     get '/logout' do
-      logout! 'http://localhost:9292/'
+      logout! "#{env['rack.url_scheme']}://#{env['HTTP_HOST']}/"
     end
 
     # Personne ne devrait jamais arriver sur les 3 routes suivantes...
