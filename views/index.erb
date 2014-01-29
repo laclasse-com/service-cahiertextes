@@ -54,7 +54,8 @@
 	    </li>
 	  </ul>
 	  <div class="pull-right" data-ng-controller="HeaderCtrl">
-	    {{current_user['user']}} ({{current_user['uid']}})
+	    <i class="glyphicon glyphicon-eye-open" rel="tooltip" title="DEBUG: {{current_user}}"></i>
+	    {{current_user['LaclasseCivilite']}} {{current_user['LaclassePrenom']}} {{current_user['LaclasseNom']}} ({{current_user['uid']}})
 	    <a class="btn btn-danger" href="/logout">Déconnexion</a>
 	  </div>
 	</div>
