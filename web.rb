@@ -24,7 +24,7 @@ module CahierDeTextesAPI
     helpers AuthenticationHelpers
 
     before  do
-      pass if %w[ auth ].include? request.path_info.split('/')[1]
+      pass if %w[ auth ].include? request.path_info.split('/')[2]
       login! request.path_info unless is_logged?
     end
 
