@@ -14,9 +14,9 @@ module AuthenticationHelpers
       unless route.empty?
          route += "?#{env['QUERY_STRING']}" unless env['QUERY_STRING'].empty?
          route = URI.escape( "#{env['rack.url_scheme']}://#{env['HTTP_HOST']}#{route}" )
-         redirect "/auth/cas?url=#{URI.encode( route )}"
+         redirect "#{APP_VIRTUAL_PATH}/auth/cas?url=#{URI.encode( route )}"
       end
-      redirect '/auth/cas'
+      redirect "#{APP_VIRTUAL_PATH}/auth/cas"
    end
 
    #
