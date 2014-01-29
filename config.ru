@@ -16,9 +16,9 @@ require ::File.expand_path( '../api', __FILE__ )
 require ::File.expand_path( '../web', __FILE__ )
 
 use Rack::Rewrite do
-  rewrite %r{/api/(.*)}, "#{APP_VIRTUAL_PATH}/api/$1"
-  rewrite %r{/logout}, "#{APP_VIRTUAL_PATH}/logout"
-  rewrite %r{#{APP_VIRTUAL_PATH}(/.*(css|js|ttf|woff|html|png|jpg|jpeg|gif)$)}, '/$1'
+  # rewrite %r{^/api/(.*)$}, "#{APP_VIRTUAL_PATH}/api/$1"
+  rewrite %r{^/logout/?$}, "#{APP_VIRTUAL_PATH}/logout"
+  rewrite %r{^#{APP_VIRTUAL_PATH}(/.*(css|js|ttf|woff|html|png|jpg|jpeg|gif)$)}, '$1'
 end
 
 use Rack::Session::Cookie,

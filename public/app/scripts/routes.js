@@ -1,23 +1,11 @@
 'use strict';
 
 angular.module( 'cahierDeTexteApp' )
-    .config( [ '$stateProvider', '$urlRouterProvider', function ( $stateProvider, $urlRouterProvider ) {
+    .config( [ '$stateProvider', '$urlRouterProvider',
+	       function ( $stateProvider, $urlRouterProvider ) {
 	$urlRouterProvider.otherwise('/');
 
 	$stateProvider
-	    // .state('racine', {
-	//	url: '/',
-	//	templateUrl: 'app/views/main.html',
-	//	controller: 'MainCtrl'
-	//     })
-
-	// // Authentification ////////////////////////////////////////////////////
-	//     .state('connected', {
-	//	url: '/connected',
-	//	templateUrl: 'app/views/connected.html',
-	//	controller: 'AuthConnectedCtrl'
-	//     })
-
 	// Principal ///////////////////////////////////////////////////////////
 	    .state('principal', {
 		url: '/principal',
