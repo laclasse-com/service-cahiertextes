@@ -5,6 +5,7 @@
 require 'rubygems'
 require 'bundler'
 
+require_relative './config/options'
 require_relative './config/environment'
 require_relative './config/CASLaclasseCom'
 
@@ -27,32 +28,32 @@ module CahierDeTextesAPI
       login! request.path_info unless is_logged?
     end
 
-    get '/' do
+    get "#{APP_VIRTUAL_PATH}/" do
       erb :index
     end
 
     # routes pour la gestion de l'authentification
-    get '/auth/:provider/callback' do
+    get "#{APP_VIRTUAL_PATH}/auth/:provider/callback" do
       init_session( request.env )
 
       redirect params[:url]
     end
 
-    get '/logout' do
-      logout! "#{env['rack.url_scheme']}://#{env['HTTP_HOST']}/"
+    get "#{APP_VIRTUAL_PATH}/logout" do
+      logout! "#{env['rack.url_scheme']}://#{env['HTTP_HOST']}#{APP_VIRTUAL_PATH}/"
     end
 
     # Personne ne devrait jamais arriver sur les 3 routes suivantes...
-    get '/auth/failure' do
+    get "#{APP_VIRTUAL_PATH}/auth/failure" do
       erb :auth_failure
     end
 
-    get '/auth/:provider/deauthorized' do
+    get "#{APP_VIRTUAL_PATH}/auth/:provider/deauthorized" do
       erb :auth_deauthorized
     end
 
-    get '/login' do
-      login! '/'
+    get "#{APP_VIRTUAL_PATH}/login" do
+      login! "#{APP_VIRTUAL_PATH}/"
     end
 
   end

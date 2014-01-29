@@ -10,21 +10,31 @@
 
 require ::File.expand_path( '../config/CASLaclasseCom', __FILE__ )
 require ::File.expand_path( '../config/environment', __FILE__ )
+require ::File.expand_path( '../config/options', __FILE__ )
 
 require ::File.expand_path( '../api', __FILE__ )
 require ::File.expand_path( '../web', __FILE__ )
 
-APP_VIRTUAL_PATH = '/'
+use Rack::Rewrite do
+  rewrite %r{/api/(.*)}, '/ct/api/$1'
+  rewrite %r{/ct/(.*(css|js|ttf|woff|html|png|jpg|jpeg|gif))}, '/$1'
+end
 
 use Rack::Session::Cookie,
     key: 'rack.session',
-    path: '/',
+    path: APP_VIRTUAL_PATH,
     expire_after: 3600, # In seconds
     secret: 'e862960f7140cc24c8e933fd0bfa5f3bd8cdc6c3' # Digest::SHA1.hexdigest( SecureRandom.base64 )
 
 use OmniAuth::Builder do
+  configure do |config|
+    config.path_prefix =  "#{APP_VIRTUAL_PATH}/auth"
+  end
   provider :cas, CASLaclasseCom::OPTIONS
 end
 
-run Rack::Cascade.new [ CahierDeTextesAPI::API,
-                        CahierDeTextesAPI::Web ]
+map "#{APP_VIRTUAL_PATH}/api" do
+  run CahierDeTextesAPI::API
+end
+
+run CahierDeTextesAPI::Web
