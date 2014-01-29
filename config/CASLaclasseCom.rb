@@ -9,5 +9,4 @@ module CASLaclasseCom
               login_url: '/sso-mysql/login',
               service_validate_url: '/sso-mysql/serviceValidate',
               logout_url: '/sso-mysql/logout' }
-  APIKEY = ''
 end
