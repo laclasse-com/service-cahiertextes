@@ -2,8 +2,16 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EnseignantCtrl',
-		[ '$scope', '$rootScope', '$modal', '$q', 'API', 'Annuaire', 'Cours', 'Devoirs', 'EmploisDuTemps',
-		  function ( $scope, $rootScope, $modal, $q, API, Annuaire, Cours, Devoirs, EmploisDuTemps ) {
+		[ '$scope', '$rootScope', '$modal', '$q', 'API', 'Annuaire', 'Cours', 'Devoirs', 'EmploisDuTemps', 'CurrentUser',
+		  function ( $scope, $rootScope, $modal, $q, API, Annuaire, Cours, Devoirs, EmploisDuTemps, CurrentUser ) {
+
+		      // CurrentUser.getCurrentUser().then( function( response ) {
+		      //	  if ( _(response.data.details.profils).pluck('profil_id').indexOf( 'ENS' ) == -1 ) {
+		      //	      console.log('redirect to elsewhere')
+		      //	  } else {
+		      //	      console.log('welcome')
+		      //	  }
+		      // })
 
 		      ///////////////////////////////////////// Sous-contrôleurs
 		      // popup de création/édition des cours et devoirs ////////
@@ -22,10 +30,10 @@ angular.module('cahierDeTexteApp')
 			  $scope.creneaux_similaires = _.chain(raw_data)
 			      .where({matiere_id: $scope.matiere_id})
 			      .reject(function( creneau ) {
+				  // FIXME: DEBUG
 				  return false // creneau.regroupement_id == $scope.regroupement_id;
 			      })
 			      .value();
-			  console.log($scope.creneaux_similaires)
 
 			  var create_devoir = function( cours, types_de_devoir ) {
 			      var date = new Date();

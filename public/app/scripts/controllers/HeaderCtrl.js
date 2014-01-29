@@ -2,10 +2,13 @@
 
 angular.module('cahierDeTexteApp')
     .controller('HeaderCtrl',
-		[ '$scope', 'CurrentUser',
-		  function ($scope, CurrentUser) {
-		      CurrentUser.getCurrentUser().success(function( response ) {
+		[ '$scope', '$location', 'CurrentUser',
+		  function ($scope, $location, CurrentUser) {
+		      CurrentUser.getCurrentUser().success( function( response ) {
 			  $scope.current_user = response;
+			  $scope.current_user_display = response;
 		      });
+
+		      $location.path( '/#/eleve' );
 
 		  } ] );
