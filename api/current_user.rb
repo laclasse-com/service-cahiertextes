@@ -5,7 +5,14 @@ module CahierDeTextesAPI
 
     desc 'renvoi les infos de l\'utilisateur identifié'
     get  do
-      env['rack.session'][:current_user]
+       utilisateur = env['rack.session'][:current_user]
+
+       utilisateur['classes'] = [] unless utilisateur.has_key? 'classes'
+
+       # FIXME: DEBUG
+       p utilisateur
+       utilisateur
+      # env['rack.session'][:current_user]
     end
 
   end

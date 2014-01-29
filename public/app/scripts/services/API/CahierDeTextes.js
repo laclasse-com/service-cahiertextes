@@ -2,10 +2,10 @@
 
 angular.module('cahierDeTexteApp')
     .service('CurrentUser',
-	     [ '$http', 'Users',
-	       function( $http, Users ) {
+	     [ '$http', '$rootScope', 'Users',
+	       function( $http, $rootScope, Users ) {
 		   this.getCurrentUser = _.memoize( function() {
-		       var current_user = $http.get( '/ct/api/v0/current_user' ).success(function( response ) {
+		       var current_user = $http.get( $rootScope.APP_VIRTUAL_PATH + '/api/v0/current_user' ).success(function( response ) {
 			   Users.get({ user_id: response.uid }).$promise.then(function( details ) {
 			       response.details = details;
 			   });
@@ -16,30 +16,33 @@ angular.module('cahierDeTexteApp')
 	       } ] );
 
 angular.module('cahierDeTexteApp')
-  .factory('Classes', [ '$resource', function($resource) {
-      return $resource( '/ct/api/v0/etablissements/:uai/classes/:id',
+  .factory('Classes', [ '$resource', '$rootScope',
+function( $resource, $rootScope ) {
+      return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/etablissements/:uai/classes/:id',
 			{ uai: '@uai',
 			  id: '@id' } );
   } ] );
 
 angular.module('cahierDeTexteApp')
     .factory('Cours',
-	     [ '$resource', function($resource) {
-		 return $resource( '/ct/api/v0/cours/:id',
+	     [ '$resource', '$rootScope',
+function( $resource, $rootScope ) {
+		 return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/cours/:id',
 				   { id: '@id',
 				     regroupement_id: '@regroupement_id',
 				     creneau_emploi_du_temps_id: '@creneau_emploi_du_temps_id' },
 				   { update: { method: 'PUT' },
 				     valide: { method: 'PUT',
-					       url: '/ct/api/v0/cours/:id/valide' },
+					       url: $rootScope.APP_VIRTUAL_PATH + '/api/v0/cours/:id/valide' },
 				     copie: { method: 'PUT',
-					      url: '/ct/api/v0/cours/:id/copie/regroupement/:regroupement_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id' } } );
+					      url: $rootScope.APP_VIRTUAL_PATH + '/api/v0/cours/:id/copie/regroupement/:regroupement_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id' } } );
 	     } ] );
 
 angular.module('cahierDeTexteApp')
     .factory('CreneauEmploiDuTemps',
-	     [ '$resource', function($resource) {
-		 return $resource( '/ct/api/v0/creneau_emploi_du_temps/:id',
+	     [ '$resource', '$rootScope',
+function( $resource, $rootScope ) {
+		 return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/creneau_emploi_du_temps/:id',
 				   { id: '@id',
 				     regroupement_id: '@regroupement_id',
 				     jour_de_la_semaine: '@jour_de_la_semaine',
@@ -51,35 +54,36 @@ angular.module('cahierDeTexteApp')
 
 angular.module('cahierDeTexteApp')
     .factory('Devoirs',
-	     [ '$resource', function($resource) {
-		 return $resource( '/ct/api/v0/devoirs/:id',
+	     [ '$resource', '$rootScope',
+	       function( $resource, $rootScope ) {
+		 return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/devoirs/:id',
 				   { id: '@id' },
 				   { update: { method: 'PUT' },
 				     fait: { method: 'PUT',
-					     url: '/ct/api/v0/devoirs/:id/fait' }});
+					     url: $rootScope.APP_VIRTUAL_PATH + '/api/v0/devoirs/:id/fait' }});
 	     } ] );
 
 angular.module('cahierDeTexteApp')
   .factory('EmploisDuTemps',
-	   [ '$resource',
-	     function($resource) {
-		 return $resource( '/ct/api/v0/emplois_du_temps' );
+	   [ '$resource', '$rootScope',
+function( $resource, $rootScope ) {
+		 return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/emplois_du_temps' );
 	     } ] );
 
 angular.module('cahierDeTexteApp')
   .factory('Enseignants',
-	   [ '$resource',
-	     function($resource) {
-		 return $resource( '/ct/api/v0/etablissements/:etablissement_id/enseignants/:enseignant_id',
+	   [ '$resource', '$rootScope',
+function( $resource, $rootScope ) {
+		 return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/etablissements/:etablissement_id/enseignants/:enseignant_id',
 				   { etablissement_id: '@etablissement_id',
 				     enseignant_id: '@enseignant_id' } );
 	     } ] );
 
 angular.module('cahierDeTexteApp')
   .factory('TypesDeDevoir',
-	   [ '$resource',
-	     function($resource) {
-		 return $resource( '/ct/api/v0/types_de_devoir/:id',
+	   [ '$resource', '$rootScope',
+	     function( $resource, $rootScope ) {
+		 return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/types_de_devoir/:id',
 				   { id: '@id' });
 	     } ] );
 

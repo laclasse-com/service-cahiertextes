@@ -2,6 +2,8 @@
 
 angular.module( 'cahierDeTexteApp' )
     .run( [ '$rootScope', function ($rootScope) {
+	$rootScope.APP_VIRTUAL_PATH = '/ct';
+
 	$rootScope.mois = [ 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre' ];
 	// définition des couleurs
 	$rootScope.theme = {
