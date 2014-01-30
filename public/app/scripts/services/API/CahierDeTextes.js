@@ -16,76 +16,86 @@ angular.module('cahierDeTexteApp')
 	       } ] );
 
 angular.module('cahierDeTexteApp')
-  .factory('Classes', [ '$resource', '$rootScope',
-function( $resource, $rootScope ) {
-      return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/etablissements/:uai/classes/:id',
-			{ uai: '@uai',
-			  id: '@id' } );
-  } ] );
+    .factory('Classes', [ '$resource', '$rootScope',
+			  function( $resource, $rootScope ) {
+			      return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/etablissements/:uai/classes/:id',
+						{ uai: '@uai',
+						  id: '@id' } );
+			  } ] );
 
 angular.module('cahierDeTexteApp')
     .factory('Cours',
 	     [ '$resource', '$rootScope',
-function( $resource, $rootScope ) {
-		 return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/cours/:id',
-				   { id: '@id',
-				     regroupement_id: '@regroupement_id',
-				     creneau_emploi_du_temps_id: '@creneau_emploi_du_temps_id' },
-				   { update: { method: 'PUT' },
-				     valide: { method: 'PUT',
-					       url: $rootScope.APP_VIRTUAL_PATH + '/api/v0/cours/:id/valide' },
-				     copie: { method: 'PUT',
-					      url: $rootScope.APP_VIRTUAL_PATH + '/api/v0/cours/:id/copie/regroupement/:regroupement_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id' } } );
-	     } ] );
+	       function( $resource, $rootScope ) {
+		   return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/cours/:id',
+				     { update: { method: 'PUT' },
+				       valide: { method: 'PUT',
+						 url: $rootScope.APP_VIRTUAL_PATH + '/api/v0/cours/:id/valide' },
+				       copie: { method: 'PUT',
+						url: $rootScope.APP_VIRTUAL_PATH + '/api/v0/cours/:id/copie/regroupement/:regroupement_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id',
+						params: { id: '@id',
+							  regroupement_id: '@regroupement_id',
+							  creneau_emploi_du_temps_id: '@creneau_emploi_du_temps_id' } } },
+				     { id: '@id' } );
+	       } ] );
 
 angular.module('cahierDeTexteApp')
     .factory('CreneauEmploiDuTemps',
 	     [ '$resource', '$rootScope',
-function( $resource, $rootScope ) {
-		 return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/creneau_emploi_du_temps/:id',
-				   { id: '@id',
-				     regroupement_id: '@regroupement_id',
-				     jour_de_la_semaine: '@jour_de_la_semaine',
-				     heure_debut: '@heure_debut',
-				     heure_fin: '@heure_fin',
-				     matiere_id: '@matiere_id' },
-				   { update: { method: 'PUT' } } );
-	     } ] );
+	       function( $resource, $rootScope ) {
+		   return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/creneaux_emploi_du_temps/:id',
+				     { update: { method: 'PUT',
+						 url: $rootScope.APP_VIRTUAL_PATH + '/api/v0/creneaux_emploi_du_temps/:id/jour_de_la_semaine/:jour_de_la_semaine/debut/:heure_debut/fin/:heure_fin/matiere/:matiere_id/regroupement/:regroupement_id',
+						 params: { id: '@id',
+							   regroupement_id: '@regroupement_id',
+							   jour_de_la_semaine: '@jour_de_la_semaine',
+							   heure_debut: '@heure_debut',
+							   heure_fin: '@heure_fin',
+							   matiere_id: '@matiere_id' } } },
+				     { save: { method: 'POST',
+					       url: $rootScope.APP_VIRTUAL_PATH + '/api/v0/creneaux_emploi_du_temps/jour_de_la_semaine/:jour_de_la_semaine/debut/:heure_debut/fin/:heure_fin/matiere/:matiere_id/regroupement/:regroupement_id',
+					       params: { regroupement_id: '@regroupement_id',
+							 jour_de_la_semaine: '@jour_de_la_semaine',
+							 heure_debut: '@heure_debut',
+							 heure_fin: '@heure_fin',
+							 matiere_id: '@matiere_id' }} },
+				     { id: '@id' } );
+	       } ] );
 
 angular.module('cahierDeTexteApp')
     .factory('Devoirs',
 	     [ '$resource', '$rootScope',
 	       function( $resource, $rootScope ) {
-		 return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/devoirs/:id',
-				   { id: '@id' },
-				   { update: { method: 'PUT' },
-				     fait: { method: 'PUT',
-					     url: $rootScope.APP_VIRTUAL_PATH + '/api/v0/devoirs/:id/fait' }});
-	     } ] );
+		   return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/devoirs/:id',
+				     { update: { method: 'PUT' },
+				       fait: { method: 'PUT',
+					       url: $rootScope.APP_VIRTUAL_PATH + '/api/v0/devoirs/:id/fait' }},
+				     { id: '@id' });
+	       } ] );
 
 angular.module('cahierDeTexteApp')
-  .factory('EmploisDuTemps',
-	   [ '$resource', '$rootScope',
-function( $resource, $rootScope ) {
-		 return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/emplois_du_temps' );
-	     } ] );
+    .factory('EmploisDuTemps',
+	     [ '$resource', '$rootScope',
+	       function( $resource, $rootScope ) {
+		   return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/emplois_du_temps' );
+	       } ] );
 
 angular.module('cahierDeTexteApp')
-  .factory('Enseignants',
-	   [ '$resource', '$rootScope',
-function( $resource, $rootScope ) {
-		 return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/etablissements/:etablissement_id/enseignants/:enseignant_id',
-				   { etablissement_id: '@etablissement_id',
-				     enseignant_id: '@enseignant_id' } );
-	     } ] );
+    .factory('Enseignants',
+	     [ '$resource', '$rootScope',
+	       function( $resource, $rootScope ) {
+		   return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/etablissements/:etablissement_id/enseignants/:enseignant_id',
+				     { etablissement_id: '@etablissement_id',
+				       enseignant_id: '@enseignant_id' } );
+	       } ] );
 
 angular.module('cahierDeTexteApp')
-  .factory('TypesDeDevoir',
-	   [ '$resource', '$rootScope',
-	     function( $resource, $rootScope ) {
-		 return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/types_de_devoir/:id',
-				   { id: '@id' });
-	     } ] );
+    .factory('TypesDeDevoir',
+	     [ '$resource', '$rootScope',
+	       function( $resource, $rootScope ) {
+		   return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/types_de_devoir/:id',
+				     { id: '@id' });
+	       } ] );
 
 
 
