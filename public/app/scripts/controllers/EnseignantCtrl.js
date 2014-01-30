@@ -2,16 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EnseignantCtrl',
-		[ '$scope', '$rootScope', '$modal', '$q', 'API', 'Annuaire', 'Cours', 'Devoirs', 'EmploisDuTemps', 'CurrentUser',
-		  function ( $scope, $rootScope, $modal, $q, API, Annuaire, Cours, Devoirs, EmploisDuTemps, CurrentUser ) {
-
-		      // CurrentUser.getCurrentUser().then( function( response ) {
-		      //	  if ( _(response.data.details.profils).pluck('profil_id').indexOf( 'ENS' ) == -1 ) {
-		      //	      console.log('redirect to elsewhere')
-		      //	  } else {
-		      //	      console.log('welcome')
-		      //	  }
-		      // })
+		[ '$scope', '$rootScope', '$modal', '$q', 'API', 'Annuaire', 'Cours', 'Devoirs', 'EmploisDuTemps', 'CurrentUser', 'CreneauEmploiDuTemps',
+		  function ( $scope, $rootScope, $modal, $q, API, Annuaire, Cours, Devoirs, EmploisDuTemps, CurrentUser, CreneauEmploiDuTemps ) {
 
 		      ///////////////////////////////////////// Sous-contrôleurs
 		      // popup de création/édition des cours et devoirs ////////
@@ -116,13 +108,50 @@ angular.module('cahierDeTexteApp')
 			  $scope.calendar.options.selectable = true;
 			  $scope.calendar.options.selectHelper = true;
 			  $scope.calendar.options.select = function(start, end, allDay) {
-			      console.log('TODO: création plage horaire')
-			      console.log('weekDay: ' + ( start.getDay() + 1 ) )
-			      console.log('Start: ' + start)
-			      console.log('End: ' + end)
-			      console.log('Allday long?: ' + allDay)
-			      console.log('Demander matiere')
-			      console.log('Demander classe')
+			      var cedt = new CreneauEmploiDuTemps({
+				  regroupement_id: 'XXX',
+				  jour_de_la_semaine: start.getDay() + 1,
+				  heure_debut: start,
+				  heure_fin: end,
+				  matiere_id: 999
+			      });
+			      cedt.matiere_id = prompt( 'Demander matiere', 'Vietnamien?' );
+			      cedt.regroupement_id = prompt( 'Demander classe', 'PS1?' );
+			      console.log(cedt)
+			      cedt.$save();
+
+			      console.log( 'créer l\'événement dans fullcalendar' );
+
+			      // FIXME: copy-pasta /////////////////////////////
+			      var create_cours = function( creneau ) {
+				  var cours = new Cours({
+				      cahier_de_textes_id: '-1', //FIXME
+				      creneau_emploi_du_temps_id: cedt.id,
+				      date_cours: start
+				  });
+				  cours.create = true;
+
+				  return cours;
+			      };
+
+			      $scope.creneau = cedt;
+			      $scope.matiere = cedt.matiere_id; //FIXME
+			      $scope.matiere_id = cedt.matiere_id;
+			      $scope.regroupement_id = cedt.regroupement_id;
+
+			      // 1. cours
+			      $scope.cours = create_cours( $scope.creneau );
+
+			      // 2. devoir
+			      $scope.devoirs = [];
+
+			      // 3. ouverture de la popup
+			      $q.all( $scope.types_de_devoir, $scope.cours, $scope.devoirs )
+				  .then( function() {
+				      $scope.ouvre_popup_cours_devoirs(  );
+				  });
+			      // FIXME: /copy-pasta ////////////////////////////
+
 			      console.log('passer id')
 
 			      $scope.ouvre_popup_cours_devoirs(  );
