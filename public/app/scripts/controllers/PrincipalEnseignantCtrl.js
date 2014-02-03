@@ -46,7 +46,6 @@ angular.module('cahierDeTexteApp')
 				cellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-model="row.entity.valide" ng-show="!row.entity.valide" ng-click="grid.valide( row )" /><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" disabled checked ng-show="row.entity.valide" /></div>'}
 			  ],
 			  valide: function( row ) {
-			      console.log(row.entity.cours)
 			      row.entity.cours.$valide();
 			      row.entity.valide = true;
 			      $scope.raw_data[ row.entity.index ].valide = true;
