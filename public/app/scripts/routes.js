@@ -5,16 +5,16 @@ angular.module( 'cahierDeTexteApp' )
 	       function ( $stateProvider, $urlRouterProvider ) {
 		   $urlRouterProvider.otherwise('/');
 
-
+		   // redirections
 		   $urlRouterProvider.when( '/principal', '/principal/enseignants' );
 		   $urlRouterProvider.when( '/eleve', '/eleve/emploi_du_temps' );
+
 		   $stateProvider
 		   // Principal ///////////////////////////////////////////////////////////
 		       .state('principal', {
 			   abstract: true,
 			   url: '/principal',
-			   templateUrl: 'app/views/principal/index.html',
-			   controller: 'PrincipalCtrl'
+			   templateUrl: 'app/views/principal/index.html'
 		       })
 		       .state('principal.enseignants', { //imbriquée sous principal
 			   parent: 'principal',
@@ -60,8 +60,7 @@ angular.module( 'cahierDeTexteApp' )
 		       .state('eleve', {
 			   abstract: true,
 			   url: '/eleve',
-			   templateUrl: 'app/views/eleve/index.html',
-			   controller: 'EleveCtrl'
+			   templateUrl: 'app/views/eleve/index.html'
 		       })
 		       .state('eleve.emploi_du_temps', {
 			   parent: 'eleve',
