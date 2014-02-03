@@ -28,6 +28,7 @@ angular.module('cahierDeTexteApp')
 	     [ '$resource', '$rootScope',
 	       function( $resource, $rootScope ) {
 		   return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/cours/:id',
+				     { id: '@id' },
 				     { update: { method: 'PUT' },
 				       valide: { method: 'PUT',
 						 url: $rootScope.APP_VIRTUAL_PATH + '/api/v0/cours/:id/valide' },
@@ -35,8 +36,7 @@ angular.module('cahierDeTexteApp')
 						url: $rootScope.APP_VIRTUAL_PATH + '/api/v0/cours/:id/copie/regroupement/:regroupement_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id',
 						params: { id: '@id',
 							  regroupement_id: '@regroupement_id',
-							  creneau_emploi_du_temps_id: '@creneau_emploi_du_temps_id' } } },
-				     { id: '@id' } );
+							  creneau_emploi_du_temps_id: '@creneau_emploi_du_temps_id' } } } );
 	       } ] );
 
 angular.module('cahierDeTexteApp')
@@ -44,6 +44,7 @@ angular.module('cahierDeTexteApp')
 	     [ '$resource', '$rootScope',
 	       function( $resource, $rootScope ) {
 		   return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/creneaux_emploi_du_temps/:id',
+				     { id: '@id' },
 				     { update: { method: 'PUT',
 						 url: $rootScope.APP_VIRTUAL_PATH + '/api/v0/creneaux_emploi_du_temps/:id/jour_de_la_semaine/:jour_de_la_semaine/debut/:heure_debut/fin/:heure_fin/matiere/:matiere_id/regroupement/:regroupement_id',
 						 params: { id: '@id',
@@ -58,8 +59,7 @@ angular.module('cahierDeTexteApp')
 							 jour_de_la_semaine: '@jour_de_la_semaine',
 							 heure_debut: '@heure_debut',
 							 heure_fin: '@heure_fin',
-							 matiere_id: '@matiere_id' }} },
-				     { id: '@id' } );
+							 matiere_id: '@matiere_id' }} } );
 	       } ] );
 
 angular.module('cahierDeTexteApp')
@@ -67,10 +67,10 @@ angular.module('cahierDeTexteApp')
 	     [ '$resource', '$rootScope',
 	       function( $resource, $rootScope ) {
 		   return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/devoirs/:id',
+				     { id: '@id' },
 				     { update: { method: 'PUT' },
 				       fait: { method: 'PUT',
-					       url: $rootScope.APP_VIRTUAL_PATH + '/api/v0/devoirs/:id/fait' }},
-				     { id: '@id' });
+					       url: $rootScope.APP_VIRTUAL_PATH + '/api/v0/devoirs/:id/fait' }});
 	       } ] );
 
 angular.module('cahierDeTexteApp')
