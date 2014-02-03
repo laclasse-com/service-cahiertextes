@@ -5,20 +5,20 @@ angular.module('cahierDeTexteApp')
 		[ '$scope', '$rootScope', '$q', 'API', 'Annuaire', 'CurrentUser',
 		  function ( $scope, $rootScope, $q, API, Annuaire, CurrentUser ) {
 		      CurrentUser.getCurrentUser().then( function( response ) {
-			  var cu = response.data;
-			  $scope.uai = cu.ENTPersonStructRattachRNE;
+			  var current_user = response.data;
+			  $scope.uai = current_user.ENTPersonStructRattachRNE;
 
-			  $scope.raw_data		=   [];
-			  $scope.displayed_data     =  [  ];
-			  $scope.classes		= {    };
-			  $scope.matieres		=   []; // bientôt Noël !
+			  $scope.raw_data	 =   [];
+			  $scope.displayed_data  =  [  ];
+			  $scope.classes	 = {    };
+			  $scope.matieres	 =   []; // bientôt Noël !
 
-			  $scope.classe		= -1;
-			  $scope.moisCourant	= -1;
-			  $scope.matiereCourante	= -1;
+			  $scope.classe		 = -1;
+			  $scope.moisCourant	 = -1;
+			  $scope.matiereCourante = -1;
 
-			  $scope.global_stats = { filled: 0,
-						  validated: 0 };
+			  $scope.global_stats    = { filled: 0,
+						     validated: 0 };
 
 			  $scope.pieChart = { options: $rootScope.globalPieChartOptions,
 					      data: [ { color : $rootScope.theme.validated.base,
