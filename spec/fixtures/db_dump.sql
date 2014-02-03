@@ -331,7 +331,7 @@ CREATE TABLE `etablissements` (
 
 LOCK TABLES `etablissements` WRITE;
 /*!40000 ALTER TABLE `etablissements` DISABLE KEYS */;
-INSERT INTO `etablissements` VALUES (1,'0134567A','2012-09-04','2013-08-31','2012-09-03');
+INSERT INTO `etablissements` VALUES (1,'0699999Z','2012-09-04','2013-08-31','2012-09-03');
 /*!40000 ALTER TABLE `etablissements` ENABLE KEYS */;
 UNLOCK TABLES;
 

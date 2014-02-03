@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantCtrl',
-		[ '$scope', '$rootScope', '$stateParams', '$q', 'API', 'Cours', 'Annuaire',
-		  function( $scope, $rootScope, $stateParams, $q, API, Cours, Annuaire ) {
+		[ '$scope', '$rootScope', '$stateParams', '$q', 'API', 'Cours', 'Annuaire', 'CurrentUser',
+		  function( $scope, $rootScope, $stateParams, $q, API, Cours, Annuaire, CurrentUser ) {
 		      $scope.enseignant_id = $stateParams.enseignant_id;
 		      $scope.classe = -1;
 		      $scope.mois = $rootScope.mois;
@@ -46,6 +46,7 @@ angular.module('cahierDeTexteApp')
 				cellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-model="row.entity.valide" ng-show="!row.entity.valide" ng-click="grid.valide( row )" /><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" disabled checked ng-show="row.entity.valide" /></div>'}
 			  ],
 			  valide: function( row ) {
+			      console.log(row.entity.cours)
 			      row.entity.cours.$valide();
 			      row.entity.valide = true;
 			      $scope.raw_data[ row.entity.index ].valide = true;
@@ -183,7 +184,9 @@ angular.module('cahierDeTexteApp')
 				  .value();
 			  });
 
-		      API.get_enseignant( $stateParams.enseignant_id, '0134567A' ).then(
+		      CurrentUser.getCurrentUser().then( function( response ) {
+			  var cu = response.data;
+			  API.get_enseignant( $stateParams.enseignant_id, cu.ENTPersonStructRattachRNE ).then(
 				      function success( response ) {
 					  $scope.raw_data = response.saisies;
 
@@ -201,4 +204,5 @@ angular.module('cahierDeTexteApp')
 						  $scope.process_data();
 					      });
 				      });
+		      });
 		  } ] );

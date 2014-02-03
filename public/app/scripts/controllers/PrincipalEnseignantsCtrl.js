@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantsCtrl',
-		[ '$scope', '$rootScope', '$q', 'API', 'Annuaire',
-		  function( $scope, $rootScope, $q, API, Annuaire ) {
+		[ '$scope', '$rootScope', '$q', 'API', 'Annuaire', 'CurrentUser',
+		  function( $scope, $rootScope, $q, API, Annuaire, CurrentUser ) {
 		      $scope.annee = $rootScope.mois;
 		      $scope.classe = -1;
 		      $scope.mois = -1;
@@ -155,29 +155,32 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      // Récupération et consommation des données
-		      API.query_enseignants( '0134567A' ).then(
-					 function success( response ) {
-					     $scope.raw_data = _(response).reject( function( enseignant ) {
-						 return enseignant.enseignant_id === '';
-					     });
+		      CurrentUser.getCurrentUser().then( function( response ) {
+			  var cu = response.data;
+			  API.query_enseignants( cu.ENTPersonStructRattachRNE ).then( function success( response ) {
+			      $scope.raw_data = _(response).reject( function( enseignant ) {
+				  return enseignant.enseignant_id === '';
+			      });
 
-					     $q.all( $scope.extract_details_enseignants_promises( $scope.raw_data ) )
-						 .then( function( enseignants ) {
-						     _(enseignants).each(function( enseignant ) {
-							 enseignant.matieres = _.chain(enseignant.matieres_enseignees)
-							     .pluck( 'libelle_long' )
-							     .uniq()
-							     .value();
-							 $scope.details_enseignants[enseignant.id_ent] = enseignant;
-						     });
+			      $q.all( $scope.extract_details_enseignants_promises( $scope.raw_data ) )
+				  .then( function( enseignants ) {
+				      _(enseignants).each(function( enseignant ) {
+					  enseignant.matieres = _.chain(enseignant.matieres_enseignees)
+					      .pluck( 'libelle_long' )
+					      .uniq()
+					      .value();
+					  $scope.details_enseignants[enseignant.id_ent] = enseignant;
+				      });
 
-						     $q.all( $scope.extract_classes_promises( $scope.raw_data ) )
-							 .then( function( classes ) {
-							     _(classes).each(function( classe ) {
-								 $scope.classes[classe.id] = classe.libelle !== null ? classe.libelle : classe.libelle_aaf;
-							     });
-							     $scope.process_data();
-							 });
-						 });
-					 } );
+				      $q.all( $scope.extract_classes_promises( $scope.raw_data ) )
+					  .then( function( classes ) {
+					      _(classes).each(function( classe ) {
+						  $scope.classes[classe.id] = classe.libelle !== null ? classe.libelle : classe.libelle_aaf;
+					      });
+					      $scope.process_data();
+					  });
+				  });
+			  } );
+		      } );
+
 		  } ] );
