@@ -1,13 +1,13 @@
 * client
 ** global
-*** NEXT Intégration CAS
+*** DONE Intégration CAS
 *** NEXT filtre sur l'établissement
 **** API
 **** client
 *** TODO tests
 *** TODO configurer grunt
-*** TODO animation pendant le chargement des données
-*** NEXT factoriser la récupération des données géneŕiques de l'annuaire
+*** DONE animation pendant le chargement des données
+*** DONE factoriser la récupération des données géneŕiques de l'annuaire
     . types de devoirs
     . matières
     . ...
@@ -26,7 +26,7 @@
 *** CANCELLED pagination de la grid
 *** DONE remplacer la grid par des blocs comme pour principal/classes
 - State "DONE"       from "STARTED"    [2013-10-16 Wed 12:31]
-        
+
 *** NEXT bug dans le bargraph quand il n'y a qu'une classe
     bug de Charts.js
 *** CANCELLED bug dans la persistance de la visualisation des validations
