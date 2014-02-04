@@ -100,37 +100,37 @@ angular.module('cahierDeTexteApp')
     .service('API',
 	     [ 'Classes', 'Cours', 'CreneauEmploiDuTemps', 'Devoirs', 'EmploisDuTemps', 'Enseignants', 'TypesDeDevoir',
 	       function( Classes, Cours, CreneauEmploiDuTemps, Devoirs, EmploisDuTemps, Enseignants, TypesDeDevoir ) {
-		   this.query_classes = _.memoize( function( uai ) {
-		       return Classes.query({ uai: uai }).$promise;
+		   this.query_classes = _.memoize( function( params ) {
+		       return Classes.query( params ).$promise;
 		   } );
 
 		   this.query_types_de_devoir = _.memoize( function() {
 		       return TypesDeDevoir.query().$promise;
 		   } );
-		   this.get_type_de_devoir = _.memoize( function( id ) {
-		       return TypesDeDevoir.get({ id: id }).$promise;
+		   this.get_type_de_devoir = _.memoize( function( params ) {
+		       return TypesDeDevoir.get( params ).$promise;
 		   } );
 
 		   this.query_emplois_du_temps = _.memoize( function() {
 		       return EmploisDuTemps.query().$promise;
 		   } );
 
-		   this.query_enseignants = _.memoize( function( uai ) {
-		       return Enseignants.query({ etablissement_id: uai }).$promise;
+		   this.query_enseignants = _.memoize( function( params ) {
+		       return Enseignants.query( params ).$promise;
 		   } );
-		   this.get_enseignant = _.memoize( function( id, uai ) {
-		       return Enseignants.get({ enseignant_id: id, etablissement_id: uai }).$promise;
+		   this.get_enseignant = _.memoize( function( params ) {
+		       return Enseignants.get( params ).$promise;
 		   } );
 
-		   this.get_cours = _.memoize( function( id ) {
-		       return Cours.get({ id: id }).$promise;
+		   this.get_cours = _.memoize( function( params ) {
+		       return Cours.get( params ).$promise;
 		   } );
 
 		   this.query_devoirs = _.memoize( function() {
 		       return Devoirs.query().$promise;
 		   } );
-		   this.get_devoir = _.memoize( function( id ) {
-		       return Devoirs.get({ id: id }).$promise;
+		   this.get_devoir = _.memoize( function( params ) {
+		       return Devoirs.get( params ).$promise;
 		   } );
 	       }
 	     ] );

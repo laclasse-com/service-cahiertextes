@@ -159,7 +159,7 @@ angular.module('cahierDeTexteApp')
 		      // Récupération et consommation des données
 		      CurrentUser.getCurrentUser().then( function( response ) {
 			  var current_user = response.data;
-			  API.query_enseignants( current_user.ENTPersonStructRattachRNE ).then( function success( response ) {
+			  API.query_enseignants( { uai: current_user.ENTPersonStructRattachRNE } ).then( function success( response ) {
 			      $scope.raw_data = _(response).reject( function( enseignant ) {
 				  return enseignant.enseignant_id === '';
 			      });
