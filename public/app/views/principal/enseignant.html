@@ -8,65 +8,69 @@
   </div>
 </div>
 
-<div class="panel panel-default">
-  <div class="panel-body">
+<div data-ng-hide="loading">
 
-    <select class="col-md-3" data-ui-select2 data-ng-model="classe" data-placeholder="Toutes les classes" data-ng-change="process_data()">
-      <option value="-1">Toutes les classes</option>
-      <option data-ng-repeat="classe in classes" value="{{classe}}">{{classe}}</option>
-    </select>
+  <div class="panel panel-default">
+    <div class="panel-body">
+
+      <select class="col-md-3" data-ui-select2 data-ng-model="classe" data-placeholder="Toutes les classes" data-ng-change="process_data()">
+	<option value="-1">Toutes les classes</option>
+	<option data-ng-repeat="classe in classes" value="{{classe}}">{{classe}}</option>
+      </select>
 
 
-    <select class="col-md-3" data-ui-select2 data-ng-model="moisCourant" data-placeholder="Toute l'année" data-ng-change="process_data()">
-      <option value="-1">Toute l'année</option>
-      <option data-ng-repeat="unmois in mois" value="{{$index + 1}}">{{unmois}}</option>
-    </select>
+      <select class="col-md-3" data-ui-select2 data-ng-model="moisCourant" data-placeholder="Toute l'année" data-ng-change="process_data()">
+	<option value="-1">Toute l'année</option>
+	<option data-ng-repeat="unmois in mois" value="{{$index + 1}}">{{unmois}}</option>
+      </select>
 
-  </div>
-</div>
-
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h4>{{enseignant.prenom}} {{enseignant.nom}}</h4>
+    </div>
   </div>
 
-  <div class="panel-body">
-    <div class="col-md-4">
-      <div class="panel panel-default">
-	<div class="panel-body">
-	  <p><a href="mailto:{{enseignant.emails[0].adresse}}">{{enseignant.emails[0].adresse}}</a></p>
-	  <label data-ng-show="enseignant.prof_principal.length > 0">Professeur principal en</label>
-	  <ul data-ng-show="enseignant.prof_principal.length > 0">
-	    <li data-ng-repeat="classe in enseignant.prof_principal">{{classe}}</li>
-	  </ul>
-	  <label>Matières enseignées</label>
-	  <ul>
-	    <li data-ng-repeat="matiere in enseignant.matieres">{{matiere.libelle_long}}</li>
-	  </ul>
-	  <label>Classes</label>
-	  <p><span data-ng-repeat="classe in enseignant.classes">{{classe.classe_libelle}}{{($last != true) && ", " || ""}}</span></p>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4>{{enseignant.prenom}} {{enseignant.nom}}</h4>
+    </div>
+
+    <div class="panel-body">
+      <div class="col-md-4">
+	<div class="panel panel-default">
+	  <div class="panel-body">
+	    <p><a href="mailto:{{enseignant.emails[0].adresse}}">{{enseignant.emails[0].adresse}}</a></p>
+	    <label data-ng-show="enseignant.prof_principal.length > 0">Professeur principal en</label>
+	    <ul data-ng-show="enseignant.prof_principal.length > 0">
+	      <li data-ng-repeat="classe in enseignant.prof_principal">{{classe}}</li>
+	    </ul>
+	    <label>Matières enseignées</label>
+	    <ul>
+	      <li data-ng-repeat="matiere in enseignant.matieres">{{matiere.libelle_long}}</li>
+	    </ul>
+	    <label>Classes</label>
+	    <p><span data-ng-repeat="classe in enseignant.classes">{{classe.classe_libelle}}{{($last != true) && ", " || ""}}</span></p>
+	  </div>
+	</div>
+      </div>
+      <div class="col-md-8">
+	<div class="panel panel-default">
+	  <div class="panel-body">
+	    <canvas data-piechart data-data="graphiques.pieChart.data" data-options="graphiques.pieChart.options" width="256" height="256"></canvas>
+	    <canvas data-barchart data-data="graphiques.barChart.data" data-options="graphiques.barChart.options" width="256" height="256"></canvas>
+	  </div>
 	</div>
       </div>
     </div>
-    <div class="col-md-8">
-      <div class="panel panel-default">
-	<div class="panel-body">
-	  <canvas data-piechart data-data="graphiques.pieChart.data" data-options="graphiques.pieChart.options" width="256" height="256"></canvas>
-	  <canvas data-barchart data-data="graphiques.barChart.data" data-options="graphiques.barChart.options" width="256" height="256"></canvas>
-	</div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <input type="checkbox" data-ng-model="montre_valides" name="montre_valides" id="montre_valides" data-ng-change="process_data()" />
+      <label for="montre_valides">afficher les saisies validées</label>
+      <div class="btn-group btn-group-xs pull-right">
+	<a class="btn btn-default" data-ng-click="grid.selectionneNonValides()">Sélectionne les non validés</a>
+	<a class="btn btn-default" data-ng-click="grid.valideSelection()">Valider la sélection</a>
       </div>
     </div>
+    <div class="panel-body principal-enseignant-grid" data-ng-grid="grid"></div>
   </div>
-</div>
 
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <input type="checkbox" data-ng-model="montre_valides" name="montre_valides" id="montre_valides" data-ng-change="process_data()" />
-    <label for="montre_valides">afficher les saisies validées</label>
-    <div class="btn-group btn-group-xs pull-right">
-      <a class="btn btn-default" data-ng-click="grid.selectionneNonValides()">Sélectionne les non validés</a>
-      <a class="btn btn-default" data-ng-click="grid.valideSelection()">Valider la sélection</a>
-    </div>
-  </div>
-  <div class="panel-body principal-enseignant-grid" data-ng-grid="grid"></div>
 </div>
