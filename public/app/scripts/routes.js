@@ -12,6 +12,7 @@ angular.module( 'cahierDeTexteApp' )
 		   $stateProvider
 		   // Principal ///////////////////////////////////////////////////////////
 		       .state('principal', {
+			   data: { auth: [ 'DIR' ] },
 			   abstract: true,
 			   url: '/principal',
 			   templateUrl: 'app/views/principal/index.html'
@@ -19,6 +20,7 @@ angular.module( 'cahierDeTexteApp' )
 		       .state('principal.enseignants', { //imbriquée sous principal
 			   parent: 'principal',
 			   url: '/enseignants',
+			   data: { auth: [ 'DIR' ] },
 			   views: {
 			       'titre': {
 				   template: 'Validation des saisies par Enseignants'
@@ -32,6 +34,7 @@ angular.module( 'cahierDeTexteApp' )
 		       .state('principal.enseignant', { //imbriquée sous principal
 			   parent: 'principal',
 			   url: '/enseignant/:enseignant_id',
+			   data: { auth: [ 'DIR' ] },
 			   views: {
 			       'titre': {
 				   template: 'Validation des saisies par Enseignant'
@@ -45,6 +48,7 @@ angular.module( 'cahierDeTexteApp' )
 		       .state('principal.classes', { //imbriquée sous principal
 			   parent: 'principal',
 			   url: '/classes',
+			   data: { auth: [ 'DIR' ] },
 			   views: {
 			       'titre': {
 				   template: 'Validation des saisies par Classe/Groupe'
@@ -60,11 +64,13 @@ angular.module( 'cahierDeTexteApp' )
 		       .state('eleve', {
 			   abstract: true,
 			   url: '/eleve',
+			   data: { auth: [ 'ELV', 'PAR' ] },
 			   templateUrl: 'app/views/eleve/index.html'
 		       })
 		       .state('eleve.emploi_du_temps', {
 			   parent: 'eleve',
 			   url: '/emploi_du_temps',
+			   data: { auth: [ 'ELV', 'PAR' ] },
 			   views: {
 			       'content': {
 				   templateUrl: 'app/views/eleve/emploi_du_temps.html',
@@ -75,6 +81,7 @@ angular.module( 'cahierDeTexteApp' )
 		       .state('eleve.devoirs', {
 			   parent: 'eleve',
 			   url: '/devoirs',
+			   data: { auth: [ 'ELV', 'PAR' ] },
 			   views: {
 			       'content': {
 				   templateUrl: 'app/views/eleve/devoirs.html',
@@ -86,6 +93,7 @@ angular.module( 'cahierDeTexteApp' )
 		   // Enseignant //////////////////////////////////////////////////////////
 		       .state('enseignant', {
 			   url: '/enseignant',
+			   data: { auth: [ 'ENS' ] },
 			   templateUrl: 'app/views/enseignant.html',
 			   controller: 'EnseignantCtrl'
 		       });
