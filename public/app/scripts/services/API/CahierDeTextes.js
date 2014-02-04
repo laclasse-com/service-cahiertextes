@@ -81,8 +81,8 @@ angular.module('cahierDeTexteApp')
     .factory('Enseignants',
 	     [ '$resource', '$rootScope',
 	       function( $resource, $rootScope ) {
-		   return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/etablissements/:etablissement_id/enseignants/:enseignant_id',
-				     { etablissement_id: '@etablissement_id',
+		   return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/etablissements/:uai/enseignants/:enseignant_id',
+				     { uai: '@uai',
 				       enseignant_id: '@enseignant_id' } );
 	       } ] );
 
