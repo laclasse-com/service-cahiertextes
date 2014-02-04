@@ -8,7 +8,4 @@ angular.module('cahierDeTexteApp')
 			  $scope.current_user = response;
 			  $scope.current_user_display = response;
 		      });
-
-		      $location.path( '/#/eleve' );
-
 		  } ] );
