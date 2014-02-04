@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module( 'cahierDeTexteApp' )
-    .run( [ '$rootScope', 'CurrentUser',
-	    function ( $rootScope, CurrentUser ) {
+    .run( [ '$rootScope', '$location', 'CurrentUser',
+	    function ( $rootScope, $location, CurrentUser ) {
 		$rootScope.APP_VIRTUAL_PATH = '/ct';
 
 		$rootScope.mois = [ 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre' ];
@@ -78,12 +78,24 @@ angular.module( 'cahierDeTexteApp' )
 					if ( _(current_user.profils).reduce( function( autorise, profil ) { return autorise && _(toState.data.auth).contains( profil.type ); }, true ) ) {
 					    return true;
 					} else {
-					    alert('DEBUG: là normallement vous n\'avez rien à faire ici!!!')
-					    return true;
+					    // alert('DEBUG: là normallement vous n\'avez rien à faire ici!!!')
+					    // return true;
 
 					    // FIXME: real code below vv
-					    // event.preventDefault();
-					    // return false;
+					    event.preventDefault();
+					    switch (current_user.profils[0].type) {
+					    case 'DIR': $location.url( '/principal' );
+						console.log('redirection vers /principal')
+						break;
+					    case 'ENS': $location.url( '/enseignant' );
+						console.log('redirection vers /enseignant')
+						break;
+					    case 'ELV': $location.url( '/eleve' );
+						console.log('redirection vers /eleve')
+						break;
+					    }
+
+					    return false;
 					}
 				    } );
 		});
