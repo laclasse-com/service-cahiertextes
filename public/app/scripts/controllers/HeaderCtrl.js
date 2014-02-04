@@ -6,6 +6,5 @@ angular.module('cahierDeTexteApp')
 		  function ($scope, $location, CurrentUser) {
 		      CurrentUser.getCurrentUser().success( function( response ) {
 			  $scope.current_user = response;
-			  $scope.current_user_display = response;
 		      });
 		  } ] );
