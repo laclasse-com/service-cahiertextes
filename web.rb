@@ -28,7 +28,7 @@ module CahierDeTextesAPI
       login! request.path_info unless is_logged?
     end
 
-    get "#{APP_VIRTUAL_PATH}/" do
+    get "#{APP_VIRTUAL_PATH}/?" do
       erb :index
     end
 
