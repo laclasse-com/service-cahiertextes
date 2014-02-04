@@ -4,6 +4,8 @@ angular.module('cahierDeTexteApp')
     .controller('EleveDevoirsCtrl',
 		[ '$scope', 'API',
 		  function( $scope, API ) {
+		      $scope.loading = true;
+
 		      $scope.affiche_faits = false;
 		      $scope.fait = function( id ) {
 			  Devoirs.fait({ id: id }).$promise
@@ -23,11 +25,13 @@ angular.module('cahierDeTexteApp')
 			  }
 		      };
 		      API.query_devoirs().then(function( response ) {
-					$scope.all_devoirs = _(response).map( function( devoir ) {
-					    devoir.type_devoir = _($scope.types_de_devoir)
-						.findWhere({id: devoir.type_devoir_id}).label;
-					    return devoir;
-					});
-					$scope.filtre();
-				    });
+			  $scope.all_devoirs = _(response).map( function( devoir ) {
+			      devoir.type_devoir = _($scope.types_de_devoir)
+				  .findWhere({id: devoir.type_devoir_id}).label;
+			      return devoir;
+			  });
+			  $scope.filtre();
+
+			  $scope.loading = false;
+		      });
 		  } ] );
