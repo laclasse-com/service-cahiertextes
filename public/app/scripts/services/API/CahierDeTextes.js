@@ -2,16 +2,13 @@
 
 angular.module('cahierDeTexteApp')
     .service('CurrentUser',
-	     [ '$http', '$rootScope', 'Users',
-	       function( $http, $rootScope, Users ) {
+	     [ '$http',
+	       function( $http ) {
 		   this.getCurrentUser = _.memoize( function() {
-		       var current_user = $http.get( $rootScope.APP_VIRTUAL_PATH + '/api/v0/current_user' ).success(function( response ) {
-			   Users.get({ user_id: response.uid }).$promise.then(function( details ) {
-			       response.details = details;
-			   });
-			   return response;
-		       });
-		       return current_user;
+		       return $http.get( '/ct/api/v0/current_user' )
+			       .success( function( response ) {
+				   return response;
+			       } );
 		   });
 	       } ] );
 
