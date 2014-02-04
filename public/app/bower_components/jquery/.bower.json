@@ -16,6 +16,6 @@
     "commit": "099ad075783a6189f13c1e742e03f9cc95654a27"
   },
   "_source": "git://github.com/components/jquery.git",
-  "_target": "~2.x",
+  "_target": ">=1.6",
   "_originalSource": "jquery"
 }
