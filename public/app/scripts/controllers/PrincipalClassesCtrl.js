@@ -183,7 +183,7 @@ angular.module('cahierDeTexteApp')
 			      }
 			  };
 
-			  API.query_classes( $scope.uai ).then( function( response ) {
+			  API.query_classes( { uai: $scope.uai } ).then( function( response ) {
 				  $scope.raw_data = response;
 
 				  // Extraction des matières

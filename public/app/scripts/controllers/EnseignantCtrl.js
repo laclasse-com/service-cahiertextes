@@ -205,7 +205,7 @@ angular.module('cahierDeTexteApp')
 
 			  // 1. cours
 			  if ( $scope.creneau.details.cours.id !== undefined ) {
-			      $scope.cours = API.get_cours( $scope.creneau.details.cours.id );
+			      $scope.cours = API.get_cours( { id: $scope.creneau.details.cours.id } );
 			      $scope.cours.then( function success() {
 				  $scope.cours.create = false;
 			      },
@@ -219,7 +219,7 @@ angular.module('cahierDeTexteApp')
 			  // 2. devoir
 			  if ( $scope.creneau.details.devoirs.length > 0 ) {
 			      $scope.devoirs = $scope.creneau.details.devoirs.map(function(devoir) {
-				  return API.get_devoir( devoir.id );
+				  return API.get_devoir( { id: devoir.id } );
 			      });
 			      $q.all( $scope.devoirs ).then( function success() {
 				  $scope.devoirs.create = false;

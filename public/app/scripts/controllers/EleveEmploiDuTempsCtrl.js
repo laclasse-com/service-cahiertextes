@@ -130,7 +130,7 @@ angular.module('cahierDeTexteApp')
 				  // composition du titre
 				  // FIXME: peut sûrement mieux faire avec API.query_types_de_devoir()
 				  if ( $scope.types_de_devoir[ devoir.type_devoir_id ] === undefined ) {
-				      $scope.types_de_devoir[ devoir.type_devoir_id ] = API.get_type_de_devoir( devoir.type_devoir_id );
+				      $scope.types_de_devoir[ devoir.type_devoir_id ] = API.get_type_de_devoir( { id: devoir.type_devoir_id } );
 				  }
 				  $scope.types_de_devoir[ devoir.type_devoir_id ].then( function success( response ) {
 				      devoir_event.title = response.label;
