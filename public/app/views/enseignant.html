@@ -8,17 +8,21 @@
   </div>
 </div>
 
-<div class="panel panel-default">
-  <div class="panel-body">
-    <select class="col-md-3" data-ui-select2 data-ng-model="classe" data-placeholder="Toute les classes" data-ng-change="process_data()">
-      <option value="-1" selected>Toute les classes</option>
-      <option data-ng-repeat="classe in classes">{{classe}}</option>
-    </select>
-  </div>
-</div>
+<div data-ng-hide="loading">
 
-<div class="panel panel-default">
-  <div class="panel-body">
-    <div data-calendar="emploi_du_temps" data-ui-calendar="calendar.options" class="col-md-12 calendar" data-ng-model="calendar.events"></div>
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <select class="col-md-3" data-ui-select2 data-ng-model="classe" data-placeholder="Toute les classes" data-ng-change="process_data()">
+	<option value="-1" selected>Toute les classes</option>
+	<option data-ng-repeat="classe in classes">{{classe}}</option>
+      </select>
+    </div>
   </div>
+
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div data-calendar="emploi_du_temps" data-ui-calendar="calendar.options" class="col-md-12 calendar" data-ng-model="calendar.events"></div>
+    </div>
+  </div>
+
 </div>
