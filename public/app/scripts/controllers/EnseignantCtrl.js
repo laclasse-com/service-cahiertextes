@@ -4,6 +4,7 @@ angular.module('cahierDeTexteApp')
     .controller('EnseignantCtrl',
 		[ '$scope', '$rootScope', '$modal', '$q', 'API', 'Annuaire', 'Cours', 'Devoirs', 'EmploisDuTemps', 'CurrentUser', 'CreneauEmploiDuTemps',
 		  function ( $scope, $rootScope, $modal, $q, API, Annuaire, Cours, Devoirs, EmploisDuTemps, CurrentUser, CreneauEmploiDuTemps ) {
+		      $scope.loading = true;
 
 		      ///////////////////////////////////////// Sous-contrôleurs
 		      // popup de création/édition des cours et devoirs ////////
@@ -391,5 +392,7 @@ angular.module('cahierDeTexteApp')
 			      });
 
 			  $scope.process_data();
+
+			  $scope.loading = false;
 		      });
 		  } ] );

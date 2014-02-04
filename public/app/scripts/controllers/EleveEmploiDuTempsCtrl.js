@@ -4,6 +4,8 @@ angular.module('cahierDeTexteApp')
     .controller('EleveEmploiDuTempsCtrl',
 		[ '$scope', '$rootScope', '$modal', 'API', 'Annuaire', 'EmploisDuTemps',
 		  function ( $scope, $rootScope, $modal, API, Annuaire, EmploisDuTemps ) {
+		      $scope.loading = true;
+
 		      $scope.matieres = {};
 		      $scope.types_de_devoir = {};
 
@@ -149,5 +151,7 @@ angular.module('cahierDeTexteApp')
 			      return $scope.assemble_fullCalendar_event( event );
 			  } ) );
 			  $scope.calendar.events[0] = _($scope.calendar.events[0]).flatten();
+
+			  $scope.loading = false;
 		      });
 		  } ] );
