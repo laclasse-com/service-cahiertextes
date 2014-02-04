@@ -78,10 +78,10 @@ angular.module( 'cahierDeTexteApp' )
 					if ( _(current_user.profils).reduce( function( autorise, profil ) { return autorise && _(toState.data.auth).contains( profil.type ); }, true ) ) {
 					    return true;
 					} else {
-					    // alert('DEBUG: là normallement vous n\'avez rien à faire ici!!!')
-					    // return true;
+					    // FIXME: delete this debug hijack
+					    alert('DEBUG: là normallement vous n\'avez rien à faire ici!!!')
+					    return true;
 
-					    // FIXME: real code below vv
 					    event.preventDefault();
 					    switch (current_user.profils[0].type) {
 					    case 'DIR': $location.url( '/principal' );
