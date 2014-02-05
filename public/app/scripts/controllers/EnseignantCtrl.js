@@ -23,8 +23,7 @@ angular.module('cahierDeTexteApp')
 			  $scope.creneaux_similaires = _.chain(raw_data)
 			      .where({matiere_id: $scope.matiere_id})
 			      .reject(function( creneau ) {
-				  // FIXME: DEBUG
-				  return false // creneau.regroupement_id == $scope.regroupement_id;
+				  return creneau.regroupement_id == $scope.regroupement_id;
 			      })
 			      .value();
 
