@@ -1,5 +1,7 @@
 'use strict';
 
+// on ne peut pas utiliser $rootScope.APP_VIRTUAL_PATH ici parce que CurrentUser
+//   est utilisé dans $rootScope d'où une dépendance circulaire malheureuse :(
 angular.module('cahierDeTexteApp')
     .service('CurrentUser',
 	     [ '$http',
