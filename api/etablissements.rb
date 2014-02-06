@@ -43,7 +43,7 @@ module CahierDeTextesAPI
       requires :uai, desc: 'Code UAI de l\'établissement'
     }
     get '/:uai/enseignants' do
-      Etablissement.where(uai: params[:uai]).first.statistiques_enseignants
+      Etablissement.where(UAI: params[:uai]).first.statistiques_enseignants
     end
 
     desc 'saisies détaillées d\'un enseignant dans les cahiers de textes par mois/classes'

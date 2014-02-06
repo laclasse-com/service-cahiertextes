@@ -19,7 +19,7 @@ describe CahierDeTextesAPI::API do
   it 'valide un cours' do
     cours_id = Cours.where( 'date_validation IS NULL' ).first.id
 
-    put "/api/v0/cours/#{cours_id}/valide", {}
+    put "/v0/cours/#{cours_id}/valide", {}
     last_response.status.should == 200
 
     Cours[ cours_id ].date_validation.nil?.should be_false
@@ -28,9 +28,9 @@ describe CahierDeTextesAPI::API do
 
   # {{{ Enseignants
   it 'récupère les statistiques par enseignants et par mois' do
-    uai = '0134567A'
+    uai = '0699999Z'
 
-    get "/api/v0/etablissements/#{uai}/enseignants"
+    get "/v0/etablissements/#{uai}/enseignants"
     last_response.status.should == 200
 
     response_body = JSON.parse( last_response.body )
@@ -45,10 +45,10 @@ describe CahierDeTextesAPI::API do
   end
 
   it 'récupère les statistiques d\'un enseignant par mois' do
-    uai = '0134567A'
+    uai = '0699999Z'
     enseignant_id = Cours.select(:enseignant_id).first[:enseignant_id].to_s
 
-    get "/api/v0/etablissements/#{uai}/enseignants/#{enseignant_id}"
+    get "/v0/etablissements/#{uai}/enseignants/#{enseignant_id}"
     last_response.status.should == 200
 
     response_body = JSON.parse( last_response.body )
@@ -57,12 +57,12 @@ describe CahierDeTextesAPI::API do
   end
 
   it 'valide tout le cahier de textes d\'un enseignant' do
-    uai = '0134567A'
+    uai = '0699999Z'
     enseignant_id = Cours.select(:enseignant_id).first[:enseignant_id].to_s
     debut = Date.today
     fin = debut - 7
 
-    put "/api/v0/etablissements/#{uai}/enseignants/#{enseignant_id}?debut=#{debut}&fin=#{fin}"
+    put "/v0/etablissements/#{uai}/enseignants/#{enseignant_id}?debut=#{debut}&fin=#{fin}"
     last_response.status.should == 200
 
     Cours.where(enseignant_id: enseignant_id).where('date_validation IS NULL').count.should == 0
@@ -71,9 +71,9 @@ describe CahierDeTextesAPI::API do
 
   # {{{ Classes
   it 'récupère les statistiques des classes d\'un établissement' do
-    uai = '0134567A'
+    uai = '0699999Z'
 
-    get "/api/v0/etablissements/#{uai}/classes"
+    get "/v0/etablissements/#{uai}/classes"
     last_response.status.should == 200
 
     response_body = JSON.parse( last_response.body )
@@ -88,10 +88,10 @@ describe CahierDeTextesAPI::API do
   end
 
   it 'récupère les statistiques d\'une classe' do
-    uai = '0134567A'
+    uai = '0699999Z'
     classe_id = CreneauEmploiDuTempsRegroupement.select(:regroupement_id).map { |r| r.regroupement_id }.uniq.sample
 
-    get "/api/v0/etablissements/#{uai}/classes/#{classe_id}"
+    get "/v0/etablissements/#{uai}/classes/#{classe_id}"
     last_response.status.should == 200
 
     response_body = JSON.parse( last_response.body )
@@ -103,10 +103,10 @@ describe CahierDeTextesAPI::API do
   end
 
   it 'valide tout le cahier de textes d\'une classe' do
-    uai = '0134567A'
+    uai = '0699999Z'
     classe_id = CreneauEmploiDuTempsRegroupement.select(:regroupement_id).map { |r| r.regroupement_id }.uniq.sample
 
-    put "/api/v0/etablissements/#{uai}/classes/#{classe_id}"
+    put "/v0/etablissements/#{uai}/classes/#{classe_id}"
     last_response.status.should == 200
 
     Cours.where(cahier_de_textes_id: CahierDeTextes.where(regroupement_id: classe_id).first.id ).where('date_validation IS NULL').count.should == 0
