@@ -110,11 +110,11 @@ angular.module('cahierDeTexteApp')
 			  $scope.calendar.options.selectHelper = true;
 			  $scope.calendar.options.select = function(start, end, allDay) {
 			      var cedt = new CreneauEmploiDuTemps({
-				  regroupement_id: 'XXX',
+				  regroupement_id: '',
 				  jour_de_la_semaine: start.getDay() + 1,
 				  heure_debut: start,
 				  heure_fin: end,
-				  matiere_id: 999
+				  matiere_id: ''
 			      });
 			      cedt.matiere_id = prompt( 'Demander matiere', 'Vietnamien?' );
 			      cedt.regroupement_id = prompt( 'Demander classe', 'PS1?' );
