@@ -43,22 +43,12 @@ angular.module('cahierDeTexteApp')
 	     [ '$resource', '$rootScope',
 	       function( $resource, $rootScope ) {
 		   return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/creneaux_emploi_du_temps/:id',
-				     { id: '@id' },
-				     { update: { method: 'PUT',
-						 url: $rootScope.APP_VIRTUAL_PATH + '/api/v0/creneaux_emploi_du_temps/:id/jour_de_la_semaine/:jour_de_la_semaine/debut/:heure_debut/fin/:heure_fin/matiere/:matiere_id/regroupement/:regroupement_id',
-						 params: { id: '@id',
-							   regroupement_id: '@regroupement_id',
-							   jour_de_la_semaine: '@jour_de_la_semaine',
-							   heure_debut: '@heure_debut',
-							   heure_fin: '@heure_fin',
-							   matiere_id: '@matiere_id' } } },
-				     { save: { method: 'POST',
-					       url: $rootScope.APP_VIRTUAL_PATH + '/api/v0/creneaux_emploi_du_temps/jour_de_la_semaine/:jour_de_la_semaine/debut/:heure_debut/fin/:heure_fin/matiere/:matiere_id/regroupement/:regroupement_id',
-					       params: { jour_de_la_semaine: '@jour_de_la_semaine',
-							 heure_debut: '@heure_debut',
-							 heure_fin: '@heure_fin',
-							 matiere_id: '@matiere_id',
-							 regroupement_id: '@regroupement_id' } } } );
+				     { id: '@id',
+				       regroupement_id: '@regroupement_id',
+				       jour_de_la_semaine: '@jour_de_la_semaine',
+				       heure_debut: '@heure_debut',
+				       heure_fin: '@heure_fin',
+				       matiere_id: '@matiere_id' } );
 	       } ] );
 
 angular.module('cahierDeTexteApp')
