@@ -79,7 +79,7 @@ angular.module( 'cahierDeTexteApp' )
 					    return true;
 					} else {
 					    // FIXME: delete this debug hijack
-					    alert('DEBUG: là normallement vous n\'avez rien à faire ici!!!')
+					    console.log('DEBUG: là normallement vous n\'avez rien à faire ici!!!')
 					    return true;
 
 					    event.preventDefault();
