@@ -13,6 +13,8 @@ module CahierDeTextesAPI
       get  do
          # TODO: prendre en compte debut et fin
 
+         return [] unless user.methods.include? :classes
+
          regroupements_ids = user.classes.map {
             |classe|
             classe['classe_id']
