@@ -53,11 +53,13 @@ module CahierDeTextesAPI
          if devoir.nil?
             error!( 'Devoir inconnu', 404 )
          else
-            eleve_id = user.uid
-
             hash = devoir.to_hash
             hash[:ressources] = devoir.ressources
-            hash[:fait] = devoir.fait_par?( eleve_id )
+
+            unless user.nil?
+               eleve_id = user.uid
+               hash[:fait] = devoir.fait_par?( eleve_id )
+            end
 
             hash
          end
@@ -162,9 +164,7 @@ module CahierDeTextesAPI
       put '/:id/fait' do
          error!( '401 Unauthorized', 401 ) unless user.is? 'ELV', '0699999Z'
 
-         eleve_id = user.uid
-
-         Devoir[ params[:id] ].fait_par!( eleve_id )
+         Devoir[ params[:id] ].fait_par!( user.uid )
       end
 
    end

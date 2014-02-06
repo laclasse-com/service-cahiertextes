@@ -21,7 +21,7 @@ describe CahierDeTextesAPI::API do
     debut = Date.today
     fin = debut + 7
 
-    get "/api/v0/emplois_du_temps?debut=#{debut}&fin=#{fin}"
+    get "/v0/emplois_du_temps?debut=#{debut}&fin=#{fin}"
 
     last_response.status.should == 200
   end
@@ -33,7 +33,7 @@ describe CahierDeTextesAPI::API do
     debut = Date.today
     fin = debut + 7
 
-    get "/api/v0/cahiers_de_textes?debut=#{debut}&fin=#{fin}"
+    get "/v0/cahiers_de_textes?debut=#{debut}&fin=#{fin}"
 
     last_response.status.should == 200
   end
@@ -44,7 +44,7 @@ describe CahierDeTextesAPI::API do
   it 'récupère le détail d\'une séquence pédagogique' do
     cours = Cours.last
 
-    get "/api/v0/cours/#{cours.id}"
+    get "/v0/cours/#{cours.id}"
     last_response.status.should == 200
 
     response_body = JSON.parse(last_response.body)
@@ -64,10 +64,9 @@ describe CahierDeTextesAPI::API do
   # {{{ Devoir
   ############ GET ############
   it 'récupère les détails d\'un devoir' do
-    eleve_id = 1
     devoir = Devoir.all.sample
 
-    get "/api/v0/devoirs/#{devoir.id}"
+    get "/v0/devoirs/#{devoir.id}"
     last_response.status.should == 200
 
     response_body = JSON.parse( last_response.body )
@@ -75,15 +74,14 @@ describe CahierDeTextesAPI::API do
     response_body['cours_id'].should == devoir.cours_id
     response_body['type_devoir_id'].should == devoir.type_devoir_id
     response_body['contenu'].should == devoir.contenu
-    response_body['fait'].should == devoir.fait_par?( eleve_id )
   end
 
   ############ PUT ############
   it 'note un devoir comme fait' do
-    eleve_id = 1
+    eleve_id = 'VAA61181'
     devoir = Devoir.all.sample
 
-    put "/api/v0/devoirs/#{devoir.id}/fait", { eleve_id: eleve_id }
+    put "/v0/devoirs/#{devoir.id}/fait"
     last_response.status.should == 200
 
     devoir.fait_par?( eleve_id ).should be_true
