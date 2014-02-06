@@ -54,11 +54,11 @@ angular.module('cahierDeTexteApp')
 							   matiere_id: '@matiere_id' } } },
 				     { save: { method: 'POST',
 					       url: $rootScope.APP_VIRTUAL_PATH + '/api/v0/creneaux_emploi_du_temps/jour_de_la_semaine/:jour_de_la_semaine/debut/:heure_debut/fin/:heure_fin/matiere/:matiere_id/regroupement/:regroupement_id',
-					       params: { regroupement_id: '@regroupement_id',
-							 jour_de_la_semaine: '@jour_de_la_semaine',
+					       params: { jour_de_la_semaine: '@jour_de_la_semaine',
 							 heure_debut: '@heure_debut',
 							 heure_fin: '@heure_fin',
-							 matiere_id: '@matiere_id' }} } );
+							 matiere_id: '@matiere_id',
+							 regroupement_id: '@regroupement_id' } } } );
 	       } ] );
 
 angular.module('cahierDeTexteApp')
