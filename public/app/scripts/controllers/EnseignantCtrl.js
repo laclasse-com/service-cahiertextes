@@ -84,7 +84,7 @@ angular.module('cahierDeTexteApp')
 			  };
 		      };
 
-		      //////////////////////// Code du contrôleur proprement dit
+		      //////////////////////// Code du contrôleur principal proprement dit
 		      $scope.build_EdT_from_scratch = true;
 
 		      $scope.matieres = {};
@@ -159,7 +159,7 @@ angular.module('cahierDeTexteApp')
 
 			      $scope.emploi_du_temps.fullCalendar('unselect');
 			  };
-			  $scope.calendar.options.eventResize = function(event,dayDelta,minuteDelta,revertFunc) {
+			  $scope.calendar.options.eventResize = function( event, dayDelta, minuteDelta, revertFunc ) {
 			      console.log( "The end date of " + event.title + "has been moved " +
 					   dayDelta + " days and " +
 					   minuteDelta + " minutes." );
@@ -167,7 +167,7 @@ angular.module('cahierDeTexteApp')
 				  revertFunc();
 			      }
 			  };
-			  $scope.calendar.options.eventDrop = function(event,dayDelta,minuteDelta,allDay,revertFunc) {
+			  $scope.calendar.options.eventDrop = function( event, dayDelta, minuteDelta, allDay, revertFunc ) {
 			      console.log( event.title + " was moved " +
 					   dayDelta + " days and " +
 					   minuteDelta + " minutes." );
