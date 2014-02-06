@@ -67,52 +67,5 @@ module CahierDeTextesAPI
          creneau
       end
 
-      # desc 'mets à jour un créneau'
-      # params {
-      #    requires :id
-      #    requires :jour_de_la_semaine, type: Integer
-      #    requires :heure_debut, type: Time
-      #    requires :heure_fin, type: Time
-      #    requires :matiere_id
-      #    requires :regroupement_id
-
-      #    optional :salle_id
-      # }
-      # post '/:id' do
-      #    plage_horaire_debut = PlageHoraire.where(debut: params[:heure_debut] ).first
-      #    if plage_horaire_debut.nil?
-      #       plage_horaire_debut = PlageHoraire.create( label: '',
-      #                                                    debut: params[:heure_debut],
-      #                                                    fin: params[:heure_debut] + 1800 )
-      #    end
-
-      #    plage_horaire_fin = PlageHoraire.where(fin: params[:heure_fin] ).first
-      #    if plage_horaire_fin.nil?
-      #       plage_horaire_fin = PlageHoraire.create( label: '',
-      #                                                  debut: params[:heure_fin] - 1800,
-      #                                                  fin: params[:heure_fin] )
-      #    end
-
-      #    creneau = CreneauEmploiDuTemps[ params[:id] ]
-      #    creneau.jour_de_la_semaine = params[:jour_de_la_semaine]
-      #    creneau.debut = plage_horaire_debut.id
-      #    creneau.fin = plage_horaire_fin.id
-      #    creneau.matiere_id = params[:matiere_id].to_s
-
-      #    # FIXME: traiter regroupement
-
-      #    creneau.save
-
-      #    creneau
-      # end
-
-      # desc 'efface un créneau'
-      # params {
-      #   requires :id
-      # }
-      # delete '/:id' do
-      #   { todo: true } # TODO
-      # end
-
    end
 end
