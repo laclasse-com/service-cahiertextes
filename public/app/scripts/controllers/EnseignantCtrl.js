@@ -8,11 +8,10 @@ angular.module('cahierDeTexteApp')
 
 		      ///////////////////////////////////////// Sous-contrôleurs
 		      // popup de création/édition des cours et devoirs ////////
-		      var editionModalInstanceCtrl = function( $scope, $rootScope, $modalInstance, matiere, cours, devoirs, types_de_devoir, matiere_id, regroupement_id, raw_data, classes, matieres ) {
+		      var editionModalInstanceCtrl = function( $scope, $rootScope, $modalInstance, cours, devoirs, types_de_devoir, matiere_id, regroupement_id, raw_data, classes, matieres ) {
 			  // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
 			  $scope.matieres = matieres;
 			  $scope.classes = classes;
-			  $scope.matiere = matiere;
 			  $scope.cours = cours;
 			  $scope.devoirs = devoirs;
 			  $scope.types_de_devoir = types_de_devoir;
@@ -136,7 +135,6 @@ angular.module('cahierDeTexteApp')
 			      };
 
 			      $scope.creneau = cedt;
-			      $scope.matiere = cedt.matiere_id; //FIXME
 			      $scope.matiere_id = cedt.matiere_id;
 			      $scope.regroupement_id = cedt.regroupement_id;
 
@@ -199,7 +197,6 @@ angular.module('cahierDeTexteApp')
 			  };
 
 			  $scope.creneau = _(event.source.events).findWhere({_id: event._id});
-			  $scope.matiere = event.title;
 			  $scope.matiere_id = event.details.matiere_id;
 			  $scope.regroupement_id = event.details.regroupement_id;
 
@@ -248,7 +245,6 @@ angular.module('cahierDeTexteApp')
 			  $modal.open({ templateUrl: 'app/views/modals/enseignant/detail_emploi_du_temps.html',
 					controller: editionModalInstanceCtrl,
 					resolve: { raw_data: function() { return $scope.raw_data; },
-						   matiere: function() { return $scope.matiere; },
 						   matieres: function() { return $scope.matieres; },
 						   classes: function() { return $scope.classes; },
 						   matiere_id: function() { return $scope.matiere_id; },
