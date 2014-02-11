@@ -201,29 +201,34 @@ angular.module('cahierDeTexteApp')
 
 			  // 2. devoir
 			  if ( $scope.creneau.details.devoirs.length > 0 ) {
-			      $scope.devoirs = $scope.creneau.details.devoirs.map(function(devoir) {
-				  return API.get_devoir( { id: devoir.id } );
-			      });
-			      $q.all( $scope.devoirs ).then( function success() {
-				  $scope.devoirs.create = false;
-			      },
-							     function error() {
-								 $q.all( $scope.types_de_devoir, $scope.cours )
-								     .then( function() {
-									 $scope.devoirs = [];
-								     });
-							     });
+			      // $scope.devoirs = _($scope.creneau.details.devoirs).map( function( devoir ) {
+			      //	  return API.get_devoir( { id: devoir.id } ).then( function( vrai_devoir ) {
+			      //	      return vrai_devoir;
+			      //	  });
+			      // });
+			      $scope.devoirs = [];
+			      _($scope.creneau.details.devoirs).each( function( devoir ) {
+				  API.get_devoir( { id: $scope.creneau.details.devoirs[0].id } )
+				      .then( function( vrai_devoir ) {
+					  $scope.devoirs.push( vrai_devoir );
+				      } );
+			      } );
+			      $scope.devoirs.create = false;
+
 			  } else {
-			      $q.all( $scope.types_de_devoir, $scope.cours )
-				  .then( function() {
-				      $scope.devoirs = [];
-				  });
+			      $scope.devoirs = [];
 			  }
 
 			  // 3. ouverture de la popup
-			  $q.all( $scope.types_de_devoir, $scope.cours, $scope.devoirs )
+			  $q.all( $scope.types_de_devoir, $scope.cours )
 			      .then( function() {
-				  $scope.ouvre_popup_edition(  );
+				  if ( _($scope.devoirs).isEmpty() ) {
+				      $scope.ouvre_popup_edition(  );
+				  } else {
+				      $q.all( $scope.devoirs ).then( function() {
+					  $scope.ouvre_popup_edition(  );
+				      } );
+				  }
 			      });
 		      };
 
