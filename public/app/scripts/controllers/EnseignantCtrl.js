@@ -153,8 +153,6 @@ angular.module('cahierDeTexteApp')
 
 			      console.log('passer id')
 
-			      $scope.ouvre_popup_cours_devoirs(  );
-
 			      $scope.emploi_du_temps.fullCalendar('unselect');
 			  };
 		      }
