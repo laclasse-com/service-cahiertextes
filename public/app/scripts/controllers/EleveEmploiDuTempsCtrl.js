@@ -101,11 +101,11 @@ angular.module('cahierDeTexteApp')
 			  }
 
 			  // composition du titre
-			  if ( $scope.matieres[ item_emploi_du_temps.matiere_id ] === undefined ) {
-			      $scope.matieres[ item_emploi_du_temps.matiere_id ] = Annuaire.get_matiere( item_emploi_du_temps.matiere_id );
-			  }
+			  $scope.matieres[ item_emploi_du_temps.matiere_id ] = Annuaire.get_matiere( item_emploi_du_temps.matiere_id );
+
 			  $scope.matieres[ item_emploi_du_temps.matiere_id ].then( function success( response ) {
-			      cours_event.title = response.libelle_long;
+			      $scope.matieres[ item_emploi_du_temps.matiere_id ] = response;
+			      cours_event.title = $scope.matieres[ item_emploi_du_temps.matiere_id ].libelle_long;
 			  });
 
 			  events.push( cours_event );
