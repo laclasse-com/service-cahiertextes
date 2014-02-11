@@ -311,9 +311,8 @@ angular.module('cahierDeTexteApp')
 			  }
 
 			  // composition du titre
-			  if ( $scope.matieres[ event.details.matiere_id ] === undefined ) {
-			      $scope.matieres[ event.details.matiere_id ] = Annuaire.get_matiere( event.details.matiere_id );
-			  }
+			  $scope.matieres[ event.details.matiere_id ] = Annuaire.get_matiere( event.details.matiere_id );
+
 			  $scope.matieres[ event.details.matiere_id ].then( function success( response ) {
 			      $scope.matieres[ event.details.matiere_id ] = response;
 			      calendar_event.title = $scope.matieres[ event.details.matiere_id ].libelle_long;
