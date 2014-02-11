@@ -126,17 +126,16 @@ angular.module('cahierDeTexteApp')
 				  heure_fin: end,
 				  matiere_id: ''
 			      });
-			      cedt.matiere_id = prompt( 'Demander matiere', 'Vietnamien?' );
-			      cedt.regroupement_id = prompt( 'Demander classe', 'PS1?' );
+			      // cedt.$save();
+			      cedt.dirty = true;
 			      console.log(cedt)
-			      cedt.$save();
 
 			      console.log( 'créer l\'événement dans fullcalendar' );
 
-			      // FIXME: copy-pasta /////////////////////////////
+			      // TODO: refactor this with $scope.calendar.options.eventClick()
 			      var create_cours = function( creneau ) {
 				  var cours = new Cours({
-				      cahier_de_textes_id: '-1', //FIXME
+				      cahier_de_textes_id: '',
 				      creneau_emploi_du_temps_id: cedt.id,
 				      date_cours: start
 				  });
