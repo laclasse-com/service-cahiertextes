@@ -19,6 +19,16 @@ angular.module('cahierDeTexteApp')
 			  $scope.regroupement_id = regroupement_id;
 			  $scope.tinyMCEOptions = $rootScope.tinyMCEOptions;
 
+			  if ( $scope.matiere_id == '' ) {
+			      $scope.matieres_array = _($scope.matieres).keys().map( function( key ) {
+				  return { id: key, nom: $scope.matieres[key].libelle_long };
+			      });
+			  }
+			  if ( $scope.regroupement_id == '' ) {
+			      $scope.classes_array = _($scope.classes).keys().map( function( key ) {
+				  return { id: key, nom: $scope.classes[key] };
+			      });
+			  }
 			  $scope.creneaux_similaires = _.chain(raw_data)
 			      .where({matiere_id: $scope.matiere_id})
 			      .reject(function( creneau ) {
