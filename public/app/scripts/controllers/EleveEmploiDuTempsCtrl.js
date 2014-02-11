@@ -58,7 +58,6 @@ angular.module('cahierDeTexteApp')
 			  $scope.fait = function( devoir_id ) {
 			      Devoirs.fait({ id: devoir_id },
 					   function() {
-					       // FIXME
 					       _(devoirs).findWhere({id: devoir_id}).fait = true;
 					   });
 			  };
@@ -128,12 +127,11 @@ angular.module('cahierDeTexteApp')
 				  devoir_event.description += '</span>';
 
 				  // composition du titre
-				  // FIXME: peut sûrement mieux faire avec API.query_types_de_devoir()
-				  if ( $scope.types_de_devoir[ devoir.type_devoir_id ] === undefined ) {
-				      $scope.types_de_devoir[ devoir.type_devoir_id ] = API.get_type_de_devoir( { id: devoir.type_devoir_id } );
-				  }
+				  $scope.types_de_devoir[ devoir.type_devoir_id ] = API.get_type_de_devoir( { id: devoir.type_devoir_id } );
+
 				  $scope.types_de_devoir[ devoir.type_devoir_id ].then( function success( response ) {
-				      devoir_event.title = response.label;
+				      $scope.types_de_devoir[ devoir.type_devoir_id ] = response;
+				      devoir_event.title = $scope.types_de_devoir[ devoir.type_devoir_id ].label;
 				  });
 
 				  events.push( devoir_event );
