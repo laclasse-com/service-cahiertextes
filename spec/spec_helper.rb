@@ -18,7 +18,7 @@ module AuthenticationHelpers
   end
 end
 
-class UserHelpers
+module UserHelpers
    @@user = nil
 
    class HashIt
