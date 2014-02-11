@@ -7,8 +7,8 @@
       <option data-ng-repeat="cls in classes_array" value="{{cls.id}}">{{cls.nom}}</option>
     </select>
     -
-    <span data-ng-hide="matiere == ''">{{matieres[ matiere_id ]}}</span>
-    <select data-ng-show="matiere == ''">
+    <span data-ng-hide="matiere_id == ''">{{matieres[ matiere_id ].libelle_long}}</span>
+    <select data-ng-show="matiere_id == ''">
       <option data-ng-repeat="mat in matieres_array" value="{{mat.id}}">{{mat.nom}}</option>
     </select>
   </h3>
