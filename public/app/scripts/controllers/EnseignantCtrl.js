@@ -239,25 +239,28 @@ angular.module('cahierDeTexteApp')
 						   cours: function() { return $scope.cours; },
 						   devoirs: function() { return $scope.devoirs; },
 						   types_de_devoir: function() { return $scope.types_de_devoir; } } })
-			      .result.then( function ( objets ) { //évécuté à la fermeture de la popup
-				  objets.devoirs = _(objets.devoirs).filter(function(devoir) {
-				      return _(devoir).has( 'id' );
-				  });
-				  if ( ( objets.cours.dirty ) || ( objets.devoirs.dirty ) ) {
-				      var index = _($scope.calendar.events[0]).indexOf($scope.creneau);
-				      var updated_event = $scope.update_fullCalendar_event( $scope.creneau, objets.cours, objets.devoirs );
+			      .result.then(
+				  // éxécuté à la fermeture de la popup
+				  function ( objets ) {
+				      objets.devoirs = _(objets.devoirs).filter(function(devoir) {
+					  return _(devoir).has( 'id' );
+				      });
+				      if ( ( objets.cours.dirty ) || ( objets.devoirs.dirty ) ) {
+					  var index = _($scope.calendar.events[0]).indexOf($scope.creneau);
+					  var updated_event = $scope.update_fullCalendar_event( $scope.creneau, objets.cours, objets.devoirs );
 
-				      _.chain(updated_event)
-					  .keys()
-					  .reject(function( key ) { //updated_event n'a pas de title
-					      return key == "title";
-					  })
-					  .each( function( propriete ) {
-					      $scope.calendar.events[0][ index ][ propriete ] = updated_event[ propriete ];
-					  });
-				      $scope.emploi_du_temps.fullCalendar( 'renderEvent', $scope.calendar.events[0][ index ] );
+					  _.chain(updated_event)
+					      .keys()
+					      .reject(function( key ) { //updated_event n'a pas de title
+						  return key == "title";
+					      })
+					      .each( function( propriete ) {
+						  $scope.calendar.events[0][ index ][ propriete ] = updated_event[ propriete ];
+					      });
+					  $scope.emploi_du_temps.fullCalendar( 'renderEvent', $scope.calendar.events[0][ index ] );
+				      }
 				  }
-			      });
+			      );
 		      };
 
 		      // consommation des données //////////////////////////////
