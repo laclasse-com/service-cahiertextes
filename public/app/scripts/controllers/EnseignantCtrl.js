@@ -29,6 +29,7 @@ angular.module('cahierDeTexteApp')
 				  return { id: key, nom: $scope.classes[key] };
 			      });
 			  }
+
 			  $scope.creneaux_similaires = _.chain(raw_data)
 			      .where({matiere_id: $scope.matiere_id})
 			      .reject(function( creneau ) {
