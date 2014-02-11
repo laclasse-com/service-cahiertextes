@@ -158,9 +158,8 @@ angular.module('cahierDeTexteApp')
 			      // 3. ouverture de la popup
 			      $q.all( $scope.types_de_devoir, $scope.cours, $scope.devoirs )
 				  .then( function() {
-				      $scope.ouvre_popup_cours_devoirs(  );
+				      $scope.ouvre_popup_edition(  );
 				  });
-			      // FIXME: /copy-pasta ////////////////////////////
 
 			      console.log('passer id')
 
@@ -225,11 +224,11 @@ angular.module('cahierDeTexteApp')
 			  // 3. ouverture de la popup
 			  $q.all( $scope.types_de_devoir, $scope.cours, $scope.devoirs )
 			      .then( function() {
-				  $scope.ouvre_popup_cours_devoirs(  );
+				  $scope.ouvre_popup_edition(  );
 			      });
 		      };
 
-		      $scope.ouvre_popup_cours_devoirs = function(  ) {
+		      $scope.ouvre_popup_edition = function(  ) {
 			  $modal.open({ templateUrl: 'app/views/modals/enseignant/detail_emploi_du_temps.html',
 					controller: editionModalInstanceCtrl,
 					resolve: { raw_data: function() { return $scope.raw_data; },
