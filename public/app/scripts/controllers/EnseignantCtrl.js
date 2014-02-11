@@ -157,27 +157,6 @@ angular.module('cahierDeTexteApp')
 
 			      $scope.emploi_du_temps.fullCalendar('unselect');
 			  };
-			  $scope.calendar.options.eventResize = function( event, dayDelta, minuteDelta, revertFunc ) {
-			      console.log( "The end date of " + event.title + "has been moved " +
-					   dayDelta + " days and " +
-					   minuteDelta + " minutes." );
-			      if (!confirm("is this okay?")) {
-				  revertFunc();
-			      }
-			  };
-			  $scope.calendar.options.eventDrop = function( event, dayDelta, minuteDelta, allDay, revertFunc ) {
-			      console.log( event.title + " was moved " +
-					   dayDelta + " days and " +
-					   minuteDelta + " minutes." );
-			      if (allDay) {
-				  console.log("Event is now all-day");
-			      }else{
-				  console.log("Event has a time-of-day");
-			      }
-			      if (!confirm("Are you sure about this change?")) {
-				  revertFunc();
-			      }
-			  };
 		      }
 		      else {
 			  $scope.calendar.options.editable = false;
