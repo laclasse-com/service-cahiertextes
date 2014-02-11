@@ -304,7 +304,8 @@ angular.module('cahierDeTexteApp')
 			      $scope.matieres[ event.details.matiere_id ] = Annuaire.get_matiere( event.details.matiere_id );
 			  }
 			  $scope.matieres[ event.details.matiere_id ].then( function success( response ) {
-			      calendar_event.title = response.libelle_long;
+			      $scope.matieres[ event.details.matiere_id ] = response;
+			      calendar_event.title = $scope.matieres[ event.details.matiere_id ].libelle_long;
 			  });
 
 			  return calendar_event;
