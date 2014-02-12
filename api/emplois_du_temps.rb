@@ -28,7 +28,7 @@ module CahierDeTextesAPI
             # }.uniq
 
             # FIXME: DEBUG
-            regroupements_ids = CreneauEmploiDuTempsRegroupement.all.map{|r| r.regroupement_id}.sample rand 1..3
+            regroupements_ids = CreneauEmploiDuTempsRegroupement.all.map{|r| r.regroupement_id}.sample # rand 1..3
 
             CreneauEmploiDuTemps
             .join(:creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :id)
