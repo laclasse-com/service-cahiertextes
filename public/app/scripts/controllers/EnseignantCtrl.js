@@ -79,7 +79,7 @@ angular.module('cahierDeTexteApp')
 					  devoir.dirty = true;
 					  if ( devoir.create ) {
 					      devoir.cours_id = $scope.cours.id;
-					      devoir.$save().then(function( new_devoir ) {
+					      devoir.$save().then( function( new_devoir ) {
 						  devoir.id = new_devoir.id;
 					      });
 					  } else {
