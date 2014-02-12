@@ -86,12 +86,20 @@ angular.module('cahierDeTexteApp')
 				     { id: '@id' });
 	       } ] );
 
+angular.module('cahierDeTexteApp')
+    .factory('PlagesHoraires',
+	     [ '$resource', '$rootScope',
+	       function( $resource, $rootScope ) {
+		   return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/plages_horaires/:id',
+				     { id: '@id' });
+	       } ] );
+
 
 
 angular.module('cahierDeTexteApp')
     .service('API',
-	     [ 'Classes', 'Cours', 'CreneauEmploiDuTemps', 'Devoirs', 'EmploisDuTemps', 'Enseignants', 'TypesDeDevoir',
-	       function( Classes, Cours, CreneauEmploiDuTemps, Devoirs, EmploisDuTemps, Enseignants, TypesDeDevoir ) {
+	     [ 'Classes', 'Cours', 'CreneauEmploiDuTemps', 'Devoirs', 'EmploisDuTemps', 'Enseignants', 'TypesDeDevoir', 'PlagesHoraires',
+	       function( Classes, Cours, CreneauEmploiDuTemps, Devoirs, EmploisDuTemps, Enseignants, TypesDeDevoir, PlagesHoraires ) {
 		   this.query_classes = _.memoize( function( params ) {
 		       return Classes.query( params ).$promise;
 		   } );
@@ -105,6 +113,10 @@ angular.module('cahierDeTexteApp')
 
 		   this.query_emplois_du_temps = _.memoize( function() {
 		       return EmploisDuTemps.query().$promise;
+		   } );
+
+		   this.get_creneau_emploi_du_temps = _.memoize( function( params ) {
+		       return CreneauEmploiDuTemps.get( params ).$promise;
 		   } );
 
 		   this.query_enseignants = _.memoize( function( params ) {
@@ -123,6 +135,13 @@ angular.module('cahierDeTexteApp')
 		   } );
 		   this.get_devoir = _.memoize( function( params ) {
 		       return Devoirs.get( params ).$promise;
+		   } );
+
+		   // this.query_plages_horaires = _.memoize( function() {
+		   //     return PlagesHoraires.query().$promise;
+		   // } );
+		   this.get_plage_horaire = _.memoize( function( params ) {
+		       return PlagesHoraires.get( params ).$promise;
 		   } );
 	       }
 	     ] );
