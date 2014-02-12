@@ -455,7 +455,7 @@ CREATE TABLE `types_devoir` (
 
 LOCK TABLES `types_devoir` WRITE;
 /*!40000 ALTER TABLE `types_devoir` DISABLE KEYS */;
-INSERT INTO `types_devoir` VALUES (1,'DS','Devoir surveillé'),(2,'DM','Devoir à la maison'),(3,'Leçon','Leçon à apprendre'),(4,'Exposé','Exposé à préparer'),(5,'Recherche','Recherche à faire'),(6,'Exercice','Exercice à faire'),(7,'DS','Devoir surveillé'),(8,'DM','Devoir à la maison'),(9,'Leçon','Leçon à apprendre'),(10,'Exposé','Exposé à préparer'),(11,'Recherche','Recherche à faire'),(12,'Exercice','Exercice à faire'),(13,'DS','Devoir surveillé'),(14,'DM','Devoir à la maison'),(15,'Leçon','Leçon à apprendre'),(16,'Exposé','Exposé à préparer'),(17,'Recherche','Recherche à faire'),(18,'Exercice','Exercice à faire');
+INSERT INTO `types_devoir` VALUES (1,'DS','Devoir surveillé'),(2,'DM','Devoir à la maison'),(3,'Leçon','Leçon à apprendre'),(4,'Exposé','Exposé à préparer'),(5,'Recherche','Recherche à faire'),(6,'Exercice','Exercice à faire');
 /*!40000 ALTER TABLE `types_devoir` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
