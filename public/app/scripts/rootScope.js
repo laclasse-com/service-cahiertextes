@@ -50,8 +50,12 @@ angular.module( 'cahierDeTexteApp' )
 		// options de tinyMCE
 		$rootScope.tinyMCEOptions = { menubar: false,
 					      statusbar: false,
-					      plugins: "textcolor",
-					      toolbar: "undo redo | styleselect | bold italic | link image | forecolor | backcolor" };
+					      plugins: "textcolor paste contextmenu autoresize",
+					      toolbar: "undo redo | styleselect | bold italic | link image | forecolor | backcolor",
+					      contextmenu: "bold italic",
+					      insertdatetime_formats: ["%d/%m/%Y", "%H:%M"]
+
+					    };
 
 		// options des graphiques
 		$rootScope.globalBarChartOptions = { animation : false,
