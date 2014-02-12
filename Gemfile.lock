@@ -62,6 +62,7 @@ GEM
     rack-rewrite (1.5.0)
     rack-test (0.6.2)
       rack (>= 1.0)
+    rake (0.9.6)
     rest-client (1.6.7)
       mime-types (>= 1.16)
     rspec (2.14.1)
@@ -109,6 +110,7 @@ DEPENDENCIES
   rack
   rack-rewrite
   rack-test
+  rake
   rest-client
   rspec
   sequel
