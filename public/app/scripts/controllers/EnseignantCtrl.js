@@ -243,7 +243,7 @@ angular.module('cahierDeTexteApp')
 					  return _(devoir).has( 'id' );
 				      });
 
-				      if ( ! _($scope.creneau).has( '_id' ) ) {
+				      if ( ( ! _($scope.creneau).has( '_id' ) ) && ( ( objets.cours.dirty ) || ( objets.devoirs.dirty ) ) ) {
 					  console.debug( 'creneau à compléter et ajouter au calendar' )
 					  var creneau = {};
 
