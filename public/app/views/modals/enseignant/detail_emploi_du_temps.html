@@ -2,15 +2,19 @@
   <button type="button" class="close pull-right" aria-hidden="true" data-ng-click="fermer()">&times;</button>
 
   <h3>
-    <span data-ng-hide="regroupement_id == ''">{{classes[ regroupement_id ]}}</span>
-    <select data-ng-show="regroupement_id == ''">
-      <option data-ng-repeat="cls in classes_array" value="{{cls.id}}">{{cls.nom}}</option>
-    </select>
-    -
-    <span data-ng-hide="matiere_id == ''">{{matieres[ matiere_id ].libelle_long}}</span>
-    <select data-ng-show="matiere_id == ''">
-      <option data-ng-repeat="mat in matieres_array" value="{{mat.id}}">{{mat.nom}}</option>
-    </select>
+    <span data-ng-show="cours.cahier_de_textes_id != ''">
+      {{classes[ regroupement_id ]}} - {{matieres[ matiere_id ].libelle_long}}
+    </span>
+    <span data-ng-show="cours.cahier_de_textes_id == ''">
+      <select data-ui-select2 data-ng-model="regroupement_id" data-placeholder="classe">
+	<option {selected : $first} data-ng-repeat="cls in classes_array" value="{{cls.id}}">{{cls.nom}}</option>
+      </select>
+      -
+      <select data-ui-select2 data-ng-model="matiere_id" data-placeholder="matière">
+	<option {selected : $first} data-ng-repeat="mat in matieres_array" value="{{mat.id}}">{{mat.nom}}</option>
+      </select>
+    </span>
+
   </h3>
 </div>
 <div class="modal-body">
