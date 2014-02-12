@@ -201,11 +201,6 @@ angular.module('cahierDeTexteApp')
 
 			  // 2. devoir
 			  if ( $scope.creneau.details.devoirs.length > 0 ) {
-			      // $scope.devoirs = _($scope.creneau.details.devoirs).map( function( devoir ) {
-			      //	  return API.get_devoir( { id: devoir.id } ).then( function( vrai_devoir ) {
-			      //	      return vrai_devoir;
-			      //	  });
-			      // });
 			      $scope.devoirs = [];
 			      _($scope.creneau.details.devoirs).each( function( devoir ) {
 				  API.get_devoir( { id: $scope.creneau.details.devoirs[0].id } )
