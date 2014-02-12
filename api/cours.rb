@@ -37,7 +37,8 @@ module CahierDeTextesAPI
       post do
          error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS', '0699999Z' ) || user.is?( 'DIR', '0699999Z' )
 
-         cours = Cours.create( cahier_de_textes_id: params[:cahier_de_textes_id],
+         cours = Cours.create( enseignant_id: user.uid,
+                                 cahier_de_textes_id: params[:cahier_de_textes_id],
                                  creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
                                  date_cours: params[:date_cours].to_s,
                                  date_creation: Time.now,
