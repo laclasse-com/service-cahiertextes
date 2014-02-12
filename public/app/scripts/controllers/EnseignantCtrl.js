@@ -116,6 +116,7 @@ angular.module('cahierDeTexteApp')
 		      if ( $scope.build_EdT_from_scratch ) {
 			  $scope.calendar.options.editable = true;
 			  $scope.calendar.options.disableDragging = true;
+			  $scope.calendar.options.eventDurationEditable = false;
 			  $scope.calendar.options.selectable = true;
 			  $scope.calendar.options.selectHelper = true;
 			  $scope.calendar.options.select = function(start, end, allDay) {
