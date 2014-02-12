@@ -244,6 +244,32 @@ angular.module('cahierDeTexteApp')
 				      objets.devoirs = _(objets.devoirs).filter(function(devoir) {
 					  return _(devoir).has( 'id' );
 				      });
+
+				      if ( ! _($scope.creneau).has( '_id' ) ) {
+					  console.debug( 'creneau à compléter et ajouter au calendar' )
+					  var creneau = {};
+
+					  var iedt = { cours: objets.cours,
+						       devoirs: objets.devoirs,
+						       cahier_de_textes_id: objets.cours.cahier_de_textes_id,
+						       creneau_emploi_du_temps_id: objets.cours.creneau_emploi_du_temps_id,
+						       matiere_id: $scope.creneau.matiere_id,
+						       regroupement_id: $scope.creneau.regroupement_id,
+						       start: $scope.creneau.start,
+						       end: $scope.creneau.end };
+					  var debut = API.get_plage_horaire({ id: $scope.creneau.debut }).then( function( response ) {
+					      iedt.start = response.debut;
+					  });
+					  var fin = API.get_plage_horaire({ id: $scope.creneau.fin }).then( function( response ) {
+					      iedt.end = response.fin;
+					  });
+
+					  $q.all( debut, fin ).then( function() {
+					      console.debug(iedt)
+					      $scope.assemble_fullCalendar_event( iedt );
+					  });
+				      }
+
 				      if ( ( objets.cours.dirty ) || ( objets.devoirs.dirty ) ) {
 					  var index = _($scope.calendar.events[0]).indexOf($scope.creneau);
 					  var updated_event = $scope.update_fullCalendar_event( $scope.creneau, objets.cours, objets.devoirs );
