@@ -7,9 +7,9 @@ angular.module('cahierDeTexteApp')
 		      $scope.loading = true;
 
 		      $scope.enseignant_id = $stateParams.enseignant_id;
-		      $scope.classe = -1;
+		      $scope.classe = null;
 		      $scope.mois = $rootScope.mois;
-		      $scope.moisCourant = -1;
+		      $scope.moisCourant = null;
 		      $scope.selectedSaisies = [];
 		      $scope.matieres = {};
 		      $scope.classes = {};
@@ -17,10 +17,10 @@ angular.module('cahierDeTexteApp')
 
 		      $scope.filtre = function( saisies ) {
 			  var data = saisies;
-			  if ( $scope.moisCourant != -1 ) {
+			  if ( $scope.moisCourant != null ) {
 			      data = _(data).where({ mois: $scope.moisCourant + 1 });
 			  }
-			  if ( $scope.classe != -1 ) {
+			  if ( $scope.classe != null ) {
 			      // .invert() suppose que les valeurs sont uniques
 			      var id = _($scope.classes).invert()[$scope.classe];
 			      data = _(data).where({ classe_id: id });

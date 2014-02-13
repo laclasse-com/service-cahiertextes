@@ -15,9 +15,9 @@ angular.module('cahierDeTexteApp')
 			  $scope.classes	 = {    };
 			  $scope.matieres	 =   []; // bientôt Noël !
 
-			  $scope.classe		 = -1;
-			  $scope.moisCourant	 = -1;
-			  $scope.matiereCourante = -1;
+			  $scope.classe		 = null;
+			  $scope.moisCourant	 = null;
+			  $scope.matiereCourante = null;
 
 			  $scope.global_stats    = { filled: 0,
 						     validated: 0 };
@@ -114,7 +114,7 @@ angular.module('cahierDeTexteApp')
 				  $scope.displayed_data = $scope.raw_data;
 
 				  // Filtrage par classe
-				  if ( $scope.classe != -1 ) {
+				  if ( $scope.classe != null ) {
 				      // .invert() suppose que les valeurs sont uniques
 				      var id = _($scope.classes).invert()[$scope.classe];
 				      $scope.displayed_data = _($scope.displayed_data).filter( function( r ) {
@@ -123,7 +123,7 @@ angular.module('cahierDeTexteApp')
 				  }
 
 				  // Filtrage sur une matière
-				  if ( $scope.matiereCourante != -1 ) {
+				  if ( $scope.matiereCourante != null ) {
 				      $scope.displayed_data = $scope.displayed_data.map( function( regroupement ) {
 					  var matieres = _(regroupement.matieres).filter( function( r ) {
 					      return r.matiere_id == $scope.matiereCourante;
@@ -135,7 +135,7 @@ angular.module('cahierDeTexteApp')
 				  }
 
 				  // filtrage sur un mois
-				  if ( $scope.moisCourant != -1 ) {
+				  if ( $scope.moisCourant != null ) {
 				      $scope.displayed_data = $scope.displayed_data.map( function( regroupement ) {
 					  return { regroupement_id: regroupement.regroupement_id,
 						   matieres: regroupement.matieres.map( function( matiere ) {
