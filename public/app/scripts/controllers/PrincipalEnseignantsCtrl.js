@@ -73,7 +73,6 @@ angular.module('cahierDeTexteApp')
 			  } };
 
 		      $scope.extract_classes_promises = function( data ) {
-			  console.debug(data)
 			  return _.chain(data)
 			      .pluck('classes')
 			      .flatten()
@@ -83,7 +82,6 @@ angular.module('cahierDeTexteApp')
 				  return ( regroupement_id === '' );
 			      })
 			      .map(function( regroupement_id ) {
-				  console.debug(regroupement_id)
 				  return Annuaire.get_regroupement( regroupement_id );
 			      })
 			      .value();
