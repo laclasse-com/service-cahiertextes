@@ -48,7 +48,7 @@ angular.module('cahierDeTexteApp')
 			  };
 
 			  $scope.ajout_devoir = function() {
-			      $scope.devoirs.push( create_devoir( $scope.cours, $scope.types_de_devoir ) );
+			      $scope.devoirs.unshift( create_devoir( $scope.cours, $scope.types_de_devoir ) );
 			  };
 
 			  $scope.fermer = function() {
