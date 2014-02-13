@@ -7,9 +7,8 @@ angular.module('cahierDeTexteApp')
 		      $scope.loading = true;
 
 		      $scope.annee = $rootScope.mois;
-		      $scope.classe = -1;
-		      $scope.mois = -1;
-		      $scope.enseignant = -1;
+		      $scope.classe = null;
+		      $scope.mois = null;
 		      $scope.classes = {};
 		      $scope.details_enseignants = {};
 
@@ -74,12 +73,17 @@ angular.module('cahierDeTexteApp')
 			  } };
 
 		      $scope.extract_classes_promises = function( data ) {
+			  console.debug(data)
 			  return _.chain(data)
 			      .pluck('classes')
 			      .flatten()
 			      .pluck('regroupement')
 			      .uniq()
+			      .reject(function( regroupement_id ) {
+				  return ( regroupement_id === '' );
+			      })
 			      .map(function( regroupement_id ) {
+				  console.debug(regroupement_id)
 				  return Annuaire.get_regroupement( regroupement_id );
 			      })
 			      .value();
@@ -97,7 +101,7 @@ angular.module('cahierDeTexteApp')
 			      $scope.displayed_data = $scope.raw_data;
 
 			      // filtrage sur la classe sélectionnée
-			      if ( $scope.classe != -1 ) {
+			      if ( $scope.classe != null ) {
 				  // .invert() suppose que les valeurs sont uniques
 				  var id = _($scope.classes).invert()[$scope.classe];
 				  $scope.displayed_data = _.chain($scope.displayed_data)
@@ -115,7 +119,7 @@ angular.module('cahierDeTexteApp')
 			      }
 
 			      // filtrage sur le mois sélectionné
-			      if ( $scope.mois != -1 ) {
+			      if ( $scope.mois != null ) {
 				  $scope.displayed_data = _($scope.displayed_data).map( function( enseignant ) {
 				      return { enseignant_id: enseignant.enseignant_id,
 					       classes: _(enseignant.classes).map( function( classe ) {
