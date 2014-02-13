@@ -99,7 +99,7 @@ angular.module('cahierDeTexteApp')
 
 		      $scope.matieres = {};
 		      $scope.classes = {};
-		      $scope.classe = -1;
+		      $scope.classe = null;
 
 		      // configuration du composant calendrier /////////////////
 		      $scope.calendar = { options: $rootScope.globalCalendarOptions,
@@ -372,7 +372,7 @@ angular.module('cahierDeTexteApp')
 			  var filtered_data = $scope.raw_data;
 
 			  // Filtrage par classe
-			  if ( $scope.classe != -1 ) {
+			  if ( $scope.classe != null ) {
 			      // .invert() suppose que les valeurs sont uniques
 			      var id = _($scope.classes).invert()[$scope.classe];
 			      filtered_data = _($scope.raw_data).filter( function( creneau ) {
