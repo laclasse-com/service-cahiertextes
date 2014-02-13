@@ -41,7 +41,7 @@ angular.module('cahierDeTexteApp')
 			      var date = new Date();
 			      var devoir = new Devoirs({ cours_id: cours.id,
 							 date_due: date.getFullYear() + '-' + date.getMonth() + '-' + date.getDay(),
-							 type_devoir_id: types_de_devoir[1].id });
+							 type_devoir_id: null });
 			      devoir.create = true;
 
 			      return devoir;

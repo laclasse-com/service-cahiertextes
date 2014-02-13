@@ -50,6 +50,7 @@
       <div class="pull-right">
 	<select data-ui-select2 data-ng-model="devoir.type_devoir_id" data-placeholder="Type de devoir"
 		data-ng-options="type_de_devoir.id as type_de_devoir.description for type_de_devoir in types_de_devoir">
+	  <option value="" disabled selected>Choisissez un type de devoir</option>
 	</select>
 	<!-- input data-ui-date="{ dateFormat: 'd M yy' }" data-ui-date-format="d M yy" data-ng-model="devoir.date_due" -->
 	<input data-ui-date="{ dateFormat: 'yy-mm-dd' }" data-ui-date-format="yy-mm-dd" data-ng-model="devoir.date_due">
