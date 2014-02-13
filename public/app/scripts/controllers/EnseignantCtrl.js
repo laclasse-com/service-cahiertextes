@@ -53,7 +53,9 @@ angular.module('cahierDeTexteApp')
 
 			  $scope.fermer = function() {
 			      $modalInstance.close( { cours: $scope.cours,
-						      devoirs: $scope.devoirs} );
+						      devoirs: $scope.devoirs,
+						      matiere_id: $scope.matiere_id,
+						      regroupement_id: $scope.regroupement_id } );
 			  };
 
 			  $scope.dupliquer = function() {
@@ -140,6 +142,9 @@ angular.module('cahierDeTexteApp')
 
 				      return cours;
 				  };
+
+				  // durent le $scope.creneau.$save() on perds regroupement_id
+				  $scope.creneau.regroupement_id = '';
 
 				  $scope.matiere_id = $scope.creneau.matiere_id;
 				  $scope.regroupement_id = $scope.creneau.regroupement_id;
@@ -246,19 +251,19 @@ angular.module('cahierDeTexteApp')
 
 				      if ( ( ! _($scope.creneau).has( '_id' ) ) && ( ( objets.cours.dirty ) || ( objets.devoirs.dirty ) ) ) {
 					  console.debug( 'creneau à compléter et ajouter au calendar' )
-					  var creneau = {};
-
 					  var iedt = { cours: objets.cours,
 						       devoirs: objets.devoirs,
 						       cahier_de_textes_id: objets.cours.cahier_de_textes_id,
 						       creneau_emploi_du_temps_id: objets.cours.creneau_emploi_du_temps_id,
-						       matiere_id: $scope.creneau.matiere_id,
-						       regroupement_id: $scope.creneau.regroupement_id,
+						       matiere_id: objets.matiere_id,
+						       regroupement_id: objets.regroupement_id,
 						       start: $scope.creneau.start,
 						       end: $scope.creneau.end };
+
 					  var debut = API.get_plage_horaire({ id: $scope.creneau.debut }).then( function( response ) {
 					      iedt.start = response.debut;
 					  });
+
 					  var fin = API.get_plage_horaire({ id: $scope.creneau.fin }).then( function( response ) {
 					      iedt.end = response.fin;
 					  });
