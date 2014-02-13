@@ -13,12 +13,12 @@
   <div class="panel panel-default">
     <div class="panel-body">
 
-      <select class="col-md-3" data-ng-model="classe" data-placeholder="Toutes les classes" data-ng-change="process_data()" data-ng-options="class as class for (id, class) in classes">
+      <select class="col-md-3" data-ng-model="classe" data-ng-change="process_data()" data-ng-options="class as class for (id, class) in classes">
 	<option value="">Toutes les classes</option>
       </select>
 
 
-      <select class="col-md-3" data-ng-model="moisCourant" data-placeholder="Toute l'année" data-ng-change="process_data()" data-ng-options="mois.indexOf(m) as m for m in mois">
+      <select class="col-md-3" data-ng-model="moisCourant" data-ng-change="process_data()" data-ng-options="mois.indexOf(m) as m for m in mois">
 	<option value="">Toute l'année</option>
       </select>
 
