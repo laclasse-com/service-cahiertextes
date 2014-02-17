@@ -138,9 +138,9 @@ angular.module('cahierDeTexteApp')
 			   return Devoirs.get( params ).$promise;
 		       };
 
-		   // this.query_plages_horaires = function() {
-		   //     return PlagesHoraires.query().$promise;
-		   // };
+		   this.query_plages_horaires = function() {
+		       return PlagesHoraires.query().$promise;
+		   };
 		   this.get_plage_horaire = function( params ) {
 			   return PlagesHoraires.get( params ).$promise;
 		   };
