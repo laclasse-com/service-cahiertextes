@@ -131,6 +131,8 @@ angular.module('cahierDeTexteApp')
 
 			      $scope.creneau.$save().then(function() {
 				  $scope.creneau.dirty = true;
+				  $scope.creneau.heure_debut = start;
+				  $scope.creneau.heure_fin = end;
 
 				  // TODO: refactor this with $scope.calendar.options.eventClick()
 				  var create_cours = function( creneau ) {
@@ -193,7 +195,8 @@ angular.module('cahierDeTexteApp')
 			  // 1. cours
 			  if ( $scope.creneau.details.cours.id !== undefined ) {
 			      $scope.cours = API.get_cours( { id: $scope.creneau.details.cours.id } );
-			      $scope.cours.then( function success() {
+			      $scope.cours.then( function success( cours ) {
+				  $scope.cours = cours;
 				  $scope.cours.create = false;
 			      },
 						 function error() {
@@ -241,55 +244,52 @@ angular.module('cahierDeTexteApp')
 						   regroupement_id: function() { return $scope.regroupement_id; },
 						   cours: function() { return $scope.cours; },
 						   devoirs: function() { return $scope.devoirs; },
-						   types_de_devoir: function() { return $scope.types_de_devoir; } } })
-			      .result.then(
-				  // éxécuté à la fermeture de la popup
-				  function ( objets ) {
-				      objets.devoirs = _(objets.devoirs).filter(function(devoir) {
-					  return _(devoir).has( 'id' );
-				      });
+						   types_de_devoir: function() { return $scope.types_de_devoir; } } }
+				     ).result.then( function ( objets ) {     // éxécuté à la fermeture de la popup
+					 var updated_event = {};
 
-				      if ( ( ! _($scope.creneau).has( '_id' ) ) && ( ( objets.cours.dirty ) || ( objets.devoirs.dirty ) ) ) {
-					  console.debug( 'creneau à compléter et ajouter au calendar' )
-					  var iedt = { cours: objets.cours,
-						       devoirs: objets.devoirs,
-						       cahier_de_textes_id: objets.cours.cahier_de_textes_id,
-						       creneau_emploi_du_temps_id: objets.cours.creneau_emploi_du_temps_id,
-						       matiere_id: objets.matiere_id,
-						       regroupement_id: objets.regroupement_id,
-						       start: $scope.creneau.start,
-						       end: $scope.creneau.end };
+					 objets.devoirs = _(objets.devoirs).filter( function( devoir ) {
+					     return _(devoir).has( 'id' );
+					 } );
 
-					  var debut = API.get_plage_horaire({ id: $scope.creneau.debut }).then( function( response ) {
-					      iedt.start = response.debut;
-					  });
+					 // s'il s'agit d'une création de créneau
+					 if ( ! _($scope.creneau).has( '_id' ) ) {
 
-					  var fin = API.get_plage_horaire({ id: $scope.creneau.fin }).then( function( response ) {
-					      iedt.end = response.fin;
-					  });
+					     var iedt = { cours: objets.cours,
+							  devoirs: objets.devoirs,
+							  cahier_de_textes_id: objets.cours.cahier_de_textes_id,
+							  creneau_emploi_du_temps_id: objets.cours.creneau_emploi_du_temps_id,
+							  matiere_id: objets.matiere_id,
+							  regroupement_id: objets.regroupement_id,
+							  start: $scope.creneau.heure_debut,
+							  end: $scope.creneau.heure_fin };
 
-					  $q.all( debut, fin ).then( function() {
-					      console.debug(iedt)
-					      $scope.assemble_fullCalendar_event( iedt );
-					  });
-				      }
+					     $scope.creneau.matiere_id = objets.matiere_id;
+					     $scope.creneau.regroupement_id = objets.regroupement_id;
 
-				      if ( ( objets.cours.dirty ) || ( objets.devoirs.dirty ) ) {
-					  var index = _($scope.calendar.events[0]).indexOf($scope.creneau);
-					  var updated_event = $scope.update_fullCalendar_event( $scope.creneau, objets.cours, objets.devoirs );
+					     updated_event = $scope.assemble_fullCalendar_event( iedt );
 
-					  _.chain(updated_event)
-					      .keys()
-					      .reject(function( key ) { //updated_event n'a pas de title
-						  return key == "title";
-					      })
-					      .each( function( propriete ) {
-						  $scope.calendar.events[0][ index ][ propriete ] = updated_event[ propriete ];
-					      });
-					  $scope.emploi_du_temps.fullCalendar( 'renderEvent', $scope.calendar.events[0][ index ] );
-				      }
-				  }
-			      );
+					     $scope.calendar.events[0].push( updated_event );
+					     $scope.emploi_du_temps.fullCalendar( 'renderEvent', _($scope.calendar.events[0]).last(), true );
+
+					 } else {
+
+					     if ( ( objets.cours.dirty ) || ( objets.devoirs.dirty ) ) {
+						 updated_event = $scope.update_fullCalendar_event( $scope.creneau, objets.cours, objets.devoirs );
+
+						 var index = _($scope.calendar.events[0]).indexOf($scope.creneau);
+						 _.chain(updated_event)
+						     .keys()
+						     .reject(function( key ) { //updated_event n'a pas de title
+							 return key == "title";
+						     })
+						     .each( function( propriete ) {
+							 $scope.calendar.events[0][ index ][ propriete ] = updated_event[ propriete ];
+						     });
+						 $scope.emploi_du_temps.fullCalendar( 'renderEvent', $scope.calendar.events[0][ index ] );
+					     }
+					 }
+				     } );
 		      };
 
 		      // consommation des données //////////////////////////////
@@ -342,12 +342,17 @@ angular.module('cahierDeTexteApp')
 			  }
 
 			  // composition du titre
-			  $scope.matieres[ event.details.matiere_id ] = Annuaire.get_matiere( event.details.matiere_id );
+			  console.debug(event.details.matiere_id)
+			  if ( event.details.matiere_id == "" ) {
+			      calendar_event.title = "** BUG**";
+			  } else {
+			      $scope.matieres[ event.details.matiere_id ] = Annuaire.get_matiere( event.details.matiere_id );
 
-			  $scope.matieres[ event.details.matiere_id ].then( function success( response ) {
-			      $scope.matieres[ event.details.matiere_id ] = response;
-			      calendar_event.title = $scope.matieres[ event.details.matiere_id ].libelle_long;
-			  });
+			      $scope.matieres[ event.details.matiere_id ].then( function success( response ) {
+				  $scope.matieres[ event.details.matiere_id ] = response;
+				  calendar_event.title = $scope.matieres[ event.details.matiere_id ].libelle_long;
+			      });
+			  }
 
 			  return calendar_event;
 		      };
@@ -379,7 +384,7 @@ angular.module('cahierDeTexteApp')
 			  // Filtrage par classe
 			  if ( $scope.classe != null ) {
 			      // .invert() suppose que les valeurs sont uniques
-			      var id = _($scope.classes).invert()[$scope.classe];
+			      var id = _($scope.classes).invert()[ $scope.classe ];
 			      filtered_data = _($scope.raw_data).filter( function( creneau ) {
 				  return creneau.regroupement_id == id;
 			      });
