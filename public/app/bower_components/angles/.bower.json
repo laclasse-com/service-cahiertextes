@@ -18,11 +18,11 @@
     "nnnick-chartjs": "*"
   },
   "homepage": "https://github.com/lgsilver/angles",
-  "_release": "2275bd8ecc",
+  "_release": "ef30df657a",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "2275bd8eccc258ec1e8bad147a56b39eec6bc9c7"
+    "commit": "ef30df657a8139025e2f3382cb2c80125c4f8ba9"
   },
   "_source": "git://github.com/lgsilver/angles.git",
   "_target": "*",
