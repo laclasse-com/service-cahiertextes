@@ -19,16 +19,8 @@ angular.module('cahierDeTexteApp')
 			  $scope.regroupement_id = regroupement_id;
 			  $scope.tinyMCEOptions = $rootScope.tinyMCEOptions;
 
-			  if ( $scope.matiere_id == '' ) {
-			      $scope.matieres_array = _($scope.matieres).keys().map( function( key ) {
-				  return { id: key, nom: $scope.matieres[key].libelle_long };
-			      });
-			  }
-			  if ( $scope.regroupement_id == '' ) {
-			      $scope.classes_array = _($scope.classes).keys().map( function( key ) {
-				  return { id: key, nom: $scope.classes[key] };
-			      });
-			  }
+			  // http://stackoverflow.com/questions/19408883/angularjs-select-not-2-way-binding-to-model
+			  $scope.scope = $scope;
 
 			  $scope.creneaux_similaires = _.chain(raw_data)
 			      .where({matiere_id: $scope.matiere_id})
@@ -235,6 +227,9 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      $scope.ouvre_popup_edition = function(  ) {
+
+			  console.debug($scope)
+
 			  $modal.open({ templateUrl: 'app/views/modals/enseignant/detail_emploi_du_temps.html',
 					controller: editionModalInstanceCtrl,
 					resolve: { raw_data: function() { return $scope.raw_data; },
@@ -246,6 +241,8 @@ angular.module('cahierDeTexteApp')
 						   devoirs: function() { return $scope.devoirs; },
 						   types_de_devoir: function() { return $scope.types_de_devoir; } } }
 				     ).result.then( function ( objets ) {     // éxécuté à la fermeture de la popup
+					 console.debug('Popup closed, sent this back:')
+					 console.debug(objets)
 					 var updated_event = {};
 
 					 objets.devoirs = _(objets.devoirs).filter( function( devoir ) {
@@ -341,18 +338,12 @@ angular.module('cahierDeTexteApp')
 			      calendar_event.description += '</span>';
 			  }
 
-			  // composition du titre
-			  console.debug(event.details.matiere_id)
-			  if ( event.details.matiere_id == "" ) {
-			      calendar_event.title = "** BUG**";
-			  } else {
-			      $scope.matieres[ event.details.matiere_id ] = Annuaire.get_matiere( event.details.matiere_id );
+			  $scope.matieres[ event.details.matiere_id ] = Annuaire.get_matiere( event.details.matiere_id );
 
-			      $scope.matieres[ event.details.matiere_id ].then( function success( response ) {
-				  $scope.matieres[ event.details.matiere_id ] = response;
-				  calendar_event.title = $scope.matieres[ event.details.matiere_id ].libelle_long;
-			      });
-			  }
+			  $scope.matieres[ event.details.matiere_id ].then( function success( response ) {
+			      $scope.matieres[ event.details.matiere_id ] = response;
+			      calendar_event.title = $scope.matieres[ event.details.matiere_id ].libelle_long;
+			  });
 
 			  return calendar_event;
 		      };
