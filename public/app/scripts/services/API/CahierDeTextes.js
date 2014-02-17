@@ -100,48 +100,49 @@ angular.module('cahierDeTexteApp')
     .service('API',
 	     [ 'Classes', 'Cours', 'CreneauEmploiDuTemps', 'Devoirs', 'EmploisDuTemps', 'Enseignants', 'TypesDeDevoir', 'PlagesHoraires',
 	       function( Classes, Cours, CreneauEmploiDuTemps, Devoirs, EmploisDuTemps, Enseignants, TypesDeDevoir, PlagesHoraires ) {
-		   this.query_classes = _.memoize( function( params ) {
-		       return Classes.query( params ).$promise;
-		   } );
+		   this.query_classes = function( params ) {
+			   return Classes.query( params ).$promise;
+		       };
 
 		   this.query_types_de_devoir = _.memoize( function() {
-		       return TypesDeDevoir.query().$promise;
-		   } );
+			   return TypesDeDevoir.query().$promise;
+		       } );
 		   this.get_type_de_devoir = _.memoize( function( params ) {
-		       return TypesDeDevoir.get( params ).$promise;
-		   } );
+			   return TypesDeDevoir.get( params ).$promise;
+		       } );
 
-		   this.query_emplois_du_temps = _.memoize( function() {
-		       return EmploisDuTemps.query().$promise;
-		   } );
+		   this.query_emplois_du_temps = function() {
+			   return EmploisDuTemps.query().$promise;
+		       };
 
-		   this.get_creneau_emploi_du_temps = _.memoize( function( params ) {
-		       return CreneauEmploiDuTemps.get( params ).$promise;
-		   } );
+		   this.get_creneau_emploi_du_temps = function( params ) {
+			   return CreneauEmploiDuTemps.get( params ).$promise;
+		       };
 
-		   this.query_enseignants = _.memoize( function( params ) {
-		       return Enseignants.query( params ).$promise;
-		   } );
-		   this.get_enseignant = _.memoize( function( params ) {
-		       return Enseignants.get( params ).$promise;
-		   } );
+		   this.query_enseignants = function( params ) {
+			   return Enseignants.query( params ).$promise;
+		       };
+		   this.get_enseignant = function( params ) {
+			   return Enseignants.get( params ).$promise;
+		       };
 
-		   this.get_cours = _.memoize( function( params ) {
-		       return Cours.get( params ).$promise;
-		   } );
+		   this.get_cours = // // _.memoize(
+		       function( params ) {
+			   return Cours.get( params ).$promise;
+		       }; //; // );
 
-		   this.query_devoirs = _.memoize( function() {
-		       return Devoirs.query().$promise;
-		   } );
-		   this.get_devoir = _.memoize( function( params ) {
-		       return Devoirs.get( params ).$promise;
-		   } );
+		   this.query_devoirs = function() {
+			   return Devoirs.query().$promise;
+		       };
+		   this.get_devoir = function( params ) {
+			   return Devoirs.get( params ).$promise;
+		       };
 
-		   // this.query_plages_horaires = _.memoize( function() {
+		   // this.query_plages_horaires = function() {
 		   //     return PlagesHoraires.query().$promise;
-		   // } );
-		   this.get_plage_horaire = _.memoize( function( params ) {
-		       return PlagesHoraires.get( params ).$promise;
-		   } );
+		   // };
+		   this.get_plage_horaire = function( params ) {
+			   return PlagesHoraires.get( params ).$promise;
+		   };
 	       }
 	     ] );
