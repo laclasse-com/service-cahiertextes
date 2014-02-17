@@ -6,12 +6,12 @@
       {{classes[ regroupement_id ]}} - {{matieres[ matiere_id ].libelle_long}}
     </span>
     <span data-ng-show="cours.cahier_de_textes_id == ''">
-      <select data-ng-model="regroupement_id" data-ng-options="c.id as c.nom for c in classes_array">
+      <select data-ng-model="scope.regroupement_id" data-ng-options="id as classe for (id, classe) in classes">
 	<option value="" disabled selected>Choisissez une classe</option>
       </select>
       -
-      <select data-ng-model="matiere_id" data-ng-options="m.id as m.nom for m in matieres_array">
-	<option value="" disabled selected>Choisissez une matière</option>
+      <select data-ng-model="scope.matiere_id" data-ng-options="id as matiere.libelle_long for (id, matiere) in matieres">
+	  <option value="" disabled selected>Choisissez une matière</option>
       </select>
     </span>
 
