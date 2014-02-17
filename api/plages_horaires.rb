@@ -5,7 +5,14 @@ module CahierDeTextesAPI
 
     desc 'renvoi toutes les plages horaires'
     get '/' do
-      PlageHoraire.all
+      PlageHoraire.all.map {
+        |ph|
+
+        { id: ph.id,
+          label: ph.label,
+          debut: ph.debut.iso8601,
+          fin: ph.fin.iso8601 }
+      }
     end
 
     desc 'renvoi une plage horaire'
@@ -13,7 +20,12 @@ module CahierDeTextesAPI
       requires :id
     }
     get '/:id' do
-      PlageHoraire[ params[:id] ]
+       ph = PlageHoraire[ params[:id] ]
+
+       { id: ph.id,
+         label: ph.label,
+         debut: ph.debut.iso8601,
+         fin: ph.fin.iso8601 }
     end
 
   end
