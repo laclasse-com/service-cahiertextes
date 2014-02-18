@@ -46,6 +46,9 @@
     <span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
   </button>
 
+  <ul>
+    <li data-ng-repeat="erreur in erreurs">{{erreur.message}}</li>
+  </ul>
   <div class="panel panel-default" data-ng-repeat="devoir in devoirs">
     <div class="panel-heading enseignant-saisie">
       <h3 class="panel-title">Travail à faire</h3>

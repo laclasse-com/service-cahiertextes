@@ -19,6 +19,8 @@ angular.module('cahierDeTexteApp')
 			  $scope.regroupement_id = regroupement_id;
 			  $scope.tinyMCEOptions = $rootScope.tinyMCEOptions;
 
+			  $scope.erreurs = [];
+
 			  // http://stackoverflow.com/questions/19408883/angularjs-select-not-2-way-binding-to-model
 			  $scope.scope = $scope;
 
@@ -55,8 +57,11 @@ angular.module('cahierDeTexteApp')
 			  };
 
 			  $scope.valider = function() {
-			      var promesse = $q.when(true);
+			      // réinitialisation des erreurs
+			      $scope.erreurs = [];
 
+			      // traitement de la séquence pédagogique
+			      var promesse = $q.when( true );
 			      if ( $scope.cours.contenu.length > 0 ) {
 				  $scope.cours.dirty = true;
 				  if ( $scope.cours.create ) {
@@ -68,23 +73,46 @@ angular.module('cahierDeTexteApp')
 
 			      promesse.then( function( cours ) {
 				  $scope.cours = cours;
-				  $scope.devoirs = _($scope.devoirs).map(function( devoir ) {
-				      if ( devoir.contenu.length > 0 ) {
-					  devoir.dirty = true;
-					  if ( devoir.create ) {
-					      devoir.cours_id = $scope.cours.id;
-					      devoir.$save().then( function( new_devoir ) {
-						  devoir.id = new_devoir.id;
-					      });
-					  } else {
-					      devoir.$update();
+
+				  // traitement des devoirs attachés
+				  var promesses = [];
+				  $scope.devoirs = _($scope.devoirs).map(
+				      function( devoir ) {
+					  if ( devoir.contenu.length > 0 ) {
+					      devoir.dirty = true;
+					      var prom = $q.defer();
+					      if ( devoir.create ) {
+						  devoir.cours_id = $scope.cours.id;
+						  devoir.$save().then( function success( result ) {
+						      devoir.id = result.id;
+						      prom.resolve( result );
+						  }, function( response ) {
+						      $scope.erreurs.unshift( { status: response.status,
+										message: response.data.error } );
+						      prom.reject( response );
+						  });
+					      } else {
+						  devoir.$update().then( function success( result ) {
+						      devoir.id = result.id;
+						      prom.resolve( result );
+						  }, function( response ) {
+						      $scope.erreurs.unshift( { status: response.status,
+										message: response.data.error } );
+						      prom.reject( response );
+						  });
+					      }
+
+					      promesses.push( prom.promise );
 					  }
+					  return devoir;
+				      } );
+
+				  $q.all( promesses ).then( function() {
+				      if ( _($scope.erreurs).size() == 0 ) {
+					  $scope.fermer();
 				      }
-				      return devoir;
 				  });
 			      });
-
-			      $scope.fermer();
 			  };
 		      };
 
