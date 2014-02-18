@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantCtrl',
-		[ '$scope', '$rootScope', '$stateParams', '$q', 'API', 'Cours', 'Annuaire', 'CurrentUser',
-		  function( $scope, $rootScope, $stateParams, $q, API, Cours, Annuaire, CurrentUser ) {
+		[ '$scope', '$rootScope', '$stateParams', '$q', 'API', 'Cours', 'Annuaire', 'User',
+		  function( $scope, $rootScope, $stateParams, $q, API, Cours, Annuaire, User ) {
 		      $scope.loading = true;
 
 		      $scope.enseignant_id = $stateParams.enseignant_id;
@@ -185,7 +185,7 @@ angular.module('cahierDeTexteApp')
 				  .value();
 			  });
 
-		      CurrentUser.getCurrentUser().then( function( response ) {
+		      User.get_user().then( function( response ) {
 			  var current_user = response.data;
 			  API.get_enseignant( { enseignant_id: $stateParams.enseignant_id, uai: current_user.ENTPersonStructRattachRNE } ).then(
 				      function success( response ) {

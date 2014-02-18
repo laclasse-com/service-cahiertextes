@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantsCtrl',
-		[ '$scope', '$rootScope', '$q', 'API', 'Annuaire', 'CurrentUser',
-		  function( $scope, $rootScope, $q, API, Annuaire, CurrentUser ) {
+		[ '$scope', '$rootScope', '$q', 'API', 'Annuaire', 'User',
+		  function( $scope, $rootScope, $q, API, Annuaire, User ) {
 		      $scope.loading = true;
 
 		      $scope.annee = $rootScope.mois;
@@ -159,7 +159,7 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      // Récupération et consommation des données
-		      CurrentUser.getCurrentUser().then( function( response ) {
+		      User.get_user().then( function( response ) {
 			  var current_user = response.data;
 			  API.query_enseignants( { uai: current_user.ENTPersonStructRattachRNE } ).then( function success( response ) {
 			      $scope.raw_data = _(response).reject( function( enseignant ) {

@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EnseignantCtrl',
-		[ '$scope', '$rootScope', '$modal', '$q', 'API', 'Annuaire', 'Cours', 'Devoirs', 'EmploisDuTemps', 'CurrentUser', 'CreneauEmploiDuTemps',
-		  function ( $scope, $rootScope, $modal, $q, API, Annuaire, Cours, Devoirs, EmploisDuTemps, CurrentUser, CreneauEmploiDuTemps ) {
+		[ '$scope', '$rootScope', '$modal', '$q', 'API', 'Annuaire', 'Cours', 'Devoirs', 'EmploisDuTemps', 'User', 'CreneauEmploiDuTemps',
+		  function ( $scope, $rootScope, $modal, $q, API, Annuaire, Cours, Devoirs, EmploisDuTemps, User, CreneauEmploiDuTemps ) {
 		      $scope.loading = true;
 
 		      ///////////////////////////////////////// Sous-contrôleurs

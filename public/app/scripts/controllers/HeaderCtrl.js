@@ -2,9 +2,9 @@
 
 angular.module('cahierDeTexteApp')
     .controller('HeaderCtrl',
-		[ '$scope', '$location', 'CurrentUser',
-		  function ( $scope, $location, CurrentUser ) {
-		      CurrentUser.getCurrentUser().success( function( response ) {
+		[ '$scope', '$location', 'User',
+		  function ( $scope, $location, User ) {
+		      User.get_user().success( function( response ) {
 			  $scope.current_user = response;
 		      });
 		  } ] );
