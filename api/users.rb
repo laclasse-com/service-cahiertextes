@@ -13,11 +13,13 @@ module CahierDeTextesAPI
 
     desc 'efface toute trace de l\'utilisateur identifié'
     delete '/:id' do
+       # TODO
        STDERR.puts "Deleteing all traces of #{params[:id]}"
     end
 
     desc 'efface toute trace de l\'utilisateur identifié'
     put '/:target_id/merge/:source_id' do
+       # TODO
        STDERR.puts "Merging all data of #{params[:source_id]} into #{params[:target_id]}"
     end
 
