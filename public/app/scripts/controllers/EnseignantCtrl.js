@@ -227,9 +227,6 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      $scope.ouvre_popup_edition = function(  ) {
-
-			  console.debug($scope)
-
 			  $modal.open({ templateUrl: 'app/views/modals/enseignant/detail_emploi_du_temps.html',
 					controller: editionModalInstanceCtrl,
 					resolve: { raw_data: function() { return $scope.raw_data; },
@@ -241,8 +238,6 @@ angular.module('cahierDeTexteApp')
 						   devoirs: function() { return $scope.devoirs; },
 						   types_de_devoir: function() { return $scope.types_de_devoir; } } }
 				     ).result.then( function ( objets ) {     // éxécuté à la fermeture de la popup
-					 console.debug('Popup closed, sent this back:')
-					 console.debug(objets)
 					 var updated_event = {};
 
 					 objets.devoirs = _(objets.devoirs).filter( function( devoir ) {
