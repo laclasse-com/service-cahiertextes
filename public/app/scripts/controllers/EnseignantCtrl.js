@@ -45,13 +45,6 @@ angular.module('cahierDeTexteApp')
 			      $scope.devoirs.unshift( create_devoir( $scope.cours, $scope.types_de_devoir ) );
 			  };
 
-			  $scope.fermer = function() {
-			      $modalInstance.close( { cours: $scope.cours,
-						      devoirs: $scope.devoirs,
-						      matiere_id: $scope.matiere_id,
-						      regroupement_id: $scope.regroupement_id } );
-			  };
-
 			  $scope.dupliquer = function() {
 			      console.log('TODO: la duplication en action !')
 			  };
@@ -109,7 +102,10 @@ angular.module('cahierDeTexteApp')
 
 				  $q.all( promesses ).then( function() {
 				      if ( _($scope.erreurs).size() == 0 ) {
-					  $scope.fermer();
+					  $modalInstance.close( { cours: $scope.cours,
+								  devoirs: $scope.devoirs,
+								  matiere_id: $scope.matiere_id,
+								  regroupement_id: $scope.regroupement_id } );
 				      }
 				  });
 			      });
