@@ -2,11 +2,11 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalClassesCtrl',
-		[ '$scope', '$rootScope', '$q', 'API', 'Annuaire', 'CurrentUser',
-		  function ( $scope, $rootScope, $q, API, Annuaire, CurrentUser ) {
+		[ '$scope', '$rootScope', '$q', 'API', 'Annuaire', 'User',
+		  function ( $scope, $rootScope, $q, API, Annuaire, User ) {
 		      $scope.loading = true;
 
-		      CurrentUser.getCurrentUser().then( function( response ) {
+		      User.get_user().then( function( response ) {
 			  var current_user = response.data;
 			  $scope.uai = current_user.ENTPersonStructRattachRNE;
 

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module( 'cahierDeTexteApp' )
-    .run( [ '$rootScope', '$location', 'CurrentUser',
-	    function ( $rootScope, $location, CurrentUser ) {
+    .run( [ '$rootScope', '$location', 'User',
+	    function ( $rootScope, $location, User ) {
 		$rootScope.APP_VIRTUAL_PATH = '/ct';
 
 		$rootScope.mois = [ 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre' ];
@@ -67,7 +67,7 @@ angular.module( 'cahierDeTexteApp' )
 		$rootScope.globalLineChartOptions = { animation : false };
 		$rootScope.globalRadarChartOptions = { animation : false };
 
-		CurrentUser.getCurrentUser().then(function (response) {
+		User.get_user().then(function (response) {
 		    var current_user = response.data;
 
 		    // Par souci de rapidité on parse current_user.ENTPersonProfils plutôt que d'attendre
