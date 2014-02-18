@@ -11,7 +11,7 @@ require_relative './lib/UserHelpers'
 require_relative './models/models'
 require_relative './lib/pronote'
 
-require_relative './api/user'
+require_relative './api/users'
 
 require_relative './api/pronote'
 require_relative './api/etablissements'
@@ -38,7 +38,7 @@ module CahierDeTextesAPI
       error!( '401 Unauthorized', 401 ) unless is_logged?
     end
 
-    resource( :user                     ) { mount ::CahierDeTextesAPI::UserAPI }
+    resource( :users                    ) { mount ::CahierDeTextesAPI::UsersAPI }
 
     resource( :pronote                  ) { mount ::CahierDeTextesAPI::ProNoteAPI }
     resource( :etablissements           ) { mount ::CahierDeTextesAPI::EtablissementsAPI }

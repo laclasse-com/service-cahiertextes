@@ -7,7 +7,7 @@ angular.module('cahierDeTexteApp')
 	     [ '$http',
 	       function( $http ) {
 		   this.get_user = _.memoize( function() {
-		       return $http.get( '/ct/api/v0/user' )
+		       return $http.get( '/ct/api/v0/users/current' )
 			       .success( function( response ) {
 				   return response;
 			       } );
