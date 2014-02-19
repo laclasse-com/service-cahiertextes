@@ -9,11 +9,7 @@ class Etablissement < Sequel::Model( :etablissements )
   end
 
   def statistiques_enseignants
-    # FIXME: get this from actual etablissement
-    enseignants_ids = Cours.select( :enseignant_id ).group_by( :enseignant_id ).all.map {
-      |cours|
-      cours.values[ :enseignant_id ]
-    }
+    enseignants_ids = Annuaire.get_etablissement( values[:UAI] )['enseignants'].map { |enseignant| enseignant['id_ent'] }
 
     enseignants_ids.map do
       |enseignant_id|

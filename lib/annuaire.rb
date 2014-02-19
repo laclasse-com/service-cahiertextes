@@ -116,4 +116,17 @@ module Annuaire
     end
   end
 
+  def get_etablissement( uai )
+    uai = URI.escape( uai )
+
+    RestClient.get( sign( ANNUAIRE[:url], "etablissements/#{uai}", { expand: 'true' }, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
+      |response, request, result|
+      if response.code == 200
+        return JSON.parse( response )
+      else
+        STDERR.puts "Établissement inconnu : #{uai}"
+      end
+    end
+  end
+
 end
