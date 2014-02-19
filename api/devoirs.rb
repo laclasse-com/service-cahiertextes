@@ -16,7 +16,7 @@ module CahierDeTextesAPI
       get '/' do
          # TODO: prendre en compte debut et fin
 
-         return [] if user.classes.nil?
+         return [] unless user.methods.include? :classes
 
          regroupements_ids = user.classes.map {
             |classe|
@@ -74,7 +74,7 @@ module CahierDeTextesAPI
          optional :ressources
       }
       post  do
-         error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS', '0699999Z' ) || user.is?( 'DIR', '0699999Z' )
+         error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS', user.ENTPersonStructRattachRNE ) || user.is?( 'DIR', user.ENTPersonStructRattachRNE )
 
          if Cours[ params[:cours_id] ].nil?
             error!( 'Cours inconnu', 404 )
@@ -120,7 +120,7 @@ module CahierDeTextesAPI
          optional :ressources
       }
       put '/:id' do
-         error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS', '0699999Z' ) || user.is?( 'DIR', '0699999Z' )
+         error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS', user.ENTPersonStructRattachRNE ) || user.is?( 'DIR', user.ENTPersonStructRattachRNE )
 
          devoir = Devoir[ params[:id] ]
          if devoir.nil?
@@ -162,7 +162,7 @@ module CahierDeTextesAPI
          requires :id
       }
       put '/:id/fait' do
-         error!( '401 Unauthorized', 401 ) unless user.is? 'ELV', '0699999Z'
+         error!( '401 Unauthorized', 401 ) unless user.is? 'ELV', user.ENTPersonStructRattachRNE
 
          Devoir[ params[:id] ].fait_par!( user.uid )
       end
