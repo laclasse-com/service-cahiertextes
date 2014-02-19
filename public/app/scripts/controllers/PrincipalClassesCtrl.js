@@ -187,11 +187,9 @@ angular.module('cahierDeTexteApp')
 			  API.query_classes( { uai: $scope.uai } ).then( function( response ) {
 			      $scope.raw_data = response;
 
-			      if ( _($scope.raw_data[ 0 ]).size() == 0 ) {
-				  $scope.loading = false;
-				  $scope.empty = true;
-				  console.log('Pas de données')
-			      } else {
+			      $scope.empty = _($scope.raw_data[ 0 ]).size() == 0;
+
+			      if ( ! $scope.empty ) {
 				  // Extraction des matières
 				  $scope.matieres = $scope.extract_matieres( $scope.raw_data );
 
@@ -202,10 +200,10 @@ angular.module('cahierDeTexteApp')
 					      $scope.classes[classe.id] = classe.libelle !== null ? classe.libelle : classe.libelle_aaf;
 					  });
 					  $scope.process_data();
-
-					  $scope.loading = false;
 				      });
 			      }
+
+			      $scope.loading = false;
 			  });
 		      } );
 		  } ] );

@@ -8,7 +8,12 @@
   </div>
 </div>
 
-<div data-ng-hide="loading">
+
+<div class="message" data-ng-show="empty">
+  <h1><span class="label label-danger"><span class="glyphicon glyphicon-warning-sign"></span> Aucune donnée</span></h1>
+</div>
+
+<div data-ng-hide="loading || empty">
 
   <div class="col-md-12">
     <div class="panel panel-default">

@@ -5,6 +5,7 @@ angular.module('cahierDeTexteApp')
 		[ '$scope', 'API',
 		  function( $scope, API ) {
 		      $scope.loading = true;
+		      $scope.empty = false;
 
 		      $scope.affiche_faits = false;
 		      $scope.fait = function( id ) {
@@ -31,6 +32,8 @@ angular.module('cahierDeTexteApp')
 			      return devoir;
 			  });
 			  $scope.filtre();
+
+			  $scope.empty = $scope.all_devoirs.length == 0;
 
 			  $scope.loading = false;
 		      });
