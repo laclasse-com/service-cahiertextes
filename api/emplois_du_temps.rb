@@ -26,8 +26,10 @@ module CahierDeTextesAPI
                 user.is?( 'DIR', user.ENTPersonStructRattachRNE ) ) &&
                ( user.methods.include? :classes )
 
-            # FIXME: DEBUG
-            regroupements_ids = CreneauEmploiDuTempsRegroupement.all.map{|r| r.regroupement_id}.sample # rand 1..3
+            regroupements_ids = user.classes.map {
+               |classe|
+               classe['classe_id']
+            }.uniq
 
             CreneauEmploiDuTemps
             .join(:creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :id)
