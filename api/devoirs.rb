@@ -31,7 +31,7 @@ module CahierDeTextesAPI
                         :devoirs__date_modification,
                         :devoirs__date_validation,
                         :devoirs__date_due,
-                        :devoirs__temps_estime)
+                        :devoirs__temps_estime )
          .join(:cours, id: :cours_id)
          .join(:creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :id)
          .where( regroupement_id: regroupements_ids )
