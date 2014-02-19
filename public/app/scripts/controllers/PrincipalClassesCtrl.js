@@ -5,6 +5,7 @@ angular.module('cahierDeTexteApp')
 		[ '$scope', '$rootScope', '$q', 'API', 'Annuaire', 'User',
 		  function ( $scope, $rootScope, $q, API, Annuaire, User ) {
 		      $scope.loading = true;
+		      $scope.empty = false;
 
 		      User.get_user().then( function( response ) {
 			  var current_user = response.data;
@@ -188,6 +189,7 @@ angular.module('cahierDeTexteApp')
 
 			      if ( _($scope.raw_data[ 0 ]).size() == 0 ) {
 				  $scope.loading = false;
+				  $scope.empty = true;
 				  console.log('Pas de données')
 			      } else {
 				  // Extraction des matières
