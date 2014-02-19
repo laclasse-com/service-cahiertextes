@@ -21,11 +21,10 @@ module CahierDeTextesAPI
       get  do
          # TODO: prendre en compte debut et fin
 
-         if user.is?( 'ENS', '0699999Z' ) || user.is?( 'ELV', '0699999Z' ) || user.is?( 'DIR', '0699999Z' )
-            # regroupements_ids = user.classes.map {
-            #    |classe|
-            #    classe['classe_id']
-            # }.uniq
+         if ( user.is?( 'ENS', user.ENTPersonStructRattachRNE ) ||
+                user.is?( 'ELV', user.ENTPersonStructRattachRNE ) ||
+                user.is?( 'DIR', user.ENTPersonStructRattachRNE ) ) &&
+               ( user.methods.include? :classes )
 
             # FIXME: DEBUG
             regroupements_ids = CreneauEmploiDuTempsRegroupement.all.map{|r| r.regroupement_id}.sample # rand 1..3
