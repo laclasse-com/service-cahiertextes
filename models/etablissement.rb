@@ -2,9 +2,10 @@
 
 class Etablissement < Sequel::Model( :etablissements )
   def statistiques_classes
-    CahierDeTextes.map {
-      |cahier_de_textes|
-      cahier_de_textes.statistiques
+    Annuaire.get_etablissement( values[:UAI] )['classes'].map {
+      |classe|
+      cdt = CahierDeTextes.where( regroupement_id: classe['id'] ).first
+      cdt.nil? ? [] : cdt.statistiques
     }
   end
 
