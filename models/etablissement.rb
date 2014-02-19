@@ -9,38 +9,37 @@ class Etablissement < Sequel::Model( :etablissements )
   end
 
   def statistiques_enseignants
-    enseignants_ids = Annuaire.get_etablissement( values[:UAI] )['enseignants'].map { |enseignant| enseignant['id_ent'] }
-
-    enseignants_ids.map do
-      |enseignant_id|
-      { enseignant_id: enseignant_id,
+    Annuaire.get_etablissement( values[:UAI] )['enseignants'].map {
+      |enseignant|
+      { enseignant_id: enseignant['id_ent'],
         classes: CreneauEmploiDuTempsRegroupement
           .join( :creneaux_emploi_du_temps_enseignants, creneau_emploi_du_temps_id: :creneau_emploi_du_temps_id )
-          .select( :regroupement_id ).where( enseignant_id: enseignant_id )
+          .select( :regroupement_id ).where( enseignant_id: enseignant['id_ent'] )
           .group_by( :regroupement_id )
-          .map { |regroupement_id|
+          .map {
+          |regroupement_id|
           {
             regroupement: regroupement_id.values[ :regroupement_id ],
-            statistiques: (1..12).map do
+            statistiques: (1..12).map {
               |month|
               stats = { month: month, filled: 0, validated: 0 }
 
               CreneauEmploiDuTempsEnseignant
                 .join( :creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :creneau_emploi_du_temps_id )
-                .where( enseignant_id: enseignant_id )
+                .where( enseignant_id: enseignant['id_ent'] )
                 .where( regroupement_id: regroupement_id.values[ :regroupement_id ] )
-                .map do
+                .map {
                 |creneau|
                 # TODO: prendre en compte les semaine_de_presence
                 cours = Cours
-                  .where( creneau_emploi_du_temps_id: creneau.creneau_emploi_du_temps_id )
-                  .where( 'extract( month from date_cours ) = ' + month.to_s )
+                        .where( creneau_emploi_du_temps_id: creneau.creneau_emploi_du_temps_id )
+                        .where( 'extract( month from date_cours ) = ' + month.to_s )
 
                 # TODO: calcul total attendu
                 { filled: cours.count,
                   validated: cours.where( :date_validation ).count
                 }
-              end.each {
+              }.each {
                 |values|
                 [:filled, :validated].each {
                   |key|
@@ -49,12 +48,11 @@ class Etablissement < Sequel::Model( :etablissements )
               }
 
               stats
-            end
+            }
           }
         }
       }
-    end
-
+    }
   end
 
   def saisies_enseignant( enseignant_id )
