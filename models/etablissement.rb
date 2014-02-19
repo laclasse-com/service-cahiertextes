@@ -58,6 +58,7 @@ class Etablissement < Sequel::Model( :etablissements )
         }
       }
     end
+
   end
 
   def saisies_enseignant( enseignant_id )
@@ -78,7 +79,7 @@ class Etablissement < Sequel::Model( :etablissements )
             matiere_id: CreneauEmploiDuTemps[ cours.creneau_emploi_du_temps_id ].matiere_id,
             cours: cours,
             devoir: devoir,
-            valide: !cours.date_validation.nil?
+            valide: ! cours.date_validation.nil?
           }
         end
       end.flatten
