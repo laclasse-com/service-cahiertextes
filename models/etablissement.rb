@@ -5,7 +5,7 @@ class Etablissement < Sequel::Model( :etablissements )
     Annuaire.get_etablissement( values[:UAI] )['classes'].map {
       |classe|
       cdt = CahierDeTextes.where( regroupement_id: classe['id'] ).first
-      cdt.nil? ? [] : cdt.statistiques
+      cdt.nil? ? {} : cdt.statistiques
     }
   end
 

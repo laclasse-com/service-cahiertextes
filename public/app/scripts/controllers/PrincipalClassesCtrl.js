@@ -184,8 +184,12 @@ angular.module('cahierDeTexteApp')
 			  };
 
 			  API.query_classes( { uai: $scope.uai } ).then( function( response ) {
-				  $scope.raw_data = response;
+			      $scope.raw_data = response;
 
+			      if ( _($scope.raw_data[ 0 ]).size() == 0 ) {
+				  $scope.loading = false;
+				  console.log('Pas de données')
+			      } else {
 				  // Extraction des matières
 				  $scope.matieres = $scope.extract_matieres( $scope.raw_data );
 
@@ -199,6 +203,7 @@ angular.module('cahierDeTexteApp')
 
 					  $scope.loading = false;
 				      });
-			      });
+			      }
+			  });
 		      } );
 		  } ] );
