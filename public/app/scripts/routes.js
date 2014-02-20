@@ -22,9 +22,6 @@ angular.module( 'cahierDeTexteApp' )
 			   url: '/enseignants',
 			   data: { auth: [ 'DIR' ] },
 			   views: {
-			       'titre': {
-				   template: 'Validation des saisies par Enseignants'
-			       },
 			       'content': {
 				   templateUrl: 'app/views/principal/enseignants.html',
 				   controller: 'PrincipalEnseignantsCtrl'
@@ -36,9 +33,6 @@ angular.module( 'cahierDeTexteApp' )
 			   url: '/enseignant/:enseignant_id',
 			   data: { auth: [ 'DIR' ] },
 			   views: {
-			       'titre': {
-				   template: 'Validation des saisies par Enseignant'
-			       },
 			       'content': {
 				   templateUrl: 'app/views/principal/enseignant.html',
 				   controller: 'PrincipalEnseignantCtrl'
@@ -50,9 +44,6 @@ angular.module( 'cahierDeTexteApp' )
 			   url: '/classes',
 			   data: { auth: [ 'DIR' ] },
 			   views: {
-			       'titre': {
-				   template: 'Validation des saisies par Classe/Groupe'
-			       },
 			       'content': {
 				   templateUrl: 'app/views/principal/classes.html',
 				   controller: 'PrincipalClassesCtrl'
