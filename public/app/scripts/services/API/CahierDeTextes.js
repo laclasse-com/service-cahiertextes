@@ -9,6 +9,14 @@ angular.module('cahierDeTexteApp')
 		   this.get_user = _.memoize( function() {
 		       return $http.get( '/ct/api/v0/users/current' )
 			       .success( function( response ) {
+				   // Par souci de rapidité on parse current_user.ENTPersonProfils plutôt que d'attendre
+				   //   le retour de l'appel à l'API Annuaire pour utiliser current_user.details.profils[]
+				   response.profils = _(response.ENTPersonProfils.split( ';' ))
+				       .map( function( profil ) {
+					   var p = profil.split( ':' );
+					   return { 'type': p[ 0 ],
+						    'uai' : p[ 1 ] };
+				       });
 				   return response;
 			       } );
 		   });
