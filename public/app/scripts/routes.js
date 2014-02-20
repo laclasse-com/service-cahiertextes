@@ -95,17 +95,18 @@ angular.module( 'cahierDeTexteApp' )
 				function( event, toState, toParams, fromState, fromParams ) {
 				    User.get_user().then( function( response ) {
 					var current_user = response.data;
-					var allowed = _(current_user.profils).reduce( function( autorise, profil ) {
-					    return autorise && _(toState.data.auth).contains( profil.type );
-					}, true );
+					var allowed = _(current_user.profils).reduce(
+					    function( autorise, profil ) {
+						return autorise && _(toState.data.auth).contains( profil.type );
+					    },
+					    true );
 
-					if ( allowed ) {
-					    return true;
-					} else {
+					if ( ! allowed ) {
+					    event.preventDefault();
 
 					    var profil_etab = _(current_user.profils).find( function( p ) {
 						return p.uai == current_user.ENTPersonStructRattachRNE;
-					    });
+					    } );
 
 					    switch ( profil_etab.type ) {
 					    case 'DIR':
@@ -121,11 +122,7 @@ angular.module( 'cahierDeTexteApp' )
 						$location.url( '/eleve' );
 						break;
 					    }
-
-					    console.debug(current_user)
-					    event.preventDefault();
 					    $location.replace();
-					    return false;
 					}
 				    } );
 				} );
