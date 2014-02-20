@@ -9,8 +9,6 @@ angular.module('cahierDeTexteApp')
 
 		      User.get_user().then( function( response ) {
 			  var current_user = response.data;
-			  $scope.uai = current_user.ENTPersonStructRattachRNE;
-
 			  $scope.raw_data	 =   [];
 			  $scope.displayed_data  =  [  ];
 			  $scope.classes	 = {    };
@@ -184,7 +182,7 @@ angular.module('cahierDeTexteApp')
 			      }
 			  };
 
-			  API.query_classes( { uai: $scope.uai } ).then( function( response ) {
+			  API.query_classes( { uai: current_user.ENTPersonStructRattachRNE } ).then( function( response ) {
 			      $scope.raw_data = response;
 
 			      $scope.empty = _($scope.raw_data[ 0 ]).size() == 0;
