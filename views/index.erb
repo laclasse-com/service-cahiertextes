@@ -42,17 +42,6 @@
 	  <div class="navbar-header">
 	    <a class="navbar-brand" href="#">Cahier de Texte</a>
 	  </div>
-	  <ul class="navbar-nav nav">
-	    <li data-ng-class="{active:tab=='principal'}">
-	      <a href="#/principal" data-ng-click="tab='principal'">Principal</a>
-	    </li>
-	    <li data-ng-class="{active:tab=='enseignant'}">
-	      <a href="#/enseignant" data-ng-click="tab='enseignant'">Enseignant</a>
-	    </li>
-	    <li data-ng-class="{active:tab=='eleve'}">
-	      <a href="#/eleve" data-ng-click="tab='eleve'">Élève</a>
-	    </li>
-	  </ul>
 	  <div class="pull-right" data-ng-controller="HeaderCtrl">
 	    <i class="glyphicon glyphicon-eye-open" rel="tooltip" title="DEBUG: {{current_user_display}}"></i>
 	    {{current_user['LaclasseCivilite']}} {{current_user['LaclassePrenom']}} {{current_user['LaclasseNom']}} ({{current_user['uid']}})
