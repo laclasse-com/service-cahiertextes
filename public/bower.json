@@ -1,41 +1,42 @@
 {
-  "name": "cahierDeTexte",
-  "version": "0.0.0",
-  "dependencies": {
-    "angular": "latest",
-    "angular-resource": "latest",
-    "angular-mocks": "latest",
-    "angular-sanitize": "latest",
-    "angular-cookies": "latest",
-    "angular-scenario": "latest",
-    "angular-grid": "git://github.com/angular-ui/ng-grid.git#latest",
-    "angles": "git://github.com/lgsilver/angles.git#latest",
-    "Chart.js": "latest",
-    "angular-ui-router": "latest",
-    "angular-ui-select2": "latest",
-    "angular-bootstrap": "latest",
-    "json3": "latest",
-    "es5-shim": "latest",
-    "angular-ui-calendar": "latest",
-    "angular-ui-tinymce": "latest",
-    "angular-ui-date": "latest",
-    "underscore": "latest",
-    "bootstrap": "latest",
-    "select2-bootstrap-css": "latest"
-  },
-  "devDependencies": {
-    "angular-mocks": "latest",
-    "angular-scenario": "latest"
-  },
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "components",
-    "bower_components",
-    "test",
-    "tests"
-  ],
-  "resolutions": {
-    "jquery": "~2.x"
-  }
+    "name": "cahierDeTexte",
+    "version": "0.0.0",
+    "dependencies": {
+	"Chart.js": "latest",
+	"angles": "git://github.com/lgsilver/angles.git#latest",
+	"angular": "latest",
+	"angular-bootstrap": "latest",
+	"angular-cookies": "latest",
+	"angular-grid": "git://github.com/angular-ui/ng-grid.git#latest",
+	"angular-mocks": "latest",
+	"angular-resource": "latest",
+	"angular-sanitize": "latest",
+	"angular-scenario": "latest",
+	"angular-ui-calendar": "latest",
+	"angular-ui-date": "latest",
+	"angular-ui-router": "latest",
+	"angular-ui-select2": "latest",
+	"angular-ui-tinymce": "latest",
+	"bootstrap": "latest",
+	"es5-shim": "latest",
+	"json3": "latest",
+	"select2-bootstrap-css": "latest",
+	"sizzle": "latest",
+	"underscore": "latest"
+    },
+    "devDependencies": {
+	"angular-mocks": "latest",
+	"angular-scenario": "latest"
+    },
+    "ignore": [
+	"**/.*",
+	"node_modules",
+	"components",
+	"bower_components",
+	"test",
+	"tests"
+    ],
+    "resolutions": {
+	"jquery": "~2.x"
+    }
 }
