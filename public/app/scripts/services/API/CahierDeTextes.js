@@ -17,6 +17,8 @@ angular.module('cahierDeTexteApp')
 					   return { 'type': p[ 0 ],
 						    'uai' : p[ 1 ] };
 				       });
+				   response.etablissements = _.chain(response.profils).pluck( 'uai' ).uniq().value();
+				   response.etablissement_actif = response.etablissements[ 0 ];
 				   return response;
 			       } );
 		   });

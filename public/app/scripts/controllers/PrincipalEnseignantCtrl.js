@@ -187,7 +187,7 @@ angular.module('cahierDeTexteApp')
 
 		      User.get_user().then( function( response ) {
 			  var current_user = response.data;
-			  API.get_enseignant( { enseignant_id: $stateParams.enseignant_id, uai: current_user.ENTPersonStructRattachRNE } ).then(
+			  API.get_enseignant( { enseignant_id: $stateParams.enseignant_id, uai: current_user.etablissement_actif } ).then(
 				      function success( response ) {
 					  $scope.raw_data = response.saisies;
 
