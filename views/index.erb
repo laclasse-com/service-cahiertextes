@@ -43,8 +43,10 @@
 	    <a class="navbar-brand" href="#">Cahier de Texte</a>
 	  </div>
 	  <div class="pull-right" data-ng-controller="HeaderCtrl">
-	    <i class="glyphicon glyphicon-eye-open" rel="tooltip" title="DEBUG: {{current_user_display}}"></i>
+	    <i class="glyphicon glyphicon-eye-open" rel="tooltip" title="DEBUG: {{current_user}}"></i>
 	    {{current_user['LaclasseCivilite']}} {{current_user['LaclassePrenom']}} {{current_user['LaclasseNom']}} ({{current_user['uid']}})
+	    <select data-ng-model="current_user.etablissement_actif" data-ng-options="etablissement for etablissement in current_user['etablissements']" data-ng-change="reload()">
+	    </select>
 	    <a class="btn btn-danger" href="logout">Déconnexion</a>
 	  </div>
 	</div>
