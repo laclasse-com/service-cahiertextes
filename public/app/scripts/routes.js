@@ -10,6 +10,12 @@ angular.module( 'cahierDeTexteApp' )
 		   $urlRouterProvider.when( '/eleve', '/eleve/emploi_du_temps' );
 
 		   $stateProvider
+		   // index ///////////////////////////////////////////////////////////////
+		       .state('index', {
+			   data: { auth: [ 'DIR', 'ENS', 'ELV' ] },
+			   url: '/',
+			   controller: 'IndexCtrl'
+		       })
 		   // Principal ///////////////////////////////////////////////////////////
 		       .state('principal', {
 			   data: { auth: [ 'DIR' ] },
@@ -105,20 +111,17 @@ angular.module( 'cahierDeTexteApp' )
 					    event.preventDefault();
 
 					    var profil_etab = _(current_user.profils).find( function( p ) {
-						return p.uai == current_user.ENTPersonStructRattachRNE;
+						return p.uai == current_user.etablissement_actif;
 					    } );
 
 					    switch ( profil_etab.type ) {
 					    case 'DIR':
-						console.log('redirection vers /principal')
 						$location.url( '/principal' );
 						break;
 					    case 'ENS':
-						console.log('redirection vers /enseignant')
 						$location.url( '/enseignant' );
 						break;
 					    case 'ELV':
-						console.log('redirection vers /eleve')
 						$location.url( '/eleve' );
 						break;
 					    }
