@@ -18,7 +18,7 @@ module Annuaire
     canonical_string += Hash[ args.sort ].map { |key, value| "#{key}=#{CGI.escape(value)}" }.join( '&' )
     canonical_string += ";#{timestamp};#{app_id}"
 
-    digest = OpenSSL::Digest::Digest.new( 'sha1' )
+    digest = OpenSSL::Digest.new( 'sha1' )
     digested_message = Base64.encode64( OpenSSL::HMAC.digest( digest, secret_key, canonical_string ) )
 
     query = args.map { |key, value| "#{key}=#{CGI.escape(value)}" }.join( '&' )
