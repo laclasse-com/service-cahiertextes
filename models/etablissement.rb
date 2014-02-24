@@ -6,8 +6,9 @@ class Etablissement < Sequel::Model( :etablissements )
       Annuaire.get_etablissement( values[:UAI] )['classes'].map {
          |classe|
          cdt = CahierDeTextes.where( regroupement_id: classe['id'] ).first
+         STDERR.puts "Creation du cahier de textes pour le groupe #{classe['id']}" if cdt.nil?
          cdt = CahierDeTextes.create( regroupement_id: classe[ 'id' ] ) if cdt.nil?
-         cdt.nil? ? {} : cdt.statistiques
+         cdt.statistiques
       }
    end
 
