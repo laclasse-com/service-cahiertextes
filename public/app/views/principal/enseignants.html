@@ -9,47 +9,49 @@
 </div>
 
 <div data-ng-hide="loading">
+  <div class="row">
 
-  <div class="panel panel-default">
-    <div class="panel-body">
-      <select class="col-md-2" data-ng-model="mois" data-ng-change="process_data()" data-ng-options="annee.indexOf(m) as m for m in annee">
-	<option value="">Toute l'année</option>
-      </select>
-      <select class="col-md-2" data-ng-model="classe" data-ng-change="process_data()" data-ng-options="class as class for (id, class) in classes">
-	<option value="">Toutes les classes</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="panel panel-default">
-    <div class="panel-body">
-      <canvas data-piechart data-options="pieChart.options" data-data="pieChart.data" width="256" height="256"></canvas>
-      <canvas data-barchart data-options="barChart.options" data-data="barChart.data" width="768" height="256"></canvas>
-    </div>
-  </div>
-
-  <div class="col-md-3 bloc-enseignant" data-ng-repeat="individualChart in individualCharts.enseignants">
     <div class="panel panel-default">
-      <div class="panel-heading">
-	<h4>
-	  <a href="#/principal/enseignant/{{individualChart.enseignant.id_ent}}">
-	    {{individualChart.enseignant.full_name}}
-	  </a>
-	</h4>
-	<h6 data-ng-show="individualChart.enseignant.classes.length > 0">
-	  <span data-ng-repeat="classe in individualChart.enseignant.classes">{{($first == true) && "(" || ""}}{{classe.classe_libelle}}{{($last != true) && ", " || ")"}}</span>
-	</h6>
-      </div>
       <div class="panel-body">
-	<div class="col-md-12">
-	  <canvas data-piechart data-data="individualChart.pieChart.data" data-options="individualChart.pieChart.options" width="64" height="64"></canvas>
-	  <span class="badge badge-info">{{individualChart.pieChart.data[0].value}} / {{individualChart.pieChart.data[0].value + individualChart.pieChart.data[1].value}}</span>
-	</div>
-	<ul class="col-md-12">
-	  <li data-ng-repeat="matiere in individualChart.enseignant.matieres">{{matiere}}</li>
-	</ul>
+	<select class="col-md-2" data-ng-model="mois" data-ng-change="process_data()" data-ng-options="annee.indexOf(m) as m for m in annee">
+	  <option value="">Toute l'année</option>
+	</select>
+	<select class="col-md-2" data-ng-model="classe" data-ng-change="process_data()" data-ng-options="class as class for (id, class) in classes">
+	  <option value="">Toutes les classes</option>
+	</select>
       </div>
     </div>
-  </div>
 
+    <div class="panel panel-default">
+      <div class="panel-body">
+	<canvas data-piechart data-options="pieChart.options" data-data="pieChart.data" width="256" height="256"></canvas>
+	<canvas data-barchart data-options="barChart.options" data-data="barChart.data" width="768" height="256"></canvas>
+      </div>
+    </div>
+
+    <div class="col-md-3 bloc-enseignant" data-ng-repeat="individualChart in individualCharts.enseignants">
+      <div class="panel panel-default">
+	<div class="panel-heading">
+	  <h4>
+	    <a href="#/principal/enseignant/{{individualChart.enseignant.id_ent}}">
+	      {{individualChart.enseignant.full_name}}
+	    </a>
+	  </h4>
+	  <h6 data-ng-show="individualChart.enseignant.classes.length > 0">
+	    <span data-ng-repeat="classe in individualChart.enseignant.classes">{{($first == true) && "(" || ""}}{{classe.classe_libelle}}{{($last != true) && ", " || ")"}}</span>
+	  </h6>
+	</div>
+	<div class="panel-body">
+	  <div class="col-md-12">
+	    <canvas data-piechart data-data="individualChart.pieChart.data" data-options="individualChart.pieChart.options" width="64" height="64"></canvas>
+	    <span class="badge badge-info">{{individualChart.pieChart.data[0].value}} / {{individualChart.pieChart.data[0].value + individualChart.pieChart.data[1].value}}</span>
+	  </div>
+	  <ul class="col-md-12">
+	    <li data-ng-repeat="matiere in individualChart.enseignant.matieres">{{matiere}}</li>
+	  </ul>
+	</div>
+      </div>
+    </div>
+
+  </div>
 </div>

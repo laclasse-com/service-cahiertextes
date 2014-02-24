@@ -13,41 +13,43 @@
 </div>
 
 <div data-ng-hide="loading || empty">
+  <div class="row">
 
-  <div class="panel panel-default">
-    <div class="panel-body">
-      <select class="col-md-3" data-ng-model="classe" data-ng-change="process_data()" data-ng-options="class as class for (id, class) in classes">
-	<option value="" selected>Toute les classes</option>
-      </select>
+    <div class="panel panel-default">
+      <div class="panel-body">
+	<select class="col-md-3" data-ng-model="classe" data-ng-change="process_data()" data-ng-options="class as class for (id, class) in classes">
+	  <option value="" selected>Toute les classes</option>
+	</select>
 
-      <select class="col-md-3" data-ng-model="moisCourant" data-ng-change="process_data()" data-ng-options="mois.indexOf(m) as m for m in mois">
-	<option value="">Toute l'année</option>
-      </select>
+	<select class="col-md-3" data-ng-model="moisCourant" data-ng-change="process_data()" data-ng-options="mois.indexOf(m) as m for m in mois">
+	  <option value="">Toute l'année</option>
+	</select>
 
-      <select class="col-md-3" data-ng-model="matiereCourante" data-ng-change="process_data()" data-ng-options="m.id as m.libelle for m in matieres">
-	<option value="">Toute les matières</option>
-      </select>
+	<select class="col-md-3" data-ng-model="matiereCourante" data-ng-change="process_data()" data-ng-options="m.id as m.libelle for m in matieres">
+	  <option value="">Toute les matières</option>
+	</select>
+      </div>
     </div>
-  </div>
 
-  <div class="panel panel-default">
-    <div class="panel-body">
-      <canvas data-piechart data-data="pieChart.data" data-options="pieChart.options" width="256" height="256"></canvas>
-      <span class="badge badge-info">{{displayed_data.validated}} / {{displayed_data.filled}}</span>
-      <canvas data-linechart data-data="monthlyLineChart.data" data-options="monthlyLineChart.options" width="640" height="256" style="float:right"></canvas>
+    <div class="panel panel-default">
+      <div class="panel-body">
+	<canvas data-piechart data-data="pieChart.data" data-options="pieChart.options" width="256" height="256"></canvas>
+	<span class="badge badge-info">{{displayed_data.validated}} / {{displayed_data.filled}}</span>
+	<canvas data-linechart data-data="monthlyLineChart.data" data-options="monthlyLineChart.options" width="640" height="256" style="float:right"></canvas>
+      </div>
     </div>
-  </div>
 
-  <div class="col-md-12">
-    <div class="col-md-3" data-ng-show="classe == null" data-ng-repeat="individualChart in individualCharts.classes">
-      <div class="panel panel-default">
-	<div class="panel-heading"><h3 class="panel-title">{{individualChart.libelle}}</h3></div>
-	<div class="panel-body">
-	  <canvas data-piechart data-data="individualChart.pieChart.data" data-options="individualChart.pieChart.options" width="64" height="64"></canvas>
-	  <span class="badge badge-info">{{individualChart.pieChart.data[0].value}} / {{individualChart.pieChart.data[0].value + individualChart.pieChart.data[1].value}}</span>
+    <div class="col-md-12">
+      <div class="col-md-3" data-ng-show="classe == null" data-ng-repeat="individualChart in individualCharts.classes">
+	<div class="panel panel-default">
+	  <div class="panel-heading"><h3 class="panel-title">{{individualChart.libelle}}</h3></div>
+	  <div class="panel-body">
+	    <canvas data-piechart data-data="individualChart.pieChart.data" data-options="individualChart.pieChart.options" width="64" height="64"></canvas>
+	    <span class="badge badge-info">{{individualChart.pieChart.data[0].value}} / {{individualChart.pieChart.data[0].value + individualChart.pieChart.data[1].value}}</span>
+	  </div>
 	</div>
       </div>
     </div>
-  </div>
 
+  </div>
 </div>
