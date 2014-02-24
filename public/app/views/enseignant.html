@@ -10,18 +10,19 @@
 
 <div data-ng-hide="loading">
 
-  <div class="panel panel-default">
-    <div class="panel-body">
-      <select class="col-md-3" data-ng-model="classe" data-ng-change="process_data()" data-ng-options="class as class for (id, class) in classes">
-	<option value="" selected>Toute les classes</option>
-      </select>
+  <div class="row">
+    <div class="panel panel-default">
+
+      <div class="panel-heading">
+	<select data-ng-model="classe" data-ng-change="process_data()" data-ng-options="class as class for (id, class) in classes">
+	  <option value="" selected>Toute les classes</option>
+	</select>
+      </div>
+
+      <div class="panel-body">
+	<div data-calendar="emploi_du_temps" data-ui-calendar="calendar.options" class="col-md-12 calendar" data-ng-model="calendar.events"></div>
+      </div>
+
     </div>
   </div>
-
-  <div class="panel panel-default">
-    <div class="panel-body">
-      <div data-calendar="emploi_du_temps" data-ui-calendar="calendar.options" class="col-md-12 calendar" data-ng-model="calendar.events"></div>
-    </div>
-  </div>
-
 </div>
