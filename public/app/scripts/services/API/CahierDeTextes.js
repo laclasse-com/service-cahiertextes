@@ -1,13 +1,11 @@
 'use strict';
 
-// on ne peut pas utiliser $rootScope.APP_VIRTUAL_PATH ici parce que User
-//   est utilisé dans $rootScope d'où une dépendance circulaire malheureuse :(
 angular.module('cahierDeTexteApp')
     .service('User',
-	     [ '$http',
-	       function( $http ) {
+	     [ '$http', '$rootScope',
+	       function( $http, $rootScope ) {
 		   this.get_user = _.memoize( function() {
-		       return $http.get( '/ct/api/v0/users/current' )
+		       return $http.get( $rootScope.APP_VIRTUAL_PATH + '/api/v0/users/current' )
 			       .success( function( response ) {
 				   // Par souci de rapidité on parse current_user.ENTPersonProfils plutôt que d'attendre
 				   //   le retour de l'appel à l'API Annuaire pour utiliser current_user.details.profils[]
