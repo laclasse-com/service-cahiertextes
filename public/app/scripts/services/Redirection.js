@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .service('Redirection',
-	     [ '$location', 'User',
-	       function( $location, User ) {
+	     [ '$location', '$state', 'User',
+	       function( $location, $state, User ) {
 		   this.doorman = function( allowed_types ) {
 		       User.get_user().then( function( response ) {
 			   var profils_utilisateur_pour_etablissement = _.chain( response.data.profils )
@@ -17,15 +17,15 @@ angular.module('cahierDeTexteApp')
 				.value() )
 			   {
 			       if ( _(profils_utilisateur_pour_etablissement).contains( 'DIR' ) ) {
-				   $location.url( '/principal' );
+				   $state.transitionTo( 'principal' );
 			       } else if ( _(profils_utilisateur_pour_etablissement).contains( 'ENS' ) ) {
-				   $location.url( '/enseignant' );
+				   $state.transitionTo( 'enseignant' );
 			       } else if ( _(profils_utilisateur_pour_etablissement).contains( 'ELV' ) ) {
-				   $location.url( '/eleve' );
+				   $state.transitionTo( 'eleve' );
 			       } else {
 				   $location.url( '/logout' );
+				   $location.replace();
 			       }
-			       $location.replace();
 			   }
 		       } );
 		   };
