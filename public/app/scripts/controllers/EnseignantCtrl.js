@@ -30,6 +30,7 @@ angular.module('cahierDeTexteApp')
 				  return creneau.regroupement_id == $scope.regroupement_id;
 			      })
 			      .value();
+			  $scope.creneaux_similaires.selected = [];
 
 			  var create_devoir = function( cours, types_de_devoir ) {
 			      var date = new Date();
@@ -46,7 +47,11 @@ angular.module('cahierDeTexteApp')
 			  };
 
 			  $scope.dupliquer = function() {
-			      console.log('TODO: la duplication en action !')
+			      console.debug('TODO: la duplication en action !')
+			      console.debug( 'Créneaux cible(s) :' )
+			      _($scope.creneaux_similaires.selected).each( function( creneau_cible ) {
+				  console.debug( creneau_cible )
+			      });
 			  };
 
 			  $scope.valider = function() {

@@ -30,11 +30,13 @@
       <input type="file">
 
       <div data-ng-show="creneaux_similaires">
-	  <li data-ng-repeat="creneau in creneaux_similaires">
-	    <input type="checkbox" />
-	    {{classes[ creneau.regroupement_id ]}} . {{creneau.creneau_emploi_du_temps_id}}
-	  </li>
-	</ul>
+	<span data-ng-repeat="creneau in creneaux_similaires">
+	  <label>
+	    <input type="checkbox" value="{{creneau.creneau_emploi_du_temps_id}}" data-check-list="creneaux_similaires.selected" />{{classes[ creneau.regroupement_id ]}} . {{creneau.creneau_emploi_du_temps_id}}
+	  </label>
+	  <br />
+	</span>
+	{{creneaux_similaires.selected}}
 	<button class="btn btn-primary" data-ng-click="dupliquer()">
 	  <span class="glyphicon glyphicon-plus-sign"></span> Copier vers d'autres classes
 	</button>
