@@ -12,13 +12,13 @@ angular.module( 'cahierDeTexteApp' )
 		   $stateProvider
 		   // index ///////////////////////////////////////////////////////////////
 		       .state('index', {
-			   data: { auth: [ 'DIR', 'ENS', 'ELV' ] },
+			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'DIR', 'ENS', 'ELV' ] ); } },
 			   url: '/',
 			   controller: 'IndexCtrl'
 		       })
 		   // Principal ///////////////////////////////////////////////////////////
 		       .state('principal', {
-			   data: { auth: [ 'DIR' ] },
+			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } },
 			   abstract: true,
 			   url: '/principal',
 			   templateUrl: 'app/views/principal/index.html'
@@ -26,7 +26,7 @@ angular.module( 'cahierDeTexteApp' )
 		       .state('principal.enseignants', { //imbriquée sous principal
 			   parent: 'principal',
 			   url: '/enseignants',
-			   data: { auth: [ 'DIR' ] },
+			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } },
 			   views: {
 			       'content': {
 				   templateUrl: 'app/views/principal/enseignants.html',
@@ -37,7 +37,7 @@ angular.module( 'cahierDeTexteApp' )
 		       .state('principal.enseignant', { //imbriquée sous principal
 			   parent: 'principal',
 			   url: '/enseignant/:enseignant_id',
-			   data: { auth: [ 'DIR' ] },
+			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } },
 			   views: {
 			       'content': {
 				   templateUrl: 'app/views/principal/enseignant.html',
@@ -48,7 +48,7 @@ angular.module( 'cahierDeTexteApp' )
 		       .state('principal.classes', { //imbriquée sous principal
 			   parent: 'principal',
 			   url: '/classes',
-			   data: { auth: [ 'DIR' ] },
+			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } },
 			   views: {
 			       'content': {
 				   templateUrl: 'app/views/principal/classes.html',
@@ -61,13 +61,13 @@ angular.module( 'cahierDeTexteApp' )
 		       .state('eleve', {
 			   abstract: true,
 			   url: '/eleve',
-			   data: { auth: [ 'ELV', 'PAR' ] },
+			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ELV', 'PAR' ] ); } },
 			   templateUrl: 'app/views/eleve/index.html'
 		       })
 		       .state('eleve.emploi_du_temps', {
 			   parent: 'eleve',
 			   url: '/emploi_du_temps',
-			   data: { auth: [ 'ELV', 'PAR' ] },
+			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ELV', 'PAR' ] ); } },
 			   views: {
 			       'content': {
 				   templateUrl: 'app/views/eleve/emploi_du_temps.html',
@@ -78,7 +78,7 @@ angular.module( 'cahierDeTexteApp' )
 		       .state('eleve.devoirs', {
 			   parent: 'eleve',
 			   url: '/devoirs',
-			   data: { auth: [ 'ELV', 'PAR' ] },
+			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ELV', 'PAR' ] ); } },
 			   views: {
 			       'content': {
 				   templateUrl: 'app/views/eleve/devoirs.html',
@@ -90,43 +90,10 @@ angular.module( 'cahierDeTexteApp' )
 		   // Enseignant //////////////////////////////////////////////////////////
 		       .state('enseignant', {
 			   url: '/enseignant',
-			   data: { auth: [ 'ENS' ] },
+			   resolve: { auth: function( Redirection ) {
+			       Redirection.doorman( [ 'ENS' ] );
+			   } },
 			   templateUrl: 'app/views/enseignant.html',
 			   controller: 'EnseignantCtrl'
 		       });
-	       } ] )
-    .run( [ '$rootScope', '$location', 'User',
-	    function ( $rootScope, $location, User ) {
-		$rootScope.$on( '$stateChangeStart',
-				function( event, toState, toParams, fromState, fromParams ) {
-				    User.get_user().then( function( response ) {
-					var current_user = response.data;
-					var allowed = _(current_user.profils).reduce(
-					    function( autorise, profil ) {
-						return autorise && _(toState.data.auth).contains( profil.type );
-					    },
-					    true );
-
-					if ( ! allowed ) {
-					    event.preventDefault();
-
-					    var profil_etab = _(current_user.profils).find( function( p ) {
-						return p.uai == current_user.etablissement_actif;
-					    } );
-
-					    switch ( profil_etab.type ) {
-					    case 'DIR':
-						$location.url( '/principal' );
-						break;
-					    case 'ENS':
-						$location.url( '/enseignant' );
-						break;
-					    case 'ELV':
-						$location.url( '/eleve' );
-						break;
-					    }
-					    $location.replace();
-					}
-				    } );
-				} );
-	    } ] );
+	       } ] );
