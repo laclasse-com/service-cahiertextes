@@ -47,10 +47,10 @@ angular.module('cahierDeTexteApp')
 			  };
 
 			  $scope.dupliquer = function() {
-			      console.debug('TODO: la duplication en action !')
-			      console.debug( 'Créneaux cible(s) :' )
 			      _($scope.creneaux_similaires.selected).each( function( creneau_cible ) {
-				  console.debug( creneau_cible )
+				  var cc = JSON.parse( creneau_cible );
+				  $scope.cours.$copie({ regroupement_id: cc.regroupement_id,
+							creneau_emploi_du_temps_id: cc.creneau_emploi_du_temps_id });
 			      });
 			  };
 
