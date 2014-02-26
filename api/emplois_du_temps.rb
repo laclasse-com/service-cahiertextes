@@ -45,7 +45,10 @@ module CahierDeTextesAPI
                raise '/!\ Incohérence dans les cahier de textes !' unless data.count == 1
                cahier_de_textes = data.first
 
-               data = Cours.where(creneau_emploi_du_temps_id: creneau.id).where(cahier_de_textes_id: cahier_de_textes.id )
+               data = Cours.where( creneau_emploi_du_temps_id: creneau.id )
+                        .where( cahier_de_textes_id: cahier_de_textes.id )
+                        .where( date_cours: jour )
+
                # FIXME: DEBUG
                # raise '/!\ Incohérence dans les cours !' unless data.count == 1
                if data.first.nil?
