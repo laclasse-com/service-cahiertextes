@@ -32,7 +32,7 @@ angular.module('cahierDeTexteApp')
 			      .value();
 			  $scope.creneaux_similaires.selected = [];
 
-			  var create_devoir = function( cours, types_de_devoir ) {
+			  var create_devoir = function( cours ) {
 			      var date = new Date();
 			      var devoir = new Devoirs({ cours_id: cours.id,
 							 date_due: date.getFullYear() + '-' + date.getMonth() + '-' + date.getDay(),
@@ -43,7 +43,7 @@ angular.module('cahierDeTexteApp')
 			  };
 
 			  $scope.ajout_devoir = function() {
-			      $scope.devoirs.unshift( create_devoir( $scope.cours, $scope.types_de_devoir ) );
+			      $scope.devoirs.unshift( create_devoir( $scope.cours ) );
 			  };
 
 			  $scope.dupliquer = function() {
