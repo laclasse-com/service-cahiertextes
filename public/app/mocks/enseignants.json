@@ -1,7 +1,0 @@
-[
-	{"id": 1, "name": "Moroni", "discipline": "sport", "stats": 50, "total": 52},
-	{"id": 2, "name": "Teancum", "discipline": "anglais", "stats": 43, "total": 90},
-	{"id": 3, "name": "Jacob", "discipline": "géographie", "stats": 27, "total": 27},
-	{"id": 4, "name": "Nephi", "discipline": "français", "stats": 29, "total": 32},
-	{"id": 5, "name": "Enos", "discipline": "SVT", "stats": 34, "total": 51}
-]
