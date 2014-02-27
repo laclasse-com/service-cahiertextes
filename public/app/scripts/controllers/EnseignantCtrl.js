@@ -24,6 +24,7 @@ angular.module('cahierDeTexteApp')
 			  // http://stackoverflow.com/questions/19408883/angularjs-select-not-2-way-binding-to-model
 			  $scope.scope = $scope;
 
+			  // TODO: à raffiner
 			  $scope.creneaux_similaires = _.chain(raw_data)
 			      .where({matiere_id: $scope.matiere_id})
 			      .reject(function( creneau ) {
