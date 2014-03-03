@@ -169,8 +169,8 @@ angular.module('cahierDeTexteApp')
 			      $q.all( $scope.extract_details_enseignants_promises( $scope.raw_data ) )
 				  .then( function( enseignants ) {
 				      _(enseignants).each(function( enseignant ) {
-					  enseignant.matieres = _.chain(enseignant.matieres_enseignees)
-					      .pluck( 'libelle_long' )
+					  enseignant.matieres = _.chain(enseignant.classes)
+					      .pluck( 'matiere_libelle' )
 					      .uniq()
 					      .value();
 					  $scope.details_enseignants[enseignant.id_ent] = enseignant;
