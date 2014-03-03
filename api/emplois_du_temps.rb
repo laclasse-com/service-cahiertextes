@@ -49,7 +49,7 @@ module CahierDeTextesAPI
 
                # 1. récupération du cahier de textes
                data = CahierDeTextes.where( regroupement_id: creneau[ :regroupement_id ] )
-               raise '/!\ Incohérence dans les cahier de textes !' unless data.count == 1
+               raise '/!\ Incohérence dans les cahiers de textes !' unless data.count == 1
                cahier_de_textes = data.first
 
                # 2. récupération des cours
