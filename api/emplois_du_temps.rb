@@ -19,10 +19,6 @@ module CahierDeTextesAPI
          requires :fin, type: Date
       }
       get '/du/:debut/au/:fin' do
-         # TODO: prendre en compte debut et fin
-         p params[ :debut ]
-         p params[ :fin ]
-
          if ( user.is?( 'ENS', user.ENTPersonStructRattachRNE ) ||
                 user.is?( 'ELV', user.ENTPersonStructRattachRNE ) ||
                 user.is?( 'DIR', user.ENTPersonStructRattachRNE ) ) &&
@@ -55,7 +51,7 @@ module CahierDeTextesAPI
                # 2. récupération des cours
                data = Cours.where( creneau_emploi_du_temps_id: creneau.id )
                         .where( cahier_de_textes_id: cahier_de_textes.id )
-                        .where( date_cours: jour ) # where( params[ :debut ] < :date_cours < params[ :fin ] )
+                        .where( date_cours: params[:debut] .. params[:fin] )
 
                if data.count == 0
 
