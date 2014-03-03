@@ -74,7 +74,9 @@ angular.module('cahierDeTexteApp')
     .factory('EmploisDuTemps',
 	     [ '$resource', '$rootScope',
 	       function( $resource, $rootScope ) {
-		   return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/emplois_du_temps' );
+		   return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/emplois_du_temps/du/:debut/au/:fin',
+				     { debut: '@debut',
+				       fin: '@fin' } );
 	       } ] );
 
 angular.module('cahierDeTexteApp')

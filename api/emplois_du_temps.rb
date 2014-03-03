@@ -15,11 +15,13 @@ module CahierDeTextesAPI
 
       desc 'emploi du temps de l\'utilisateur durant l\'intervalle de dates donné'
       params {
-         optional :debut, type: Time
-         optional :fin, type: Time
+         requires :debut, type: Date
+         requires :fin, type: Date
       }
-      get  do
+      get '/du/:debut/au/:fin' do
          # TODO: prendre en compte debut et fin
+         p params[ :debut ]
+         p params[ :fin ]
 
          if ( user.is?( 'ENS', user.ENTPersonStructRattachRNE ) ||
                 user.is?( 'ELV', user.ENTPersonStructRattachRNE ) ||

@@ -416,19 +416,21 @@ angular.module('cahierDeTexteApp')
 		      // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
 
 		      // API.query_emplois_du_temps().then( function(response) {
-		      EmploisDuTemps.query( function( response ) {
-			  $scope.raw_data = response;
+		      EmploisDuTemps.query( { debut: new Date(),
+					      fin: new Date(+new Date + (1000*60*60*24*7) ) },
+					    function( response ) {
+						$scope.raw_data = response;
 
-			  // Extraction des classes
-			  $q.all( $scope.extract_classes_promises( $scope.raw_data ) )
-			      .then( function( classes ) {
-				  _(classes).each(function( classe ) {
-				      $scope.classes[classe.id] = classe.libelle !== null ? classe.libelle : classe.libelle_aaf;
-				  });
-			      });
+						// Extraction des classes
+						$q.all( $scope.extract_classes_promises( $scope.raw_data ) )
+						    .then( function( classes ) {
+							_(classes).each(function( classe ) {
+							    $scope.classes[classe.id] = classe.libelle !== null ? classe.libelle : classe.libelle_aaf;
+							});
+						    });
 
-			  $scope.process_data();
+						$scope.process_data();
 
-			  $scope.loading = false;
-		      });
+						$scope.loading = false;
+					    } );
 		  } ] );
