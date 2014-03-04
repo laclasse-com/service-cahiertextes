@@ -62,8 +62,8 @@ module CahierDeTextesAPI
                      matiere_id: creneau.matiere_id,
                      start: Time.new( jour.year, jour.month, jour.mday, plage_debut.hour, plage_debut.min ).iso8601,
                      end: Time.new( jour.year, jour.month, jour.mday, plage_fin.hour, plage_fin.min ).iso8601,
-                     cours: {}, # FIXME: should only be the ID
-                     devoirs: [] # FIXME: should only be an array of IDs
+                     cours: {}, # TODO: should only be the ID
+                     devoirs: [] # TODO: should only be an array of IDs
                   }
 
                else
