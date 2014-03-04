@@ -17,11 +17,11 @@ angular.module('cahierDeTexteApp')
 				.value() )
 			   {
 			       if ( _(profils_utilisateur_pour_etablissement).contains( 'DIR' ) ) {
-				   $state.transitionTo( 'principal' );
+				   $state.transitionTo( 'principal.enseignants' );
 			       } else if ( _(profils_utilisateur_pour_etablissement).contains( 'ENS' ) ) {
 				   $state.transitionTo( 'enseignant' );
 			       } else if ( _(profils_utilisateur_pour_etablissement).contains( 'ELV' ) ) {
-				   $state.transitionTo( 'eleve' );
+				   $state.transitionTo( 'eleve.emploi_du_temps' );
 			       } else {
 				   $location.url( '/logout' );
 				   $location.replace();
