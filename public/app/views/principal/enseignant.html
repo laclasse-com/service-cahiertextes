@@ -42,7 +42,7 @@
 	      </ul>
 	      <label>Matières enseignées</label>
 	      <ul>
-		<li data-ng-repeat="matiere in enseignant.matieres">{{matiere.libelle_long}}</li>
+		<li data-ng-repeat="matiere in enseignant.matieres">{{matiere.matiere_libelle}}</li>
 	      </ul>
 	      <label>Classes</label>
 	      <p><span data-ng-repeat="classe in enseignant.classes">{{classe.classe_libelle}}{{($last != true) && ", " || ""}}</span></p>

@@ -6,23 +6,18 @@ angular.module('cahierDeTexteApp')
 	       function( $location, $state, User ) {
 		   this.doorman = function( allowed_types ) {
 		       User.get_user().then( function( response ) {
-			   var profils_utilisateur_pour_etablissement = _.chain( response.data.profils )
-				   .where( { uai: response.data.etablissement_actif } )
-				   .pluck( 'type' )
-				   .value();
-
-			   if ( _.chain( profils_utilisateur_pour_etablissement )
-				.intersection( allowed_types )
-				.isEmpty()
-				.value() )
-			   {
-			       if ( _(profils_utilisateur_pour_etablissement).contains( 'DIR' ) ) {
-				   $state.transitionTo( 'principal' );
-			       } else if ( _(profils_utilisateur_pour_etablissement).contains( 'ENS' ) ) {
+			   if ( _( allowed_types ).indexOf( response.data['profil_actif']['type'] ) == -1 ) {
+			       switch ( response.data['profil_actif']['type'] ) {
+			       case 'DIR':
+				   $state.transitionTo( 'principal.enseignants' );
+				   break;
+			       case'ENS':
 				   $state.transitionTo( 'enseignant' );
-			       } else if ( _(profils_utilisateur_pour_etablissement).contains( 'ELV' ) ) {
-				   $state.transitionTo( 'eleve' );
-			       } else {
+				   break;
+			       case 'ELV':
+				   $state.transitionTo( 'eleve.emploi_du_temps' );
+				   break;
+			       default:
 				   $location.url( '/logout' );
 				   $location.replace();
 			       }

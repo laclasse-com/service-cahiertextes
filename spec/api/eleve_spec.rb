@@ -21,7 +21,7 @@ describe CahierDeTextesAPI::API do
     debut = Date.today
     fin = debut + 7
 
-    get "/v0/emplois_du_temps?debut=#{debut}&fin=#{fin}"
+    get "/v0/emplois_du_temps/du/#{debut}/au/#{fin}"
 
     last_response.status.should == 200
   end

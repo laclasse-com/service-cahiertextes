@@ -6,7 +6,7 @@ module CASLaclasseCom
               ssl: true,
               port: 443,
               disable_ssl_verification: true,
-              login_url: '/sso-mysql/login',
-              service_validate_url: '/sso-mysql/serviceValidate',
-              logout_url: '/sso-mysql/logout' }
+              login_url: '/sso/login',
+              service_validate_url: '/sso/serviceValidate',
+              logout_url: '/sso/logout' }
 end

@@ -1,39 +1,37 @@
 # -*- coding: utf-8 -*-
 
 module CahierDeTextesAPI
-  class UsersAPI < Grape::API
+   class UsersAPI < Grape::API
 
-    desc 'renvoi les infos de l\'utilisateur identifié'
-    get '/current' do
-       utilisateur = env['rack.session'][:current_user]
-       # utilisateur['classes'] = [] unless utilisateur.has_key? 'classes'
-       utilisateur[ 'extra' ] = Annuaire.get_user( utilisateur[ 'uid' ] )
-       utilisateur['classes'] = utilisateur[ 'extra' ][ 'classes' ]
-       utilisateur['classes'] = utilisateur['classes'].map { |classe|
-          classe['regroupement_id'] = classe['classe_id']
+      desc 'renvoi les infos de l\'utilisateur identifié'
+      get '/current' do
+         utilisateur = env['rack.session'][:current_user]
 
-          classe
-       }
+         utilisateur[ 'extra' ] = Annuaire.get_user( utilisateur[ 'uid' ] )
+         utilisateur[ 'classes' ] = utilisateur[ 'extra' ][ 'classes' ]
+         utilisateur[ 'classes' ] = utilisateur[ 'classes' ].map { |classe|
+            classe[ 'regroupement_id' ] = classe[ 'classe_id' ]
 
-       # FIXME: DEBUG
-       p utilisateur['ENTPersonProfils']
-       utilisateur['ENTPersonProfils'] = 'ENS:0699999Z' if utilisateur['uid'] == 'VAA62559'
-       #utilisateur['classes'] = [{regroupement_id: 23}, {regroupement_id: 24} ] if utilisateur['uid'] == 'VAA62559'
+            classe
+         }
 
-       utilisateur
-    end
+         # FIXME: DEBUG
+         utilisateur['extra']['profils'] = [ { 'etablissement_code_uai' => "0699999Z", 'etablissement_id' => 1, 'etablissement_nom' => "ERASME", 'profil_id' => "DIR", 'profil_nom' => "Personel de direction de l'etablissement" }, { 'etablissement_code_uai' => "0699999Z",    'etablissement_id' => 1,    'etablissement_nom' => "ERASME",    'profil_id' => "ENS",    'profil_nom' => "Enseignant" }, { 'etablissement_code_uai' => "0699999Z",    'etablissement_id' => 1,    'etablissement_nom' => "ERASME",    'profil_id' => "ELV",    'profil_nom' => "Élève" } ] if utilisateur['uid'] == 'VAA62559'
 
-    desc 'efface toute trace de l\'utilisateur identifié'
-    delete '/:id' do
-       # TODO
-       STDERR.puts "Deleteing all traces of #{params[:id]}"
-    end
+            utilisateur
+         end
 
-    desc 'efface toute trace de l\'utilisateur identifié'
-    put '/:target_id/merge/:source_id' do
-       # TODO
-       STDERR.puts "Merging all data of #{params[:source_id]} into #{params[:target_id]}"
-    end
+         desc 'efface toute trace de l\'utilisateur identifié'
+         delete '/:id' do
+            # TODO
+            STDERR.puts "Deleteing all traces of #{params[:id]}"
+         end
 
-  end
-end
+         desc 'efface toute trace de l\'utilisateur identifié'
+         put '/:target_id/merge/:source_id' do
+            # TODO
+            STDERR.puts "Merging all data of #{params[:source_id]} into #{params[:target_id]}"
+         end
+
+      end
+   end
