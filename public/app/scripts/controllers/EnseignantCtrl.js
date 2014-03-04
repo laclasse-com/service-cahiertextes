@@ -4,8 +4,6 @@ angular.module('cahierDeTexteApp')
     .controller('EnseignantCtrl',
 		[ '$scope', '$rootScope', '$modal', '$q', 'API', 'Annuaire', 'Cours', 'Devoirs', 'EmploisDuTemps', 'User', 'CreneauEmploiDuTemps',
 		  function ( $scope, $rootScope, $modal, $q, API, Annuaire, Cours, Devoirs, EmploisDuTemps, User, CreneauEmploiDuTemps ) {
-		      $scope.loading = true;
-
 		      ///////////////////////////////////////// Sous-contrôleurs
 		      // popup de création/édition des cours et devoirs ////////
 		      var editionModalInstanceCtrl = function( $scope, $rootScope, $modalInstance, cours, devoirs, types_de_devoir, matiere_id, regroupement_id, raw_data, classes, matieres ) {
@@ -256,6 +254,11 @@ angular.module('cahierDeTexteApp')
 			      });
 		      };
 
+		      $scope.calendar.options.viewRender = function( view, element ) {
+			  // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
+			  $scope.retrieve_data( view.start, view.end );
+		      };
+
 		      $scope.ouvre_popup_edition = function(  ) {
 			  $modal.open({ templateUrl: 'app/views/modals/enseignant/detail_emploi_du_temps.html',
 					controller: editionModalInstanceCtrl,
@@ -411,26 +414,27 @@ angular.module('cahierDeTexteApp')
 			  } );
 		      };
 
-		      $scope.types_de_devoir = API.query_types_de_devoir();
+		      $scope.retrieve_data = function( from_date, to_date ) {
+			  $scope.loading = true;
 
-		      // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
+			  EmploisDuTemps.query( { debut: from_date,
+						  fin: to_date },
+						function( response ) {
+						    $scope.raw_data = response;
 
-		      // API.query_emplois_du_temps().then( function(response) {
-		      EmploisDuTemps.query( { debut: new Date(),
-					      fin: new Date(+new Date + (1000*60*60*24*7) ) },
-					    function( response ) {
-						$scope.raw_data = response;
-
-						// Extraction des classes
-						$q.all( $scope.extract_classes_promises( $scope.raw_data ) )
-						    .then( function( classes ) {
-							_(classes).each(function( classe ) {
-							    $scope.classes[classe.id] = classe.libelle !== null ? classe.libelle : classe.libelle_aaf;
+						    // Extraction des classes
+						    $q.all( $scope.extract_classes_promises( $scope.raw_data ) )
+							.then( function( classes ) {
+							    _(classes).each(function( classe ) {
+								$scope.classes[classe.id] = classe.libelle !== null ? classe.libelle : classe.libelle_aaf;
+							    });
 							});
-						    });
 
-						$scope.process_data();
+						    $scope.process_data();
 
-						$scope.loading = false;
-					    } );
+						    $scope.loading = false;
+						} );
+		      };
+
+		      $scope.types_de_devoir = API.query_types_de_devoir();
 		  } ] );

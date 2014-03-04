@@ -7,7 +7,6 @@ angular.module('cahierDeTexteApp')
 		   this.doorman = function( allowed_types ) {
 		       User.get_user().then( function( response ) {
 			   if ( _( allowed_types ).indexOf( response.data['profil_actif']['type'] ) == -1 ) {
-			       console.debug('redir vers '+response.data['profil_actif']['type'])
 			       switch ( response.data['profil_actif']['type'] ) {
 			       case 'DIR':
 				   $state.transitionTo( 'principal.enseignants' );

@@ -9,14 +9,12 @@ angular.module('cahierDeTexteApp')
 		       if ( user == null ) {
 			   user = $http.get( $rootScope.APP_VIRTUAL_PATH + '/api/v0/users/current' )
 			       .success( function( response ) {
-				   // Par souci de rapidité on parse current_user.ENTPersonProfils plutôt que d'attendre
-				   //   le retour de l'appel à l'API Annuaire pour utiliser current_user.details.profils[]
-				   response.profils = _(response.ENTPersonProfils.split( ';' ))
-				       .map( function( profil ) {
-					   var p = profil.split( ':' );
-					   return { 'type': p[ 0 ],
-						    'uai' : p[ 1 ] };
-				       });
+				   response.profils = _(response.extra.profils).map( function( profil ) {
+				       return { 'type': profil['profil_id'],
+						'uai': profil['etablissement_code_uai'],
+						'etablissement': profil['etablissement_nom'],
+						'nom': profil['profil_nom'] };
+				   });
 				   response.profil_actif = response.profils[ 0 ];
 
 				   return response;
