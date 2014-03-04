@@ -33,10 +33,8 @@ angular.module('cahierDeTexteApp')
 			  }
 		      };
 
-
 		      $scope.calendar.options.viewRender = function( view, element ) {
 			  // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
-			  $scope.emploi_du_temps.fullCalendar( 'removeEvents' );
 			  $scope.retrieve_data( view.start, view.end );
 		      };
 
@@ -154,11 +152,12 @@ angular.module('cahierDeTexteApp')
 			  EmploisDuTemps.query( { debut: from_date,
 						  fin: to_date },
 						function( response ) {
-						    console.debug(response)
-						    $scope.calendar.events.push( response.map( function( event ) {
-							return $scope.assemble_fullCalendar_event( event );
-						    } ) );
-						    $scope.calendar.events[0] = _($scope.calendar.events[0]).flatten();
+						    $scope.calendar.events[0] = _.chain(response)
+							.map( function( event ) {
+							    return $scope.assemble_fullCalendar_event( event );
+							} )
+							.flatten()
+							.value();
 
 						    $scope.loading = false;
 						});
