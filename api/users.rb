@@ -6,19 +6,17 @@ module CahierDeTextesAPI
     desc 'renvoi les infos de l\'utilisateur identifié'
     get '/current' do
        utilisateur = env['rack.session'][:current_user]
-       # utilisateur['classes'] = [] unless utilisateur.has_key? 'classes'
+
        utilisateur[ 'extra' ] = Annuaire.get_user( utilisateur[ 'uid' ] )
-       utilisateur['classes'] = utilisateur[ 'extra' ][ 'classes' ]
-       utilisateur['classes'] = utilisateur['classes'].map { |classe|
-          classe['regroupement_id'] = classe['classe_id']
+       utilisateur[ 'classes' ] = utilisateur[ 'extra' ][ 'classes' ]
+       utilisateur[ 'classes' ] = utilisateur[ 'classes' ].map { |classe|
+          classe[ 'regroupement_id' ] = classe[ 'classe_id' ]
 
           classe
        }
 
        # FIXME: DEBUG
-       p utilisateur['ENTPersonProfils']
-       utilisateur['ENTPersonProfils'] = 'ENS:0699999Z' if utilisateur['uid'] == 'VAA62559'
-       #utilisateur['classes'] = [{regroupement_id: 23}, {regroupement_id: 24} ] if utilisateur['uid'] == 'VAA62559'
+       utilisateur['ENTPersonProfils'] = 'ELV:0699999Z' if utilisateur['uid'] == 'VAA62559'
 
        utilisateur
     end

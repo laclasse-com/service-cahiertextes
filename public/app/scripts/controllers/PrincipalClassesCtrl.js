@@ -182,7 +182,7 @@ angular.module('cahierDeTexteApp')
 			      }
 			  };
 
-			  API.query_classes( { uai: current_user.etablissement_actif } ).then( function( response ) {
+			  API.query_classes( { uai: current_user['profil_actif']['uai'] } ).then( function( response ) {
 			      $scope.raw_data = response;
 
 			      $scope.empty = _($scope.raw_data[ 0 ]).size() == 0;
