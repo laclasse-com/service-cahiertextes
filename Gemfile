@@ -22,5 +22,4 @@ group :development do
   gem 'rack-test'
   gem 'rspec'
   gem 'simplecov'
-  gem 'sqlite3'
 end
