@@ -26,6 +26,7 @@ angular.module( 'cahierDeTexteApp' )
 					    devoir: '#eff'
 					}};
 		$rootScope.globalCalendarOptions = {
+		    firstDay: 1,
 		    timeFormat: 'H:mm{ - H:mm}',
 		    axisFormat: 'H:mm',
 		    allDayText: 'journée<br>complète',
@@ -37,8 +38,8 @@ angular.module( 'cahierDeTexteApp' )
 				   day: 'dddd d MMMM yyyy' },
 		    monthNames: $rootScope.mois,
 		    monthNamesShort: [ 'Jan.', 'Fév.', 'Mar.', 'Avr.', 'Mai', 'Juin', 'Juil.', 'Août', 'Sep.', 'Oct.', 'Nov.', 'Déc.' ],
-		    dayNames: [ 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche' ],
-		    dayNamesShort: [ 'Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.', 'Dim.' ],
+		    dayNames: [ 'Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi' ],
+		    dayNamesShort: [ 'Dim.', 'Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.' ],
 		    buttonText: { prev:     '&lsaquo;',
 				  next:     '&rsaquo;',
 				  prevYear: '&laquo;',
