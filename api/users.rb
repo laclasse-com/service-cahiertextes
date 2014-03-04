@@ -16,7 +16,7 @@ module CahierDeTextesAPI
        }
 
        # FIXME: DEBUG
-       utilisateur['ENTPersonProfils'] = 'ELV:0699999Z' if utilisateur['uid'] == 'VAA62559'
+       utilisateur['ENTPersonProfils'] = 'DIR:0699999Z;ENS:0699999Z;ELV:0699999Z' if utilisateur['uid'] == 'VAA62559'
 
        utilisateur
     end
