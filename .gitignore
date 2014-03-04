@@ -30,3 +30,4 @@ public/node_modules
 #config
 /config/options.rb
 /config/database.rb*
+/lib/key_pronote

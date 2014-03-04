@@ -4,22 +4,25 @@ angular.module('cahierDeTexteApp')
     .service('User',
 	     [ '$http', '$rootScope',
 	       function( $http, $rootScope ) {
-		   this.get_user = _.memoize( function() {
-		       return $http.get( $rootScope.APP_VIRTUAL_PATH + '/api/v0/users/current' )
+		   var user = null;
+		   this.get_user = function() {
+		       if ( user == null ) {
+			   user = $http.get( $rootScope.APP_VIRTUAL_PATH + '/api/v0/users/current' )
 			       .success( function( response ) {
-				   // Par souci de rapidité on parse current_user.ENTPersonProfils plutôt que d'attendre
-				   //   le retour de l'appel à l'API Annuaire pour utiliser current_user.details.profils[]
-				   response.profils = _(response.ENTPersonProfils.split( ';' ))
-				       .map( function( profil ) {
-					   var p = profil.split( ':' );
-					   return { 'type': p[ 0 ],
-						    'uai' : p[ 1 ] };
-				       });
-				   response.etablissements = _.chain(response.profils).pluck( 'uai' ).uniq().value();
-				   response.etablissement_actif = response.etablissements[ 0 ];
+				   response.profils = _(response.extra.profils).map( function( profil ) {
+				       return { 'type': profil['profil_id'],
+						'uai': profil['etablissement_code_uai'],
+						'etablissement': profil['etablissement_nom'],
+						'nom': profil['profil_nom'] };
+				   });
+				   response.profil_actif = response.profils[ 0 ];
+
 				   return response;
 			       } );
-		   });
+		       }
+
+		       return user;
+		   };
 	       } ] );
 
 angular.module('cahierDeTexteApp')
@@ -64,8 +67,12 @@ angular.module('cahierDeTexteApp')
 	     [ '$resource', '$rootScope',
 	       function( $resource, $rootScope ) {
 		   return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/devoirs/:id',
-				     { id: '@id' },
-				     { update: { method: 'PUT' },
+				     { id: '@id',
+				       debut: '@debut',
+				       fin: '@fin' },
+				     { query: { method: 'GET',
+						url: $rootScope.APP_VIRTUAL_PATH + '/api/v0/devoirs/du/:debut/au/:fin' },
+				       update: { method: 'PUT' },
 				       fait: { method: 'PUT',
 					       url: $rootScope.APP_VIRTUAL_PATH + '/api/v0/devoirs/:id/fait' }});
 	       } ] );
@@ -74,7 +81,9 @@ angular.module('cahierDeTexteApp')
     .factory('EmploisDuTemps',
 	     [ '$resource', '$rootScope',
 	       function( $resource, $rootScope ) {
-		   return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/emplois_du_temps' );
+		   return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/emplois_du_temps/du/:debut/au/:fin',
+				     { debut: '@debut',
+				       fin: '@fin' } );
 	       } ] );
 
 angular.module('cahierDeTexteApp')
@@ -139,8 +148,8 @@ angular.module('cahierDeTexteApp')
 			   return Cours.get( params ).$promise;
 		       }; //; // );
 
-		   this.query_devoirs = function() {
-			   return Devoirs.query().$promise;
+		   this.query_devoirs = function( params ) {
+		       return Devoirs.query( params ).$promise;
 		       };
 		   this.get_devoir = function( params ) {
 			   return Devoirs.get( params ).$promise;

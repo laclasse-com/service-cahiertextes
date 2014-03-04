@@ -172,22 +172,22 @@ angular.module('cahierDeTexteApp')
 		      Annuaire.get_user( $scope.enseignant_id ).then(
 			  function( response ) {
 			      $scope.enseignant = response;
-			      $scope.enseignant.matieres = _($scope.enseignant.matieres_enseignees).uniq( function( matiere ) {
+			      $scope.enseignant.matieres = _($scope.enseignant.classes).uniq( function( matiere ) {
 				  return matiere.matiere_enseignee_id;
 			      });
-			      $scope.enseignant.prof_principal = _.chain($scope.enseignant.matieres_enseignees)
+			      $scope.enseignant.prof_principal = _.chain($scope.enseignant.classes)
 				  .filter( function( matiere ) {
 				      return matiere.prof_principal == 'O';
 				  })
 				  .map( function( matiere ) {
-				      return matiere.libelle_aaf;
+				      return matiere.classe_libelle;
 				  })
 				  .value();
 			  });
 
 		      User.get_user().then( function( response ) {
 			  var current_user = response.data;
-			  API.get_enseignant( { enseignant_id: $stateParams.enseignant_id, uai: current_user.etablissement_actif } ).then(
+			  API.get_enseignant( { enseignant_id: $stateParams.enseignant_id, uai: current_user['profil_actif']['uai'] } ).then(
 				      function success( response ) {
 					  $scope.raw_data = response.saisies;
 
