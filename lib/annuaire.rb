@@ -27,7 +27,16 @@ module Annuaire
                   timestamp: timestamp,
                   signature: digested_message }.map { |key, value| "#{key}=#{CGI.escape(value)}" }.join( ';' ).chomp
 
-    "#{uri}/#{service}?#{query};#{signature}"
+    # Compatibilité avec les api laclasse v2 (pl/sql): pas de mode REST, en fait.
+    coordination = '?'
+    liaison = '/'
+    if ANNUAIRE[:api_mode] == 'v2'
+      service = service.sub!("users", "").sub!("/", "")
+      coordination = '&'
+      liaison = ""
+    end
+    # Fin patch compat.
+    "#{uri}#{liaison}#{service}#{coordination}#{query};#{signature}"
   end
 
   def search_matiere( label )
