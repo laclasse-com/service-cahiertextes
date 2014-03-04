@@ -46,7 +46,8 @@
 	    <div class="pull-right" data-ng-controller="HeaderCtrl">
 	      <i class="glyphicon glyphicon-eye-open" rel="tooltip" title="DEBUG: {{current_user}}"></i>
 	      {{current_user['LaclassePrenom']}} {{current_user['LaclasseNom']}}
-	      <select data-ng-model="current_user.etablissement_actif" data-ng-options="etablissement for etablissement in current_user['etablissements']" data-ng-change="reload()">
+	      <select data-ng-model="current_user['profil_actif']"
+		      data-ng-options="profil['type'] + ' : ' + profil['uai'] group by profil['uai'] for profil in current_user['profils']" data-ng-change="reload()">
 	      </select>
 	      <a class="btn btn-danger" href="logout">Déconnexion</a>
 	    </div>
