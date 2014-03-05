@@ -48,7 +48,7 @@ Sequel.migration do
          primary_key [:creneau_emploi_du_temps_id, :enseignant_id]
          foreign_key :creneau_emploi_du_temps_id, :creneaux_emploi_du_temps
 
-         String :enseignant_id
+         String :enseignant_id, null: false
          Bignum :semaines_de_presence, unsigned: true, default: 2**53 - 1
       }
 
@@ -56,7 +56,7 @@ Sequel.migration do
          primary_key [:creneau_emploi_du_temps_id, :regroupement_id]
          foreign_key :creneau_emploi_du_temps_id, :creneaux_emploi_du_temps
 
-         String :regroupement_id
+         String :regroupement_id, null: false
          Bignum :semaines_de_presence, unsigned: true, default: 2**53 - 1
       }
 
