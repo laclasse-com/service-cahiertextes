@@ -46,7 +46,7 @@ module CahierDeTextesAPI
 
          creneau = CreneauEmploiDuTemps.create( debut: plage_horaire_debut.id,
             fin: plage_horaire_fin.id,
-            jour_de_la_semaine: params[:jour_de_la_semaine],
+            jour_de_la_semaine: params[:jour_de_la_semaine] - 1, # FIXME: pas toujours lundi
             matiere_id: params[:matiere_id] )
          CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
          CreneauEmploiDuTempsEnseignant.create( creneau_emploi_du_temps_id: creneau.id,
