@@ -28,6 +28,7 @@ vagrant/
 public/node_modules
 
 #config
+/config/thin.yml
 /config/options.rb
 /config/database.rb*
 /lib/key_pronote
