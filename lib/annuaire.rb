@@ -39,19 +39,32 @@ module Annuaire
     "#{uri}#{liaison}#{service}#{coordination}#{query};#{signature}"
   end
 
-  def search_matiere( label )
-    label = URI.escape( label )
-
-    RestClient.get( sign( ANNUAIRE[:url], "matieres/libelle/#{label}", {}, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
+  def send_request (service, param, expandvalue, error_msg)
+    RestClient.get( sign( ANNUAIRE[:url], "#{service}/#{param}", { expand: expandvalue }, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
       |response, request, result|
       if response.code == 200
         return JSON.parse( response )
       else
-        STDERR.puts "Matière inconnue : #{label}"
-        STDERR.puts 'URL fautive: ' + sign( ANNUAIRE[:url], "/matieres/libelle/#{label}", {}, ANNUAIRE[:secret], ANNUAIRE[:app_id] )
-        return { 'id' => nil }
+        STDERR.puts "#{error_msg} : #{param}"
       end
     end
+   end
+
+  def search_matiere( label )
+    parsed_response = send_request "matieres/libelle", URI.escape( label ), "false", "Matière inconnue"
+
+#    label = URI.escape( label )
+#
+#    RestClient.get( sign( ANNUAIRE[:url], "matieres/libelle/#{label}", {}, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
+#      |response, request, result|
+#      if response.code == 200
+#        return JSON.parse( response )
+#      else
+#        STDERR.puts "Matière inconnue : #{label}"
+#        STDERR.puts 'URL fautive: ' + sign( ANNUAIRE[:url], "/matieres/libelle/#{label}", {}, ANNUAIRE[:secret], ANNUAIRE[:app_id] )
+#        return { 'id' => nil }
+#      end
+#    end
   end
 
   def search_regroupement( code_uai, nom )
@@ -87,55 +100,58 @@ module Annuaire
 
   # API d'interfaçage avec l'annuaire à destination du client
   def get_matiere( id )
-    id = URI.escape( id )
-
-    RestClient.get( sign( ANNUAIRE[:url], "matieres/#{id}", {}, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
-      |response, request, result|
-      if response.code == 200
-        return JSON.parse( response )
-      else
-        STDERR.puts "Matière inconnue : #{id}"
-      end
-    end
+    parsed_response = send_request "regroupements", URI.escape( id ), "false", "Matière inconnue"
+#    id = URI.escape( id )
+#
+#    RestClient.get( sign( ANNUAIRE[:url], "matieres/#{id}", {}, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
+#      |response, request, result|
+#      if response.code == 200
+#        return JSON.parse( response )
+#      else
+#        STDERR.puts "Matière inconnue : #{id}"
+#      end
+#    end
   end
 
   def get_regroupement( id )
-    id = URI.escape( id )
-
-    RestClient.get( sign( ANNUAIRE[:url], "regroupements/#{id}", {}, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
-      |response, request, result|
-      if response.code == 200
-        return JSON.parse( response )
-      else
-        STDERR.puts "Regroupement inconnu : #{id}"
-      end
-    end
+    parsed_response = send_request "regroupements", URI.escape( id ), "false", "Regroupement inconnu"
+#    id = URI.escape( id )
+#
+#    RestClient.get( sign( ANNUAIRE[:url], "regroupements/#{id}", {}, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
+#      |response, request, result|
+#      if response.code == 200
+#        return JSON.parse( response )
+#      else
+#        STDERR.puts "Regroupement inconnu : #{id}"
+#      end
+#    end
   end
 
   def get_user( id )
-    id = URI.escape( id )
-
-    RestClient.get( sign( ANNUAIRE[:url], "users/#{id}", { expand: 'true' }, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
-      |response, request, result|
-      if response.code == 200
-        return JSON.parse( response )
-      else
-        STDERR.puts "User inconnu : #{id}"
-      end
-    end
+    parsed_response = send_request "users", URI.escape( id ), "true", "User inconnu"
+#    id = URI.escape( id )
+#
+#    RestClient.get( sign( ANNUAIRE[:url], "users/#{id}", { expand: 'true' }, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
+#      |response, request, result|
+#      if response.code == 200
+#        return JSON.parse( response )
+#      else
+#        STDERR.puts "User inconnu : #{id}"
+#      end
+#    end
   end
 
   def get_etablissement( uai )
-    uai = URI.escape( uai )
-
-    RestClient.get( sign( ANNUAIRE[:url], "etablissements/#{uai}", { expand: 'true' }, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
-      |response, request, result|
-      if response.code == 200
-        return JSON.parse( response )
-      else
-        STDERR.puts "Établissement inconnu : #{uai}"
-      end
-    end
+    parsed_response = send_request "etablissements", URI.escape( uai ), "true", "Etablissement inconnu"
+  # uai = URI.escape( uai )
+  #  RestClient.get( sign( ANNUAIRE[:url], "etablissements/#{uai}", { expand: 'true' }, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
+  #    |response, request, result|
+  #    if response.code == 200
+  #      return JSON.parse( response )
+  #    else
+  #      STDERR.puts "Établissement inconnu : #{uai}"
+  #    end
+  #  end
   end
 
 end
