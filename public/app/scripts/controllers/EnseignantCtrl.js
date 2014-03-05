@@ -142,10 +142,11 @@ angular.module('cahierDeTexteApp')
 			  $scope.calendar.options.selectable = true;
 			  $scope.calendar.options.selectHelper = true;
 			  $scope.calendar.options.select = function(start, end, allDay) {
+			      var timezoneOffset = new Date(start).getTimezoneOffset() * 60000;
 			      $scope.creneau= new CreneauEmploiDuTemps({ regroupement_id: '',
 									 jour_de_la_semaine: start.getDay() + 1,
-									 heure_debut: start,
-									 heure_fin: end,
+									 heure_debut: new Date( new Date(start) - timezoneOffset ),
+									 heure_fin: new Date( new Date(end) - timezoneOffset ),
 									 matiere_id: ''
 								       });
 
@@ -154,11 +155,10 @@ angular.module('cahierDeTexteApp')
 				  $scope.creneau.heure_debut = start;
 				  $scope.creneau.heure_fin = end;
 
-				  // TODO: refactor this with $scope.calendar.options.eventClick()
 				  var create_cours = function( creneau ) {
 				      var cours = new Cours({ cahier_de_textes_id: '',
 							      creneau_emploi_du_temps_id: $scope.creneau.id,
-							      date_cours: start
+							      date_cours: new Date(start).toISOString()
 							    });
 				      cours.create = true;
 
@@ -201,7 +201,7 @@ angular.module('cahierDeTexteApp')
 			      var cours = new Cours({
 				  cahier_de_textes_id: creneau.details.cahier_de_textes_id,
 				  creneau_emploi_du_temps_id: creneau.details.creneau_emploi_du_temps_id,
-				  date_cours: creneau.start
+				  date_cours: new Date( creneau.start ).toISOString()
 			      });
 			      cours.create = true;
 
@@ -379,12 +379,16 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      $scope.assemble_fullCalendar_event = function( item_emploi_du_temps ) {
+			  var timezoneOffset = (new Date( item_emploi_du_temps.start )).getTimezoneOffset() * 60 * 1000 ;
+			  var start = item_emploi_du_temps.start;
+			  var end = item_emploi_du_temps.end;
+
 			  return $scope.update_fullCalendar_event( { details: { matiere_id: item_emploi_du_temps.matiere_id,
 										regroupement_id: item_emploi_du_temps.regroupement_id,
 										cahier_de_textes_id: item_emploi_du_temps.cahier_de_textes_id,
 										creneau_emploi_du_temps_id: item_emploi_du_temps.creneau_emploi_du_temps_id },
-								     start: new Date( item_emploi_du_temps.start ),
-								     end: new Date( item_emploi_du_temps.end ) },
+								     start: start,
+								     end: end },
 								   item_emploi_du_temps.cours,
 								   item_emploi_du_temps.devoirs );
 		      };
