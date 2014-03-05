@@ -59,7 +59,8 @@ angular.module('cahierDeTexteApp')
 				       jour_de_la_semaine: '@jour_de_la_semaine',
 				       heure_debut: '@heure_debut',
 				       heure_fin: '@heure_fin',
-				       matiere_id: '@matiere_id' } );
+				       matiere_id: '@matiere_id' },
+				     { update: { method: 'PUT' } });
 	       } ] );
 
 angular.module('cahierDeTexteApp')
