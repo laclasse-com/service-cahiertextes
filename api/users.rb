@@ -16,7 +16,24 @@ module CahierDeTextesAPI
          }
 
          # FIXME: DEBUG
-         utilisateur['extra']['profils'] = [ { 'etablissement_code_uai' => "0699999Z", 'etablissement_id' => 1, 'etablissement_nom' => "ERASME", 'profil_id' => "DIR", 'profil_nom' => "Personel de direction de l'etablissement" }, { 'etablissement_code_uai' => "0699999Z",    'etablissement_id' => 1,    'etablissement_nom' => "ERASME",    'profil_id' => "ENS",    'profil_nom' => "Enseignant" }, { 'etablissement_code_uai' => "0699999Z",    'etablissement_id' => 1,    'etablissement_nom' => "ERASME",    'profil_id' => "ELV",    'profil_nom' => "Élève" } ] if utilisateur['uid'] == 'VAA62559'
+         if utilisateur['uid'] == 'VAA62559'
+            utilisateur['extra']['profils'] = [
+               { 'etablissement_code_uai' => "0699999Z",
+                  'etablissement_id' => 1,
+                  'etablissement_nom' => "ERASME",
+                  'profil_id' => "DIR",
+                  'profil_nom' => "Personel de direction de l'etablissement" },
+               { 'etablissement_code_uai' => "0699999Z",
+                  'etablissement_id' => 1,
+                  'etablissement_nom' => "ERASME",
+                  'profil_id' => "ENS",
+                  'profil_nom' => "Enseignant" },
+               { 'etablissement_code_uai' => "0699999Z",
+                  'etablissement_id' => 1,
+                  'etablissement_nom' => "ERASME",
+                  'profil_id' => "ELV",
+                  'profil_nom' => "Élève" } ]
+         end
 
             utilisateur
          end

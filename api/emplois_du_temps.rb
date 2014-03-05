@@ -24,6 +24,9 @@ module CahierDeTextesAPI
                 user.is?( 'DIR', user.ENTPersonStructRattachRNE ) ) &&
                ( user.methods.include? :classes )
 
+            params[:debut] = Date.parse( params[:debut].iso8601 )
+            params[:fin] = Date.parse( params[:fin].iso8601 )
+
             regroupements_ids = user.classes.map {
                |classe|
                classe['classe_id']
@@ -40,57 +43,41 @@ module CahierDeTextesAPI
                plage_debut = PlageHoraire[ creneau.debut ].debut
                plage_fin = PlageHoraire[ creneau.fin ].fin
 
-               lundi = date_of_last 'monday' # FIXME: pas forcément un lundi ?
-               jour = lundi + ( creneau.jour_de_la_semaine - 2)
-
                # 1. récupération du cahier de textes
                data = CahierDeTextes.where( regroupement_id: creneau[ :regroupement_id ] )
                raise '/!\ Incohérence dans les cahiers de textes !' unless data.count == 1
                cahier_de_textes = data.first
 
-               # 2. récupération des cours
-               data = Cours.where( creneau_emploi_du_temps_id: creneau.id )
-                        .where( cahier_de_textes_id: cahier_de_textes.id )
-                        .where( date_cours: params[:debut] .. params[:fin] )
+               ( params[:debut] .. params[:fin] ).reject {
+                  |day|
+                  day.wday != creneau.jour_de_la_semaine
+               }.map {
+                  |jour|
 
-               if data.count == 0
+                  cours = {} # TODO: should only be the ID
+                  devoirs = [] # TODO: should only be an array of IDs
 
-                  {
-                     cahier_de_textes_id: cahier_de_textes.id,
-                     regroupement_id: cahier_de_textes.regroupement_id,
-                     creneau_emploi_du_temps_id: creneau.id,
-                     matiere_id: creneau.matiere_id,
-                     start: Time.new( jour.year, jour.month, jour.mday, plage_debut.hour, plage_debut.min ).iso8601,
-                     end: Time.new( jour.year, jour.month, jour.mday, plage_fin.hour, plage_fin.min ).iso8601,
-                     cours: {}, # TODO: should only be the ID
-                     devoirs: [] # TODO: should only be an array of IDs
-                  }
-
-               else
-
-                  data.map { |le_cours|
+                  # 2. récupération des cours
+                  Cours.where( creneau_emploi_du_temps_id: creneau.id )
+                  .where( cahier_de_textes_id: cahier_de_textes.id )
+                  .where( date_cours: jour ).map { |le_cours|
                      cours = le_cours.to_hash
                      cours[:ressources] = le_cours.ressources
 
-                     le_cours = Devoir.where( cours_id: cours[:id] ) if cours.key?( :id )
-                     if le_cours.first.nil?
-                        devoirs = []
-                     else
-                        devoirs = le_cours.map { |devoir|
-                           hstart = PlageHoraire[ CreneauEmploiDuTemps[ devoir.creneau_emploi_du_temps_id ].debut ].debut
-                           hend = PlageHoraire[ CreneauEmploiDuTemps[ devoir.creneau_emploi_du_temps_id ].fin ].fin
-                           d = devoir.to_hash
-                           d[:ressources] = devoir.ressources
-                           d[:fait] = devoir.fait_par?( user.uid )
-                           d[:start] = Time.new( devoir.date_due.year, devoir.date_due.month, devoir.date_due.mday, hstart.hour, hstart.min ).iso8601
-                           d[:end] = Time.new( devoir.date_due.year, devoir.date_due.month, devoir.date_due.mday, hend.hour, hend.min ).iso8601
+                     devoirs = Devoir.where( cours_id: cours[:id] ).all.map { |devoir|
+                        hstart = PlageHoraire[ CreneauEmploiDuTemps[ devoir.creneau_emploi_du_temps_id ].debut ].debut
+                        hend = PlageHoraire[ CreneauEmploiDuTemps[ devoir.creneau_emploi_du_temps_id ].fin ].fin
+                        d = devoir.to_hash
+                        d[:ressources] = devoir.ressources
+                        d[:fait] = devoir.fait_par?( user.uid )
+                        d[:start] = Time.new( devoir.date_due.year, devoir.date_due.month, devoir.date_due.mday, hstart.hour, hstart.min ).iso8601
+                        d[:end] = Time.new( devoir.date_due.year, devoir.date_due.month, devoir.date_due.mday, hend.hour, hend.min ).iso8601
 
-                           d
-                        }
-                     end
+                        d }
+                  }
 
-                     {
-                        cahier_de_textes_id: cahier_de_textes.id,
+                  {
+                     cahier_de_textes_id: cahier_de_textes.id,
                         regroupement_id: cahier_de_textes.regroupement_id,
                         creneau_emploi_du_temps_id: creneau.id,
                         matiere_id: creneau.matiere_id,
@@ -98,10 +85,8 @@ module CahierDeTextesAPI
                         end: Time.new( jour.year, jour.month, jour.mday, plage_fin.hour, plage_fin.min ).iso8601,
                         cours: cours,
                         devoirs: devoirs
-                     }
                   }
-               end
-
+               }
             }.flatten
          else
             []
