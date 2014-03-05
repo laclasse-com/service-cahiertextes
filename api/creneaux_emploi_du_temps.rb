@@ -45,17 +45,20 @@ module CahierDeTextesAPI
          end
 
          creneau = CreneauEmploiDuTemps.create( debut: plage_horaire_debut.id,
-                                                  fin: plage_horaire_fin.id,
-                                                  jour_de_la_semaine: params[:jour_de_la_semaine],
-                                                  matiere_id: params[:matiere_id] )
+            fin: plage_horaire_fin.id,
+            jour_de_la_semaine: params[:jour_de_la_semaine],
+            matiere_id: params[:matiere_id] )
          CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
          CreneauEmploiDuTempsEnseignant.create( creneau_emploi_du_temps_id: creneau.id,
-                                                  enseignant_id: user.uid )
+            enseignant_id: user.uid )
          CreneauEmploiDuTempsEnseignant.restrict_primary_key
-         CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
-         CreneauEmploiDuTempsRegroupement.create( creneau_emploi_du_temps_id: creneau.id,
-                                                    regroupement_id: params[:regroupement_id] )
-         CreneauEmploiDuTempsRegroupement.restrict_primary_key
+
+         unless params[:regroupement_id].empty?
+            CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
+            CreneauEmploiDuTempsRegroupement.create( creneau_emploi_du_temps_id: creneau.id,
+               regroupement_id: params[:regroupement_id] )
+            CreneauEmploiDuTempsRegroupement.restrict_primary_key
+         end
 
          if params[:salle_id]
             CreneauEmploiDuTempsSalle.unrestrict_primary_key
