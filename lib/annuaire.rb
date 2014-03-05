@@ -74,7 +74,7 @@ module Annuaire
     # Compatibilité avec les api laclasse v2 (pl/sql): pas de mode REST, en fait.
     service = compat_service service
     # Fin patch compat.
-    
+puts "#{uri}"+liaison+"#{service}"+coordination+"#{query};#{signature}"
     "#{uri}"+liaison+"#{service}"+coordination+"#{query};#{signature}"
   end
 
