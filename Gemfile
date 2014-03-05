@@ -18,6 +18,11 @@ gem 'thin'
 gem 'zipruby'
 
 group :development do
+  gem 'guard'
+  gem 'guard-rake'
+  gem 'guard-rspec'
+  gem 'guard-bundler'
+  gem 'guard-shell'
   gem 'pry'
   gem 'rack-test'
   gem 'rspec'
