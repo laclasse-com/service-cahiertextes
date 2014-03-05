@@ -14,7 +14,7 @@ module AuthenticationHelpers
       unless route.empty?
          route += "?#{env['QUERY_STRING']}" unless env['QUERY_STRING'].empty?
          route = CGI.escape( "#{env['rack.url_scheme']}://#{env['HTTP_HOST']}#{route}" )
-         redirect "#{APP_VIRTUAL_PATH}/auth/cas?url=#{CGI.encode( route )}"
+         redirect "#{APP_VIRTUAL_PATH}/auth/cas?url=#{URI.encode( route )}"
       end
       redirect "#{APP_VIRTUAL_PATH}/auth/cas"
    end
@@ -27,7 +27,7 @@ module AuthenticationHelpers
       env['rack.session'][:current_user] = nil
 
       CASLaclasseCom::OPTIONS[:ssl] ? protocol = 'https://' : protocol = 'http://'
-      redirect protocol + CASLaclasseCom::OPTIONS[:host] + CASLaclasseCom::OPTIONS[:logout_url] + '?url=' + CGI.encode( url )
+      redirect protocol + CASLaclasseCom::OPTIONS[:host] + CASLaclasseCom::OPTIONS[:logout_url] + '?url=' + URI.encode( url )
    end
 
    #
