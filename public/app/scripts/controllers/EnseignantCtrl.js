@@ -292,6 +292,8 @@ angular.module('cahierDeTexteApp')
 					     $scope.creneau.matiere_id = objets.matiere_id;
 					     $scope.creneau.regroupement_id = objets.regroupement_id;
 
+					     $scope.creneau.$update();
+
 					     updated_event = $scope.assemble_fullCalendar_event( iedt );
 
 					     $scope.calendar.events[0].push( updated_event );

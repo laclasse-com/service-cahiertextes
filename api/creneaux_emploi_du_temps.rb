@@ -70,5 +70,43 @@ module CahierDeTextesAPI
          creneau
       end
 
+      desc 'modifie un créneau'
+      params {
+         requires :id, type: Integer
+         requires :matiere_id
+         requires :regroupement_id
+
+         optional :salle_id
+      }
+      put '/:id'  do
+         error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS', user.ENTPersonStructRattachRNE ) || user.is?( 'DIR', user.ENTPersonStructRattachRNE )
+
+         creneau = CreneauEmploiDuTemps[ params[:id] ]
+         unless creneau.nil?
+            creneau.matiere_id = params[:matiere_id]
+
+            creneau.save
+
+            if CreneauEmploiDuTempsRegroupement
+               .where( creneau_emploi_du_temps_id: params[:id] )
+               .where( regroupement_id: params[:regroupement_id] ).count < 1
+
+               CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
+               CreneauEmploiDuTempsRegroupement.create( creneau_emploi_du_temps_id: creneau.id,
+                  regroupement_id: params[:regroupement_id] )
+               CreneauEmploiDuTempsRegroupement.restrict_primary_key
+            end
+
+            # if params[:salle_id]
+            #    CreneauEmploiDuTempsSalle.unrestrict_primary_key
+            #    CreneauEmploiDuTempsSalle.create( creneau_emploi_du_temps_id: creneau.id,
+            #       salle_id: params[:salle_id] )
+            #    CreneauEmploiDuTempsSalle.restrict_primary_key
+            # end
+
+            creneau
+         end
+      end
+
    end
 end
