@@ -2,6 +2,7 @@
 
 ANNUAIRE = { url: 'http://www.dev.laclasse.com/api/app',
 	     app_id: 'test',
-	     secret: 'veryverysecret' }
+	     secret: 'veryverysecret',
+             api_mode: 'v3' }
 
 APP_VIRTUAL_PATH = '/ct'
