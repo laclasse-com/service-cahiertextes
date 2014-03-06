@@ -108,5 +108,30 @@ module CahierDeTextesAPI
          end
       end
 
+      desc 'modifie un créneau'
+      params {
+         requires :id, type: Integer
+      }
+      delete '/:id'  do
+         error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS', user.ENTPersonStructRattachRNE ) || user.is?( 'DIR', user.ENTPersonStructRattachRNE )
+
+         creneau = CreneauEmploiDuTemps[ params[:id] ]
+         unless creneau.nil?
+            CreneauEmploiDuTempsRegroupement.where( creneau_emploi_du_temps_id: creneau.id ).all.each {
+               |cedtr|
+               cedtr.delete
+            }
+            CreneauEmploiDuTempsEnseignant.where( creneau_emploi_du_temps_id: creneau.id ).all.each {
+               |cedte|
+               cedte.delete
+            }
+            CreneauEmploiDuTempsSalle.where( creneau_emploi_du_temps_id: creneau.id ).all.each {
+               |cedts|
+               cedts.delete
+            }
+            creneau.delete
+         end
+      end
+
    end
 end

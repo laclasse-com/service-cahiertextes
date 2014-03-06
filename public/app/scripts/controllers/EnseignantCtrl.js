@@ -53,6 +53,15 @@ angular.module('cahierDeTexteApp')
 			      });
 			  };
 
+			  $scope.fermer = function() {
+			      if ( _($scope.erreurs).size() == 0 ) {
+				  $modalInstance.close( { cours: $scope.cours,
+							  devoirs: $scope.devoirs,
+							  matiere_id: $scope.matiere_id,
+							  regroupement_id: $scope.regroupement_id } );
+			      }
+			  };
+
 			  $scope.valider = function() {
 			      // réinitialisation des erreurs
 			      $scope.erreurs = [];
@@ -105,12 +114,7 @@ angular.module('cahierDeTexteApp')
 				      } );
 
 				  $q.all( promesses ).then( function() {
-				      if ( _($scope.erreurs).size() == 0 ) {
-					  $modalInstance.close( { cours: $scope.cours,
-								  devoirs: $scope.devoirs,
-								  matiere_id: $scope.matiere_id,
-								  regroupement_id: $scope.regroupement_id } );
-				      }
+				      $scope.fermer();
 				  });
 			      });
 			  };
@@ -281,25 +285,28 @@ angular.module('cahierDeTexteApp')
 
 					 // s'il s'agit d'une création de créneau
 					 if ( ! _($scope.creneau).has( '_id' ) ) {
+					     if ( objets.matiere_id == null || objets.regroupement_id == null || ( ! objets.cours.dirty || ! objets.devoirs.dirty ) ) {
+						 $scope.creneau.$delete();
+					     } else {
+						 var iedt = { cours: objets.cours,
+							      devoirs: objets.devoirs,
+							      cahier_de_textes_id: objets.cours.cahier_de_textes_id,
+							      creneau_emploi_du_temps_id: objets.cours.creneau_emploi_du_temps_id,
+							      matiere_id: objets.matiere_id,
+							      regroupement_id: objets.regroupement_id,
+							      start: $scope.creneau.heure_debut,
+							      end: $scope.creneau.heure_fin };
 
-					     var iedt = { cours: objets.cours,
-							  devoirs: objets.devoirs,
-							  cahier_de_textes_id: objets.cours.cahier_de_textes_id,
-							  creneau_emploi_du_temps_id: objets.cours.creneau_emploi_du_temps_id,
-							  matiere_id: objets.matiere_id,
-							  regroupement_id: objets.regroupement_id,
-							  start: $scope.creneau.heure_debut,
-							  end: $scope.creneau.heure_fin };
+						 $scope.creneau.matiere_id = objets.matiere_id;
+						 $scope.creneau.regroupement_id = objets.regroupement_id;
 
-					     $scope.creneau.matiere_id = objets.matiere_id;
-					     $scope.creneau.regroupement_id = objets.regroupement_id;
+						 $scope.creneau.$update();
 
-					     $scope.creneau.$update();
+						 updated_event = $scope.assemble_fullCalendar_event( iedt );
 
-					     updated_event = $scope.assemble_fullCalendar_event( iedt );
-
-					     $scope.calendar.events[0].push( updated_event );
-					     $scope.emploi_du_temps.fullCalendar( 'renderEvent', _($scope.calendar.events[0]).last(), true );
+						 $scope.calendar.events[0].push( updated_event );
+						 $scope.emploi_du_temps.fullCalendar( 'renderEvent', _($scope.calendar.events[0]).last(), true );
+					     }
 
 					 } else {
 
