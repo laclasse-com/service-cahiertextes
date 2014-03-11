@@ -55,18 +55,5 @@ module CahierDeTextesAPI
       Etablissement.where(uai: params[:uai]).first.saisies_enseignant( params[:enseignant_id] )
     end
 
-    desc 'valide toutes les saisies non validées de l\'enseignant'
-    params {
-      requires :uai, desc: 'Code UAI de l\'établissement'
-      requires :enseignant_id
-      optional :debut, type: Time
-      optional :fin, type: Time
-    }
-    put '/:uai/enseignants/:enseignant_id' do
-      # TODO: prendre en compte debut et fin
-
-      Etablissement.where(uai: params[:uai]).first.valide_enseignant!( params[:enseignant_id] )
-    end
-
   end
 end
