@@ -68,12 +68,8 @@ angular.module('cahierDeTexteApp')
 	     [ '$resource', '$rootScope',
 	       function( $resource, $rootScope ) {
 		   return $resource( $rootScope.APP_VIRTUAL_PATH + '/api/v0/devoirs/:id',
-				     { id: '@id',
-				       debut: '@debut',
-				       fin: '@fin' },
-				     { query: { method: 'GET',
-						url: $rootScope.APP_VIRTUAL_PATH + '/api/v0/devoirs/du/:debut/au/:fin' },
-				       update: { method: 'PUT' },
+				     { id: '@id' },
+				     { update: { method: 'PUT' },
 				       fait: { method: 'PUT',
 					       url: $rootScope.APP_VIRTUAL_PATH + '/api/v0/devoirs/:id/fait' }});
 	       } ] );
