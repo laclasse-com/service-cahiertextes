@@ -71,18 +71,6 @@ describe CahierDeTextesAPI::API do
    end
    # }}}
 
-   # {{{ Cahiers de Textes
-   ############ GET ############
-   it 'récupère les cahiers de textes de l\'enseignant' do
-      debut = Date.today
-      fin = debut + 7
-
-      get "/v0/cahiers_de_textes?debut=#{debut}&fin=#{fin}"
-
-      last_response.status.should == 200
-   end
-   # }}}
-
    # {{{ Cours
    ############ POST ############
    it 'renseigne une nouvelle séquence pédagogique' do

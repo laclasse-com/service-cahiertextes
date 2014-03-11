@@ -55,18 +55,6 @@ describe CahierDeTextesAPI::API do
 
     response_body['enseignant_id'].should == enseignant_id
   end
-
-  it 'valide tout le cahier de textes d\'un enseignant' do
-    uai = '0699999Z'
-    enseignant_id = Cours.select(:enseignant_id).first[:enseignant_id].to_s
-    debut = Date.today
-    fin = debut - 7
-
-    put "/v0/etablissements/#{uai}/enseignants/#{enseignant_id}?debut=#{debut}&fin=#{fin}"
-    last_response.status.should == 200
-
-    Cours.where(enseignant_id: enseignant_id).where('date_validation IS NULL').count.should == 0
-  end
   # }}}
 
   # {{{ Classes
