@@ -22,6 +22,7 @@
 	"json3": "latest",
 	"select2-bootstrap-css": "latest",
 	"sizzle": "latest",
+	"swagger-ui": "latest",
 	"underscore": "latest"
     },
     "devDependencies": {
