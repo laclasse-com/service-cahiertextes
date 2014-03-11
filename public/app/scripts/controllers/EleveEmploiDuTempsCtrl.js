@@ -105,13 +105,14 @@ angular.module('cahierDeTexteApp')
 			  }
 
 			  // composition du titre
-			  $scope.matieres[ item_emploi_du_temps.matiere_id ] = Annuaire.get_matiere( item_emploi_du_temps.matiere_id );
+			  if ( item_emploi_du_temps.matiere_id.length > 0 ) {
+			      $scope.matieres[ item_emploi_du_temps.matiere_id ] = Annuaire.get_matiere( item_emploi_du_temps.matiere_id );
 
-			  $scope.matieres[ item_emploi_du_temps.matiere_id ].then( function success( response ) {
-			      $scope.matieres[ item_emploi_du_temps.matiere_id ] = response;
-			      cours_event.title = $scope.matieres[ item_emploi_du_temps.matiere_id ].libelle_long;
-			  });
-
+			      $scope.matieres[ item_emploi_du_temps.matiere_id ].then( function success( response ) {
+				  $scope.matieres[ item_emploi_du_temps.matiere_id ] = response;
+				  cours_event.title = $scope.matieres[ item_emploi_du_temps.matiere_id ].libelle_long;
+			      });
+			  }
 			  events.push( cours_event );
 
 			  // traitement des devoirs
