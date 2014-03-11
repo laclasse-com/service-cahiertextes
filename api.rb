@@ -27,7 +27,6 @@ require_relative './api/plages_horaires'
 module CahierDeTextesAPI
   class API < Grape::API
     version 'v0', using: :path, vendor: 'laclasse.com'
-    # prefix "#{APP_VIRTUAL_PATH}/api"
     format :json
     rescue_from :all
 
