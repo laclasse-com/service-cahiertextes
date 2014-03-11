@@ -8,8 +8,7 @@ module CahierDeTextesAPI
          utilisateur = env['rack.session'][:current_user]
 
          utilisateur[ 'extra' ] = Annuaire.get_user( utilisateur[ 'uid' ] )
-         utilisateur[ 'classes' ] = utilisateur[ 'extra' ][ 'classes' ]
-         utilisateur[ 'classes' ] = utilisateur[ 'classes' ].map { |classe|
+         utilisateur[ 'classes' ] = utilisateur[ 'extra' ][ 'classes' ].map { |classe|
             classe[ 'regroupement_id' ] = classe[ 'classe_id' ]
 
             classe
