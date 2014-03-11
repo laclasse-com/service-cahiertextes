@@ -16,38 +16,38 @@ module CahierDeTextesAPI
 
          # FIXME: DEBUG
          if utilisateur['uid'] == 'VAA62559'
-            utilisateur['extra']['profils'] = [
-               { 'etablissement_code_uai' => "0699999Z",
-                  'etablissement_id' => 1,
-                  'etablissement_nom' => "ERASME",
-                  'profil_id' => "DIR",
-                  'profil_nom' => "Personel de direction de l'etablissement" },
-               { 'etablissement_code_uai' => "0699999Z",
-                  'etablissement_id' => 1,
-                  'etablissement_nom' => "ERASME",
-                  'profil_id' => "ENS",
-                  'profil_nom' => "Enseignant" },
-               { 'etablissement_code_uai' => "0699999Z",
-                  'etablissement_id' => 1,
-                  'etablissement_nom' => "ERASME",
-                  'profil_id' => "ELV",
-                  'profil_nom' => "Élève" } ]
+            utilisateur[ 'classes' ] = []
+            utilisateur['extra']['profils'] = [ { 'etablissement_code_uai' => '0699999Z',
+                                                    'etablissement_id' => 1,
+                                                    'etablissement_nom' => 'ERASME',
+                                                    'profil_id' => 'DIR',
+                                                    'profil_nom' => 'Personel de direction de l\'etablissement' },
+                                                  { 'etablissement_code_uai' => '0699999Z',
+                                                      'etablissement_id' => 1,
+                                                      'etablissement_nom' => 'ERASME',
+                                                      'profil_id' => 'ENS',
+                                                      'profil_nom' => 'Enseignant' },
+                                                  { 'etablissement_code_uai' => '0699999Z',
+                                                      'etablissement_id' => 1,
+                                                      'etablissement_nom' => 'ERASME',
+                                                      'profil_id' => 'ELV',
+                                                      'profil_nom' => 'Élève' } ]
          end
 
-            utilisateur
-         end
-
-         desc 'efface toute trace de l\'utilisateur identifié'
-         delete '/:id' do
-            # TODO
-            STDERR.puts "Deleteing all traces of #{params[:id]}"
-         end
-
-         desc 'efface toute trace de l\'utilisateur identifié'
-         put '/:target_id/merge/:source_id' do
-            # TODO
-            STDERR.puts "Merging all data of #{params[:source_id]} into #{params[:target_id]}"
-         end
-
+         utilisateur
       end
+
+      desc 'efface toute trace de l\'utilisateur identifié'
+      delete '/:id' do
+         # TODO
+         STDERR.puts "Deleteing all traces of #{params[:id]}"
+      end
+
+      desc 'Merge les données de l\'utilisateur source_id vers l\'utilisateur target_id'
+      put '/:target_id/merge/:source_id' do
+         # TODO
+         STDERR.puts "Merging all data of #{params[:source_id]} into #{params[:target_id]}"
+      end
+
    end
+end
