@@ -90,14 +90,5 @@ describe CahierDeTextesAPI::API do
     }
   end
 
-  it 'valide tout le cahier de textes d\'une classe' do
-    uai = '0699999Z'
-    classe_id = CreneauEmploiDuTempsRegroupement.select(:regroupement_id).map { |r| r.regroupement_id }.uniq.sample
-
-    put "/v0/etablissements/#{uai}/classes/#{classe_id}"
-    last_response.status.should == 200
-
-    Cours.where(cahier_de_textes_id: CahierDeTextes.where(regroupement_id: classe_id).first.id ).where('date_validation IS NULL').count.should == 0
-  end
   # }}}
 end

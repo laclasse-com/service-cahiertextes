@@ -26,19 +26,6 @@ module CahierDeTextesAPI
             cahier_de_textes.statistiques
          end
 
-         desc 'valide toutes les saisies non validées de la classe'
-         params {
-            requires :uai, desc: 'Code UAI de l\'établissement'
-            requires :classe_id, desc: 'identifiant annuaire de la classe'
-         }
-         put '/:uai/classes/:classe_id' do
-            cahier_de_textes = CahierDeTextes[ regroupement_id: params[:classe_id] ]
-
-            error!( 'Classe inconnue', 404 ) if cahier_de_textes.nil?
-
-            cahier_de_textes.valide!
-         end
-
          desc 'statistiques des cahiers de textes par enseignants/mois'
          params {
             requires :uai, desc: 'Code UAI de l\'établissement'
