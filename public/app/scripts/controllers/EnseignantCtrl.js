@@ -138,8 +138,7 @@ angular.module('cahierDeTexteApp')
 		      $scope.calendar.options.eventRender = function( event, element ) {
 			  element.find('.fc-event-title').append( event.description );
 		      };
-
-		      if ( $scope.build_EdT_from_scratch && $scope.classes.length > 0 ) {
+		      if ( $scope.build_EdT_from_scratch ) {
 			  $scope.calendar.options.editable = true;
 			  $scope.calendar.options.disableDragging = true;
 			  $scope.calendar.options.eventDurationEditable = false;
@@ -440,9 +439,14 @@ angular.module('cahierDeTexteApp')
 						    // Extraction des classes
 						    $q.all( $scope.extract_classes_promises( $scope.raw_data ) )
 							.then( function( classes ) {
-							    _(classes).each(function( classe ) {
-								$scope.classes[classe.id] = classe.libelle !== null ? classe.libelle : classe.libelle_aaf;
-							    });
+							    if ( classes.length > 0 ) {
+								_(classes).each(function( classe ) {
+								    $scope.classes[classe.id] = classe.libelle !== null ? classe.libelle : classe.libelle_aaf;
+								});
+								$scope.calendar.options.editable = $scope.build_EdT_from_scratch;
+							    } else {
+								$scope.calendar.options.editable = false;
+							    }
 							});
 
 						    $scope.process_data();
