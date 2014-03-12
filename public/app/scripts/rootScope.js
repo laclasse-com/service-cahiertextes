@@ -27,6 +27,8 @@ angular.module( 'cahierDeTexteApp' )
 					}};
 		$rootScope.globalCalendarOptions = {
 		    firstDay: 1,
+		    minTime: 7,
+		    maxTime: 19,
 		    ignoreTimezone: false,
 		    timeFormat: 'H:mm{ - H:mm}',
 		    axisFormat: 'H:mm',
