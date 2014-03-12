@@ -282,7 +282,7 @@ angular.module('cahierDeTexteApp')
 
 					 // s'il s'agit d'une création de créneau
 					 if ( ! _($scope.creneau).has( '_id' ) ) {
-					     if ( objets.matiere_id == null || objets.regroupement_id == null || ( ! objets.cours.dirty || ! objets.devoirs.dirty ) ) {
+					     if ( objets.matiere_id == null || objets.regroupement_id == null && ( ! objets.cours.dirty || ! objets.devoirs.dirty ) ) {
 						 $scope.creneau.$delete();
 					     } else {
 						 var iedt = { cours: objets.cours,
