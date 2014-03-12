@@ -261,7 +261,7 @@ angular.module('cahierDeTexteApp')
 
 		      $scope.calendar.options.viewRender = function( view, element ) {
 			  // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
-			  $scope.retrieve_data( view.start, view.end );
+			  $scope.retrieve_data( view.visStart, view.visEnd );
 		      };
 
 		      $scope.ouvre_popup_edition = function(  ) {
