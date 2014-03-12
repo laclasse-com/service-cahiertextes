@@ -32,6 +32,7 @@ angular.module( 'cahierDeTexteApp' )
 		    ignoreTimezone: false,
 		    timeFormat: 'H:mm{ - H:mm}',
 		    axisFormat: 'H:mm',
+		    allDaySlot: false,
 		    allDayText: 'journée<br>complète',
 		    columnFormat: { month: 'ddd',
 				    week: 'ddd d/M',
