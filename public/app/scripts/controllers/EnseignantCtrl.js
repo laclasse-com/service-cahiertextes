@@ -19,6 +19,18 @@ angular.module('cahierDeTexteApp')
 
 			  $scope.erreurs = [];
 
+			  $scope.dateOptions = {
+			      'year-format': "'yy'",
+			      'starting-day': 1
+			  };
+			  $scope.datePickerOpened = false;
+			  $scope.openDatePicker = function($event) {
+			      $event.preventDefault();
+			      $event.stopPropagation();
+
+			      $scope.opened = true;
+			  };
+
 			  // http://stackoverflow.com/questions/19408883/angularjs-select-not-2-way-binding-to-model
 			  $scope.scope = $scope;
 
