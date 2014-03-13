@@ -134,10 +134,6 @@ angular.module('cahierDeTexteApp')
 		      $scope.calendar = { options: $rootScope.globalCalendarOptions,
 					  events: [  ] };
 		      $scope.calendar.options.defaultView = 'agendaWeek';
-		      $scope.calendar.options.height = 600;
-		      $scope.calendar.options.header = { left: 'title',
-							 center: 'agendaDay agendaWeek month',
-							 right: 'today prev,next' };
 		      $scope.calendar.options.eventRender = function( event, element ) {
 			  element.find('.fc-event-title').append( event.description );
 		      };
