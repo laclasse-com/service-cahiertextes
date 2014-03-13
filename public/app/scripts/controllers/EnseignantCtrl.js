@@ -135,6 +135,8 @@ angular.module('cahierDeTexteApp')
 					  events: [  ] };
 		      $scope.calendar.options.defaultView = 'agendaWeek';
 		      $scope.calendar.options.eventRender = function( event, element ) {
+			  element.find('.fc-event-title').append( ' - ' + event.regroupement );
+			  element.find('.fc-event-title').append( '<br>' );
 			  element.find('.fc-event-title').append( event.description );
 		      };
 		      if ( $scope.build_EdT_from_scratch ) {
@@ -377,6 +379,12 @@ angular.module('cahierDeTexteApp')
 			      calendar_event.description += '</span>';
 			  }
 
+			  if ( event.details.regroupement_id.length > 0 ) {
+			      calendar_event.regroupement = $scope.classes[ event.details.regroupement_id ];
+			  } else {
+			      calendar_event.regroupement = '';
+			  }
+
 			  if ( event.details.matiere_id.length > 0 ) {
 			      $scope.matieres[ event.details.matiere_id ] = Annuaire.get_matiere( event.details.matiere_id );
 
@@ -450,9 +458,9 @@ angular.module('cahierDeTexteApp')
 							    } else {
 								$scope.calendar.options.editable = false;
 							    }
-							});
 
-						    $scope.process_data();
+							    $scope.process_data();
+							});
 
 						    $scope.loading = false;
 						} );
