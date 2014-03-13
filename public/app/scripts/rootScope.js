@@ -26,6 +26,10 @@ angular.module( 'cahierDeTexteApp' )
 					    devoir: '#eff'
 					}};
 		$rootScope.globalCalendarOptions = {
+		    height: 600,
+		    header: { left: 'title',
+			      center: 'agendaDay agendaWeek month',
+			      right: 'today prev,next' },
 		    firstDay: 1,
 		    minTime: 7,
 		    maxTime: 19,
