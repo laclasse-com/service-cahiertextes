@@ -8,6 +8,7 @@
 	"angular-bootstrap": "latest",
 	"angular-cookies": "latest",
 	"angular-grid": "git://github.com/angular-ui/ng-grid.git#latest",
+	"angular-i18n": "latest",
 	"angular-mocks": "latest",
 	"angular-resource": "latest",
 	"angular-sanitize": "latest",
