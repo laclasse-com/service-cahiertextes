@@ -17,11 +17,13 @@ module UserHelpers
 
    class HashedUser < HashIt
       def is?( profil, uai )
-         if @ENTPersonProfils.index("#{profil}:#{uai}")
-            true
-         else
-            false
-         end
+         @extra['profils'].reject {
+            |p|
+            p['etablissement_code_uai'] != uai
+         }.map {
+            |p|
+            p['profil_id']
+         }.include? profil
       end
    end
 
