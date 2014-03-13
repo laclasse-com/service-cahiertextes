@@ -46,7 +46,7 @@ angular.module('cahierDeTexteApp')
 			  var create_devoir = function( cours ) {
 			      var date = new Date();
 			      var devoir = new Devoirs({ cours_id: cours.id,
-							 date_due: date.getFullYear() + '-' + date.getMonth() + '-' + date.getDay(),
+							 date_due: date.toISOString(), //date.getFullYear() + '-' + date.getMonth() + '-' + date.getDay(),
 							 type_devoir_id: null });
 			      devoir.create = true;
 
@@ -161,8 +161,8 @@ angular.module('cahierDeTexteApp')
 			      var timezoneOffset = new Date(start).getTimezoneOffset() * 60000;
 			      $scope.creneau= new CreneauEmploiDuTemps({ regroupement_id: '',
 									 jour_de_la_semaine: start.getDay() + 1,
-									 heure_debut: new Date( new Date(start) - timezoneOffset ),
-									 heure_fin: new Date( new Date(end) - timezoneOffset ),
+									 heure_debut: new Date( new Date(start) - timezoneOffset ).toISOString(),
+									 heure_fin: new Date( new Date(end) - timezoneOffset ).toISOString(),
 									 matiere_id: ''
 								       });
 
