@@ -4,7 +4,7 @@ angular.module('cahierDeTexteApp')
     .controller('EnseignantCtrl',
 		[ '$scope', '$rootScope', '$modal', '$q', 'API', 'Annuaire', 'Cours', 'Devoirs', 'EmploisDuTemps', 'User', 'CreneauEmploiDuTemps',
 		  function ( $scope, $rootScope, $modal, $q, API, Annuaire, Cours, Devoirs, EmploisDuTemps, User, CreneauEmploiDuTemps ) {
-		      ///////////////////////////////////////// Sous-contrôleurs
+		      //{{{ Sous-contrôleurs
 		      // popup de création/édition des cours et devoirs ////////
 		      var editionModalInstanceCtrl = function( $scope, $rootScope, $modalInstance, cours, devoirs, types_de_devoir, matiere_id, regroupement_id, raw_data, classes, matieres ) {
 			  // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
@@ -121,6 +121,7 @@ angular.module('cahierDeTexteApp')
 			      }
 			  };
 		      };
+		      // }}}
 
 		      //////////////////////// Code du contrôleur principal proprement dit
 		      $scope.build_EdT_from_scratch = true;
@@ -344,6 +345,8 @@ angular.module('cahierDeTexteApp')
 						 start: event.start,
 						 end: event.end,
 						 color: '' };
+
+			  calendar_event.className = 'clickable-event';
 
 			  // choix de la couleur
 			  if ( ( cours.contenu !== undefined ) && ( cours.contenu.length > 0 ) ) {

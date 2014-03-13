@@ -89,11 +89,13 @@ angular.module('cahierDeTexteApp')
 			  cours_event.type = 'cours';
 			  cours_event.id = item_emploi_du_temps.cours.id;
 
-			  // choix de la couleur
+			  // choix de la couleur et dur curseur
 			  if ( _(item_emploi_du_temps.cours).size() > 0 ) {
 			      cours_event.color = $rootScope.theme.calendar.saisie;
+			      cours_event.className = 'clickable-event';
 			  } else {
 			      cours_event.color = $rootScope.theme.calendar.vide;
+			      cours_event.className = 'un-clickable-event';
 			  }
 
 			  // composition de la description
@@ -123,6 +125,8 @@ angular.module('cahierDeTexteApp')
 				  devoir_event.id = devoir.id;
 
 				  devoir_event.color = devoir.fait ? $rootScope.theme.calendar.devoir_fait : $rootScope.theme.calendar.devoir;
+				  devoir_event.className = 'clickable-event';
+
 				  devoir_event.start = new Date( devoir.start );
 				  devoir_event.end = new Date( devoir.end );
 

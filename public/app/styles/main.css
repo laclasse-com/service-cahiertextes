@@ -32,6 +32,10 @@ body {
 .cdt-agendaDay-devoir{background-color:#ff6666}
 .cdt-agendaDay-devoir-fait{background-color:#66cc66}
 
+.clickable-event{cursor:pointer}
+.un-clickable-event{cursor:default}
+
+
 /* Principal */
 /** Enseignants **/
 .bloc-enseignant .panel-heading{padding-top:0;padding-bottom:0}
