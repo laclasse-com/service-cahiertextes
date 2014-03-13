@@ -53,8 +53,8 @@
   <div class="panel panel-default" data-ng-repeat="devoir in devoirs">
     <div class="panel-heading enseignant-saisie">
       <div class="row">
-	<h3 class="panel-title">Travail à faire</h3>
-	<div class="pull-right">
+	<h3 class="panel-title pull-left">Travail à faire</h3>
+	<div class="pull-left">
 	  <select data-ng-required="true" data-ng-model="devoir.type_devoir_id"
 		  data-ng-options="type_de_devoir.id as type_de_devoir.description for type_de_devoir in types_de_devoir">
 	    <option value="" disabled selected>Choisissez un type de devoir</option>
