@@ -52,14 +52,15 @@
 
   <div class="panel panel-default" data-ng-repeat="devoir in devoirs">
     <div class="panel-heading enseignant-saisie">
-      <h3 class="panel-title">Travail à faire</h3>
-      <div class="pull-right">
-	<select data-ui-select2 data-ng-model="devoir.type_devoir_id"
-		data-ng-options="type_de_devoir.id as type_de_devoir.description for type_de_devoir in types_de_devoir">
-	  <option value="" disabled selected>Choisissez un type de devoir</option>
-	</select>
-	<!-- input data-ui-date="{ dateFormat: 'd M yy' }" data-ui-date-format="d M yy" data-ng-model="devoir.date_due" -->
-	<input data-ui-date="{ dateFormat: 'yy-mm-dd' }" data-ui-date-format="yy-mm-dd" data-ng-model="devoir.date_due">
+      <div class="row">
+	<h3 class="panel-title">Travail à faire</h3>
+	<div class="pull-right">
+	  <select data-ng-required="true" data-ng-model="devoir.type_devoir_id"
+		  data-ng-options="type_de_devoir.id as type_de_devoir.description for type_de_devoir in types_de_devoir">
+	    <option value="" disabled selected>Choisissez un type de devoir</option>
+	  </select>
+	  <input type="text" class="cdt-form-control" data-datepicker-popup="dd MMMM yyyy" data-ng-model="devoir.date_due" data-is-open="datePickerOpened" data-datepicker-options="dateOptions" data-ng-required="true" data-close-text="Fermer" />
+	</div>
       </div>
     </div>
     <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="devoir.contenu"></textarea>
