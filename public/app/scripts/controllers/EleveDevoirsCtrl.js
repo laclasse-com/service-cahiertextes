@@ -4,7 +4,6 @@ angular.module('cahierDeTexteApp')
     .controller('EleveDevoirsCtrl',
 		[ '$scope', 'API',
 		  function( $scope, API ) {
-		      $scope.loading = true;
 		      $scope.empty = false;
 
 		      $scope.affiche_faits = false;
@@ -34,7 +33,5 @@ angular.module('cahierDeTexteApp')
 			  $scope.filtre();
 
 			  $scope.empty = $scope.all_devoirs.length == 0;
-
-			  $scope.loading = false;
-		      });
+			  g		      });
 		  } ] );

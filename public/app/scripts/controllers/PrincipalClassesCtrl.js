@@ -4,7 +4,6 @@ angular.module('cahierDeTexteApp')
     .controller('PrincipalClassesCtrl',
 		[ '$scope', '$rootScope', '$q', 'API', 'Annuaire', 'User',
 		  function ( $scope, $rootScope, $q, API, Annuaire, User ) {
-		      $scope.loading = true;
 		      $scope.empty = false;
 
 		      User.get_user().then( function( response ) {
@@ -200,8 +199,6 @@ angular.module('cahierDeTexteApp')
 					  $scope.process_data();
 				      });
 			      }
-
-			      $scope.loading = false;
 			  });
 		      } );
 		  } ] );

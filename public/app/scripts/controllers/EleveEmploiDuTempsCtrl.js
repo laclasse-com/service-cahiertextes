@@ -4,8 +4,6 @@ angular.module('cahierDeTexteApp')
     .controller('EleveEmploiDuTempsCtrl',
 		[ '$scope', '$rootScope', '$modal', 'API', 'Annuaire', 'EmploisDuTemps',
 		  function ( $scope, $rootScope, $modal, API, Annuaire, EmploisDuTemps ) {
-		      $scope.loading = true;
-
 		      $scope.matieres = {};
 		      $scope.types_de_devoir = {};
 
@@ -148,8 +146,6 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      $scope.retrieve_data = function( from_date, to_date ) {
-			  $scope.loading = true;
-
 			  EmploisDuTemps.query( { debut: from_date,
 						  fin: to_date },
 						function( response ) {
@@ -159,8 +155,6 @@ angular.module('cahierDeTexteApp')
 							} )
 							.flatten()
 							.value();
-
-						    $scope.loading = false;
 						});
 		      };
 		  } ] );

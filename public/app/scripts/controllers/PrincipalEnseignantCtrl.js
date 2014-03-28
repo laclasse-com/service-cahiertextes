@@ -4,8 +4,6 @@ angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantCtrl',
 		[ '$scope', '$rootScope', '$stateParams', '$q', 'API', 'Cours', 'Annuaire', 'User',
 		  function( $scope, $rootScope, $stateParams, $q, API, Cours, Annuaire, User ) {
-		      $scope.loading = true;
-
 		      $scope.enseignant_id = $stateParams.enseignant_id;
 		      $scope.classe = null;
 		      $scope.mois = $rootScope.mois;
@@ -203,8 +201,6 @@ angular.module('cahierDeTexteApp')
 						      $scope.classes[classe.id] = classe.libelle !== null ? classe.libelle : classe.libelle_aaf;
 						  });
 						  $scope.process_data();
-
-						  $scope.loading = false;
 					      });
 				      });
 		      });

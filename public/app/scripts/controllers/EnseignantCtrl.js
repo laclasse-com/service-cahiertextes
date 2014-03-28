@@ -452,8 +452,6 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      $scope.retrieve_data = function( from_date, to_date ) {
-			  $scope.loading = true;
-
 			  EmploisDuTemps.query( { debut: from_date,
 						  fin: to_date },
 						function( response ) {
@@ -473,8 +471,6 @@ angular.module('cahierDeTexteApp')
 
 							    $scope.process_data();
 							});
-
-						    $scope.loading = false;
 						} );
 		      };
 
