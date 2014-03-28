@@ -19,6 +19,7 @@ module CahierDeTextesAPI
 
     configure do
       set :protection, true
+      set :protection, except: :frame_options
     end
 
     helpers AuthenticationHelpers
