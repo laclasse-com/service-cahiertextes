@@ -7,4 +7,6 @@ angular.module( 'cahierDeTexteApp', [ 'ngResource',
 				      'ui.router',
 				      'ngGrid',
 				      'angles',
-				      'ui.tinymce' ] );
+				      'ui.tinymce',
+				      'chieffancypants.loadingBar',
+				      'ngAnimate' ] );
