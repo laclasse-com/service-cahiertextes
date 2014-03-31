@@ -2,7 +2,9 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantCtrl',
-		[ '$scope', '$stateParams', '$q', 'MOIS', 'THEME', 'LINECHART_OPTIONS', 'PIECHART_OPTIONS', 'API', 'Cours', 'Annuaire', 'User',
+		[ '$scope', '$stateParams', '$q',
+		  'MOIS', 'THEME', 'LINECHART_OPTIONS', 'PIECHART_OPTIONS',
+		  'API', 'Cours', 'Annuaire', 'User',
 		  function( $scope, $stateParams, $q, MOIS, THEME, LINECHART_OPTIONS, PIECHART_OPTIONS, API, Cours, Annuaire, User ) {
 		      $scope.enseignant_id = $stateParams.enseignant_id;
 		      $scope.classe = null;
