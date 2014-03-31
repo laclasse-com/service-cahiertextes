@@ -19,11 +19,10 @@ angular.module( 'cahierDeTexteApp' )
 		};
 
 		// options des calendriers
-		$rootScope.calendar = {	cours_max_length: 16,
-					devoir_max_length: 16,
+		$rootScope.calendar = {	max_length: 16,
 					couleurs: {
-					    cours: '#ffc',
-					    devoir: '#eff'
+					    'cours': '#ffc',
+					    'devoir': '#eff'
 					}};
 		$rootScope.globalCalendarOptions = {
 		    height: 600,
