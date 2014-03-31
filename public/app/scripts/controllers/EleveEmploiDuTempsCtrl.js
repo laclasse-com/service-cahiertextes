@@ -36,34 +36,32 @@ angular.module('cahierDeTexteApp')
 		      $scope.cours = {};
 		      $scope.devoirs = [];
 		      $scope.affiche_details = function(  ) {
-			  $modal.open({ templateUrl: 'app/views/modals/eleve/detail_emploi_du_temps.html',
-					controller: modalInstanceCtrl,
-					resolve: { matiere: function() { return $scope.matiere; },
-						   cours: function() { return $scope.cours; },
-						   devoirs: function() { return $scope.devoirs; } } })
-			      .result.then( function ( devoirs ) {
-				  _(devoirs).each(function(devoir) {
-				      _($scope.calendar.events[0]).findWhere({type: 'devoir', id: devoir.id}).color = devoir.fait ? $rootScope.theme.calendar.devoir_fait : $rootScope.theme.calendar.devoir;
-				  });
-				  $scope.emploi_du_temps.fullCalendar( 'renderEvent', $scope.creneau );
-			      });
-		      };
+			  $modal.open( { templateUrl: 'app/views/modals/eleve/detail_emploi_du_temps.html',
+					 resolve: { matiere: function() { return $scope.matiere; },
+						    cours: function() { return $scope.cours; },
+						    devoirs: function() { return $scope.devoirs; } },
+					 controller: function( $scope, $modalInstance, Devoirs, matiere, cours, devoirs ) {
+					     $scope.matiere = matiere;
+					     $scope.cours = cours;
+					     $scope.devoirs = devoirs;
 
-		      var modalInstanceCtrl = function( $scope, $modalInstance, Devoirs, matiere, cours, devoirs ) {
-			  $scope.matiere = matiere;
-			  $scope.cours = cours;
-			  $scope.devoirs = devoirs;
+					     $scope.fait = function( devoir_id ) {
+						 Devoirs.fait({ id: devoir_id },
+							      function() {
+								  _(devoirs).findWhere({id: devoir_id}).fait = true;
+							      });
+					     };
 
-			  $scope.fait = function( devoir_id ) {
-			      Devoirs.fait({ id: devoir_id },
-					   function() {
-					       _(devoirs).findWhere({id: devoir_id}).fait = true;
-					   });
-			  };
-
-			  $scope.fermer = function() {
-			      $modalInstance.close( devoirs );
-			  };
+					     $scope.fermer = function() {
+						 $modalInstance.close( devoirs );
+					     };
+					 } }
+				     ).result.then( function ( devoirs ) {
+					 _(devoirs).each(function(devoir) {
+					     _($scope.calendar.events[0]).findWhere({type: 'devoir', id: devoir.id}).color = devoir.fait ? $rootScope.theme.calendar.devoir_fait : $rootScope.theme.calendar.devoir;
+					 });
+					 $scope.emploi_du_temps.fullCalendar( 'renderEvent', $scope.creneau );
+				     });
 		      };
 
 		      // consommation des données
