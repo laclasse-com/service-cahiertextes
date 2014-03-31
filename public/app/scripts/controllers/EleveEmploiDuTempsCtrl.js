@@ -63,80 +63,65 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      // consommation des données
-		      var assemble_fullCalendar_event = function( item_emploi_du_temps ) {
-			  var Calendar_event_template = function() { this.details = { cours: item_emploi_du_temps.cours,
-										      devoirs: item_emploi_du_temps.devoirs };
-								     this.allDay = false;
-								     this.title = '';
-								     this.description = '';
-								     this.start = new Date( item_emploi_du_temps.start );
-								     this.end = new Date( item_emploi_du_temps.end );
-								     this.color = ''; };
+		      var fullCalendarize_event = function( item_emploi_du_temps ) {
+			  var Calendar_event = function( event, item ) {
+			      var fc_event = this; //pour pouvoir le référencé dans les .then()
+			      this.details = { cours: event.cours,
+					       devoirs: event.devoirs };
+			      this.allDay = false;
+			      this.title = '';
+			      this.description = '';
+			      this.color = '';
+			      this.type = ( _(item).has( 'fait' ) ) ? 'devoir': 'cours';
+			      if ( this.type === 'cours' ) {
+				  item.start = event.start;
+				  item.end = event.end;
+			      }
+			      this.start = new Date( item.start );
+			      this.end = new Date( item.end );
+
+			      if ( this.type === 'cours' ) {
+				  this.color = $rootScope.theme.calendar.saisie;
+				  if ( event.matiere_id.length > 0 ) {
+				      $scope.matieres[ event.matiere_id ] = Annuaire.get_matiere( event.matiere_id );
+
+				      $scope.matieres[ event.matiere_id ].$promise.then( function success( response ) {
+					  fc_event.title = $scope.matieres[ event.matiere_id ].libelle_long;
+				      });
+				  }
+			      } else {
+				  this.color = item.fait ? $rootScope.theme.calendar.devoir_fait : $rootScope.theme.calendar.devoir;
+
+				  $scope.types_de_devoir[ item.type_devoir_id ] = API.get_type_de_devoir( { id: item.type_devoir_id } );
+
+				  $scope.types_de_devoir[ item.type_devoir_id ].then( function success( response ) {
+				      $scope.types_de_devoir[ item.type_devoir_id ] = response;
+				      fc_event.title = $scope.types_de_devoir[ item.type_devoir_id ].label;
+				  });
+			      }
+
+			      if ( _(item).has( 'contenu' ) && item.contenu.length > 0 ) {
+				  this.description += '<br><span style="color:' + $rootScope.calendar.couleurs[ this.type ] + '">';
+				  this.description += item.contenu.substring( 0, $rootScope.calendar.max_length );
+				  this.description += item.contenu.length > $rootScope.calendar.max_length ? '…' : '';
+				  this.description += '</span>';
+				  this.className = 'clickable-event';
+				  this.id = item.id;
+			      } else {
+				  this.color = $rootScope.theme.calendar.vide;
+				  this.className = 'un-clickable-event';
+			      }
+
+			  };
 			  var events = [];
 
 			  // traitement du cours
-			  var cours_event = new Calendar_event_template();
-			  cours_event.type = 'cours';
-			  cours_event.id = item_emploi_du_temps.cours.id;
-
-			  // choix de la couleur et dur curseur
-			  if ( _(item_emploi_du_temps.cours).size() > 0 ) {
-			      cours_event.color = $rootScope.theme.calendar.saisie;
-			      cours_event.className = 'clickable-event';
-			  } else {
-			      cours_event.color = $rootScope.theme.calendar.vide;
-			      cours_event.className = 'un-clickable-event';
-			  }
-
-			  // composition de la description
-			  if ( _(item_emploi_du_temps.cours).size() > 0 ) {
-			      cours_event.description += '<br><span style="color:' + $rootScope.calendar.couleurs.cours + '">';
-			      cours_event.description += item_emploi_du_temps.cours.contenu.substring( 0, $rootScope.calendar.cours_max_length );
-			      cours_event.description += item_emploi_du_temps.cours.contenu.length > $rootScope.calendar.cours_max_length ? '…' : '';
-			      cours_event.description += '</span>';
-			  }
-
-			  // composition du titre
-			  if ( item_emploi_du_temps.matiere_id.length > 0 ) {
-			      $scope.matieres[ item_emploi_du_temps.matiere_id ] = Annuaire.get_matiere( item_emploi_du_temps.matiere_id );
-
-			      $scope.matieres[ item_emploi_du_temps.matiere_id ].then( function success( response ) {
-				  $scope.matieres[ item_emploi_du_temps.matiere_id ] = response;
-				  cours_event.title = $scope.matieres[ item_emploi_du_temps.matiere_id ].libelle_long;
-			      });
-			  }
-			  events.push( cours_event );
+			  events.push( new Calendar_event( item_emploi_du_temps, item_emploi_du_temps.cours ) );
 
 			  // traitement des devoirs
-			  if ( _(item_emploi_du_temps.devoirs).size() > 0 ) {
-			      _(item_emploi_du_temps.devoirs).each( function( devoir ) {
-				  var devoir_event = new Calendar_event_template();
-				  devoir_event.type = 'devoir';
-				  devoir_event.id = devoir.id;
-
-				  devoir_event.color = devoir.fait ? $rootScope.theme.calendar.devoir_fait : $rootScope.theme.calendar.devoir;
-				  devoir_event.className = 'clickable-event';
-
-				  devoir_event.start = new Date( devoir.start );
-				  devoir_event.end = new Date( devoir.end );
-
-				  // composition de la description
-				  devoir_event.description += '<br><span style="color:' + $rootScope.calendar.couleurs.devoir + '">';
-				  devoir_event.description += devoir.contenu.substring( 0, $rootScope.calendar.devoir_max_length );
-				  devoir_event.description += devoir.contenu.length > $rootScope.calendar.devoir_max_length ? '…' : '';
-				  devoir_event.description += '</span>';
-
-				  // composition du titre
-				  $scope.types_de_devoir[ devoir.type_devoir_id ] = API.get_type_de_devoir( { id: devoir.type_devoir_id } );
-
-				  $scope.types_de_devoir[ devoir.type_devoir_id ].then( function success( response ) {
-				      $scope.types_de_devoir[ devoir.type_devoir_id ] = response;
-				      devoir_event.title = $scope.types_de_devoir[ devoir.type_devoir_id ].label;
-				  });
-
-				  events.push( devoir_event );
-			      });
-			  }
+			  _(item_emploi_du_temps.devoirs).each( function( devoir ) {
+			      events.push( new Calendar_event( item_emploi_du_temps, devoir ) );
+			  });
 
 			  return events;
 		      };
@@ -144,9 +129,9 @@ angular.module('cahierDeTexteApp')
 		      $scope.retrieve_data = function( from_date, to_date ) {
 			  EmploisDuTemps.query( { debut: from_date, fin: to_date },
 						function( response ) {
-						    $scope.calendar.events[0] = _.chain(response)
+						    $scope.calendar.events[0] = _.chain( response )
 							.map( function( event ) {
-							    return assemble_fullCalendar_event( event );
+							    return fullCalendarize_event( event );
 							} )
 							.flatten()
 							.value();
