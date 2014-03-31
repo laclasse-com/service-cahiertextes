@@ -12,9 +12,8 @@ angular.module('cahierDeTexteApp')
 					  events: [  ] };
 		      $scope.calendar.options.defaultView = 'agendaWeek';
 		      $scope.calendar.options.editable = false;
-
-		      // ajouter la description ici permet que l'HTML soit interprété
 		      $scope.calendar.options.eventRender = function( event, element ) {
+			  // ajouter la description ici permet que l'HTML soit interprété
 			  element.find('.fc-event-title').append( event.description );
 		      };
 		      $scope.calendar.options.eventClick = function( event ) {
@@ -26,7 +25,6 @@ angular.module('cahierDeTexteApp')
 			      $scope.affiche_details(  );
 			  }
 		      };
-
 		      $scope.calendar.options.viewRender = function( view, element ) {
 			  // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
 			  $scope.retrieve_data( view.visStart, view.visEnd );
