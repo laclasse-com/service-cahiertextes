@@ -80,7 +80,7 @@ angular.module('cahierDeTexteApp')
 				  return ( regroupement_id === '' );
 			      })
 			      .map(function( regroupement_id ) {
-				  return Annuaire.get_regroupement( regroupement_id );
+				  return Annuaire.get_regroupement( regroupement_id ).$promise;
 			      })
 			      .value();
 		      };
@@ -88,7 +88,7 @@ angular.module('cahierDeTexteApp')
 		      $scope.extract_details_enseignants_promises = function( data ) {
 			  return _(data).pluck('enseignant_id')
 			      .map(function ( enseignant_id ) {
-				  return Annuaire.get_user( enseignant_id );
+				  return Annuaire.get_user( enseignant_id ).$promise;
 			      });
 		      };
 

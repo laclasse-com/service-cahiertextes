@@ -89,7 +89,7 @@ angular.module('cahierDeTexteApp')
 				  .map( function( matiere_id ) {
 				      var matiere = { id: matiere_id,
 						      libelle: 'Matière inconnue !' };
-				      Annuaire.get_matiere( matiere_id ).then(
+				      Annuaire.get_matiere( matiere_id ).$promise.then(
 					  function success( response ) {
 					      matiere.libelle = response.libelle_long;
 					  });
