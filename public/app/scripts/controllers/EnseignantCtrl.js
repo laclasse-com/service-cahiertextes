@@ -4,138 +4,6 @@ angular.module('cahierDeTexteApp')
     .controller('EnseignantCtrl',
 		[ '$scope', '$rootScope', '$modal', '$q', 'API', 'Annuaire', 'Cours', 'Devoirs', 'EmploisDuTemps', 'User', 'CreneauEmploiDuTemps',
 		  function ( $scope, $rootScope, $modal, $q, API, Annuaire, Cours, Devoirs, EmploisDuTemps, User, CreneauEmploiDuTemps ) {
-		      //{{{ Sous-contrôleurs
-		      // popup de création/édition des cours et devoirs ////////
-		      var editionModalInstanceCtrl = function( $scope, $rootScope, $modalInstance, cours, devoirs, types_de_devoir, matiere_id, regroupement_id, raw_data, classes, matieres ) {
-			  // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
-			  $scope.matieres = matieres;
-			  $scope.classes = classes;
-			  $scope.cours = cours;
-			  $scope.devoirs = devoirs;
-			  $scope.types_de_devoir = types_de_devoir;
-			  $scope.matiere_id = matiere_id;
-			  $scope.regroupement_id = regroupement_id;
-			  $scope.tinyMCEOptions = $rootScope.tinyMCEOptions;
-
-			  $scope.erreurs = [];
-
-			  $scope.dateOptions = {
-			      'year-format': "'yy'",
-			      'starting-day': 1
-			  };
-			  $scope.datePickerOpened = false;
-			  $scope.openDatePicker = function($event) {
-			      $event.preventDefault();
-			      $event.stopPropagation();
-
-			      $scope.opened = true;
-			  };
-
-			  // http://stackoverflow.com/questions/19408883/angularjs-select-not-2-way-binding-to-model
-			  $scope.scope = $scope;
-
-			  // TODO: à raffiner
-			  $scope.creneaux_similaires = _.chain(raw_data)
-			      .where({matiere_id: $scope.matiere_id})
-			      .reject(function( creneau ) {
-				  return creneau.regroupement_id == $scope.regroupement_id;
-			      })
-			      .value();
-			  $scope.creneaux_similaires.selected = [];
-
-			  var create_devoir = function( cours ) {
-			      var date = new Date();
-			      var devoir = new Devoirs({ cours_id: cours.id,
-							 date_due: date.toISOString(), //date.getFullYear() + '-' + date.getMonth() + '-' + date.getDay(),
-							 type_devoir_id: null });
-			      devoir.create = true;
-
-			      return devoir;
-			  };
-
-			  $scope.ajout_devoir = function() {
-			      $scope.devoirs.unshift( create_devoir( $scope.cours ) );
-			  };
-
-			  $scope.dupliquer = function() {
-			      _($scope.creneaux_similaires.selected).each( function( creneau_cible ) {
-				  var cc = JSON.parse( creneau_cible );
-				  $scope.cours.$copie({ regroupement_id: cc.regroupement_id,
-							creneau_emploi_du_temps_id: cc.creneau_emploi_du_temps_id });
-			      });
-			  };
-
-			  $scope.fermer = function() {
-			      $modalInstance.close( { cours: $scope.cours,
-						      devoirs: $scope.devoirs,
-						      matiere_id: $scope.matiere_id,
-						      regroupement_id: $scope.regroupement_id } );
-			  };
-
-			  $scope.valider = function() {
-			      // réinitialisation des erreurs
-			      $scope.erreurs = [];
-
-			      if ( $scope.matiere_id !== '' && $scope.regroupement_id !== '' ) {
-				  // traitement de la séquence pédagogique
-				  var promesse = $q.when( true );
-				  if ( _($scope.cours).has( 'contenu' ) && ( $scope.cours.contenu.length > 0 ) ) {
-				      $scope.cours.dirty = true;
-				      if ( $scope.cours.create ) {
-					  promesse = $scope.cours.$save();
-				      } else {
-					  promesse = $scope.cours.$update();
-				      }
-				  }
-
-				  promesse.then( function( cours ) {
-				      $scope.cours = cours;
-
-				      // traitement des devoirs attachés
-				      var promesses = [];
-				      $scope.devoirs = _($scope.devoirs).map(
-					  function( devoir ) {
-					      if ( _(devoir).has( 'contenu' ) && ( devoir.contenu.length > 0 ) ) {
-						  devoir.dirty = true;
-						  var prom = $q.defer();
-						  if ( devoir.create ) {
-						      devoir.cours_id = $scope.cours.id;
-						      devoir.$save().then( function success( result ) {
-							  devoir.id = result.id;
-							  prom.resolve( result );
-						      }, function( response ) {
-							  $scope.erreurs.unshift( { status: response.status,
-										    message: response.data.error } );
-							  prom.reject( response );
-						      });
-						  } else {
-						      devoir.$update().then( function success( result ) {
-							  devoir.id = result.id;
-							  prom.resolve( result );
-						      }, function( response ) {
-							  $scope.erreurs.unshift( { status: response.status,
-										    message: response.data.error } );
-							  prom.reject( response );
-						      });
-						  }
-
-						  promesses.push( prom.promise );
-					      }
-					      return devoir;
-					  } );
-
-				      $q.all( promesses ).then( function() {
-					  $scope.fermer();
-				      });
-				  });
-			      } else {
-				  $scope.erreurs.push( { 'message': 'Aucune matière ou classe défini' } );
-			      }
-			  };
-		      };
-		      // }}}
-
-		      //////////////////////// Code du contrôleur principal proprement dit
 		      $scope.build_EdT_from_scratch = true;
 
 		      $scope.matieres = [];
@@ -277,7 +145,6 @@ angular.module('cahierDeTexteApp')
 
 		      $scope.ouvre_popup_edition = function(  ) {
 			  $modal.open({ templateUrl: 'app/views/modals/enseignant/detail_emploi_du_temps.html',
-					controller: editionModalInstanceCtrl,
 					resolve: { raw_data: function() { return $scope.raw_data; },
 						   matieres: function() { return $scope.matieres; },
 						   classes: function() { return $scope.classes; },
@@ -285,7 +152,134 @@ angular.module('cahierDeTexteApp')
 						   regroupement_id: function() { return $scope.regroupement_id; },
 						   cours: function() { return $scope.cours; },
 						   devoirs: function() { return $scope.devoirs; },
-						   types_de_devoir: function() { return $scope.types_de_devoir; } } }
+						   types_de_devoir: function() { return $scope.types_de_devoir; } },
+					controller: function( $scope, $rootScope, $modalInstance, cours, devoirs, types_de_devoir, matiere_id, regroupement_id, raw_data, classes, matieres ) {
+					    // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
+					    $scope.matieres = matieres;
+					    $scope.classes = classes;
+					    $scope.cours = cours;
+					    $scope.devoirs = devoirs;
+					    $scope.types_de_devoir = types_de_devoir;
+					    $scope.matiere_id = matiere_id;
+					    $scope.regroupement_id = regroupement_id;
+					    $scope.tinyMCEOptions = $rootScope.tinyMCEOptions;
+
+					    $scope.erreurs = [];
+
+					    $scope.dateOptions = {
+						'year-format': "'yy'",
+						'starting-day': 1
+					    };
+					    $scope.datePickerOpened = false;
+					    $scope.openDatePicker = function($event) {
+						$event.preventDefault();
+						$event.stopPropagation();
+
+						$scope.opened = true;
+					    };
+
+					    // http://stackoverflow.com/questions/19408883/angularjs-select-not-2-way-binding-to-model
+					    $scope.scope = $scope;
+
+					    // TODO: à raffiner
+					    $scope.creneaux_similaires = _.chain(raw_data)
+						.where({matiere_id: $scope.matiere_id})
+						.reject(function( creneau ) {
+						    return creneau.regroupement_id == $scope.regroupement_id;
+						})
+						.value();
+					    $scope.creneaux_similaires.selected = [];
+
+					    var create_devoir = function( cours ) {
+						var date = new Date();
+						var devoir = new Devoirs({ cours_id: cours.id,
+									   date_due: date.toISOString(), //date.getFullYear() + '-' + date.getMonth() + '-' + date.getDay(),
+									   type_devoir_id: null });
+						devoir.create = true;
+
+						return devoir;
+					    };
+
+					    $scope.ajout_devoir = function() {
+						$scope.devoirs.unshift( create_devoir( $scope.cours ) );
+					    };
+
+					    $scope.dupliquer = function() {
+						_($scope.creneaux_similaires.selected).each( function( creneau_cible ) {
+						    var cc = JSON.parse( creneau_cible );
+						    $scope.cours.$copie({ regroupement_id: cc.regroupement_id,
+									  creneau_emploi_du_temps_id: cc.creneau_emploi_du_temps_id });
+						});
+					    };
+
+					    $scope.fermer = function() {
+						$modalInstance.close( { cours: $scope.cours,
+									devoirs: $scope.devoirs,
+									matiere_id: $scope.matiere_id,
+									regroupement_id: $scope.regroupement_id } );
+					    };
+
+					    $scope.valider = function() {
+						// réinitialisation des erreurs
+						$scope.erreurs = [];
+
+						if ( $scope.matiere_id !== '' && $scope.regroupement_id !== '' ) {
+						    // traitement de la séquence pédagogique
+						    var promesse = $q.when( true );
+						    if ( _($scope.cours).has( 'contenu' ) && ( $scope.cours.contenu.length > 0 ) ) {
+							$scope.cours.dirty = true;
+							if ( $scope.cours.create ) {
+							    promesse = $scope.cours.$save();
+							} else {
+							    promesse = $scope.cours.$update();
+							}
+						    }
+
+						    promesse.then( function( cours ) {
+							$scope.cours = cours;
+
+							// traitement des devoirs attachés
+							var promesses = [];
+							$scope.devoirs = _($scope.devoirs).map(
+							    function( devoir ) {
+								if ( _(devoir).has( 'contenu' ) && ( devoir.contenu.length > 0 ) ) {
+								    devoir.dirty = true;
+								    var prom = $q.defer();
+								    if ( devoir.create ) {
+									devoir.cours_id = $scope.cours.id;
+									devoir.$save().then( function success( result ) {
+									    devoir.id = result.id;
+									    prom.resolve( result );
+									}, function( response ) {
+									    $scope.erreurs.unshift( { status: response.status,
+												      message: response.data.error } );
+									    prom.reject( response );
+									});
+								    } else {
+									devoir.$update().then( function success( result ) {
+									    devoir.id = result.id;
+									    prom.resolve( result );
+									}, function( response ) {
+									    $scope.erreurs.unshift( { status: response.status,
+												      message: response.data.error } );
+									    prom.reject( response );
+									});
+								    }
+
+								    promesses.push( prom.promise );
+								}
+								return devoir;
+							    } );
+
+							$q.all( promesses ).then( function() {
+							    $scope.fermer();
+							});
+						    });
+						} else {
+						    $scope.erreurs.push( { 'message': 'Aucune matière ou classe défini' } );
+						}
+					    };
+					} }
 				     ).result.then(     // éxécuté à la fermeture de la popup
 					 function ( objets ) {
 					     var updated_event = {};
