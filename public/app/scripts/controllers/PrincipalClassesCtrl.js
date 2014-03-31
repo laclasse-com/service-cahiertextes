@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalClassesCtrl',
-		[ '$scope', '$rootScope', '$q', 'API', 'Annuaire', 'User',
-		  function ( $scope, $rootScope, $q, API, Annuaire, User ) {
+		[ '$scope', 'THEME', 'MOIS', 'LINECHART_OPTIONS', 'PIECHART_OPTIONS', '$q', 'API', 'Annuaire', 'User',
+		  function ( $scope, THEME, MOIS, LINECHART_OPTIONS, PIECHART_OPTIONS, $q, API, Annuaire, User ) {
 		      $scope.empty = false;
 
 		      User.get_user().then( function( response ) {
@@ -20,31 +20,31 @@ angular.module('cahierDeTexteApp')
 			  $scope.global_stats    = { filled: 0,
 						     validated: 0 };
 
-			  $scope.pieChart = { options: $rootScope.globalPieChartOptions,
-					      data: [ { color : $rootScope.theme.validated.base,
+		  $scope.pieChart = { options: PIECHART_OPTIONS,
+					      data: [ { color : THEME.validated.base,
 							value: 0 },
-						      { color : $rootScope.theme.filled.base,
+						      { color : THEME.filled.base,
 							value: 0 } ],
 					      populate: function( data ) {
 						  $scope.pieChart.data[0].value = data.validated;
 						  $scope.pieChart.data[1].value = data.filled - data.validated;
 					      } };
 
-			  $scope.monthlyLineChart = { options: $rootScope.globalLineChartOptions,
-						      data: { labels: $rootScope.mois,
+		  $scope.monthlyLineChart = { options: LINECHART_OPTIONS,
+		  data: { labels: MOIS,
 							      datasets: [
 								  // 0: saisies totales
-								  { fillColor : $rootScope.theme.filled.base,
-								    pointColor : $rootScope.theme.filled.base,
-								    strokeColor : $rootScope.theme.filled.stroke,
-								    pointStrokeColor : $rootScope.theme.filled.stroke,
+								  { fillColor : THEME.filled.base,
+								    pointColor : THEME.filled.base,
+								    strokeColor : THEME.filled.stroke,
+								    pointStrokeColor : THEME.filled.stroke,
 								    data: []
 								  },
 								  // 1: saisies validées
-								  { fillColor : $rootScope.theme.validated.base,
-								    pointColor : $rootScope.theme.validated.base,
-								    strokeColor : $rootScope.theme.validated.stroke,
-								    pointStrokeColor : $rootScope.theme.validated.stroke,
+								  { fillColor : THEME.validated.base,
+								    pointColor : THEME.validated.base,
+								    strokeColor : THEME.validated.stroke,
+								    pointStrokeColor : THEME.validated.stroke,
 								    data: []
 								  } ] },
 						      populate: function( data ) {
@@ -66,10 +66,10 @@ angular.module('cahierDeTexteApp')
 							  $scope.individualCharts.classes = _.chain(data)
 							      .map( function( regroupement ) {
 								  return { libelle: classes[ regroupement.regroupement_id ],
-									   pieChart: { options: $rootScope.globalPieChartOptions,
-										       data: [ { color : $rootScope.theme.validated.base,
+		  pieChart: { options: PIECHART_OPTIONS,
+										       data: [ { color : THEME.validated.base,
 												 value: regroupement.validated },
-											       { color : $rootScope.theme.filled.base,
+		  { color : THEME.filled.base,
 												 value: regroupement.filled - regroupement.validated } ] } };
 							      })
 							      .reject( function( classe ) {

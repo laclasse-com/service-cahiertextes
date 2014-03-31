@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EnseignantCtrl',
-		[ '$scope', '$rootScope', '$modal', '$q', 'API', 'Annuaire', 'Cours', 'Devoirs', 'EmploisDuTemps', 'User', 'CreneauEmploiDuTemps',
-		  function ( $scope, $rootScope, $modal, $q, API, Annuaire, Cours, Devoirs, EmploisDuTemps, User, CreneauEmploiDuTemps ) {
+		[ '$scope', '$modal', '$q', 'THEME', 'CALENDAR_OPTIONS', 'CALENDAR_PARAMS', 'TINYMCE_OPTIONS', 'API', 'Annuaire', 'Cours', 'Devoirs', 'EmploisDuTemps', 'User', 'CreneauEmploiDuTemps',
+		  function ( $scope, $modal, $q, THEME, CALENDAR_OPTIONS, CALENDAR_PARAMS, TINYMCE_OPTIONS, API, Annuaire, Cours, Devoirs, EmploisDuTemps, User, CreneauEmploiDuTemps ) {
 		      $scope.build_EdT_from_scratch = true;
 
 		      $scope.matieres = [];
@@ -11,7 +11,7 @@ angular.module('cahierDeTexteApp')
 		      $scope.classe = null;
 
 		      // configuration du composant calendrier /////////////////
-		      $scope.calendar = { options: $rootScope.globalCalendarOptions,
+		      $scope.calendar = { options: CALENDAR_OPTIONS,
 					  events: [  ] };
 		      $scope.calendar.options.defaultView = 'agendaWeek';
 		      $scope.calendar.options.eventRender = function( event, element ) {
@@ -153,7 +153,7 @@ angular.module('cahierDeTexteApp')
 						   cours: function() { return $scope.cours; },
 						   devoirs: function() { return $scope.devoirs; },
 						   types_de_devoir: function() { return $scope.types_de_devoir; } },
-					controller: function( $scope, $rootScope, $modalInstance, cours, devoirs, types_de_devoir, matiere_id, regroupement_id, raw_data, classes, matieres ) {
+					controller: function( $scope, TINYMCE_OPTIONS, $modalInstance, cours, devoirs, types_de_devoir, matiere_id, regroupement_id, raw_data, classes, matieres ) {
 					    // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
 					    $scope.matieres = matieres;
 					    $scope.classes = classes;
@@ -162,7 +162,7 @@ angular.module('cahierDeTexteApp')
 					    $scope.types_de_devoir = types_de_devoir;
 					    $scope.matiere_id = matiere_id;
 					    $scope.regroupement_id = regroupement_id;
-					    $scope.tinyMCEOptions = $rootScope.tinyMCEOptions;
+					    $scope.tinyMCEOptions = TINYMCE_OPTIONS;
 
 					    $scope.erreurs = [];
 
@@ -355,16 +355,16 @@ angular.module('cahierDeTexteApp')
 			  // choix de la couleur
 			  if ( ( cours.contenu !== undefined ) && ( cours.contenu.length > 0 ) ) {
 			      if ( devoirs.length > 0 ) {
-				  calendar_event.color = $rootScope.theme.calendar.devoir;
+				  calendar_event.color = THEME.calendar.devoir;
 			      } else {
 				  if ( cours.date_validation != null ) {
-				      calendar_event.color = $rootScope.theme.validated.base;
+				      calendar_event.color = THEME.validated.base;
 				  } else {
-				      calendar_event.color = $rootScope.theme.calendar.saisie;
+				      calendar_event.color = THEME.calendar.saisie;
 				  }
 			      }
 			  } else {
-			      calendar_event.color = $rootScope.theme.calendar.vide;
+			      calendar_event.color = THEME.calendar.vide;
 			  }
 
 			  var clever_truncate = function( text, length ) {
@@ -380,8 +380,8 @@ angular.module('cahierDeTexteApp')
 
 			  // composition de la description
 			  if ( _(cours).size() > 0 ) {
-			      calendar_event.description += '<br><span style="color:' + $rootScope.calendar.couleurs.cours + '">';
-			      calendar_event.description += clever_truncate( cours.contenu, $rootScope.calendar.cours_max_length );
+			      calendar_event.description += '<br><span style="color:' + CALENDAR_PARAMS.couleurs.cours + '">';
+			      calendar_event.description += clever_truncate( cours.contenu, CALENDAR_PARAMS.cours_max_length );
 			      calendar_event.description += '</span>';
 			  }
 
