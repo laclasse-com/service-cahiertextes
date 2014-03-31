@@ -10,6 +10,7 @@ angular.module('cahierDeTexteApp')
 		      $scope.classe = null;
 		      $scope.mois = MOIS;
 		      $scope.moisCourant = null;
+		      $scope.gridSaisies = [];
 		      $scope.selectedSaisies = [];
 		      $scope.matieres = {};
 		      $scope.classes = {};
@@ -69,14 +70,10 @@ angular.module('cahierDeTexteApp')
 			      });
 			  },
 			  populate: function( saisies ) {
-			      var data = $scope.filtre( saisies );
+			      $scope.gridSaisies = $scope.filtre( saisies );
 			      if ( ! $scope.montre_valides ) {
-				  data = _(data).where({ valide: false });
+				  $scope.gridSaisies = _($scope.gridSaisies).where({ valide: false });
 			      }
-
-			      $scope.gridSaisies = _(data).map( function ( saisie ) {
-				  return saisie;
-			      } );
 			  }
 		      };
 
