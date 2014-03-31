@@ -98,14 +98,14 @@ angular.module('cahierDeTexteApp')
 
 			  // 1. cours
 			  if ( $scope.creneau.details.cours.id !== undefined ) {
-			      $scope.cours = API.get_cours( { id: $scope.creneau.details.cours.id } );
-			      $scope.cours.then( function success( cours ) {
-				  $scope.cours = cours;
-				  $scope.cours.create = false;
-			      },
-						 function error() {
-						     $scope.cours = create_cours( $scope.creneau );
-						 });
+			      API.get_cours( { id: $scope.creneau.details.cours.id } )
+				  .$promise.then( function success( cours ) {
+				      $scope.cours = cours;
+				      $scope.cours.create = false;
+				  },
+					 function error() {
+					     $scope.cours = create_cours( $scope.creneau );
+					 });
 			  } else {
 			      $scope.cours = create_cours( $scope.creneau );
 			  }
@@ -114,7 +114,7 @@ angular.module('cahierDeTexteApp')
 			  if ( $scope.creneau.details.devoirs.length > 0 ) {
 			      $scope.devoirs = [];
 			      _($scope.creneau.details.devoirs).each( function( devoir ) {
-				  API.get_devoir( { id: $scope.creneau.details.devoirs[0].id } )
+				  API.get_devoir( { id: $scope.creneau.details.devoirs[0].id } ).$promise
 				      .then( function( vrai_devoir ) {
 					  $scope.devoirs.push( vrai_devoir );
 				      } );

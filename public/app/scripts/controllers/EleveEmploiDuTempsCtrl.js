@@ -83,21 +83,17 @@ angular.module('cahierDeTexteApp')
 			      if ( this.type === 'cours' ) {
 				  this.color = $rootScope.theme.calendar.saisie;
 				  if ( event.matiere_id.length > 0 ) {
-				      $scope.matieres[ event.matiere_id ] = Annuaire.get_matiere( event.matiere_id );
-
-				      $scope.matieres[ event.matiere_id ].$promise.then( function success( response ) {
-					  fc_event.title = $scope.matieres[ event.matiere_id ].libelle_long;
+				      Annuaire.get_matiere( event.matiere_id ).$promise.then( function success( response ) {
+					  fc_event.title = response.libelle_long;
 				      });
 				  }
 			      } else {
 				  this.color = item.fait ? $rootScope.theme.calendar.devoir_fait : $rootScope.theme.calendar.devoir;
 
-				  $scope.types_de_devoir[ item.type_devoir_id ] = API.get_type_de_devoir( { id: item.type_devoir_id } );
-
-				  $scope.types_de_devoir[ item.type_devoir_id ].then( function success( response ) {
-				      $scope.types_de_devoir[ item.type_devoir_id ] = response;
-				      fc_event.title = $scope.types_de_devoir[ item.type_devoir_id ].label;
-				  });
+				  API.get_type_de_devoir( { id: item.type_devoir_id } )
+				      .$promise.then( function success( response ) {
+					  fc_event.title = response.label;
+				      });
 			      }
 
 			      if ( _(item).has( 'contenu' ) && item.contenu.length > 0 ) {

@@ -14,7 +14,6 @@ angular.module('cahierDeTexteApp')
 			      });
 		      };
 
-		      $scope.types_de_devoir = API.query_types_de_devoir();
 		      $scope.filtre = function() {
 			  if ( ! $scope.affiche_faits ) {
 			      $scope.devoirs = _($scope.all_devoirs).reject(function( devoir ) {
@@ -24,14 +23,19 @@ angular.module('cahierDeTexteApp')
 			      $scope.devoirs = $scope.all_devoirs;
 			  }
 		      };
-		      API.query_devoirs().then(function( response ) {
-			  $scope.all_devoirs = _(response).map( function( devoir ) {
-			      devoir.type_devoir = _($scope.types_de_devoir)
-				  .findWhere({id: devoir.type_devoir_id}).label;
-			      return devoir;
-			  });
-			  $scope.filtre();
 
-			  $scope.empty = $scope.all_devoirs.length == 0;
-			  g		      });
+		      API.query_types_de_devoir()
+			  .$promise.then( function( types_de_devoir ) {
+			      API.query_devoirs()
+				  .$promise.then(function( response ) {
+				      $scope.all_devoirs = _(response).map( function( devoir ) {
+					  devoir.type_devoir = _(types_de_devoir)
+					      .findWhere({id: devoir.type_devoir_id}).label;
+					  return devoir;
+				      });
+				      $scope.filtre();
+
+				      $scope.empty = $scope.all_devoirs.length == 0;
+				  });
+			  });
 		  } ] );

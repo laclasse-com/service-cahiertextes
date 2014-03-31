@@ -167,41 +167,44 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      // Récupération et consommation des données
-		      Annuaire.get_user( $scope.enseignant_id ).then(
-			  function( response ) {
-			      $scope.enseignant = response;
-			      $scope.enseignant.matieres = _($scope.enseignant.classes).uniq( function( matiere ) {
-				  return matiere.matiere_enseignee_id;
+		      Annuaire.get_user( $scope.enseignant_id )
+			  .$promise.then(
+			      function( response ) {
+				  $scope.enseignant = response;
+				  $scope.enseignant.matieres = _($scope.enseignant.classes).uniq( function( matiere ) {
+				      return matiere.matiere_enseignee_id;
+				  });
+				  $scope.enseignant.prof_principal = _.chain($scope.enseignant.classes)
+				      .filter( function( matiere ) {
+					  return matiere.prof_principal == 'O';
+				      })
+				      .map( function( matiere ) {
+					  return matiere.classe_libelle;
+				      })
+				      .value();
 			      });
-			      $scope.enseignant.prof_principal = _.chain($scope.enseignant.classes)
-				  .filter( function( matiere ) {
-				      return matiere.prof_principal == 'O';
-				  })
-				  .map( function( matiere ) {
-				      return matiere.classe_libelle;
-				  })
-				  .value();
-			  });
 
 		      User.get_user().then( function( response ) {
 			  var current_user = response.data;
-			  API.get_enseignant( { enseignant_id: $stateParams.enseignant_id, uai: current_user['profil_actif']['uai'] } ).then(
-				      function success( response ) {
-					  $scope.raw_data = response.saisies;
+			  API.get_enseignant( { enseignant_id: $stateParams.enseignant_id,
+						uai: current_user['profil_actif']['uai'] } )
+			      .$promise.then(
+				  function success( response ) {
+				      $scope.raw_data = response.saisies;
 
-					  $scope.matieres = $scope.extract_matieres( $scope.raw_data );
-					  // $q.all() permet d'attendre que tout les appels d' soient résolus avant de
-					  //   - remplir $scope.classes
-					  //   - puis d'appeler $scope.process_data() qui va pouvoir consommer $scope.classes
-					  //     pour passer les noms des classes aux graphiques qui ne peuvent pas profiter
-					  //     du data-binding d'angularJS car ils dessinent des canvas.
-					  $q.all( $scope.extract_classes_promises( $scope.raw_data ) )
-					      .then( function( classes ) {
-						  _(classes).each(function( classe ) {
-						      $scope.classes[classe.id] = classe.libelle !== null ? classe.libelle : classe.libelle_aaf;
-						  });
-						  $scope.process_data();
+				      $scope.matieres = $scope.extract_matieres( $scope.raw_data );
+				      // $q.all() permet d'attendre que tout les appels d' soient résolus avant de
+				      //   - remplir $scope.classes
+				      //   - puis d'appeler $scope.process_data() qui va pouvoir consommer $scope.classes
+				      //     pour passer les noms des classes aux graphiques qui ne peuvent pas profiter
+				      //     du data-binding d'angularJS car ils dessinent des canvas.
+				      $q.all( $scope.extract_classes_promises( $scope.raw_data ) )
+					  .then( function( classes ) {
+					      _(classes).each(function( classe ) {
+						  $scope.classes[classe.id] = classe.libelle !== null ? classe.libelle : classe.libelle_aaf;
 					      });
-				      });
+					      $scope.process_data();
+					  });
+				  });
 		      });
 		  } ] );

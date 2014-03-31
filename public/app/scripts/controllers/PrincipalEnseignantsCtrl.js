@@ -159,10 +159,11 @@ angular.module('cahierDeTexteApp')
 		      // Récupération et consommation des données
 		      User.get_user().then( function( response ) {
 			  var current_user = response.data;
-			  API.query_enseignants( { uai: current_user['profil_actif']['uai'] } ).then( function success( response ) {
-			      $scope.raw_data = _(response).reject( function( enseignant ) {
-				  return enseignant.enseignant_id === '';
-			      });
+			  API.query_enseignants( { uai: current_user['profil_actif']['uai'] } )
+			      .$promise.then( function success( response ) {
+				  $scope.raw_data = _(response).reject( function( enseignant ) {
+				      return enseignant.enseignant_id === '';
+				  });
 
 			      $q.all( $scope.extract_details_enseignants_promises( $scope.raw_data ) )
 				  .then( function( enseignants ) {
