@@ -181,24 +181,25 @@ angular.module('cahierDeTexteApp')
 			      }
 			  };
 
-			  API.query_classes( { uai: current_user['profil_actif']['uai'] } ).then( function( response ) {
-			      $scope.raw_data = response;
+			  API.query_classes( { uai: current_user['profil_actif']['uai'] } )
+			      .$promise.then( function( response ) {
+				  $scope.raw_data = response;
 
-			      $scope.empty = _($scope.raw_data[ 0 ]).size() == 0;
+				  $scope.empty = _($scope.raw_data[ 0 ]).size() == 0;
 
-			      if ( ! $scope.empty ) {
-				  // Extraction des matières
-				  $scope.matieres = $scope.extract_matieres( $scope.raw_data );
+				  if ( ! $scope.empty ) {
+				      // Extraction des matières
+				      $scope.matieres = $scope.extract_matieres( $scope.raw_data );
 
-				  // Extraction des classes
-				  $q.all( $scope.extract_classes_promises( $scope.raw_data ) )
-				      .then( function( classes ) {
-					  _(classes).each(function( classe ) {
-					      $scope.classes[classe.id] = classe.libelle !== null ? classe.libelle : classe.libelle_aaf;
+				      // Extraction des classes
+				      $q.all( $scope.extract_classes_promises( $scope.raw_data ) )
+					  .then( function( classes ) {
+					      _(classes).each(function( classe ) {
+						  $scope.classes[classe.id] = classe.libelle !== null ? classe.libelle : classe.libelle_aaf;
+					      });
+					      $scope.process_data();
 					  });
-					  $scope.process_data();
-				      });
-			      }
-			  });
+				  }
+			      });
 		      } );
 		  } ] );
