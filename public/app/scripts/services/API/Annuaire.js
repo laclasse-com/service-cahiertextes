@@ -29,15 +29,15 @@ angular.module('cahierDeTexteApp')
 	     [ 'Matieres', 'Regroupements', 'Users',
 	       function( Matieres, Regroupements, Users ) {
 		   this.get_matiere = _.memoize( function( matiere_id ) {
-		       return Matieres.get({ matiere_id: matiere_id }).$promise;
+		       return Matieres.get({ matiere_id: matiere_id });
 		   });
 
 		   this.get_regroupement = _.memoize( function( regroupement_id ) {
-		       return Regroupements.get({ regroupement_id: regroupement_id }).$promise;
+		       return Regroupements.get({ regroupement_id: regroupement_id });
 		   });
 
 		   this.get_user = _.memoize( function( user_id ) {
-		       return Users.get({ user_id: user_id }).$promise;
+		       return Users.get({ user_id: user_id });
 		   });
 	       }
 	     ] );

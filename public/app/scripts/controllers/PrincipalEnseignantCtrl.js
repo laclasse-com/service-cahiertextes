@@ -147,7 +147,7 @@ angular.module('cahierDeTexteApp')
 			      .pluck('matiere_id')
 			      .uniq()
 			      .each(function( matiere_id ) {
-				  Annuaire.get_matiere( matiere_id ).then(
+				  Annuaire.get_matiere( matiere_id ).$promise.then(
 				      function( response ) {
 					  matieres[matiere_id] = response.libelle_long;
 				      });
