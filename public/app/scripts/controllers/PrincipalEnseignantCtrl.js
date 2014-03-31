@@ -2,11 +2,11 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantCtrl',
-		[ '$scope', '$rootScope', '$stateParams', '$q', 'API', 'Cours', 'Annuaire', 'User',
-		  function( $scope, $rootScope, $stateParams, $q, API, Cours, Annuaire, User ) {
+		[ '$scope', '$stateParams', '$q', 'MOIS', 'THEME', 'LINECHART_OPTIONS', 'PIECHART_OPTIONS', 'API', 'Cours', 'Annuaire', 'User',
+		  function( $scope, $stateParams, $q, MOIS, THEME, LINECHART_OPTIONS, PIECHART_OPTIONS, API, Cours, Annuaire, User ) {
 		      $scope.enseignant_id = $stateParams.enseignant_id;
 		      $scope.classe = null;
-		      $scope.mois = $rootScope.mois;
+		      $scope.mois = MOIS;
 		      $scope.moisCourant = null;
 		      $scope.selectedSaisies = [];
 		      $scope.matieres = {};
@@ -80,24 +80,24 @@ angular.module('cahierDeTexteApp')
 
 		      // Graphiques
 		      $scope.graphiques = {
-			  pieChart: { options: $rootScope.globalPieChartOptions,
-				      data: [ { color : $rootScope.theme.filled.base,
+			  pieChart: { options: PIECHART_OPTIONS,
+				      data: [ { color : THEME.filled.base,
 						value: 0 },
-					      { color : $rootScope.theme.validated.base,
+					      { color : THEME.validated.base,
 						value: 0 } ] },
-			  barChart: { options: $rootScope.globalLineChartOptions,
+			  barChart: { options: LINECHART_OPTIONS,
 				      data: { labels: [],
 					      datasets: [
-						  { fillColor : $rootScope.theme.filled.base,
-						    pointColor : $rootScope.theme.filled.base,
-						    strokeColor : $rootScope.theme.filled.stroke,
-						    pointStrokeColor : $rootScope.theme.filled.stroke,
+						  { fillColor : THEME.filled.base,
+						    pointColor : THEME.filled.base,
+						    strokeColor : THEME.filled.stroke,
+						    pointStrokeColor : THEME.filled.stroke,
 						    data: []
 						  },
-						  { fillColor : $rootScope.theme.validated.base,
-						    pointColor : $rootScope.theme.validated.base,
-						    strokeColor : $rootScope.theme.validated.stroke,
-						    pointStrokeColor : $rootScope.theme.validated.stroke,
+						  { fillColor : THEME.validated.base,
+						    pointColor : THEME.validated.base,
+						    strokeColor : THEME.validated.stroke,
+						    pointStrokeColor : THEME.validated.stroke,
 						    data: []
 						  } ] } },
 			  populate: function( saisies ) {

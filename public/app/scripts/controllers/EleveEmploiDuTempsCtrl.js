@@ -2,13 +2,13 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EleveEmploiDuTempsCtrl',
-		[ '$scope', '$rootScope', '$modal', 'API', 'Annuaire', 'EmploisDuTemps',
-		  function ( $scope, $rootScope, $modal, API, Annuaire, EmploisDuTemps ) {
+		[ '$scope', '$modal', 'THEME', 'CALENDAR_OPTIONS', 'CALENDAR_PARAMS', 'API', 'Annuaire', 'EmploisDuTemps',
+		  function ( $scope, $modal, THEME, CALENDAR_OPTIONS, CALENDAR_PARAMS, API, Annuaire, EmploisDuTemps ) {
 		      $scope.matieres = {};
 		      $scope.types_de_devoir = {};
 
 		      // configuration du composant calendrier
-		      $scope.calendar = { options: $rootScope.globalCalendarOptions,
+		      $scope.calendar = { options: CALENDAR_OPTIONS,
 					  events: [  ] };
 		      $scope.calendar.options.defaultView = 'agendaWeek';
 		      $scope.calendar.options.editable = false;
@@ -56,7 +56,7 @@ angular.module('cahierDeTexteApp')
 					 } }
 				     ).result.then( function ( devoirs ) {
 					 _(devoirs).each(function(devoir) {
-					     _($scope.calendar.events[0]).findWhere({type: 'devoir', id: devoir.id}).color = devoir.fait ? $rootScope.theme.calendar.devoir_fait : $rootScope.theme.calendar.devoir;
+					     _($scope.calendar.events[0]).findWhere({type: 'devoir', id: devoir.id}).color = devoir.fait ? THEME.calendar.devoir_fait : THEME.calendar.devoir;
 					 });
 					 $scope.emploi_du_temps.fullCalendar( 'renderEvent', $scope.creneau );
 				     });
@@ -81,14 +81,14 @@ angular.module('cahierDeTexteApp')
 			      this.end = new Date( item.end );
 
 			      if ( this.type === 'cours' ) {
-				  this.color = $rootScope.theme.calendar.saisie;
+				  this.color = THEME.calendar.saisie;
 				  if ( event.matiere_id.length > 0 ) {
 				      Annuaire.get_matiere( event.matiere_id ).$promise.then( function success( response ) {
 					  fc_event.title = response.libelle_long;
 				      });
 				  }
 			      } else {
-				  this.color = item.fait ? $rootScope.theme.calendar.devoir_fait : $rootScope.theme.calendar.devoir;
+				  this.color = item.fait ? THEME.calendar.devoir_fait : THEME.calendar.devoir;
 
 				  API.get_type_de_devoir( { id: item.type_devoir_id } )
 				      .$promise.then( function success( response ) {
@@ -97,14 +97,14 @@ angular.module('cahierDeTexteApp')
 			      }
 
 			      if ( _(item).has( 'contenu' ) && item.contenu.length > 0 ) {
-				  this.description += '<br><span style="color:' + $rootScope.calendar.couleurs[ this.type ] + '">';
-				  this.description += item.contenu.substring( 0, $rootScope.calendar.max_length );
-				  this.description += item.contenu.length > $rootScope.calendar.max_length ? '…' : '';
+				  this.description += '<br><span style="color:' + CALENDAR_PARAMS.couleurs[ this.type ] + '">';
+				  this.description += item.contenu.substring( 0, CALENDAR_PARAMS.max_length );
+				  this.description += item.contenu.length > CALENDAR_PARAMS.max_length ? '…' : '';
 				  this.description += '</span>';
 				  this.className = 'clickable-event';
 				  this.id = item.id;
 			      } else {
-				  this.color = $rootScope.theme.calendar.vide;
+				  this.color = THEME.calendar.vide;
 				  this.className = 'un-clickable-event';
 			      }
 

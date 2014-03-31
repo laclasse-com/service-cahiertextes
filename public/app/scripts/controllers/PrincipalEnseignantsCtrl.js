@@ -2,18 +2,18 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantsCtrl',
-		[ '$scope', '$rootScope', '$q', 'API', 'Annuaire', 'User',
-		  function( $scope, $rootScope, $q, API, Annuaire, User ) {
-		      $scope.annee = $rootScope.mois;
+		[ '$scope', 'THEME', 'MOIS', 'BARCHART_OPTIONS', 'PIECHART_OPTIONS', '$q', 'API', 'Annuaire', 'User',
+		  function( $scope, THEME, MOIS, BARCHART_OPTIONS, PIECHART_OPTIONS, $q, API, Annuaire, User ) {
+		      $scope.annee = MOIS;
 		      $scope.classe = null;
 		      $scope.mois = null;
 		      $scope.classes = {};
 		      $scope.details_enseignants = {};
 
-		      $scope.pieChart = { options: $rootScope.globalPieChartOptions,
-					  data: [ { color : $rootScope.theme.validated.base,
+		      $scope.pieChart = { options: PIECHART_OPTIONS,
+					  data: [ { color : THEME.validated.base,
 						    value: 0 },
-						  { color : $rootScope.theme.filled.base,
+						  { color : THEME.filled.base,
 						    value: 0 } ],
 					  populate: function( data ) {
 					      $scope.pieChart.data[0].value = data.validated;
@@ -21,19 +21,19 @@ angular.module('cahierDeTexteApp')
 					  } };
 
 		      $scope.barChart = {
-			  options: $rootScope.globalBarChartOptions,
+			  options: BARCHART_OPTIONS,
 			  data: { labels: [],
 				  datasets: [
-				      { fillColor : $rootScope.theme.filled.base,
-					pointColor : $rootScope.theme.filled.base,
-					strokeColor : $rootScope.theme.filled.stroke,
-					pointStrokeColor : $rootScope.theme.filled.stroke,
+				      { fillColor : THEME.filled.base,
+					pointColor : THEME.filled.base,
+					strokeColor : THEME.filled.stroke,
+					pointStrokeColor : THEME.filled.stroke,
 					data: []
 				      },
-				      { fillColor : $rootScope.theme.validated.base,
-					pointColor : $rootScope.theme.validated.base,
-					strokeColor : $rootScope.theme.validated.stroke,
-					pointStrokeColor : $rootScope.theme.validated.stroke,
+				      { fillColor : THEME.validated.base,
+					pointColor : THEME.validated.base,
+					strokeColor : THEME.validated.stroke,
+					pointStrokeColor : THEME.validated.stroke,
 					data: []
 				      } ] },
 			  populate: function( enseignants ) {
@@ -56,10 +56,10 @@ angular.module('cahierDeTexteApp')
 			      $scope.individualCharts.enseignants = _.chain(data)
 				  .map( function( enseignant ) {
 				      return { enseignant: details_enseignants[ enseignant.enseignant_id ],
-					       pieChart: { options: $rootScope.globalPieChartOptions,
-							   data: [ { color : $rootScope.theme.validated.base,
+					       pieChart: { options: PIECHART_OPTIONS,
+							   data: [ { color : THEME.validated.base,
 								     value: enseignant.validated },
-								   { color : $rootScope.theme.filled.base,
+								   { color : THEME.filled.base,
 								     value: enseignant.filled - enseignant.validated } ] } };
 				  })
 				  .reject( function( enseignant ) {
