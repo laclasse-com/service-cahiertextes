@@ -63,7 +63,7 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      // consommation des données
-		      $scope.assemble_fullCalendar_event = function( item_emploi_du_temps ) {
+		      var assemble_fullCalendar_event = function( item_emploi_du_temps ) {
 			  var Calendar_event_template = function() { this.details = { cours: item_emploi_du_temps.cours,
 										      devoirs: item_emploi_du_temps.devoirs };
 								     this.allDay = false;
@@ -142,12 +142,11 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      $scope.retrieve_data = function( from_date, to_date ) {
-			  EmploisDuTemps.query( { debut: from_date,
-						  fin: to_date },
+			  EmploisDuTemps.query( { debut: from_date, fin: to_date },
 						function( response ) {
 						    $scope.calendar.events[0] = _.chain(response)
 							.map( function( event ) {
-							    return $scope.assemble_fullCalendar_event( event );
+							    return assemble_fullCalendar_event( event );
 							} )
 							.flatten()
 							.value();
