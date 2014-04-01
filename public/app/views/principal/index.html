@@ -1,13 +1,13 @@
 <div class="navbar col-md-12">
   <div class="navbar-header">
-    <a class="navbar-brand" href="#/principal">Principal</a>
+    <a class="navbar-brand" data-ui-sref="principal">Principal</a>
   </div>
   <ul class="nav navbar-nav">
     <li data-ng-class="{active:tab=='classes'}">
-      <a href="#/principal/classes" data-ng-click="tab='classes'">Tableau de bord par Classes</a>
+      <a data-ui-sref="principal.classes" data-ng-click="tab='classes'">Tableau de bord par Classes</a>
     </li>
     <li data-ng-class="{active:tab=='enseignants'}">
-      <a href="#/principal/enseignants" data-ng-click="tab='enseignants'">Validation des saisies par Enseignants</a>
+      <a data-ui-sref="principal.enseignants" data-ng-click="tab='enseignants'">Validation des saisies par Enseignants</a>
     </li>
   </ul>
 </div>
