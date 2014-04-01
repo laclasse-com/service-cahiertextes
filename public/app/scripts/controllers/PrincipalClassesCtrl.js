@@ -8,10 +8,10 @@ angular.module('cahierDeTexteApp')
 
 		      User.get_user().then( function( response ) {
 			  var current_user = response.data;
-			  $scope.raw_data	 =   [];
-			  $scope.displayed_data  =  [  ];
-			  $scope.classes	 = {    };
-			  $scope.matieres	 =   []; // bientôt Noël !
+			  $scope.raw_data	 = [];
+			  $scope.displayed_data  = [];
+			  $scope.classes	 = {};
+			  $scope.matieres	 = [];
 
 			  $scope.classe		 = null;
 			  $scope.moisCourant	 = null;

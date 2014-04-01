@@ -106,8 +106,7 @@ angular.module('cahierDeTexteApp')
 			      $scope.graphiques.pieChart.data[0].value = 0;
 			      $scope.graphiques.pieChart.data[1].value = 0;
 
-			      var data = $scope.filtre( saisies );
-			      _.chain(data)
+			      _.chain( $scope.filtre( saisies ) )
 				  .groupBy('classe_id')
 				  .each( function( classe ) {
 				      var filled = classe.length;
@@ -125,13 +124,14 @@ angular.module('cahierDeTexteApp')
 
 		      $scope.process_data = function(  ) {
 			  if ( $scope.raw_data !== undefined ) {
-			      $scope.raw_data = _($scope.raw_data).map( function( saisie, index ) {
-				  // on référence l'index d'origine dans chaque élément pour propager la validation
-				  saisie.index = index;
-				  saisie.cours = new Cours( saisie.cours );
-				  // saisie.devoir = new Devoirs( saisie.devoir );
-				  return saisie;
-			      });
+			      $scope.raw_data = _($scope.raw_data)
+				  .map( function( saisie, index ) {
+				      // on référence l'index d'origine dans chaque élément pour propager la validation
+				      saisie.index = index;
+				      saisie.cours = new Cours( saisie.cours );
+				      // saisie.devoir = new Devoirs( saisie.devoir );
+				      return saisie;
+				  } );
 
 			      // consommation des données dans les graphiques et le grid
 			      $scope.grid.populate( $scope.raw_data );
@@ -148,7 +148,7 @@ angular.module('cahierDeTexteApp')
 			      .each(function( matiere_id ) {
 				  Annuaire.get_matiere( matiere_id ).$promise.then(
 				      function( response ) {
-					  matieres[matiere_id] = response.libelle_long;
+					  matieres[ matiere_id ] = response.libelle_long;
 				      });
 			      });
 			  return matieres;
