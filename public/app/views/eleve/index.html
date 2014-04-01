@@ -1,13 +1,13 @@
 <div class="navbar col-md-12">
   <div class="navbar-header">
-    <a class="navbar-brand" href="#/eleve">Élève</a>
+    <a class="navbar-brand" data-ui-sref="eleve">Élève</a>
   </div>
   <ul class="nav navbar-nav">
     <li data-ng-class="{active:tab=='emploi_du_temps'}">
-      <a href="#/eleve/emploi_du_temps" data-ng-click="tab='classes'">Emploi du temps</a>
+      <a data-ui-sref="eleve.emploi_du_temps" data-ng-click="tab='classes'">Emploi du temps</a>
     </li>
     <li data-ng-class="{active:tab=='devoirs'}">
-      <a href="#/eleve/devoirs" data-ng-click="tab='enseignants'">Todo-list</a>
+      <a data-ui-sref="eleve.devoirs" data-ng-click="tab='enseignants'">Todo-list</a>
     </li>
   </ul>
 </div>
