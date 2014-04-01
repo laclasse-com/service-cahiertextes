@@ -38,22 +38,23 @@ angular.module('cahierDeTexteApp')
 					 resolve: { matiere: function() { return $scope.matiere; },
 						    cours: function() { return $scope.cours; },
 						    devoirs: function() { return $scope.devoirs; } },
-					 controller: function( $scope, $modalInstance, Devoirs, matiere, cours, devoirs ) {
-					     $scope.matiere = matiere;
-					     $scope.cours = cours;
-					     $scope.devoirs = devoirs;
+					 controller: [ '$scope', '$modalInstance', 'Devoirs', 'matiere', 'cours', 'devoirs',
+						       function( $scope, $modalInstance, Devoirs, matiere, cours, devoirs ) {
+							   $scope.matiere = matiere;
+							   $scope.cours = cours;
+							   $scope.devoirs = devoirs;
 
-					     $scope.fait = function( devoir_id ) {
-						 Devoirs.fait({ id: devoir_id },
-							      function() {
-								  _(devoirs).findWhere({id: devoir_id}).fait = true;
-							      });
-					     };
+							   $scope.fait = function( devoir_id ) {
+							       Devoirs.fait({ id: devoir_id },
+									    function() {
+										_(devoirs).findWhere({id: devoir_id}).fait = true;
+									    });
+							   };
 
-					     $scope.fermer = function() {
-						 $modalInstance.close( devoirs );
-					     };
-					 } }
+							   $scope.fermer = function() {
+							       $modalInstance.close( devoirs );
+							   };
+						       } ] }
 				     ).result.then( function ( devoirs ) {
 					 _(devoirs).each(function(devoir) {
 					     _($scope.calendar.events[0]).findWhere({type: 'devoir', id: devoir.id}).color = devoir.fait ? THEME.calendar.devoir_fait : THEME.calendar.devoir;
