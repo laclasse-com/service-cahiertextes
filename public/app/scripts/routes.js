@@ -90,9 +90,7 @@ angular.module( 'cahierDeTexteApp' )
 		   // Enseignant //////////////////////////////////////////////////////////
 		       .state('enseignant', {
 			   url: '/enseignant',
-			   resolve: { auth: function( Redirection ) {
-			       Redirection.doorman( [ 'ENS' ] );
-			   } },
+			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ENS' ] ); } },
 			   templateUrl: 'app/views/enseignant.html',
 			   controller: 'EnseignantCtrl'
 		       });
