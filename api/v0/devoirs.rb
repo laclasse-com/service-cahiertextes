@@ -89,7 +89,7 @@ module CahierDeTextesAPI
                .where( matiere_id: "#{matiere_id}" )
                .where( jour_de_la_semaine: params[:date_due].wday  )
                .join( :creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :id )
-               .where( regroupement_id: regroupement_id )
+               .where( regroupement_id: "#{regroupement_id}" )
                .first                # FIXME: arbitrairement on choisi d'attacher le devoir au premier créneau
 
                # 2. création du devoir
@@ -140,7 +140,7 @@ module CahierDeTextesAPI
                   .where( matiere_id: "#{matiere_id}" )
                   .where( jour_de_la_semaine: params[:date_due].wday  )
                   .join( :creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :id )
-                  .where( regroupement_id: regroupement_id )
+                  .where( regroupement_id: "#{regroupement_id}" )
                   .first                # FIXME: arbitrairement on choisi d'attacher le devoir au premier créneau
 
                   if creneau_emploi_du_temps.nil?
