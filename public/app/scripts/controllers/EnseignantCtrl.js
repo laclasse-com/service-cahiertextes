@@ -315,10 +315,9 @@ angular.module('cahierDeTexteApp')
 							 .each( function( propriete ) {
 							     $scope.calendar.events[0][ index ][ propriete ] = updated_event[ propriete ];
 							 });
-						     $scope.emploi_du_temps.fullCalendar( 'renderEvent', $scope.calendar.events[0][ index ] );
+						     $scope.emploi_du_temps.fullCalendar( 'renderEvent', $scope.calendar.events[0][ index ], true );
 						 }
 					     }
-					     $scope.emploi_du_temps.fullCalendar( 'rerenderEvent' );
 					 } );
 		      };
 
@@ -411,6 +410,22 @@ angular.module('cahierDeTexteApp')
 			      .value();
 		      };
 
+		      $scope.process_data = function() {
+			  var filtered_data = $scope.raw_data;
+
+			  // Filtrage sur une seule classe
+			  if ( $scope.classe != null ) {
+			      filtered_data = _($scope.raw_data).filter( function( creneau ) {
+				  // .invert() suppose que les valeurs sont uniques
+				  return creneau.regroupement_id == _($scope.classes).invert()[ $scope.classe ];
+			      });
+			  }
+
+			  $scope.calendar.events[0] = _(filtered_data).map( function( event ) {
+			      return $scope.assemble_fullCalendar_event( event );
+			  } );
+		      };
+
 		      $scope.retrieve_data = function( from_date, to_date ) {
 			  EmploisDuTemps.query( { debut: from_date,
 						  fin: to_date } ).$promise
@@ -428,20 +443,7 @@ angular.module('cahierDeTexteApp')
 					      $scope.classes[classe.id] = classe.libelle !== null ? classe.libelle : classe.libelle_aaf;
 					  });
 
-					  var filtered_data = $scope.raw_data;
-
-					  // Filtrage sur une seule classe
-					  if ( $scope.classe != null ) {
-					      filtered_data = _($scope.raw_data).filter( function( creneau ) {
-						  // .invert() suppose que les valeurs sont uniques
-						  return creneau.regroupement_id == _($scope.classes).invert()[ $scope.classe ];
-					      });
-					  }
-
-					  $scope.calendar.events[0] = _(filtered_data).map( function( event ) {
-					      return $scope.assemble_fullCalendar_event( event );
-					  } );
-
+					  $scope.process_data();
 				      });
 			      } );
 		      };
