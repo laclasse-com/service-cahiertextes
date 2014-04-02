@@ -66,16 +66,6 @@ angular.module('myApp', ['chieffancypants.loadingBar'])
   })
 ```
 
-**Set the text to show below spinner:**  
-Like the spinner configuration above, the text to display below the Spinner can be modified as follows
-
-```js
-angular.module('myApp', ['chieffancypants.loadingBar'])
-  .config(function(cfpLoadingBarProvider) {
-    cfpLoadingBarProvider.textSpinner = 'Wait...'; 
-  })
-```
-
 **Ignoring particular XHR requests:**  
 The loading bar can also be forced to ignore certain requests, for example, when long-polling or periodically sending debugging information back to the server.
 

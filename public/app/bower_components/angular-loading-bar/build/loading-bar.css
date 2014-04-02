@@ -1,15 +1,10 @@
+/*! 
+ * angular-loading-bar v0.3.0
+ * https://chieffancypants.github.io/angular-loading-bar
+ * Copyright (c) 2014 Wes Cruver
+ * License: MIT
+ */
 
-#loading-top-layer {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    top: 0;
-    left: 0;
-    opacity: 0.5;
-    background-color: grey;
-}
 /* Make clicks pass-through */
 #loading-bar,
 #loading-bar-spinner {
@@ -71,18 +66,17 @@
   display: block;
   position: fixed;
   z-index: 100;
-  top: 50%;
-  left: 50%;
+  top: 10px;
+  left: 10px;
 }
 
 #loading-bar-spinner .spinner-icon {
-  width: 16px;
-  height: 16px;
-
+  width: 14px;
+  height: 14px;
 
   border:  solid 2px transparent;
-  border-top-color:  black;
-  border-left-color: black;
+  border-top-color:  #29d;
+  border-left-color: #29d;
   border-radius: 10px;
 
   -webkit-animation: loading-bar-spinner 400ms linear infinite;
