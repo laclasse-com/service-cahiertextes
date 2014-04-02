@@ -81,11 +81,15 @@ module CahierDeTextesAPI
                error!( 'Cours inconnu', 404 )
             else
                # 1. trouver le créneau cible
+               cours_orig = Cours[ params[:cours_id] ]
+               matiere_id = CreneauEmploiDuTemps[ cours_orig.creneau_emploi_du_temps_id ].matiere_id
+               regroupement_id = CreneauEmploiDuTempsRegroupement.where( creneau_emploi_du_temps_id: cours_orig.creneau_emploi_du_temps_id ).first.regroupement_id
+
                creneau_emploi_du_temps = CreneauEmploiDuTemps
-               .where(matiere_id: CreneauEmploiDuTemps[ Cours[ params[:cours_id] ].creneau_emploi_du_temps_id ].matiere_id)
-               .where(jour_de_la_semaine: params[:date_due].wday)
-               .join(:creneaux_emploi_du_temps_enseignants, creneau_emploi_du_temps_id: :id)
-               .where(enseignant_id: Cours[ params[:cours_id] ].enseignant_id)
+               .where( matiere_id: "#{matiere_id}" )
+               .where( jour_de_la_semaine: params[:date_due].wday  )
+               .join( :creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :id )
+               .where( regroupement_id: regroupement_id )
                .first                # FIXME: arbitrairement on choisi d'attacher le devoir au premier créneau
 
                # 2. création du devoir
@@ -128,11 +132,15 @@ module CahierDeTextesAPI
                error!( 'Devoir inconnu', 404 )
             else
                if devoir.date_due != params[:date_due]
+                  cours_orig = Cours[ params[:cours_id] ]
+                  matiere_id = CreneauEmploiDuTemps[ cours_orig.creneau_emploi_du_temps_id ].matiere_id
+                  regroupement_id = CreneauEmploiDuTempsRegroupement.where( creneau_emploi_du_temps_id: cours_orig.creneau_emploi_du_temps_id ).first.regroupement_id
+
                   creneau_emploi_du_temps = CreneauEmploiDuTemps
-                  .where(matiere_id: CreneauEmploiDuTemps[ Cours[ params[:cours_id] ].creneau_emploi_du_temps_id ].matiere_id)
-                  .where(jour_de_la_semaine: params[:date_due].wday)
-                  .join(:creneaux_emploi_du_temps_enseignants, creneau_emploi_du_temps_id: :id)
-                  .where(enseignant_id: Cours[ params[:cours_id] ].enseignant_id)
+                  .where( matiere_id: "#{matiere_id}" )
+                  .where( jour_de_la_semaine: params[:date_due].wday  )
+                  .join( :creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :id )
+                  .where( regroupement_id: regroupement_id )
                   .first                # FIXME: arbitrairement on choisi d'attacher le devoir au premier créneau
 
                   if creneau_emploi_du_temps.nil?
