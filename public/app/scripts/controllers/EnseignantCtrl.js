@@ -277,8 +277,21 @@ angular.module('cahierDeTexteApp')
 						 return _(devoir).has( 'id' );
 					     } );
 
-					     // s'il s'agit d'une création de créneau
-					     if ( ! _($scope.creneau).has( '_id' ) ) {
+					     if ( _($scope.creneau).has( '_id' ) ) {
+						 updated_event = $scope.update_fullCalendar_event( $scope.creneau, objets.cours, objets.devoirs );
+
+						 var index = _($scope.calendar.events[0]).indexOf($scope.creneau);
+						 _.chain(updated_event)
+						     .keys()
+						     .reject(function( key ) { //updated_event n'a pas de title
+							 return key == "title";
+						     })
+						     .each( function( propriete ) {
+							 $scope.calendar.events[0][ index ][ propriete ] = updated_event[ propriete ];
+						     });
+						 $scope.emploi_du_temps.fullCalendar( 'renderEvent', $scope.calendar.events[0][ index ] );
+					     } else {					     // s'il s'agit d'une création de créneau
+
 						 if ( objets.matiere_id === '' || objets.regroupement_id === '' ) { //the user hasn't selected a class and/or matiere
 						     $scope.creneau.$delete(); //full stop
 						 } else {
@@ -300,22 +313,6 @@ angular.module('cahierDeTexteApp')
 
 						     $scope.calendar.events[0].push( updated_event );
 						     $scope.emploi_du_temps.fullCalendar( 'renderEvent', _($scope.calendar.events[0]).last(), true );
-						 }
-					     } else {
-
-						 if ( ( objets.cours.dirty ) || ( objets.devoirs.dirty ) ) {
-						     updated_event = $scope.update_fullCalendar_event( $scope.creneau, objets.cours, objets.devoirs );
-
-						     var index = _($scope.calendar.events[0]).indexOf($scope.creneau);
-						     _.chain(updated_event)
-							 .keys()
-							 .reject(function( key ) { //updated_event n'a pas de title
-							     return key == "title";
-							 })
-							 .each( function( propriete ) {
-							     $scope.calendar.events[0][ index ][ propriete ] = updated_event[ propriete ];
-							 });
-						     $scope.emploi_du_temps.fullCalendar( 'renderEvent', $scope.calendar.events[0][ index ], true );
 						 }
 					     }
 					 } );
