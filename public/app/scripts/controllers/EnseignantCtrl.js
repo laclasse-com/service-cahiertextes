@@ -4,6 +4,7 @@ angular.module('cahierDeTexteApp')
     .controller('EnseignantCtrl',
 		[ '$scope', '$modal', '$q', 'THEME', 'CALENDAR_OPTIONS', 'CALENDAR_PARAMS', 'TINYMCE_OPTIONS', 'API', 'Annuaire', 'Cours', 'Devoirs', 'EmploisDuTemps', 'User', 'CreneauEmploiDuTemps',
 		  function ( $scope, $modal, $q, THEME, CALENDAR_OPTIONS, CALENDAR_PARAMS, TINYMCE_OPTIONS, API, Annuaire, Cours, Devoirs, EmploisDuTemps, User, CreneauEmploiDuTemps ) {
+		      $scope.types_de_devoir = API.query_types_de_devoir();
 		      $scope.matieres = [];
 		      $scope.classes = [];
 		      $scope.classe = null;
@@ -68,7 +69,7 @@ angular.module('cahierDeTexteApp')
 			  }
 
 			  // 3. ouverture de la popup
-			  $q.all( $scope.types_de_devoir, $scope.cours, $scope.devoirs )
+			  $q.all( $scope.types_de_devoir, $scope.cours, $scope.devoirs, $scope.matieres, $scope.classes )
 			      .then( function() {
 				  $scope.ouvre_popup_edition(  );
 			      });
@@ -148,8 +149,8 @@ angular.module('cahierDeTexteApp')
 							  $scope.cours = cours;
 							  $scope.devoirs = devoirs;
 							  $scope.types_de_devoir = types_de_devoir;
-							  $scope.matiere_id = matiere_id;
-							  $scope.regroupement_id = regroupement_id;
+							  $scope.matiere_id = matiere_id.length > 0 ? matiere_id : $scope.matieres[0].id;
+							  $scope.regroupement_id = regroupement_id.length > 0 ? regroupement_id : $scope.classes[0].id;
 							  $scope.tinyMCEOptions = TINYMCE_OPTIONS;
 
 							  $scope.erreurs = [];
@@ -370,17 +371,18 @@ angular.module('cahierDeTexteApp')
 			  }
 
 			  if ( event.details.regroupement_id.length > 0 ) {
-			      calendar_event.regroupement = $scope.classes[ event.details.regroupement_id ];
+			      calendar_event.regroupement = _.chain($scope.classes)
+				  .filter( function( classe ) {
+				      return classe.id == event.details.regroupement_id;
+				  })
+				  .pluck( 'libelle' )
+				  .value()[0];
 			  } else {
 			      calendar_event.regroupement = '';
 			  }
 
 			  if ( event.details.matiere_id.length > 0 ) {
-			      $scope.matieres[ event.details.matiere_id ] = Annuaire.get_matiere( event.details.matiere_id );
-
-			      $scope.matieres[ event.details.matiere_id ].$promise.then( function success( response ) {
-				  calendar_event.title = $scope.matieres[ event.details.matiere_id ].libelle_long;
-			      });
+			      calendar_event.title = _($scope.matieres).findWhere({id:event.details.matiere_id}).libelle_long;
 			  }
 
 			  return calendar_event;
@@ -413,8 +415,7 @@ angular.module('cahierDeTexteApp')
 			  // Filtrage sur une seule classe
 			  if ( $scope.classe != null ) {
 			      filtered_data = _($scope.raw_data).filter( function( creneau ) {
-				  // .invert() suppose que les valeurs sont uniques
-				  return creneau.regroupement_id == _($scope.classes).invert()[ $scope.classe ];
+				  return creneau.regroupement_id == $scope.classe;
 			      });
 			  }
 
@@ -429,20 +430,23 @@ angular.module('cahierDeTexteApp')
 			      .then( function( response ) {
 				  $scope.raw_data = response;
 
-				  // Extraction des classes
+				  // Extraction des matières
+				  $scope.matieres = _.chain( $scope.raw_data )
+				      .pluck( 'matiere_id' )
+				      .uniq()
+				      .map( function( matiere_id ) {
+					  return Annuaire.get_matiere( matiere_id );
+				      })
+				      .value();
 				  $q.all( $scope.extract_classes_promises( $scope.raw_data ) )
-				      .then( function( classes ) {
-					  // s'il y a des classes le calendrier est éditable (?)
-					  $scope.calendar.options.editable = classes.length > 0;
+				      .then( function( response ) {
+					  $scope.classes = response;
 
-					  // liste des noms des classes
-					  _(classes).each(function( classe ) {
-					      $scope.classes[classe.id] = classe.libelle !== null ? classe.libelle : classe.libelle_aaf;
-					  });
+					  // s'il y a des classes le calendrier est éditable (?)
+					  $scope.calendar.options.editable = $scope.classes.length > 0;
 
 					  $scope.process_data();
 				      });
 			      } );
 		      };
-		      $scope.types_de_devoir = API.query_types_de_devoir();
 		  } ] );
