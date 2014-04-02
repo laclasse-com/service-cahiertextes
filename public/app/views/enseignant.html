@@ -2,7 +2,7 @@
   <div class="panel panel-default">
 
     <div class="panel-heading">
-      <select data-ng-model="classe" data-ng-change="process_data()" data-ng-options="class as class for (id, class) in classes">
+      <select data-ng-model="classe" data-ng-change="process_data()" data-ng-options="classe.id as classe.libelle for classe in classes">
 	<option value="" selected>Toute les classes</option>
       </select>
     </div>
