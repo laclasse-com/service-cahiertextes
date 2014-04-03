@@ -3,7 +3,7 @@
 
   <h3>
     <span data-ng-show="cours.cahier_de_textes_id != ''">
-      {{classes[ regroupement_id ]}} - {{matieres[ matiere_id ].libelle_long}}
+      {{classe.libelle}} - {{matiere.libelle_long}}
     </span>
     <span data-ng-show="cours.cahier_de_textes_id == ''">
       <select data-ng-model="scope.regroupement_id" data-ng-options="classe.id as classe.libelle for classe in classes">
@@ -35,7 +35,7 @@
       <div data-ng-show="creneaux_similaires">
 	<span data-ng-repeat="creneau in creneaux_similaires">
 	  <label>
-	    <input type="checkbox" value="{{creneau}}" data-check-list="creneaux_similaires.selected" />{{classes[ creneau.regroupement_id ]}} . {{creneau.creneau_emploi_du_temps_id}}
+	    <input type="checkbox" value="{{creneau}}" data-check-list="creneaux_similaires.selected" />{{_(classes).findWhere({id: creneau.regroupement_id}).libelle}} . {{creneau.creneau_emploi_du_temps_id}}
 	  </label>
 	  <br />
 	</span>
