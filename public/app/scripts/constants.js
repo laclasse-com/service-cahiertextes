@@ -8,12 +8,8 @@ angular.module( 'cahierDeTexteApp' )
     .constant( 'THEME', { filled: { base: '#aaffaa',
 				    stroke: '#88aa88' },
 			  validated: { base: '#00ff00',
-				       stroke: '#00aa00' },
-			  calendar: { vide: '#a0a0a0',
-				      saisie: '#aaaaff',
-				      devoir: '#ff6666',
-				      devoir_fait: '#66cc66'}
-    } )
+				       stroke: '#00aa00' }
+			} )
 
 // options des calendriers
     .constant( 'CALENDAR_PARAMS', { max_length: 16,
