@@ -36,7 +36,7 @@ angular.module( 'cahierDeTexteApp' )
 								 week: 'ddd d/M',
 								 day: 'dddd d MMMM' },
 						 titleFormat: { month: 'MMMM yyyy',
-								week: "d MMM[ yyyy]{ '&#8212 )' d [ MMM] yyyy}",
+								week: "d MMM[ yyyy]{ '&#8212' d [ MMM] yyyy}",
 								day: 'dddd d MMMM yyyy' },
 						 monthNames: MOIS,
 						 monthNamesShort: [ 'Jan.', 'Fév.', 'Mar.', 'Avr.', 'Mai', 'Juin', 'Juil.', 'Août', 'Sep.', 'Oct.', 'Nov.', 'Déc.' ],
