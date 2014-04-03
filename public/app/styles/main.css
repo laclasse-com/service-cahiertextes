@@ -41,6 +41,11 @@ body {
 .saisie-devoirs { background-color:#f66 }
 .saisie-devoirs-fait { background-color:#6c6 }
 
+.saisie-invalide,
+.saisie-valide,
+.saisie-devoirs,
+.saisie-devoirs-fait { font-weight:bold }
+
 /* Principal */
 /** Enseignants **/
 .bloc-enseignant .panel-heading{padding-top:0;padding-bottom:0}
