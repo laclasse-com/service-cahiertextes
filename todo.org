@@ -1,59 +1,8 @@
 * client
-** global
-*** DONE Intégration CAS
-*** DONE NEXT filtre sur l'établissement
-**** API
-**** client
-*** TODO tests
-*** TODO configurer grunt
-*** DONE animation pendant le chargement des données
-*** DONE factoriser la récupération des données géneŕiques de l'annuaire
-    . types de devoirs
-    . matières
-    . ...
-**** DONE service d'interrogation des APIs
-**** DONE variables globales ou services pour l'accès aux données
-
-
 ** principal/enseignant
-*** DONE répercussion des validation sur les raw_data
-- State "DONE"       from "STARTED"    [2013-10-15 Tue 16:06]
-    - filtre sur une classe A et valide toute les saisies
-    - filtre sur toutes les classes
-    => les saisies de la classe A ne sont pas affichées comme validées
-*** DONE filtre pour n'afficher que ce qui n'est pas validé
-- State "DONE"       from "STARTED"    [2013-10-15 Tue 17:25]
-*** CANCELLED pagination de la grid
-*** DONE remplacer la grid par des blocs comme pour principal/classes
-- State "DONE"       from "STARTED"    [2013-10-16 Wed 12:31]
-
 *** NEXT bug dans le bargraph quand il n'y a qu'une classe
     bug de Charts.js
-*** CANCELLED bug dans la persistance de la visualisation des validations
-
-
-** principal/classes
-*** DONE bug d'affichage des noms des classes
-- State "DONE"       from "STARTED"    [2013-10-15 Tue 14:07]
-
-
-** enseignant
-*** DONE éviter une erreur 405 s'il n'y a pas de cours
-*** DONE saisie sans rien ou juste sans devoir
-*** DONE tronquer le texte entre les mots
-*** DONE disparition de la matière à la fermeture de la popup
-*** DONE filtrer par classe
-*** DONE attacher plusieurs devoirs à un cours
-*** DONE séparer cours et devoir en 2 événements ?
-*** DONE copier les saisies entre classes/groupes
-
-
-** eleve
-*** DONE page todo-list
 
 * API
 ** emplois_du_temps
-*** ne renvoyer que les ID des cours et devoirs
-** devoir
-*** creation
-**** Date due impossible						:BUG:
+*** ne renvoyer que les ID des cours et devoirs ?
