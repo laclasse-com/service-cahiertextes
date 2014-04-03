@@ -24,11 +24,13 @@
 	"swagger-ui": "latest",
 	"underscore": "latest",
 	"angular-animate": "latest",
-	"angular-loading-bar": "latest"
+	"angular-loading-bar": "latest",
+	"charte-graphique-laclasse-com": "git@gitlab.erasme.org:laclasse/charte-graphique-laclasse-com.git#latest"
     },
     "devDependencies": {
 	"angular-mocks": "latest",
-	"angular-scenario": "latest"
+	"angular-scenario": "latest",
+	"jasmine": "latest"
     },
     "ignore": [
 	"**/.*",
