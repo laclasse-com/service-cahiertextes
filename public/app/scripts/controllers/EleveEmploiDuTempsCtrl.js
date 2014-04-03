@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EleveEmploiDuTempsCtrl',
-		[ '$scope', '$modal', 'THEME', 'CALENDAR_OPTIONS', 'CALENDAR_PARAMS', 'API', 'Annuaire', 'EmploisDuTemps',
-		  function ( $scope, $modal, THEME, CALENDAR_OPTIONS, CALENDAR_PARAMS, API, Annuaire, EmploisDuTemps ) {
+		[ '$scope', '$modal', 'CALENDAR_OPTIONS', 'CALENDAR_PARAMS', 'API', 'Annuaire', 'EmploisDuTemps',
+		  function ( $scope, $modal, CALENDAR_OPTIONS, CALENDAR_PARAMS, API, Annuaire, EmploisDuTemps ) {
 		      $scope.types_de_devoir = {};
 
 		      // configuration du composant calendrier
@@ -56,7 +56,7 @@ angular.module('cahierDeTexteApp')
 						       } ] }
 				     ).result.then( function ( devoirs ) {
 					 _(devoirs).each(function(devoir) {
-					     _($scope.calendar.events[0]).findWhere({type: 'devoir', id: devoir.id}).color = devoir.fait ? THEME.calendar.devoir_fait : THEME.calendar.devoir;
+					     _($scope.calendar.events[0]).findWhere({type: 'devoir', id: devoir.id}).className = devoir.fait ? ' saisie-devoirs-fait' : ' saisie-devoirs';
 					 });
 					 $scope.emploi_du_temps.fullCalendar( 'renderEvent', $scope.creneau );
 				     });
@@ -81,14 +81,14 @@ angular.module('cahierDeTexteApp')
 			      this.end = new Date( item.end );
 
 			      if ( this.type === 'cours' ) {
-				  this.color = THEME.calendar.saisie;
+				  this.className += ' saisie-invalide';
 				  if ( event.matiere_id.length > 0 ) {
 				      Annuaire.get_matiere( event.matiere_id ).$promise.then( function success( response ) {
 					  fc_event.title = response.libelle_long;
 				      });
 				  }
 			      } else {
-				  this.color = item.fait ? THEME.calendar.devoir_fait : THEME.calendar.devoir;
+				  this.className += item.fait ? ' saisie-devoirs-fait' : ' saisie-devoirs';
 
 				  API.get_type_de_devoir( { id: item.type_devoir_id } )
 				      .$promise.then( function success( response ) {
@@ -104,7 +104,7 @@ angular.module('cahierDeTexteApp')
 				  this.className = 'clickable-event';
 				  this.id = item.id;
 			      } else {
-				  this.color = THEME.calendar.vide;
+				  this.className += ' saisie-vide';
 				  this.className = 'un-clickable-event';
 			      }
 

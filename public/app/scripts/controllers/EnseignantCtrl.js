@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EnseignantCtrl',
-		[ '$scope', '$modal', '$q', 'THEME', 'CALENDAR_OPTIONS', 'CALENDAR_PARAMS', 'TINYMCE_OPTIONS', 'API', 'Annuaire', 'Cours', 'Devoirs', 'EmploisDuTemps', 'User', 'CreneauEmploiDuTemps',
-		  function ( $scope, $modal, $q, THEME, CALENDAR_OPTIONS, CALENDAR_PARAMS, TINYMCE_OPTIONS, API, Annuaire, Cours, Devoirs, EmploisDuTemps, User, CreneauEmploiDuTemps ) {
+		[ '$scope', '$modal', '$q', 'CALENDAR_OPTIONS', 'CALENDAR_PARAMS', 'TINYMCE_OPTIONS', 'API', 'Annuaire', 'Cours', 'Devoirs', 'EmploisDuTemps', 'User', 'CreneauEmploiDuTemps',
+		  function ( $scope, $modal, $q, CALENDAR_OPTIONS, CALENDAR_PARAMS, TINYMCE_OPTIONS, API, Annuaire, Cours, Devoirs, EmploisDuTemps, User, CreneauEmploiDuTemps ) {
 		      $scope.types_de_devoir = API.query_types_de_devoir();
 		      $scope.matieres = [];
 		      $scope.classes = [];
@@ -348,16 +348,16 @@ angular.module('cahierDeTexteApp')
 			  // choix de la couleur
 			  if ( ( cours.contenu !== undefined ) && ( cours.contenu.length > 0 ) ) {
 			      if ( devoirs.length > 0 ) {
-				  calendar_event.color = THEME.calendar.devoir;
+				  calendar_event.className += ' saisie-devoirs';
 			      } else {
 				  if ( cours.date_validation != null ) {
-				      calendar_event.color = THEME.validated.base;
+				      calendar_event.className += ' saisie-valide';
 				  } else {
-				      calendar_event.color = THEME.calendar.saisie;
+				      calendar_event.className += ' saisie-invalide';
 				  }
 			      }
 			  } else {
-			      calendar_event.color = THEME.calendar.vide;
+			      calendar_event.className += ' saisie-vide';
 			  }
 
 			  var clever_truncate = function( text, length ) {

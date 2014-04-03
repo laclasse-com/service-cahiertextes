@@ -35,6 +35,11 @@ body {
 .clickable-event{cursor:pointer}
 .un-clickable-event{cursor:default}
 
+.saisie-vide { background-color:#a0a0a0 }
+.saisie-invalide { background-color:#aaf }
+.saisie-valide { background-color:#0f0 }
+.saisie-devoirs { background-color:#f66 }
+.saisie-devoirs-fait { background-color:#6c6 }
 
 /* Principal */
 /** Enseignants **/
