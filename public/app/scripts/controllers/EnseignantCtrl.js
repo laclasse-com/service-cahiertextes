@@ -144,14 +144,16 @@ angular.module('cahierDeTexteApp')
 					controller: [ '$scope', 'TINYMCE_OPTIONS', '$modalInstance', 'cours', 'devoirs', 'types_de_devoir', 'matiere_id', 'regroupement_id', 'raw_data', 'classes', 'matieres',
 						      function( $scope, TINYMCE_OPTIONS, $modalInstance, cours, devoirs, types_de_devoir, matiere_id, regroupement_id, raw_data, classes, matieres ) {
 							  // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
-							  $scope.matieres = matieres;
-							  $scope.classes = classes;
+							  $scope.tinyMCEOptions = TINYMCE_OPTIONS;
 							  $scope.cours = cours;
 							  $scope.devoirs = devoirs;
 							  $scope.types_de_devoir = types_de_devoir;
+							  $scope.matieres = matieres;
+							  $scope.classes = classes;
 							  $scope.matiere_id = matiere_id.length > 0 ? matiere_id : $scope.matieres[0].id;
 							  $scope.regroupement_id = regroupement_id.length > 0 ? regroupement_id : $scope.classes[0].id;
-							  $scope.tinyMCEOptions = TINYMCE_OPTIONS;
+							  $scope.classe = _($scope.classes).findWhere({id: parseInt($scope.regroupement_id)});
+							  $scope.matiere = _($scope.matieres).findWhere({id: $scope.matiere_id});
 
 							  $scope.erreurs = [];
 
