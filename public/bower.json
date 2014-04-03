@@ -29,8 +29,7 @@
     },
     "devDependencies": {
 	"angular-mocks": "latest",
-	"angular-scenario": "latest",
-	"jasmine": "latest"
+	"angular-scenario": "latest"
     },
     "ignore": [
 	"**/.*",
