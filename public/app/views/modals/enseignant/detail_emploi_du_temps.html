@@ -25,7 +25,9 @@
     <div class="panel-heading">
       <h3 class="panel-title">Séquence pédagogique</h3>
     </div>
-    <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="cours.contenu"></textarea>
+    <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="cours.contenu" data-ng-show="cours.$resolved">
+
+    </textarea>
     <div class="panel-footer">
       <ul>
 	<li data-ng-repeat="ressource in cours.ressources">{{ressource.url}}</li>

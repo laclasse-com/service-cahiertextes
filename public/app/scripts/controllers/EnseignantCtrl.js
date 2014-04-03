@@ -38,40 +38,41 @@ angular.module('cahierDeTexteApp')
 			  };
 
 			  $scope.creneau = _(event.source.events).findWhere({_id: event._id});
+
+			  $scope.cours = null;
+			  $scope.devoirs = null;
+			  $scope.regroupement_id = null;
+			  $scope.matiere_id = null;
+
 			  $scope.matiere_id = event.details.matiere_id;
 			  $scope.regroupement_id = event.details.regroupement_id;
 
 			  // 1. cours
 			  if ( $scope.creneau.details.cours.id !== undefined ) {
-			      API.get_cours( { id: $scope.creneau.details.cours.id } )
-				  .$promise.then( function success( cours ) {
-				      $scope.cours = cours;
-				      $scope.cours.create = false;
-				  },
-						  function error() {
-						      $scope.cours = create_cours( $scope.creneau );
-						  });
+			      $scope.cours = API.get_cours( { id: $scope.creneau.details.cours.id } );
 			  } else {
 			      $scope.cours = create_cours( $scope.creneau );
 			  }
-
-			  $scope.devoirs = [];
-			  // 2. devoir
-			  if ( $scope.creneau.details.devoirs.length > 0 ) {
-			      _($scope.creneau.details.devoirs).each( function( devoir ) {
-				  API.get_devoir( { id: $scope.creneau.details.devoirs[0].id } ).$promise
-				      .then( function( vrai_devoir ) {
-					  $scope.devoirs.push( vrai_devoir );
-				      } );
-			      } );
-			      $scope.devoirs.create = false;
-
-			  }
-
-			  // 3. ouverture de la popup
-			  $q.all( $scope.types_de_devoir, $scope.cours, $scope.devoirs, $scope.matieres, $scope.classes )
+			  $q.all( $scope.cours, $scope.types_de_devoir, $scope.matieres, $scope.classes )
 			      .then( function() {
-				  $scope.ouvre_popup_edition(  );
+				  $scope.devoirs = [];
+				  // 2. devoir
+				  if ( $scope.creneau.details.devoirs.length > 0 ) {
+				      _($scope.creneau.details.devoirs).each( function( devoir ) {
+					  API.get_devoir( { id: $scope.creneau.details.devoirs[0].id } ).$promise
+					      .then( function( vrai_devoir ) {
+						  $scope.devoirs.push( vrai_devoir );
+					      } );
+				      } );
+				      $scope.devoirs.create = false;
+
+				  }
+
+				  // 3. ouverture de la popup
+				  $q.all( $scope.devoirs )
+				      .then( function() {
+					  $scope.ouvre_popup_edition(  );
+				      });
 			      });
 		      };
 
@@ -108,6 +109,11 @@ angular.module('cahierDeTexteApp')
 
 				      // durent le $scope.creneau.$save() on perds regroupement_id
 				      $scope.creneau.regroupement_id = '';
+
+				      $scope.cours = null;
+				      $scope.devoirs = null;
+				      $scope.regroupement_id = null;
+				      $scope.matiere_id = null;
 
 				      $scope.matiere_id = $scope.creneau.matiere_id;
 				      $scope.regroupement_id = $scope.creneau.regroupement_id;
