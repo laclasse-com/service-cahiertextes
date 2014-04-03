@@ -36,7 +36,6 @@ angular.module( 'cahierDeTexteApp' )
 						 titleFormat: { month: 'MMMM yyyy',
 								week: "d MMM[ yyyy]{ '&#8212 )' d [ MMM] yyyy}",
 								day: 'dddd d MMMM yyyy' },
-						 // FIXME: doublon
 						 monthNames: MOIS,
 						 monthNamesShort: [ 'Jan.', 'Fév.', 'Mar.', 'Avr.', 'Mai', 'Juin', 'Juil.', 'Août', 'Sep.', 'Oct.', 'Nov.', 'Déc.' ],
 						 dayNames: [ 'Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi' ],
