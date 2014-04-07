@@ -2,6 +2,7 @@
 
 angular.module( 'cahierDeTexteApp', [ 'ngResource',
 				      'ngSanitize',
+				      'ngLocale',
 				      'ui.bootstrap',
 				      'ui.calendar',
 				      'ui.router',

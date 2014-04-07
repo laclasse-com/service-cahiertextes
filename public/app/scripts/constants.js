@@ -3,7 +3,6 @@
 angular.module( 'cahierDeTexteApp' )
     .constant( 'APP_VIRTUAL_PATH', '/ct' )
 
-    .constant( 'MOIS', [ 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre' ] )
 // définition des couleurs
     .constant( 'THEME', { filled: { base: '#aaffaa',
 				    stroke: '#88aa88' },
@@ -17,8 +16,8 @@ angular.module( 'cahierDeTexteApp' )
 					'cours': '#ffc',
 					'devoir': '#eff'
 				    }} )
-    .factory( 'CALENDAR_OPTIONS', [ 'MOIS',
-				    function( MOIS ) {
+    .factory( 'CALENDAR_OPTIONS', [ '$locale',
+				    function( $locale ) {
 					return { height: 600,
 						 header: { left: 'title',
 							   center: 'agendaDay agendaWeek month',
@@ -38,10 +37,10 @@ angular.module( 'cahierDeTexteApp' )
 						 titleFormat: { month: 'MMMM yyyy',
 								week: "d MMM[ yyyy]{ '&#8212' d [ MMM] yyyy}",
 								day: 'dddd d MMMM yyyy' },
-						 monthNames: MOIS,
-						 monthNamesShort: [ 'Jan.', 'Fév.', 'Mar.', 'Avr.', 'Mai', 'Juin', 'Juil.', 'Août', 'Sep.', 'Oct.', 'Nov.', 'Déc.' ],
-						 dayNames: [ 'Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi' ],
-						 dayNamesShort: [ 'Dim.', 'Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.' ],
+						 monthNames: $locale.DATETIME_FORMATS.MONTH,
+						 monthNamesShort: $locale.DATETIME_FORMATS.SHORTMONTH,
+						 dayNames: $locale.DATETIME_FORMATS.DAY,
+						 dayNamesShort: $locale.DATETIME_FORMATS.SHORTDAY,
 						 buttonText: { prev:     '&lsaquo;',
 							       next:     '&rsaquo;',
 							       prevYear: '&laquo;',

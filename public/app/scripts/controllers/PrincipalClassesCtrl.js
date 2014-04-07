@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalClassesCtrl',
-		[ '$scope', 'THEME', 'MOIS', 'LINECHART_OPTIONS', 'PIECHART_OPTIONS', '$q', 'API', 'Annuaire', 'User',
-		  function ( $scope, THEME, MOIS, LINECHART_OPTIONS, PIECHART_OPTIONS, $q, API, Annuaire, User ) {
+		[ '$scope', 'THEME', '$locale', 'LINECHART_OPTIONS', 'PIECHART_OPTIONS', '$q', 'API', 'Annuaire', 'User',
+		  function ( $scope, THEME, $locale, LINECHART_OPTIONS, PIECHART_OPTIONS, $q, API, Annuaire, User ) {
 		      $scope.empty = false;
 
 		      User.get_user().then( function( response ) {
@@ -30,8 +30,8 @@ angular.module('cahierDeTexteApp')
 						  $scope.pieChart.data[1].value = data.filled - data.validated;
 					      } };
 
-		  $scope.monthlyLineChart = { options: LINECHART_OPTIONS,
-		  data: { labels: MOIS,
+			  $scope.monthlyLineChart = { options: LINECHART_OPTIONS,
+						      data: { labels: $locale.DATETIME_FORMATS.MONTH,
 							      datasets: [
 								  // 0: saisies totales
 								  { fillColor : THEME.filled.base,
