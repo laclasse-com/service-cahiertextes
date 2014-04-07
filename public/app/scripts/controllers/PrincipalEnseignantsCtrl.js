@@ -2,9 +2,9 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantsCtrl',
-		[ '$scope', 'THEME', 'MOIS', 'BARCHART_OPTIONS', 'PIECHART_OPTIONS', '$q', 'API', 'Annuaire', 'User',
-		  function( $scope, THEME, MOIS, BARCHART_OPTIONS, PIECHART_OPTIONS, $q, API, Annuaire, User ) {
-		      $scope.annee = MOIS;
+		[ '$scope', '$locale', 'THEME', 'BARCHART_OPTIONS', 'PIECHART_OPTIONS', '$q', 'API', 'Annuaire', 'User',
+		  function( $scope, $locale, THEME, BARCHART_OPTIONS, PIECHART_OPTIONS, $q, API, Annuaire, User ) {
+		      $scope.annee = $locale.DATETIME_FORMATS.MONTH;
 		      $scope.classe = null;
 		      $scope.mois = null;
 		      $scope.classes = {};

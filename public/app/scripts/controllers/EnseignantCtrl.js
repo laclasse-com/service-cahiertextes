@@ -150,42 +150,6 @@ angular.module('cahierDeTexteApp')
 					controller: [ '$scope', 'TINYMCE_OPTIONS', '$modalInstance', 'cours', 'devoirs', 'types_de_devoir', 'matiere_id', 'regroupement_id', 'raw_data', 'classes', 'matieres',
 						      function( $scope, TINYMCE_OPTIONS, $modalInstance, cours, devoirs, types_de_devoir, matiere_id, regroupement_id, raw_data, classes, matieres ) {
 							  // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
-							  $scope.tinyMCEOptions = TINYMCE_OPTIONS;
-							  $scope.cours = cours;
-							  $scope.devoirs = devoirs;
-							  $scope.types_de_devoir = types_de_devoir;
-							  $scope.matieres = matieres;
-							  $scope.classes = classes;
-							  $scope.matiere_id = matiere_id.length > 0 ? matiere_id : $scope.matieres[0].id;
-							  $scope.regroupement_id = regroupement_id.length > 0 ? regroupement_id : $scope.classes[0].id;
-							  $scope.classe = _($scope.classes).findWhere({id: parseInt($scope.regroupement_id)});
-							  $scope.matiere = _($scope.matieres).findWhere({id: $scope.matiere_id});
-
-							  $scope.erreurs = [];
-
-							  $scope.dateOptions = {
-							      'year-format': "'yy'",
-							      'starting-day': 1
-							  };
-							  $scope.datePickerOpened = false;
-							  $scope.openDatePicker = function($event) {
-							      $event.preventDefault();
-							      $event.stopPropagation();
-
-							      $scope.opened = true;
-							  };
-
-							  // http://stackoverflow.com/questions/19408883/angularjs-select-not-2-way-binding-to-model
-							  $scope.scope = $scope;
-
-							  // TODO: à raffiner
-							  $scope.creneaux_similaires = _.chain(raw_data)
-							      .where({matiere_id: $scope.matiere_id})
-							      .reject(function( creneau ) {
-								  return creneau.regroupement_id == $scope.regroupement_id;
-							      })
-							      .value();
-							  $scope.creneaux_similaires.selected = [];
 
 							  var create_devoir = function( cours ) {
 							      var date = new Date();
@@ -195,6 +159,13 @@ angular.module('cahierDeTexteApp')
 							      devoir.create = true;
 
 							      return devoir;
+							  };
+
+							  $scope.openDatePicker = function($event) {
+							      $event.preventDefault();
+							      $event.stopPropagation();
+
+							      $scope.opened = true;
 							  };
 
 							  $scope.ajout_devoir = function() {
@@ -276,6 +247,42 @@ angular.module('cahierDeTexteApp')
 								  $scope.erreurs.push( { 'message': 'Aucune matière ou classe défini' } );
 							      }
 							  };
+
+							  $scope.tinyMCEOptions = TINYMCE_OPTIONS;
+							  $scope.cours = cours;
+							  $scope.devoirs = devoirs;
+							  $scope.types_de_devoir = types_de_devoir;
+							  $scope.matieres = matieres;
+							  $scope.classes = classes;
+							  $scope.matiere_id = matiere_id.length > 0 ? matiere_id : $scope.matieres[ 0 ].id;
+							  $scope.regroupement_id = regroupement_id.length > 0 ? regroupement_id : $scope.classes[ 0 ].id;
+							  $scope.classe = _($scope.classes).findWhere({id: parseInt( $scope.regroupement_id )});
+							  $scope.matiere = _($scope.matieres).findWhere({id: $scope.matiere_id});
+
+							  $scope.erreurs = [];
+
+							  $scope.dateOptions = {
+							      'year-format': "'yy'",
+							      'starting-day': 1
+							  };
+							  $scope.datePickerOpened = false;
+
+							  // http://stackoverflow.com/questions/19408883/angularjs-select-not-2-way-binding-to-model
+							  $scope.scope = $scope;
+
+							  // TODO: à raffiner
+							  $scope.creneaux_similaires = _.chain(raw_data)
+							      .filter( function( creneau ) {
+								  return ( creneau.regroupement_id != $scope.regroupement_id ) && ( creneau.matiere_id == $scope.matiere_id );
+							      } )
+							      .map( function( creneau ) {
+								  creneau.classe = _($scope.classes).findWhere({id: parseInt( creneau.regroupement_id ) });
+
+								  return creneau;
+							      })
+							      .value();
+
+							  $scope.creneaux_similaires.selected = [];
 						      } ]
 				      }
 				     ).result.then(     // éxécuté à la fermeture de la popup
