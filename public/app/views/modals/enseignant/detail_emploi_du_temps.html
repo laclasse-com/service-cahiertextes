@@ -37,7 +37,7 @@
       <div data-ng-show="creneaux_similaires">
 	<span data-ng-repeat="creneau in creneaux_similaires">
 	  <label>
-	    <input type="checkbox" value="{{creneau}}" data-check-list="creneaux_similaires.selected" />{{_(classes).findWhere({id: creneau.regroupement_id}).libelle}} . {{creneau.creneau_emploi_du_temps_id}}
+	    <input type="checkbox" value="{{creneau}}" data-check-list="creneaux_similaires.selected" />{{creneau.classe.libelle}} . {{creneau.start | date: 'medium'}} - {{creneau.end | date: 'medium'}}
 	  </label>
 	  <br />
 	</span>
