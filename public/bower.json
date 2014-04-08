@@ -25,6 +25,7 @@
 	"underscore": "latest",
 	"angular-animate": "latest",
 	"angular-loading-bar": "latest",
+	"w11k-select": "latest",
 	"charte-graphique-laclasse-com": "git@gitlab.erasme.org:laclasse/charte-graphique-laclasse-com.git#latest"
     },
     "devDependencies": {
