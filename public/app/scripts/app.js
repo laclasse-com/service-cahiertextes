@@ -10,4 +10,6 @@ angular.module( 'cahierDeTexteApp', [ 'ngResource',
 				      'angles',
 				      'ui.tinymce',
 				      'chieffancypants.loadingBar',
-				      'ngAnimate' ] );
+				      'ngAnimate',
+				      'w11k.select',
+				      'w11k.select.template' ] );

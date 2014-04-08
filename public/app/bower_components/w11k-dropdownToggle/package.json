@@ -1,0 +1,26 @@
+{
+  "name": "w11k-dropdownToggle-bower",
+  "version": "0.1.1",
+
+  "description": "Distribution Repository of w11k-dropdownToggle",
+  "keywords": [ "angular", "angularjs", "directive", "dropdown", "bootstrap", "bower" ],
+  "homepage": "https://github.com/w11k/w11k-dropdownToggle",
+  "bugs": "https://github.com/w11k/w11k-dropdownToggle/issues",
+
+  "author": {
+    "name": "WeigleWilczek GmbH",
+    "url": "http://www.w11k.com"
+  },
+  "contributors": [
+    "Philipp Burgmer"
+  ],
+
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pburgmer/w11k-dropdownToggle-bower.git"
+  },
+
+  "licenses": [{
+      "type": "MIT"
+  }]
+}

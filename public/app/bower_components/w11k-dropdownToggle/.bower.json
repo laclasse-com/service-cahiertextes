@@ -1,0 +1,20 @@
+{
+  "name": "w11k-dropdownToggle",
+  "version": "0.1.1",
+  "dependencies": {
+    "angular": "1.2.x"
+  },
+  "devDependencies": {
+    "bootstrap": "3.1.0"
+  },
+  "homepage": "https://github.com/w11k/w11k-dropdownToggle-bower",
+  "_release": "0.1.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.1.1",
+    "commit": "c9cd481783ad927fdf34263f210ebf2b12605696"
+  },
+  "_source": "git://github.com/w11k/w11k-dropdownToggle-bower.git",
+  "_target": "0.1.x",
+  "_originalSource": "w11k-dropdownToggle"
+}
