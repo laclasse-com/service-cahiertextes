@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EnseignantCtrl',
-		[ '$scope', '$modal', '$q', 'CALENDAR_OPTIONS', 'CALENDAR_PARAMS', 'TINYMCE_OPTIONS', 'API', 'Annuaire', 'Cours', 'Devoirs', 'EmploisDuTemps', 'User', 'CreneauEmploiDuTemps',
-		  function ( $scope, $modal, $q, CALENDAR_OPTIONS, CALENDAR_PARAMS, TINYMCE_OPTIONS, API, Annuaire, Cours, Devoirs, EmploisDuTemps, User, CreneauEmploiDuTemps ) {
+		[ '$scope', '$modal', '$q', '$filter', 'CALENDAR_OPTIONS', 'CALENDAR_PARAMS', 'TINYMCE_OPTIONS', 'API', 'Annuaire', 'Cours', 'Devoirs', 'EmploisDuTemps', 'User', 'CreneauEmploiDuTemps',
+		  function ( $scope, $modal, $q, $filter, CALENDAR_OPTIONS, CALENDAR_PARAMS, TINYMCE_OPTIONS, API, Annuaire, Cours, Devoirs, EmploisDuTemps, User, CreneauEmploiDuTemps ) {
 		      $scope.types_de_devoir = API.query_types_de_devoir();
 		      $scope.matieres = [];
 		      $scope.classes = [];
@@ -147,8 +147,8 @@ angular.module('cahierDeTexteApp')
 						   cours: function() { return $scope.cours; },
 						   devoirs: function() { return $scope.devoirs; },
 						   types_de_devoir: function() { return $scope.types_de_devoir; } },
-					controller: [ '$scope', 'TINYMCE_OPTIONS', '$modalInstance', 'cours', 'devoirs', 'types_de_devoir', 'matiere_id', 'regroupement_id', 'raw_data', 'classes', 'matieres',
-						      function( $scope, TINYMCE_OPTIONS, $modalInstance, cours, devoirs, types_de_devoir, matiere_id, regroupement_id, raw_data, classes, matieres ) {
+					controller: [ '$scope', '$filter', 'TINYMCE_OPTIONS', '$modalInstance', 'cours', 'devoirs', 'types_de_devoir', 'matiere_id', 'regroupement_id', 'raw_data', 'classes', 'matieres',
+						      function( $scope, $filter, TINYMCE_OPTIONS, $modalInstance, cours, devoirs, types_de_devoir, matiere_id, regroupement_id, raw_data, classes, matieres ) {
 							  // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
 
 							  var create_devoir = function( cours ) {
@@ -277,6 +277,8 @@ angular.module('cahierDeTexteApp')
 							      } )
 							      .map( function( creneau ) {
 								  creneau.classe = _($scope.classes).findWhere({id: parseInt( creneau.regroupement_id ) });
+								  creneau.start_str = $filter('date')( creneau.start, 'short' );
+								  creneau.end_str = $filter('date')( creneau.end, 'shortTime' );
 
 								  return creneau;
 							      })
