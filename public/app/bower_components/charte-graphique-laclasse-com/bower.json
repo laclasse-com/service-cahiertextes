@@ -1,0 +1,9 @@
+{
+    "name": "charte-graphique-laclasse-com",
+    "version": "0.0.1",
+    "private": true,
+    "main": "css/main.css",
+    "ignore": [  ],
+    "dependencies": {  },
+    "devDependencies": {  }
+}
