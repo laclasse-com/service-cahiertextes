@@ -35,12 +35,18 @@
       <input type="file">
 
       <div data-ng-show="creneaux_similaires">
-	<span data-ng-repeat="creneau in creneaux_similaires">
-	  <label>
-	    <input type="checkbox" value="{{creneau}}" data-check-list="creneaux_similaires.selected" />{{creneau.classe.libelle}} . {{creneau.start | date: 'medium'}} - {{creneau.end | date: 'medium'}}
-	  </label>
-	  <br />
-	</span>
+	<div data-w11k-select multiple="true"
+	     data-disabled="false"
+	     data-required="false"
+	     data-ng-model="creneaux_similaires.selected"
+	     data-options="creneau as creneau.classe.libelle +' . '+ creneau.start_str +' - '+ creneau.end_str for creneau in creneaux_similaires"
+	     data-placeholder="'Créneaux similaires'"
+	     data-filter-placeholder="'Filtre'"
+	     data-select-filtered-text="'tous'"
+	     data-deselect-filtered-text="'aucun'"
+	     >
+	</div>
+
 	<button class="btn btn-primary" data-ng-click="dupliquer()">
 	  <span class="glyphicon glyphicon-plus-sign"></span> Copier vers d'autres classes
 	</button>
