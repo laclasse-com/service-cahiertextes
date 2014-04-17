@@ -27,19 +27,20 @@ module AuthenticationHelpers
       env['rack.session'][:current_user] = nil
 
       CASLaclasseCom::OPTIONS[:ssl] ? protocol = 'https://' : protocol = 'http://'
-      redirect protocol + CASLaclasseCom::OPTIONS[:host] + CASLaclasseCom::OPTIONS[:logout_url] + '?url=' + URI.encode( url )
+
+      redirect "#{protocol}#{CASLaclasseCom::OPTIONS[:host]}#{CASLaclasseCom::OPTIONS[:logout_url]}?url=#{URI.encode( url )}"
    end
 
    #
    # Initialisation de la session après l'authentification
    #
    def init_session( env )
-      if env['rack.session'] && env['omniauth.auth'] && env['omniauth.auth'].extra
+      if env['rack.session'] && env['omniauth.auth'] && env['omniauth.auth']['extra']
          env['rack.session'][:authenticated] = true
-         env['rack.session'][:current_user] ||= env['omniauth.auth'].extra.to_hash if env['omniauth.auth'].extra
-
-         env['rack.session'][:current_user]
+         env['rack.session'][:current_user] ||= env['omniauth.auth']['extra'].to_hash
       end
+
+      env['rack.session'][:current_user]
    end
 
 end
