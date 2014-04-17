@@ -6,14 +6,6 @@ module CahierDeTextesAPI
    module V0
       class EmploisDuTempsAPI < Grape::API
 
-         helpers do
-            def date_of_last(day)
-               date  = Date.parse(day)
-               delta = date <= Date.today ? 0 : 7
-               date - delta
-            end
-         end
-
          desc 'emploi du temps de l\'utilisateur durant l\'intervalle de dates donné'
          params {
             requires :debut, type: Date
