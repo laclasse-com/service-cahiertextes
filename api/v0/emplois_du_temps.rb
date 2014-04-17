@@ -12,18 +12,17 @@ module CahierDeTextesAPI
             requires :fin, type: Date
          }
          get '/du/:debut/au/:fin' do
-            if ( user.is?( 'ENS', user.ENTPersonStructRattachRNE ) ||
-                   user.is?( 'ELV', user.ENTPersonStructRattachRNE ) ||
-                   user.is?( 'DIR', user.ENTPersonStructRattachRNE ) ) &&
-                  ( user.methods.include? :classes )
-
+            if # ( user.is?( 'ENS', user.ENTPersonStructRattachRNE ) ||
+               #     user.is?( 'ELV', user.ENTPersonStructRattachRNE ) ||
+               #     user.is?( 'DIR', user.ENTPersonStructRattachRNE ) ) &&
+              user.methods.include? :classes
                params[:debut] = Date.parse( params[:debut].iso8601 )
                params[:fin] = Date.parse( params[:fin].iso8601 )
 
                regroupements_ids = user.classes.map {
                   |classe|
                   classe['classe_id']
-               }.uniq
+               }.uniq unless user.uid == 'VAA62559'
 
                # FIXME: DEBUG
                regroupements_ids = [ 23, 24 ] if user.uid == 'VAA62559'
