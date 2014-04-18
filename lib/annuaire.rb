@@ -82,6 +82,7 @@ module Annuaire
          else
             STDERR.puts "#{error_msg} : #{CGI.escape( param )}"
          end
+        return { 'id' => nil }
       end
    end
 
@@ -110,7 +111,6 @@ module Annuaire
             return JSON.parse( response )[0]
          else
             STDERR.puts "Regroupement inconnu : #{nom}"
-            return { 'id' => rand( 1 .. 59 ) } # nil }
          end
       end
    end
