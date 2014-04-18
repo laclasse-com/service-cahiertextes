@@ -270,7 +270,6 @@ angular.module('cahierDeTexteApp')
 							  // http://stackoverflow.com/questions/19408883/angularjs-select-not-2-way-binding-to-model
 							  $scope.scope = $scope;
 
-							  // TODO: à raffiner
 							  $scope.creneaux_similaires = _.chain(raw_data)
 							      .filter( function( creneau ) {
 								  return ( creneau.regroupement_id != $scope.regroupement_id ) && ( creneau.matiere_id == $scope.matiere_id );
@@ -285,6 +284,21 @@ angular.module('cahierDeTexteApp')
 							      .value();
 
 							  $scope.creneaux_similaires.selected = [];
+
+							  $scope.creneaux_devoirs_possibles = _.chain(raw_data)
+							      .filter( function( creneau ) {
+								  return ( creneau.regroupement_id == $scope.regroupement_id ) && ( creneau.matiere_id == $scope.matiere_id );
+							      } )
+							      .map( function( creneau ) {
+								  creneau.classe = _($scope.classes).findWhere({id: parseInt( creneau.regroupement_id ) });
+								  creneau.start_str = $filter('date')( creneau.start, 'short' );
+								  creneau.end_str = $filter('date')( creneau.end, 'shortTime' );
+
+								  return creneau;
+							      })
+							      .value();
+
+							  $scope.creneaux_devoirs_possibles.selected = [];
 						      } ]
 				      }
 				     ).result.then(     // éxécuté à la fermeture de la popup
