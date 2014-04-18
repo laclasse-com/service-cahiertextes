@@ -297,8 +297,6 @@ angular.module('cahierDeTexteApp')
 								  return creneau;
 							      })
 							      .value();
-
-							  $scope.creneaux_devoirs_possibles.selected = [];
 						      } ]
 				      }
 				     ).result.then(     // éxécuté à la fermeture de la popup
