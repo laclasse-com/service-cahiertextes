@@ -35,7 +35,8 @@
       <input type="file">
 
       <div data-ng-show="creneaux_similaires">
-	<div data-w11k-select multiple="true"
+	<div data-w11k-select
+	     data-multiple="true"
 	     data-disabled="false"
 	     data-required="false"
 	     data-ng-model="creneaux_similaires.selected"
@@ -70,7 +71,8 @@
 	    <option value="" disabled selected>Choisissez un type de devoir</option>
 	  </select>
 
-	  <div data-w11k-select multiple="true"
+	  <div data-w11k-select
+	       data-multiple="false"
 	       data-disabled="false"
 	       data-required="true"
 	       data-ng-model="creneaux_disponibles.selected"
