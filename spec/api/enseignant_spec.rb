@@ -180,14 +180,16 @@ describe CahierDeTextesAPI::API do
       contenu = 'Exemple de devoir.'
       temps_estime = rand(0..120)
       ressources = [ { label: 'test1', url: 'https://localhost/docs/test1' },
-                       { label: 'test2', url: 'https://localhost/docs/test2' } ]
+                      { label: 'test2', url: 'https://localhost/docs/test2' } ]
+      creneau_emploi_du_temps_id = CreneauEmploiDuTemps.last.id
 
       post( '/v0/devoirs/', { cours_id: cours_id,
-                                type_devoir_id: type_devoir_id,
-                                contenu: contenu,
-                                date_due: date_due,
-                                temps_estime: temps_estime,
-                                ressources: ressources }.to_json,
+                               type_devoir_id: type_devoir_id,
+                               contenu: contenu,
+                               creneau_emploi_du_temps_id: creneau_emploi_du_temps_id,
+                               date_due: date_due,
+                               temps_estime: temps_estime,
+                               ressources: ressources }.to_json,
               'CONTENT_TYPE' => 'application/json' )
       last_response.status.should == 201
 
@@ -210,6 +212,7 @@ describe CahierDeTextesAPI::API do
 
       type_devoir_id = TypeDevoir.all.sample.id
       date_due = Time.now
+      creneau_emploi_du_temps_id = CreneauEmploiDuTemps.last.id
       contenu = 'Exemple de devoir totalement modifié.'
       temps_estime = rand(0..120)
       ressources = [ { label: 'test1', url: 'https://localhost/docs/test1' },
@@ -221,6 +224,7 @@ describe CahierDeTextesAPI::API do
              { cours_id: devoir.cours_id,
                  type_devoir_id: type_devoir_id,
                  contenu: contenu,
+                 creneau_emploi_du_temps_id: creneau_emploi_du_temps_id,
                  date_due: date_due,
                  temps_estime: temps_estime,
                  ressources: ressources }.to_json,
