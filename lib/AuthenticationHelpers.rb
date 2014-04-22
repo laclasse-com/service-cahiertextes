@@ -30,16 +30,39 @@ module AuthenticationHelpers
       redirect protocol + CASLaclasseCom::OPTIONS[:host] + CASLaclasseCom::OPTIONS[:logout_url] + '?url=' + URI.encode( url )
    end
 
+   def provisionning
+     user_annuaire = Annuaire.get_user( env['rack.session'][:current_user]['uid'] )
+     uais = user_annuaire['profils'].map {
+       |profil|
+       profil['etablissement_code_uai']
+     }.uniq
+
+     # 0. Établissements
+     uais.each {
+       |uai|
+       if Etablissement.where(UAI: uai).first.nil?
+         etablissement = Annuaire.get_etablissement( uai )
+         Etablissement.create(UAI: etablissement['code_uai'])
+         etablissement['classes'].each {
+           |classe|
+           CahierDeTextes.create( regroupement_id: classe['id']  )
+         }
+       end
+     }
+   end
+
    #
    # Initialisation de la session après l'authentification
    #
    def init_session( env )
-      if env['rack.session'] && env['omniauth.auth'] && env['omniauth.auth'].extra
+      if env['rack.session'] && env['omniauth.auth']
          env['rack.session'][:authenticated] = true
          env['rack.session'][:current_user] ||= env['omniauth.auth'].extra.to_hash if env['omniauth.auth'].extra
-
-         env['rack.session'][:current_user]
       end
+
+      provisionning
+
+      env['rack.session'][:current_user]
    end
 
 end
