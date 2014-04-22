@@ -14,6 +14,7 @@ module CahierDeTextesAPI
 
                classe
             }
+            utilisateur[ 'extra' ].delete 'classes'
 
             utilisateur
          end
