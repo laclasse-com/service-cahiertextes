@@ -22,10 +22,7 @@ module CahierDeTextesAPI
                regroupements_ids = user.classes.map {
                   |classe|
                   classe['classe_id']
-               }.uniq unless user.uid == 'VAA62559'
-
-               # FIXME: DEBUG
-               regroupements_ids = [ 23, 24 ] if user.uid == 'VAA62559'
+               }.uniq
 
                CreneauEmploiDuTemps
                .join(:creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :id)
