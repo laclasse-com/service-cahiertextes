@@ -467,6 +467,8 @@ angular.module('cahierDeTexteApp')
 					  return Annuaire.get_matiere( matiere_id );
 				      })
 				      .value();
+
+				  // Extraction des classes
 				  $q.all( $scope.extract_classes_promises( $scope.raw_data ) )
 				      .then( function( response ) {
 					  $scope.classes = response;
