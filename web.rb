@@ -17,7 +17,7 @@ require_relative './lib/AuthenticationHelpers'
 module CahierDeTextesAPI
   class Web < Sinatra::Base
 
-    configure do
+    configure :production, :development do
       set :protection, true
       set :protection, except: :frame_options
     end
