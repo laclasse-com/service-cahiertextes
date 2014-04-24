@@ -10,6 +10,13 @@ module CahierDeTextesAPI
     class CoursAPI < Grape::API
       format :json
 
+      before do
+        # pas de gestion restriction d'accès sur les get
+        next if request.get?
+
+        error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS' ) || user.is?( 'DIR' )
+      end
+
       desc 'renvoi le détail d\'une séquence pédagogique'
       params {
         requires :id, desc: 'id du cours'
@@ -36,9 +43,6 @@ module CahierDeTextesAPI
         optional :ressources
       }
       post do
-        pp user
-        error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS', user.ENTPersonStructRattachRNE ) || user.is?( 'DIR', user.ENTPersonStructRattachRNE )
-
         cours = Cours.create(  enseignant_id: user.uid,
                                cahier_de_textes_id: params[:cahier_de_textes_id],
                                creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
@@ -62,8 +66,6 @@ module CahierDeTextesAPI
         optional :ressources, type: Array
       }
       put '/:id' do
-        error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS', user.ENTPersonStructRattachRNE ) || user.is?( 'DIR', user.ENTPersonStructRattachRNE )
-
         cours = Cours[ params[:id] ]
 
         unless cours.nil?
@@ -87,7 +89,7 @@ module CahierDeTextesAPI
         requires :id
       }
       put '/:id/valide' do
-        error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS', user.ENTPersonStructRattachRNE ) || user.is?( 'DIR', user.ENTPersonStructRattachRNE )
+        error!( '401 Unauthorized', 401 ) unless user.is?( 'DIR' )
 
         cours = Cours[ params[:id] ]
 
@@ -107,8 +109,6 @@ module CahierDeTextesAPI
         requires :regroupement_id
       }
       put '/:id/copie/regroupement/:regroupement_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id' do
-        error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS', user.ENTPersonStructRattachRNE ) || user.is?( 'DIR', user.ENTPersonStructRattachRNE )
-
         cours = Cours[ params[:id] ]
 
         unless cours.nil?
@@ -145,8 +145,6 @@ module CahierDeTextesAPI
         requires :id
       }
       delete '/:id' do
-        error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS', user.ENTPersonStructRattachRNE ) || user.is?( 'DIR', user.ENTPersonStructRattachRNE )
-
         cours = Cours[ params[:id] ]
 
         unless cours.nil?
