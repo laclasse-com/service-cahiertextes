@@ -12,9 +12,9 @@ module CahierDeTextesAPI
             requires :fin, type: Date
          }
          get '/du/:debut/au/:fin' do
-            # if # ( user.is?( 'ENS', user.ENTPersonStructRattachRNE ) ||
-            #    #     user.is?( 'ELV', user.ENTPersonStructRattachRNE ) ||
-            #    #     user.is?( 'DIR', user.ENTPersonStructRattachRNE ) ) &&
+            # if # ( user.is?( 'ENS' ) ||
+            #    #     user.is?( 'ELV' ) ||
+            #    #     user.is?( 'DIR' ) ) &&
             #   user.methods.include? :classes
 
                params[:debut] = Date.parse( params[:debut].iso8601 )

@@ -16,14 +16,10 @@ module UserHelpers
   end
 
   class HashedUser < HashIt
-    def is?( profil, uai )
-      @extra['profils'].reject {
-        |p|
-        p['etablissement_code_uai'] != uai
-      }.map {
-        |p|
-        p['profil_id']
-      }.include? profil
+    def is?( profil )
+      # FIXME
+      p @ENTPersonProfils
+      @ENTPersonProfils.include? "#{profil}:#{profil_actif['uai']}"
     end
   end
 
