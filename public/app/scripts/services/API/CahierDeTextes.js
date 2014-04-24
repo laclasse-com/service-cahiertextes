@@ -4,19 +4,14 @@ angular.module('cahierDeTexteApp')
     .service('User',
 	     [ '$http', 'APP_VIRTUAL_PATH',
 	       function( $http, APP_VIRTUAL_PATH ) {
-		   var user = null;
-		   this.get_user = function() {
-		       if ( user == null ) {
-			   user = $http.get( APP_VIRTUAL_PATH + '/api/v0/users/current' )
-			       .success( function( response ) {
-				   response.profil_actif = response.profils[ 0 ];
+		   this.get_user = _.memoize( function() {
+		       return $http.get( APP_VIRTUAL_PATH + '/api/v0/users/current' )
+			   .success( function( response ) {
+			       response.profil_actif = response.profils[ 0 ];
 
-				   return response;
-			       } );
-		       }
-
-		       return user;
-		   };
+			       return response;
+			   } );
+		   } );
 	       } ] );
 
 angular.module('cahierDeTexteApp')
