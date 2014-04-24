@@ -59,22 +59,19 @@ module AuthenticationHelpers
     unless env['rack.session'].nil? || env['omniauth.auth'].nil?
       env['rack.session'][:authenticated] = true
 
-      STDERR.puts '. . . base de départ'
-      pp env['rack.session']
-
       env['rack.session'][:current_user] = { 'user' => env['omniauth.auth'].extra.user,
                                              'uid' => env['omniauth.auth'].extra.uid,
                                              'LaclasseNom' => env['omniauth.auth'].extra.LaclasseNom,
                                              'LaclassePrenom' => env['omniauth.auth'].extra.LaclassePrenom,
-                                             'LaclasseCivilite' => env['omniauth.auth'].extra.LaclasseCivilite }
+                                             'LaclasseCivilite' => env['omniauth.auth'].extra.LaclasseCivilite,
+                                             'ENTPersonProfils' => env['omniauth.auth'].extra.ENTPersonProfils }
 
-      STDERR.puts '. . . avec les infos user'
-      pp env['rack.session']
+      # FIXME: DEBUG: récupérer depuis l'env généré par le portail
+      env['rack.session'][:current_user]['profil_actif'] = { 'uai' => '0699999Z' }
 
       provisionning
     end
 
     env['rack.session'][:current_user]
   end
-
 end

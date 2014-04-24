@@ -80,7 +80,7 @@ module CahierDeTextesAPI
             optional :salle_id
          }
          put '/:id'  do
-            error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS', user.ENTPersonStructRattachRNE ) || user.is?( 'DIR', user.ENTPersonStructRattachRNE )
+            error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS' ) || user.is?( 'DIR' )
 
             creneau = CreneauEmploiDuTemps[ params[:id] ]
             unless creneau.nil?
@@ -114,7 +114,7 @@ module CahierDeTextesAPI
             requires :id, type: Integer
          }
          delete '/:id'  do
-            error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS', user.ENTPersonStructRattachRNE ) || user.is?( 'DIR', user.ENTPersonStructRattachRNE )
+            error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS' ) || user.is?( 'DIR' )
 
             creneau = CreneauEmploiDuTemps[ params[:id] ]
             unless creneau.nil?
