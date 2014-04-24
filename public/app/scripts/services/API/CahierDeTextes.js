@@ -9,12 +9,6 @@ angular.module('cahierDeTexteApp')
 		       if ( user == null ) {
 			   user = $http.get( APP_VIRTUAL_PATH + '/api/v0/users/current' )
 			       .success( function( response ) {
-				   response.profils = _(response.extra.profils).map( function( profil ) {
-				       return { 'type': profil['profil_id'],
-						'uai': profil['etablissement_code_uai'],
-						'etablissement': profil['etablissement_nom'],
-						'nom': profil['profil_nom'] };
-				   });
 				   response.profil_actif = response.profils[ 0 ];
 
 				   return response;
