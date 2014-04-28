@@ -33,3 +33,6 @@ vagrant/
 # minification
 *.min.js
 *.min.css
+
+# données de test non anonymisées
+/spec/fixtures/UDT/*.xml
