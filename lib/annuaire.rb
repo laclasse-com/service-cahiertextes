@@ -76,7 +76,7 @@ module Annuaire
 
   def send_request( service, param, expand, error_msg )
     RestClient.get( sign( ANNUAIRE[:url], "#{service}/#{CGI.escape( param )}", { expand: expand } ) ) do
-      |response, request, result|
+      |response, _request, _result|
       if response.code == 200
         return JSON.parse( response )
       else
@@ -89,7 +89,7 @@ module Annuaire
     label = URI.escape( label )
 
     RestClient.get( sign( ANNUAIRE[:url], "matieres/libelle/#{label}", {}, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
-      |response, request, result|
+      |response, _request, _result|
       if response.code == 200
         return JSON.parse( response )
       else
@@ -105,7 +105,7 @@ module Annuaire
     nom = URI.escape( nom )
 
     RestClient.get( sign( ANNUAIRE[:url], 'regroupement', { etablissement: code_uai, nom: nom }, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
-      |response, request, result|
+      |response, _request, _result|
       if response.code == 200
         return JSON.parse( response )[0]
       else
@@ -121,7 +121,7 @@ module Annuaire
     prenom = URI.escape( prenom )
 
     RestClient.get( sign( ANNUAIRE[:url], 'users', { nom: nom, prenom: prenom, etablissement: code_uai }, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
-      |response, request, result|
+      |response, _request, _result|
       if response.code == 200
         return JSON.parse( response )[0]
       else
