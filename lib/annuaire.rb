@@ -146,8 +146,30 @@ module Annuaire
     send_request 'users', CGI.escape( id ), 'true', 'User inconnu'
   end
 
+  def get_user_regroupements( id )
+    RestClient.get( sign( ANNUAIRE[:url], "users/#{CGI.escape( id )}/regroupements", {} ) ) do
+      |response, _request, _result|
+      if response.code == 200
+        return JSON.parse( response )
+      else
+        STDERR.puts "erreur getting user's regroupements : #{CGI.escape( id )}"
+      end
+    end
+  end
+
   # Service etablissement
   def get_etablissement( uai )
     send_request 'etablissements', CGI.escape( uai ), 'true', 'Etablissement inconnu'
+  end
+
+  def get_etablissement_regroupements( uai )
+    RestClient.get( sign( ANNUAIRE[:url], "etablissements/#{CGI.escape( uai )}/regroupements", {} ) ) do
+      |response, _request, _result|
+      if response.code == 200
+        return JSON.parse( response )
+      else
+        STDERR.puts "erreur getting etablissement's regroupements : #{CGI.escape( uai )}"
+      end
+    end
   end
 end
