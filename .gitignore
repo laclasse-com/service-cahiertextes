@@ -36,3 +36,5 @@ vagrant/
 
 # données de test non anonymisées
 /spec/fixtures/UDT/*.xml
+/clef_privee
+/clef_publique
