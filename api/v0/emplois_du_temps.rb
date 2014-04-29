@@ -35,17 +35,13 @@ module CahierDeTextesAPI
           plage_fin = PlageHoraire[ creneau.fin ].fin
 
           # 1. récupération du cahier de textes
-          data = CahierDeTextes.where( regroupement_id: creneau[ :regroupement_id ] )
-          # raise '/!\ Incohérence dans les cahiers de textes !' unless data.count == 1
-          cahier_de_textes = data.first
+          cahier_de_textes = CahierDeTextes.where( regroupement_id: creneau[:regroupement_id] ).first
 
           ( params[:debut] .. params[:fin] )
             .reject { |day| day.wday != creneau.jour_de_la_semaine }
-            .map {
-            |jour|
-
-            cours = {} # TODO: should only be the ID
-            devoirs = [] # TODO: should only be an array of IDs
+            .map { |jour|
+            cours = {}
+            devoirs = []
 
             # 2. récupération des cours
             Cours.where( creneau_emploi_du_temps_id: creneau.id )
