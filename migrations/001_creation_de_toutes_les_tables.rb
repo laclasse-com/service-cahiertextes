@@ -100,8 +100,7 @@ Sequel.migration do
       String :label, null: false
       String :description
     }
-    [
-     [ 'DS', 'Devoir surveillé' ],
+    [ [ 'DS', 'Devoir surveillé' ],
      [ 'DM', 'Devoir à la maison' ],
      [ 'Leçon', 'Leçon à apprendre' ],
      [ 'Exposé', 'Exposé à préparer' ],
@@ -109,7 +108,7 @@ Sequel.migration do
      [ 'Exercice', 'Exercice à faire' ]
     ].each {
       |type_devoir|
-      self[:types_devoir].insert( type_devoir )
+      self[:types_devoir].insert( [ :label, :description ], type_devoir )
     }
 
     create_table!(:devoirs) {
