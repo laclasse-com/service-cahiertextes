@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+require 'nokogiri'
+require 'base64'
+require 'openssl'
+require 'zipruby'
 
 require_relative './annuaire'
 require_relative '../models/models'
@@ -10,24 +14,44 @@ module ProNote
   def decrypt_xml(encrypted_xml, xsd = nil)
     encrypted_xml = Nokogiri::XML(encrypted_xml)
 
-    fail 'fichier XML invalide' unless !xsd.nil? && Nokogiri::XML::Schema( xsd ).valid?( encrypted_xml )
+    # fail 'fichier XML invalide' unless !xsd.nil? && Nokogiri::XML::Schema( xsd ).valid?( encrypted_xml )
 
-    xml = Nokogiri::XML( encrypted_xml )
+    xml = encrypted_xml.at 'EXPORT_INDEX_EDUCATION'
 
-    content = xml
+    hxml = {  version: xml.at('VERSION').child.text,
+              logiciel: xml.at('LOGICIEL').child.text,
+              cles_chiffrees: xml.at('CLES').child.text,
+              contenu_chiffre: xml.at('CONTENU').child.text,
+              verification: xml.at('VERIFICATION').child.text,
+              dateheure: xml.at('DATEHEURE').child.text,
+              uai: xml.at('UAI').child.text,
+              nometablissement: xml.at('NOMETABLISSEMENT').child.text,
+              codepostalville: xml.at('CODEPOSTALVILLE').child.text }
 
-    xml_debase64 = Base64.decode64 content.children[0].to_s
+    hxml[:contenu_chiffre_debased64] = Base64.decode64 hxml[:contenu_chiffre]
+    hxml[:cles_chiffrees_debased64] = Base64.decode64 hxml[:cles_chiffrees]
 
-    xml_dechiffre = xml_debase64
+    pk = OpenSSL::PKey::RSA.new File.read '../clef_privee'
+    STDERR.puts 'WE HAZ PRIVATE KEY!' if pk.private?
+    STDERR.puts 'WE HAZ PUBLIC KEY!' if pk.public?
 
-    xml_dezippe = xml_dechiffre
+    # FIXME: OpenSSL::PKey::RSAError: padding check failed
+    hxml[:cles_AES] = pk.private_decrypt hxml[:cles_chiffrees_debased64]
 
-    # TODO: Here be decryption magic
+    # FIXME: liste des types dans OpenSSL::Cipher.ciphers
+    aes = OpenSSL::Cipher.new 'AES-128-CBC'
+    aes.decrypt
+    aes.key = hxml[:cles_AES]
+    hxml[:contenu_zippe] = aes.update( hxml[:contenu_chiffre_debased64] ) + aes.final
 
-    # TODO: Here be dezipping magic
-    xml = xml_dezippe
+    hxml[:contenu] = Zip::Archive.open_buffer( hxml[:contenu_zippe] ) { |archive|
+      archive.each { |entry|
+        entry.name
+        entry.read
+      }
+    }
 
-    xml
+    hxml[:contenu]
   end
 
   def load_xml(xml, xsd = nil)
