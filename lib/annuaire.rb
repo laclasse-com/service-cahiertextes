@@ -143,7 +143,7 @@ module Annuaire
 
   # Service Utilisateur : init de la session et de son environnement
   def get_user( id )
-    send_request 'users', CGI.escape( id ), 'true', 'User inconnu'
+    send_request 'users', CGI.escape( id ), 'false', 'User inconnu'
   end
 
   def get_user_regroupements( id )
