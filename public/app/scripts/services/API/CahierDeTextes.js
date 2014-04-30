@@ -69,7 +69,8 @@ angular.module('cahierDeTexteApp')
 	       function( $resource, APP_VIRTUAL_PATH ) {
 		   return $resource( APP_VIRTUAL_PATH + '/api/v0/emplois_du_temps/du/:debut/au/:fin',
 				     { debut: '@debut',
-				       fin: '@fin' } );
+				       fin: '@fin',
+				       uai: '@uai' } );
 	       } ] );
 
 angular.module('cahierDeTexteApp')
