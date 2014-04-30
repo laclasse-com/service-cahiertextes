@@ -379,6 +379,19 @@ angular.module('cahierDeTexteApp')
 			      .value();
 		      };
 
+		      $scope.list_matieres = function(  ) {
+			  return _.chain( $scope.current_user.classes )
+			      .reject( function( classe ) {
+				  return classe.etablissement_code !== $scope.current_user.profil_actif.uai;
+			      })
+			      .pluck( 'matiere_enseignee_id' )
+			      .uniq()
+			      .map( function( regroupement_id ) {
+				  return Annuaire.get_matiere( regroupement_id );
+			      })
+			      .value();
+		      };
+
 		      $scope.process_data = function() {
 			  var filtered_data = $scope.raw_data;
 
@@ -400,18 +413,14 @@ angular.module('cahierDeTexteApp')
 			      .then( function( response ) {
 				  $scope.raw_data = response;
 
-				  // Extraction des matières
-				  $scope.matieres = _.chain( $scope.raw_data )
-				      .pluck( 'matiere_id' )
-				      .uniq()
-				      .map( function( matiere_id ) {
-					  return Annuaire.get_matiere( matiere_id );
-				      })
-				      .value();
 				  User.get_user().then( function( response ) {
 				      $scope.current_user = response.data;
+
+				      // Extraction des matières
+				      $scope.matieres = $scope.list_matieres();
+
 				      // Extraction des classes
-				      $q.all( $scope.list_classes(  ) )
+				      $q.all( $scope.list_classes() )
 					  .then( function( response ) {
 					      $scope.classes = response;
 					      _($scope.classes).each( function( classe) {
