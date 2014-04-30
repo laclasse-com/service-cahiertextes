@@ -21,7 +21,7 @@ module CahierDeTextesAPI
         params[:fin] = Date.parse( params[:fin].iso8601 )
 
         # FIXME
-        regroupements_ids = Annuaire.get_user( user.uid )['classes'].map {
+        regroupements_ids = Annuaire.get_user_regroupements( user.uid )['classes'].map {
           |classe|
           classe['classe_id']
         }.uniq

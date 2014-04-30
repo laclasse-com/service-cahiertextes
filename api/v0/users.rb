@@ -9,16 +9,17 @@ module CahierDeTextesAPI
         utilisateur = env['rack.session'][:current_user]
 
         extra = Annuaire.get_user( utilisateur[ 'uid' ] )
-        utilisateur[ 'classes' ] = extra[ 'classes' ].map { |classe|
-          classe[ 'regroupement_id' ] = classe[ 'classe_id' ]
-
-          classe
-        }
         utilisateur[ 'profils' ] = extra['profils'].map { |profil|
           {  type: profil['profil_id'],
              uai: profil['etablissement_code_uai'],
              etablissement: profil['etablissement_nom'],
              nom: profil['profil_nom'] }
+        }
+
+        utilisateur[ 'classes' ] = Annuaire.get_user_regroupements( utilisateur[ 'uid' ] )[ 'classes' ].map { |classe|
+          classe[ 'regroupement_id' ] = classe[ 'classe_id' ]
+
+          classe
         }
 
         utilisateur
