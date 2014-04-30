@@ -18,7 +18,6 @@ module UserHelpers
   class HashedUser < HashIt
     def is?( profil )
       # FIXME
-      p @ENTPersonProfils
       @ENTPersonProfils.include? "#{profil}:#{profil_actif['uai']}"
     end
   end
