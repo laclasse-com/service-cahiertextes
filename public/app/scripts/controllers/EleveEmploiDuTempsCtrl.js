@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EleveEmploiDuTempsCtrl',
-		[ '$scope', '$modal', 'CALENDAR_OPTIONS', 'CALENDAR_PARAMS', 'API', 'Annuaire', 'EmploisDuTemps',
-		  function ( $scope, $modal, CALENDAR_OPTIONS, CALENDAR_PARAMS, API, Annuaire, EmploisDuTemps ) {
+		[ '$scope', '$modal', 'CALENDAR_OPTIONS', 'CALENDAR_PARAMS', 'API', 'Annuaire', 'EmploisDuTemps', 'User',
+		  function ( $scope, $modal, CALENDAR_OPTIONS, CALENDAR_PARAMS, API, Annuaire, EmploisDuTemps, User ) {
 		      $scope.types_de_devoir = {};
 
 		      // configuration du composant calendrier
@@ -123,14 +123,21 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      $scope.retrieve_data = function( from_date, to_date ) {
-			  EmploisDuTemps.query( { debut: from_date, fin: to_date },
-						function( response ) {
-						    $scope.calendar.events[0] = _.chain( response )
-							.map( function( event ) {
-							    return fullCalendarize_event( event );
-							} )
-							.flatten()
-							.value();
-						});
+			  User.get_user().then( function( response ) {
+			      $scope.current_user = response.data;
+
+			      EmploisDuTemps.query(
+				  { debut: from_date,
+				    fin: to_date,
+				    uai: $scope.current_user.profil_actif.uai },
+				  function( response ) {
+				      $scope.calendar.events[0] = _.chain( response )
+					  .map( function( event ) {
+					      return fullCalendarize_event( event );
+					  } )
+					  .flatten()
+					  .value();
+				  });
+			  });
 		      };
 		  } ] );

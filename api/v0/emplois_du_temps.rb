@@ -10,6 +10,7 @@ module CahierDeTextesAPI
       params {
         requires :debut, type: Date
         requires :fin, type: Date
+        optional :uai
       }
       get '/du/:debut/au/:fin' do
         # if # ( user.is?( 'ENS' ) ||
@@ -21,7 +22,10 @@ module CahierDeTextesAPI
         params[:fin] = Date.parse( params[:fin].iso8601 )
 
         # FIXME
-        regroupements_ids = Annuaire.get_user_regroupements( user.uid )['classes'].map {
+        regroupements_ids = Annuaire.get_user_regroupements( user.uid )['classes'].reject {
+          |classe|
+          classe['etablissement_code'] != params[:uai] if params[:uai]
+        }.map {
           |classe|
           classe['classe_id']
         }.uniq
