@@ -2,8 +2,6 @@
     "name": "cahierDeTexte",
     "version": "0.0.0",
     "dependencies": {
-	"Chart.js": "latest",
-	"angles": "git://github.com/lgsilver/angles.git#latest",
 	"angular": "latest",
 	"angular-bootstrap": "latest",
 	"angular-cookies": "latest",
@@ -26,7 +24,8 @@
 	"angular-animate": "latest",
 	"angular-loading-bar": "latest",
 	"w11k-select": "latest",
-	"charte-graphique-laclasse-com": "git@gitlab.erasme.org:laclasse/charte-graphique-laclasse-com.git#latest"
+	"charte-graphique-laclasse-com": "git@gitlab.erasme.org:laclasse/charte-graphique-laclasse-com.git#latest",
+	"angularjs-nvd3-directives": "latest"
     },
     "devDependencies": {
 	"angular-mocks": "latest",

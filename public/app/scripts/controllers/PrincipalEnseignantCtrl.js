@@ -3,9 +3,9 @@
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantCtrl',
 		[ '$scope', '$stateParams', '$q',
-		  '$locale', 'THEME', 'LINECHART_OPTIONS', 'PIECHART_OPTIONS',
+		  '$locale', 'THEME',
 		  'API', 'Cours', 'Annuaire', 'User',
-		  function( $scope, $stateParams, $q, $locale, THEME, LINECHART_OPTIONS, PIECHART_OPTIONS, API, Cours, Annuaire, User ) {
+		  function( $scope, $stateParams, $q, $locale, THEME, API, Cours, Annuaire, User ) {
 		      $scope.enseignant_id = $stateParams.enseignant_id;
 		      $scope.classe = null;
 		      $scope.mois = $locale.DATETIME_FORMATS.MONTH;
@@ -78,43 +78,41 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      // Graphiques
-		      $scope.graphiques = {
-			  pieChart: { options: PIECHART_OPTIONS,
-				      data: [ { color : THEME.filled.base,
-						value: 0 },
-					      { color : THEME.validated.base,
-						value: 0 } ] },
-			  barChart: { options: LINECHART_OPTIONS,
-				      data: { labels: [],
-					      datasets: [
-						  { fillColor : THEME.filled.base,
-						    pointColor : THEME.filled.base,
-						    strokeColor : THEME.filled.stroke,
-						    pointStrokeColor : THEME.filled.stroke,
-						    data: []
-						  },
-						  { fillColor : THEME.validated.base,
-						    pointColor : THEME.validated.base,
-						    strokeColor : THEME.validated.stroke,
-						    pointStrokeColor : THEME.validated.stroke,
-						    data: []
-						  } ] } },
-			  populate: function( saisies ) {
-			      $scope.graphiques.barChart.data.labels = [];
-			      $scope.graphiques.barChart.data.datasets[0].data = [];
-			      $scope.graphiques.barChart.data.datasets[1].data = [];
-			      $scope.graphiques.pieChart.data[0].value = 0;
-			      $scope.graphiques.pieChart.data[1].value = 0;
+		      $scope.xFunction = function(){ return function(d) { return d.label; }; };
+		      $scope.yFunction = function(){ return function(d) { return d.value; }; };
+		      $scope.descriptionFunction = $scope.xFunction;
+		      $scope.colorFunction = function() {
+			  var couleurs = [ THEME.validated.base, THEME.filled.base ];
+			  return function( d, i ) {
+			      return couleurs[ i ];
+			  };
+		      };
+		      $scope.barChartxAxisTickFormatFunction = function() { return function( d ) { return d; }; };
 
-			      _.chain( $scope.filtre( saisies ) )
+		      $scope.graphiques = {
+			  pieChart: { data: [ { label: 'valide',
+						value: 0 },
+					      { label: 'saisie',
+						value: 0 } ] },
+			  barChart: { data: [] },
+			  populate: function( data ) {
+			      $scope.graphiques.barChart.data = [];
+			      $scope.graphiques.pieChart.data[ 0 ].value = 0;
+			      $scope.graphiques.pieChart.data[ 1 ].value = 0;
+
+			      var saisies = { key: "saisie", values: [] };
+			      var valides = { key: "valide", values: [] };
+
+			      _.chain( $scope.filtre( data ) )
 				  .groupBy('classe_id')
 				  .each( function( classe ) {
 				      var filled = classe.length;
 				      var validated = _(classe).where({valide: true}).length;
 
-				      $scope.graphiques.barChart.data.labels.push( $scope.classes[ classe[0].classe_id ] );
-				      $scope.graphiques.barChart.data.datasets[0].data.push( filled );
-				      $scope.graphiques.barChart.data.datasets[1].data.push( validated );
+				      saisies.values.push( [ $scope.classes[ classe[0].classe_id ], filled ] );
+				      valides.values.push( [ $scope.classes[ classe[0].classe_id ], validated ] );
+
+				      $scope.graphiques.barChart.data = [ valides, saisies ];
 
 				      $scope.graphiques.pieChart.data[0].value += filled - validated;
 				      $scope.graphiques.pieChart.data[1].value += validated;

@@ -41,8 +41,32 @@
       <div class="col-md-8">
 	<div class="panel panel-default">
 	  <div class="panel-body">
-	    <canvas data-piechart data-data="graphiques.pieChart.data" data-options="graphiques.pieChart.options" width="256" height="256"></canvas>
-	    <canvas data-barchart data-data="graphiques.barChart.data" data-options="graphiques.barChart.options" width="256" height="256"></canvas>
+	    <nvd3-pie-chart id="globalPieChart" class="col-md-4"
+			    data="graphiques.pieChart.data"
+			    margin="{left:0,top:0,bottom:0,right:0}"
+			    height="256"
+			    x="xFunction()"
+			    y="yFunction()"
+			    color="colorFunction()"
+			    showLabels="true"
+			    labelType="value"
+			    showLegend="true"
+			    tooltips="true"
+			    pieLabelsOutside="false"
+			    objectEquality="true" >
+	      <svg></svg>
+	    </nvd3-pie-chart>
+	    <nvd3-multi-bar-chart id="globalBarChart" class="col-md-8"
+				  data="graphiques.barChart.data"
+				  height="256"
+				  color="colorFunction()"
+				  showXAxis="true"
+				  showYAxis="true"
+				  tooltips="true"
+				  objectEquality="true"
+				  xAxisTickFormat="barChartxAxisTickFormatFunction()" >
+	      <svg></svg>
+	    </nvd3-multi-bar-chart>
 	  </div>
 	</div>
       </div>

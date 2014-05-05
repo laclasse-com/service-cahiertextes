@@ -7,11 +7,11 @@
 
     <div class="panel panel-default">
       <div class="panel-body">
-	<select class="col-md-3" data-ng-model="classe" data-ng-change="process_data()" data-ng-options="class as class for (id, class) in classes">
+	<select data-ng-model="classe" data-ng-change="process_data()" data-ng-options="classe.id as classe.libelle for classe in classes">
 	  <option value="" selected>Toute les classes</option>
 	</select>
 
-	<select class="col-md-3" data-ng-model="moisCourant" data-ng-change="process_data()" data-ng-options="mois.indexOf(m) as m for m in mois">
+	<select class="col-md-3" data-ng-model="moisCourant" data-ng-change="process_data()" data-ng-options="mois.indexOf(m) as m for m in annee">
 	  <option value="">Toute l'année</option>
 	</select>
 
@@ -23,9 +23,33 @@
 
     <div class="panel panel-default">
       <div class="panel-body">
-	<canvas data-piechart data-data="pieChart.data" data-options="pieChart.options" width="256" height="256"></canvas>
-	<span class="badge badge-info">{{displayed_data.validated}} / {{displayed_data.filled}}</span>
-	<canvas data-linechart data-data="monthlyLineChart.data" data-options="monthlyLineChart.options" width="640" height="256" style="float:right"></canvas>
+	<nvd3-pie-chart id="globalPieChart" class="col-md-4"
+			data="pieChart.data"
+			margin="{left:0,top:0,bottom:0,right:0}"
+			height="256"
+			x="xFunction()"
+			y="yFunction()"
+			color="colorFunction()"
+			showLabels="true"
+			labelType="value"
+			showLegend="true"
+			tooltips="true"
+			pieLabelsOutside="false"
+			objectEquality="true" >
+	  <svg></svg>
+	</nvd3-pie-chart>
+	<nvd3-line-chart id="globalLineChart" class="col-md-8"
+			 data="monthlyLineChart.data"
+			 height="256"
+			 useInteractiveGuideline="true"
+			 showXAxis="true"
+			 showYAxis="true"
+			 showLegend="true"
+			 tooltips="true"
+			 objectEquality="true"
+			 xAxisTickFormat="xAxisTickFormatFunction()" >
+	  <svg></svg>
+	</nvd3-line-chart>
       </div>
     </div>
 
@@ -34,7 +58,24 @@
 	<div class="panel panel-default">
 	  <div class="panel-heading"><h3 class="panel-title">{{individualChart.libelle}}</h3></div>
 	  <div class="panel-body">
-	    <canvas data-piechart data-data="individualChart.pieChart.data" data-options="individualChart.pieChart.options" width="64" height="64"></canvas>
+	    <nvd3-pie-chart id="individualPieChart{{$index}}" class="individualPieChart"
+			    width="64"
+			    height="64"
+			    data="individualChart.pieChart.data"
+			    margin="{left:0,top:0,bottom:0,right:0}"
+			    x="xFunction()"
+			    y="yFunction()"
+			    color="colorFunction()"
+			    showLabels="false"
+			    labelType="value"
+			    showLegend="false"
+			    tooltips="true"
+			    pieLabelsOutside="false"
+			    objectEquality="true"
+			    noData="Aucune saisie" >
+	      <svg></svg>
+	    </nvd3-pie-chart>
+
 	    <span class="badge badge-info">{{individualChart.pieChart.data[0].value}} / {{individualChart.pieChart.data[0].value + individualChart.pieChart.data[1].value}}</span>
 	  </div>
 	</div>

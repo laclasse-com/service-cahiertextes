@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalClassesCtrl',
-		[ '$scope', 'THEME', '$locale', 'LINECHART_OPTIONS', 'PIECHART_OPTIONS', '$q', 'API', 'Annuaire', 'User',
-		  function ( $scope, THEME, $locale, LINECHART_OPTIONS, PIECHART_OPTIONS, $q, API, Annuaire, User ) {
+		[ '$scope', 'THEME', '$locale', '$q', 'API', 'Annuaire', 'User',
+		  function ( $scope, THEME, $locale, $q, API, Annuaire, User ) {
 		      $scope.empty = false;
 
 		      User.get_user().then( function( response ) {
@@ -12,6 +12,7 @@ angular.module('cahierDeTexteApp')
 			  $scope.displayed_data  = [];
 			  $scope.classes	 = {};
 			  $scope.matieres	 = [];
+			  $scope.annee = $locale.DATETIME_FORMATS.MONTH;
 
 			  $scope.classe		 = null;
 			  $scope.moisCourant	 = null;
@@ -20,45 +21,48 @@ angular.module('cahierDeTexteApp')
 			  $scope.global_stats    = { filled: 0,
 						     validated: 0 };
 
-		  $scope.pieChart = { options: PIECHART_OPTIONS,
-					      data: [ { color : THEME.validated.base,
+			  $scope.xFunction = function(){ return function(d) { return d.label; }; };
+			  $scope.yFunction = function(){ return function(d) { return d.value; }; };
+			  $scope.descriptionFunction = $scope.xFunction;
+			  $scope.colorFunction = function() {
+			      var couleurs = [ THEME.validated.base, THEME.filled.base ];
+			      return function( d, i ) {
+				  return couleurs[ i ];
+			      };
+			  };
+			  $scope.xAxisTickFormatFunction = function() { return function( d ) { return d; }; };
+
+			  $scope.pieChart = { data: [ { label: 'saisie',
 							value: 0 },
-						      { color : THEME.filled.base,
+						      { label: 'valide',
 							value: 0 } ],
 					      populate: function( data ) {
-						  $scope.pieChart.data[0].value = data.validated;
-						  $scope.pieChart.data[1].value = data.filled - data.validated;
+						  $scope.pieChart.data[0].value = data.filled - data.validated;
+						  $scope.pieChart.data[1].value = data.validated;
 					      } };
 
-			  $scope.monthlyLineChart = { options: LINECHART_OPTIONS,
-						      data: { labels: $locale.DATETIME_FORMATS.MONTH,
-							      datasets: [
-								  // 0: saisies totales
-								  { fillColor : THEME.filled.base,
-								    pointColor : THEME.filled.base,
-								    strokeColor : THEME.filled.stroke,
-								    pointStrokeColor : THEME.filled.stroke,
-								    data: []
-								  },
-								  // 1: saisies validées
-								  { fillColor : THEME.validated.base,
-								    pointColor : THEME.validated.base,
-								    strokeColor : THEME.validated.stroke,
-								    pointStrokeColor : THEME.validated.stroke,
-								    data: []
-								  } ] },
+			  $scope.monthlyLineChart = { data: [],
 						      populate: function( data ) {
+							  var data_bootstrap = [];
+							  _(12).times( function( i ) { data_bootstrap.push( [ $scope.annee[ i ], i ] ); } );
+
 							  var monthlyLineChart_data = data.reduce( function( monthly_stats, regroupement ) {
 							      _(regroupement.mensuel.filled.length).times( function( i ) {
-								  monthly_stats.filled[i] += regroupement.mensuel.filled[i];
-								  monthly_stats.validated[i] += regroupement.mensuel.validated[i];
+								  monthly_stats.filled[ i ].y += regroupement.mensuel.filled[i];
+								  monthly_stats.validated[ i ].y += regroupement.mensuel.validated[i];
 							      });
 							      return monthly_stats;
-							  }, { filled: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-							       validated:  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] });
+							  }, { filled: data_bootstrap,
+							       validated: data_bootstrap });
 
-							  $scope.monthlyLineChart.data.datasets[0].data = monthlyLineChart_data.filled;
-							  $scope.monthlyLineChart.data.datasets[1].data = monthlyLineChart_data.validated;
+							  $scope.monthlyLineChart.data[ 0 ] = { key: 'saisie',
+												area: true,
+												color: THEME.filled.base,
+												values: monthlyLineChart_data.filled };
+							  $scope.monthlyLineChart.data[ 1 ] = { key: 'valide',
+												area: false,
+												color: THEME.validated.base,
+												values: monthlyLineChart_data.validated};
 						      } };
 
 			  $scope.individualCharts = { classes: [],
@@ -66,17 +70,11 @@ angular.module('cahierDeTexteApp')
 							  $scope.individualCharts.classes = _.chain(data)
 							      .map( function( regroupement ) {
 								  return { libelle: classes[ regroupement.regroupement_id ],
-		  pieChart: { options: PIECHART_OPTIONS,
-										       data: [ { color : THEME.validated.base,
+									   pieChart: { data: [ { label: 'valide',
 												 value: regroupement.validated },
-		  { color : THEME.filled.base,
+											       { label: 'saisie',
 												 value: regroupement.filled - regroupement.validated } ] } };
 							      })
-							      .reject( function( classe ) {
-								  return _(classe.pieChart.data).reduce(function( useless, slice ) {
-								      return useless && slice.value === 0;
-								  }, true);
-							      } )
 							      .value();
 						      } };
 
@@ -98,7 +96,7 @@ angular.module('cahierDeTexteApp')
 				  .value();
 			  };
 
-			  $scope.extract_classes_promises = function( data ) {
+			  $scope.extract_classes = function( data ) {
 			      return _.chain( data )
 				  .pluck( 'regroupement_id' )
 				  .map( function( regroupement_id ) {
@@ -111,12 +109,11 @@ angular.module('cahierDeTexteApp')
 			      if ( $scope.raw_data.length > 0 ) {
 				  $scope.displayed_data = $scope.raw_data;
 
-				  // Filtrage par classe
+
+				  // Filtrage sur une seule classe
 				  if ( $scope.classe != null ) {
-				      // .invert() suppose que les valeurs sont uniques
-				      var id = _($scope.classes).invert()[$scope.classe];
-				      $scope.displayed_data = _($scope.displayed_data).filter( function( r ) {
-					  return r.regroupement_id == id;
+				      $scope.filtered_data = _($scope.raw_data).filter( function( creneau ) {
+					  return creneau.regroupement_id == $scope.classe;
 				      });
 				  }
 
@@ -192,11 +189,16 @@ angular.module('cahierDeTexteApp')
 				      $scope.matieres = $scope.extract_matieres( $scope.raw_data );
 
 				      // Extraction des classes
-				      $q.all( $scope.extract_classes_promises( $scope.raw_data ) )
-					  .then( function( classes ) {
-					      _(classes).each(function( classe ) {
-						  $scope.classes[classe.id] = classe.libelle !== null ? classe.libelle : classe.libelle_aaf;
-					      });
+				      $scope.classes = $scope.extract_classes( $scope.raw_data );
+
+				      $q.all( $scope.matieres, $scope.classes )
+					  .then( function(  ) {
+					      _($scope.classes).each( function( classe ) {
+						  console.debug(classe.libelle_aaf)
+						  if ( classe.libelle === null ) {
+						      classe.libelle = classe.libelle_aaf;
+						  }
+					      } );
 					      $scope.process_data();
 					  });
 				  }

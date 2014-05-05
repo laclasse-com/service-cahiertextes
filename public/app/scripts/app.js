@@ -7,9 +7,9 @@ angular.module( 'cahierDeTexteApp', [ 'ngResource',
 				      'ui.calendar',
 				      'ui.router',
 				      'ngGrid',
-				      'angles',
 				      'ui.tinymce',
 				      'chieffancypants.loadingBar',
 				      'ngAnimate',
 				      'w11k.select',
-				      'w11k.select.template' ] );
+				      'w11k.select.template',
+				      'nvd3ChartDirectives'] );

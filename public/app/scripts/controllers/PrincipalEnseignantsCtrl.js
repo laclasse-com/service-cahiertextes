@@ -2,18 +2,28 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantsCtrl',
-		[ '$scope', '$locale', 'THEME', 'BARCHART_OPTIONS', 'PIECHART_OPTIONS', '$q', 'API', 'Annuaire', 'User',
-		  function( $scope, $locale, THEME, BARCHART_OPTIONS, PIECHART_OPTIONS, $q, API, Annuaire, User ) {
+		[ '$scope', '$locale', 'THEME', '$q', 'API', 'Annuaire', 'User',
+		  function( $scope, $locale, THEME, $q, API, Annuaire, User ) {
 		      $scope.annee = $locale.DATETIME_FORMATS.MONTH;
 		      $scope.classe = null;
 		      $scope.mois = null;
 		      $scope.classes = {};
 		      $scope.details_enseignants = {};
 
-		      $scope.pieChart = { options: PIECHART_OPTIONS,
-					  data: [ { color : THEME.validated.base,
+		      $scope.xFunction = function(){ return function(d) { return d.label; }; };
+		      $scope.yFunction = function(){ return function(d) { return d.value; }; };
+		      $scope.descriptionFunction = $scope.xFunction;
+		      $scope.colorFunction = function() {
+			  var couleurs = [ THEME.validated.base, THEME.filled.base ];
+			  return function( d, i ) {
+			      return couleurs[ i ];
+			  };
+		      };
+		      $scope.barChartxAxisTickFormatFunction = function() { return function( d ) { return d; }; };
+
+		      $scope.pieChart = { data: [ { label: 'valide',
 						    value: 0 },
-						  { color : THEME.filled.base,
+						  { label: 'saisie',
 						    value: 0 } ],
 					  populate: function( data ) {
 					      $scope.pieChart.data[0].value = data.validated;
@@ -21,32 +31,17 @@ angular.module('cahierDeTexteApp')
 					  } };
 
 		      $scope.barChart = {
-			  options: BARCHART_OPTIONS,
-			  data: { labels: [],
-				  datasets: [
-				      { fillColor : THEME.filled.base,
-					pointColor : THEME.filled.base,
-					strokeColor : THEME.filled.stroke,
-					pointStrokeColor : THEME.filled.stroke,
-					data: []
-				      },
-				      { fillColor : THEME.validated.base,
-					pointColor : THEME.validated.base,
-					strokeColor : THEME.validated.stroke,
-					pointStrokeColor : THEME.validated.stroke,
-					data: []
-				      } ] },
+			  data: [],
 			  populate: function( enseignants ) {
-			      $scope.barChart.data.labels = [];
-			      $scope.barChart.data.datasets[0].data = [];
-			      $scope.barChart.data.datasets[1].data = [];
+			      var saisies = { key: "saisie", values: [] };
+			      var valides = { key: "valide", values: [] };
 
 			      _(enseignants).each( function( enseignant ) {
-				  $scope.barChart.data.datasets[0].data.push( enseignant.filled );
-				  $scope.barChart.data.datasets[1].data.push( enseignant.validated );
+				  saisies.values.push( [ $scope.details_enseignants[enseignant.enseignant_id].full_name, enseignant.filled ] );
+				  valides.values.push( [ $scope.details_enseignants[enseignant.enseignant_id].full_name, enseignant.validated ] );
+			      } );
 
-				  $scope.barChart.data.labels.push( $scope.details_enseignants[enseignant.enseignant_id].full_name );
-			      });
+			      $scope.barChart.data = [ valides, saisies ];
 			  }
 		      };
 
@@ -56,10 +51,9 @@ angular.module('cahierDeTexteApp')
 			      $scope.individualCharts.enseignants = _.chain(data)
 				  .map( function( enseignant ) {
 				      return { enseignant: details_enseignants[ enseignant.enseignant_id ],
-					       pieChart: { options: PIECHART_OPTIONS,
-							   data: [ { color : THEME.validated.base,
+					       pieChart: { data: [ { label: 'valide',
 								     value: enseignant.validated },
-								   { color : THEME.filled.base,
+								   { label: 'saisie',
 								     value: enseignant.filled - enseignant.validated } ] } };
 				  })
 				  .value();
