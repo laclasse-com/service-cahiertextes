@@ -62,11 +62,6 @@ angular.module('cahierDeTexteApp')
 								   { color : THEME.filled.base,
 								     value: enseignant.filled - enseignant.validated } ] } };
 				  })
-				  .reject( function( enseignant ) {
-				      return _(enseignant.pieChart.data).reduce(function( useless, slice ) {
-					  return useless && slice.value === 0;
-				      }, true);
-				  } )
 				  .value();
 			  } };
 
