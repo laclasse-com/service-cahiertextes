@@ -63,11 +63,7 @@ angular.module( 'cahierDeTexteApp' )
 				  } )
 
 // options des graphiques
-    .constant( 'BARCHART_OPTIONS', { animation : false,
-				     scaleOverride: true,
-				     scaleSteps : 0,
-				     scaleStepWidth : 0,
-				     scaleStartValue: 0 } )
+    .constant( 'BARCHART_OPTIONS', { animation : false } )
     .constant( 'PIECHART_OPTIONS', { animation : false } )
     .constant( 'LINECHART_OPTIONS', { animation : false } )
     .constant( 'RADARCHART_OPTIONS', { animation : false } );
