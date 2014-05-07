@@ -23,7 +23,7 @@ angular.module( 'cahierDeTexteApp' )
 			   url: '/principal',
 			   templateUrl: 'app/views/principal/index.html'
 		       })
-		       .state('principal.enseignants', { //imbriquée sous principal
+		       .state('principal.enseignants', {
 			   parent: 'principal',
 			   url: '/enseignants',
 			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } },
@@ -34,7 +34,7 @@ angular.module( 'cahierDeTexteApp' )
 			       }
 			   }
 		       })
-		       .state('principal.enseignant', { //imbriquée sous principal
+		       .state('principal.enseignant', {
 			   parent: 'principal',
 			   url: '/enseignant/:enseignant_id',
 			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } },
@@ -45,7 +45,7 @@ angular.module( 'cahierDeTexteApp' )
 			       }
 			   }
 		       })
-		       .state('principal.classes', { //imbriquée sous principal
+		       .state('principal.classes', {
 			   parent: 'principal',
 			   url: '/classes',
 			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } },
