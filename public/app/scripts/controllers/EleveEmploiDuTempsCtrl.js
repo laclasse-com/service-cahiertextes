@@ -81,14 +81,14 @@ angular.module('cahierDeTexteApp')
 			      this.end = new Date( item.end );
 
 			      if ( this.type === 'cours' ) {
-				  this.className += ' saisie-invalide';
+				  this.className = 'saisie-invalide';
 				  if ( event.matiere_id.length > 0 ) {
 				      Annuaire.get_matiere( event.matiere_id ).$promise.then( function success( response ) {
 					  fc_event.title = response.libelle_long;
 				      });
 				  }
 			      } else {
-				  this.className += item.fait ? ' saisie-devoirs-fait' : ' saisie-devoirs';
+				  this.className = item.fait ? 'saisie-devoirs-fait' : 'saisie-devoirs';
 
 				  API.get_type_de_devoir( { id: item.type_devoir_id } )
 				      .$promise.then( function success( response ) {
@@ -101,11 +101,10 @@ angular.module('cahierDeTexteApp')
 				  this.description += item.contenu.substring( 0, CALENDAR_PARAMS.max_length );
 				  this.description += item.contenu.length > CALENDAR_PARAMS.max_length ? '…' : '';
 				  this.description += '</span>';
-				  this.className = 'clickable-event';
+				  this.className += ' clickable-event';
 				  this.id = item.id;
 			      } else {
-				  this.className += ' saisie-vide';
-				  this.className = 'un-clickable-event';
+				  this.className = 'saisie-vide un-clickable-event';
 			      }
 
 			  };
