@@ -54,14 +54,15 @@
     </div>
 
     <div class="col-md-12">
-      <div class="col-md-3" data-ng-show="classe == null" data-ng-repeat="individualChart in individualCharts.classes">
+      <div class="col-md-3" data-ng-show="classe == null" data-ng-repeat="classe in individualCharts.classes">
 	<div class="panel panel-default">
-	  <div class="panel-heading"><h3 class="panel-title">{{individualChart.libelle}}</h3></div>
+	  <div class="panel-heading"><h3 class="panel-title">{{classe.libelle.libelle}}</h3></div>
 	  <div class="panel-body">
+	    {{classe}}
 	    <nvd3-pie-chart id="individualPieChart{{$index}}" class="individualPieChart"
 			    width="64"
 			    height="64"
-			    data="individualChart.pieChart.data"
+			    data="classe.pieChart.data"
 			    margin="{left:0,top:0,bottom:0,right:0}"
 			    x="xFunction()"
 			    y="yFunction()"
@@ -76,7 +77,7 @@
 	      <svg></svg>
 	    </nvd3-pie-chart>
 
-	    <span class="badge badge-info">{{individualChart.pieChart.data[0].value}} / {{individualChart.pieChart.data[0].value + individualChart.pieChart.data[1].value}}</span>
+	    <span class="badge badge-info">{{classe.pieChart.data[0].value}} / {{classe.pieChart.data[0].value + classe.pieChart.data[1].value}}</span>
 	  </div>
 	</div>
       </div>
