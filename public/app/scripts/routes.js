@@ -91,7 +91,7 @@ angular.module( 'cahierDeTexteApp' )
 		       .state('enseignant', {
 			   url: '/enseignant',
 			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ENS' ] ); } },
-			   templateUrl: 'app/views/enseignant.html',
+			   templateUrl: 'app/views/enseignant/index.html',
 			   controller: 'EnseignantCtrl'
 		       });
 	       } ] );

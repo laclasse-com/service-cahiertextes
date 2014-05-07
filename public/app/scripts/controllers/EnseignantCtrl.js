@@ -77,7 +77,7 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      $scope.ouvre_popup_edition = function(  ) {
-			  $modal.open({ templateUrl: 'app/views/modals/enseignant/detail_emploi_du_temps.html',
+			  $modal.open({ templateUrl: 'app/views/enseignant/detail_emploi_du_temps.html',
 					resolve: { raw_data: function() { return $scope.raw_data; },
 						   matieres: function() { return $scope.matieres; },
 						   classes: function() { return $scope.classes; },

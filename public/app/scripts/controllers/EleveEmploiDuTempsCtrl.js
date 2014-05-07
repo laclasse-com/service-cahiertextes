@@ -33,7 +33,7 @@ angular.module('cahierDeTexteApp')
 		      $scope.cours = {};
 		      $scope.devoirs = [];
 		      $scope.affiche_details = function(  ) {
-			  $modal.open( { templateUrl: 'app/views/modals/eleve/detail_emploi_du_temps.html',
+			  $modal.open( { templateUrl: 'app/views/eleve/detail_emploi_du_temps.html',
 					 resolve: { matiere: function() { return $scope.matiere; },
 						    cours: function() { return $scope.cours; },
 						    devoirs: function() { return $scope.devoirs; } },
