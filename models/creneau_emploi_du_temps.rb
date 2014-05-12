@@ -10,11 +10,6 @@ module SemainesDePresenceMixin
   end
 end
 
-class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
-  many_to_one :salle
-  # FIXME: associations pour les plages horaires de début et de fin ?
-end
-
 class CreneauEmploiDuTempsSalle < Sequel::Model( :creneaux_emploi_du_temps_salles )
   include SemainesDePresenceMixin
 end
@@ -25,4 +20,10 @@ end
 
 class CreneauEmploiDuTempsRegroupement < Sequel::Model( :creneaux_emploi_du_temps_regroupements )
   include SemainesDePresenceMixin
+end
+
+class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
+  one_to_many :regroupements, class: :CreneauEmploiDuTempsRegroupement
+  one_to_many :enseignants, class: :CreneauEmploiDuTempsEnseignant
+  one_to_many :salles, class: :CreneauEmploiDuTempsSalle
 end
