@@ -2,7 +2,11 @@
 
 class CahierDeTextes < Sequel::Model( :cahiers_de_textes )
   def statistiques
-    cours = Cours.where(cahier_de_textes_id: id).where(:date_cours)
+    cours = Cours
+      .where( cahier_de_textes_id: id )
+      .where( :date_cours )
+      .where( deleted: false )
+
     {
       regroupement_id: regroupement_id,
       matieres:
@@ -28,7 +32,11 @@ class CahierDeTextes < Sequel::Model( :cahiers_de_textes )
 
   # Valide tout un cahier de texte
   def valide!
-    Cours.where(cahier_de_textes_id: id).where('date_validation IS NULL').update(date_validation: Time.now)
+    Cours
+      .where( cahier_de_textes_id: id )
+      .where( 'date_validation IS NULL' )
+      .where( deleted: false )
+      .update( date_validation: Time.now )
   end
 
   def contenu( debut, fin )
