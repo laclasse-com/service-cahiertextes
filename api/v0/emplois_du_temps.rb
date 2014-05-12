@@ -50,7 +50,9 @@ module CahierDeTextesAPI
             # 2. récupération des cours
             Cours.where( creneau_emploi_du_temps_id: creneau.id )
               .where( cahier_de_textes_id: cahier_de_textes.id )
-              .where( date_cours: jour ).map {
+              .where( date_cours: jour )
+              .where( deleted: false )
+              .map {
               |le_cours|
 
               cours = le_cours.to_hash
