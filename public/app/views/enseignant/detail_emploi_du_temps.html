@@ -25,7 +25,7 @@
     <div class="panel-heading">
       <h3 class="panel-title">Séquence pédagogique</h3>
     </div>
-    <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="cours.contenu" data-ng-show="cours.$resolved">
+    <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="cours.contenu" data-ng-show="cours.$resolved" data-ng-change="is_dirty()">
 
     </textarea>
     <div class="panel-footer">
@@ -86,7 +86,7 @@
 	</div>
       </div>
     </div>
-    <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="devoir.contenu"></textarea>
+    <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="devoir.contenu" data-ng-change="is_dirty()"></textarea>
     <div class="panel-footer">
       <ul>
 	<li data-ng-repeat="ressource in devoir.ressources">{{ressource.url}}</li>
@@ -98,10 +98,14 @@
 </div>
 
 <div class="modal-footer">
-  <button class="btn btn-info pull-right" data-ng-click="fermer()">
-    <span class="glyphicon glyphicon-remove-sign"></span> Fermer
+  <button class="btn btn-info pull-left" data-ng-click="effacer()">
+    <span class="glyphicon glyphicon-trash"></span> Détruire
   </button>
-  <button class="btn btn-success pull-right" data-ng-click="valider()">
+
+  <button class="btn btn-info pull-right" data-ng-click="annuler()">
+    <span class="glyphicon glyphicon-remove-sign"></span> <span data-ng-show="dirty">Annuler</span><span data-ng-hide="dirty">Fermer</span>
+  </button>
+  <button class="btn btn-success pull-right" data-ng-click="valider()" data-ng-show="dirty">
     <span class="glyphicon glyphicon-ok-sign"></span> Valider
   </button>
 </div>
