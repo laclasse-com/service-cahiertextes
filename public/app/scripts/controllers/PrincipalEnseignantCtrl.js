@@ -114,8 +114,8 @@ angular.module('cahierDeTexteApp')
 
 				      $scope.graphiques.barChart.data = [ valides, saisies ];
 
-				      $scope.graphiques.pieChart.data[0].value += filled - validated;
-				      $scope.graphiques.pieChart.data[1].value += validated;
+				      $scope.graphiques.pieChart.data[0].value += validated;
+				      $scope.graphiques.pieChart.data[1].value += filled - validated;
 				  });
 			  }
 		      };
