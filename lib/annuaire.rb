@@ -88,13 +88,13 @@ module Annuaire
   def search_matiere( label )
     label = URI.escape( label )
 
-    RestClient.get( sign( ANNUAIRE[:url], "matieres/libelle/#{label}", {}, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
+    RestClient.get( sign( ANNUAIRE[:url], "matieres/libelle/#{label}", {} ) ) do
       |response, _request, _result|
       if response.code == 200
         return JSON.parse( response )
       else
         STDERR.puts "Matière inconnue : #{label}"
-        STDERR.puts 'URL fautive: ' + sign( ANNUAIRE[:url], "/matieres/libelle/#{label}", {}, ANNUAIRE[:secret], ANNUAIRE[:app_id] )
+        STDERR.puts 'URL fautive: ' + sign( ANNUAIRE[:url], "/matieres/libelle/#{label}", {} )
         return { 'id' => nil }
       end
     end
@@ -104,7 +104,7 @@ module Annuaire
     code_uai = URI.escape( code_uai )
     nom = URI.escape( nom )
 
-    RestClient.get( sign( ANNUAIRE[:url], 'regroupement', { etablissement: code_uai, nom: nom }, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
+    RestClient.get( sign( ANNUAIRE[:url], 'regroupement', { etablissement: code_uai, nom: nom } ) ) do
       |response, _request, _result|
       if response.code == 200
         return JSON.parse( response )[0]
@@ -120,7 +120,7 @@ module Annuaire
     nom = URI.escape( nom )
     prenom = URI.escape( prenom )
 
-    RestClient.get( sign( ANNUAIRE[:url], 'users', { nom: nom, prenom: prenom, etablissement: code_uai }, ANNUAIRE[:secret], ANNUAIRE[:app_id] ) ) do
+    RestClient.get( sign( ANNUAIRE[:url], 'users', { nom: nom, prenom: prenom, etablissement: code_uai } ) ) do
       |response, _request, _result|
       if response.code == 200
         return JSON.parse( response )[0]
