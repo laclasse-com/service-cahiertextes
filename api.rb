@@ -14,15 +14,15 @@ require_relative './lib/pronote'
 require_relative './api/v0/api'
 
 module CahierDeTextesAPI
-   class API < Grape::API
+  class API < Grape::API
 
-      helpers AuthenticationHelpers
-      helpers UserHelpers
+    helpers AuthenticationHelpers
+    helpers UserHelpers
 
-      before do
-         error!( '401 Unauthorized', 401 ) unless is_logged?
-      end
+    before do
+      error!( '401 Unauthorized', 401 ) unless is_logged? || !request.env['PATH_INFO'].match(/.*swagger.*\.json$/).nil?
+    end
 
-      mount ::CahierDeTextesAPI::V0::API
-   end
+    mount ::CahierDeTextesAPI::V0::API
+  end
 end
