@@ -30,10 +30,6 @@ vagrant/
 /config/database.rb*
 /lib/key_pronote
 
-# minification
-public/app/scripts/*.min.js
-public/app/styles/*.min.css
-
 # données de test non anonymisées
 /spec/fixtures/UDT/*.xml
 /clef_privee
