@@ -232,17 +232,25 @@ module ProNote
           creneau_emploi_du_temps.children.each do |node|
             case node.name
             when 'Professeur'
-              CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
-              CreneauEmploiDuTempsEnseignant.create(creneau_emploi_du_temps_id: creneau.id,
-                                                    enseignant_id: enseignants[ node['Ident'] ],
-                                                    semaines_de_presence: node['Semaines'])
-              CreneauEmploiDuTempsEnseignant.restrict_primary_key
-            when 'Classe', 'PartieDeClasse', 'Groupe' # on ne distingue pas les 3 types de regroupements
-              CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
-              CreneauEmploiDuTempsRegroupement.create(creneau_emploi_du_temps_id: creneau.id,
-                                                      regroupement_id: regroupements[ node.name ][ node['Ident'] ],
+              if enseignants[ node['Ident'] ].nil?
+                STDERR.puts "Impossible de créer ce créneau car l'enseignant #{node['Ident']} n'a pu être indentifié"
+              else
+                CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
+                CreneauEmploiDuTempsEnseignant.create(creneau_emploi_du_temps_id: creneau.id,
+                                                      enseignant_id: enseignants[ node['Ident'] ],
                                                       semaines_de_presence: node['Semaines'])
-              CreneauEmploiDuTempsRegroupement.restrict_primary_key
+                CreneauEmploiDuTempsEnseignant.restrict_primary_key
+              end
+            when 'Classe', 'PartieDeClasse', 'Groupe' # on ne distingue pas les 3 types de regroupements
+              if regroupements[ node['Ident'] ].nil?
+                STDERR.puts "Impossible de créer ce créneau car le regroupement #{node['Ident']} n'a pu être indentifié"
+              else
+                CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
+                CreneauEmploiDuTempsRegroupement.create(creneau_emploi_du_temps_id: creneau.id,
+                                                        regroupement_id: regroupements[ node.name ][ node['Ident'] ],
+                                                        semaines_de_presence: node['Semaines'])
+                CreneauEmploiDuTempsRegroupement.restrict_primary_key
+              end
             when 'Salle'
               CreneauEmploiDuTempsSalle.unrestrict_primary_key
               CreneauEmploiDuTempsSalle.create(creneau_emploi_du_temps_id: creneau.id,
