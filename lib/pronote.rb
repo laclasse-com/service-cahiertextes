@@ -32,13 +32,10 @@ module ProNote
     hxml[:cles_chiffrees_debased64] = Base64.decode64 hxml[:cles_chiffrees]
 
     pk = OpenSSL::PKey::RSA.new File.read '../clef_privee'
-    STDERR.puts 'WE HAZ PRIVATE KEY!' if pk.private?
-    STDERR.puts 'WE HAZ PUBLIC KEY!' if pk.public?
 
     # FIXME: OpenSSL::PKey::RSAError: padding check failed
     hxml[:cles_AES] = pk.private_decrypt hxml[:cles_chiffrees_debased64]
 
-    # FIXME: liste des types dans OpenSSL::Cipher.ciphers
     aes = OpenSSL::Cipher.new 'AES-128-CBC'
     aes.decrypt
     aes.key = hxml[:cles_AES]
