@@ -38,15 +38,15 @@ angular.module('cahierDeTexteApp')
 			  rowHeight: 64,
 			  columnDefs: [
 			      { field: 'classe', displayName: 'Classe',
-				cellTemplate: '<span ng-bind-html="row.entity.classe_id">{{classes[row.entity.classe_id]}}</span>' },
+				cellTemplate: '<span data-ng-bind-html="row.entity.classe_id">{{classes[row.entity.classe_id]}}</span>' },
 			      { field: 'matiere', displayName: 'Matière',
-				cellTemplate: '<span ng-bind-html="row.entity.matiere_id">{{matieres[row.entity.matiere_id]}}</span>' },
+				cellTemplate: '<span data-ng-bind-html="row.entity.matiere_id">{{matieres[row.entity.matiere_id]}}</span>' },
 			      { field: 'cours', displayName: 'Cours',
-				cellTemplate: '<span style="overflow-y:auto" ng-bind-html="row.entity.cours.contenu"></span>' },
+				cellTemplate: '<span style="overflow-y:auto" data-ng-bind-html="row.entity.cours.contenu"></span>' },
 			      { field: 'devoir', displayName: 'Travail à faire',
-				cellTemplate: '<span style="overflow-y:auto" ng-bind-html="row.entity.devoir.contenu"></span>' },
+				cellTemplate: '<span style="overflow-y:auto" data-ng-bind-html="row.entity.devoir.contenu"></span>' },
 			      { field: 'validated', displayName: 'Validé',
-				cellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" ng-model="row.entity.valide" ng-show="!row.entity.valide" ng-click="grid.valide( row )" /><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" disabled checked ng-show="row.entity.valide" /></div>'}
+				cellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" data-ng-model="row.entity.valide" data-ng-show="!row.entity.valide" data-ng-click="grid.valide( row )" /><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" disabled checked data-ng-show="row.entity.valide" /></div>'}
 			  ],
 			  valide: function( row ) {
 			      row.entity.cours.$valide();
