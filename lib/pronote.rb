@@ -222,7 +222,7 @@ module ProNote
         matiere_id = nil
 
         creneau_emploi_du_temps.children.each do |node|  # FIXME: peut sûrement mieux faire
-          node.name == 'Matiere' && matiere_id = matieres[ node['Ident'] ]
+          matiere_id = matieres[ node['Ident'] ] if node.name == 'Matiere'
         end
         unless matiere_id.nil?
           creneau = CreneauEmploiDuTemps.create(jour_de_la_semaine: creneau_emploi_du_temps['Jour'].to_i + etablissement.date_premier_jour_premiere_semaine.wday, # 1: 'lundi' .. 7: 'dimanche', norme ISO-8601
