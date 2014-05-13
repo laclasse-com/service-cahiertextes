@@ -31,8 +31,8 @@ vagrant/
 /lib/key_pronote
 
 # minification
-*.min.js
-*.min.css
+public/app/scripts/*.min.js
+public/app/styles/*.min.css
 
 # données de test non anonymisées
 /spec/fixtures/UDT/*.xml
