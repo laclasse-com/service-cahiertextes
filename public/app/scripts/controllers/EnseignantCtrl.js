@@ -15,9 +15,7 @@ angular.module('cahierDeTexteApp')
 		      $scope.calendar.options.defaultView = 'agendaWeek';
 		      $scope.calendar.options.eventRender = function( event, element ) {
 			  // FIXME: manipulation du DOM dans le contrôleur, sale
-			  element.find('.fc-event-title').append( ' - ' + event.regroupement );
-			  element.find('.fc-event-title').append( '<br>' );
-			  element.find('.fc-event-title').append( event.description );
+			  element.find('.fc-event-title').append( ' - ' + event.regroupement + '<br>' + event.description );
 		      };
 
 		      $scope.calendar.options.viewRender = function( view, element ) {
