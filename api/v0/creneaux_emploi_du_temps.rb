@@ -17,7 +17,13 @@ module CahierDeTextesAPI
         requires :id
       }
       get '/:id' do
-        CreneauEmploiDuTemps[ params[:id] ]
+        creneau = CreneauEmploiDuTemps[ params[:id] ]
+        h = creneau.to_hash
+        h[:ressources] = creneau.ressources
+        h[:enseignants] = creneau.enseignants
+        h[:salles] = creneau.salles
+
+        h
       end
 
       desc 'crée un créneau s\'il n\'existe pas déjà un semblable'
