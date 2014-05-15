@@ -96,9 +96,8 @@ angular.module('cahierDeTexteApp')
 							  };
 
 							  var create_devoir = function( cours ) {
-							      var date = new Date();
 							      var devoir = new Devoirs({ cours_id: cours.id,
-											 date_due: date.toISOString(),
+											 date_due: new Date().toISOString(),
 											 type_devoir_id: null });
 							      devoir.create = true;
 
