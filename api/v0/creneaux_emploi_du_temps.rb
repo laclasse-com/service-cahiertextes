@@ -19,7 +19,7 @@ module CahierDeTextesAPI
       get '/:id' do
         creneau = CreneauEmploiDuTemps[ params[:id] ]
         h = creneau.to_hash
-        h[:ressources] = creneau.ressources
+        h[:regroupements] = creneau.regroupements
         h[:enseignants] = creneau.enseignants
         h[:salles] = creneau.salles
 
