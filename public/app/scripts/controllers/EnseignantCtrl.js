@@ -8,7 +8,7 @@ angular.module('cahierDeTexteApp')
 		      $scope.matieres = [];
 		      $scope.classes = [];
 		      $scope.classe = null;
-		      console.debug(Documents.list_files)
+
 		      // configuration du composant calendrier /////////////////
 		      $scope.calendar = { options: CALENDAR_OPTIONS,
 					  events: [  ] };
