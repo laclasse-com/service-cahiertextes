@@ -79,15 +79,24 @@ angular.module('cahierDeTexteApp')
 					resolve: { raw_data: function() { return $scope.raw_data; },
 						   matieres: function() { return $scope.matieres; },
 						   classes: function() { return $scope.classes; },
+						   creneau_emploi_du_temps_id: function() { return $scope.creneau.details.creneau_emploi_du_temps_id; },
 						   matiere_id: function() { return $scope.matiere_id; },
 						   regroupement_id: function() { return $scope.regroupement_id; },
 						   cours: function() { return $scope.cours; },
 						   devoirs: function() { return $scope.devoirs; },
 						   types_de_devoir: function() { return $scope.types_de_devoir; } },
-					controller: [ '$scope', '$filter', 'TINYMCE_OPTIONS', '$modalInstance', 'cours', 'devoirs', 'types_de_devoir', 'matiere_id', 'regroupement_id', 'raw_data', 'classes', 'matieres',
-						      function( $scope, $filter, TINYMCE_OPTIONS, $modalInstance, cours, devoirs, types_de_devoir, matiere_id, regroupement_id, raw_data, classes, matieres ) {
+					controller: [ '$scope', '$filter', 'TINYMCE_OPTIONS', '$modalInstance',
+						      'CreneauEmploiDuTemps', 'cours', 'devoirs', 'types_de_devoir',
+						      'creneau_emploi_du_temps_id', 'matiere_id', 'regroupement_id',
+						      'raw_data', 'classes', 'matieres',
+						      function( $scope, $filter, TINYMCE_OPTIONS, $modalInstance,
+								CreneauEmploiDuTemps, cours, devoirs, types_de_devoir,
+								creneau_emploi_du_temps_id, matiere_id, regroupement_id,
+								raw_data, classes, matieres ) {
 							  // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
 							  $scope.matieres_ary = _($scope.matieres).values();
+
+							  $scope.creneau = CreneauEmploiDuTemps.get({ id: creneau_emploi_du_temps_id });
 
 							  $scope.dirty = false;
 							  $scope.deleted = false;
