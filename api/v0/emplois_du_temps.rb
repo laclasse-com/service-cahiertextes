@@ -20,21 +20,21 @@ module CahierDeTextesAPI
 
         params[:debut] = Date.parse( params[:debut].iso8601 )
         params[:fin] = Date.parse( params[:fin].iso8601 )
+        weeks =  ( params[:debut] .. params[:fin] ).map { |d| d.cweek }.uniq
 
-        # FIXME
-        regroupements_ids = Annuaire.get_user_regroupements( user.uid )['classes'].reject {
-          |classe|
-          classe['etablissement_code'] != params[:uai] if params[:uai]
-        }.map {
-          |classe|
-          classe['classe_id']
-        }.uniq
+        regroupements_ids = Annuaire.get_user_regroupements( user.uid )['classes']
+          .reject { |classe| classe['etablissement_code'] != params[:uai] if params[:uai] }
+          .map    { |classe| classe['classe_id'] }
+          .uniq
 
+        # FIXME: creneau[:semaines_de_presence][ 1 ] == première semaine de janvier ?
         CreneauEmploiDuTemps
-          .join(:creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :id)
+          .association_join( :regroupements )
           .where( regroupement_id: regroupements_ids )
-          .map {
-          |creneau|
+          .all
+          .select { |creneau| weeks.reduce( true ) { |a, week| a && creneau[:semaines_de_presence][ week ] == 1 } }
+          .map { |creneau|
+
           plage_debut = PlageHoraire[ creneau.debut ].debut
           plage_fin = PlageHoraire[ creneau.fin ].fin
 
@@ -58,15 +58,17 @@ module CahierDeTextesAPI
               cours = le_cours.to_hash
               cours[:ressources] = le_cours.ressources
 
-              devoirs = Devoir.where( cours_id: cours[:id] ).all.map {
-                |devoir|
-                hstart = PlageHoraire[ CreneauEmploiDuTemps[ devoir.creneau_emploi_du_temps_id ].debut ].debut
-                hend = PlageHoraire[ CreneauEmploiDuTemps[ devoir.creneau_emploi_du_temps_id ].fin ].fin
-                d = devoir.to_hash
+              devoirs = Devoir
+                .where( cours_id: cours[:id] )
+                .all
+                .map { |devoir|
+                hstart         = PlageHoraire[ CreneauEmploiDuTemps[ devoir.creneau_emploi_du_temps_id ].debut ].debut
+                hend           = PlageHoraire[ CreneauEmploiDuTemps[ devoir.creneau_emploi_du_temps_id ].fin ].fin
+                d              = devoir.to_hash
                 d[:ressources] = devoir.ressources
-                d[:fait] = devoir.fait_par?( user.uid )
-                d[:start] = Time.new( devoir.date_due.year, devoir.date_due.month, devoir.date_due.mday, hstart.hour, hstart.min ).iso8601
-                d[:end] = Time.new( devoir.date_due.year, devoir.date_due.month, devoir.date_due.mday, hend.hour, hend.min ).iso8601
+                d[:fait]       = devoir.fait_par?( user.uid )
+                d[:start]      = Time.new( devoir.date_due.year, devoir.date_due.month, devoir.date_due.mday, hstart.hour, hstart.min ).iso8601
+                d[:end]        = Time.new( devoir.date_due.year, devoir.date_due.month, devoir.date_due.mday, hend.hour, hend.min ).iso8601
 
                 d
               }
