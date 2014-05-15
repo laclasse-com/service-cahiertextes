@@ -337,8 +337,6 @@ angular.module('cahierDeTexteApp')
 							className: 'clickable-event'};
 
 			  } else {
-			      console.debug('Cours NON  détruit')
-
 			      var calendar_event = { details: { matiere_id: event.details.matiere_id,
 								regroupement_id: event.details.regroupement_id,
 								cahier_de_textes_id: event.details.cahier_de_textes_id,
@@ -387,7 +385,6 @@ angular.module('cahierDeTexteApp')
 			      }
 
 			      if ( event.details.matiere_id.length > 0 ) {
-				  console.debug(event.details.matiere_id)
 				  calendar_event.title = $scope.matieres[ event.details.matiere_id ].libelle_long;
 			      }
 
