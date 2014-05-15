@@ -53,24 +53,21 @@ module CahierDeTextesAPI
 
         creneau = CreneauEmploiDuTemps.create(debut: plage_horaire_debut.id,
                                               fin: plage_horaire_fin.id,
-                                              jour_de_la_semaine: params[:jour_de_la_semaine] - 1, # FIXME: pas toujours lundi
+                                              jour_de_la_semaine: params[:jour_de_la_semaine] - 1, # FIXME: pas forcément toujours lundi
                                               matiere_id: params[:matiere_id] )
         CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
-        CreneauEmploiDuTempsEnseignant.create(creneau_emploi_du_temps_id: creneau.id,
-                                              enseignant_id: user.uid )
+        creneau.add_enseignant enseignant_id: user.uid
         CreneauEmploiDuTempsEnseignant.restrict_primary_key
 
         unless params[:regroupement_id].empty?
           CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
-          CreneauEmploiDuTempsRegroupement.create(creneau_emploi_du_temps_id: creneau.id,
-                                                  regroupement_id: params[:regroupement_id] )
+          creneau.add_regroupement regroupement_id: params[:regroupement_id]
           CreneauEmploiDuTempsRegroupement.restrict_primary_key
         end
 
         if params[:salle_id]
           CreneauEmploiDuTempsSalle.unrestrict_primary_key
-          CreneauEmploiDuTempsSalle.create(creneau_emploi_du_temps_id: creneau.id,
-                                           salle_id: params[:salle_id] )
+          creneau.add_salle salle_id: params[:salle_id]
           CreneauEmploiDuTempsSalle.restrict_primary_key
         end
 
@@ -97,19 +94,16 @@ module CahierDeTextesAPI
           if CreneauEmploiDuTempsRegroupement
               .where( creneau_emploi_du_temps_id: params[:id] )
               .where( regroupement_id: params[:regroupement_id] ).count < 1
-
             CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
-            CreneauEmploiDuTempsRegroupement.create(creneau_emploi_du_temps_id: creneau.id,
-                                                    regroupement_id: params[:regroupement_id] )
+            creneau.add_regroupement regroupement_id: params[:regroupement_id]
             CreneauEmploiDuTempsRegroupement.restrict_primary_key
           end
 
-          # if params[:salle_id]
-          #    CreneauEmploiDuTempsSalle.unrestrict_primary_key
-          #    CreneauEmploiDuTempsSalle.create( creneau_emploi_du_temps_id: creneau.id,
-          #       salle_id: params[:salle_id] )
-          #    CreneauEmploiDuTempsSalle.restrict_primary_key
-          # end
+          if params[:salle_id]
+            CreneauEmploiDuTempsSalle.unrestrict_primary_key
+            creneau.add_salle salle_id: params[:salle_id]
+            CreneauEmploiDuTempsSalle.restrict_primary_key
+          end
 
           creneau
         end
