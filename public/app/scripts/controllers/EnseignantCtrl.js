@@ -86,17 +86,17 @@ angular.module('cahierDeTexteApp')
 						   devoirs: function() { return $scope.devoirs; },
 						   types_de_devoir: function() { return $scope.types_de_devoir; } },
 					controller: [ '$scope', '$filter', 'TINYMCE_OPTIONS', '$modalInstance',
-						      'CreneauEmploiDuTemps', 'cours', 'devoirs', 'types_de_devoir',
+						      'CreneauEmploiDuTemps', 'Documents', 'cours', 'devoirs', 'types_de_devoir',
 						      'creneau_emploi_du_temps_id', 'matiere_id', 'regroupement_id',
 						      'raw_data', 'classes', 'matieres',
-						      function( $scope, $filter, TINYMCE_OPTIONS, $modalInstance,
-								CreneauEmploiDuTemps, cours, devoirs, types_de_devoir,
-								creneau_emploi_du_temps_id, matiere_id, regroupement_id,
-								raw_data, classes, matieres ) {
+						      function( $scope, $filter, TINYMCE_OPTIONS, $modalInstance, CreneauEmploiDuTemps, Documents, cours, devoirs, types_de_devoir, creneau_emploi_du_temps_id, matiere_id, regroupement_id, raw_data, classes, matieres ) {
+							  console.debug(Documents.list_files());
 							  // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
 							  $scope.matieres_ary = _($scope.matieres).values();
 
-							  $scope.creneau = CreneauEmploiDuTemps.get({ id: creneau_emploi_du_temps_id });
+							  if ( creneau_emploi_du_temps_id === undefined ){
+							      $scope.creneau = CreneauEmploiDuTemps.get({ id: creneau_emploi_du_temps_id });
+							  }
 
 							  $scope.dirty = false;
 							  $scope.deleted = false;
@@ -107,7 +107,8 @@ angular.module('cahierDeTexteApp')
 							  var create_devoir = function( cours ) {
 							      var devoir = new Devoirs({ cours_id: cours.id,
 											 date_due: new Date().toISOString(),
-											 type_devoir_id: null });
+											 type_devoir_id: null,
+											 creneau_emploi_du_temps_id: null });
 							      devoir.create = true;
 
 							      return devoir;
