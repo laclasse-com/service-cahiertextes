@@ -71,18 +71,21 @@
 	    <option value="" disabled selected>Choisissez un type de devoir</option>
 	  </select>
 
-	  <div data-w11k-select
-	       data-multiple="false"
-	       data-disabled="false"
-	       data-required="true"
-	       data-ng-model="devoir.creneau_emploi_du_temps_id"
-	       data-options="creneau.id as creneau.start_str +' - '+ creneau.end_str for creneau in creneaux_disponibles"
-	       data-placeholder="'Créneaux disponibles'"
-	       data-filter-placeholder="'Filtre'"
-	       data-select-filtered-text="'tous'"
-	       data-deselect-filtered-text="'aucun'"
-	       >
-	  </div>
+	  <select data-ng-model="devoir.creneau_emploi_du_temps_id"
+		  data-ng-options="creneau.creneau_emploi_du_temps_id as creneau.start_str +' - '+ creneau.end_str for creneau in creneaux_devoirs_possibles" >
+	  </select>
+	  <!-- <div data-w11k-select
+	  data-multiple="false"
+	  data-disabled="false"
+	  data-required="true"
+	  data-ng-model="devoir.creneau_emploi_du_temps_id"
+	  data-options="creneau.creneau_emploi_du_temps_id as creneau.start_str +' - '+ creneau.end_str for creneau in creneaux_devoirs_possibles"
+	  data-placeholder="'Créneaux disponibles'"
+	  data-filter-placeholder="'Filtre'"
+	  data-select-filtered-text="'tous'"
+	  data-deselect-filtered-text="'aucun'"
+	  >
+	  </div> -->
 	</div>
       </div>
     </div>
