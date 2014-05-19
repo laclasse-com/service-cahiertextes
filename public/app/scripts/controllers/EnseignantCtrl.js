@@ -126,6 +126,9 @@ angular.module('cahierDeTexteApp')
 									      noeud.children.push( elt );
 									  } );
 								  } );
+							      } else {
+								  cours.ressources.push( { name: noeud.name,
+											   hash: noeud.hash } );
 							      }
 							  };
 							  $scope.treeOptions = {
