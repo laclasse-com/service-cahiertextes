@@ -29,7 +29,7 @@
     </textarea>
     <div class="panel-footer">
       <ul>
-	<li data-ng-repeat="ressource in cours.ressources"><a target="_blank" href="http://www.dev.laclasse.com/docs-beta/api/connector?cmd=file&target={{ressource.hash}}">{{ressource.name}}</a> <button style="color:red;font-weight:bold" data-ng-click="">&times;</button> </li>
+	<li data-ng-repeat="ressource in cours.ressources"><a target="_blank" href="http://www.dev.laclasse.com/docs-beta/api/connector?cmd=file&target={{ressource.hash}}">{{ressource.name}}</a> <button style="color:red;font-weight:bold" data-ng-click="cours.remove_ressource( ressource.hash )">&times;</button> </li>
       </ul>
       <input type="file">
       <treecontrol class="tree-classic"
