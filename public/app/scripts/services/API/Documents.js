@@ -5,10 +5,8 @@ angular.module('cahierDeTexteApp')
 	     [ '$http',
 	       function( $http ) {
 		   this.list_files = function( root ) {
-		       $http.get( "http://www.dev.laclasse.com/docs-beta/api/connector?cmd=open&target=" )
-			   .success( function( response ) {
-			       console.debug(response)
-			   } );
+		       root = typeof root === 'undefined' ? '&init=1' : root;
+		       return $http.get( "http://www.dev.laclasse.com/docs-beta/api/connector?cmd=open&target=" + root );
 		   };
 	       }
 	     ] );
