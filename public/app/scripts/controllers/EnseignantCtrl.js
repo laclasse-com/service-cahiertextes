@@ -102,42 +102,36 @@ angular.module('cahierDeTexteApp')
 							  $scope.is_dirty = function() {
 							      $scope.dirty = true;
 							  };
-							  $scope.liste_docs = function() {
-							      Documents.list_files().then( function( response ) {
-								  $scope.cartable = response.data;
+							  $scope.cartable = [];
+
+							  Documents.list_files(  ).then( function( response ) {
+							      $scope.cartable = response.data;
+							      $scope.cartable.files = _($scope.cartable.files).map( function( elt ) {
+								  elt.children = [];
+								  return elt;
 							      } );
-							  };
-							  $scope.liste_docs();
+							  } );
 
 							  //;;;;;;;;;;;;;;;;;;;;;;;
+							  $scope.treeClicked = function( noeud ) {
+							      console.debug( noeud );
+							      if ( noeud.mime === 'directory' ) {
+								  Documents.list_files( noeud.hash ).then( function( response ) {
+								      console.debug( _($scope.cartable.files).map( function( elt ) {
+									  elt.children = [];
+									  return elt;
+								      } )
+										   );
+								      noeud.children.push( { hash: 'test', mime: 'text', name: 'test' } );
+								      noeud.children.push( { hash: 'test', mime: 'text', name: 'test' } );
+								      noeud.children.push( { hash: 'test', mime: 'text', name: 'test' } );
+								  } );
+							      }
+							  };
 							  $scope.treeOptions = {
 							      nodeChildren: "children",
-							      dirSelectable: true,
-							      injectClasses: {
-								  ul: "a1",
-								  li: "a2",
-								  liSelected: "a7",
-								  iExpanded: "a3",
-								  iCollapsed: "a4",
-								  iLeaf: "a5",
-								  label: "a6",
-								  labelSelected: "a8"
-							      }
+							      dirSelectable: true
 							  }
-							  $scope.dataForTheTree =
-							      [
-								  { "name" : "Joe", "age" : "21", "children" : [
-								      { "name" : "Smith", "age" : "42", "children" : [] },
-								      { "name" : "Gary", "age" : "21", "children" : [
-									  { "name" : "Jenifer", "age" : "23", "children" : [
-									      { "name" : "Dani", "age" : "32", "children" : [] },
-									      { "name" : "Max", "age" : "34", "children" : [] }
-									  ]}
-								      ]}
-								  ]},
-								  { "name" : "Albert", "age" : "33", "children" : [] },
-								  { "name" : "Ron", "age" : "29", "children" : [] }
-							      ];
 							  //;;;;;;;;;;;;;;;;;;;;;;;
 
 							  var create_devoir = function( cours ) {
