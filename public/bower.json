@@ -1,45 +1,45 @@
 {
-    "name": "cahierDeTexte",
-    "version": "0.0.0",
-    "dependencies": {
-	"angular": "latest",
-	"angular-bootstrap": "latest",
-	"angular-cookies": "latest",
-	"angular-grid": "git://github.com/angular-ui/ng-grid.git#latest",
-	"angular-i18n": "latest",
-	"angular-mocks": "latest",
-	"angular-resource": "latest",
-	"angular-sanitize": "latest",
-	"angular-scenario": "latest",
-	"angular-ui-calendar": "latest",
-	"angular-ui-router": "latest",
-	"angular-ui-tinymce": "latest",
-	"bootstrap": "latest",
-	"es5-shim": "latest",
-	"json3": "latest",
-	"select2-bootstrap-css": "latest",
-	"sizzle": "latest",
-	"swagger-ui": "latest",
-	"underscore": "latest",
-	"angular-animate": "latest",
-	"angular-loading-bar": "latest",
-	"w11k-select": "latest",
-	"charte-graphique-laclasse-com": "git@gitlab.erasme.org:laclasse/charte-graphique-laclasse-com.git#latest",
 	"angularjs-nvd3-directives": "latest"
-    },
-    "devDependencies": {
-	"angular-mocks": "latest",
-	"angular-scenario": "latest"
-    },
-    "ignore": [
-	"**/.*",
-	"node_modules",
-	"components",
-	"bower_components",
-	"test",
-	"tests"
-    ],
-    "resolutions": {
-	"jquery": "~2.x"
-    }
+  "name": "cahierDeTexte",
+  "version": "0.0.0",
+  "dependencies": {
+    "angular": "latest",
+    "angular-bootstrap": "latest",
+    "angular-cookies": "latest",
+    "angular-grid": "git://github.com/angular-ui/ng-grid.git#latest",
+    "angular-i18n": "latest",
+    "angular-mocks": "latest",
+    "angular-resource": "latest",
+    "angular-sanitize": "latest",
+    "angular-scenario": "latest",
+    "angular-ui-calendar": "latest",
+    "angular-ui-router": "latest",
+    "angular-ui-tinymce": "latest",
+    "bootstrap": "latest",
+    "es5-shim": "latest",
+    "json3": "latest",
+    "select2-bootstrap-css": "latest",
+    "sizzle": "latest",
+    "swagger-ui": "latest",
+    "underscore": "latest",
+    "angular-animate": "latest",
+    "angular-loading-bar": "latest",
+    "w11k-select": "latest",
+    "charte-graphique-laclasse-com": "git@gitlab.erasme.org:laclasse/charte-graphique-laclasse-com.git#latest",
+  },
+  "devDependencies": {
+    "angular-mocks": "latest",
+    "angular-scenario": "latest"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "resolutions": {
+    "jquery": "~2.x"
+  }
 }

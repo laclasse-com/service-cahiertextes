@@ -13,9 +13,9 @@
 
 'use strict';
 
-// Alias the loading bar so it can be included using a simpler
-// (and maybe more professional) module name:
-angular.module('angular-loading-bar', ['chieffancypants.loadingBar']);
+// Alias the loading bar for various backwards compatibilities since the project has matured:
+angular.module('angular-loading-bar', ['cfp.loadingBarInterceptor']);
+angular.module('chieffancypants.loadingBar', ['cfp.loadingBarInterceptor']);
 
 
 /**
@@ -23,7 +23,7 @@ angular.module('angular-loading-bar', ['chieffancypants.loadingBar']);
  *
  * Registers itself as an Angular interceptor and listens for XHR requests.
  */
-angular.module('chieffancypants.loadingBar', [])
+angular.module('cfp.loadingBarInterceptor', ['cfp.loadingBar'])
   .config(['$httpProvider', function ($httpProvider) {
 
     var interceptor = ['$q', '$cacheFactory', '$timeout', '$rootScope', 'cfpLoadingBar', function ($q, $cacheFactory, $timeout, $rootScope, cfpLoadingBar) {
@@ -139,29 +139,30 @@ angular.module('chieffancypants.loadingBar', [])
     }];
 
     $httpProvider.interceptors.push(interceptor);
-  }])
+  }]);
 
 
-  /**
-   * Loading Bar
-   *
-   * This service handles adding and removing the actual element in the DOM.
-   * Generally, best practices for DOM manipulation is to take place in a
-   * directive, but because the element itself is injected in the DOM only upon
-   * XHR requests, and it's likely needed on every view, the best option is to
-   * use a service.
-   */
+/**
+ * Loading Bar
+ *
+ * This service handles adding and removing the actual element in the DOM.
+ * Generally, best practices for DOM manipulation is to take place in a
+ * directive, but because the element itself is injected in the DOM only upon
+ * XHR requests, and it's likely needed on every view, the best option is to
+ * use a service.
+ */
+angular.module('cfp.loadingBar', [])
   .provider('cfpLoadingBar', function() {
 
     this.includeSpinner = true;
     this.includeBar = true;
     this.latencyThreshold = 100;
+    this.startSize = 0.02;
     this.parentSelector = 'body';
 
     this.$get = ['$document', '$timeout', '$animate', '$rootScope', function ($document, $timeout, $animate, $rootScope) {
 
       var $parentSelector = this.parentSelector,
-        $parent = $document.find($parentSelector),
         loadingBarContainer = angular.element('<div id="loading-bar"><div class="bar"><div class="peg"></div></div></div>'),
         loadingBar = loadingBarContainer.find('div').eq(0),
         spinner = angular.element('<div id="loading-bar-spinner"><div class="spinner-icon"></div></div>');
@@ -173,11 +174,13 @@ angular.module('chieffancypants.loadingBar', [])
 
       var includeSpinner = this.includeSpinner;
       var includeBar = this.includeBar;
+      var startSize = this.startSize;
 
       /**
        * Inserts the loading bar element into the dom, and sets it to 2%
        */
       function _start() {
+        var $parent = $document.find($parentSelector);
         $timeout.cancel(completeTimeout);
 
         // do not continually broadcast the started event:
@@ -196,7 +199,7 @@ angular.module('chieffancypants.loadingBar', [])
           $animate.enter(spinner, $parent);
         }
 
-        _set(0.02);
+        _set(startSize);
       }
 
       /**
@@ -282,7 +285,8 @@ angular.module('chieffancypants.loadingBar', [])
         complete         : _complete,
         includeSpinner   : this.includeSpinner,
         latencyThreshold : this.latencyThreshold,
-        parentSelector   : this.parentSelector
+        parentSelector   : this.parentSelector,
+        startSize        : this.startSize
       };
 
 
