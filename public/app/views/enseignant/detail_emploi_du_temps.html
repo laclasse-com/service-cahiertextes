@@ -31,6 +31,13 @@
 	<li data-ng-repeat="ressource in cours.ressources">{{ressource.url}}</li>
       </ul>
       <input type="file">
+      <treecontrol class="tree-classic"
+		   tree-model="dataForTheTree"
+		   options="treeOptions"
+		   on-selection="showSelected(node)"
+		   selected-node="node1">
+	employee: {{node.name}} age {{node.age}}
+      </treecontrol>
 
       <div class="row-fluid" data-ng-show="creneaux_similaires">
 	<div class="col-md-8" data-w11k-select

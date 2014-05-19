@@ -90,7 +90,6 @@ angular.module('cahierDeTexteApp')
 						      'creneau_emploi_du_temps_id', 'matiere_id', 'regroupement_id',
 						      'raw_data', 'classes', 'matieres',
 						      function( $scope, $filter, TINYMCE_OPTIONS, $modalInstance, CreneauEmploiDuTemps, Documents, cours, devoirs, types_de_devoir, creneau_emploi_du_temps_id, matiere_id, regroupement_id, raw_data, classes, matieres ) {
-							  console.debug(Documents.list_files());
 							  // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
 							  $scope.matieres_ary = _($scope.matieres).values();
 
@@ -103,6 +102,43 @@ angular.module('cahierDeTexteApp')
 							  $scope.is_dirty = function() {
 							      $scope.dirty = true;
 							  };
+							  $scope.liste_docs = function() {
+							      Documents.list_files().then( function( response ) {
+								  $scope.cartable = response.data;
+							      } );
+							  };
+							  $scope.liste_docs();
+
+							  //;;;;;;;;;;;;;;;;;;;;;;;
+							  $scope.treeOptions = {
+							      nodeChildren: "children",
+							      dirSelectable: true,
+							      injectClasses: {
+								  ul: "a1",
+								  li: "a2",
+								  liSelected: "a7",
+								  iExpanded: "a3",
+								  iCollapsed: "a4",
+								  iLeaf: "a5",
+								  label: "a6",
+								  labelSelected: "a8"
+							      }
+							  }
+							  $scope.dataForTheTree =
+							      [
+								  { "name" : "Joe", "age" : "21", "children" : [
+								      { "name" : "Smith", "age" : "42", "children" : [] },
+								      { "name" : "Gary", "age" : "21", "children" : [
+									  { "name" : "Jenifer", "age" : "23", "children" : [
+									      { "name" : "Dani", "age" : "32", "children" : [] },
+									      { "name" : "Max", "age" : "34", "children" : [] }
+									  ]}
+								      ]}
+								  ]},
+								  { "name" : "Albert", "age" : "33", "children" : [] },
+								  { "name" : "Ron", "age" : "29", "children" : [] }
+							      ];
+							  //;;;;;;;;;;;;;;;;;;;;;;;
 
 							  var create_devoir = function( cours ) {
 							      var devoir = new Devoirs({ cours_id: cours.id,

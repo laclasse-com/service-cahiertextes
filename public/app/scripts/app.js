@@ -12,4 +12,5 @@ angular.module( 'cahierDeTexteApp', [ 'ngResource',
 				      'ngAnimate',
 				      'w11k.select',
 				      'w11k.select.template',
-				      'nvd3ChartDirectives'] );
+				      'nvd3ChartDirectives',
+				      'treeControl' ] );
