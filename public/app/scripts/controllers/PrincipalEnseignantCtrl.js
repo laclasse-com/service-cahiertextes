@@ -42,9 +42,9 @@ angular.module('cahierDeTexteApp')
 			      { field: 'matiere', displayName: 'Matière',
 				cellTemplate: '<span data-ng-bind-html="row.entity.matiere_id">{{matieres[row.entity.matiere_id]}}</span>' },
 			      { field: 'cours', displayName: 'Cours',
-				cellTemplate: '<span style="overflow-y:auto" data-ng-bind-html="row.entity.cours.contenu"></span>' },
+				cellTemplate: '<span class="scrollbar" data-ng-bind-html="row.entity.cours.contenu"></span>' },
 			      { field: 'devoir', displayName: 'Travail à faire',
-				cellTemplate: '<span style="overflow-y:auto" data-ng-bind-html="row.entity.devoir.contenu"></span>' },
+				cellTemplate: '<span class="scrollbar" data-ng-bind-html="row.entity.devoir.contenu"></span>' },
 			      { field: 'validated', displayName: 'Validé',
 				cellTemplate: '<div class="ngSelectionCell"><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" data-ng-model="row.entity.valide" data-ng-show="!row.entity.valide" data-ng-click="grid.valide( row )" /><input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" disabled checked data-ng-show="row.entity.valide" /></div>'}
 			  ],
