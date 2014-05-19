@@ -5,11 +5,11 @@
   "ignore": [],
   "dependencies": {},
   "devDependencies": {},
-  "_release": "b8918cf211",
+  "_release": "26178e9c50",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "b8918cf2112dd74d00704c25b0135bfc7d38e2be"
+    "commit": "26178e9c50cf08b950ae54e855a8ed8095f4db5f"
   },
   "_source": "git@gitlab.erasme.org:laclasse/charte-graphique-laclasse-com.git",
   "_target": "*",

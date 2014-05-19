@@ -12,3 +12,6 @@
 .gris2 {background-color:#8e8e8e}
 .gris3 {background-color:#505050}
 .gris4 {background-color:#323232}
+
+/* notifications */
+#gritter-notice-wrapper { height:75px;}

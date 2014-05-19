@@ -1,6 +1,6 @@
 {
   "name": "sizzle",
-  "version": "1.10.18",
+  "version": "1.10.19",
   "main": "./dist/sizzle.js",
   "devDependencies": {
     "qunit": "1.14.0",
@@ -18,14 +18,15 @@
     "*.md",
     "*.txt",
     "src",
+    "test",
     "Gruntfile.js"
   ],
   "homepage": "https://github.com/jquery/sizzle",
-  "_release": "1.10.18",
+  "_release": "1.10.19",
   "_resolution": {
     "type": "version",
-    "tag": "1.10.18",
-    "commit": "a9eb3ca3c5e1b568057390f73da385809ac69340"
+    "tag": "1.10.19",
+    "commit": "b5de20331f9caf0b3d4e6d223ffea0bb7e3511f4"
   },
   "_source": "git://github.com/jquery/sizzle.git",
   "_target": "*",

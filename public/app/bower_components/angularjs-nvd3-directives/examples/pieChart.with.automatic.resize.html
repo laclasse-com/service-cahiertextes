@@ -10,57 +10,57 @@
     <script src="../dist/angularjs-nvd3-directives.js"></script>
     <link rel="stylesheet" href="stylesheets/nv.d3.css"/>
     <script>
-	var app = angular.module("nvd3TestApp", ['nvd3ChartDirectives']);
+        var app = angular.module("nvd3TestApp", ['nvd3ChartDirectives']);
 
-	function ExampleCtrl($scope){
-	    $scope.exampleData = [
-		{
-		    key: "One",
-		    y: 5
-		},
-		{
-		    key: "Two",
-		    y: 2
-		},
-		{
-		    key: "Three",
-		    y: 9
-		},
-		{
-		    key: "Four",
-		    y: 7
-		},
-		{
-		    key: "Five",
-		    y: 4
-		},
-		{
-		    key: "Six",
-		    y: 3
-		},
-		{
-		    key: "Seven",
-		    y: 9
-		}
-	    ];
+        function ExampleCtrl($scope){
+            $scope.exampleData = [
+                {
+                    key: "One",
+                    y: 5
+                },
+                {
+                    key: "Two",
+                    y: 2
+                },
+                {
+                    key: "Three",
+                    y: 9
+                },
+                {
+                    key: "Four",
+                    y: 7
+                },
+                {
+                    key: "Five",
+                    y: 4
+                },
+                {
+                    key: "Six",
+                    y: 3
+                },
+                {
+                    key: "Seven",
+                    y: 9
+                }
+            ];
 
-	    $scope.xFunction = function(){
-		return function(d) {
-		    return d.key;
-		};
-	    }
-	    $scope.yFunction = function(){
-		return function(d) {
-		    return d.y;
-		};
-	    }
+            $scope.xFunction = function(){
+                return function(d) {
+                    return d.key;
+                };
+            }
+            $scope.yFunction = function(){
+                return function(d) {
+                    return d.y;
+                };
+            }
 
-	    $scope.descriptionFunction = function(){
-		return function(d){
-		    return d.key;
-		}
-	    }
-	}
+            $scope.descriptionFunction = function(){
+                return function(d){
+                    return d.key;
+                }
+            }
+        }
     </script>
 
 </head>
@@ -68,16 +68,16 @@
 
 <div ng-controller="ExampleCtrl">
     <nvd3-pie-chart
-	    data="exampleData"
-	    id="exampleId"
-	    margin="{left:0,top:0,bottom:0,right:0}"
-	    x="xFunction()"
-	    y="yFunction()"
-showLabels="false"
-	    pieLabelsOutside="false"
-showValues="false"
-	    labelType="key">
-	<svg></svg>
+            data="exampleData"
+            id="exampleId"
+            margin="{left:0,top:0,bottom:0,right:0}"
+            x="xFunction()"
+            y="yFunction()"
+            showLabels="true"
+            pieLabelsOutside="false"
+            showValues="true"
+            labelType="percent">
+        <svg></svg>
     </nvd3-pie-chart>
 </div>
 
