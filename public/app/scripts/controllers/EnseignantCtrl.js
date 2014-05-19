@@ -106,32 +106,32 @@ angular.module('cahierDeTexteApp')
 
 							  Documents.list_files(  ).then( function( response ) {
 							      $scope.cartable = response.data;
-							      $scope.cartable.files = _($scope.cartable.files).map( function( elt ) {
-								  elt.children = [];
-								  return elt;
-							      } );
+							      $scope.cartable.files = _.chain( $scope.cartable.files )
+								  .rest()
+								  .value()
+								  .map( function( elt ) {
+								      elt.children = [];
+								      return elt;
+								  } );
 							  } );
 
 							  //;;;;;;;;;;;;;;;;;;;;;;;
 							  $scope.treeClicked = function( noeud ) {
-							      console.debug( noeud );
 							      if ( noeud.mime === 'directory' ) {
 								  Documents.list_files( noeud.hash ).then( function( response ) {
-								      console.debug( _($scope.cartable.files).map( function( elt ) {
-									  elt.children = [];
-									  return elt;
-								      } )
-										   );
-								      noeud.children.push( { hash: 'test', mime: 'text', name: 'test' } );
-								      noeud.children.push( { hash: 'test', mime: 'text', name: 'test' } );
-								      noeud.children.push( { hash: 'test', mime: 'text', name: 'test' } );
+								      _.chain( response.data.files )
+									  .rest()
+									  .each( function( elt ) {
+									      elt.children = [];
+									      noeud.children.push( elt );
+									  } );
 								  } );
 							      }
 							  };
 							  $scope.treeOptions = {
 							      nodeChildren: "children",
 							      dirSelectable: true
-							  }
+							  };
 							  //;;;;;;;;;;;;;;;;;;;;;;;
 
 							  var create_devoir = function( cours ) {
