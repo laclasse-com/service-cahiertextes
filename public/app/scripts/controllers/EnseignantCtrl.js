@@ -117,10 +117,10 @@ angular.module('cahierDeTexteApp')
 
 							  //;;;;;;;;;;;;;;;;;;;;;;;
 							  cours.remove_ressource = function( hash ) {
-							      console.debug('removing ressource ' + hash)
 							      cours.ressources = _(cours.ressources).reject( function( ressource ) {
 								  return ressource.hash == hash;
 							      } );
+							      $scope.dirty = true;
 							  };
 
 							  $scope.treeClicked = function( noeud ) {
@@ -137,6 +137,7 @@ angular.module('cahierDeTexteApp')
 								  if ( _(cours.ressources).findWhere( { hash: noeud.hash } ) === undefined ) {
 								      cours.ressources.push( { name: noeud.name,
 											       hash: noeud.hash } );
+								      $scope.dirty = true;
 								  }
 							      }
 							  };
