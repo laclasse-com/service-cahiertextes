@@ -4,8 +4,15 @@
 </div>
 <div class="modal-body">
 
-  <div class="panel panel-default col-md-12">
+  <div class="panel panel-default">
     <div class="panel-body" data-ng-bind-html="cours.contenu"></div>
+    <div class="panel-footer">
+      <ul>
+	<li data-ng-repeat="ressource in cours.ressources">
+	  <a target="_blank" href="http://www.dev.laclasse.com/docs-beta/api/connector?cmd=file&target={{ressource.hash}}">{{ressource.name}}</a>
+	</li>
+      </ul>
+    </div>
   </div>
 
   <div class="panel panel-default col-md-12" data-ng-repeat="devoir in devoirs">
