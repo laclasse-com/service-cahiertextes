@@ -28,7 +28,7 @@ module CahierDeTextesAPI
           cours = Cours[ params[:id] ]
           unless cours.nil?
             hash = cours.to_hash
-            hash[:ressources] = cours.ressources
+            hash[:ressources] = cours.ressources.map { |rsrc| rsrc.to_hash }
             hash
           end
         end
