@@ -87,8 +87,8 @@ module CahierDeTextesAPI
           # 3. traitement des ressources
           params[:ressources] && params[:ressources].each do
             |ressource|
-            devoir.add_ressource( Ressource.create(  label: ressource['label'],
-                                                     url: ressource['url'] ) )
+            devoir.add_ressource( Ressource.create(  name: ressource['name'],
+                                                     hash: ressource['hash'] ) )
           end
 
           devoir
@@ -122,8 +122,8 @@ module CahierDeTextesAPI
 
           params[:ressources].each do
             |ressource|
-            devoir.add_ressource( Ressource.create(  label: ressource['label'],
-                                                     url: ressource['url'] ) )
+            devoir.add_ressource( Ressource.create(  name: ressource['name'],
+                                                     hash: ressource['hash'] ) )
           end if params[:ressources]
 
           devoir.date_modification = Time.now

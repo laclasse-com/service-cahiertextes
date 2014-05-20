@@ -63,8 +63,8 @@ Sequel.migration do
     create_table!(:ressources) {
       primary_key :id
 
-      String :label
-      String :url, null: false
+      String :name
+      String :hash, null: false
     }
 
     create_table!(:cahiers_de_textes) {

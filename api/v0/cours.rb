@@ -52,8 +52,8 @@ module CahierDeTextesAPI
 
         params[:ressources] && params[:ressources].each do
           |ressource|
-          cours.add_ressource( Ressource.create(  label: ressource['label'],
-                                                  url: ressource['url'] ) )
+          cours.add_ressource( Ressource.create(  name: ressource['name'],
+                                                  hash: ressource['hash'] ) )
         end
 
         cours
@@ -74,8 +74,8 @@ module CahierDeTextesAPI
 
           params[:ressources] && params[:ressources].each do
             |ressource|
-            cours.add_ressource( Ressource.create(  label: ressource['label'],
-                                                    url: ressource['url'] ) )
+            cours.add_ressource( Ressource.create(  name: ressource['name'],
+                                                    hash: ressource['hash'] ) )
           end
 
           cours.save
