@@ -116,14 +116,14 @@ angular.module('cahierDeTexteApp')
 							  } );
 
 							  //;;;;;;;;;;;;;;;;;;;;;;;
-							  cours.remove_ressource = function( hash ) {
-							      cours.ressources = _(cours.ressources).reject( function( ressource ) {
+							  $scope.remove_ressource = function( item, hash ) {
+							      item.ressources = _(item.ressources).reject( function( ressource ) {
 								  return ressource.hash == hash;
 							      } );
 							      $scope.dirty = true;
 							  };
 
-							  $scope.treeClicked = function( noeud ) {
+							  $scope.treeClicked = function( item, noeud ) {
 							      if ( noeud.mime === 'directory' ) {
 								  Documents.list_files( noeud.hash ).then( function( response ) {
 								      _.chain( response.data.files )
@@ -134,8 +134,8 @@ angular.module('cahierDeTexteApp')
 									  } );
 								  } );
 							      } else {
-								  if ( _(cours.ressources).findWhere( { hash: noeud.hash } ) === undefined ) {
-								      cours.ressources.push( { name: noeud.name,
+								  if ( _(item.ressources).findWhere( { hash: noeud.hash } ) === undefined ) {
+								      item.ressources.push( { name: noeud.name,
 											       hash: noeud.hash } );
 								      $scope.dirty = true;
 								  }

@@ -31,14 +31,14 @@
       <ul>
 	<li data-ng-repeat="ressource in cours.ressources">
 	  <a target="_blank" href="http://www.dev.laclasse.com/docs-beta/api/connector?cmd=file&target={{ressource.hash}}">{{ressource.name}}</a>
-	  <button style="color:red;font-weight:bold" data-ng-click="cours.remove_ressource( ressource.hash )">&times;</button>
+	  <button style="color:red;font-weight:bold" data-ng-click="remove_ressource( cours, ressource.hash )">&times;</button>
 	</li>
       </ul>
       <input type="file">
       <treecontrol class="tree-classic"
 		   tree-model="cartable.files"
 		   options="treeOptions"
-		   on-selection="treeClicked( node )">
+		   on-selection="treeClicked( cours, node )">
 	{{node.name}} ({{node.mime}})
       </treecontrol>
 
