@@ -229,6 +229,10 @@ angular.module('cahierDeTexteApp')
 									  function( devoir ) {
 									      if ( _(devoir).has( 'contenu' ) && ( devoir.contenu.length > 0 ) ) {
 										  devoir.dirty = true;
+
+										  // recalcul de la date_due
+										  devoir.date_due = _(raw_data).findWhere({creneau_emploi_du_temps_id: devoir.creneau_emploi_du_temps_id}).start;
+
 										  var prom = $q.defer();
 										  if ( devoir.create ) {
 										      devoir.cours_id = $scope.cours.id;
