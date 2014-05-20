@@ -100,9 +100,18 @@
     <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="devoir.contenu" data-ng-change="is_dirty()"></textarea>
     <div class="panel-footer">
       <ul>
-	<li data-ng-repeat="ressource in devoir.ressources">{{ressource.url}}</li>
+	<li data-ng-repeat="ressource in devoir.ressources">
+	  <a target="_blank" href="http://www.dev.laclasse.com/docs-beta/api/connector?cmd=file&target={{ressource.hash}}">{{ressource.name}}</a>
+	  <button style="color:red;font-weight:bold" data-ng-click="remove_ressource( devoir, ressource.hash )">&times;</button>
+	</li>
       </ul>
       <input type="file">
+      <treecontrol class="tree-classic"
+		   tree-model="cartable.files"
+		   options="treeOptions"
+		   on-selection="treeClicked( devoir, node )">
+	{{node.name}} ({{node.mime}})
+      </treecontrol>
     </div>
   </div>
 
