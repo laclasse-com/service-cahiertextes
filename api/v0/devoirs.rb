@@ -32,7 +32,7 @@ module CahierDeTextesAPI
           .where( regroupement_id: regroupements_ids )
           .map { |devoir|
           hash = devoir.to_hash
-          hash[:ressources] = devoir.ressources
+          hash[:ressources] = devoir.ressources.map { |rsrc| rsrc.to_hash }
           hash[:fait] = devoir.fait_par?( params[ :eleve_id ] )
 
           hash
