@@ -21,7 +21,7 @@ angular.module('cahierDeTexteApp')
 						   matieres: function() { return matieres; },
 						   classes: function() { return classes; },
 
-						   creneau_emploi_du_temps_id: function() { console.debug(creneau_selectionne);return creneau_selectionne.details.creneau_emploi_du_temps_id; },
+						   creneau_emploi_du_temps_id: function() { return creneau_selectionne.details.creneau_emploi_du_temps_id; },
 						   matiere_id: function() { return matiere_id; },
 						   regroupement_id: function() { return regroupement_id; },
 
