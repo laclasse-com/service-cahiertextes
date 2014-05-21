@@ -1,7 +1,7 @@
 #!/usr/bin/env rackup
 # -*- coding: utf-8; mode: ruby -*-
 
-require ::File.expand_path( '../config/CASLaclasseCom', __FILE__ )
+require ::File.expand_path( '../config/CAS', __FILE__ )
 require ::File.expand_path( '../config/environment', __FILE__ )
 require ::File.expand_path( '../config/options', __FILE__ )
 
