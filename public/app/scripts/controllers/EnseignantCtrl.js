@@ -383,7 +383,6 @@ angular.module('cahierDeTexteApp')
 			  };
 
 			  if ( cours.deleted ) {
-			      console.debug('Cours détruit')
 			      return calendar_event = { details: { matiere_id: event.details.matiere_id,
 								   regroupement_id: event.details.regroupement_id,
 								   cahier_de_textes_id: event.details.cahier_de_textes_id,
