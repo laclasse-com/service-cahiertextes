@@ -41,7 +41,7 @@ angular.module('cahierDeTexteApp')
 							  $scope.matieres = matieres;
 							  $scope.classes = classes;
 							  $scope.matiere_id = matiere_id.length > 0 ? matiere_id : _.chain($scope.matieres).values().first().value().id;
-							  $scope.regroupement_id = regroupement_id.length > 0 ? regroupement_id : $scope.classes[ 0 ].id;
+							  $scope.regroupement_id = regroupement_id.length > 0 ? regroupement_id : _($scope.classes).first().id;
 							  $scope.classe = _($scope.classes).findWhere({id: parseInt( $scope.regroupement_id )});
 							  $scope.matiere = $scope.matieres[ $scope.matiere_id ];
 
