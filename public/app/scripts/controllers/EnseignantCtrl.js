@@ -45,8 +45,6 @@ angular.module('cahierDeTexteApp')
 							  $scope.classe = _($scope.classes).findWhere({id: parseInt( $scope.regroupement_id )});
 							  $scope.matiere = $scope.matieres[ $scope.matiere_id ];
 
-							  $scope.matieres_ary = _(matieres).values();
-
 							  $scope.dirty = false;
 							  $scope.deleted = false;
 							  $scope.is_dirty = function() {
