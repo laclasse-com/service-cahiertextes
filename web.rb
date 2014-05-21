@@ -7,7 +7,7 @@ require 'bundler'
 
 require_relative './config/options'
 require_relative './config/environment'
-require_relative './config/CASLaclasseCom'
+require_relative './config/CAS'
 
 Bundler.require( :default, ENV['RACK_ENV'].to_sym )     # require tout les gems définis dans Gemfile
 
