@@ -55,11 +55,6 @@ angular.module('cahierDeTexteApp')
 				      if ( this.type === 'cours' ) {
 					  item.start = event.start;
 					  item.end = event.end;
-				      }
-				      this.start = new Date( item.start );
-				      this.end = new Date( item.end );
-
-				      if ( this.type === 'cours' ) {
 					  this.className = 'saisie-invalide';
 					  if ( event.matiere_id.length > 0 ) {
 					      Annuaire.get_matiere( event.matiere_id ).$promise.then( function success( response ) {
@@ -74,6 +69,8 @@ angular.module('cahierDeTexteApp')
 						  fc_event.title = response.label;
 					      });
 				      }
+				      this.start = new Date( item.start );
+				      this.end = new Date( item.end );
 
 				      if ( _(item).has( 'contenu' ) && item.contenu.length > 0 ) {
 					  this.description += '<br><span style="color:' + CALENDAR_PARAMS.couleurs[ this.type ] + '">';
