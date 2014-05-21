@@ -485,8 +485,9 @@ angular.module('cahierDeTexteApp')
 			      .pluck( 'matiere_enseignee_id' )
 			      .uniq()
 			      .map( function( matiere_id ) {
-				  return Annuaire.get_matiere( matiere_id );
+				  return [ matiere_id, Annuaire.get_matiere( matiere_id ) ];
 			      })
+			      .object()
 			      .value();
 		      };
 
@@ -522,12 +523,6 @@ angular.module('cahierDeTexteApp')
 				      $scope.classes = $scope.list_classes( $scope.current_user );
 
 				      $q.all( $scope.matieres, $scope.classes ).then( function(  ) {
-					  $scope.matieres = _.chain($scope.matieres)
-					      .map( function( matiere ) {
-						  return [ matiere.id, matiere ];
-					      } )
-					      .object()
-					      .value();
 					  _($scope.classes).each( function( classe) {
 					      classe.libelle = (classe.libelle === null && classe.libelle_aaf !== null) ? classe.libelle_aaf : classe.libelle;
 					      classe.libelle_aaf = (classe.libelle_aaf === null && classe.libelle !== null) ? classe.libelle : classe.libelle_aaf;
