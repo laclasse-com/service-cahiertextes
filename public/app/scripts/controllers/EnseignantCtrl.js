@@ -21,7 +21,7 @@ angular.module('cahierDeTexteApp')
 						   matieres: function() { return matieres; },
 						   classes: function() { return classes; },
 
-						   creneau_emploi_du_temps_id: function() { return creneau_selectionne.details.creneau_emploi_du_temps_id; },
+						   creneau_selectionne: function() { return creneau_selectionne; },
 						   matiere_id: function() { return matiere_id; },
 						   regroupement_id: function() { return regroupement_id; },
 
@@ -29,10 +29,10 @@ angular.module('cahierDeTexteApp')
 						   devoirs: function() { return devoirs; }
 						 },
 					controller: [ '$scope', '$filter', 'TINYMCE_OPTIONS', '$modalInstance',
-						      'CreneauEmploiDuTemps', 'Documents', 'cours', 'devoirs', 'types_de_devoir',
-						      'creneau_emploi_du_temps_id', 'matiere_id', 'regroupement_id',
+						      'Documents', 'cours', 'devoirs', 'types_de_devoir',
+						      'creneau_selectionne', 'matiere_id', 'regroupement_id',
 						      'raw_data', 'classes', 'matieres',
-						      function( $scope, $filter, TINYMCE_OPTIONS, $modalInstance, CreneauEmploiDuTemps, Documents, cours, devoirs, types_de_devoir, creneau_emploi_du_temps_id, matiere_id, regroupement_id, raw_data, classes, matieres ) {
+						      function( $scope, $filter, TINYMCE_OPTIONS, $modalInstance, Documents, cours, devoirs, types_de_devoir, creneau_selectionne, matiere_id, regroupement_id, raw_data, classes, matieres ) {
 							  // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
 
 							  // Initialisations {{{
@@ -188,6 +188,7 @@ angular.module('cahierDeTexteApp')
 
 								      if ( $scope.cours.create ) {
 									  $scope.cours.cahier_de_textes_id = _($scope.classes).findWhere({id: $scope.regroupement_id}).cahier_de_textes_id;
+									  $scope.cours.creneau_emploi_du_temps_id = creneau_selectionne.details.creneau_emploi_du_temps_id;
 									  promesse = $scope.cours.$save();
 								      } else {
 									  promesse = $scope.cours.$update();
@@ -432,7 +433,7 @@ angular.module('cahierDeTexteApp')
 			  var cours = new Cours({
 			      cahier_de_textes_id: creneau.cahier_de_textes_id,
 			      creneau_emploi_du_temps_id: creneau.id,
-			      date_cours: new Date( creneau.heure_debut ).toISOString()
+			      date_cours: new Date( creneau.start ).toISOString()
 			  });
 			  cours.create = true;
 
@@ -515,6 +516,7 @@ angular.module('cahierDeTexteApp')
 			  creneau_selectionne.$save()
 			      .then( function() {
 				  creneau_selectionne.dirty = true;
+				  creneau_selectionne.start = start;
 				  creneau_selectionne.heure_debut = start;
 				  creneau_selectionne.heure_fin = end;
 
