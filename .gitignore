@@ -28,6 +28,7 @@ vagrant/
 /config/thin.yml
 /config/options.rb
 /config/database.rb*
+/config/CAS.rb
 /lib/key_pronote
 
 # données de test non anonymisées
