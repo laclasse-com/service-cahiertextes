@@ -21,7 +21,7 @@ angular.module('cahierDeTexteApp')
 						   matieres: function() { return matieres; },
 						   classes: function() { return classes; },
 
-						   creneau_emploi_du_temps_id: function() { return creneau_selectionne.details.creneau_emploi_du_temps_id; },
+						   creneau_emploi_du_temps_id: function() { console.debug(creneau_selectionne);return creneau_selectionne.details.creneau_emploi_du_temps_id; },
 						   matiere_id: function() { return matiere_id; },
 						   regroupement_id: function() { return regroupement_id; },
 
@@ -437,10 +437,14 @@ angular.module('cahierDeTexteApp')
 					  // s'il y a des classes et des matières le calendrier est éditable (?)
 					  $scope.calendar.options.editable = $scope.classes.length > 0 && _(matieres).size() > 0;
 
-					  populate_calendar_events( filter_data( $scope.raw_data ) );
+					  $scope.refresh_calendar();
 				      } );
 				  } );
 			  } );
+		      };
+
+		      $scope.refresh_calendar = function() {
+			  populate_calendar_events( filter_data( $scope.raw_data ) );
 		      };
 
 		      var create_cours = function( creneau ) {
