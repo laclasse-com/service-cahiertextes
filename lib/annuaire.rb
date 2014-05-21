@@ -77,17 +77,9 @@ module Annuaire
 
     signature = build_signature( canonical_string, timestamp )
     
-80.times { putc "-"}
-puts
-puts service + " : "
-
     # Compatibilité avec les api laclasse v2 (pl/sql): pas de mode REST, en fait.
     service = compat_service( service )
     # Fin patch compat.
-
-puts service
-80.times { putc "-"}
-puts
 
     query = args.map { |key, value| "#{key}=#{CGI.escape(value)}" }.join( '&' )
 puts "#{uri}#{@liaison}#{service}#{@coordination}#{query};#{signature}"
@@ -98,7 +90,6 @@ puts "#{uri}#{@liaison}#{service}#{@coordination}#{query};#{signature}"
     RestClient.get( sign( ANNUAIRE[:url], "#{service}/#{CGI.escape( param )}", { expand: expand } ) ) do
       |response, _request, _result|
       if response.code == 200
-#puts JSON.parse( response )
         return JSON.parse( response )
       else
         STDERR.puts "#{error_msg} : #{CGI.escape( param )}"
