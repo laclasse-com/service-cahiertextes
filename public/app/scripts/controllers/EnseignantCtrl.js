@@ -374,13 +374,7 @@ angular.module('cahierDeTexteApp')
 			      .pluck( 'regroupement_id' )
 			      .uniq()
 			      .map( function( regroupement_id ) {
-				  var classe = Annuaire.get_regroupement( regroupement_id );
-				  classe.$promise.then( function( c ) {
-				      c.libelle = (c.libelle === null && c.libelle_aaf !== null) ? c.libelle_aaf : c.libelle;
-				      c.libelle_aaf = (c.libelle_aaf === null && c.libelle !== null) ? c.libelle : c.libelle_aaf;
-				  });
-
-				  return classe;
+				  return Annuaire.get_regroupement( regroupement_id );
 			      })
 			      .value();
 		      };
