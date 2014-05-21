@@ -4,8 +4,6 @@ angular.module('cahierDeTexteApp')
     .controller('EleveEmploiDuTempsCtrl',
 		[ '$scope', '$modal', 'CALENDAR_OPTIONS', 'CALENDAR_PARAMS', 'API', 'Annuaire', 'EmploisDuTemps', 'User',
 		  function ( $scope, $modal, CALENDAR_OPTIONS, CALENDAR_PARAMS, API, Annuaire, EmploisDuTemps, User ) {
-		      $scope.types_de_devoir = {};
-
 		      // configuration du composant calendrier
 		      $scope.calendar = { options: CALENDAR_OPTIONS,
 					  events: [  ] };
