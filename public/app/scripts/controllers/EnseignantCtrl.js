@@ -154,11 +154,8 @@ angular.module('cahierDeTexteApp')
 								  if ( _($scope.cours).has( 'contenu' ) && ( $scope.cours.contenu.length > 0 ) ) {
 								      $scope.cours.dirty = true;
 
-								      // FIXME: à refactoré
-								      if ( $scope.cours.cahier_de_textes_id === null ) {
-									  $scope.cours.cahier_de_textes_id = _($scope.classes).findWhere({id: $scope.regroupement_id}).cahier_de_textes_id;
-								      }
 								      if ( $scope.cours.create ) {
+									  $scope.cours.cahier_de_textes_id = _($scope.classes).findWhere({id: $scope.regroupement_id}).cahier_de_textes_id;
 									  promesse = $scope.cours.$save();
 								      } else {
 									  promesse = $scope.cours.$update();
