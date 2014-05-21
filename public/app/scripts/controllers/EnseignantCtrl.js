@@ -162,9 +162,7 @@ angular.module('cahierDeTexteApp')
 								      }
 								  }
 
-								  promesse.then( function( cours ) {
-								      $scope.cours = cours;
-
+								  promesse.then( function( cours_from_DB ) {
 								      // traitement des devoirs attachés
 								      var promesses = [];
 								      $scope.devoirs = _($scope.devoirs).map(
@@ -177,7 +175,7 @@ angular.module('cahierDeTexteApp')
 
 										  var prom = $q.defer();
 										  if ( devoir.create ) {
-										      devoir.cours_id = $scope.cours.id;
+										      devoir.cours_id = cours_from_DB.id;
 										      devoir.$save().then( function success( result ) {
 											  devoir.id = result.id;
 											  prom.resolve( result );
