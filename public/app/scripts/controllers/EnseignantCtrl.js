@@ -24,6 +24,8 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      // // ouverture de la popup de création/édition //////////
+
+		      // édition d'un créneau existant
 		      $scope.calendar.options.eventClick = function( event ) {
 			  var create_cours = function( creneau ) {
 			      var cours = new Cours({
@@ -75,14 +77,16 @@ angular.module('cahierDeTexteApp')
 			      });
 		      };
 
+		      // création d'un nouveau créneau
 		      $scope.calendar.options.select = function(start, end, allDay) {
 			  var timezoneOffset = new Date(start).getTimezoneOffset() * 60000;
-			  $scope.creneau= new CreneauEmploiDuTemps( {  regroupement_id: '',
-								       jour_de_la_semaine: start.getDay() + 1,
-								       heure_debut: new Date( new Date(start) - timezoneOffset ).toISOString(),
-								       heure_fin: new Date( new Date(end) - timezoneOffset ).toISOString(),
-								       matiere_id: ''
-								    } );
+			  $scope.creneau = new CreneauEmploiDuTemps( {  regroupement_id: '',
+									cahier_de_textes_id: $scope.classes[0].cahier_de_textes_id,
+									jour_de_la_semaine: start.getDay() + 1,
+									heure_debut: new Date( new Date(start) - timezoneOffset ).toISOString(),
+									heure_fin: new Date( new Date(end) - timezoneOffset ).toISOString(),
+									matiere_id: ''
+								     } );
 
 			  $scope.creneau.$save()
 			      .then( function() {
@@ -91,7 +95,7 @@ angular.module('cahierDeTexteApp')
 				  $scope.creneau.heure_fin = end;
 
 				  var create_cours = function( creneau ) {
-				      var cours = new Cours({ cahier_de_textes_id: '',
+				      var cours = new Cours({ cahier_de_textes_id: $scope.creneau.cahier_de_textes_id,
 							      creneau_emploi_du_temps_id: $scope.creneau.id,
 							      date_cours: new Date(start).toISOString()
 							    });
@@ -400,7 +404,7 @@ angular.module('cahierDeTexteApp')
 							 if ( objets.dirty ) {
 							     $scope.creneau.matiere_id = objets.matiere_id;
 							     $scope.creneau.regroupement_id = objets.regroupement_id;
-
+							     $scope.creneau.cahier_de_textes_id = objets.cours.cahier_de_textes_id;
 							     $scope.creneau.$update();
 
 							     var iedt = { cours: objets.cours,
