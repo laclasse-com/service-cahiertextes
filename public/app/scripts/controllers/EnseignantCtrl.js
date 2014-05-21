@@ -100,6 +100,9 @@ angular.module('cahierDeTexteApp')
 							  } );
 
 							  $scope.add_ressource = function( item, name, hash ) {
+							      if ( item.ressources === undefined ) {
+								  item.ressources = [];
+							      }
 							      if ( _(item.ressources).findWhere( { hash: hash } ) === undefined ) {
 								  item.ressources.push( { name: name,
 											  hash: hash } );
