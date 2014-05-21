@@ -48,7 +48,13 @@ angular.module( 'cahierDeTexteApp' )
 							       today:    'aujourd\'hui',
 							       month:    'mois',
 							       week:     'semaine',
-							       day:      'jour' }
+							       day:      'jour' },
+						 defaultView: 'agendaWeek',
+						 editable: false,
+						 eventDurationEditable: false,
+						 disableDragging: true,
+						 selectable: true,
+						 selectHelper: true
 					       };
 				    } ] )
 
