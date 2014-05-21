@@ -7,7 +7,7 @@
       {{classe.libelle_aaf}} - {{matiere.libelle_long}}
     </span>
     <span data-ng-show="cours.cahier_de_textes_id == ''">
-      <select data-ng-model="scope.regroupement_id" data-ng-options="classe.id as classe.libelle_aaf for classe in classes">
+      <select data-ng-model="scope.regroupement_id" data-ng-options="classe.id as classe.libelle for classe in classes">
       </select>
       -
       <select data-ng-model="scope.matiere_id" data-ng-options="id as matiere.libelle_long for (id, matiere) in matieres">
@@ -48,7 +48,7 @@
 	     data-disabled="false"
 	     data-required="false"
 	     data-ng-model="creneaux_similaires.selected"
-	     data-options="creneau as creneau.classe.libelle_aaf +' . '+ creneau.start_str +' - '+ creneau.end_str for creneau in creneaux_similaires"
+	     data-options="creneau as creneau.classe.libelle +' . '+ creneau.start_str +' - '+ creneau.end_str for creneau in creneaux_similaires"
 	     data-placeholder="'Créneaux similaires'"
 	     data-filter-placeholder="'Filtre'"
 	     data-select-filtered-text="'tous'"
