@@ -21,7 +21,7 @@ Sequel.migration do
 
     create_table!(:salles) {
       primary_key :id
-      foreign_key :etablissement_id, :etablissements
+      foreign_key :etablissement_id, :etablissements, null: false
 
       String :identifiant, null: false
       String :nom
@@ -29,8 +29,8 @@ Sequel.migration do
 
     create_table!(:creneaux_emploi_du_temps) {
       primary_key :id
-      foreign_key :debut, :plages_horaires
-      foreign_key :fin, :plages_horaires
+      foreign_key :debut, :plages_horaires, null: false
+      foreign_key :fin, :plages_horaires, null: false
 
       Integer :jour_de_la_semaine, null: false
       String :matiere_id, null: false
@@ -38,33 +38,33 @@ Sequel.migration do
 
     create_table!(:creneaux_emploi_du_temps_salles) {
       primary_key [:creneau_emploi_du_temps_id, :salle_id]
-      foreign_key :creneau_emploi_du_temps_id, :creneaux_emploi_du_temps
-      foreign_key :salle_id, :salles
+      foreign_key :creneau_emploi_du_temps_id, :creneaux_emploi_du_temps, null: false
+      foreign_key :salle_id, :salles, null: false
 
-      Bignum :semaines_de_presence, unsigned: true, default: 2**53 - 1
+      Bignum :semaines_de_presence, unsigned: true, default: 2**53 - 1, null: false
     }
 
     create_table!(:creneaux_emploi_du_temps_enseignants) {
       primary_key [:creneau_emploi_du_temps_id, :enseignant_id]
-      foreign_key :creneau_emploi_du_temps_id, :creneaux_emploi_du_temps
+      foreign_key :creneau_emploi_du_temps_id, :creneaux_emploi_du_temps, null: false
 
       String :enseignant_id, null: false
-      Bignum :semaines_de_presence, unsigned: true, default: 2**53 - 1
+      Bignum :semaines_de_presence, unsigned: true, default: 2**53 - 1, null: false
     }
 
     create_table!(:creneaux_emploi_du_temps_regroupements) {
       primary_key [:creneau_emploi_du_temps_id, :regroupement_id]
-      foreign_key :creneau_emploi_du_temps_id, :creneaux_emploi_du_temps
+      foreign_key :creneau_emploi_du_temps_id, :creneaux_emploi_du_temps, null: false
 
       String :regroupement_id, null: false
-      Bignum :semaines_de_presence, unsigned: true, default: 2**53 - 1
+      Bignum :semaines_de_presence, unsigned: true, default: 2**53 - 1, null: false
     }
 
     create_table!(:ressources) {
       primary_key :id
 
-      String :label
-      String :url, null: false
+      String :name, null: false
+      String :hash, null: false
     }
 
     create_table!(:cahiers_de_textes) {
@@ -80,8 +80,8 @@ Sequel.migration do
 
     create_table!(:cours) {
       primary_key :id
-      foreign_key :creneau_emploi_du_temps_id, :creneaux_emploi_du_temps
-      foreign_key :cahier_de_textes_id, :cahiers_de_textes
+      foreign_key :creneau_emploi_du_temps_id, :creneaux_emploi_du_temps, null: false
+      foreign_key :cahier_de_textes_id, :cahiers_de_textes, null: false
 
       String :enseignant_id, null: false
       Date :date_cours, null: false
@@ -113,9 +113,9 @@ Sequel.migration do
 
     create_table!(:devoirs) {
       primary_key :id
-      foreign_key :cours_id, :cours
-      foreign_key :creneau_emploi_du_temps_id, :creneaux_emploi_du_temps
-      foreign_key :type_devoir_id, :types_devoir
+      foreign_key :cours_id, :cours, null: false
+      foreign_key :creneau_emploi_du_temps_id, :creneaux_emploi_du_temps, null: false
+      foreign_key :type_devoir_id, :types_devoir, null: false
 
       String :contenu, size: 4096
       DateTime :date_creation, null: false
@@ -129,7 +129,7 @@ Sequel.migration do
 
     create_table!(:devoir_todo_items) {
       primary_key :id
-      foreign_key :devoir_id, :devoirs
+      foreign_key :devoir_id, :devoirs, null: false
 
       String :eleve_id, null: false
       DateTime :date_fait, null: false

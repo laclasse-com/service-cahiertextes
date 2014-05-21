@@ -19,17 +19,17 @@ angular.module( 'cahierDeTexteApp' )
     .factory( 'CALENDAR_OPTIONS', [ '$locale',
 				    function( $locale ) {
 					return { height: 600,
-						 header: { left: 'title',
-							   center: 'agendaDay agendaWeek month',
-							   right: 'today prev,next' },
+						 header: { left: 'today prev,next',
+							   center: 'title',
+							   right: 'agendaDay agendaWeek month' },
 						 firstDay: 1,
 						 minTime: 7,
 						 maxTime: 19,
 						 ignoreTimezone: false,
-						 timeFormat: { month: 'H:mm{ - H:mm}',
+						 timeFormat: { month: $locale.DATETIME_FORMATS.shortTime + '{ - ' + $locale.DATETIME_FORMATS.shortTime + '}',
 							       week: '',
 							       day: '' },
-						 axisFormat: 'H:mm',
+						 axisFormat: $locale.DATETIME_FORMATS.shortTime,
 						 allDaySlot: false,
 						 columnFormat: { month: 'ddd',
 								 week: 'ddd d/M',
@@ -48,7 +48,13 @@ angular.module( 'cahierDeTexteApp' )
 							       today:    'aujourd\'hui',
 							       month:    'mois',
 							       week:     'semaine',
-							       day:      'jour' }
+							       day:      'jour' },
+						 defaultView: 'agendaWeek',
+						 editable: false,
+						 eventDurationEditable: false,
+						 disableDragging: true,
+						 selectable: true,
+						 selectHelper: true
 					       };
 				    } ] )
 

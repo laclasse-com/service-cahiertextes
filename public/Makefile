@@ -5,10 +5,10 @@ clean:
 
 minify: app/scripts/app.min.js app/scripts/constants.min.js app/scripts/cdt.min.js app/styles/main.min.css
 
-app/scripts/app.min.js:
+app/scripts/app.min.js: app/scripts/app.js
 	uglifyjs -p 5 -c -m -o $@ app/scripts/app.js
 
-app/scripts/constants.min.js:
+app/scripts/constants.min.js: app/scripts/constants.js
 	uglifyjs -p 5 -c -m -o $@ app/scripts/constants.js
 
 app/scripts/cdt.min.js:
