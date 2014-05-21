@@ -47,10 +47,6 @@ angular.module('cahierDeTexteApp')
 
 							  $scope.matieres_ary = _(matieres).values();
 
-							  if ( creneau_emploi_du_temps_id === undefined ){
-							      $scope.creneau = CreneauEmploiDuTemps.get({ id: creneau_emploi_du_temps_id });
-							  }
-
 							  $scope.dirty = false;
 							  $scope.deleted = false;
 							  $scope.is_dirty = function() {
@@ -109,13 +105,6 @@ angular.module('cahierDeTexteApp')
 							      devoir.create = true;
 
 							      return devoir;
-							  };
-
-							  $scope.openDatePicker = function($event) {
-							      $event.preventDefault();
-							      $event.stopPropagation();
-
-							      $scope.opened = true;
 							  };
 
 							  $scope.ajout_devoir = function() {
@@ -224,12 +213,6 @@ angular.module('cahierDeTexteApp')
 							  };
 
 							  $scope.erreurs = [];
-
-							  $scope.dateOptions = {
-							      'year-format': "'yy'",
-							      'starting-day': 1
-							  };
-							  $scope.datePickerOpened = false;
 
 							  // http://stackoverflow.com/questions/19408883/angularjs-select-not-2-way-binding-to-model
 							  $scope.scope = $scope;
