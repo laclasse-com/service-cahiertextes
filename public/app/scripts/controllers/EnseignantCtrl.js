@@ -374,7 +374,13 @@ angular.module('cahierDeTexteApp')
 			      .pluck( 'regroupement_id' )
 			      .uniq()
 			      .map( function( regroupement_id ) {
-				  return Annuaire.get_regroupement( regroupement_id );
+				  var classe = Annuaire.get_regroupement( regroupement_id );
+				  classe.$promise.then( function( c ) {
+				      c.libelle = (c.libelle === null && c.libelle_aaf !== null) ? c.libelle_aaf : c.libelle;
+				      c.libelle_aaf = (c.libelle_aaf === null && c.libelle !== null) ? c.libelle : c.libelle_aaf;
+				  });
+
+				  return classe;
 			      })
 			      .value();
 		      };
@@ -429,11 +435,6 @@ angular.module('cahierDeTexteApp')
 				      $scope.classes = list_classes( $scope.current_user );
 
 				      $q.all( $scope.matieres, $scope.classes ).then( function(  ) {
-					  _($scope.classes).each( function( classe) {
-					      classe.libelle = (classe.libelle === null && classe.libelle_aaf !== null) ? classe.libelle_aaf : classe.libelle;
-					      classe.libelle_aaf = (classe.libelle_aaf === null && classe.libelle !== null) ? classe.libelle : classe.libelle_aaf;
-					  } );
-
 					  // s'il y a des classes et des matières le calendrier est éditable (?)
 					  $scope.calendar.options.editable = $scope.classes.length > 0 && _($scope.matieres).size() > 0;
 
