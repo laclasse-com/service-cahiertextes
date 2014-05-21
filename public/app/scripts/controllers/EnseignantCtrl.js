@@ -64,7 +64,14 @@ angular.module('cahierDeTexteApp')
 								  } );
 							  } );
 
-							  //;;;;;;;;;;;;;;;;;;;;;;;
+							  $scope.add_ressource = function( item, name, hash ) {
+							      if ( _(item.ressources).findWhere( { hash: hash } ) === undefined ) {
+								  item.ressources.push( { name: name,
+											  hash: hash } );
+								  $scope.dirty = true;
+							      }
+							  };
+
 							  $scope.remove_ressource = function( item, hash ) {
 							      item.ressources = _(item.ressources).reject( function( ressource ) {
 								  return ressource.hash == hash;
@@ -83,11 +90,7 @@ angular.module('cahierDeTexteApp')
 									  } );
 								  } );
 							      } else {
-								  if ( _(item.ressources).findWhere( { hash: noeud.hash } ) === undefined ) {
-								      item.ressources.push( { name: noeud.name,
-											      hash: noeud.hash } );
-								      $scope.dirty = true;
-								  }
+								  $scope.add_ressource( item, noeud.name, noeud.hash );
 							      }
 							  };
 							  $scope.treeOptions = {
