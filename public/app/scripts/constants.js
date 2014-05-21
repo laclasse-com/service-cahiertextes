@@ -19,9 +19,9 @@ angular.module( 'cahierDeTexteApp' )
     .factory( 'CALENDAR_OPTIONS', [ '$locale',
 				    function( $locale ) {
 					return { height: 600,
-						 header: { left: 'title',
-							   center: 'agendaDay agendaWeek month',
-							   right: 'today prev,next' },
+						 header: { left: 'today prev,next',
+							   center: 'title',
+							   right: 'agendaDay agendaWeek month' },
 						 firstDay: 1,
 						 minTime: 7,
 						 maxTime: 19,
