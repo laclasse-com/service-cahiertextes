@@ -104,7 +104,7 @@ angular.module('cahierDeTexteApp')
 							  };
 							  $scope.cartable = [];
 
-							  Documents.list_files(  ).then( function( response ) {
+							  Documents.list_files(  ).success( function( response ) {
 							      $scope.cartable = response.data;
 							      $scope.cartable.files = _.chain( $scope.cartable.files )
 								  .rest()
