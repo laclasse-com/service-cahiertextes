@@ -212,17 +212,6 @@ angular.module('cahierDeTexteApp')
 							      }
 							  };
 
-							  $scope.tinyMCEOptions = TINYMCE_OPTIONS;
-							  $scope.cours = cours;
-							  $scope.devoirs = devoirs;
-							  $scope.types_de_devoir = types_de_devoir;
-							  $scope.matieres = matieres;
-							  $scope.classes = classes;
-							  $scope.matiere_id = matiere_id.length > 0 ? matiere_id : _.chain($scope.matieres).values().first().value().id;
-							  $scope.regroupement_id = regroupement_id.length > 0 ? regroupement_id : $scope.classes[ 0 ].id;
-							  $scope.classe = _($scope.classes).findWhere({id: parseInt( $scope.regroupement_id )});
-							  $scope.matiere = $scope.matieres[ $scope.matiere_id ];
-
 							  $scope.erreurs = [];
 
 							  $scope.dateOptions = {
