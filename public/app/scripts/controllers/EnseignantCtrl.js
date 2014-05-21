@@ -99,18 +99,14 @@ angular.module('cahierDeTexteApp')
 							  };
 							  // }}}
 
-							  var create_devoir = function( cours ) {
-							      var devoir = new Devoirs({ cours_id: cours.id,
+							  $scope.ajout_devoir = function() {
+							      var devoir = new Devoirs({ cours_id: $scope.cours.id,
 											 date_due: new Date().toISOString(),
 											 type_devoir_id: null,
 											 creneau_emploi_du_temps_id: null });
 							      devoir.create = true;
 
-							      return devoir;
-							  };
-
-							  $scope.ajout_devoir = function() {
-							      $scope.devoirs.unshift( create_devoir( $scope.cours ) );
+							      $scope.devoirs.unshift( devoir );
 							  };
 
 							  $scope.dupliquer = function() {
