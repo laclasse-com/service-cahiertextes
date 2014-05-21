@@ -165,9 +165,10 @@ angular.module('cahierDeTexteApp')
 								  promesse.then( function( cours_from_DB ) {
 								      // traitement des devoirs attachés
 								      var promesses = [];
-								      $scope.devoirs = _($scope.devoirs).map(
-									  function( devoir ) {
+								      $scope.devoirs = _($scope.devoirs)
+									  .map( function( devoir ) {
 									      if ( _(devoir).has( 'contenu' ) && ( devoir.contenu.length > 0 ) ) {
+										  // FIXME: on $save() ou $update() tous les devoirs qu'ils aient été modifiés ou non
 										  devoir.dirty = true;
 
 										  // recalcul de la date_due
@@ -226,7 +227,6 @@ angular.module('cahierDeTexteApp')
 								  return creneau;
 							      })
 							      .value();
-
 							  $scope.creneaux_similaires.selected = [];
 
 							  $scope.creneaux_devoirs_possibles = _.chain(raw_data)
