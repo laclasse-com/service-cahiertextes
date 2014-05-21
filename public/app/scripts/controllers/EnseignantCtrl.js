@@ -34,6 +34,17 @@ angular.module('cahierDeTexteApp')
 						      'raw_data', 'classes', 'matieres',
 						      function( $scope, $filter, TINYMCE_OPTIONS, $modalInstance, CreneauEmploiDuTemps, Documents, cours, devoirs, types_de_devoir, creneau_emploi_du_temps_id, matiere_id, regroupement_id, raw_data, classes, matieres ) {
 							  // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
+							  $scope.tinyMCEOptions = TINYMCE_OPTIONS;
+							  $scope.cours = cours;
+							  $scope.devoirs = devoirs;
+							  $scope.types_de_devoir = types_de_devoir;
+							  $scope.matieres = matieres;
+							  $scope.classes = classes;
+							  $scope.matiere_id = matiere_id.length > 0 ? matiere_id : _.chain($scope.matieres).values().first().value().id;
+							  $scope.regroupement_id = regroupement_id.length > 0 ? regroupement_id : $scope.classes[ 0 ].id;
+							  $scope.classe = _($scope.classes).findWhere({id: parseInt( $scope.regroupement_id )});
+							  $scope.matiere = $scope.matieres[ $scope.matiere_id ];
+
 							  $scope.matieres_ary = _(matieres).values();
 
 							  if ( creneau_emploi_du_temps_id === undefined ){
