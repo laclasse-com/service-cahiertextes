@@ -132,7 +132,7 @@ angular.module('cahierDeTexteApp')
 							      _($scope.devoirs).each( function( devoir ) {
 								  devoir.$delete();
 							      });
-							      $scope.deleted = false;
+							      $scope.deleted = true;
 
 							      $scope.fermer();
 							  };
