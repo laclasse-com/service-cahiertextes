@@ -9,8 +9,6 @@ angular.module('cahierDeTexteApp')
 		      // configuration du composant calendrier
 		      $scope.calendar = { options: CALENDAR_OPTIONS,
 					  events: [  ] };
-		      $scope.calendar.options.defaultView = 'agendaWeek';
-		      $scope.calendar.options.editable = false;
 		      $scope.calendar.options.eventRender = function( event, element ) {
 			  // FIXME: manipulation du DOM dans le contrôleur, sale
 			  // ajouter la description ici permet que l'HTML soit interprété
