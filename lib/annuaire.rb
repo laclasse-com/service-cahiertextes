@@ -13,7 +13,13 @@ module Annuaire
 
   @coordination = nil
   @liaison = nil
+  @search = false
 
+  # Petit setter pour les tests unitaires
+  def set_search(arg)
+    @search=arg
+  end
+  
   # Fonction de vérification du mode d'api paramétrée dans la conf et init des paramètres
   def init
     @coordination = '?'
@@ -45,13 +51,19 @@ module Annuaire
   # qui ne doit pas être au format REST, mais au format URL
   def compat_service(srv)
     if ANNUAIRE[:api_mode] == 'v2'
-      srv.sub! 'matieres/libelle', '&searchmatiere='
-      srv.sub! 'matieres', '&mat_code='
-      srv.sub! 'etablissements', '&etb_code='
-      srv.sub! 'regroupements', '&grp_id='
-      srv.sub! 'users', ''
-      srv.sub! 'regroupement', '&searchgrp='
-      srv.sub! '/', ''
+      if @search
+        srv.sub! 'users', 'SearchUsers&uid='  
+        srv.sub! 'matieres/libelle', 'Matieres&lib=' 
+      else
+        srv.sub! 'users', 'Users&uid='
+        srv.sub! 'etablissements', 'Etablissements&uai=' 
+        srv.sub! 'matieres', 'Matieres&code='
+        srv.sub! 'regroupements', 'Regroupements&grp_id='
+        # En dernier pour traiter les cas des etab/[uai]/Regroupements et users/[uid]/Regroupements
+        # Les services Users et Etablissements, donnent l'info des regroupements en mode expand.
+        srv.sub! '/Regroupements&grp_id=', '&expand=true' if ( !srv.match('Users&uid=').nil? || !srv.match('Etablissements&uai=').nil? )
+      end
+      srv.sub! '/', '' # Supprimer les '/' devant les data : &grp_id=/19 devient &grp_id=19
     end
     srv
   end
@@ -64,13 +76,21 @@ module Annuaire
     canonical_string += "#{timestamp};#{ANNUAIRE[:app_id]}" if ANNUAIRE[:api_mode] == 'v3'
 
     signature = build_signature( canonical_string, timestamp )
+    
+80.times { putc "-"}
+puts
+puts service + " : "
 
     # Compatibilité avec les api laclasse v2 (pl/sql): pas de mode REST, en fait.
     service = compat_service( service )
     # Fin patch compat.
 
-    query = args.map { |key, value| "#{key}=#{CGI.escape(value)}" }.join( '&' )
+puts service
+80.times { putc "-"}
+puts
 
+    query = args.map { |key, value| "#{key}=#{CGI.escape(value)}" }.join( '&' )
+puts "#{uri}#{@liaison}#{service}#{@coordination}#{query};#{signature}"
     "#{uri}#{@liaison}#{service}#{@coordination}#{query};#{signature}"
   end
 
@@ -78,6 +98,7 @@ module Annuaire
     RestClient.get( sign( ANNUAIRE[:url], "#{service}/#{CGI.escape( param )}", { expand: expand } ) ) do
       |response, _request, _result|
       if response.code == 200
+#puts JSON.parse( response )
         return JSON.parse( response )
       else
         STDERR.puts "#{error_msg} : #{CGI.escape( param )}"
@@ -87,7 +108,7 @@ module Annuaire
 
   def search_matiere( label )
     label = URI.escape( label )
-
+    @search = true
     RestClient.get( sign( ANNUAIRE[:url], "matieres/libelle/#{label}", {} ) ) do
       |response, _request, _result|
       if response.code == 200
@@ -103,8 +124,8 @@ module Annuaire
   def search_regroupement( code_uai, nom )
     code_uai = URI.escape( code_uai )
     nom = URI.escape( nom )
-
-    RestClient.get( sign( ANNUAIRE[:url], 'regroupement', { etablissement: code_uai, nom: nom } ) ) do
+    @search = true
+    RestClient.get( sign( ANNUAIRE[:url], 'regroupement', { etablissement: code_uai, nom: nom, expand: "false" } ) ) do
       |response, _request, _result|
       if response.code == 200
         return JSON.parse( response )[0]
@@ -119,7 +140,7 @@ module Annuaire
     code_uai = URI.escape( code_uai )
     nom = URI.escape( nom )
     prenom = URI.escape( prenom )
-
+    @search = true
     RestClient.get( sign( ANNUAIRE[:url], 'users', { nom: nom, prenom: prenom, etablissement: code_uai } ) ) do
       |response, _request, _result|
       if response.code == 200
@@ -133,20 +154,24 @@ module Annuaire
 
   # API d'interfaçage avec l'annuaire à destination du client
   def get_matiere( id )
+    @search = false
     send_request 'matieres', CGI.escape( id ), 'false', 'Matière inconnue'
   end
 
   # Service classes et groupes d'élèves
   def get_regroupement( id )
+    @search = false
     send_request 'regroupements', CGI.escape( id ), 'false', 'Regroupement inconnu'
   end
 
   # Service Utilisateur : init de la session et de son environnement
   def get_user( id )
+    @search = false
     send_request 'users', CGI.escape( id ), 'false', 'User inconnu'
   end
 
   def get_user_regroupements( id )
+    @search = false
     RestClient.get( sign( ANNUAIRE[:url], "users/#{CGI.escape( id )}/regroupements", {} ) ) do
       |response, _request, _result|
       if response.code == 200
@@ -159,10 +184,12 @@ module Annuaire
 
   # Service etablissement
   def get_etablissement( uai )
+    @search = false
     send_request 'etablissements', CGI.escape( uai ), 'true', 'Etablissement inconnu'
   end
 
   def get_etablissement_regroupements( uai )
+    @search = false
     RestClient.get( sign( ANNUAIRE[:url], "etablissements/#{CGI.escape( uai )}/regroupements", {} ) ) do
       |response, _request, _result|
       if response.code == 200
