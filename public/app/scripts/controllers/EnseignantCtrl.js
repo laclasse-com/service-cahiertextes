@@ -50,8 +50,9 @@ angular.module('cahierDeTexteApp')
 							  $scope.is_dirty = function() {
 							      $scope.dirty = true;
 							  };
-							  $scope.cartable = [];
 
+							  // {{{ Gestion des documents attachés
+							  $scope.cartable = [];
 							  Documents.list_files(  ).success( function( response ) {
 							      $scope.cartable = response;
 							      $scope.cartable.files = _.chain( $scope.cartable.files )
@@ -93,7 +94,7 @@ angular.module('cahierDeTexteApp')
 							      nodeChildren: "children",
 							      dirSelectable: true
 							  };
-							  //;;;;;;;;;;;;;;;;;;;;;;;
+							  // }}}
 
 							  var create_devoir = function( cours ) {
 							      var devoir = new Devoirs({ cours_id: cours.id,
