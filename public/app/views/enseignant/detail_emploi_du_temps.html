@@ -3,10 +3,10 @@
   <button type="button" class="close pull-right" aria-hidden="true" data-ng-click="fermer()">&times;</button>
 
   <h3>
-    <span data-ng-show="cours.cahier_de_textes_id != ''">
-      {{classe.libelle_aaf}} - {{matiere.libelle_long}}
+    <span data-ng-hide="cours.create">
+      {{classe.libelle}} - {{matiere.libelle_long}}
     </span>
-    <span data-ng-show="cours.cahier_de_textes_id == ''">
+    <span data-ng-show="cours.create">
       <select data-ng-model="scope.regroupement_id" data-ng-options="classe.id as classe.libelle for classe in classes">
       </select>
       -

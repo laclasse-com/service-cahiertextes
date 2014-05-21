@@ -464,6 +464,7 @@ angular.module('cahierDeTexteApp')
 			  // 1. cours
 			  if ( creneau_selectionne.details.cours.id !== undefined ) {
 			      cours = API.get_cours( { id: creneau_selectionne.details.cours.id } );
+			      cours.create = false;
 			  } else {
 			      cours = create_cours( creneau_selectionne );
 			  }
@@ -478,7 +479,6 @@ angular.module('cahierDeTexteApp')
 					      } );
 				      } );
 				      devoirs.create = false;
-
 				  }
 
 				  // 3. ouverture de la popup
