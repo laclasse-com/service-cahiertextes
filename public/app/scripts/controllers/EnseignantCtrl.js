@@ -34,6 +34,8 @@ angular.module('cahierDeTexteApp')
 						      'raw_data', 'classes', 'matieres',
 						      function( $scope, $filter, TINYMCE_OPTIONS, $modalInstance, CreneauEmploiDuTemps, Documents, cours, devoirs, types_de_devoir, creneau_emploi_du_temps_id, matiere_id, regroupement_id, raw_data, classes, matieres ) {
 							  // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
+
+							  // Initialisations {{{
 							  $scope.tinyMCEOptions = TINYMCE_OPTIONS;
 							  $scope.cours = cours;
 							  $scope.devoirs = devoirs;
@@ -51,7 +53,40 @@ angular.module('cahierDeTexteApp')
 							      $scope.dirty = true;
 							  };
 
-							  // {{{ Gestion des documents attachés
+							  $scope.erreurs = [];
+
+							  // http://stackoverflow.com/questions/19408883/angularjs-select-not-2-way-binding-to-model
+							  $scope.scope = $scope;
+
+							  $scope.creneaux_similaires = _.chain(raw_data)
+							      .filter( function( creneau ) {
+								  return ( creneau.regroupement_id != $scope.regroupement_id ) && ( creneau.matiere_id == $scope.matiere_id );
+							      } )
+							      .map( function( creneau ) {
+								  creneau.classe = _($scope.classes).findWhere({id: parseInt( creneau.regroupement_id ) });
+								  creneau.start_str = $filter('date')( creneau.start, 'short' );
+								  creneau.end_str = $filter('date')( creneau.end, 'shortTime' );
+
+								  return creneau;
+							      })
+							      .value();
+							  $scope.creneaux_similaires.selected = [];
+
+							  $scope.creneaux_devoirs_possibles = _.chain(raw_data)
+							      .filter( function( creneau ) {
+								  return ( creneau.regroupement_id == $scope.regroupement_id ) && ( creneau.matiere_id == $scope.matiere_id );
+							      } )
+							      .map( function( creneau ) {
+								  creneau.classe = _($scope.classes).findWhere({id: parseInt( creneau.regroupement_id ) });
+								  creneau.start_str = $filter('date')( creneau.start, 'short' );
+								  creneau.end_str = $filter('date')( creneau.end, 'shortTime' );
+
+								  return creneau;
+							      })
+							      .value();
+							  // }}}
+
+							  // Gestion des documents attachés {{{
 							  $scope.cartable = [];
 							  Documents.list_files(  ).success( function( response ) {
 							      $scope.cartable = response;
@@ -99,6 +134,7 @@ angular.module('cahierDeTexteApp')
 							  };
 							  // }}}
 
+							  // fonctions d'événements GUI {{{
 							  $scope.ajout_devoir = function() {
 							      var devoir = new Devoirs({ cours_id: $scope.cours.id,
 											 date_due: new Date().toISOString(),
@@ -205,38 +241,7 @@ angular.module('cahierDeTexteApp')
 								  $scope.erreurs.push( { 'message': 'Aucune matière ou classe défini' } );
 							      }
 							  };
-
-							  $scope.erreurs = [];
-
-							  // http://stackoverflow.com/questions/19408883/angularjs-select-not-2-way-binding-to-model
-							  $scope.scope = $scope;
-
-							  $scope.creneaux_similaires = _.chain(raw_data)
-							      .filter( function( creneau ) {
-								  return ( creneau.regroupement_id != $scope.regroupement_id ) && ( creneau.matiere_id == $scope.matiere_id );
-							      } )
-							      .map( function( creneau ) {
-								  creneau.classe = _($scope.classes).findWhere({id: parseInt( creneau.regroupement_id ) });
-								  creneau.start_str = $filter('date')( creneau.start, 'short' );
-								  creneau.end_str = $filter('date')( creneau.end, 'shortTime' );
-
-								  return creneau;
-							      })
-							      .value();
-							  $scope.creneaux_similaires.selected = [];
-
-							  $scope.creneaux_devoirs_possibles = _.chain(raw_data)
-							      .filter( function( creneau ) {
-								  return ( creneau.regroupement_id == $scope.regroupement_id ) && ( creneau.matiere_id == $scope.matiere_id );
-							      } )
-							      .map( function( creneau ) {
-								  creneau.classe = _($scope.classes).findWhere({id: parseInt( creneau.regroupement_id ) });
-								  creneau.start_str = $filter('date')( creneau.start, 'short' );
-								  creneau.end_str = $filter('date')( creneau.end, 'shortTime' );
-
-								  return creneau;
-							      })
-							      .value();
+							  // }}}
 						      } ]
 				      }
 				     ).result.then(     // éxécuté à la fermeture de la popup
