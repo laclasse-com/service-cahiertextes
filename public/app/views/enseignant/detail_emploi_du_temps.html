@@ -39,7 +39,8 @@
 		   tree-model="cartable.files"
 		   options="treeOptions"
 		   on-selection="treeClicked( cours, node )">
-	{{node.name}} ({{node.mime}})
+	{{node.name}} ({{node.mime}}) <button style="color:red;font-weight:bold" data-ng-click="add_ressource( cours, node.name, node.hash )">&plus;</button>
+
       </treecontrol>
 
       <div class="row-fluid" data-ng-show="creneaux_similaires">
