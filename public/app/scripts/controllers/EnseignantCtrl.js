@@ -543,16 +543,15 @@ angular.module('cahierDeTexteApp')
 								       creneau_selectionne.cahier_de_textes_id = popup_response.cours.cahier_de_textes_id;
 								       creneau_selectionne.$update();
 
-								       var iedt = { cours: popup_response.cours,
-										    devoirs: popup_response.devoirs,
-										    cahier_de_textes_id: popup_response.cours.cahier_de_textes_id,
-										    creneau_emploi_du_temps_id: popup_response.cours.creneau_emploi_du_temps_id,
-										    matiere_id: popup_response.matiere_id,
-										    regroupement_id: popup_response.regroupement_id,
-										    start: creneau_selectionne.heure_debut,
-										    end: creneau_selectionne.heure_fin };
+								       $scope.calendar.events[0].push( assemble_fullCalendar_event( { cours: popup_response.cours,
+																      devoirs: popup_response.devoirs,
+																      cahier_de_textes_id: popup_response.cours.cahier_de_textes_id,
+																      creneau_emploi_du_temps_id: popup_response.cours.creneau_emploi_du_temps_id,
+																      matiere_id: popup_response.matiere_id,
+																      regroupement_id: popup_response.regroupement_id,
+																      start: creneau_selectionne.heure_debut,
+																      end: creneau_selectionne.heure_fin } ) );
 
-								       $scope.calendar.events[0].push( assemble_fullCalendar_event( iedt ) );
 								       $scope.emploi_du_temps.fullCalendar( 'renderEvent', _($scope.calendar.events[0]).last(), true );
 								   } else {
 								       creneau_selectionne.$delete(); //full stop
