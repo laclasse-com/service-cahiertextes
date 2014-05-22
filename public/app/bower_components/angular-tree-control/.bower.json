@@ -23,7 +23,6 @@
     "commit": "8db0aeab1c1e325aaea25331fb7f5f09dcdbd65c"
   },
   "_source": "git://github.com/wix/angular-tree-control.git",
-  "_target": "~0.1.5",
-  "_originalSource": "angular-tree-control",
-  "_direct": true
+  "_target": "*",
+  "_originalSource": "angular-tree-control"
 }
