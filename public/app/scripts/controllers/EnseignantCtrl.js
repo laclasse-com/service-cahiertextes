@@ -189,7 +189,7 @@ angular.module('cahierDeTexteApp')
 
 								      if ( $scope.cours.create ) {
 									  $scope.cours.cahier_de_textes_id = _($scope.classes).findWhere({id: $scope.regroupement_id}).cahier_de_textes_id;
-									  $scope.cours.creneau_emploi_du_temps_id = creneau_selectionne.details.creneau_emploi_du_temps_id;
+									  $scope.cours.creneau_emploi_du_temps_id = creneau_selectionne.id;
 									  promesse = $scope.cours.$save();
 								      } else {
 									  promesse = $scope.cours.$update();
@@ -457,11 +457,12 @@ angular.module('cahierDeTexteApp')
 		      // édition d'un créneau existant
 		      $scope.calendar.options.eventClick = function( event ) {
 			  var creneau_selectionne = _(event.source.events).findWhere({_id: event._id});
+			  creneau_selectionne.id = creneau_selectionne.details.creneau_emploi_du_temps_id;
 
+			  // 1. cours
 			  var cours = null;
 			  var devoirs = [];
 
-			  // 1. cours
 			  if ( creneau_selectionne.details.cours.id !== undefined ) {
 			      cours = API.get_cours( { id: creneau_selectionne.details.cours.id } );
 			      cours.create = false;
