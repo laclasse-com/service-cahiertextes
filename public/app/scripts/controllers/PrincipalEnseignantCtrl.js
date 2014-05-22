@@ -38,9 +38,9 @@ angular.module('cahierDeTexteApp')
 			  rowHeight: 64,
 			  columnDefs: [
 			      { field: 'classe', displayName: 'Classe',
-				cellTemplate: '<span data-ng-bind-html="row.entity.classe_id">{{classes[row.entity.classe_id]}}</span>' },
+				cellTemplate: '<span>{{classes[row.entity.classe_id]}}</span>' },
 			      { field: 'matiere', displayName: 'Matière',
-				cellTemplate: '<span data-ng-bind-html="row.entity.matiere_id">{{matieres[row.entity.matiere_id]}}</span>' },
+				cellTemplate: '<span>{{matieres[row.entity.matiere_id]}}</span>' },
 			      { field: 'cours', displayName: 'Cours',
 				cellTemplate: '<span class="scrollbar" data-ng-bind-html="row.entity.cours.contenu"></span>' },
 			      { field: 'devoir', displayName: 'Travail à faire',
