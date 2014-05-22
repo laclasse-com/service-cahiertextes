@@ -44,18 +44,22 @@
       </treecontrol>
 
       <div class="row-fluid" data-ng-show="creneaux_similaires">
-	<div class="col-md-8" data-w11k-select
-	     data-multiple="true"
-	     data-disabled="false"
-	     data-required="false"
-	     data-ng-model="creneaux_similaires.selected"
-	     data-options="creneau as creneau.classe.libelle +' . '+ creneau.start_str +' - '+ creneau.end_str for creneau in creneaux_similaires"
-	     data-placeholder="'Créneaux similaires'"
-	     data-filter-placeholder="'Filtre'"
-	     data-select-filtered-text="'tous'"
-	     data-deselect-filtered-text="'aucun'"
-	     >
-	</div>
+	<select multiple
+		data-ng-model="devoir.creneau_emploi_du_temps_id"
+		data-ng-options="creneau.id as creneau.classe.libelle +' . '+ creneau.start_str +' - '+ creneau.end_str for creneau in creneaux_similaires" >
+	</select>
+	<!-- <div class="col-md-8" data-w11k-select
+	data-multiple="true"
+	data-disabled="false"
+	data-required="false"
+	data-ng-model="creneaux_similaires.selected"
+	data-options="creneau as creneau.classe.libelle +' . '+ creneau.start_str +' - '+ creneau.end_str for creneau in creneaux_similaires"
+	data-placeholder="'Créneaux similaires'"
+	data-filter-placeholder="'Filtre'"
+	data-select-filtered-text="'tous'"
+	data-deselect-filtered-text="'aucun'"
+	>
+	</div> -->
 
 	<button class="btn btn-primary" data-ng-click="dupliquer()">
 	  <span class="glyphicon glyphicon-plus-sign"></span> Copier vers d'autres classes
