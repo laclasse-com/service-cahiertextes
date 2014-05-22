@@ -113,6 +113,13 @@ angular.module('cahierDeTexteApp')
 							      }
 							  };
 
+							  $scope.upload_and_add_ressource = function( item, $files ) {
+							      Documents.upload_dans_cahier_de_textes( $scope.classe.id, $files )
+								      .success( function( response ) {
+									  console.debug( response )
+								      } );
+							  };
+
 							  $scope.remove_ressource = function( item, hash ) {
 							      item.ressources = _(item.ressources).reject( function( ressource ) {
 								  return ressource.hash == hash;
@@ -120,7 +127,7 @@ angular.module('cahierDeTexteApp')
 							      $scope.dirty = true;
 							  };
 
-							  $scope.treeClicked = function( item, noeud ) {
+							  $scope.treeClicked = function( noeud ) {
 							      if ( noeud.mime === 'directory' ) {
 								  Documents.list_files( noeud.hash ).then( function( response ) {
 								      _.chain( response.data.files )
@@ -128,6 +135,7 @@ angular.module('cahierDeTexteApp')
 									  .each( function( elt ) {
 									      elt.children = [];
 									      noeud.children.push( elt );
+									      $scope.selectNodeHead( noeud );
 									  } );
 								  } );
 							      }
