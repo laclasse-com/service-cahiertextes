@@ -104,9 +104,12 @@ angular.module('cahierDeTexteApp')
 								  item.ressources = [];
 							      }
 							      if ( _(item.ressources).findWhere( { hash: hash } ) === undefined ) {
-								  item.ressources.push( { name: name,
-											  hash: hash } );
-								  $scope.dirty = true;
+								  Documents.ajout_au_cahier_de_textes( $scope.classe.id, hash )
+								      .success( function( response ) {
+									  item.ressources.push( { name: name,
+												  hash: _(response.added).first().hash } );
+									  $scope.dirty = true;
+								      } );
 							      }
 							  };
 
