@@ -54,7 +54,6 @@ module AuthenticationHelpers
       env['rack.session'][:authenticated] = true
 
       user_annuaire = Annuaire.get_user( env['omniauth.auth'].extra.uid )
-      p user_annuaire
       env['rack.session'][:current_user] = { 'user' => env['omniauth.auth'].extra.user,
                                              'uid' => env['omniauth.auth'].extra.uid,
                                              'LaclasseNom' => user_annuaire['nom'],
