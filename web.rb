@@ -5,9 +5,8 @@
 require 'rubygems'
 require 'bundler'
 
-require_relative './config/options'
-require_relative './config/environment'
 require_relative './config/CAS'
+require_relative './config/options'
 
 Bundler.require( :default, ENV['RACK_ENV'].to_sym )     # require tout les gems définis dans Gemfile
 

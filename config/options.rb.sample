@@ -1,8 +1,18 @@
 # -*- encoding: utf-8 -*-
 
-ANNUAIRE = { url: 'http://www.dev.laclasse.com/api/app',
-	     app_id: 'test',
-	     secret: 'veryverysecret',
-             api_mode: 'v3' }
+Encoding.default_external = Encoding::UTF_8
+Encoding.default_internal = Encoding::UTF_8
 
+# Environnment de deployement
+ENV[ 'RACK_ENV' ] = 'development'
+
+# Config de l'annuaire ENT de Back-end
+ANNUAIRE = { 
+  url: 'http://www.dev.laclasse.com/api/app',
+  app_id: 'CTXT',
+  secret: 'veryverysecret',
+  api_mode: 'v3'
+}
+
+# Virtual path de l'aaplication
 APP_VIRTUAL_PATH = '/ct'
