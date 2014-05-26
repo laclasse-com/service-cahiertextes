@@ -18,7 +18,8 @@ module UserHelpers
   class HashedUser < HashIt
     def is?( profil )
       # FIXME
-      @ENTPersonProfils.include? "#{profil}:#{profil_actif['uai']}"
+      profils = Annuaire.get_user( @uid )['profils']
+      @ENTPersonProfils.include? "#{profil}:#{profils[0]['uai']}"
     end
   end
 
