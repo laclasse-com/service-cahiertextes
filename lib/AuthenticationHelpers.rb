@@ -30,13 +30,7 @@ module AuthenticationHelpers
     redirect protocol + CASAuth::OPTIONS[:host] + CASAuth::OPTIONS[:logout_url] + '?url=' + URI.encode( url )
   end
 
-  def provisionning
-    user_annuaire = Annuaire.get_user( env['omniauth.auth'].extra.uid )
-    uais = user_annuaire['profils'].map {
-      |profil|
-      profil['etablissement_code_uai']
-    }.uniq
-
+  def provisionning( uais )
     # 0. Établissements
     uais.each {
       |uai|
@@ -59,17 +53,20 @@ module AuthenticationHelpers
     unless env['rack.session'].nil? || env['omniauth.auth'].nil?
       env['rack.session'][:authenticated] = true
 
+      user_annuaire = Annuaire.get_user( env['omniauth.auth'].extra.uid )
+      p user_annuaire
       env['rack.session'][:current_user] = { 'user' => env['omniauth.auth'].extra.user,
                                              'uid' => env['omniauth.auth'].extra.uid,
-                                             'LaclasseNom' => env['omniauth.auth'].extra.LaclasseNom,
-                                             'LaclassePrenom' => env['omniauth.auth'].extra.LaclassePrenom,
-                                             'LaclasseCivilite' => env['omniauth.auth'].extra.LaclasseCivilite,
-                                             'ENTPersonProfils' => env['omniauth.auth'].extra.ENTPersonProfils }
+                                             'LaclasseNom' => user_annuaire['nom'],
+                                             'LaclassePrenom' => user_annuaire['prenom'],
+                                             'ENTPersonProfils' => user_annuaire['profils'].map { |p| "#{p['profil_id']}:#{p['etablissement_code_uai']}" }.join( ',' ) }
 
-      # FIXME: DEBUG: récupérer depuis l'env généré par le portail
-      env['rack.session'][:current_user]['profil_actif'] = { 'uai' => '0699999Z' }
+      uais = user_annuaire['profils'].map {
+        |profil|
+        profil['etablissement_code_uai']
+      }.uniq
 
-      provisionning
+      provisionning( uais )
     end
 
     env['rack.session'][:current_user]
