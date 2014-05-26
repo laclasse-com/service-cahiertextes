@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # CAS Configuration.
-module CASLaclasseCom
+module CASAuth
   OPTIONS = { host: 'www.dev.laclasse.com',
               ssl: true,
               port: 443,

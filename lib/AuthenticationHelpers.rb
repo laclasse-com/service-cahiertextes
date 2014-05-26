@@ -26,8 +26,8 @@ module AuthenticationHelpers
     env['rack.session'][:authenticated] = false
     env['rack.session'][:current_user] = nil
 
-    CASLaclasseCom::OPTIONS[:ssl] ? protocol = 'https://' : protocol = 'http://'
-    redirect protocol + CASLaclasseCom::OPTIONS[:host] + CASLaclasseCom::OPTIONS[:logout_url] + '?url=' + URI.encode( url )
+    CASAuth::OPTIONS[:ssl] ? protocol = 'https://' : protocol = 'http://'
+    redirect protocol + CASAuth::OPTIONS[:host] + CASAuth::OPTIONS[:logout_url] + '?url=' + URI.encode( url )
   end
 
   def provisionning
