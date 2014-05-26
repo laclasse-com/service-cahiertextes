@@ -3,10 +3,10 @@
   <button type="button" class="close pull-right" aria-hidden="true" data-ng-click="fermer()">&times;</button>
 
   <h3>
-    <span data-ng-show="cours.cahier_de_textes_id != ''">
-      {{classe.libelle_aaf}} - {{matiere.libelle_long}}
+    <span data-ng-hide="cours.create">
+      {{classe.libelle}} - {{matiere.libelle_long}}
     </span>
-    <span data-ng-show="cours.cahier_de_textes_id == ''">
+    <span data-ng-show="cours.create">
       <select data-ng-model="scope.regroupement_id" data-ng-options="classe.id as classe.libelle for classe in classes">
       </select>
       -
@@ -31,30 +31,36 @@
       <ul>
 	<li data-ng-repeat="ressource in cours.ressources">
 	  <a target="_blank" href="http://www.dev.laclasse.com/docs-beta/api/connector?cmd=file&target={{ressource.hash}}">{{ressource.name}}</a>
-	  <button style="color:red;font-weight:bold" data-ng-click="remove_ressource( cours, ressource.hash )">&times;</button>
+	  <button style="font-size:1.25em;color:#f00;font-weight:bold" data-ng-click="remove_ressource( cours, ressource.hash )">✕</button>
 	</li>
       </ul>
-      <input type="file">
+
+      <input type="file" multiple data-ng-file-select="upload_and_add_ressource( cours, $files )" />
+
       <treecontrol class="tree-classic"
 		   tree-model="cartable.files"
 		   options="treeOptions"
-		   on-selection="treeClicked( cours, node )">
-	{{node.name}} ({{node.mime}})
+		   on-selection="treeClicked( node )">
+	{{node.name}} ({{node.mime}}) <button style="font-size:1.25em;color:#0a0;font-weight:bold" data-ng-click="add_ressource( cours, node.name, node.hash )">+</button>
+
       </treecontrol>
 
       <div class="row-fluid" data-ng-show="creneaux_similaires">
-	<div class="col-md-8" data-w11k-select
-	     data-multiple="true"
-	     data-disabled="false"
-	     data-required="false"
-	     data-ng-model="creneaux_similaires.selected"
-	     data-options="creneau as creneau.classe.libelle +' . '+ creneau.start_str +' - '+ creneau.end_str for creneau in creneaux_similaires"
-	     data-placeholder="'Créneaux similaires'"
-	     data-filter-placeholder="'Filtre'"
-	     data-select-filtered-text="'tous'"
-	     data-deselect-filtered-text="'aucun'"
-	     >
-	</div>
+	<select multiple
+		data-ng-model="devoir.creneau_emploi_du_temps_id"
+		data-ng-options="creneau.id as creneau.classe.libelle +' . '+ creneau.start_str +' - '+ creneau.end_str for creneau in creneaux_similaires" >
+	</select>
+	<!-- <div class="col-md-8" data-w11k-select
+	data-multiple="true"
+	data-disabled="false"
+	data-required="false"
+	data-ng-model="creneaux_similaires.selected"
+	data-options="creneau as creneau.classe.libelle +' . '+ creneau.start_str +' - '+ creneau.end_str for creneau in creneaux_similaires"
+	data-placeholder="'Créneaux similaires'"
+	data-filter-placeholder="'Filtre'"
+	data-select-filtered-text="'tous'"
+	data-deselect-filtered-text="'aucun'" >
+	</div> -->
 
 	<button class="btn btn-primary" data-ng-click="dupliquer()">
 	  <span class="glyphicon glyphicon-plus-sign"></span> Copier vers d'autres classes
@@ -91,8 +97,7 @@
 	  data-placeholder="'Créneaux disponibles'"
 	  data-filter-placeholder="'Filtre'"
 	  data-select-filtered-text="'tous'"
-	  data-deselect-filtered-text="'aucun'"
-	  >
+	  data-deselect-filtered-text="'aucun'" >
 	  </div> -->
 	</div>
       </div>
@@ -105,11 +110,29 @@
 	  <button style="color:red;font-weight:bold" data-ng-click="remove_ressource( devoir, ressource.hash )">&times;</button>
 	</li>
       </ul>
-      <input type="file">
+      <!-- <input type="file"> -->
+
+      <form id="upload" method="post" action="http://www.dev.laclasse.com/docs-beta/api/ctxt/add/" enctype="multipart/form-data">
+	<div id="drop">
+	  Glissez-déposez vos fichiers ici.
+
+	  <a>Parcourir</a>
+	  <input type="file" name="upload[]" multiple />
+	  <input id="cmd" name="cmd" type="hidden" value="upload" />
+	  <input id="current" name="current" type="hidden" value="0" />
+	  <input id="attachment" name="attachment" type="hidden" value="CAHIERTXT" />
+	  <input id="share" name="share" type="hidden" value="{{classe.id}}" />
+	</div>
+
+	<ul>
+	  <!-- The file uploads will be shown here -->
+	</ul>
+      </form>
+
       <treecontrol class="tree-classic"
 		   tree-model="cartable.files"
 		   options="treeOptions"
-		   on-selection="treeClicked( devoir, node )">
+		   on-selection="treeClicked( node )">
 	{{node.name}} ({{node.mime}})
       </treecontrol>
     </div>
