@@ -11,6 +11,7 @@ describe Annuaire do
     @srv = 'users/VAA60001'
     @args = { expand: 'true' }
     @url_annuaire_v2 = 'http://www.dev.laclasse.com/pls/public/!ajax_server.service?p_rendertype=none&serviceName=ServiceApi'
+    @url_annuaire_v3 = 'http://www.dev.laclasse.com/api/app'
   end
 
   it 'should build a canonical string mode api V3' do
@@ -152,168 +153,156 @@ describe Annuaire do
     Annuaire.compat_service('regroupement').should == 'regroupement'
   end
 
-  it " teste l'appel a l'annuaire  en mode v2 pour get_user" do
+  it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour get_user" do
     ANNUAIRE[:api_mode] = 'v2'
     ANNUAIRE[:url] = @url_annuaire_v2
-    r = Annuaire.get_user "VPG60307"
-
-    r.class.should be Hash 
-    r.has_key?('id').should be true
-    r.has_key?('nom').should be true
-    r.has_key?('prenom').should be true
-    r.has_key?('sexe').should be true
-    r.has_key?('id_ent').should be true
-    r.has_key?('date_naissance').should be true
-    r.has_key?('adresse').should be true
-    r.has_key?('code_postal').should be true
-    r.has_key?('ville').should be true
-    r.has_key?('full_name').should be true
-    r.has_key?('profils').should be true
-    r.has_key?('telephones').should be true
-    r.has_key?('emails').should be true  
-
+    r2 = Annuaire.get_user "VPG60307"
+    ANNUAIRE[:api_mode] = 'v3'
+    ANNUAIRE[:url] = @url_annuaire_v3
+    r3 = Annuaire.get_user "VAA61315"
+    
+    r2.has_key?('id').should be r3.has_key?('id')
+    r2.has_key?('id_sconet').should be r3.has_key?('id_sconet')
+    r2.has_key?('id_jointure_aaf').should be r3.has_key?('id_jointure_aaf')
+    r2.has_key?('login').should be r3.has_key?('login')
+    r2.has_key?('nom').should be r3.has_key?('nom')
+    r2.has_key?('prenom').should be r3.has_key?('prenom')
+    r2.has_key?('sexe').should be r3.has_key?('sexe')
+    r2.has_key?('id_ent').should be r3.has_key?('id_ent')
+    r2.has_key?('date_naissance').should be r3.has_key?('date_naissance')
+    r2.has_key?('adresse').should be r3.has_key?('adresse')
+    r2.has_key?('code_postal').should be r3.has_key?('code_postal')
+    r2.has_key?('ville').should be r3.has_key?('ville')
+    r2.has_key?('avatar').should be r3.has_key?('avatar')
+    r2.has_key?('full_name').should be r3.has_key?('full_name')
+    r2.has_key?('profils').should be r3.has_key?('profils')
+    r2.has_key?('telephones').should be r3.has_key?('telephones')
+    r2.has_key?('emails').should be r3.has_key?('emails')
+    
+    #r3.each { |k, v| puts "r2.has_key?('"+k.to_s+"').should be r3.has_key?('"+k.to_s+"')" } 
   end
   
-  it " teste l'appel a l'annuaire  en mode v2 pour get_etablissement" do
+  it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour get_etablissement" do
     ANNUAIRE[:api_mode] = 'v2'
     ANNUAIRE[:url] = @url_annuaire_v2
-    r = Annuaire.get_etablissement "0699990Z"
+    r2 = Annuaire.get_etablissement "0699990Z"
+    ANNUAIRE[:api_mode] = 'v3'
+    ANNUAIRE[:url] = @url_annuaire_v3
+    r3 = Annuaire.get_etablissement "0699999Z"
+    r2.has_key?('id').should be r3.has_key?('id')
+    r2.has_key?('code_uai').should be r3.has_key?('code_uai')
+    r2.has_key?('nom').should be r3.has_key?('nom')
+    r2.has_key?('adresse').should be r3.has_key?('adresse')
+    r2.has_key?('code_postal').should be r3.has_key?('code_postal')
+    r2.has_key?('ville').should be r3.has_key?('ville')
+    r2.has_key?('type_etablissement_id').should be r3.has_key?('type_etablissement_id')
+    r2.has_key?('telephone').should be r3.has_key?('telephone')
+    r2.has_key?('fax').should be r3.has_key?('fax')
+    r2.has_key?('full_name').should be r3.has_key?('full_name')
+    r2.has_key?('alimentation_state').should be r3.has_key?('alimentation_state')
+    r2.has_key?('alimentation_date').should be r3.has_key?('alimentation_date')
+    r2.has_key?('data_received').should be r3.has_key?('data_received')
+    r2.has_key?('longitude').should be r3.has_key?('longitude')
+    r2.has_key?('latitude').should be r3.has_key?('latitude')
+    r2.has_key?('site_url').should be r3.has_key?('site_url')
+    r2.has_key?('logo').should be r3.has_key?('logo')
+    r2.has_key?('classes').should be r3.has_key?('classes')
+    r2.has_key?('groupes_eleves').should be r3.has_key?('groupes_eleves')
+    r2.has_key?('groupes_libres').should be r3.has_key?('groupes_libres')
+    r2.has_key?('personnel').should be r3.has_key?('personnel')
+    r2.has_key?('contacts').should be r3.has_key?('contacts')
+    r2.has_key?('eleves').should be r3.has_key?('eleves')
+    r2.has_key?('enseignants').should be r3.has_key?('enseignants')
+    r2.has_key?('parents').should be r3.has_key?('parents')
+  end
+  
+  it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour get_matiere" do
+    ANNUAIRE[:api_mode] = 'v2'
+    ANNUAIRE[:url] = @url_annuaire_v2
+    r2 =  Annuaire.get_matiere "001600"
+    ANNUAIRE[:api_mode] = 'v3'
+    ANNUAIRE[:url] = @url_annuaire_v3
+    r3 = Annuaire.get_matiere "001600"
+    r2.has_key?('json_class').should be r3.has_key?('json_class')
+    r2.has_key?('id').should be r3.has_key?('id')
+    r2.has_key?('libelle_court').should be r3.has_key?('libelle_court')
+    r2.has_key?('libelle_long').should be r3.has_key?('libelle_long')
+  end
+  
+  it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour get_regroupement" do
+    ANNUAIRE[:api_mode] = 'v2'
+    ANNUAIRE[:url] = @url_annuaire_v2
+    r2 =  Annuaire.get_regroupement "1363"
+    ANNUAIRE[:api_mode] = 'v3'
+    ANNUAIRE[:url] = @url_annuaire_v3
+    r3 = Annuaire.get_regroupement "1363"
+    r2.has_key?('id').should be r3.has_key?('id')
+    r2.has_key?('etablissement_id').should be r3.has_key?('etablissement_id')
+    r2.has_key?('libelle').should be r3.has_key?('libelle')
+    r2.has_key?('libelle_aaf').should be r3.has_key?('libelle_aaf')
+    r2.has_key?('type_regroupement_id').should be r3.has_key?('type_regroupement_id')
+  end
+
+  it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour get_regroupement" do
+    ANNUAIRE[:api_mode] = 'v2'
+    ANNUAIRE[:url] = @url_annuaire_v2
+    r2 =  Annuaire.search_matiere "Soutien"
+    ANNUAIRE[:api_mode] = 'v3'
+    ANNUAIRE[:url] = @url_annuaire_v3
+    r3 = Annuaire.search_matiere "Soutien"
+    r2.has_key?('json_class').should be r3.has_key?('json_class')
+    r2.has_key?('id').should be r3.has_key?('id')
+    r2.has_key?('libelle_court').should be r3.has_key?('libelle_court')
+    r2.has_key?('libelle_long').should be r3.has_key?('libelle_long')
+  end
  
-    r.has_key?('id').should be true
-    r.has_key?('nom').should be true
-    r.has_key?('full_name').should be true
-    r.has_key?('adresse').should be true
-    r.has_key?('code_postal').should be true
-    r.has_key?('telephone').should be true
-    r.has_key?('fax').should be true
-    r.has_key?('site_url').should be true
-    r.has_key?('type_etalissement_id').should be true
-    r.has_key?('code_uai').should be true
-    r.has_key?('ville').should be true
-    r.has_key?('latitude').should be true
-    r.has_key?('longitude').should be true
-    r.has_key?('logo').should be true
-    r.has_key?('alimentation_state').should be true
-    r.has_key?('data_recieved').should be true
-    r.has_key?('alimentation_date').should be true
-    r.has_key?('classes').should be true
-    r.has_key?('groupes_eleves').should be true
-    r.has_key?('groupes_libres').should be true
-    r.has_key?('personnel').should be true
-    r.has_key?('eleves').should be true
-    r.has_key?('enseignants').should be true
-    r.has_key?('parents').should be true
-
-  end
-
-  it " teste l'appel a l'annuaire  en mode v2 pour get_matiere" do
+  it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour get_etablissement_regroupements" do
     ANNUAIRE[:api_mode] = 'v2'
     ANNUAIRE[:url] = @url_annuaire_v2
-    r =  Annuaire.get_matiere "001600"
-    r.has_key?('json_class').should be true
-    r['json_class'].should == "MatiereEnseignee"
-    r.has_key?('id').should be true
-    r.has_key?('libelle_court').should be true
-    r.has_key?('libelle_long').should be true     
+    r2 = Annuaire.get_etablissement_regroupements "0699990Z"
+    ANNUAIRE[:api_mode] = 'v3'
+    ANNUAIRE[:url] = @url_annuaire_v3
+    r3 = Annuaire.get_etablissement_regroupements "0699999Z"
+    r2.has_key?('classes').should be r3.has_key?('classes')
+    r2.has_key?('groupes_eleves').should be r3.has_key?('groupes_eleves')
+    r2.has_key?('groupes_libres').should be r3.has_key?('groupes_libres')
   end
-
-  it " teste l'appel a l'annuaire  en mode v2 pour get_regroupement" do
+ 
+  it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour search_regroupement" do
     ANNUAIRE[:api_mode] = 'v2'
     ANNUAIRE[:url] = @url_annuaire_v2
-    r =  Annuaire.get_regroupement "1363"
-    r.has_key?('id').should be true
-    r.has_key?('etablissement_id').should be true
-    r.has_key?('libelle').should be true
-    r.has_key?('libelle_aaf').should be true
-    r.has_key?('type_regroupement_id').should be true
-  end
-
-  it " teste l'appel a l'annuaire  en mode v2 pour search_matiere" do
-    ANNUAIRE[:api_mode] = 'v2'
-    ANNUAIRE[:url] = @url_annuaire_v2
-    r =  Annuaire.search_matiere "Soutien"
-    r.has_key?('json_class').should be true
-    r.has_key?('id').should be true
-    r.has_key?('libelle_court').should be true
-    r.has_key?('libelle_long').should be true 
-  end
-
-  it " teste l'appel a l'annuaire  en mode v2 pour search_regroupement" do
-    ANNUAIRE[:api_mode] = 'v2'
-    ANNUAIRE[:url] = @url_annuaire_v2
-    r = Annuaire.search_regroupement "0699990Z", "test_aaf24"  
+    r2 = Annuaire.search_regroupement "0699990Z", "test_aaf24"  
+    ANNUAIRE[:api_mode] = 'v3'
+    ANNUAIRE[:url] = @url_annuaire_v3
+    r3 = Annuaire.search_regroupement "0699999Z", "test"     
   end
     
-  it " teste l'appel a l'annuaire  en mode v2 pour search_utilisateur" do
+  it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour search_utilisateur" do
     ANNUAIRE[:api_mode] = 'v2'
     ANNUAIRE[:url] = @url_annuaire_v2
     Annuaire.set_search true
-    r = Annuaire.search_utilisateur "0699990Z", "Levallois", "Pierre-Gilles"  
+    r2 = Annuaire.search_utilisateur "0699990Z", "Levallois", "Pierre-Gilles"  
+    ANNUAIRE[:api_mode] = 'v3'
+    ANNUAIRE[:url] = @url_annuaire_v3
+    r3 = Annuaire.search_utilisateur "0699999Z", "Levallois", "Pierre-Gilles"  
+    #   r3.each { |k, v| puts "r2.has_key?('"+k.to_s+"').should be r3.has_key?('"+k.to_s+"')" }
   end
 
-  it " teste l'appel a l'annuaire  en mode v2 pour get_etablissement_regroupements" do
-    ANNUAIRE[:api_mode] = 'v2'
-    ANNUAIRE[:url] = @url_annuaire_v2
-    r = Annuaire.get_etablissement_regroupements "0699990Z"
-    r.has_key?('id').should be true
-    r.has_key?('nom').should be true
-    r.has_key?('full_name').should be true
-    r.has_key?('adresse').should be true
-    r.has_key?('code_postal').should be true
-    r.has_key?('telephone').should be true
-    r.has_key?('fax').should be true
-    r.has_key?('site_url').should be true
-    r.has_key?('type_etalissement_id').should be true
-    r.has_key?('code_uai').should be true
-    r.has_key?('ville').should be true
-    r.has_key?('latitude').should be true
-    r.has_key?('longitude').should be true
-    r.has_key?('logo').should be true
-    r.has_key?('alimentation_state').should be true
-    r.has_key?('data_recieved').should be true
-    r.has_key?('alimentation_date').should be true
-    r.has_key?('classes').should be true
-    r.has_key?('groupes_eleves').should be true
-    r.has_key?('groupes_libres').should be true
-    r.has_key?('personnel').should be true
-    r.has_key?('eleves').should be true
-    r.has_key?('enseignants').should be true
-    r.has_key?('parents').should be true
-  end
-
-  it " teste l'appel a l'annuaire  en mode v2 pour get_user_regroupements" do
+  it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour get_user_regroupements" do
     ANNUAIRE[:api_mode] = 'v2'
     ANNUAIRE[:url] = @url_annuaire_v2
     Annuaire.set_search true
-    r =  Annuaire.get_user_regroupements "VPG60307" 
-    r.has_key?('id').should be true
-    r.has_key?('nom').should be true
-    r.has_key?('prenom').should be true
-    r.has_key?('sexe').should be true
-    r.has_key?('id_ent').should be true
-    r.has_key?('date_naissance').should be true
-    r.has_key?('adresse').should be true
-    r.has_key?('code_postal').should be true
-    r.has_key?('ville').should be true
-    r.has_key?('full_name').should be true
-    r.has_key?('profils').should be true
-    r.has_key?('telephones').should be true
-    r.has_key?('emails').should be true
-    r.has_key?('roles').should be true
-    r.has_key?('classes').should be true
-    r.has_key?('groupes_eleves').should be true
-    r.has_key?('groupes_libres').should be true
-  end
+    r2 =  Annuaire.get_user_regroupements "VPG60307" 
+    ANNUAIRE[:api_mode] = 'v3'
+    ANNUAIRE[:url] = @url_annuaire_v3
+    r3 = Annuaire.get_user_regroupements "VAA61315"  
+    r3.each { |k, v| puts "r2.has_key?('"+k.to_s+"').should be r3.has_key?('"+k.to_s+"')" }
+    r2.has_key?('classes').should be r3.has_key?('classes')
+    r2.has_key?('groupes_eleves').should be r3.has_key?('groupes_eleves')
+    r2.has_key?('groupes_libres').should be r3.has_key?('groupes_libres')
 
-  # r.each { |k, v| puts "r.has_key?('"+k.to_s+"').should be true" }
-  #        
-  #      
-  #      
-  #      
-  #      
-  #      
-  #      
-  #     
+  end
+  #   r3.each { |k, v| puts "r2.has_key?('"+k.to_s+"').should be r3.has_key?('"+k.to_s+"')" }
 
 end
- 
+  
