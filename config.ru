@@ -22,7 +22,7 @@ use OmniAuth::Builder do
   configure do |config|
     config.path_prefix = "#{APP_VIRTUAL_PATH}/auth"
   end
-  provider :cas, CASLaclasseCom::OPTIONS
+  provider :cas, CASAuth::OPTIONS
 end
 
 map "#{APP_VIRTUAL_PATH}/api" do
