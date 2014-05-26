@@ -2,6 +2,7 @@
 
 angular.module( 'cahierDeTexteApp' )
     .constant( 'APP_VIRTUAL_PATH', '/ct' )
+    .constant( 'DOCS_URL', 'http://www.dev.laclasse.com/docs-beta' )
 
 // définition des couleurs
     .constant( 'THEME', { filled: { base: '#aaffaa',
