@@ -2,7 +2,7 @@
 <div class="modal-header">
   <button type="button" class="close pull-right" aria-hidden="true" data-ng-click="fermer()">&times;</button>
 
-  <h3>
+  <h4>
     <span data-ng-hide="cours.create">
       {{classe.libelle}} - {{matiere.libelle_long}}
     </span>
@@ -14,7 +14,7 @@
       </select>
     </span>
 
-  </h3>
+  </h4>
 </div>
 <div class="modal-body">
   <ul>
@@ -22,7 +22,7 @@
   </ul>
   <div class="panel panel-default">
     <div class="panel-heading">
-      <h3 class="panel-title">Séquence pédagogique</h3>
+      <h3 class="panel-title">Séquence pédagogique du {{cours.date_cours | date : 'fullDate' }}</h3>
     </div>
     <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="cours.contenu" data-ng-show="cours.$resolved" data-ng-change="is_dirty()">
 
