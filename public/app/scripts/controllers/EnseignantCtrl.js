@@ -113,11 +113,17 @@ angular.module('cahierDeTexteApp')
 							      }
 							  };
 
-							  $scope.upload_and_add_ressource = function( item, $files ) {
-							      Documents.upload_dans_cahier_de_textes( $scope.classe.id, $files )
-								      .success( function( response ) {
-									  console.debug( response )
-								      } );
+							  $scope.upload_and_add_ressource = function( item, fichiers ) {
+							      Documents.upload_dans_cahier_de_textes( $scope.classe.id, fichiers )
+								  .progress(function(evt) {
+								      console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+								  }).success(function(data, status, headers, config) {
+								      // file is uploaded successfully
+								      console.log(data);
+								  }).error(function(data, status, headers, config) {
+								      console.log(status);
+								      console.log(data);
+								  });
 							  };
 
 							  $scope.remove_ressource = function( item, hash ) {
@@ -347,7 +353,11 @@ angular.module('cahierDeTexteApp')
 			      }
 
 			      if ( event.details.matiere_id.length > 0 ) {
-				  calendar_event.title = matieres[ event.details.matiere_id ].libelle_long;
+				  if ( matieres[ event.details.matiere_id ] === undefined ) {
+				      calendar_event.title = '{Matière inconnue}';
+				  } else {
+				      calendar_event.title = matieres[ event.details.matiere_id ].libelle_long;
+				  }
 			      }
 
 			      return calendar_event;

@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .service('Documents',
-	     [ '$http', 'DOCS_URL',
-	       function( $http, DOCS_URL ) {
+	     [ '$http', '$upload', 'DOCS_URL',
+	       function( $http, $upload, DOCS_URL ) {
 		   this.list_files = function( root ) {
 		       root = typeof root === 'undefined' ? '&init=1' : root;
 		       return $http.get( DOCS_URL + "/api/connector?cmd=open&target=" + root );
@@ -14,12 +14,11 @@ angular.module('cahierDeTexteApp')
 		   };
 
 		   this.upload_dans_cahier_de_textes = function( share_id, fichiers ) {
-		       return $http.post( DOCS_URL + "/api/ctxt/add",
-					  { upload: fichiers,
-					    current: 0,
-					    attachment: 'CAHIERTXT',
-					    share: share_id },
-					  { headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' } } );
+		       return $upload.http({ url: DOCS_URL + "/api/ctxt/add",
+					     data: { current: 0,
+						     attachment: 'CAHIERTXT',
+						     share: share_id },
+					     file: fichiers });
 		   };
 	       }
 	     ] );

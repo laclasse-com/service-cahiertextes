@@ -35,7 +35,17 @@
 	</li>
       </ul>
 
-      <input type="file" multiple data-ng-file-select="upload_and_add_ressource( cours, $files )" />
+      <form id="upload" method="post" action="http://www.dev.laclasse.com/docs-beta/api/ctxt/add/" enctype="multipart/form-data">
+	<div id="drop" style="background-color:#baddad" >
+	  Glissez-déposez vos fichiers ici.
+
+	  <input type="file" name="upload[]" multiple onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().cours, this.files)"/>
+	  <input type="hidden" id="cmd" name="cmd" value="upload" />
+	  <input type="hidden" id="current" name="current" value="0" />
+	  <input type="hidden" id="attachment" name="attachment" value="CAHIERTXT" />
+	  <input type="hidden" id="share" name="share" value="{{classe.id}}" />
+	</div>
+      </form>
 
       <treecontrol class="tree-classic"
 		   tree-model="cartable.files"
