@@ -337,7 +337,7 @@ angular.module('cahierDeTexteApp')
 				      .filter( function( classe ) {
 					  return classe.id == event.details.regroupement_id;
 				      })
-				      .pluck( 'libelle_aaf' )
+				      .pluck( 'libelle' )
 				      .value()[0];
 			      } else {
 				  calendar_event.regroupement = '';
