@@ -114,8 +114,32 @@ angular.module('cahierDeTexteApp')
 							      }
 							  };
 
+							  scope_popup.add_ressource = function( item, name, hash ) {
+							      if ( item.ressources === undefined ) {
+								  item.ressources = [];
+							      }
+							      if ( _(item.ressources).findWhere( { hash: hash } ) === undefined ) {
+								  Documents.ajout_au_cahier_de_textes( scope_popup.classe.id, hash )
+								      .success( function( response ) {
+									  item.ressources.push( { name: name,
+												  hash: _(response.added).first().hash } );
+									  scope_popup.is_dirty();
+								      } );
+							      }
+							  };
+
 							  scope_popup.upload_and_add_ressource = function( item, fichiers ) {
-							      Documents.upload_dans_cahier_de_textes( scope_popup.classe.id, fichiers );
+							      if ( item.ressources === undefined ) {
+								  item.ressources = [];
+							      }
+							      Documents.upload_dans_cahier_de_textes( scope_popup.classe.id, fichiers )
+								  .success( function( response ) {
+								      _(response.added).each( function( doc ) {
+									  item.ressources.push( { name: doc.name,
+												  hash: doc.hash } );
+									  scope_popup.is_dirty();
+								      } );
+								  } );
 							  };
 
 							  scope_popup.remove_ressource = function( item, hash ) {
