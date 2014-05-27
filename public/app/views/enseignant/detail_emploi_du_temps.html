@@ -141,8 +141,12 @@
 </div>
 
 <div class="modal-footer">
-  <button class="btn btn-warning pull-left" data-ng-click="effacer()" data-ng-hide="cours.create">
-    <span class="glyphicon glyphicon-trash"></span> Remise à zéro 
+  <button class="btn btn-default pull-left" data-ng-click="effacer()" data-ng-hide="cours.create">
+    <span class="glyphicon glyphicon-trash"></span> Supprimer le cours 
+  </button>
+
+  <button class="btn btn-warning pull-left" data-ng-click="effacer_creneau()" data-ng-show="cours.create">
+    <span class="glyphicon glyphicon-trash"></span> Supprimer le créneau 
   </button>
 
   <button class="btn btn-info pull-right" data-ng-click="annuler()">
