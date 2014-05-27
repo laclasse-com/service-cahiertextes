@@ -28,8 +28,10 @@ module CahierDeTextesAPI
           .uniq
 
         # FIXME: creneau[:semaines_de_presence][ 1 ] == première semaine de janvier ?
+        # FIXME: Un creneau "deleted" ne doit pas empecher les saisies déjà effectuée d'apparaitre
         CreneauEmploiDuTemps
           .association_join( :regroupements )
+          .where( deleted: false )
           .where( regroupement_id: regroupements_ids )
           .all
           .select { |creneau| weeks.reduce( true ) { |a, week| a && creneau[:semaines_de_presence][ week ] == 1 } }
