@@ -26,7 +26,7 @@ angular.module( 'cahierDeTexteApp' )
 						 firstDay: 1,
 						 minTime: 7,
 						 maxTime: 19,
-						 ignoreTimezone: false,
+						 ignoreTimezone: true,
 						 timeFormat: { month: $locale.DATETIME_FORMATS.shortTime + '{ - ' + $locale.DATETIME_FORMATS.shortTime + '}',
 							       week: '',
 							       day: '' },
