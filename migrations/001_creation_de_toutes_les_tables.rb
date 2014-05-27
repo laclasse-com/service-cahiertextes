@@ -34,6 +34,7 @@ Sequel.migration do
 
       Integer :jour_de_la_semaine, null: false
       String :matiere_id, null: false
+      TrueClass :deleted, default: false
     }
 
     create_table!(:creneaux_emploi_du_temps_salles) {
