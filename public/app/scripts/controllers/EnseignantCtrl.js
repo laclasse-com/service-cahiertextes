@@ -43,9 +43,9 @@ angular.module('cahierDeTexteApp')
 							  scope_popup.matieres = matieres;
 							  scope_popup.classes = classes;
 							  scope_popup.matiere_id = matiere_id.length > 0 ? matiere_id : _.chain(scope_popup.matieres).values().first().value().id;
-							  scope_popup.regroupement_id = regroupement_id.length > 0 ? regroupement_id : _(scope_popup.classes).first().id;
+							  scope_popup.regroupement_id = regroupement_id.length > 0 ? parseInt(regroupement_id) : _(scope_popup.classes).first().id;
 							  scope_popup.classe = _(scope_popup.classes).findWhere({id: parseInt( scope_popup.regroupement_id )});
-							  scope_popup.matiere = scope_popup.matieres[ scope_popup.matiere_id ];
+                                                          scope_popup.matiere = scope_popup.matieres[ scope_popup.matiere_id ];
 
 							  scope_popup.dirty = false;
 							  scope_popup.deleted = false;
@@ -57,7 +57,8 @@ angular.module('cahierDeTexteApp')
 
 							  // http://stackoverflow.com/questions/19408883/angularjs-select-not-2-way-binding-to-model
 							  scope_popup.scope = scope_popup;
-
+                                                          //  ^ ^ Cette ligne est peut-être inutile ?
+                                                          
 							  scope_popup.creneaux_similaires = _.chain(raw_data)
 							      .filter( function( creneau ) {
 								  return ( creneau.regroupement_id != scope_popup.regroupement_id ) && ( creneau.matiere_id == scope_popup.matiere_id );
@@ -108,7 +109,7 @@ angular.module('cahierDeTexteApp')
 								      .success( function( response ) {
 									  item.ressources.push( { name: name,
 												  hash: _(response.added).first().hash } );
-									  scope_popup.dirty = true;
+									  scope_popup.is_dirty();
 								      } );
 							      }
 							  };
@@ -121,7 +122,7 @@ angular.module('cahierDeTexteApp')
 							      item.ressources = _(item.ressources).reject( function( ressource ) {
 								  return ressource.hash == hash;
 							      } );
-							      scope_popup.dirty = true;
+							      scope_popup.is_dirty();
 							  };
 
 							  scope_popup.treeClicked = function( noeud ) {
@@ -171,13 +172,14 @@ angular.module('cahierDeTexteApp')
 							  };
 
 							  scope_popup.effacer = function() {
-							      scope_popup.cours.$delete();
-							      _(scope_popup.devoirs).each( function( devoir ) {
-								  devoir.$delete();
-							      });
-							      scope_popup.deleted = true;
-
-							      scope_popup.fermer();
+                                                                scope_popup.cours.$delete()
+                                                                        .then(function() {
+                                                                            _(scope_popup.devoirs).each(function(devoir) {
+                                                                                devoir.$delete();
+                                                                            });
+                                                                    scope_popup.deleted = true;
+                                                                    scope_popup.fermer();
+                                                                });
 							  };
 
 							  scope_popup.annuler = function() {
@@ -193,7 +195,7 @@ angular.module('cahierDeTexteApp')
 								  // traitement de la séquence pédagogique
 								  var promesse = $q.when( true );
 								  if ( _(scope_popup.cours).has( 'contenu' ) && ( scope_popup.cours.contenu.length > 0 ) ) {
-								      scope_popup.cours.dirty = true;
+								      scope_popup.is_dirty();
 
 								      if ( scope_popup.cours.create ) {
 									  scope_popup.cours.cahier_de_textes_id = _(scope_popup.classes).findWhere({id: scope_popup.regroupement_id}).cahier_de_textes_id;
@@ -280,20 +282,20 @@ angular.module('cahierDeTexteApp')
 			      }
 			  };
 
-			  if ( cours.deleted ) {
-			      return calendar_event = { details: { matiere_id: event.details.matiere_id,
-								   regroupement_id: event.details.regroupement_id,
-								   cahier_de_textes_id: event.details.cahier_de_textes_id,
-								   creneau_emploi_du_temps_id: event.details.creneau_emploi_du_temps_id,
-								   cours: {},
-								   devoirs: [] },
-							allDay: false,
-							title: '',
-							description: '',
-							regroupement: '',
-							start: event.start,
-							end: event.end,
-							className: 'clickable-event'};
+                          if ( cours.deleted ) {
+                                return {details: {matiere_id: event.details.matiere_id,
+                                        regroupement_id: event.details.regroupement_id,
+                                        cahier_de_textes_id: event.details.cahier_de_textes_id,
+                                        creneau_emploi_du_temps_id: event.details.creneau_emploi_du_temps_id,
+                                        cours: {},
+                                        devoirs: []},
+                                    allDay: false,
+                                    title: '',
+                                    description: '',
+                                    regroupement: '',
+                                    start: event.start,
+                                    end: event.end,
+                                    className: 'clickable-event saisie-vide'};
 
 			  } else {
 			      var calendar_event = { details: { matiere_id: event.details.matiere_id,
@@ -501,19 +503,24 @@ angular.module('cahierDeTexteApp')
 					       creneau_selectionne, event.details.matiere_id, event.details.regroupement_id,
 					       cours, devoirs,
 					       function popup_callback( popup_response ) {
-						   var updated_event = update_fullCalendar_event( creneau_selectionne, popup_response.cours, popup_response.devoirs );
+                                                   //console.debug($scope.calendar.events[0])
+                                                   
+                                                   var updated_event = update_fullCalendar_event( creneau_selectionne, popup_response.cours, popup_response.devoirs );
+                                                   //console.debug(updated_event)
 						   var index = _($scope.calendar.events[0]).indexOf( creneau_selectionne );
-						   _.chain(updated_event)
+                                                                                                   
+                                                   _.chain(updated_event)
 						       .keys()
 						       .reject( function( key ) { //updated_event n'a pas de title
-							   return key == "title";
+							   return key == "title" || key == "regroupement";
 						       })
 						       .each( function( propriete ) {
 							   $scope.calendar.events[0][ index ][ propriete ] = updated_event[ propriete ];
 						       });
 
 						   $scope.emploi_du_temps.fullCalendar( 'renderEvent', $scope.calendar.events[0][ index ] );
-					       }
+                                                   //console.debug($scope.calendar.events[0])
+						   }
 					     );
 		      };
 
