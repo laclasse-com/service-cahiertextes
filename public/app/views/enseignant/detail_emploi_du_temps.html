@@ -7,7 +7,7 @@
       {{classe.libelle}} - {{matiere.libelle_long}}
     </span>
     <span data-ng-show="cours.create">
-      <select data-ng-model="scope.regroupement_id" data-ng-options="classe.id as classe.libelle for classe in classes">
+      <select data-ng-model="regroupement_id" data-ng-options="classe.id as classe.libelle for classe in classes">
       </select>
       -
       <select data-ng-model="scope.matiere_id" data-ng-options="id as matiere.libelle_long for (id, matiere) in matieres">
@@ -141,8 +141,8 @@
 </div>
 
 <div class="modal-footer">
-  <button class="btn btn-info pull-left" data-ng-click="effacer()">
-    <span class="glyphicon glyphicon-trash"></span> Détruire
+  <button class="btn btn-warning pull-left" data-ng-click="effacer()" data-ng-hide="cours.create">
+    <span class="glyphicon glyphicon-trash"></span> Remise à zéro 
   </button>
 
   <button class="btn btn-info pull-right" data-ng-click="annuler()">
