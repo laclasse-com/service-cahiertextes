@@ -57,8 +57,8 @@ angular.module('cahierDeTexteApp')
 
 							  // http://stackoverflow.com/questions/19408883/angularjs-select-not-2-way-binding-to-model
 							  scope_popup.scope = scope_popup;
-                                                          //  ^ ^ Cette ligne est peut-être inutile ?
-                                                          
+							  //  ^ ^ Cette ligne est peut-être inutile ?
+
 							  scope_popup.creneaux_similaires = _.chain(raw_data)
 							      .filter( function( creneau ) {
 								  return ( creneau.regroupement_id != scope_popup.regroupement_id ) && ( creneau.matiere_id == scope_popup.matiere_id );
