@@ -503,13 +503,10 @@ angular.module('cahierDeTexteApp')
 					       creneau_selectionne, event.details.matiere_id, event.details.regroupement_id,
 					       cours, devoirs,
 					       function popup_callback( popup_response ) {
-                                                   //console.debug($scope.calendar.events[0])
-                                                   
-                                                   var updated_event = update_fullCalendar_event( creneau_selectionne, popup_response.cours, popup_response.devoirs );
-                                                   //console.debug(updated_event)
+						   var updated_event = update_fullCalendar_event( creneau_selectionne, popup_response.cours, popup_response.devoirs );
 						   var index = _($scope.calendar.events[0]).indexOf( creneau_selectionne );
-                                                                                                   
-                                                   _.chain(updated_event)
+
+						   _.chain(updated_event)
 						       .keys()
 						       .reject( function( key ) { //updated_event n'a pas de title
 							   return key == "title" || key == "regroupement";
