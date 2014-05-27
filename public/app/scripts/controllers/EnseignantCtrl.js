@@ -49,6 +49,7 @@ angular.module('cahierDeTexteApp')
 
 							  scope_popup.dirty = false;
 							  scope_popup.deleted = false;
+							  scope_popup.creneau_deleted = false;
 							  scope_popup.is_dirty = function() {
 							      scope_popup.dirty = true;
 							  };
@@ -189,6 +190,7 @@ angular.module('cahierDeTexteApp')
 							  scope_popup.fermer = function() {
 							      $modalInstance.close( { dirty: scope_popup.dirty,
 										      deleted: scope_popup.deleted,
+										      creneau_deleted: scope_popup.creneau_deleted,
 										      cours: scope_popup.cours,
 										      devoirs: scope_popup.devoirs,
 										      matiere_id: scope_popup.matiere_id,
@@ -205,6 +207,14 @@ angular.module('cahierDeTexteApp')
 								      scope_popup.fermer();
 								  });
 							  };
+
+							  scope_popup.effacer_creneau = function() {
+                                                              console.debug("creneau_selectionne.id="+creneau_selectionne.id);
+                                                              console.debug(CreneauEmploiDuTemps)
+                                                              CreneauEmploiDuTemps.delete({id: creneau_selectionne.id})
+                                                              scope_popup.creneau_deleted = true;
+                                                            scope_popup.fermer();
+                                                          };
 
 							  scope_popup.annuler = function() {
 							      scope_popup.dirty = false;
@@ -527,20 +537,24 @@ angular.module('cahierDeTexteApp')
 					       creneau_selectionne, event.details.matiere_id, event.details.regroupement_id,
 					       cours, devoirs,
 					       function popup_callback( popup_response ) {
-						   var updated_event = update_fullCalendar_event( creneau_selectionne, popup_response.cours, popup_response.devoirs );
-						   var index = _($scope.calendar.events[0]).indexOf( creneau_selectionne );
+                                                    var index = _($scope.calendar.events[0]).indexOf(creneau_selectionne);
+                                                    if (popup_response.creneau_deleted) {
+                                                        $scope.calendar.events[0] = _($scope.calendar.events[0]).without($scope.calendar.events[0][ index ]);
+                                                        $scope.emploi_du_temps.fullCalendar('rerenderEvents');
+                                                    } else {
+                                                        var updated_event = update_fullCalendar_event(creneau_selectionne, popup_response.cours, popup_response.devoirs);
+                                                        _.chain(updated_event)
+                                                                .keys()
+                                                                .reject(function(key) { //updated_event n'a pas de title
+                                                                    return key == "title" || key == "regroupement";
+                                                                })
+                                                                .each(function(propriete) {
+                                                                    $scope.calendar.events[0][ index ][ propriete ] = updated_event[ propriete ];
+                                                                });
 
-						   _.chain(updated_event)
-						       .keys()
-						       .reject( function( key ) { //updated_event n'a pas de title
-							   return key == "title" || key == "regroupement";
-						       })
-						       .each( function( propriete ) {
-							   $scope.calendar.events[0][ index ][ propriete ] = updated_event[ propriete ];
-						       });
-
-						   $scope.emploi_du_temps.fullCalendar( 'renderEvent', $scope.calendar.events[0][ index ] );
-					       }
+                                                        $scope.emploi_du_temps.fullCalendar('renderEvent', $scope.calendar.events[0][ index ]);
+                                                    }
+                                                }
 					     );
 		      };
 
