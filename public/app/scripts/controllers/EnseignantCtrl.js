@@ -114,16 +114,7 @@ angular.module('cahierDeTexteApp')
 							  };
 
 							  $scope.upload_and_add_ressource = function( item, fichiers ) {
-							      Documents.upload_dans_cahier_de_textes( $scope.classe.id, fichiers )
-								  .progress(function(evt) {
-								      console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
-								  }).success(function(data, status, headers, config) {
-								      // file is uploaded successfully
-								      console.log(data);
-								  }).error(function(data, status, headers, config) {
-								      console.log(status);
-								      console.log(data);
-								  });
+							      Documents.upload_dans_cahier_de_textes( $scope.classe.id, fichiers );
 							  };
 
 							  $scope.remove_ressource = function( item, hash ) {
