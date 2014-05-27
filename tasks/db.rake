@@ -2,7 +2,7 @@
 
 namespace :db do
   task :load_config do
-    require(File.join(APP_ROOT, 'config/environment'))
+    require(File.join(APP_ROOT, 'config/options'))
     require(File.join(APP_ROOT, 'api'))
   end
 
