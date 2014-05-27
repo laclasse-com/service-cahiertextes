@@ -14,12 +14,18 @@ angular.module('cahierDeTexteApp')
 		   };
 
 		   this.upload_dans_cahier_de_textes = function( share_id, fichiers ) {
-		       return $http.post( DOCS_URL + "/api/ctxt/add",
-					  { upload: fichiers,
-					    current: 0,
-					    attachment: 'CAHIERTXT',
-					    share: share_id },
-					  { headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' } } );
+		       var form_data = new FormData();
+		       form_data.append( 'cmd', 'upload' );
+		       form_data.append( 'current', 0 );
+		       form_data.append( 'attachment', 'CAHIERTXT' );
+		       form_data.append( 'share', share_id );
+		       form_data.append( 'upload', fichiers );
+		       return $http.post( DOCS_URL + '/api/ctxt/add',
+					  form_data,
+					  { withCredentials: true,
+					    headers: {'Content-Type': undefined }, //'multipart/form-data' },
+					    transformRequest: angular.identity
+					  } );
 		   };
 	       }
 	     ] );

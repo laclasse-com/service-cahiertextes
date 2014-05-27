@@ -35,7 +35,7 @@
 	</li>
       </ul>
 
-      <input type="file" multiple data-ng-file-select="upload_and_add_ressource( cours, $files )" />
+      <input type="file" name="upload[]" multiple onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().cours, this.files)" />
 
       <treecontrol class="tree-classic"
 		   tree-model="cartable.files"
