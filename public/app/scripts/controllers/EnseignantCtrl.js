@@ -132,8 +132,26 @@ angular.module('cahierDeTexteApp')
                                             }
                                         };
 
-                                        scope_popup.upload_and_add_ressource = function(item, fichiers) {
-                                            Documents.upload_dans_cahier_de_textes(scope_popup.classe.id, fichiers);
+                                        scope_popup.upload_and_add_ressource = function( item, fichiers ) {
+                                            if ( item.ressources === undefined ) {
+                                                item.ressources = [];
+                                            }
+                                            var responses = Documents.upload_dans_cahier_de_textes( scope_popup.classe.id, fichiers );
+                                            for ( var i = 0 ; i < responses.length ; i++ ) {
+                                                responses[ i ]
+                                                    .success( function( response ) {
+                                                        _(response.added).each( function( doc ) {
+                                                            if ( _(item.ressources).findWhere( { hash: doc.hash } ) === undefined ) {
+                                                                item.ressources.push( { name: doc.name,
+                                                                                        hash: doc.hash } );
+                                                                scope_popup.is_dirty();
+                                                            }
+                                                        } )
+                                                            } )
+                                                    .error( function( response ) {
+                                                        console.debug( response.error );
+                                                    } );
+                                            }
                                         };
 
                                         scope_popup.remove_ressource = function(item, hash) {
