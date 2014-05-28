@@ -1,6 +1,6 @@
 {
   "name": "w11k-select",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "dependencies": {
     "angular": "1.2.x",
     "w11k-dropdownToggle": "0.1.x",
@@ -12,11 +12,11 @@
     "es5-shim": "2.3.0"
   },
   "homepage": "https://github.com/w11k/w11k-select-bower",
-  "_release": "0.3.4",
+  "_release": "0.3.5",
   "_resolution": {
     "type": "version",
-    "tag": "0.3.4",
-    "commit": "32602a5248f7e392e9ad55068bae598de4047a65"
+    "tag": "0.3.5",
+    "commit": "7ad7a760c21f779fb806a9cd748eff0308bd9d87"
   },
   "_source": "git://github.com/w11k/w11k-select-bower.git",
   "_target": "*",
