@@ -31,11 +31,15 @@ module CahierDeTextesAPI
         # FIXME: Un creneau "deleted" ne doit pas empecher les saisies déjà effectuée d'apparaitre
         # Soit le créneau est marqué deleted ET les dates debut et fin sont antérieures à la date deleted
         # Soit le créneau n'est pas marqué deleted et pas de restriction sur les dates debut et fin
-        CreneauEmploiDuTemps
+        creneaux = CreneauEmploiDuTemps
           .association_join( :regroupements )
+          .association_join( :enseignants )
           .where( '( (deleted = true and date_suppression <= ' + params[:fin].to_s + ') or (deleted = false) )')
           .where( regroupement_id: regroupements_ids )
-          .all
+
+        creneaux = creneaux.where( enseignant_id: user.uid ) if Annuaire.get_user( user.uid )['profils'][0]['profil_id'] == 'ENS'
+
+        creneaux.all
           .select { |creneau| weeks.reduce( true ) { |a, week| a && creneau[:semaines_de_presence][ week ] == 1 } }
           .map { |creneau|
 

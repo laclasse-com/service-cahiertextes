@@ -1,8 +1,6 @@
 # -*- encoding: utf-8 -*-
 
 module UserHelpers
-  @@user = nil
-
   class HashIt
     def initialize( hash )
       hash.each do |k, v|
@@ -24,8 +22,6 @@ module UserHelpers
   end
 
   def user
-    @@user = HashedUser.new env['rack.session'][:current_user] if @@user.nil?
-
-    @@user
+    HashedUser.new env['rack.session'][:current_user]
   end
 end
