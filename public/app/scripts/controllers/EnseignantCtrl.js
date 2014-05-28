@@ -6,6 +6,7 @@ angular.module('cahierDeTexteApp')
 		 function($scope, $modal, $q, $filter, CALENDAR_OPTIONS, CALENDAR_PARAMS, TINYMCE_OPTIONS, API, Annuaire, Documents, Cours, Devoirs, EmploisDuTemps, CreneauEmploiDuTemps, User) {
 		     var types_de_devoir = API.query_types_de_devoir();
 		     var matieres = [];
+		     var matieres_enseignees = [];
 		     $scope.classes = [];
 		     $scope.classe = null;
 
@@ -427,6 +428,21 @@ angular.module('cahierDeTexteApp')
 			     .value();
 		     };
 
+		     var list_matieres_enseignees = function(user) {
+			 return _.chain(user.classes)
+			     .reject(function(classe) {
+				 return classe.etablissement_code !== user.profil_actif.uai || classe.matiere_enseignee_id === undefined;
+			     })
+			     .pluck('matiere_enseignee_id')
+			     .uniq()
+			     .map(function(matiere_id) {
+				 return [matiere_id, Annuaire.get_matiere(matiere_id)];
+			     })
+			     .object()
+			     .value();
+		     };
+
+
 		     var list_matieres = function( raw_data ) {
 			 return _.chain(raw_data)
 			     .pluck('matiere_id')
@@ -469,6 +485,7 @@ angular.module('cahierDeTexteApp')
 				     $scope.raw_data = response;
 				     // Extraction des matières
 				     matieres = list_matieres( $scope.raw_data );
+				     matieres_enseignees = list_matieres_enseignees( $scope.raw_data );
 
 				     // Extraction des classes
 				     $scope.classes = list_classes($scope.current_user);
@@ -541,7 +558,7 @@ angular.module('cahierDeTexteApp')
 			     cours = create_cours(creneau_selectionne);
 			 }
 			 ouvre_popup_edition($scope.raw_data,
-					     types_de_devoir, matieres, $scope.classes,
+					     types_de_devoir, matieres_enseignees, $scope.classes,
 					     creneau_selectionne, event.details.matiere_id, event.details.regroupement_id,
 					     cours, devoirs,
 					     function popup_callback(popup_response) {
@@ -592,7 +609,7 @@ angular.module('cahierDeTexteApp')
 					 creneau_selectionne.details = {cours: $scope.cours,
 									devoirs: $scope.devoirs};
 					 ouvre_popup_edition($scope.raw_data,
-							     types_de_devoir, matieres, $scope.classes,
+							     types_de_devoir, matieres_enseignees, $scope.classes,
 							     creneau_selectionne, creneau_selectionne.matiere_id, creneau_selectionne.regroupement_id,
 							     create_cours(creneau_selectionne), [],
 							     function popup_callback(popup_response) {
