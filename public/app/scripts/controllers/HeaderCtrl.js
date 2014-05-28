@@ -9,6 +9,8 @@ angular.module('cahierDeTexteApp')
 		      });
 
 		      $scope.reload = function() {
+                          // Changement du profil actif dans l'annuaire
+                          // Rechargement de l'application
 			  Redirection.doorman( [  ] );
 		      };
 		  } ] );
