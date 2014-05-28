@@ -29,9 +29,11 @@ module CahierDeTextesAPI
 
         # FIXME: creneau[:semaines_de_presence][ 1 ] == première semaine de janvier ?
         # FIXME: Un creneau "deleted" ne doit pas empecher les saisies déjà effectuée d'apparaitre
+        # Soit le créneau est marqué deleted ET les dates debut et fin sont antérieures à la date deleted
+        # Soit le créneau n'est pas marqué deleted et pas de restriction sur les dates debut et fin
         CreneauEmploiDuTemps
           .association_join( :regroupements )
-          .where( deleted: false )
+          .where( '( (deleted = true and date_suppression <= ' + params[:fin].to_s + ') or (deleted = false) )')
           .where( regroupement_id: regroupements_ids )
           .all
           .select { |creneau| weeks.reduce( true ) { |a, week| a && creneau[:semaines_de_presence][ week ] == 1 } }
