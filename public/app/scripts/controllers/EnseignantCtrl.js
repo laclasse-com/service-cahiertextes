@@ -427,19 +427,6 @@ angular.module('cahierDeTexteApp')
 				    .value();
 			};
 
-			var list_matieres = function(user) {
-			    return _.chain(user.classes)
-				    .reject(function(classe) {
-					return classe.etablissement_code !== user.profil_actif.uai || classe.matiere_enseignee_id === undefined;
-				    })
-				    .pluck('matiere_enseignee_id')
-				    .uniq()
-				    .map(function(matiere_id) {
-					return [matiere_id, Annuaire.get_matiere(matiere_id)];
-				    })
-				    .object()
-				    .value();
-			};
 
 			var filter_data = function(raw_data) {
 			    var filtered_data = raw_data;
@@ -625,3 +612,13 @@ angular.module('cahierDeTexteApp')
 				    });
 			};
 		    }]);
+		     var list_matieres = function( raw_data ) {
+			 return _.chain(raw_data)
+			     .pluck('matiere_id')
+			     .uniq()
+			     .map(function(matiere_id) {
+				 return [matiere_id, Annuaire.get_matiere(matiere_id)];
+			     })
+			     .object()
+			     .value();
+		     };
