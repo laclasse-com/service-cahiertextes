@@ -37,7 +37,6 @@ module CahierDeTextesAPI
           .where( '( (deleted = true and date_suppression <= ' + params[:fin].to_s + ') or (deleted = false) )')
           .where( regroupement_id: regroupements_ids )
 
-        # FIXME: utiliser le profil actif
         creneaux = creneaux.where( enseignant_id: user.uid ) if Annuaire.get_user( user.uid )['profils'][0]['profil_id'] == 'ENS'
 
         creneaux.all
