@@ -26,7 +26,8 @@
     "w11k-select": "latest",
     "charte-graphique-laclasse-com": "git@gitlab.erasme.org:laclasse/charte-graphique-laclasse-com.git#latest",
     "angularjs-nvd3-directives": "latest",
-    "angular-tree-control": "latest"
+    "angular-tree-control": "latest",
+      "ng-file-upload": "latest"
   },
   "devDependencies": {
     "angular-mocks": "latest",

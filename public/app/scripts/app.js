@@ -13,4 +13,5 @@ angular.module( 'cahierDeTexteApp', [ 'ngResource',
 				      'w11k.select',
 				      'w11k.select.template',
 				      'nvd3ChartDirectives',
-				      'treeControl' ] );
+				      'treeControl',
+				      'angularFileUpload' ] );
