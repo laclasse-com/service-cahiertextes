@@ -485,7 +485,7 @@ angular.module('cahierDeTexteApp')
 				     $scope.raw_data = response;
 				     // Extraction des matières
 				     matieres = list_matieres( $scope.raw_data );
-				     matieres_enseignees = list_matieres_enseignees( $scope.raw_data );
+				     matieres_enseignees = list_matieres_enseignees( $scope.current_user );
 
 				     // Extraction des classes
 				     $scope.classes = list_classes($scope.current_user);
