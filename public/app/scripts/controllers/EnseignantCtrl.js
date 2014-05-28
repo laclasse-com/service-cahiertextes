@@ -487,7 +487,7 @@ angular.module('cahierDeTexteApp')
                             events: []};
 
                         $scope.calendar.options.eventRender = function(event, element) {
-                            // FIXME: manipulation du DOM dans le contrôleur, sale
+                            // FIXME: manipulation du DOM dans le contrôleur, sale, mais obligé pour l'interprétation du HTML ?
                             element.find('.fc-event-title').append(' - ' + event.regroupement + '<br>' + event.description);
                         };
 
@@ -552,6 +552,7 @@ angular.module('cahierDeTexteApp')
                         };
 
                         // création d'un nouveau créneau
+                        // Le regroupement_id peut être null car on n'a pas fait de choix au niveau de la select box des classes sur full_calendar
                         $scope.calendar.options.select = function(start, end, allDay) {
                             var timezoneOffset = new Date(start).getTimezoneOffset() * 60000;
                             var creneau_selectionne = new CreneauEmploiDuTemps({regroupement_id: $scope.classe === null ? '' : '' + $scope.classe,
@@ -560,7 +561,6 @@ angular.module('cahierDeTexteApp')
                                 heure_fin: new Date(new Date(end) - timezoneOffset).toISOString(),
                                 matiere_id: ''
                             });
-
                             creneau_selectionne.$save()
                                     .then(function() {
                                         creneau_selectionne.dirty = true;
