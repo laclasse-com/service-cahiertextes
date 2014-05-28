@@ -38,7 +38,7 @@ module CahierDeTextesAPI
           .where( regroupement_id: regroupements_ids )
 
         # FIXME: utiliser le profil actif
-        creneaux = creneaux.where( enseignant_id: user.uid ) if user.profils[0][:type] == 'ENS'
+        creneaux = creneaux.where( enseignant_id: user.uid ) if Annuaire.get_user( user.uid )['profils'][0]['profil_id'] == 'ENS'
 
         creneaux.all
           .select { |creneau| weeks.reduce( true ) { |a, week| a && creneau[:semaines_de_presence][ week ] == 1 } }
