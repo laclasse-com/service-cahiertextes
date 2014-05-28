@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EleveDevoirsCtrl',
-		[ '$scope', 'API',
-		  function( $scope, API ) {
+		[ '$scope', 'API', 'Devoirs',
+		  function( $scope, API, Devoirs ) {
 		      $scope.empty = false;
 
 		      $scope.affiche_faits = false;
