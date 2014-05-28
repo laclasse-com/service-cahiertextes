@@ -46,7 +46,7 @@ angular.module('cahierDeTexteApp')
 							  scope_popup.regroupement_id = regroupement_id.length > 0 ? parseInt(regroupement_id) : _(scope_popup.classes).first().id;
 							  scope_popup.classe = _(scope_popup.classes).findWhere({id: parseInt( scope_popup.regroupement_id )});
 							  scope_popup.matiere = scope_popup.matieres[ scope_popup.matiere_id ];
-
+                                                          
 							  scope_popup.dirty = false;
 							  scope_popup.deleted = false;
 							  scope_popup.creneau_deleted = false;
@@ -185,12 +185,12 @@ angular.module('cahierDeTexteApp')
 							  };
 
 							  scope_popup.effacer_creneau = function() {
-                                                              console.debug("creneau_selectionne.id="+creneau_selectionne.id);
-                                                              console.debug(CreneauEmploiDuTemps)
-                                                              CreneauEmploiDuTemps.delete({id: creneau_selectionne.id})
-                                                              scope_popup.creneau_deleted = true;
-                                                            scope_popup.fermer();
-                                                          };
+                                                            var creneau_a_supprimer = new CreneauEmploiDuTemps({id: creneau_selectionne.id});
+                                                              creneau_a_supprimer.$delete({id: creneau_selectionne.id})
+                                                              .then(function() {
+                                                                scope_popup.creneau_deleted = true;
+                                                                scope_popup.fermer();
+                                                              });                                                          };
 
 							  scope_popup.annuler = function() {
 							      scope_popup.dirty = false;
