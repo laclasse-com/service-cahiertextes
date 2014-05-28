@@ -3,10 +3,10 @@
   <button type="button" class="close pull-right" aria-hidden="true" data-ng-click="annuler()">&times;</button>
 
   <h4>
-    <span data-ng-hide="cours.create">
+    <span data-ng-hide="creneau_en_creation">
       {{classe.libelle}} - {{matiere.libelle_long}}
     </span>
-    <span data-ng-show="cours.create">
+    <span data-ng-show="creneau_en_creation">
       <select data-ng-model="scope.regroupement_id" data-ng-options="classe.id as classe.libelle for classe in classes">
       </select>
       -

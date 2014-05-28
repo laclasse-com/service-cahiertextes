@@ -58,8 +58,9 @@ angular.module('cahierDeTexteApp')
                                         scope_popup.types_de_devoir = types_de_devoir;
                                         scope_popup.matieres = matieres;
                                         scope_popup.classes = classes;
+                                        scope_popup.creneau_en_creation = matiere_id.length == 0 || regroupement_id === undefined
                                         scope_popup.matiere_id = matiere_id.length > 0 ? matiere_id : _.chain(scope_popup.matieres).values().first().value().id;
-                                        scope_popup.regroupement_id = regroupement_id.length > 0 ? parseInt(regroupement_id) : _(scope_popup.classes).first().id;
+                                        scope_popup.regroupement_id = regroupement_id !== undefined ? parseInt(regroupement_id) : _(scope_popup.classes).first().id;
                                         scope_popup.classe = _(scope_popup.classes).findWhere({id: parseInt(scope_popup.regroupement_id)});
                                         scope_popup.matiere = scope_popup.matieres[ scope_popup.matiere_id ];
 
@@ -361,7 +362,7 @@ angular.module('cahierDeTexteApp')
                                     calendar_event.description += '</span>';
                                 }
 
-                                if (event.details.regroupement_id.length > 0) {
+                                if (event.details.regroupement_id !== undefined ) {
                                     calendar_event.regroupement = _.chain($scope.classes)
                                             .filter(function(classe) {
                                                 return classe.id == event.details.regroupement_id;
@@ -524,7 +525,6 @@ angular.module('cahierDeTexteApp')
                             } else {
                                 cours = create_cours(creneau_selectionne);
                             }
-
                             ouvre_popup_edition($scope.raw_data,
                                     types_de_devoir, matieres, $scope.classes,
                                     creneau_selectionne, event.details.matiere_id, event.details.regroupement_id,
@@ -569,7 +569,7 @@ angular.module('cahierDeTexteApp')
                                         creneau_selectionne.heure_fin = end;
 
                                         // durant le creneau_selectionne.$save() on perds regroupement_id
-                                        creneau_selectionne.regroupement_id = $scope.classe === null ? '' : '' + $scope.classe;
+                                        creneau_selectionne.regroupement_id = $scope.classe === null ? undefined : '' + $scope.classe;
                                         creneau_selectionne.cahier_de_textes_id = $scope.classes[0].cahier_de_textes_id,
                                                 // 3. ouverture de la popup
                                                 $q.all(types_de_devoir, $scope.cours)
@@ -586,7 +586,6 @@ angular.module('cahierDeTexteApp')
                                                                     creneau_selectionne.regroupement_id = popup_response.regroupement_id;
                                                                     creneau_selectionne.cahier_de_textes_id = popup_response.cours.cahier_de_textes_id;
                                                                     creneau_selectionne.$update();
-
                                                                     $scope.calendar.events[0].push(assemble_fullCalendar_event({cours: popup_response.cours,
                                                                         devoirs: popup_response.devoirs,
                                                                         cahier_de_textes_id: popup_response.cours.cahier_de_textes_id,
