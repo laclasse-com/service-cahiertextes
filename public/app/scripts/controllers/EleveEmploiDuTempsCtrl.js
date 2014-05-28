@@ -122,7 +122,9 @@ angular.module('cahierDeTexteApp')
 		      };
 		      $scope.calendar.options.eventClick = function( event ) {
 			  $scope.creneau_selectionne = _(event.source.events).findWhere({_id: event._id});
-			  ouvre_popup_details( event.title, event.details.cours, event.details.devoirs );
+			  if ( _(event.details.cours).has( 'contenu' ) ) {
+			      ouvre_popup_details( event.title, event.details.cours, event.details.devoirs );
+			  }
 		      };
 		      $scope.calendar.options.viewRender = function( view, element ) {
 			  // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
