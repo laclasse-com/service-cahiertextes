@@ -42,7 +42,6 @@
 		   options="treeOptions"
 		   on-selection="treeClicked( node )">
 	{{node.name}} ({{node.mime}}) <button style="font-size:1.25em;color:#0a0;font-weight:bold" data-ng-click="add_ressource( cours, node.name, node.hash )">+</button>
-
       </treecontrol>
 
       <div class="row-fluid" data-ng-show="creneaux_similaires">
@@ -110,31 +109,16 @@
 	  <button style="color:red;font-weight:bold" data-ng-click="remove_ressource( devoir, ressource.hash )">&times;</button>
 	</li>
       </ul>
-      <!-- <input type="file"> -->
 
-      <form id="upload" method="post" action="http://www.dev.laclasse.com/docs-beta/api/ctxt/add/" enctype="multipart/form-data">
-	<div id="drop">
-	  Glissez-déposez vos fichiers ici.
-
-	  <a>Parcourir</a>
-	  <input type="file" name="upload[]" multiple />
-	  <input id="cmd" name="cmd" type="hidden" value="upload" />
-	  <input id="current" name="current" type="hidden" value="0" />
-	  <input id="attachment" name="attachment" type="hidden" value="CAHIERTXT" />
-	  <input id="share" name="share" type="hidden" value="{{classe.id}}" />
-	</div>
-
-	<ul>
-	  <!-- The file uploads will be shown here -->
-	</ul>
-      </form>
+      <input type="file" name="upload[]" multiple onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files)" />
 
       <treecontrol class="tree-classic"
 		   tree-model="cartable.files"
 		   options="treeOptions"
 		   on-selection="treeClicked( node )">
-	{{node.name}} ({{node.mime}})
+	{{node.name}} ({{node.mime}}) <button style="font-size:1.25em;color:#0a0;font-weight:bold" data-ng-click="add_ressource( devoir, node.name, node.hash )">+</button>
       </treecontrol>
+
     </div>
   </div>
 
@@ -142,11 +126,11 @@
 
 <div class="modal-footer">
   <button class="btn btn-default pull-left" data-ng-click="effacer()" data-ng-hide="cours.create">
-    <span class="glyphicon glyphicon-trash"></span> Supprimer le cours 
+    <span class="glyphicon glyphicon-trash"></span> Supprimer le cours
   </button>
 
   <button class="btn btn-warning pull-left" data-ng-click="effacer_creneau()" data-ng-show="cours.create">
-    <span class="glyphicon glyphicon-trash"></span> Supprimer le créneau 
+    <span class="glyphicon glyphicon-trash"></span> Supprimer le créneau
   </button>
 
   <button class="btn btn-info pull-right" data-ng-click="annuler()">
