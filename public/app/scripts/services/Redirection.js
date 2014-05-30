@@ -25,7 +25,7 @@ angular.module('cahierDeTexteApp')
                                             $location.url('/logout');
                                             $location.replace();
                                     }
-                                   reloadStatus = ($state.current.name == stateName) ? true : false;
+                                   reloadStatus = ($state.current.name == 'index' || $state.current.name == stateName) ? true : false;
                                    $state.transitionTo(stateName, $state.params, {reload: reloadStatus, inherit: false, notify: reloadStatus});
                                 }
                             });
