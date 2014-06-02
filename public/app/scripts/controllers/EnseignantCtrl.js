@@ -52,6 +52,7 @@ angular.module('cahierDeTexteApp')
 						   function($scope, $filter, TINYMCE_OPTIONS, $modalInstance, Documents, cours, devoirs, types_de_devoir, creneau_selectionne, matiere_id, regroupement_id, raw_data, classes, matieres) {
 						       // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
 						       var scope_popup = $scope;
+
 						       // Initialisations {{{
 						       scope_popup.tinyMCEOptions = TINYMCE_OPTIONS;
 						       scope_popup.cours = cours;
