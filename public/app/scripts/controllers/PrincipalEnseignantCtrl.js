@@ -44,7 +44,7 @@ angular.module('cahierDeTexteApp')
                                     cellTemplate: '<span class="scrollbar" data-ng-bind-html="row.entity.cours.contenu"></span>'},
                                 {field: 'devoir', displayName: 'Travail à faire',
                                     cellTemplate: '<span class="scrollbar" data-ng-bind-html="row.entity.devoir.contenu"></span>'},
-                                {field: 'validated', displayName: 'Validé',
+                                {field: 'validated', displayName: 'Visée',
                                     cellTemplate: '<div class="ngSelectionCell">' +
                                                     '<input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" data-ng-model="row.entity.valide" data-ng-show="!row.entity.valide" data-ng-click="grid.valide( row )" />'+
                                                     '<input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" disabled checked data-ng-show="row.entity.valide" />'+
