@@ -171,7 +171,6 @@ angular.module('cahierDeTexteApp')
 								       .each(function(elt) {
 									   elt.children = [];
 									   noeud.children.push(elt);
-									   scope_popup.selectNodeHead(noeud);
 								       });
 							       });
 							   }
