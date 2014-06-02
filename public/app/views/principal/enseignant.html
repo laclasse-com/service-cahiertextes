@@ -1,23 +1,19 @@
 <div class="row">
 
   <div class="panel panel-default">
-    <div class="panel-body">
+    <div class="panel-heading">
+        <div class="row">
+      <h4 class="col-md-6 pull-left">{{enseignant.prenom}} {{enseignant.nom}}</h4>
 
-      <select class="col-md-3" data-ng-model="classe" data-ng-change="process_data()" data-ng-options="class as class for (id, class) in classes">
+      <select class="col-md-3 pull-right" data-ng-model="classe" data-ng-change="process_data()" data-ng-options="class as class for (id, class) in classes">
 	<option value="">Toutes les classes</option>
       </select>
 
 
-      <select class="col-md-3" data-ng-model="moisCourant" data-ng-change="process_data()" data-ng-options="mois.indexOf(m) as m for m in mois">
+      <select class="col-md-3 pull-right" data-ng-model="moisCourant" data-ng-change="process_data()" data-ng-options="mois.indexOf(m) as m for m in mois">
 	<option value="">Toute l'année</option>
       </select>
-
-    </div>
-  </div>
-
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h4>{{enseignant.prenom}} {{enseignant.nom}}</h4>
+        </div>
     </div>
 
     <div class="panel-body">
