@@ -7,5 +7,4 @@ angular.module('cahierDeTexteApp')
 		      User.get_user().success( function( response ) {
 			  $scope.current_user = response;
 		      });
-
 		  } ] );

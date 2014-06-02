@@ -14,7 +14,17 @@ angular.module('cahierDeTexteApp')
                             $scope.matieres = {};
                             $scope.classes = {};
                             $scope.montre_valides = false;
-
+                            var templateSaisieVisa = "<i class='glyphicon glyphicon-ok-sign' data-ng-model='row.entity.valide' data-ng-show='row.entity.valide'></i>";
+                            
+                            // Checkboxes de visa des saisies
+                            console.debug($scope);
+                            // FIXME : FIlter ça sur le profil du current_user
+                            //if ($scope.current_user.profil_actif.type == 'DIR') {
+                            if (false) {
+                                templateSaisieVisa = '<input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" data-ng-model="row.entity.valide" data-ng-show="!row.entity.valide" data-ng-click="grid.valide( row )" />'+
+                                                     '<input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" disabled checked data-ng-show="row.entity.valide" />';
+                            }
+                            
                         $scope.filtre = function(saisies) {
                             var data = saisies;
                             if ($scope.moisCourant != null) {
@@ -45,10 +55,7 @@ angular.module('cahierDeTexteApp')
                                 {field: 'devoir', displayName: 'Travail à faire',
                                     cellTemplate: '<span class="scrollbar" data-ng-bind-html="row.entity.devoir.contenu"></span>'},
                                 {field: 'validated', displayName: 'Visée',
-                                    cellTemplate: '<div class="ngSelectionCell">' +
-                                                    '<input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" data-ng-model="row.entity.valide" data-ng-show="!row.entity.valide" data-ng-click="grid.valide( row )" />'+
-                                                    '<input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" disabled checked data-ng-show="row.entity.valide" />'+
-                                                  '</div>'
+                                    cellTemplate: '<div class="ngSelectionCell">' + templateSaisieVisa + '</div>'
                                 }
                             ],
                             valide: function(row) {
