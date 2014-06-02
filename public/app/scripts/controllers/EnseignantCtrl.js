@@ -177,7 +177,12 @@ angular.module('cahierDeTexteApp')
 						       };
 						       scope_popup.treeOptions = {
 							   nodeChildren: "children",
-							   dirSelectable: true
+							   dirSelectable: true,
+							   injectClasses: {
+							       iExpanded: "glyphicon glyphicon-folder-open",
+							       iCollapsed: "glyphicon glyphicon-folder-close",
+							       iLeaf: "glyphicon glyphicon-file"
+							   }
 						       };
 						       // }}}
 
