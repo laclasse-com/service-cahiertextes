@@ -75,12 +75,11 @@
     <div class="panel-heading">
       <input type="checkbox" data-ng-model="montre_valides" name="montre_valides" id="montre_valides" data-ng-change="process_data()" />
       <label for="montre_valides">afficher les saisies validées</label>
-      <div class="btn-group btn-group-xs pull-right">
+      <div class="btn-group btn-group-xs pull-right" data-ng-show="current_user.profil_actif.type == 'DIR'">
 	<a class="btn btn-default" data-ng-click="grid.selectionneNonValides()">Sélectionne les non validés</a>
 	<a class="btn btn-default" data-ng-click="grid.valideSelection()">Valider la sélection</a>
       </div>
     </div>
     <div class="panel-body principal-enseignant-grid" data-ng-grid="grid"></div>
   </div>
-
 </div>
