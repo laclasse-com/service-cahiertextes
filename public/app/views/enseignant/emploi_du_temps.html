@@ -1,0 +1,20 @@
+<div class="row">
+  <div class="panel panel-default">
+
+    <div class="panel-heading">
+      <select data-ng-model="classe" data-ng-change="refresh_calendar()" data-ng-options="classe.id as classe.libelle for classe in classes">
+	<option value="" selected>Toutes les classes</option>
+      </select>
+
+      <!-- Menu d'accès aux autres écrans. -->
+      <button class="btn btn-default pull-left" data-ui-sref="enseignant.stats({enseignant_id: current_user.uid})">
+          <span class="glyphicon glyphicon-stats"></span> Stats
+      </button>
+    </div>
+
+    <div class="panel-body">
+      <div data-calendar="emploi_du_temps" data-ui-calendar="calendar.options" class="col-md-12 calendar" data-ng-model="calendar.events"></div>
+    </div>
+
+  </div>
+</div>

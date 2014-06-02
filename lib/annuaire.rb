@@ -158,7 +158,7 @@ puts "#{uri}#{@liaison}#{service}#{@coordination}#{query};#{signature}"
   # Service Utilisateur : init de la session et de son environnement
   def get_user( id )
     @search = false
-    send_request 'users', CGI.escape( id ), 'false', 'User inconnu'
+    send_request 'users', CGI.escape( id ), 'true', 'User inconnu'
   end
 
   def get_user_regroupements( id )
