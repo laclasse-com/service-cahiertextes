@@ -47,7 +47,8 @@ angular.module('cahierDeTexteApp')
                                 {field: 'validated', displayName: 'Validé',
                                     cellTemplate: '<div class="ngSelectionCell">' +
                                                     '<input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" data-ng-model="row.entity.valide" data-ng-show="!row.entity.valide" data-ng-click="grid.valide( row )" />'+
-                                                    '<input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" disabled checked data-ng-show="row.entity.valide" /></div>'
+                                                    '<input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" disabled checked data-ng-show="row.entity.valide" />'+
+                                                  '</div>'
                                 }
                             ],
                             valide: function(row) {
