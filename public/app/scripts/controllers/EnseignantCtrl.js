@@ -492,7 +492,8 @@ angular.module('cahierDeTexteApp')
 
 				     $q.all(matieres, $scope.classes).then(function(  ) {
 					 // s'il y a des classes et des matières le calendrier est éditable (?)
-					 $scope.calendar.options.editable = $scope.classes.length > 0 && _(matieres).size() > 0;
+					 $scope.calendar.options.editable = $scope.classes.length > 0 && _(matieres_enseignees).size() > 0;
+					 $scope.calendar.options.selectable = $scope.calendar.options.editable;
 
 					 $scope.refresh_calendar();
 				     });
