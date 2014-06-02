@@ -119,19 +119,6 @@ module CahierDeTextesAPI
 
         creneau = CreneauEmploiDuTemps[ params[:id] ]
         unless creneau.nil?
-          #          CreneauEmploiDuTempsRegroupement.where( creneau_emploi_du_temps_id: creneau.id ).all.each {
-          #            |cedtr|
-          #            cedtr.delete
-          #          }
-          #          CreneauEmploiDuTempsEnseignant.where( creneau_emploi_du_temps_id: creneau.id ).all.each {
-          #            |cedte|
-          #            cedte.delete
-          #          }
-          #          CreneauEmploiDuTempsSalle.where( creneau_emploi_du_temps_id: creneau.id ).all.each {
-          #            |cedts|
-          #            cedts.delete
-          #          }
-          #          creneau.delete
           creneau.update(deleted: true)
           # TODO : mettre la date du créneau dans date_suppression au lieu de Time.now
           creneau.date_suppression = Time.now
