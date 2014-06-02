@@ -89,9 +89,32 @@ angular.module( 'cahierDeTexteApp' )
 
 		   // Enseignant //////////////////////////////////////////////////////////
 		       .state('enseignant', {
+			   abstract: true,
 			   url: '/enseignant',
 			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ENS' ] ); } },
 			   templateUrl: 'app/views/enseignant/index.html',
-			   controller: 'EnseignantCtrl'
+                           controller: 'EnseignantCtrl'
+		       })
+		       .state('enseignant.emploi_du_temps', {
+                           parent: 'enseignant',
+			   url: '/emploi_du_temps',
+			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ENS' ] ); } },
+			   views: {
+			       'content': {
+        			   templateUrl: 'app/views/enseignant/emploi_du_temps.html',
+                		   controller: 'EnseignantEmploiDuTempsCtrl'
+                               }
+                           }
+		       })
+		       .state('enseignant.stats', {
+			   parent: 'enseignant',
+			   url: '/stats/:enseignant_id',
+			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ENS' ] ); } },
+			   views: {
+			       'content': {
+				   templateUrl: 'app/views/principal/enseignant.html',
+				   controller: 'PrincipalEnseignantCtrl'
+			       }
+			   }
 		       });
 	       } ] );

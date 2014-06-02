@@ -1,15 +1,12 @@
-<div class="row">
-  <div class="panel panel-default">
-
-    <div class="panel-heading">
-      <select data-ng-model="classe" data-ng-change="refresh_calendar()" data-ng-options="classe.id as classe.libelle for classe in classes">
-	<option value="" selected>Toutes les classes</option>
-      </select>
-    </div>
-
-    <div class="panel-body">
-      <div data-calendar="emploi_du_temps" data-ui-calendar="calendar.options" class="col-md-12 calendar" data-ng-model="calendar.events"></div>
-    </div>
-
-  </div>
+<div class="navbar col-md-12">
+  <ul class="nav navbar-nav">
+    <li>
+      <a data-ui-sref="enseignant.emploi_du_temps">Emploi du temps</a>
+    </li>
+    <li>
+      <a data-ui-sref="enseignant.stats({ enseignant_id: current_user.uid })">stats</a>
+    </li>
+  </ul>
 </div>
+
+<div ui-view="content" class="col-md-12"></div>

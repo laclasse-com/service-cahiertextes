@@ -6,7 +6,9 @@ angular.module('cahierDeTexteApp')
                     function($location, $state, User) {
                         this.doorman = function(allowed_types) {
                             User.get_user().then(function(response) {
-                                if (_(allowed_types).indexOf(response.data['profil_actif']['type']) == -1) {
+                                if (_(allowed_types).indexOf(response.data['profil_actif']['type']) == -1
+                                     && !response.data['profil_actif']['admin']   
+                                   ) {
                                     // traiter le raffraichissement de l'app en fonction du changement de profil actif
                                     var reloadStatus = true;
                                     var stateName = '';
@@ -16,7 +18,7 @@ angular.module('cahierDeTexteApp')
                                             stateName = 'principal.enseignants';
                                              break;
                                         case'ENS':
-                                            stateName = 'enseignant';
+                                            stateName = 'enseignant.emploi_du_temps';
                                             break;
                                         case 'ELV':
                                             stateName = 'eleve.emploi_du_temps';
