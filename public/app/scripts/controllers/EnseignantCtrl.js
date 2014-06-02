@@ -115,7 +115,9 @@ angular.module('cahierDeTexteApp')
 							       .rest()
 							       .value()
 							       .map(function(elt) {
-								   elt.children = [];
+								   if ( elt.mime === 'directory' ) {
+								       elt.children = [ { dummy: 'value' } ];
+								   }
 								   return elt;
 							       });
 						       });
@@ -165,11 +167,14 @@ angular.module('cahierDeTexteApp')
 
 						       scope_popup.treeClicked = function(noeud) {
 							   if (noeud.mime === 'directory') {
+							       noeud.children = [];
 							       Documents.list_files(noeud.hash).then(function(response) {
 								   _.chain(response.data.files)
 								       .rest()
 								       .each(function(elt) {
-									   elt.children = [];
+									   if ( elt.mime === 'directory' ) {
+									       elt.children = [ { dummy: 'value' } ];
+									   }
 									   noeud.children.push(elt);
 								       });
 							       });
