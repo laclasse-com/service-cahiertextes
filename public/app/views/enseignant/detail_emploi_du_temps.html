@@ -37,12 +37,14 @@
 
       <input type="file" name="upload[]" multiple onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().cours, this.files)" />
 
-      <treecontrol class="tree-classic"
-		   tree-model="cartable.files"
-		   options="treeOptions"
-		   on-selection="treeClicked( node )">
-	{{node.name}} ({{node.mime}}) <button style="font-size:1.25em;color:#0a0;font-weight:bold" data-ng-click="add_ressource( cours, node.name, node.hash )">+</button>
-      </treecontrol>
+      <div class="treecontrol-container">
+	<treecontrol class="tree-classic"
+		     tree-model="cartable.files"
+		     options="treeOptions"
+		     on-selection="treeClicked( node )">
+	  {{node.name}} ({{node.mime}}) <button style="font-size:1.25em;color:#0a0;font-weight:bold" data-ng-click="add_ressource( cours, node.name, node.hash )">+</button>
+	</treecontrol>
+      </div>
 
       <div class="row-fluid" data-ng-show="creneaux_similaires">
 	<select multiple
@@ -112,12 +114,14 @@
 
       <input type="file" name="upload[]" multiple onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files)" />
 
-      <treecontrol class="tree-classic"
-		   tree-model="cartable.files"
-		   options="treeOptions"
-		   on-selection="treeClicked( node )">
-	{{node.name}} ({{node.mime}}) <button style="font-size:1.25em;color:#0a0;font-weight:bold" data-ng-click="add_ressource( devoir, node.name, node.hash )">+</button>
-      </treecontrol>
+      <div class="treecontrol-container">
+	<treecontrol class="tree-classic"
+		     tree-model="cartable.files"
+		     options="treeOptions"
+		     on-selection="treeClicked( node )">
+	  {{node.name}} ({{node.mime}}) <button style="font-size:1.25em;color:#0a0;font-weight:bold" data-ng-click="add_ressource( devoir, node.name, node.hash )">+</button>
+	</treecontrol>
+      </div>
 
     </div>
   </div>
