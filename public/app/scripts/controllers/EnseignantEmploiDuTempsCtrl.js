@@ -221,9 +221,9 @@ angular.module('cahierDeTexteApp')
 						       };
 
 						       scope_popup.effacer_creneau = function() {
-							   var creneau_a_supprimer = new CreneauEmploiDuTemps({id: creneau_selectionne.id});
-							   creneau_a_supprimer.$delete({id: creneau_selectionne.id})
-							       .then(function() {
+							   CreneauEmploiDuTemps.delete({id: creneau_selectionne.id,
+											date_creneau: $scope.cours.date_cours })
+							       .$promise.then(function() {
 								   scope_popup.creneau_deleted = true;
 								   scope_popup.fermer();
 							       });
@@ -565,8 +565,7 @@ angular.module('cahierDeTexteApp')
 					     function popup_callback(popup_response) {
 						 var index = _($scope.calendar.events[0]).indexOf(creneau_selectionne);
 						 if (popup_response.creneau_deleted) {
-						     $scope.calendar.events[0] = _($scope.calendar.events[0]).without($scope.calendar.events[0][ index ]);
-						     $scope.emploi_du_temps.fullCalendar('rerenderEvents');
+						     $scope.calendar.events[0].splice( index, 1 );
 						 } else {
 						     var updated_event = update_fullCalendar_event(creneau_selectionne, popup_response.cours, popup_response.devoirs);
 						     _.chain(updated_event)
