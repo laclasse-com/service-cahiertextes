@@ -55,6 +55,7 @@ angular.module('cahierDeTexteApp')
 						       // Initialisations {{{
 						       scope_popup.tinyMCEOptions = TINYMCE_OPTIONS;
 						       scope_popup.cours = cours;
+                                                       // devoirs
 						       scope_popup.devoirs = devoirs;
 						       scope_popup.types_de_devoir = types_de_devoir;
 						       scope_popup.matieres = matieres;
@@ -65,12 +66,24 @@ angular.module('cahierDeTexteApp')
 						       scope_popup.classe = _(scope_popup.classes).findWhere({id: parseInt(scope_popup.regroupement_id)});
 						       scope_popup.matiere = scope_popup.matieres[ scope_popup.matiere_id ];
 
+                                                       // Flags et helpers
 						       scope_popup.dirty = false;
 						       scope_popup.deleted = false;
 						       scope_popup.creneau_deleted = false;
 						       scope_popup.is_dirty = function() {
 							   scope_popup.dirty = true;
 						       };
+                                                       
+                                                       // temps estimé sur les devoirs, fonction pour la sélection sur l'UI
+                                                       scope_popup.overValue = -1;
+                                                       scope_popup.estimation_over = function(value) {
+                                                            scope_popup.overValue = value;
+                                                            scope_popup.minutes = 5 * value;
+                                                       };                                             
+                                                       scope_popup.estimation_leave = function() {
+                                                            scope_popup.overValue = -1;
+                                                            scope_popup.minutes = 0;
+                                                       };                                             
 
 						       scope_popup.erreurs = [];
 
