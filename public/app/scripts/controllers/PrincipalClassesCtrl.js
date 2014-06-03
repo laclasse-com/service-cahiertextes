@@ -113,8 +113,8 @@ angular.module('cahierDeTexteApp')
 
 				  // Filtrage sur une seule classe
 				  if ( $scope.classe != null ) {
-				      $scope.filtered_data = _($scope.raw_data).filter( function( creneau ) {
-					  return creneau.regroupement_id == $scope.classe;
+				      $scope.displayed_data = _($scope.raw_data).filter( function( creneau ) {
+					  return creneau.regroupement_id == ''+$scope.classe;
 				      });
 				  }
 
