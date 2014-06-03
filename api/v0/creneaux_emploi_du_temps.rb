@@ -112,17 +112,16 @@ module CahierDeTextesAPI
       desc 'Supprime un créneau'
       params {
         requires :id, type: Integer
-        optional :date_creneau, type: Date
+        requires :date_creneau, type: Date
       }
       delete '/:id' do
         error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS' ) || user.is?( 'DIR' )
 
         creneau = CreneauEmploiDuTemps[ params[:id] ]
         unless creneau.nil?
-          creneau.update(deleted: true)
-          # TODO : mettre la date du créneau dans date_suppression au lieu de Time.now
-          creneau.date_suppression = Time.now
+          creneau.update( deleted: true, date_suppression: params[:date_creneau] )
           creneau.save
+
           creneau
         end
       end
