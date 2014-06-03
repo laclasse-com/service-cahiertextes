@@ -1,12 +1,6 @@
-<div class="navbar col-md-12">
-  <ul class="nav navbar-nav">
-    <li>
-      <a data-ui-sref="principal.classes">Tableau de bord par Classes</a>
-    </li>
-    <li>
-      <a data-ui-sref="principal.enseignants">Validation des saisies par Enseignants</a>
-    </li>
-  </ul>
-</div>
+<tabset>
+    <tab heading="Tableaux de bord par classe" data-ui-sref="principal.classes"></tab>
+    <tab heading="Validation des saisies par enseignant" data-ui-sref="principal.enseignants"></tab>
+</tabset>
 
 <div ui-view="content" class="col-md-12"></div>
