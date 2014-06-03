@@ -112,7 +112,7 @@ module CahierDeTextesAPI
       desc 'Supprime un créneau'
       params {
         requires :id, type: Integer
-        requires :date_creneau, type: Date
+        optional :date_creneau, type: Date
       }
       delete '/:id' do
         error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS' ) || user.is?( 'DIR' )
