@@ -9,7 +9,7 @@ angular.module('cahierDeTexteApp')
 		     var matieres_enseignees = [];
 		     $scope.classes = [];
 		     $scope.classe = null;
-                     
+
 		     var ouvre_popup_edition = function(raw_data,
 							types_de_devoir, matieres, classes,
 							creneau_selectionne, matiere_id, regroupement_id,
@@ -221,9 +221,9 @@ angular.module('cahierDeTexteApp')
 						       };
 
 						       scope_popup.effacer_creneau = function() {
-							   var creneau_a_supprimer = new CreneauEmploiDuTemps({id: creneau_selectionne.id});
-							   creneau_a_supprimer.$delete({id: creneau_selectionne.id})
-							       .then(function() {
+							   CreneauEmploiDuTemps.delete({id: creneau_selectionne.id,
+											date_creneau: $scope.cours.date_cours })
+							       .$promise.then(function() {
 								   scope_popup.creneau_deleted = true;
 								   scope_popup.fermer();
 							       });
@@ -394,7 +394,11 @@ angular.module('cahierDeTexteApp')
 
 			     if (event.details.matiere_id.length > 0) {
 				 if (matieres[ event.details.matiere_id ] === undefined) {
-				     calendar_event.title = '{Matière inconnue}';
+				     if (matieres_enseignees[ event.details.matiere_id ] === undefined) {
+					 calendar_event.title = '{Matière inconnue}';
+				     } else {
+					 calendar_event.title = matieres_enseignees[ event.details.matiere_id ].libelle_long;
+				     }
 				 } else {
 				     calendar_event.title = matieres[ event.details.matiere_id ].libelle_long;
 				 }
@@ -493,8 +497,8 @@ angular.module('cahierDeTexteApp')
 				     $q.all(matieres, $scope.classes).then(function(  ) {
 					 // s'il y a des classes et des matières le calendrier est éditable (?)
 					 $scope.calendar.options.editable = $scope.classes.length > 0 && _(matieres_enseignees).size() > 0;
-                                         $scope.calendar.options.selectable = $scope.calendar.options.editable;
-                                         
+					 $scope.calendar.options.selectable = $scope.calendar.options.editable;
+
 					 $scope.refresh_calendar();
 				     });
 				 });
@@ -565,8 +569,7 @@ angular.module('cahierDeTexteApp')
 					     function popup_callback(popup_response) {
 						 var index = _($scope.calendar.events[0]).indexOf(creneau_selectionne);
 						 if (popup_response.creneau_deleted) {
-						     $scope.calendar.events[0] = _($scope.calendar.events[0]).without($scope.calendar.events[0][ index ]);
-						     $scope.emploi_du_temps.fullCalendar('rerenderEvents');
+						     $scope.calendar.events[0].splice( index, 1 );
 						 } else {
 						     var updated_event = update_fullCalendar_event(creneau_selectionne, popup_response.cours, popup_response.devoirs);
 						     _.chain(updated_event)
