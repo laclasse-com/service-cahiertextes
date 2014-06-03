@@ -14,7 +14,6 @@ angular.module('cahierDeTexteApp')
                             $scope.matieres = {};
                             $scope.classes = {};
                             $scope.montre_valides = false;
-                            //$scope.templateSaisieVisa = $sce.trustAsHtml("<i class='glyphicon glyphicon-ok-sign' data-ng-model='row.entity.valide' data-ng-show='row.entity.valide'></i>");
                                                         
                         $scope.filtre = function(saisies) {
                             var data = saisies;
