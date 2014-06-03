@@ -4,30 +4,25 @@ class CahierDeTextes < Sequel::Model( :cahiers_de_textes )
   def statistiques
     cours = Cours
       .where( cahier_de_textes_id: id )
-      .where( :date_cours )
-      .where( deleted: false )
+      .where( cours__deleted: false )
 
-    {
-      regroupement_id: regroupement_id,
-      matieres:
-      cours.join(:creneaux_emploi_du_temps, id: :creneau_emploi_du_temps_id).select(:matiere_id).group_by(:matiere_id).map do
-        |record|
-        {
-          matiere_id: record.values[:matiere_id],
-          mois:
-          (1..12).map do
+    { regroupement_id: regroupement_id,
+      matieres: cours
+        .association_join( :creneau_emploi_du_temps )
+        .select( :matiere_id )
+        .group_by( :matiere_id )
+        .map { |record|
+        { matiere_id: record.values[:matiere_id],
+          mois: (1..12).map {
             |month|
-            tmp_cours = cours.join(:creneaux_emploi_du_temps, id: :creneau_emploi_du_temps_id).where(matiere_id: record.values[:matiere_id]).where( 'extract( month from date_cours ) = ' + month.to_s )
+            tmp_cours = cours
+              .association_join( :creneau_emploi_du_temps )
+              .where( matiere_id: record.values[:matiere_id] )
+              .where( 'extract( month from date_cours ) = ' + month.to_s )
 
-            {
-              mois: month,
+            { mois: month,
               filled: tmp_cours.count,
-              validated: tmp_cours.where( :date_validation ).count
-            }
-          end
-        }
-      end,
-    }
+              validated: tmp_cours.where( :date_validation ).count } } } } }
   end
 
   # Valide tout un cahier de texte
@@ -37,10 +32,5 @@ class CahierDeTextes < Sequel::Model( :cahiers_de_textes )
       .where( 'date_validation IS NULL' )
       .where( deleted: false )
       .update( date_validation: Time.now )
-  end
-
-  def contenu( debut, fin )
-    # TODO: return the content of this Cahier de textes during the given dates interval
-    {}
   end
 end

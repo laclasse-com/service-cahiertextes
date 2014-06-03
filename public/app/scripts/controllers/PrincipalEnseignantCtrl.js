@@ -47,7 +47,7 @@ angular.module('cahierDeTexteApp')
                                 {field: 'validated', displayName: 'Visée',
                                     cellTemplate: '<div class="ngSelectionCell">' +
                                             '<i class="glyphicon glyphicon-ok-sign" data-ng-model="row.entity.valide" data-ng-show="row.entity.valide"></i>' +
-                                            '<input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" data-ng-model="row.entity.valide" data-ng-hide="row.entity.valide || current_user.is (\'DIR\')" data-ng-click="grid.valide( row )" />' +
+                                            '<input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" data-ng-model="row.entity.valide" data-ng-hide="row.entity.valide || current_user.is( \'ENS\' )" data-ng-click="grid.valide( row )" />' +
                                             '</div>'
                                 }
                             ],
@@ -215,7 +215,7 @@ angular.module('cahierDeTexteApp')
                                                 //   - remplir $scope.classes
                                                 //   - puis d'appeler $scope.process_data() qui va pouvoir consommer $scope.classes
                                                 //     pour passer les noms des classes aux graphiques qui ne peuvent pas profiter
-                                                //     du data-binding d'angularJS car ils dessinent des canvas.                                               
+                                                //     du data-binding d'angularJS car ils dessinent des canvas.
                                                 $q.all($scope.extract_classes_promises($scope.raw_data))
                                                         .then(function(classes) {
                                                             _(classes).each(function(classe) {
