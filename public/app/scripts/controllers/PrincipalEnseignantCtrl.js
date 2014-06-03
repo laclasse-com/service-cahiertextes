@@ -47,7 +47,7 @@ angular.module('cahierDeTexteApp')
                                 {field: 'validated', displayName: 'Visée',
                                     cellTemplate: '<div class="ngSelectionCell">' +
                                             '<i class="glyphicon glyphicon-ok-sign" data-ng-model="row.entity.valide" data-ng-show="row.entity.valide"></i>' +
-                                            '<input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" data-ng-model="row.entity.valide" data-ng-hide="row.entity.valide || current_user.profil_actif.type != \'DIR\'" data-ng-click="grid.valide( row )" />' +
+                                            '<input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" data-ng-model="row.entity.valide" data-ng-hide="row.entity.valide || current_user.is (\'DIR\')" data-ng-click="grid.valide( row )" />' +
                                             '</div>'
                                 }
                             ],
@@ -190,6 +190,8 @@ angular.module('cahierDeTexteApp')
                                     .$promise.then(
                                             function(response) {
                                                 $scope.enseignant = response;
+                                                // filtrer les classes de l'enseignnant sur l'établissement actif
+                                                $scope.enseignant.classes = $scope.current_user.profil_actif.classes;
                                                 $scope.enseignant.matieres = _($scope.enseignant.classes).uniq(function(matiere) {
                                                     return matiere.matiere_enseignee_id;
                                                 });
