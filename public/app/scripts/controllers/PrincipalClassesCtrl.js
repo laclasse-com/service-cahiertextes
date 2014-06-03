@@ -41,12 +41,12 @@ angular.module('cahierDeTexteApp')
 						  $scope.pieChart.data[1].value = data.validated;
 					      } };
 
-			  $scope.monthlyLineChart = { data: [],
+			  $scope.monthlyBarChart = { data: [],
 						      populate: function( data ) {
 							  var data_bootstrap = [];
 							  _(12).times( function( i ) { data_bootstrap.push( [ $scope.annee[ i ], i ] ); } );
 
-							  var monthlyLineChart_data = data.reduce( function( monthly_stats, regroupement ) {
+							  var monthlyBarChart_data = data.reduce( function( monthly_stats, regroupement ) {
 							      _(regroupement.mensuel.filled.length).times( function( i ) {
 								  monthly_stats.filled[ i ].y += regroupement.mensuel.filled[i];
 								  monthly_stats.validated[ i ].y += regroupement.mensuel.validated[i];
@@ -55,21 +55,22 @@ angular.module('cahierDeTexteApp')
 							  }, { filled: data_bootstrap,
 							       validated: data_bootstrap });
 
-							  $scope.monthlyLineChart.data[ 0 ] = { key: 'saisie',
+							  $scope.monthlyBarChart.data[ 0 ] = { key: 'saisie',
 												area: true,
 												color: THEME.filled.base,
-												values: monthlyLineChart_data.filled };
-							  $scope.monthlyLineChart.data[ 1 ] = { key: 'valide',
+												values: monthlyBarChart_data.filled };
+							  $scope.monthlyBarChart.data[ 1 ] = { key: 'valide',
 												area: false,
 												color: THEME.validated.base,
-												values: monthlyLineChart_data.validated};
+												values: monthlyBarChart_data.validated};
 						      } };
 
 			  $scope.individualCharts = { classes: [],
 						      populate: function( data, classes ) {
+							  var hashed_classes = _.chain(classes).map( function(c) { return [ c.id, c ]; } ).object().value();
 							  $scope.individualCharts.classes = _.chain(data)
 							      .map( function( regroupement ) {
-								  return { libelle: classes[ regroupement.regroupement_id ],
+								  return { regroupement: hashed_classes[ regroupement.regroupement_id ],
 									   pieChart: { data: [ { label: 'valide',
 												 value: regroupement.validated },
 											       { label: 'saisie',
@@ -100,7 +101,7 @@ angular.module('cahierDeTexteApp')
 			      return _.chain( data )
 				  .pluck( 'regroupement_id' )
 				  .map( function( regroupement_id ) {
-				      return Annuaire.get_regroupement( regroupement_id );
+				      return Annuaire.get_regroupement( regroupement_id ).$promise;
 				  })
 				  .value();
 			  };
@@ -112,8 +113,8 @@ angular.module('cahierDeTexteApp')
 
 				  // Filtrage sur une seule classe
 				  if ( $scope.classe != null ) {
-				      $scope.filtered_data = _($scope.raw_data).filter( function( creneau ) {
-					  return creneau.regroupement_id == $scope.classe;
+				      $scope.displayed_data = _($scope.raw_data).filter( function( creneau ) {
+					  return creneau.regroupement_id == ''+$scope.classe;
 				      });
 				  }
 
@@ -174,7 +175,7 @@ angular.module('cahierDeTexteApp')
 				  // consommation des données dans les graphiques
 				  $scope.individualCharts.populate( $scope.displayed_data, $scope.classes );
 				  $scope.pieChart.populate( $scope.displayed_data );
-				  $scope.monthlyLineChart.populate( $scope.displayed_data );
+				  $scope.monthlyBarChart.populate( $scope.displayed_data );
 			      }
 			  };
 
@@ -186,20 +187,17 @@ angular.module('cahierDeTexteApp')
 
 				  if ( ! $scope.empty ) {
 				      // Extraction des matières
-				      $scope.matieres = $scope.extract_matieres( $scope.raw_data );
+				      $q.all( $scope.extract_matieres( $scope.raw_data ) )
+					  .then( function( response ) {
+					      $scope.matieres = response;
 
-				      // Extraction des classes
-				      $scope.classes = $scope.extract_classes( $scope.raw_data );
+					      // Extraction des classes
+					      $q.all( $scope.extract_classes( $scope.raw_data ) )
+						  .then( function( response ) {
+						      $scope.classes = response;
 
-				      $q.all( $scope.matieres, $scope.classes )
-					  .then( function(  ) {
-					      _($scope.classes).each( function( classe ) {
-						  console.debug(classe.libelle_aaf)
-						  if ( classe.libelle === null ) {
-						      classe.libelle = classe.libelle_aaf;
-						  }
-					      } );
-					      $scope.process_data();
+						      $scope.process_data();
+						  });
 					  });
 				  }
 			      });

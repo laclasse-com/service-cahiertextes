@@ -11,7 +11,7 @@
 	  <option value="" selected>Toute les classes</option>
 	</select>
 
-	<select class="col-md-3" data-ng-model="moisCourant" data-ng-change="process_data()" data-ng-options="mois.indexOf(m) as m for m in annee">
+	<select class="col-md-3" data-ng-model="moisCourant" data-ng-change="process_data()" data-ng-options="annee.indexOf(m) as m for m in annee">
 	  <option value="">Toute l'année</option>
 	</select>
 
@@ -39,8 +39,8 @@
 			noData="Aucune saisie" >
 	  <svg></svg>
 	</nvd3-pie-chart>
-	<nvd3-line-chart id="globalLineChart" class="col-md-8"
-			 data="monthlyLineChart.data"
+	<nvd3-multi-bar-chart id="globalbarChart" class="col-md-8"
+			 data="monthlyBarChart.data"
 			 height="256"
 			 useInteractiveGuideline="true"
 			 showXAxis="true"
@@ -51,16 +51,15 @@
 			 xAxisTickFormat="xAxisTickFormatFunction()"
 			 noData="Aucune saisie" >
 	  <svg></svg>
-	</nvd3-line-chart>
+	</nvd3-multi-bar-chart>
       </div>
     </div>
 
-    <div class="col-md-12">
-      <div class="col-md-3" data-ng-show="classe == null" data-ng-repeat="classe in individualCharts.classes">
+    <div class="col-md-12" data-ng-hide="classe">
+      <div class="col-md-3" data-ng-repeat="classe in individualCharts.classes">
 	<div class="panel panel-default">
-	  <div class="panel-heading"><h3 class="panel-title">{{classe.libelle.libelle}}</h3></div>
+	  <div class="panel-heading"><h3 class="panel-title">{{classe.regroupement.libelle}}</h3></div>
 	  <div class="panel-body">
-	    {{classe}}
 	    <nvd3-pie-chart id="individualPieChart{{$index}}" class="individualPieChart"
 			    width="64"
 			    height="64"
