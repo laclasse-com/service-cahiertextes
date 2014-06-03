@@ -67,9 +67,10 @@ angular.module('cahierDeTexteApp')
 
 			  $scope.individualCharts = { classes: [],
 						      populate: function( data, classes ) {
+							  var hashed_classes = _.chain(classes).map( function(c) { return [ c.id, c ]; } ).object().value();
 							  $scope.individualCharts.classes = _.chain(data)
 							      .map( function( regroupement ) {
-								  return { libelle: classes[ regroupement.regroupement_id ],
+								  return { regroupement: hashed_classes[ regroupement.regroupement_id ],
 									   pieChart: { data: [ { label: 'valide',
 												 value: regroupement.validated },
 											       { label: 'saisie',
@@ -100,7 +101,7 @@ angular.module('cahierDeTexteApp')
 			      return _.chain( data )
 				  .pluck( 'regroupement_id' )
 				  .map( function( regroupement_id ) {
-				      return Annuaire.get_regroupement( regroupement_id );
+				      return Annuaire.get_regroupement( regroupement_id ).$promise;
 				  })
 				  .value();
 			  };
@@ -186,20 +187,17 @@ angular.module('cahierDeTexteApp')
 
 				  if ( ! $scope.empty ) {
 				      // Extraction des matières
-				      $scope.matieres = $scope.extract_matieres( $scope.raw_data );
+				      $q.all( $scope.extract_matieres( $scope.raw_data ) )
+					  .then( function( response ) {
+					      $scope.matieres = response;
 
-				      // Extraction des classes
-				      $scope.classes = $scope.extract_classes( $scope.raw_data );
+					      // Extraction des classes
+					      $q.all( $scope.extract_classes( $scope.raw_data ) )
+						  .then( function( response ) {
+						      $scope.classes = response;
 
-				      $q.all( $scope.matieres, $scope.classes )
-					  .then( function(  ) {
-					      _($scope.classes).each( function( classe ) {
-						  console.debug(classe.libelle_aaf)
-						  if ( classe.libelle === null ) {
-						      classe.libelle = classe.libelle_aaf;
-						  }
-					      } );
-					      $scope.process_data();
+						      $scope.process_data();
+						  });
 					  });
 				  }
 			      });
