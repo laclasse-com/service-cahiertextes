@@ -68,6 +68,7 @@ module CahierDeTextesAPI
         requires :creneau_emploi_du_temps_id
         requires :date_due, type: Date
         optional :ressources
+        optional :temps_estime
       }
       post  do
         error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS' )
@@ -103,6 +104,7 @@ module CahierDeTextesAPI
         requires :creneau_emploi_du_temps_id
         requires :date_due, type: Date
         optional :ressources
+        optional :temps_estime
       }
       put '/:id' do
         error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS' )
