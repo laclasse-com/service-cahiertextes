@@ -394,7 +394,11 @@ angular.module('cahierDeTexteApp')
 
 			     if (event.details.matiere_id.length > 0) {
 				 if (matieres[ event.details.matiere_id ] === undefined) {
-				     calendar_event.title = '{Matière inconnue}';
+				     if (matieres_enseignees[ event.details.matiere_id ] === undefined) {
+					 calendar_event.title = '{Matière inconnue}';
+				     } else {
+					 calendar_event.title = matieres_enseignees[ event.details.matiere_id ].libelle_long;
+				     }
 				 } else {
 				     calendar_event.title = matieres[ event.details.matiere_id ].libelle_long;
 				 }
