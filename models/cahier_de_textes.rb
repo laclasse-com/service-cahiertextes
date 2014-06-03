@@ -38,9 +38,4 @@ class CahierDeTextes < Sequel::Model( :cahiers_de_textes )
       .where( deleted: false )
       .update( date_validation: Time.now )
   end
-
-  def contenu( debut, fin )
-    # TODO: return the content of this Cahier de textes during the given dates interval
-    {}
-  end
 end
