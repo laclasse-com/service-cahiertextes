@@ -8,6 +8,9 @@ angular.module('cahierDeTexteApp')
 		       return $http.get( APP_VIRTUAL_PATH + '/api/v0/users/current' )
 			   .success( function( response ) {
 			       response.profil_actif = response.profils[ 0 ];
+			       response.is = function( profil_id ) {
+				   return this.profil_actif['type'] == profil_id;
+			       };
 
 			       return response;
 			   } );
