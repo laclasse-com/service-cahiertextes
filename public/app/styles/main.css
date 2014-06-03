@@ -52,7 +52,7 @@ body {
 .bloc-enseignant .panel-body{height:12em;overflow:auto}
 /** Enseignant **/
 .principal-enseignant-grid{padding:0}
-
+.ng-valid.glyphicon-ok-sign{color:#0f0}
 /* Enseignant */
 .panel-heading.enseignant-saisie input,
 .panel-heading.enseignant-saisie select,

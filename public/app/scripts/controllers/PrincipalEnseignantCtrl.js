@@ -4,8 +4,8 @@ angular.module('cahierDeTexteApp')
         .controller('PrincipalEnseignantCtrl',
                 ['$scope', '$stateParams', '$q',
                     '$locale', 'THEME',
-                    'API', 'Cours', 'Annuaire', 'User',
-                    function($scope, $stateParams, $q, $locale, THEME, API, Cours, Annuaire, User) {
+                    'API', 'Cours', 'Annuaire', 'User', '$sce', 
+                    function($scope, $stateParams, $q, $locale, THEME, API, Cours, Annuaire, User, $sce) {
                             $scope.classe = null;
                             $scope.mois = $locale.DATETIME_FORMATS.MONTH;
                             $scope.moisCourant = null;
@@ -14,17 +14,8 @@ angular.module('cahierDeTexteApp')
                             $scope.matieres = {};
                             $scope.classes = {};
                             $scope.montre_valides = false;
-                            var templateSaisieVisa = "<i class='glyphicon glyphicon-ok-sign' data-ng-model='row.entity.valide' data-ng-show='row.entity.valide'></i>";
-                            
-                            // Checkboxes de visa des saisies
-                            console.debug($scope);
-                            // FIXME : FIlter ça sur le profil du current_user
-                            //if ($scope.current_user.profil_actif.type == 'DIR') {
-                            if (false) {
-                                templateSaisieVisa = '<input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" data-ng-model="row.entity.valide" data-ng-show="!row.entity.valide" data-ng-click="grid.valide( row )" />'+
-                                                     '<input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" disabled checked data-ng-show="row.entity.valide" />';
-                            }
-                            
+                            //$scope.templateSaisieVisa = $sce.trustAsHtml("<i class='glyphicon glyphicon-ok-sign' data-ng-model='row.entity.valide' data-ng-show='row.entity.valide'></i>");
+                                                        
                         $scope.filtre = function(saisies) {
                             var data = saisies;
                             if ($scope.moisCourant != null) {
@@ -47,15 +38,18 @@ angular.module('cahierDeTexteApp')
                             rowHeight: 64,
                             columnDefs: [
                                 {field: 'classe', displayName: 'Classe',
-                                    cellTemplate: '<span>{{classes[row.entity.classe_id]}}</span>'},
+                                    cellTemplate: '<span data-ng-bind="classes[row.entity.classe_id]"></span>'},
                                 {field: 'matiere', displayName: 'Matière',
-                                    cellTemplate: '<span>{{matieres[row.entity.matiere_id]}}</span>'},
+                                    cellTemplate: '<span data-ng-bind="matieres[row.entity.matiere_id]"></span>'},
                                 {field: 'cours', displayName: 'Cours',
                                     cellTemplate: '<span class="scrollbar" data-ng-bind-html="row.entity.cours.contenu"></span>'},
                                 {field: 'devoir', displayName: 'Travail à faire',
                                     cellTemplate: '<span class="scrollbar" data-ng-bind-html="row.entity.devoir.contenu"></span>'},
                                 {field: 'validated', displayName: 'Visée',
-                                    cellTemplate: '<div class="ngSelectionCell">' + templateSaisieVisa + '</div>'
+                                    cellTemplate: '<div class="ngSelectionCell">' +
+                                            '<i class="glyphicon glyphicon-ok-sign" data-ng-model="row.entity.valide" data-ng-show="row.entity.valide"></i>' +
+                                            '<input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" data-ng-model="row.entity.valide" data-ng-hide="row.entity.valide || current_user.profil_actif.type != \'DIR\'" data-ng-click="grid.valide( row )" />' +
+                                            '</div>'
                                 }
                             ],
                             valide: function(row) {
