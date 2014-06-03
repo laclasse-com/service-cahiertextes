@@ -22,7 +22,7 @@ angular.module('cahierDeTexteApp')
 	       function( $resource, APP_VIRTUAL_PATH ) {
 		   return $resource( APP_VIRTUAL_PATH + '/api/v0/annuaire/users/:user_id',
 				     { user_id: '@user_id' } );
-	       } ] );
+              } ] );
 
 angular.module('cahierDeTexteApp')
     .service('Annuaire',
