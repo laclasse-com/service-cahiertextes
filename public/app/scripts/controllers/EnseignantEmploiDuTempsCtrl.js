@@ -9,7 +9,7 @@ angular.module('cahierDeTexteApp')
 		     var matieres_enseignees = [];
 		     $scope.classes = [];
 		     $scope.classe = null;
-                     
+
 		     var ouvre_popup_edition = function(raw_data,
 							types_de_devoir, matieres, classes,
 							creneau_selectionne, matiere_id, regroupement_id,
@@ -493,8 +493,8 @@ angular.module('cahierDeTexteApp')
 				     $q.all(matieres, $scope.classes).then(function(  ) {
 					 // s'il y a des classes et des matières le calendrier est éditable (?)
 					 $scope.calendar.options.editable = $scope.classes.length > 0 && _(matieres_enseignees).size() > 0;
-                                         $scope.calendar.options.selectable = $scope.calendar.options.editable;
-                                         
+					 $scope.calendar.options.selectable = $scope.calendar.options.editable;
+
 					 $scope.refresh_calendar();
 				     });
 				 });
