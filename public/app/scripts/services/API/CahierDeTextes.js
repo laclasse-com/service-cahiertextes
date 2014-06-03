@@ -52,7 +52,11 @@ angular.module('cahierDeTexteApp')
 				       heure_debut: '@heure_debut',
 				       heure_fin: '@heure_fin',
 				       matiere_id: '@matiere_id' },
-				     { update: { method: 'PUT' } });
+				     { update: { method: 'PUT' },
+				       delete: { method: 'DELETE',
+						 url: APP_VIRTUAL_PATH + '/api/v0/creneaux_emploi_du_temps/:id',
+						 params: { id: '@id',
+							   date_creneau: '@date_creneau' } } } );
 	       } ] );
 
 angular.module('cahierDeTexteApp')
