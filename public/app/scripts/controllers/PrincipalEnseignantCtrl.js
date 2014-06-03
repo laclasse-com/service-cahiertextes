@@ -190,6 +190,8 @@ angular.module('cahierDeTexteApp')
                                     .$promise.then(
                                             function(response) {
                                                 $scope.enseignant = response;
+                                                // filtrer les classes de l'enseignnant sur l'établissement actif
+                                                $scope.enseignant.classes = $scope.current_user.profil_actif.classes;
                                                 $scope.enseignant.matieres = _($scope.enseignant.classes).uniq(function(matiere) {
                                                     return matiere.matiere_enseignee_id;
                                                 });
