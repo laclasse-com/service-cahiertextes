@@ -41,12 +41,12 @@ angular.module('cahierDeTexteApp')
 						  $scope.pieChart.data[1].value = data.validated;
 					      } };
 
-			  $scope.monthlyLineChart = { data: [],
+			  $scope.monthlyBarChart = { data: [],
 						      populate: function( data ) {
 							  var data_bootstrap = [];
 							  _(12).times( function( i ) { data_bootstrap.push( [ $scope.annee[ i ], i ] ); } );
 
-							  var monthlyLineChart_data = data.reduce( function( monthly_stats, regroupement ) {
+							  var monthlyBarChart_data = data.reduce( function( monthly_stats, regroupement ) {
 							      _(regroupement.mensuel.filled.length).times( function( i ) {
 								  monthly_stats.filled[ i ].y += regroupement.mensuel.filled[i];
 								  monthly_stats.validated[ i ].y += regroupement.mensuel.validated[i];
@@ -55,14 +55,14 @@ angular.module('cahierDeTexteApp')
 							  }, { filled: data_bootstrap,
 							       validated: data_bootstrap });
 
-							  $scope.monthlyLineChart.data[ 0 ] = { key: 'saisie',
+							  $scope.monthlyBarChart.data[ 0 ] = { key: 'saisie',
 												area: true,
 												color: THEME.filled.base,
-												values: monthlyLineChart_data.filled };
-							  $scope.monthlyLineChart.data[ 1 ] = { key: 'valide',
+												values: monthlyBarChart_data.filled };
+							  $scope.monthlyBarChart.data[ 1 ] = { key: 'valide',
 												area: false,
 												color: THEME.validated.base,
-												values: monthlyLineChart_data.validated};
+												values: monthlyBarChart_data.validated};
 						      } };
 
 			  $scope.individualCharts = { classes: [],
@@ -175,7 +175,7 @@ angular.module('cahierDeTexteApp')
 				  // consommation des données dans les graphiques
 				  $scope.individualCharts.populate( $scope.displayed_data, $scope.classes );
 				  $scope.pieChart.populate( $scope.displayed_data );
-				  $scope.monthlyLineChart.populate( $scope.displayed_data );
+				  $scope.monthlyBarChart.populate( $scope.displayed_data );
 			      }
 			  };
 
