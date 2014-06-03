@@ -55,7 +55,8 @@ angular.module( 'cahierDeTexteApp' )
 						 eventDurationEditable: false,
 						 disableDragging: true,
 						 selectable: true,
-						 selectHelper: true
+						 selectHelper: true,
+						 lazyFetching: false
 					       };
 				    } ] )
 
