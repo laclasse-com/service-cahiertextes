@@ -105,9 +105,9 @@ angular.module('cahierDeTexteApp')
                         };
 
                         $scope.graphiques = {
-                            pieChart: {data: [{label: 'valide',
+                            pieChart: {data: [{label: 'visas',
                                         value: 0},
-                                    {label: 'saisie',
+                                    {label: 'saisies',
                                         value: 0}]},
                             barChart: {data: []},
                             populate: function(data) {
@@ -115,8 +115,8 @@ angular.module('cahierDeTexteApp')
                                 $scope.graphiques.pieChart.data[ 0 ].value = 0;
                                 $scope.graphiques.pieChart.data[ 1 ].value = 0;
 
-                                var saisies = {key: "saisie", values: []};
-                                var valides = {key: "valide", values: []};
+                                var saisies = {key: "saisies", values: []};
+                                var valides = {key: "visas", values: []};
 
                                 _.chain($scope.filtre(data))
                                         .groupBy('classe_id')
@@ -205,18 +205,17 @@ angular.module('cahierDeTexteApp')
                                                         .value();
                                             });
 
-                            API.get_enseignant({enseignant_id: $scope.enseignant_id,
-                                uai: $scope.current_user['profil_actif']['uai']})
+                            API.get_enseignant({ enseignant_id: $scope.enseignant_id,
+                                uai: $scope.current_user['profil_actif']['uai'] })
                                     .$promise.then(
                                             function success(response) {
                                                 $scope.raw_data = response.saisies;
-
                                                 $scope.matieres = $scope.extract_matieres($scope.raw_data);
                                                 // $q.all() permet d'attendre que tout les appels d' soient résolus avant de
                                                 //   - remplir $scope.classes
                                                 //   - puis d'appeler $scope.process_data() qui va pouvoir consommer $scope.classes
                                                 //     pour passer les noms des classes aux graphiques qui ne peuvent pas profiter
-                                                //     du data-binding d'angularJS car ils dessinent des canvas.
+                                                //     du data-binding d'angularJS car ils dessinent des canvas.                                               
                                                 $q.all($scope.extract_classes_promises($scope.raw_data))
                                                         .then(function(classes) {
                                                             _(classes).each(function(classe) {
