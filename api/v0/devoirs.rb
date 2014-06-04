@@ -18,16 +18,7 @@ module CahierDeTextesAPI
           classe['classe_id']
         }.uniq
 
-        Devoir.select(  :devoirs__id,
-                        :devoirs__cours_id,
-                        :devoirs__type_devoir_id,
-                        :devoirs__contenu,
-                        :devoirs__date_creation,
-                        :devoirs__date_modification,
-                        :devoirs__date_validation,
-                        :devoirs__date_due,
-                        :devoirs__temps_estime )
-          .join(:cours, id: :cours_id)
+        Devoir
           .join(:creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :id)
           .where( regroupement_id: regroupements_ids )
           .map { |devoir|
