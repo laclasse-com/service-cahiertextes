@@ -117,6 +117,7 @@ angular.module('cahierDeTexteApp')
 							       return creneau;
 							   })
 							   .value();
+						       scope_popup.creneaux_devoirs_possibles.push( creneau_selectionne );
 						       // }}}
 
 						       // Gestion des documents attachés {{{
