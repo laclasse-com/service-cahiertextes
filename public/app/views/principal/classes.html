@@ -11,7 +11,7 @@
 	  <option value="" selected>Toute les classes</option>
 	</select>
 
-	<select class="col-md-3" data-ng-model="moisCourant" data-ng-change="process_data()" data-ng-options="annee.indexOf(m) as m for m in annee">
+	<select class="col-md-3" data-ng-model="moisCourant" data-ng-change="process_data()" data-ng-options="annee.indexOf(m)+1 as m for m in annee">
 	  <option value="">Toute l'année</option>
 	</select>
 
