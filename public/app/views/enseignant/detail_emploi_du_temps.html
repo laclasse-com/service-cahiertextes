@@ -86,7 +86,7 @@
 	    <option value="" disabled selected>Choisissez un type de devoir</option>
 	  </select>
 
-	  <select data-ng-model="devoir.creneau_emploi_du_temps_id"
+	  <select data-ng-required="true" data-ng-model="devoir.creneau_emploi_du_temps_id"
 		  data-ng-options="creneau.creneau_emploi_du_temps_id as creneau.start_str +' - '+ creneau.end_str for creneau in creneaux_devoirs_possibles" >
 	  </select>
 	  <!-- <div data-w11k-select
