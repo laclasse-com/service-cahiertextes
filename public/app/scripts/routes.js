@@ -21,7 +21,8 @@ angular.module( 'cahierDeTexteApp' )
 			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } },
 			   abstract: true,
 			   url: '/principal',
-			   templateUrl: 'app/views/principal/index.html'
+			   templateUrl: 'app/views/common/tabs.html',
+			   controller: 'PrincipalCtrl'
 		       })
 		       .state('principal.enseignants', {
 			   parent: 'principal',
@@ -40,7 +41,7 @@ angular.module( 'cahierDeTexteApp' )
 			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } },
 			   views: {
 			       'content': {
-				   templateUrl: 'app/views/principal/enseignant.html',
+				   templateUrl: 'app/views/common/enseignant.html',
 				   controller: 'PrincipalEnseignantCtrl'
 			       }
 			   }
@@ -62,7 +63,8 @@ angular.module( 'cahierDeTexteApp' )
 			   abstract: true,
 			   url: '/eleve',
 			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ELV', 'PAR' ] ); } },
-			   templateUrl: 'app/views/eleve/index.html'
+			   controller: 'EleveCtrl',
+			   templateUrl: 'app/views/common/tabs.html'
 		       })
 		       .state('eleve.emploi_du_temps', {
 			   parent: 'eleve',
@@ -92,7 +94,7 @@ angular.module( 'cahierDeTexteApp' )
 			   abstract: true,
 			   url: '/enseignant',
 			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ENS' ] ); } },
-			   templateUrl: 'app/views/enseignant/index.html',
+			   templateUrl: 'app/views/common/tabs.html',
                            controller: 'EnseignantCtrl'
 		       })
 		       .state('enseignant.emploi_du_temps', {
@@ -112,7 +114,7 @@ angular.module( 'cahierDeTexteApp' )
 			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ENS' ] ); } },
 			   views: {
 			       'content': {
-				   templateUrl: 'app/views/principal/enseignant.html',
+				   templateUrl: 'app/views/common/enseignant.html',
 				   controller: 'PrincipalEnseignantCtrl'
 			       }
 			   }
