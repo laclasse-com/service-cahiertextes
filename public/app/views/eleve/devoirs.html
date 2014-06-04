@@ -11,16 +11,14 @@
 	  <label for="display-done">Afficher les devoirs déjà fait</label>
 	</div>
 	<div class="panel-body">
-	  <ul>
-	    <li data-ng-repeat="devoir in devoirs" style="list-style:none">
-	      <div class="alert" data-ng-class="{'alert-success': devoir.fait, 'alert-danger': !devoir.fait}">
-		<span class="badge badge-info">{{devoir.type_devoir}}</span>
-		<span data-ng-bind-html="devoir.contenu"></span>
-		<button class="btn pull-right"
-			data-ng-class="{'btn-success': devoir.fait, 'btn-default': !devoir.fait}" data-ng-click="fait( devoir.id )" data-ng-disabled="devoir.fait">
-		  <span class="glyphicon" data-ng-class="{'glyphicon-check': devoir.fait, 'glyphicon-unchecked': !devoir.fait}"></span> Fait
-		</button>
-	      </div>
+	  <ul class="list-group">
+	    <li data-ng-repeat="devoir in devoirs" data-ng-class="{'list-group-item-success': devoir.fait, 'list-group-item-danger': !devoir.fait}" style="list-style:none" class="list-group-item">
+	      <span class="badge badge-info">{{devoir.type_devoir}}</span>
+	      <span data-ng-bind-html="devoir.contenu"></span>
+	      <button class="btn" data-ng-class="{'btn-success': devoir.fait, 'btn-default': !devoir.fait}"
+		      data-ng-click="fait( devoir.id )" data-ng-disabled="devoir.fait">
+		<span class="glyphicon" data-ng-class="{'glyphicon-check': devoir.fait, 'glyphicon-unchecked': !devoir.fait}"></span> Fait
+	      </button>
 	    </li>
 	  </ul>
 	</div>
