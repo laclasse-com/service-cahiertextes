@@ -181,7 +181,7 @@ angular.module('cahierDeTexteApp')
                         User.get_user().success(function(response) {
                             $scope.current_user = response;
                             $scope.enseignant_id = $stateParams.enseignant_id;
-                            if ($scope.enseignant_id === undefined || $scope.enseignant_id != $scope.current_user.uid) {
+                            if ($scope.enseignant_id === undefined && $scope.enseignant_id != $scope.current_user.uid) {
                                 $scope.enseignant_id = $scope.current_user.uid;
                             }
                             
