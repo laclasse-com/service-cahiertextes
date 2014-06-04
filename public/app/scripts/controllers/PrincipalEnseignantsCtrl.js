@@ -122,24 +122,27 @@ angular.module('cahierDeTexteApp')
 				  });
 			      }
 
-			      // augmentation des données
+			      // tri et calcul des données
 			      $scope.displayed_data.filled = 0;
 			      $scope.displayed_data.validated = 0;
 			      _($scope.displayed_data).each( function( enseignant ) {
-				  var stats = _(enseignant.classes).reduce( function( totaux, classe ) {
-				      var stats = _(classe.statistiques).reduce( function( totaux, mois ) {
+				  var stats_enseignant = _(enseignant.classes).reduce( function( totaux, classe ) {
+				      var stats_classe = _(classe.statistiques).reduce( function( totaux, mois ) {
 					  return { filled: totaux.filled + mois.filled,
 						   validated: totaux.validated + mois.validated};
 				      }, { filled: 0, validated: 0});
 
-				      return { filled: totaux.filled + stats.filled,
-					       validated: totaux.validated + stats.validated};
+				      return { filled: totaux.filled + stats_classe.filled,
+					       validated: totaux.validated + stats_classe.validated};
 				  }, { filled: 0, validated: 0});
-				  enseignant.filled = stats.filled;
-				  enseignant.validated = stats.validated;
 
-				  $scope.displayed_data.filled += stats.filled;
-				  $scope.displayed_data.validated += stats.validated;
+				  // stats de l'enseignant
+				  enseignant.filled = stats_enseignant.filled;
+				  enseignant.validated = stats_enseignant.validated;
+
+				  // mise à jour stats globales
+				  $scope.displayed_data.filled += stats_enseignant.filled;
+				  $scope.displayed_data.validated += stats_enseignant.validated;
 			      });
 
 			      // consommation des données dans les graphiques

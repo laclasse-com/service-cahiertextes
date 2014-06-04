@@ -2,90 +2,80 @@
 
 class Etablissement < Sequel::Model( :etablissements )
   def statistiques_classes
-    # [{'id' => '3'}, {'id' => '9'}].map {
-    Annuaire.get_etablissement( values[:UAI] )['classes'].map {
-      |classe|
+    Annuaire
+      .get_etablissement( values[:UAI] )['classes']
+      .map do |classe|
       cdt = CahierDeTextes.where( regroupement_id: classe['id'] ).first
-      STDERR.puts "Creation du cahier de textes pour le groupe #{classe['id']}" if cdt.nil?
       cdt = CahierDeTextes.create( regroupement_id: classe[ 'id' ] ) if cdt.nil?
       cdt.statistiques
-    }
+    end
   end
 
   def statistiques_enseignants
-    # [{'id_ent' => 'VAA60474'}, {'id_ent' => 'VAA60442'}].map {
-    Annuaire.get_etablissement( values[:UAI] )['enseignants'].map {
-      |enseignant|
-      {  enseignant_id: enseignant['id_ent'],
-       classes: CreneauEmploiDuTempsRegroupement
-         .join( :creneaux_emploi_du_temps_enseignants, creneau_emploi_du_temps_id: :creneau_emploi_du_temps_id )
-         .select( :regroupement_id ).where( enseignant_id: enseignant['id_ent'] )
-         .group_by( :regroupement_id )
-         .map {
-         |regroupement_id|
-         {  regroupement: regroupement_id.values[ :regroupement_id ],
-          statistiques: (1..12).map {
-            |month|
-            stats = { month: month, filled: 0, validated: 0 }
+    Annuaire
+      .get_etablissement( values[:UAI] )['enseignants']
+      .map do |enseignant|
 
-            CreneauEmploiDuTempsEnseignant
-              .join( :creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :creneau_emploi_du_temps_id )
-              .where( enseignant_id: enseignant['id_ent'] )
-              .where( regroupement_id: regroupement_id.values[ :regroupement_id ] )
-              .map {
-              |creneau|
+      { enseignant_id: enseignant['id_ent'],
+        classes: CreneauEmploiDuTempsRegroupement
+          .join( :creneaux_emploi_du_temps_enseignants, creneau_emploi_du_temps_id: :creneau_emploi_du_temps_id )
+          .where( enseignant_id: enseignant['id_ent'] )
+          .select( :regroupement_id )
+          .group_by( :regroupement_id )
+          .map do |regroupement_id|
+          { regroupement: regroupement_id.values[ :regroupement_id ],
+            statistiques: (1..12).map do |month|
+              stats = { month: month,
+                filled: 0,
+                validated: 0 }
 
-              # TODO: prendre en compte les semaine_de_presence
-              cours = Cours
-                .where( creneau_emploi_du_temps_id: creneau.creneau_emploi_du_temps_id )
-                .where( 'extract( month from date_cours ) = ' + month.to_s )
-                .where( deleted: false )
+              CreneauEmploiDuTempsEnseignant
+                .join( :creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :creneau_emploi_du_temps_id )
+                .where( enseignant_id: enseignant['id_ent'] )
+                .where( regroupement_id: regroupement_id.values[ :regroupement_id ] )
+                .each do |creneau|
+                # TODO: prendre en compte les semaine_de_presence
+                cours = Cours
+                  .where( creneau_emploi_du_temps_id: creneau.creneau_emploi_du_temps_id )
+                  .where( 'extract( month from date_cours ) = ' + month.to_s )
+                  .where( deleted: false )
 
-              # TODO: calcul total attendu
-              { filled: cours.count,
-                validated: cours.where( :date_validation ).count
-              }
-            }.each {
-              |values|
-              [:filled, :validated].each {
-                |key|
-                stats[ key ] += values[ key ]
-              }
-            }
+                # TODO: calcul total attendu
+                stats[:filled] += cours.count
+                stats[:validated] += cours.where( :date_validation ).count
+              end
 
-            stats
+              stats
+            end
           }
-         }
-       }
+        end
       }
-    }
+    end
   end
 
   def saisies_enseignant( enseignant_id )
-    {  enseignant_id: enseignant_id,
-     saisies:
-     (1..12).map do
-       |month|
+    { enseignant_id: enseignant_id,
+      saisies: (1..12).map do
+        |month|
+        
+        Cours
+          .where( enseignant_id: enseignant_id )
+          .where( 'extract( month from date_cours ) = ' + month.to_s )
+          .where( deleted: false )
+          .map do
+          |cours|
+          devoir = Devoir.where(cours_id: cours.id).first
+          devoir = -1 if devoir.nil?
 
-       Cours
-         .where( enseignant_id: enseignant_id )
-         .where( 'extract( month from date_cours ) = ' + month.to_s )
-         .where( deleted: false )
-         .map do
-         |cours|
-         devoir = Devoir.where(cours_id: cours.id).first
-         devoir = -1 if devoir.nil?
-
-         {                     # TODO: tenir compte des semaines de présence
-           mois: month,
-           classe_id: CreneauEmploiDuTempsRegroupement.where(creneau_emploi_du_temps_id: cours.creneau_emploi_du_temps_id).first.regroupement_id,
-           matiere_id: CreneauEmploiDuTemps[ cours.creneau_emploi_du_temps_id ].matiere_id,
-           cours: cours,
-           devoir: devoir,
-           valide: ! cours.date_validation.nil?
-         }
-       end
-     end.flatten
+          # TODO: tenir compte des semaines de présence
+          { mois: month,
+            classe_id: CreneauEmploiDuTempsRegroupement.where(creneau_emploi_du_temps_id: cours.creneau_emploi_du_temps_id).first.regroupement_id,
+            matiere_id: CreneauEmploiDuTemps[ cours.creneau_emploi_du_temps_id ].matiere_id,
+            cours: cours,
+            devoir: devoir,
+            valide: !cours.date_validation.nil? }
+        end
+      end.flatten
     }
   end
 
