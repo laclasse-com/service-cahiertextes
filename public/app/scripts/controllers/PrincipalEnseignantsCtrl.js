@@ -20,7 +20,11 @@ angular.module('cahierDeTexteApp')
 			  };
 		      };
 		      $scope.barChartxAxisTickFormatFunction = function() { return function( d ) { return d; }; };
-
+		      $scope.barChartTooltipContent = function() { 
+			  return function( key, x, y, e, graph ) {
+			      return '<h2>' + key + '</h2><p>' + x + ' : ' + x + '</p>';
+			  };
+		      };
 		      $scope.pieChart = { data: [ { label: 'valide',
 						    value: 0 },
 						  { label: 'saisie',
