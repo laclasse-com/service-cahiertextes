@@ -42,28 +42,28 @@ angular.module('cahierDeTexteApp')
 					      } };
 
 			  $scope.monthlyBarChart = { data: [],
-						      populate: function( data ) {
-							  var data_bootstrap = [];
-							  _(12).times( function( i ) { data_bootstrap.push( [ $scope.annee[ i ], i ] ); } );
+						     populate: function( data ) {
+							 var data_bootstrap = [];
+							 _(12).times( function( i ) { data_bootstrap.push( [ $scope.annee[ i ], 0 ] ); } );
 
-							  var monthlyBarChart_data = data.reduce( function( monthly_stats, regroupement ) {
-							      _(regroupement.mensuel.filled.length).times( function( i ) {
-								  monthly_stats.filled[ i ].y += regroupement.mensuel.filled[i];
-								  monthly_stats.validated[ i ].y += regroupement.mensuel.validated[i];
-							      });
-							      return monthly_stats;
-							  }, { filled: data_bootstrap,
-							       validated: data_bootstrap });
+							 var monthlyBarChart_data = data.reduce( function( monthly_stats, regroupement ) {
+							     _(regroupement.mensuel.filled.length).times( function( i ) {
+								 monthly_stats.filled[ i ][1] += regroupement.mensuel.filled[i];
+								 monthly_stats.validated[ i ][1] += regroupement.mensuel.validated[i];
+							     });
+							     return monthly_stats;
+							 }, { filled: data_bootstrap,
+							      validated: data_bootstrap });
 
-							  $scope.monthlyBarChart.data[ 0 ] = { key: 'saisie',
-												area: true,
-												color: THEME.filled.base,
-												values: monthlyBarChart_data.filled };
-							  $scope.monthlyBarChart.data[ 1 ] = { key: 'valide',
-												area: false,
-												color: THEME.validated.base,
-												values: monthlyBarChart_data.validated};
-						      } };
+							 $scope.monthlyBarChart.data[ 0 ] = { key: 'saisie',
+											      area: true,
+											      color: THEME.filled.base,
+											      values: monthlyBarChart_data.filled };
+							 $scope.monthlyBarChart.data[ 1 ] = { key: 'valide',
+											      area: false,
+											      color: THEME.validated.base,
+											      values: monthlyBarChart_data.validated};
+						     } };
 
 			  $scope.individualCharts = { classes: [],
 						      populate: function( data, classes ) {
