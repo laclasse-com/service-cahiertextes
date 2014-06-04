@@ -21,6 +21,9 @@ body {
     letter-spacing: -1px;
 }
 
+/* Tabs */
+.nav-tabs > li{cursor:pointer}
+
 /* Modal */
 .modal-dialog{width:800px}
 
@@ -53,6 +56,7 @@ body {
 /** Enseignant **/
 .principal-enseignant-grid{padding:0}
 .ng-valid.glyphicon-ok-sign{color:#0f0}
+
 /* Enseignant */
 .panel-heading.enseignant-saisie input,
 .panel-heading.enseignant-saisie select,
