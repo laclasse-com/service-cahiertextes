@@ -110,7 +110,7 @@ angular.module( 'cahierDeTexteApp' )
 		       })
 		       .state('enseignant.stats', {
 			   parent: 'enseignant',
-			   url: '/stats/:enseignant_id',
+			   url: '/stats',
 			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ENS' ] ); } },
 			   views: {
 			       'content': {
