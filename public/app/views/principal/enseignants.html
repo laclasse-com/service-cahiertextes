@@ -49,13 +49,14 @@
     <div class="panel panel-default">
       <div class="panel-heading">
 	<h4>
+	  <span class="glyphicon glyphicon-home"
+		tooltip="Classes : ( {{beautify_classes_list( individualChart.enseignant.classes )}} )"></span>
+	  <span class="glyphicon glyphicon-briefcase"
+		tooltip="Matières : ( {{beautify_matieres_list( individualChart.enseignant.matieres )}} )"></span>
 	  <a data-ui-sref="principal.enseignant({ enseignant_id: individualChart.enseignant.id_ent })">
 	    {{individualChart.enseignant.full_name}}
 	  </a>
 	</h4>
-	<h6 data-ng-show="individualChart.enseignant.classes.length > 0">
-	  <span data-ng-repeat="classe in individualChart.enseignant.classes">{{($first == true) && "(" || ""}}{{classe.classe_libelle}}{{($last != true) && ", " || ")"}}</span>
-	</h6>
       </div>
       <div class="panel-body">
 	<div class="col-md-12">
@@ -78,9 +79,6 @@
 	  </nvd3-pie-chart>
 	  <span class="badge badge-info">{{individualChart.pieChart.data[0].value}} / {{individualChart.pieChart.data[0].value + individualChart.pieChart.data[1].value}}</span>
 	</div>
-	<ul class="col-md-12">
-	  <li data-ng-repeat="matiere in individualChart.enseignant.matieres">{{matiere}}</li>
-	</ul>
       </div>
     </div>
   </div>
