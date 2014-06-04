@@ -37,7 +37,7 @@ angular.module( 'cahierDeTexteApp' )
 		       })
 		       .state('principal.enseignant', {
 			   parent: 'principal',
-			   url: '/enseignant/:enseignant_id',
+			   url: '/enseignants/:enseignant_id',
 			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } },
 			   views: {
 			       'content': {
