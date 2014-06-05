@@ -57,7 +57,7 @@ angular.module('cahierDeTexteApp')
 			  return _.chain(data)
 			      .pluck('classes')
 			      .flatten()
-			      .pluck('regroupement')
+			      .pluck('regroupement_id')
 			      .uniq()
 			      .reject(function( regroupement_id ) {
 				  return ( regroupement_id === '' );
@@ -87,7 +87,7 @@ angular.module('cahierDeTexteApp')
 				      .map( function( enseignant ) {
 					  return { enseignant_id: enseignant.enseignant_id,
 						   classes: _(enseignant.classes).reject( function( classe ) {
-						       return classe.regroupement != id;
+						       return classe.regroupement_id != id;
 						   })
 						 };
 				      })
@@ -102,7 +102,7 @@ angular.module('cahierDeTexteApp')
 				  $scope.displayed_data = _($scope.displayed_data).map( function( enseignant ) {
 				      return { enseignant_id: enseignant.enseignant_id,
 					       classes: _(enseignant.classes).map( function( classe ) {
-						   return { regroupement: classe.regroupement,
+						   return { regroupement: classe.regroupement_id,
 							    statistiques: _(classe.statistiques).reject( function( mois ) {
 								return mois.month != $scope.mois;
 							    })
