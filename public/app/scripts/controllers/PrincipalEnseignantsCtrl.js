@@ -30,12 +30,12 @@ angular.module('cahierDeTexteApp')
 			  $scope.barChart.data = [ valides, saisies ];
 		      };
 
-		      $scope.beautify_classes_list = function( classes ) {
-			  return _(classes).map( function( classe ) { return classe.classe_libelle; } ).join( ', ' );
+		      $scope.htmlify_classes_list = function( classes ) {
+			  return 'Classes : <ul><li>' + _(classes).map( function( classe ) { return classe.classe_libelle; } ).join( '</li><li>' ) + '</li></ul>';
 		      };
 
-		      $scope.beautify_matieres_list = function( matieres ) {
-			  return matieres.join( ', ' );
+		      $scope.htmlify_matieres_list = function( matieres ) {
+			  return 'Matières : <ul><li>' + matieres.join( '</li><li>' ) + '</li></ul>';
 		      };
 
 		      $scope.individualCharts = {
