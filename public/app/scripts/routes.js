@@ -42,7 +42,7 @@ angular.module( 'cahierDeTexteApp' )
 			   views: {
 			       'content': {
 				   templateUrl: 'app/views/common/enseignant.html',
-				   controller: 'PrincipalEnseignantCtrl'
+				   controller: 'StatsEnseignantCtrl'
 			       }
 			   }
 		       })
@@ -115,7 +115,7 @@ angular.module( 'cahierDeTexteApp' )
 			   views: {
 			       'content': {
 				   templateUrl: 'app/views/common/enseignant.html',
-				   controller: 'PrincipalEnseignantCtrl'
+				   controller: 'StatsEnseignantCtrl'
 			       }
 			   }
 		       });
