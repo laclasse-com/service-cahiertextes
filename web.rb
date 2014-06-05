@@ -36,7 +36,8 @@ module CahierDeTextesAPI
     get "#{APP_VIRTUAL_PATH}/auth/:provider/callback" do
       init_session( request.env )
 
-      redirect params[:url]
+      redirect_uri = URI( params[:url] )
+      redirect "#{redirect_uri.path}?#{redirect_uri.query}##{redirect_uri.fragment}"
     end
 
     get "#{APP_VIRTUAL_PATH}/logout" do
