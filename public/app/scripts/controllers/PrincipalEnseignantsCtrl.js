@@ -30,6 +30,14 @@ angular.module('cahierDeTexteApp')
 			  $scope.barChart.data = [ valides, saisies ];
 		      };
 
+		      $scope.beautify_classes_list = function( classes ) {
+			  return _(classes).map( function( classe ) { return classe.classe_libelle; } ).join( ', ' );
+		      };
+
+		      $scope.beautify_matieres_list = function( matieres ) {
+			  return matieres.join( ', ' );
+		      };
+
 		      $scope.individualCharts = {
 			  enseignants: [],
 			  populate: function( data, details_enseignants ) {
