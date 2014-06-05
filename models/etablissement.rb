@@ -43,6 +43,8 @@ class Etablissement < Sequel::Model( :etablissements )
           .where( deleted: false )
           .map do
           |cours|
+
+          # FIXME: ne prends en compte que le premier devoir
           devoir = Devoir.where(cours_id: cours.id).first
           devoir = -1 if devoir.nil?
 
