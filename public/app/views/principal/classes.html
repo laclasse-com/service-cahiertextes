@@ -27,9 +27,9 @@
 			data="pieChart.data"
 			margin="{left:0,top:0,bottom:0,right:0}"
 			height="256"
-			x="xFunction()"
-			y="yFunction()"
-			color="colorFunction()"
+			x="pieChart.xFunction()"
+			y="pieChart.yFunction()"
+			color="pieChart.colorFunction()"
 			showLabels="true"
 			labelType="value"
 			showLegend="true"
@@ -39,17 +39,17 @@
 			noData="Aucune saisie" >
 	  <svg></svg>
 	</nvd3-pie-chart>
-	<nvd3-multi-bar-chart id="globalbarChart" class="col-md-8"
-			      data="monthlyBarChart.data"
+	<nvd3-multi-bar-chart id="globalBarChart" class="col-md-8"
+			      data="barChart.data"
 			      height="256"
-			      useInteractiveGuideline="true"
+			      color="barChart.colorFunction()"
 			      showXAxis="true"
 			      showYAxis="true"
-			      showLegend="true"
 			      tooltips="true"
+			      tooltipcontent="barChart.tooltipContent()"
 			      rotateLabels="20"
 			      objectEquality="true"
-			      xAxisTickFormat="xAxisTickFormatFunction()"
+			      xAxisTickFormat="barChart.xAxisTickFormatFunction()"
 			      noData="Aucune saisie" >
 	  <svg></svg>
 	</nvd3-multi-bar-chart>
@@ -66,9 +66,9 @@
 			    height="64"
 			    data="classe.pieChart.data"
 			    margin="{left:0,top:0,bottom:0,right:0}"
-			    x="xFunction()"
-			    y="yFunction()"
-			    color="colorFunction()"
+			    x="classe.pieChart.xFunction()"
+			    y="classe.pieChart.yFunction()"
+			    color="classe.pieChart.colorFunction()"
 			    showLabels="false"
 			    labelType="value"
 			    showLegend="false"

@@ -70,7 +70,35 @@ angular.module( 'cahierDeTexteApp' )
 				  } )
 
 // options des graphiques
-    .constant( 'BARCHART_OPTIONS', { animation : false } )
-    .constant( 'PIECHART_OPTIONS', { animation : false } )
-    .constant( 'LINECHART_OPTIONS', { animation : false } )
-    .constant( 'RADARCHART_OPTIONS', { animation : false } );
+    .factory( 'CHART_COLORS_FUNCTION', [ 'THEME',
+					 function( THEME ) { 
+					     return function() {
+						 var couleurs = [ THEME.validated.base, THEME.filled.base ];
+						 return function( d, i ) {
+						     return couleurs[ i ];
+						 };
+					     };
+					 } ] )
+    .service( 'BARCHART_DEFINITION', [ 'CHART_COLORS_FUNCTION',
+				       function( CHART_COLORS_FUNCTION ) { 
+					   return function() { 
+					       return { data: [],
+							tooltipContent: function() { 
+							    return function( key, x, y, e, graph ) {
+								return '<h2>' + x + '</h2><p>' + y + ' ' + key + '</p>';
+							    };
+							},
+							xAxisTickFormatFunction: function() { return function( d ) { return d; }; },
+							colorFunction: CHART_COLORS_FUNCTION };
+					   };
+				       } ] )
+    .service( 'PIECHART_DEFINITION', [ 'CHART_COLORS_FUNCTION',
+				       function( CHART_COLORS_FUNCTION ) { 
+					   return function() { 
+					       return { data: [ { label: 'saisie', value: 0 },
+								{ label: 'valide', value: 0 } ],
+							xFunction: function(){ return function(d) { return d.label; }; },
+							yFunction: function(){ return function(d) { return d.value; }; },
+							colorFunction: CHART_COLORS_FUNCTION };
+					   };
+				       } ] );
