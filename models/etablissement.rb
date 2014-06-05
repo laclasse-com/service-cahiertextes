@@ -23,7 +23,7 @@ class Etablissement < Sequel::Model( :etablissements )
           .select( :regroupement_id )
           .group_by( :regroupement_id )
           .map do |regroupement_id|
-          { regroupement: regroupement_id.values[ :regroupement_id ],
+          { regroupement_id: regroupement_id.values[ :regroupement_id ],
             statistiques: (1..12).map do |month|
               stats = { month: month,
                 filled: 0,
