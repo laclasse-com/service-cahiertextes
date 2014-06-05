@@ -55,7 +55,7 @@ body {
 .bloc-enseignant .panel-heading{padding-top:0;padding-bottom:0}
 .bloc-enseignant .panel-body{text-align:center}
 .bloc-enseignant .panel-body .badge{text-align:left}
-
+.tooltip *{text-align:left}
 /** Enseignant **/
 .principal-enseignant-grid{padding:0}
 .ng-valid.glyphicon-ok-sign{color:#0f0}
