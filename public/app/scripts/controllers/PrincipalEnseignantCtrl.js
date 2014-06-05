@@ -23,7 +23,7 @@ angular.module('cahierDeTexteApp')
                             if ($scope.classe != null) {
                                 // .invert() suppose que les valeurs sont uniques
                                 var id = _($scope.classes).invert()[$scope.classe];
-                                data = _(data).where({classe_id: id});
+                                data = _(data).where({regroupement_id: id});
                             }
                             return data;
                         };
@@ -37,7 +37,7 @@ angular.module('cahierDeTexteApp')
                             rowHeight: 64,
                             columnDefs: [
                                 {field: 'classe', displayName: 'Classe',
-                                    cellTemplate: '<span data-ng-bind="classes[row.entity.classe_id]"></span>'},
+                                    cellTemplate: '<span data-ng-bind="classes[row.entity.regroupement_id]"></span>'},
                                 {field: 'matiere', displayName: 'Matière',
                                     cellTemplate: '<span data-ng-bind="matieres[row.entity.matiere_id]"></span>'},
                                 {field: 'cours', displayName: 'Cours',
@@ -95,13 +95,13 @@ angular.module('cahierDeTexteApp')
                                 var valides = {key: "visas", values: []};
 
                                 _.chain($scope.filtre(data))
-                                        .groupBy('classe_id')
+                                        .groupBy('regroupement_id')
                                         .each(function(classe) {
                                             var filled = classe.length;
                                             var validated = _(classe).where({valide: true}).length;
 
-                                            saisies.values.push([$scope.classes[ classe[0].classe_id ], filled]);
-                                            valides.values.push([$scope.classes[ classe[0].classe_id ], validated]);
+                                            saisies.values.push([$scope.classes[ classe[0].regroupement_id ], filled]);
+                                            valides.values.push([$scope.classes[ classe[0].regroupement_id ], validated]);
 
                                             $scope.graphiques.barChart.data = [valides, saisies];
 
@@ -146,7 +146,7 @@ angular.module('cahierDeTexteApp')
                         $scope.extract_classes_promises = function(saisies) {
                             return _.chain(saisies)
                                     .flatten()
-                                    .pluck('classe_id')
+                                    .pluck('regroupement_id')
                                     .uniq()
                                     .map(function(regroupement_id) {
                                         return Annuaire.get_regroupement(regroupement_id);

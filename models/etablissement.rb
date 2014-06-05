@@ -57,7 +57,7 @@ class Etablissement < Sequel::Model( :etablissements )
     { enseignant_id: enseignant_id,
       saisies: (1..12).map do
         |month|
-        
+
         Cours
           .where( enseignant_id: enseignant_id )
           .where( 'extract( month from date_cours ) = ' + month.to_s )
@@ -69,7 +69,7 @@ class Etablissement < Sequel::Model( :etablissements )
 
           # TODO: tenir compte des semaines de présence
           { mois: month,
-            classe_id: CreneauEmploiDuTempsRegroupement.where(creneau_emploi_du_temps_id: cours.creneau_emploi_du_temps_id).first.regroupement_id,
+            regroupement_id: CreneauEmploiDuTempsRegroupement.where(creneau_emploi_du_temps_id: cours.creneau_emploi_du_temps_id).first.regroupement_id,
             matiere_id: CreneauEmploiDuTemps[ cours.creneau_emploi_du_temps_id ].matiere_id,
             cours: cours,
             devoir: devoir,
