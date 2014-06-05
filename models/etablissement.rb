@@ -17,39 +17,18 @@ class Etablissement < Sequel::Model( :etablissements )
       .map do |enseignant|
 
       { enseignant_id: enseignant['id_ent'],
-        classes: CreneauEmploiDuTempsRegroupement
-          .join( :creneaux_emploi_du_temps_enseignants, creneau_emploi_du_temps_id: :creneau_emploi_du_temps_id )
-          .where( enseignant_id: enseignant['id_ent'] )
-          .select( :regroupement_id )
-          .group_by( :regroupement_id )
-          .map do |regroupement_id|
-          { regroupement_id: regroupement_id.values[ :regroupement_id ],
-            statistiques: (1..12).map do |month|
-              stats = { month: month,
-                filled: 0,
-                validated: 0 }
-
-              CreneauEmploiDuTempsEnseignant
-                .join( :creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :creneau_emploi_du_temps_id )
-                .where( enseignant_id: enseignant['id_ent'] )
-                .where( regroupement_id: regroupement_id.values[ :regroupement_id ] )
-                .each do |creneau|
-                # TODO: prendre en compte les semaine_de_presence
-                cours = Cours
-                  .where( creneau_emploi_du_temps_id: creneau.creneau_emploi_du_temps_id )
-                  .where( 'extract( month from date_cours ) = ' + month.to_s )
-                  .where( deleted: false )
-
-                # TODO: calcul total attendu
-                stats[:filled] += cours.count
-                stats[:validated] += cours.where( :date_validation ).count
-              end
-
-              stats
-            end
-          }
-        end
-      }
+        classes: saisies_enseignant( enseignant['id_ent'] )[:saisies]
+          .group_by { |s| s[:regroupement_id] }
+          .map do |regroupement_id, regroupement_saisies|
+          { regroupement_id: regroupement_id,
+            statistiques: regroupement_saisies
+              .group_by { |rs| rs[:mois] }
+              .map do |mois, mois_saisies|
+              { month: mois,
+                validated: mois_saisies.select { |s| s[:valide] }.count,
+                filled: mois_saisies.count }
+            end }
+        end }
     end
   end
 
