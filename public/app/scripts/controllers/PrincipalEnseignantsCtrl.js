@@ -2,65 +2,47 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantsCtrl',
-		[ '$scope', '$locale', 'THEME', '$q', 'API', 'Annuaire', 'User',
-		  function( $scope, $locale, THEME, $q, API, Annuaire, User ) {
+		[ '$scope', '$locale', 'THEME', '$q', 'API', 'Annuaire', 'User', 'PIECHART_DEFINITION', 'BARCHART_DEFINITION', 
+		  function( $scope, $locale, THEME, $q, API, Annuaire, User, PIECHART_DEFINITION, BARCHART_DEFINITION ) {
 		      $scope.annee = $locale.DATETIME_FORMATS.MONTH;
 		      $scope.classe = null;
 		      $scope.mois = null;
 		      $scope.classes = {};
 		      $scope.details_enseignants = {};
 
-		      $scope.xFunction = function(){ return function(d) { return d.label; }; };
-		      $scope.yFunction = function(){ return function(d) { return d.value; }; };
-		      $scope.descriptionFunction = $scope.xFunction;
-		      $scope.colorFunction = function() {
-			  var couleurs = [ THEME.validated.base, THEME.filled.base ];
-			  return function( d, i ) {
-			      return couleurs[ i ];
-			  };
+		      $scope.pieChart = PIECHART_DEFINITION();
+		      $scope.barChart = BARCHART_DEFINITION();
+
+		      $scope.pieChart.populate = function( data ) {
+			  $scope.pieChart.data[0].value = data.validated;
+			  $scope.pieChart.data[1].value = data.filled - data.validated;
 		      };
-		      $scope.barChartxAxisTickFormatFunction = function() { return function( d ) { return d; }; };
-		      $scope.barChartTooltipContent = function() { 
-			  return function( key, x, y, e, graph ) {
-			      return '<h2>' + key + '</h2><p>' + x + ' : ' + x + '</p>';
-			  };
-		      };
-		      $scope.pieChart = { data: [ { label: 'valide',
-						    value: 0 },
-						  { label: 'saisie',
-						    value: 0 } ],
-					  populate: function( data ) {
-					      $scope.pieChart.data[0].value = data.validated;
-					      $scope.pieChart.data[1].value = data.filled - data.validated;
-					  } };
 
-		      $scope.barChart = {
-			  data: [],
-			  populate: function( enseignants ) {
-			      var saisies = { key: "saisie", values: [] };
-			      var valides = { key: "valide", values: [] };
-
-			      _(enseignants).each( function( enseignant ) {
-				  saisies.values.push( [ $scope.details_enseignants[enseignant.enseignant_id].full_name, enseignant.filled ] );
-				  valides.values.push( [ $scope.details_enseignants[enseignant.enseignant_id].full_name, enseignant.validated ] );
-			      } );
-
-			      $scope.barChart.data = [ valides, saisies ];
-			  }
+		      $scope.barChart.populate = function( enseignants ) {
+			  var saisies = { key: "saisie", values: [] };
+			  var valides = { key: "valide", values: [] };
+			  
+			  _(enseignants).each( function( enseignant ) {
+			      saisies.values.push( [ $scope.details_enseignants[enseignant.enseignant_id].full_name, enseignant.filled ] );
+			      valides.values.push( [ $scope.details_enseignants[enseignant.enseignant_id].full_name, enseignant.validated ] );
+			  } );
+			  
+			  $scope.barChart.data = [ valides, saisies ];
 		      };
 
 		      $scope.individualCharts = {
 			  enseignants: [],
 			  populate: function( data, details_enseignants ) {
-			      $scope.individualCharts.enseignants = _.chain(data)
+			      $scope.individualCharts.enseignants = _(data)
 				  .map( function( enseignant ) {
-				      return { enseignant: details_enseignants[ enseignant.enseignant_id ],
-					       pieChart: { data: [ { label: 'valide',
-								     value: enseignant.validated },
-								   { label: 'saisie',
-								     value: enseignant.filled - enseignant.validated } ] } };
-				  })
-				  .value();
+				      var individualChart = { enseignant: details_enseignants[ enseignant.enseignant_id ],
+							      pieChart: PIECHART_DEFINITION() }
+				      individualChart.pieChart.data = [ { label: 'valide',
+									  value: enseignant.validated },
+									{ label: 'saisie',
+									  value: enseignant.filled - enseignant.validated } ];
+				      return individualChart;
+				  });
 			  } };
 
 		      $scope.extract_classes_promises = function( data ) {

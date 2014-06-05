@@ -41,9 +41,9 @@
 			    data="graphiques.pieChart.data"
 			    margin="{left:0,top:0,bottom:0,right:0}"
 			    height="256"
-			    x="xFunction()"
-			    y="yFunction()"
-			    color="colorFunction()"
+			    x="graphiques.pieChart.xFunction()"
+			    y="graphiques.pieChart.yFunction()"
+			    color="graphiques.pieChart.colorFunction()"
 			    showLabels="true"
 			    labelType="value"
 			    showLegend="true"
@@ -56,13 +56,13 @@
 	    <nvd3-multi-bar-chart id="globalBarChart" class="col-md-8"
 				  data="graphiques.barChart.data"
 				  height="256"
-				  color="colorFunction()"
+				  color="graphiques.barChart.colorFunction()"
 				  showXAxis="true"
 				  showYAxis="true"
 				  rotateLabels="20"
 				  tooltips="true"
 				  objectEquality="true"
-				  xAxisTickFormat="barChartxAxisTickFormatFunction()"
+				  xAxisTickFormat="graphiques.barChart.xAxisTickFormatFunction()"
 				  noData="Aucune saisie" >
 	      <svg></svg>
 	    </nvd3-multi-bar-chart>

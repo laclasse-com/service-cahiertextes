@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalClassesCtrl',
-		[ '$scope', 'THEME', '$locale', '$q', 'API', 'Annuaire', 'User',
-		  function ( $scope, THEME, $locale, $q, API, Annuaire, User ) {
+		[ '$scope', 'THEME', '$locale', '$q', 'API', 'Annuaire', 'User', 'PIECHART_DEFINITION', 'BARCHART_DEFINITION',
+		  function ( $scope, THEME, $locale, $q, API, Annuaire, User, PIECHART_DEFINITION, BARCHART_DEFINITION ) {
 		      $scope.empty = false;
 
 		      User.get_user().then( function( response ) {
@@ -21,62 +21,44 @@ angular.module('cahierDeTexteApp')
 			  $scope.global_stats    = { filled: 0,
 						     validated: 0 };
 
-			  $scope.xFunction = function(){ return function(d) { return d.label; }; };
-			  $scope.yFunction = function(){ return function(d) { return d.value; }; };
-			  $scope.descriptionFunction = $scope.xFunction;
-			  $scope.colorFunction = function() {
-			      var couleurs = [ THEME.validated.base, THEME.filled.base ];
-			      return function( d, i ) {
-				  return couleurs[ i ];
-			      };
+			  $scope.pieChart = PIECHART_DEFINITION();
+			  $scope.barChart = BARCHART_DEFINITION();
+			  $scope.pieChart.populate = function( data ) {
+			      $scope.pieChart.data[0].value = data.filled - data.validated;
+			      $scope.pieChart.data[1].value = data.validated;
 			  };
-			  $scope.xAxisTickFormatFunction = function() { return function( d ) { return d; }; };
-
-			  $scope.pieChart = { data: [ { label: 'saisie',
-							value: 0 },
-						      { label: 'valide',
-							value: 0 } ],
-					      populate: function( data ) {
-						  $scope.pieChart.data[0].value = data.filled - data.validated;
-						  $scope.pieChart.data[1].value = data.validated;
-					      } };
-
-			  $scope.monthlyBarChart = { data: [],
-						     populate: function( data ) {
-							 var data_bootstrap = [];
-							 _(12).times( function( i ) { data_bootstrap.push( [ $scope.annee[ i ], 0 ] ); } );
-
-							 var monthlyBarChart_data = data.reduce( function( monthly_stats, regroupement ) {
-							     _(regroupement.mensuel.filled.length).times( function( i ) {
-								 monthly_stats.filled[ i ][1] += regroupement.mensuel.filled[i];
-								 monthly_stats.validated[ i ][1] += regroupement.mensuel.validated[i];
-							     });
-							     return monthly_stats;
-							 }, { filled: data_bootstrap,
-							      validated: data_bootstrap });
-
-							 $scope.monthlyBarChart.data[ 0 ] = { key: 'saisie',
-											      area: true,
-											      color: THEME.filled.base,
-											      values: monthlyBarChart_data.filled };
-							 $scope.monthlyBarChart.data[ 1 ] = { key: 'valide',
-											      area: false,
-											      color: THEME.validated.base,
-											      values: monthlyBarChart_data.validated};
-						     } };
+			  $scope.barChart.populate = function( data ) {
+			      var data_bootstrap = [];
+			      _(12).times( function( i ) { data_bootstrap.push( [ $scope.annee[ i ], 0 ] ); } );
+			      
+			      var barChart_data = data.reduce( function( monthly_stats, regroupement ) {
+				  _(regroupement.mensuel.filled.length).times( function( i ) {
+				      monthly_stats.filled[ i ][1] += regroupement.mensuel.filled[i];
+				      monthly_stats.validated[ i ][1] += regroupement.mensuel.validated[i];
+				  });
+				  return monthly_stats;
+			      }, { filled: data_bootstrap,
+				   validated: data_bootstrap });
+			      
+			      $scope.barChart.data.push( { key: 'saisie',
+							   values: barChart_data.filled } );
+			      $scope.barChart.data.push( { key: 'valide',
+							   values: barChart_data.validated} );
+			  };
 
 			  $scope.individualCharts = { classes: [],
 						      populate: function( data, classes ) {
 							  var hashed_classes = _.chain(classes).map( function(c) { return [ c.id, c ]; } ).object().value();
-							  $scope.individualCharts.classes = _.chain(data)
+							  $scope.individualCharts.classes = _(data)
 							      .map( function( regroupement ) {
-								  return { regroupement: hashed_classes[ regroupement.regroupement_id ],
-									   pieChart: { data: [ { label: 'valide',
-												 value: regroupement.validated },
-											       { label: 'saisie',
-												 value: regroupement.filled - regroupement.validated } ] } };
-							      })
-							      .value();
+								  var individualChart = { regroupement: hashed_classes[ regroupement.regroupement_id ],
+											  pieChart: PIECHART_DEFINITION() };
+								  individualChart.pieChart.data = [ { label: 'valide',
+												      value: regroupement.validated },
+												    { label: 'saisie',
+												      value: regroupement.filled - regroupement.validated } ];
+								  return individualChart;
+							      });
 						      } };
 
 			  $scope.extract_matieres = function( data ) {
@@ -175,7 +157,7 @@ angular.module('cahierDeTexteApp')
 				  // consommation des données dans les graphiques
 				  $scope.individualCharts.populate( $scope.displayed_data, $scope.classes );
 				  $scope.pieChart.populate( $scope.displayed_data );
-				  $scope.monthlyBarChart.populate( $scope.displayed_data );
+				  $scope.barChart.populate( $scope.displayed_data );
 			      }
 			  };
 

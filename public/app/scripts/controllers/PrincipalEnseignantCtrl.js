@@ -4,8 +4,8 @@ angular.module('cahierDeTexteApp')
         .controller('PrincipalEnseignantCtrl',
                 ['$scope', '$stateParams', '$q',
                     '$locale', 'THEME',
-                    'API', 'Cours', 'Annuaire', 'User', '$sce', 
-                    function($scope, $stateParams, $q, $locale, THEME, API, Cours, Annuaire, User, $sce) {
+                 'API', 'Cours', 'Annuaire', 'User', '$sce', 'PIECHART_DEFINITION', 'BARCHART_DEFINITION', 
+                 function( $scope, $stateParams, $q, $locale, THEME, API, Cours, Annuaire, User, $sce, PIECHART_DEFINITION, BARCHART_DEFINITION ) {
                             $scope.classe = null;
                             $scope.mois = $locale.DATETIME_FORMATS.MONTH;
                             $scope.moisCourant = null;
@@ -81,40 +81,16 @@ angular.module('cahierDeTexteApp')
                         };
 
                         // Graphiques
-                        $scope.xFunction = function() {
-                            return function(d) {
-                                return d.label;
-                            };
-                        };
-                        $scope.yFunction = function() {
-                            return function(d) {
-                                return d.value;
-                            };
-                        };
-                        $scope.descriptionFunction = $scope.xFunction;
-                        $scope.colorFunction = function() {
-                            var couleurs = [THEME.validated.base, THEME.filled.base];
-                            return function(d, i) {
-                                return couleurs[ i ];
-                            };
-                        };
-                        $scope.barChartxAxisTickFormatFunction = function() {
-                            return function(d) {
-                                return d;
-                            };
-                        };
-
                         $scope.graphiques = {
-                            pieChart: {data: [{label: 'visas',
-                                        value: 0},
-                                    {label: 'saisies',
-                                        value: 0}]},
-                            barChart: {data: []},
+                            pieChart: PIECHART_DEFINITION(),
+                            barChart: BARCHART_DEFINITION(),
                             populate: function(data) {
                                 $scope.graphiques.barChart.data = [];
-                                $scope.graphiques.pieChart.data[ 0 ].value = 0;
-                                $scope.graphiques.pieChart.data[ 1 ].value = 0;
-
+                                $scope.graphiques.pieChart.data = [ { label: 'visas',
+								      value: 0 },
+								    { label: 'saisies',
+								      value: 0 } ];
+				
                                 var saisies = {key: "saisies", values: []};
                                 var valides = {key: "visas", values: []};
 
