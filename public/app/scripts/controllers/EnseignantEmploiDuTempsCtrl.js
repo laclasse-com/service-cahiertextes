@@ -99,25 +99,50 @@ angular.module('cahierDeTexteApp')
 							       creneau.classe = _(scope_popup.classes).findWhere({id: parseInt(creneau.regroupement_id)});
 							       creneau.start_str = $filter('date')(creneau.start, 'short');
 							       creneau.end_str = $filter('date')(creneau.end, 'shortTime');
-
 							       return creneau;
 							   })
 							   .value();
 						       scope_popup.creneaux_similaires.selected = [];
+                                                       
+                                        // sélection des créneaux possibles en fonction du regroupement et de la matière.
+                                        var creneaux_devoirs_possibles = _.chain(raw_data)
+                                                .filter(function(creneau) {
+                                                    return (creneau.regroupement_id == scope_popup.regroupement_id) && (creneau.matiere_id == scope_popup.matiere_id);
+                                                })
+                                                .map(function(creneau) {
+                                                    creneau.classe = _(scope_popup.classes).findWhere({id: parseInt(creneau.regroupement_id)});
+                                                    creneau.start_str = $filter('date')(creneau.start, 'short');
+                                                    creneau.end_str = $filter('date')(creneau.end, 'shortTime');
 
-						       scope_popup.creneaux_devoirs_possibles = _.chain(raw_data)
-							   .filter(function(creneau) {
-							       return (creneau.regroupement_id == scope_popup.regroupement_id) && (creneau.matiere_id == scope_popup.matiere_id);
-							   })
-							   .map(function(creneau) {
-							       creneau.classe = _(scope_popup.classes).findWhere({id: parseInt(creneau.regroupement_id)});
-							       creneau.start_str = $filter('date')(creneau.start, 'short');
-							       creneau.end_str = $filter('date')(creneau.end, 'shortTime');
+                                                    return creneau;
+                                                })
+                                                .value();
 
-							       return creneau;
-							   })
-							   .value();
-						       scope_popup.creneaux_devoirs_possibles.push( creneau_selectionne );
+                                        // on ajoute les créneaux de la semaine prochaine et ceux de celle d'après.
+                                        var cdp_tmp = [];
+                                        var nb_semaines = 3;
+                                        _(nb_semaines + 1).times(function(n) {
+                                            _(creneaux_devoirs_possibles).each(function(c) {
+                                                var cdp_futurs = angular.copy(c);
+                                                var d = new Date(cdp_futurs.start);
+                                                d.setDate(d.getDate() + n * 7);
+                                                var f = new Date(cdp_futurs.end);
+                                                f.setDate(f.getDate() + n * 7);
+
+                                                cdp_futurs.start = d.toISOString();
+                                                cdp_futurs.end = f.toISOString();
+
+                                                cdp_futurs.start_str = $filter('date')(cdp_futurs.start, 'short');
+                                                cdp_futurs.end_str = $filter('date')(cdp_futurs.end, 'shortTime');
+
+                                                cdp_tmp.push(cdp_futurs);
+                                            });
+                                        });
+                                        // Et voici tous les créneaux possibles !
+                                        scope_popup.creneaux_devoirs_possibles = cdp_tmp;
+
+
+        
 						       // }}}
 
 						       // Gestion des documents attachés {{{
