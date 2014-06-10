@@ -36,36 +36,39 @@
       </div>
       <div class="col-md-8">
 	<div class="panel panel-default">
-	  <div class="panel-body">
+	  <div class="panel-body row-fluid">
 	    <nvd3-pie-chart id="globalPieChart" class="col-md-4"
 			    data="graphiques.pieChart.data"
+			    noData="Aucune saisie"
 			    margin="{left:0,top:0,bottom:0,right:0}"
-			    height="256"
-			    x="graphiques.pieChart.xFunction()"
-			    y="graphiques.pieChart.yFunction()"
-			    color="graphiques.pieChart.colorFunction()"
 			    showLabels="true"
 			    labelType="value"
 			    showLegend="true"
 			    tooltips="true"
 			    pieLabelsOutside="false"
 			    objectEquality="true"
-			    noData="Aucune saisie" >
+			    color="graphiques.pieChart.colorFunction()"
 			    legendColor="graphiques.pieChart.colorFunction()"
+			    x="graphiques.pieChart.xFunction()"
+			    y="graphiques.pieChart.yFunction()" >
 	      <svg></svg>
 	    </nvd3-pie-chart>
 	    <nvd3-multi-bar-chart id="globalBarChart" class="col-md-8"
 				  data="graphiques.barChart.data"
+				  noData="Aucune saisie"
+				  rotateLabels="20"
 				  height="256"
-				  color="graphiques.barChart.colorFunction()"
 				  showXAxis="true"
 				  showYAxis="true"
-				  rotateLabels="20"
+				  showControls="false"
+				  showLabels="true"
+				  showLegend="true"
 				  tooltips="true"
 				  objectEquality="true"
-				  xAxisTickFormat="graphiques.barChart.xAxisTickFormatFunction()"
-				  noData="Aucune saisie" >
+				  color="graphiques.barChart.colorFunction()"
 				  legendColor="graphiques.barChart.colorFunction()"
+				  tooltipcontent="graphiques.barChart.tooltipContent()"
+				  xAxisTickFormat="graphiques.barChart.xAxisTickFormatFunction()" >
 	      <svg></svg>
 	    </nvd3-multi-bar-chart>
 	  </div>
