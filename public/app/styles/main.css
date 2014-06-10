@@ -53,6 +53,7 @@ body {
 /** Enseignants **/
 .bloc-enseignant .panel{height:11em}
 .bloc-enseignant .panel-heading{padding-top:0;padding-bottom:0}
+.bloc-enseignant .panel-heading span.glyphicon{cursor:pointer}
 .bloc-enseignant .panel-body{text-align:center}
 .bloc-enseignant .panel-body .badge{text-align:left}
 .tooltip *{text-align:left}
