@@ -51,17 +51,6 @@
 		data-ng-model="devoir.creneau_emploi_du_temps_id"
 		data-ng-options="creneau.id as creneau.classe.libelle +' . '+ creneau.start_str +' - '+ creneau.end_str for creneau in creneaux_similaires" >
 	</select>
-	<!-- <div class="col-md-8" data-w11k-select
-	data-multiple="true"
-	data-disabled="false"
-	data-required="false"
-	data-ng-model="creneaux_similaires.selected"
-	data-options="creneau as creneau.classe.libelle +' . '+ creneau.start_str +' - '+ creneau.end_str for creneau in creneaux_similaires"
-	data-placeholder="'Créneaux similaires'"
-	data-filter-placeholder="'Filtre'"
-	data-select-filtered-text="'tous'"
-	data-deselect-filtered-text="'aucun'" >
-	</div> -->
 
 	<button class="btn btn-primary" data-ng-click="dupliquer()">
 	  <span class="glyphicon glyphicon-plus-sign"></span> Copier vers d'autres classes
@@ -89,26 +78,16 @@
 	  <select data-ng-required="true" data-ng-model="devoir.creneau_emploi_du_temps_id"
 		  data-ng-options="creneau.creneau_emploi_du_temps_id as creneau.start_str +' - '+ creneau.end_str for creneau in creneaux_devoirs_possibles" >
 	  </select>
-	  <!-- <div data-w11k-select
-	  data-multiple="false"
-	  data-disabled="false"
-	  data-required="true"
-	  data-ng-model="devoir.creneau_emploi_du_temps_id"
-	  data-options="creneau.creneau_emploi_du_temps_id as creneau.start_str +' - '+ creneau.end_str for creneau in creneaux_devoirs_possibles"
-	  data-placeholder="'Créneaux disponibles'"
-	  data-filter-placeholder="'Filtre'"
-	  data-select-filtered-text="'tous'"
-	  data-deselect-filtered-text="'aucun'" >
-	  </div> -->
+
 	</div>
       </div>
     </div>
     <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="devoir.contenu" data-ng-change="is_dirty()"></textarea>
-    
+
     <div class="panel-body">
-        <h3 class="panel-title">Temps de travail estimé</h3>
-        <rating data-ng-model="devoir.temps_estime" max="15" readonly="false"  ng-click="is_dirty()" on-hover="estimation_over(value)" on-leave="estimation_leave()" state-on="'glyphicon-record'" state-off="'glyphicon-unchecked'"></rating>
-        <span class="label" data-ng-class="{'label-success': overValue<4, 'label-info': overValue>=4 && overValue<8 , 'label-warning': overValue>=8 && overValue<12, 'label-danger': overValue>=12}" data-ng-show="overValue>0 || devoir.temps_estime > 0">{{minutes || devoir.temps_estime * 5}} min</span>
+	<h3 class="panel-title">Temps de travail estimé</h3>
+	<rating data-ng-model="devoir.temps_estime" max="15" readonly="false"  ng-click="is_dirty()" on-hover="estimation_over(value)" on-leave="estimation_leave()" state-on="'glyphicon-record'" state-off="'glyphicon-unchecked'"></rating>
+	<span class="label" data-ng-class="{'label-success': overValue<4, 'label-info': overValue>=4 && overValue<8 , 'label-warning': overValue>=8 && overValue<12, 'label-danger': overValue>=12}" data-ng-show="overValue>0 || devoir.temps_estime > 0">{{minutes || devoir.temps_estime * 5}} min</span>
     </div>
 
     <div class="panel-footer">
