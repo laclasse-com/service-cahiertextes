@@ -2,7 +2,7 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantsCtrl',
-		[ '$scope', '$locale', 'THEME', '$q', 'API', 'Annuaire', 'User', 'PIECHART_DEFINITION', 'BARCHART_DEFINITION', 
+		[ '$scope', '$locale', 'THEME', '$q', 'API', 'Annuaire', 'User', 'PIECHART_DEFINITION', 'BARCHART_DEFINITION',
 		  function( $scope, $locale, THEME, $q, API, Annuaire, User, PIECHART_DEFINITION, BARCHART_DEFINITION ) {
 		      $scope.annee = $locale.DATETIME_FORMATS.MONTH;
 		      $scope.classe = null;
@@ -14,19 +14,21 @@ angular.module('cahierDeTexteApp')
 		      $scope.barChart = BARCHART_DEFINITION();
 
 		      $scope.pieChart.populate = function( data ) {
-			  $scope.pieChart.data[0].value = data.validated;
-			  $scope.pieChart.data[1].value = data.filled - data.validated;
+			  $scope.pieChart.data = [ { label: 'saisies',
+						     value: data.filled - data.validated },
+						   { label: 'visas',
+						     value: data.validated } ];
 		      };
 
 		      $scope.barChart.populate = function( enseignants ) {
-			  var saisies = { key: "saisie", values: [] };
-			  var valides = { key: "valide", values: [] };
-			  
+			  var saisies = { key: "saisies", values: [] };
+			  var valides = { key: "visas", values: [] };
+
 			  _(enseignants).each( function( enseignant ) {
 			      saisies.values.push( [ $scope.details_enseignants[enseignant.enseignant_id].full_name, enseignant.filled ] );
 			      valides.values.push( [ $scope.details_enseignants[enseignant.enseignant_id].full_name, enseignant.validated ] );
 			  } );
-			  
+
 			  $scope.barChart.data = [ valides, saisies ];
 		      };
 
@@ -44,10 +46,10 @@ angular.module('cahierDeTexteApp')
 			      $scope.individualCharts.enseignants = _(data)
 				  .map( function( enseignant ) {
 				      var individualChart = { enseignant: details_enseignants[ enseignant.enseignant_id ],
-							      pieChart: PIECHART_DEFINITION() }
-				      individualChart.pieChart.data = [ { label: 'valide',
+							      pieChart: PIECHART_DEFINITION() };
+				      individualChart.pieChart.data = [ { label: 'visas',
 									  value: enseignant.validated },
-									{ label: 'saisie',
+									{ label: 'saisies',
 									  value: enseignant.filled - enseignant.validated } ];
 				      return individualChart;
 				  });
