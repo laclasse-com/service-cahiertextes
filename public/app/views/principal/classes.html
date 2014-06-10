@@ -22,37 +22,39 @@
     </div>
 
     <div class="panel panel-default">
-      <div class="panel-body">
+      <div class="panel-body row-fluid">
 	<nvd3-pie-chart id="globalPieChart" class="col-md-4"
 			data="pieChart.data"
+			noData="Aucune saisie"
 			margin="{left:0,top:0,bottom:0,right:0}"
-			height="256"
-			x="pieChart.xFunction()"
-			y="pieChart.yFunction()"
-			color="pieChart.colorFunction()"
 			showLabels="true"
 			labelType="value"
 			showLegend="true"
 			tooltips="true"
 			pieLabelsOutside="false"
 			objectEquality="true"
-			noData="Aucune saisie" >
+			color="pieChart.colorFunction()"
 			legendColor="pieChart.colorFunction()"
+			x="pieChart.xFunction()"
+			y="pieChart.yFunction()" >
 	  <svg></svg>
 	</nvd3-pie-chart>
 	<nvd3-multi-bar-chart id="globalBarChart" class="col-md-8"
 			      data="barChart.data"
+			      noData="Aucune saisie"
+			      rotateLabels="20"
 			      height="256"
-			      color="barChart.colorFunction()"
 			      showXAxis="true"
 			      showYAxis="true"
+			      showControls="false"
+			      showLabels="true"
+			      showLegend="true"
 			      tooltips="true"
-			      tooltipcontent="barChart.tooltipContent()"
-			      rotateLabels="20"
 			      objectEquality="true"
-			      xAxisTickFormat="barChart.xAxisTickFormatFunction()"
-			      noData="Aucune saisie" >
+			      color="barChart.colorFunction()"
 			      legendColor="barChart.colorFunction()"
+			      tooltipcontent="barChart.tooltipContent()"
+			      xAxisTickFormat="barChart.xAxisTickFormatFunction()" >
 	  <svg></svg>
 	</nvd3-multi-bar-chart>
       </div>
