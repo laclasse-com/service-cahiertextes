@@ -24,24 +24,26 @@ angular.module('cahierDeTexteApp')
 			  $scope.pieChart = PIECHART_DEFINITION();
 			  $scope.barChart = BARCHART_DEFINITION();
 			  $scope.pieChart.populate = function( data ) {
-			      $scope.pieChart.data[0].value = data.filled - data.validated;
-			      $scope.pieChart.data[1].value = data.validated;
+			      $scope.pieChart.data = [ { label: 'saisie',
+							 value: data.filled - data.validated },
+						       { label: 'valide',
+							 value: data.validated } ];
 			  };
 			  $scope.barChart.populate = function( data ) {
 			      var data_bootstrap = [];
 			      _(12).times( function( i ) { data_bootstrap.push( [ $scope.annee[ i ], 0 ] ); } );
-			      
+
 			      var barChart_data = data.reduce( function( monthly_stats, regroupement ) {
-				  _(regroupement.mensuel.filled.length).times( function( i ) {
-				      monthly_stats.filled[ i ][1] += regroupement.mensuel.filled[i];
-				      monthly_stats.validated[ i ][1] += regroupement.mensuel.validated[i];
+				  _(12).times( function( i ) {
+				      monthly_stats.filled[ i ][ 1 ] += regroupement.mensuel.filled[i];
+				      monthly_stats.validated[ i ][ 1 ] += regroupement.mensuel.validated[i];
 				  });
 				  return monthly_stats;
-			      
-			      $scope.barChart.data.push( { key: 'saisie',
-							   values: barChart_data.filled } );
 			      }, { filled: angular.copy( data_bootstrap ),
 				   validated: angular.copy( data_bootstrap ) } );
+
+			      $scope.barChart.data.push( { key: 'saisie',
+							   values: barChart_data.filled } );
 			      $scope.barChart.data.push( { key: 'valide',
 							   values: barChart_data.validated} );
 			  };
@@ -53,10 +55,10 @@ angular.module('cahierDeTexteApp')
 							      .map( function( regroupement ) {
 								  var individualChart = { regroupement: hashed_classes[ regroupement.regroupement_id ],
 											  pieChart: PIECHART_DEFINITION() };
-								  individualChart.pieChart.data = [ { label: 'valide',
-												      value: regroupement.validated },
-												    { label: 'saisie',
-												      value: regroupement.filled - regroupement.validated } ];
+								  individualChart.pieChart.data = [ { label: 'saisie',
+												      value: regroupement.filled - regroupement.validated },
+												    { label: 'valide',
+												      value: regroupement.validated } ];
 								  return individualChart;
 							      });
 						      } };
