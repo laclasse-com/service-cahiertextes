@@ -37,11 +37,11 @@ angular.module('cahierDeTexteApp')
 				      monthly_stats.validated[ i ][1] += regroupement.mensuel.validated[i];
 				  });
 				  return monthly_stats;
-			      }, { filled: data_bootstrap,
-				   validated: data_bootstrap });
 			      
 			      $scope.barChart.data.push( { key: 'saisie',
 							   values: barChart_data.filled } );
+			      }, { filled: angular.copy( data_bootstrap ),
+				   validated: angular.copy( data_bootstrap ) } );
 			      $scope.barChart.data.push( { key: 'valide',
 							   values: barChart_data.validated} );
 			  };
