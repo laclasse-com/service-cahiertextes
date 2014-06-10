@@ -10,7 +10,5 @@ angular.module( 'cahierDeTexteApp', [ 'ngResource',
 				      'ui.tinymce',
 				      'chieffancypants.loadingBar',
 				      'ngAnimate',
-				      'w11k.select',
-				      'w11k.select.template',
 				      'nvd3ChartDirectives',
 				      'treeControl' ] );
