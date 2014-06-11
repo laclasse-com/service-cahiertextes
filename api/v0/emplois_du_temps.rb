@@ -73,11 +73,12 @@ module CahierDeTextesAPI
                 hstart         = PlageHoraire[ CreneauEmploiDuTemps[ devoir.creneau_emploi_du_temps_id ].debut ].debut
                 hend           = PlageHoraire[ CreneauEmploiDuTemps[ devoir.creneau_emploi_du_temps_id ].fin ].fin
                 d              = devoir.to_hash
+                d[:type_devoir_description]= TypeDevoir[ devoir.type_devoir_id ].description
                 d[:ressources] = devoir.ressources.map { |rsrc| rsrc.to_hash }
                 d[:fait]       = devoir.fait_par?( user.uid )
                 d[:start]      = Time.new( devoir.date_due.year, devoir.date_due.month, devoir.date_due.mday, hstart.hour, hstart.min ).iso8601
                 d[:end]        = Time.new( devoir.date_due.year, devoir.date_due.month, devoir.date_due.mday, hend.hour, hend.min ).iso8601
-
+                
                 d
               }
             }
