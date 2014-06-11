@@ -29,6 +29,8 @@ module CahierDeTextesAPI
     end
 
     get "#{APP_VIRTUAL_PATH}/?" do
+      # Gestion de l'intégration en iframe : pas d'affichage du header.
+      @embed = params[:embed]
       erb :index
     end
 
