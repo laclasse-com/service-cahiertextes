@@ -88,8 +88,8 @@
 
     <div class="panel-body">
 	<h3 class="panel-title">Temps de travail estimé</h3>
-	<rating data-ng-model="devoir.temps_estime" max="15" readonly="false"  ng-click="is_dirty()" on-hover="estimation_over(value)" on-leave="estimation_leave()" state-on="'glyphicon-record'" state-off="'glyphicon-unchecked'"></rating>
-	<span class="label" data-ng-class="{'label-success': overValue<4, 'label-info': overValue>=4 && overValue<8 , 'label-warning': overValue>=8 && overValue<12, 'label-danger': overValue>=12}" data-ng-show="overValue>0 || devoir.temps_estime > 0">{{minutes || devoir.temps_estime * 5}} min</span>
+	<rating data-ng-model="devoir.temps_estime" max="15" readonly="false"  ng-click="is_dirty()" on-hover="estimation_over(devoir, value)" on-leave="estimation_leave(devoir)" state-on="'glyphicon-record'" state-off="'glyphicon-unchecked'"></rating>
+	<span class="label" data-ng-class="{'label-success': devoir.overValue<4, 'label-info': devoir.overValue>=4 && devoir.overValue<8 , 'label-warning': devoir.overValue>=8 && devoir.overValue<12, 'label-danger': devoir.overValue>=12}" data-ng-show="devoir.overValue>0 || devoir.temps_estime > 0">{{devoir.minutes || devoir.temps_estime * 5}} min</span>
     </div>
 
     <div class="panel-footer">

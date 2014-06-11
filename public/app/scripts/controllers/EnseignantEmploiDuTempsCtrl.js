@@ -73,17 +73,19 @@ angular.module('cahierDeTexteApp')
 						       scope_popup.is_dirty = function() {
 							   scope_popup.dirty = true;
 						       };
-                                                       
+                                                        
+                                                       scope_popup.estimation_over = function(d, value) {
+                                                            d.overValue = value;
+                                                            d.minutes = 5 * value;
+                                                       };                                             
+                                                       scope_popup.estimation_leave = function(d) {
+                                                           scope_popup.estimation_over( d, d.temps_estime);
+                                                       };                                             
+                                                      
                                                        // temps estimé sur les devoirs, fonction pour la sélection sur l'UI
-                                                       scope_popup.overValue = -1;
-                                                       scope_popup.estimation_over = function(value) {
-                                                            scope_popup.overValue = value;
-                                                            scope_popup.minutes = 5 * value;
-                                                       };                                             
-                                                       scope_popup.estimation_leave = function() {
-                                                            scope_popup.overValue = -1;
-                                                            scope_popup.minutes = 0;
-                                                       };                                             
+                                                       _(scope_popup.devoirs).each( function(d) {
+                                                           scope_popup.estimation_leave( d );
+                                                       });
 
 						       scope_popup.erreurs = [];
 
@@ -576,7 +578,6 @@ angular.module('cahierDeTexteApp')
 		     $scope.calendar.options.eventClick = function(event) {
 			 var creneau_selectionne = _(event.source.events).findWhere({_id: event._id});
 			 creneau_selectionne.id = creneau_selectionne.details.creneau_emploi_du_temps_id;
-
 			 // 1. cours
 			 var cours = null;
 			 var devoirs = [];
@@ -590,7 +591,7 @@ angular.module('cahierDeTexteApp')
 				     // 2. devoir
 				     if (creneau_selectionne.details.devoirs.length > 0) {
 					 _(creneau_selectionne.details.devoirs).each(function(devoir) {
-					     API.get_devoir({id: creneau_selectionne.details.devoirs[0].id}).$promise
+					     API.get_devoir({id: devoir.id}).$promise
 						 .then(function(vrai_devoir) {
 						     devoirs.push(vrai_devoir);
 						 });
