@@ -99,13 +99,14 @@ angular.module('cahierDeTexteApp')
 							   })
 							   .map(function(creneau) {
 							       creneau.classe = _(scope_popup.classes).findWhere({id: parseInt(creneau.regroupement_id)});
-							       creneau.start_str = $filter('date')(creneau.start, 'short');
+							       creneau.start_str = $filter('date')(creneau.start, 'EEE dd MMM HH:mm');
 							       creneau.end_str = $filter('date')(creneau.end, 'shortTime');
 							       return creneau;
 							   })
 							   .value();
 						       scope_popup.creneaux_similaires.selected = [];
-                                                       
+                                            
+                                        
                                         // sélection des créneaux possibles en fonction du regroupement et de la matière.
                                         var creneaux_devoirs_possibles = _.chain(raw_data)
                                                 .filter(function(creneau) {
@@ -113,16 +114,20 @@ angular.module('cahierDeTexteApp')
                                                 })
                                                 .map(function(creneau) {
                                                     creneau.classe = _(scope_popup.classes).findWhere({id: parseInt(creneau.regroupement_id)});
-                                                    creneau.start_str = $filter('date')(creneau.start, 'short');
+                                                    creneau.start_str = $filter('date')(creneau.start, 'EEE dd MMM HH:mm');
                                                     creneau.end_str = $filter('date')(creneau.end, 'shortTime');
-
+                                                    creneau.semaine = "cette semaine";
+                                                    
                                                     return creneau;
+                                                })  
+                                                .sortBy(function(creneau){ // Trie par dates croissantes
+                                                   return creneau.start;      
                                                 })
                                                 .value();
-
-                                        // on ajoute les créneaux de la semaine prochaine et ceux de celle d'après.
+                                        
+                                        // on ajoute les créneaux possible sur un mois.
                                         var cdp_tmp = [];
-                                        var nb_semaines = 3;
+                                        var nb_semaines = 4;
                                         _(nb_semaines + 1).times(function(n) {
                                             _(creneaux_devoirs_possibles).each(function(c) {
                                                 var cdp_futurs = angular.copy(c);
@@ -133,8 +138,10 @@ angular.module('cahierDeTexteApp')
 
                                                 cdp_futurs.start = d.toISOString();
                                                 cdp_futurs.end = f.toISOString();
-
-                                                cdp_futurs.start_str = $filter('date')(cdp_futurs.start, 'short');
+                                                // calcul d'un attribut permettant de grouper les dates dans la selectbox
+                                                cdp_futurs.semaine = (n == 0) ? "cette semaine" : "dans " + n + " semaine";
+                                                cdp_futurs.semaine+= (n > 1)? "s" :"";
+                                                cdp_futurs.start_str = $filter('date')(cdp_futurs.start, 'EEE dd MMM HH:mm');
                                                 cdp_futurs.end_str = $filter('date')(cdp_futurs.end, 'shortTime');
 
                                                 cdp_tmp.push(cdp_futurs);
