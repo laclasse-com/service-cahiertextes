@@ -1,23 +1,20 @@
 <div class="row">
     <div class="panel panel-default">
-
         <div class="panel-heading">
             <select data-ng-model="classe" data-ng-change="refresh_calendar()" data-ng-options="classe.id as classe.libelle for classe in classes">
                 <option value="" selected>Toutes les classes</option>
             </select>
-
-            <span class="pull-right">
-                <span class="label saisie-vide">créneau d'emploi du temps</span>
-                <span class="label saisie-invalide">cours</span>
-                <span class="label saisie-valide">cours visé</span>
-                <span class="label saisie-devoirs">devoirs</span>
-                <span class="label saisie-devoirs-fait">devoirs fait</span>
-            </span>
         </div>
-
         <div class="panel-body">
             <div data-calendar="emploi_du_temps" data-ui-calendar="calendar.options" class="col-md-12 calendar" data-ng-model="calendar.events"></div>
+            <div class="col-md-12">
+                <div class="pull-right">
+                    <span class="label saisie-vide">emploi du temps</span>
+                    <span class="label saisie-invalide">cours</span>
+                    <span class="label saisie-valide">cours visé</span>
+                    <span class="label saisie-devoirs">cours avec devoir</span>
+                </div>
+            </div>
         </div>
-
     </div>
 </div>

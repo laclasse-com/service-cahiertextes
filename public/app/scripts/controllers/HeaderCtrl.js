@@ -2,8 +2,9 @@
 
 angular.module('cahierDeTexteApp')
     .controller('HeaderCtrl',
-		[ '$scope', 'User', 'Redirection',
-		  function ( $scope, User, Redirection ) {
+		[ '$scope', '$state', 'User', 'Redirection',
+		  function ( $scope, $state, User, Redirection ) {
+                      console.debug($state)
                       $scope.embedded = window != window.top;
 		      User.get_user().success( function( response ) {
 			  $scope.current_user = response;
