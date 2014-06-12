@@ -79,9 +79,8 @@
 	  </select>
 
           <select data-ng-required="true" data-ng-model="devoir.date_due" data-ng-change="set_creneau_date_due( devoir )"
-		  data-ng-options="creneau.start as creneau.label_sbox group by creneau.semaine for creneau in creneaux_devoirs_possibles" >
+		  data-ng-options="creneau.date_due as creneau.label_sbox group by creneau.semaine for creneau in creneaux_devoirs_possibles">
 	  </select>
-
       </div>
     </div>
     <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="devoir.contenu" data-ng-change="is_dirty()"></textarea>

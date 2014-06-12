@@ -73,7 +73,6 @@ angular.module('cahierDeTexteApp')
                                         scope_popup.is_dirty = function() {
                                             scope_popup.dirty = true;
                                         };
-//                                        scope_popup.devoirs_resolus = false;
 
                                         // fonctions UI pour le temps estimé
                                         scope_popup.estimation_over = function(d, value) {
@@ -90,9 +89,8 @@ angular.module('cahierDeTexteApp')
 
                                         // Fonction UI pour fixer l'id du créneau en fct du choix dans la sbox des créneaux possibles.
                                         scope_popup.set_creneau_date_due = function(devoir) {
-                                            var ddISO = new Date(devoir.date_due).toISOString();
                                             // on prend le premier créneau qui correspond à cette date.
-                                            var creneau_choisi = _(scope_popup.creneaux_devoirs_possibles).findWhere({start: ddISO});  
+                                            var creneau_choisi = _(scope_popup.creneaux_devoirs_possibles).findWhere({date_due: devoir.date_due});  
                                             devoir.creneau_emploi_du_temps_id = creneau_choisi.creneau_emploi_du_temps_id;
                                         };
 
@@ -109,21 +107,24 @@ angular.module('cahierDeTexteApp')
                                                 })
                                                 .map(function(creneau) {
                                                     creneau.classe = _(scope_popup.classes).findWhere({id: parseInt(creneau.regroupement_id)});
-                                                    creneau.label_sbox = $filter('date')(creneau.start, 'EEE dd MMM HH:mm') + ' - ' +$filter('date')(creneau.end, 'shortTime');
-                                                    return creneau;
+                                                    creneau.label_sbox = $filter('formateCreneau')(creneau);
+                                                            return creneau;
                                                 })
                                                 .value();
                                         scope_popup.creneaux_similaires.selected = [];
 
-
-                                        // sélection des créneaux possibles en fonction du regroupement et de la matière.
+                                        //
+                                        // Constitution de la liste des créneaux possibles pour les dates dues des devoirs.
+                                        //
+                                        // 1. sélection des créneaux possibles en fonction du regroupement et de la matière.
                                         var creneaux_devoirs_possibles = _.chain(raw_data)
                                                 .filter(function(creneau) {
                                                     return (creneau.regroupement_id == scope_popup.regroupement_id) && (creneau.matiere_id == scope_popup.matiere_id);
                                                 })
                                                 .map(function(creneau) {
                                                     creneau.classe = _(scope_popup.classes).findWhere({id: parseInt(creneau.regroupement_id)});
-                                                    creneau.label_sbox = $filter('date')(creneau.start, 'EEE dd MMM HH:mm') + ' - ' +$filter('date')(creneau.end, 'shortTime');
+                                                    creneau.date_due = $filter('date')(creneau.start, 'y-MM-dd');
+                                                    creneau.label_sbox = $filter('formateCreneau')(creneau.start);
                                                     creneau.semaine = "cette semaine";
 
                                                     return creneau;
@@ -133,7 +134,7 @@ angular.module('cahierDeTexteApp')
                                                 })
                                                 .value();
 
-                                        // on ajoute les créneaux possible sur un mois.
+                                        // 2. on ajoute les créneaux possible sur un mois.
                                         var cdp_tmp = [];
                                         var nb_semaines = 4;
                                         _(nb_semaines + 1).times(function(n) {
@@ -149,7 +150,8 @@ angular.module('cahierDeTexteApp')
                                                 // calcul d'un attribut permettant de grouper les dates dans la selectbox
                                                 cdp_futurs.semaine = (n == 0) ? "cette semaine" : "dans " + n + " semaine";
                                                 cdp_futurs.semaine += (n > 1) ? "s" : "";
-                                                cdp_futurs.label_sbox = $filter('date')(cdp_futurs.start, 'EEE dd MMM HH:mm') + ' - ' +$filter('date')(cdp_futurs.end, 'shortTime');
+                                                cdp_futurs.date_due = $filter('date')(cdp_futurs.start, 'y-MM-dd');
+                                                cdp_futurs.label_sbox = $filter('formateCreneau')(cdp_futurs);
 
                                                 cdp_tmp.push(cdp_futurs);
                                             });
@@ -639,15 +641,12 @@ angular.module('cahierDeTexteApp')
                         // création d'un nouveau créneau
                         // Le regroupement_id peut être null car on n'a pas fait de choix au niveau de la select box des classes sur full_calendar
                         $scope.calendar.options.select = function(start, end, allDay) {
-                            //var timezoneOffset = new Date(start).getTimezoneOffset() * 60000;
                             start = $filter('correctTimezone')(start);
                             end = $filter('correctTimezone')(end);
                             var creneau_selectionne = new CreneauEmploiDuTemps({regroupement_id: $scope.classe === null ? '' : '' + $scope.classe,
                                 jour_de_la_semaine: start.getDay() + 1,
                                 heure_debut: new Date(new Date(start)).toISOString(),
                                 heure_fin: new Date(new Date(end)).toISOString(),
-//                                heure_debut: new Date(new Date(start) - timezoneOffset).toISOString(),
-//                                heure_fin: new Date(new Date(end) - timezoneOffset).toISOString(),
                                 matiere_id: ''
                             });
                             creneau_selectionne.$save()
