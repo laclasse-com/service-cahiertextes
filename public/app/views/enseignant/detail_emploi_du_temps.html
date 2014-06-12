@@ -78,9 +78,9 @@
 	    <option value="" disabled selected>Choisissez un type de devoir</option>
 	  </select>
 
-	  <select data-ng-required="true" data-ng-model="devoir.creneau_emploi_du_temps_id"
-		  data-ng-options="creneau.creneau_emploi_du_temps_id as creneau.start_str +' - '+ creneau.end_str group by creneau.semaine for creneau in creneaux_devoirs_possibles" >
-	  </select>
+          <select data-ng-required="true" data-ng-model="devoir.date_due" data-ng-change="set_creneau_date_due( devoir )"
+		  data-ng-options="creneau.start as creneau.label_sbox group by creneau.semaine for creneau in creneaux_devoirs_possibles" >
+	  </select> cedt_id = {{devoir.creneau_emploi_du_temps_id}}, date_due =  {{devoir.date_due | date : 'dd/MM/y' }}
 
       </div>
     </div>
