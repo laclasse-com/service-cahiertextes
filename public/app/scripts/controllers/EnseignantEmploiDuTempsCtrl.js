@@ -92,6 +92,7 @@ angular.module('cahierDeTexteApp')
                                             // on prend le premier créneau qui correspond à cette date.
                                             var creneau_choisi = _(scope_popup.creneaux_devoirs_possibles).findWhere({date_due: devoir.date_due});  
                                             devoir.creneau_emploi_du_temps_id = creneau_choisi.creneau_emploi_du_temps_id;
+                                            scope_popup.is_dirty();
                                         };
 
 
@@ -314,9 +315,6 @@ angular.module('cahierDeTexteApp')
                                                                 if (_(devoir).has('contenu') && (devoir.contenu.length > 0)) {
                                                                     // FIXME: on $save() ou $update() tous les devoirs qu'ils aient été modifiés ou non
                                                                     devoir.dirty = true;
-
-                                                                    // recalcul de la date_due
-                                                                    devoir.date_due = _(raw_data).findWhere({creneau_emploi_du_temps_id: devoir.creneau_emploi_du_temps_id}).start;
 
                                                                     var prom = $q.defer();
                                                                     if (devoir.create) {
