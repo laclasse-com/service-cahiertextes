@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('cahierDeTexteApp')
-    .controller('PopupEmploiDuTempsDisplayCtrl',
+    .controller('EmploiDuTempsPopupDisplayCtrl',
 		[ '$scope', '$modalInstance', 'Devoirs', 'titre', 'cours', 'devoirs',
   function( $scope, $modalInstance, Devoirs, titre, cours, devoirs ) {
       var scope_popup = $scope;

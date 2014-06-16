@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module( 'cahierDeTexteApp' )
-    .controller( 'PopupEmploiDuTempsEditionCtrl',
+    .controller( 'EmploiDuTempsPopupEditionCtrl',
 		 [ '$scope', '$filter', '$q', 'TINYMCE_OPTIONS', '$modalInstance', 'Documents', 'CreneauEmploiDuTemps', 'Devoirs', 'cours', 'devoirs', 'types_de_devoir', 'creneau_selectionne', 'matiere_id', 'regroupement_id', 'raw_data', 'classes', 'matieres',
 		   function ( $scope, $filter, $q, TINYMCE_OPTIONS, $modalInstance, Documents, CreneauEmploiDuTemps, Devoirs, cours, devoirs, types_de_devoir, creneau_selectionne, matiere_id, regroupement_id, raw_data, classes, matieres ) {
 		       // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
