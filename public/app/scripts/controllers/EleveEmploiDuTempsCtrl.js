@@ -9,27 +9,10 @@ angular.module('cahierDeTexteApp')
 		      // popup d'affichage des détails
 		      var ouvre_popup_details = function( titre, cours, devoirs ) {
 			  $modal.open( { templateUrl: 'app/views/eleve/detail_emploi_du_temps.html',
+					 controller: 'PopupEmploiDuTempsDisplayCtrl',
 					 resolve: { titre: function() { return titre; },
 						    cours: function() { return cours; },
-						    devoirs: function() { return devoirs; } },
-					 controller: [ '$scope', '$modalInstance', 'Devoirs', 'titre', 'cours', 'devoirs',
-						       function( $scope, $modalInstance, Devoirs, titre, cours, devoirs ) {
-							   var scope_popup = $scope;
-							   scope_popup.titre = titre;
-							   scope_popup.cours = cours;
-							   scope_popup.devoirs = devoirs;
-
-							   scope_popup.fait = function( devoir_id ) {
-							       Devoirs.fait({ id: devoir_id },
-									    function() {
-										_(devoirs).findWhere({id: devoir_id}).fait = true;
-									    });
-							   };
-
-							   scope_popup.fermer = function() {
-							       $modalInstance.close( scope_popup );
-							   };
-						       } ] }
+						    devoirs: function() { return devoirs; } } }
 				     ).result.then( function ( scope_popup ) {
 					 _(scope_popup.devoirs).each(function(devoir) {
 					     _($scope.calendar.events[0]).findWhere({type: 'devoir', id: devoir.id}).className = devoir.fait ? ' saisie-devoirs-fait' : ' saisie-devoirs';
