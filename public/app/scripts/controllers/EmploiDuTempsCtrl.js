@@ -197,87 +197,6 @@ angular.module('cahierDeTexteApp')
 				  return cours;
 			      };
 
-			      var update_fullCalendar_event = function(event, cours, devoirs) {
-
-				  if (cours.deleted) {
-				      return {details: {matiere_id: event.details.matiere_id,
-							regroupement_id: event.details.regroupement_id,
-							cahier_de_textes_id: event.details.cahier_de_textes_id,
-							creneau_emploi_du_temps_id: event.details.creneau_emploi_du_temps_id,
-							cours: {},
-							devoirs: []},
-					      allDay: false,
-					      title: '',
-					      description: '',
-					      regroupement: '',
-					      start: event.start,
-					      end: event.end,
-					      className: 'clickable-event saisie-vide'};
-
-				  } else {
-				      var calendar_event = {details: {matiere_id: event.details.matiere_id,
-								      regroupement_id: event.details.regroupement_id,
-								      cahier_de_textes_id: event.details.cahier_de_textes_id,
-								      creneau_emploi_du_temps_id: event.details.creneau_emploi_du_temps_id,
-								      cours: cours,
-								      devoirs: devoirs},
-							    allDay: false,
-							    title: '',
-							    description: '',
-							    regroupement: '',
-							    start: event.start,
-							    end: event.end,
-							    className: 'clickable-event'};
-
-				      // choix de la couleur
-				      if (cours.contenu === undefined || cours.contenu.length == 0) {
-					  calendar_event.className += ' saisie-vide';
-				      } else {
-					  if (devoirs.length > 0) {
-					      calendar_event.className += ' saisie-devoirs';
-					  } else {
-					      if (cours.date_validation != null) {
-						  calendar_event.className += ' saisie-valide';
-					      } else {
-						  calendar_event.className += ' saisie-invalide';
-					      }
-					  }
-				      }
-
-				      // composition de la description
-				      if (_(cours).size() > 0) {
-					  calendar_event.description += '<br><span style="color:' + CALENDAR_PARAMS.couleurs.cours + '">';
-					  calendar_event.description += $filter( 'cleverTruncate', cours.contenu, CALENDAR_PARAMS.cours_max_length );
-					  calendar_event.description += '</span>';
-				      }
-
-				      if (event.details.regroupement_id !== undefined) {
-					  calendar_event.regroupement = _.chain($scope.classes)
-					      .filter(function(classe) {
-						  return classe.id == event.details.regroupement_id;
-					      })
-					      .pluck('libelle')
-					      .value()[0];
-				      } else {
-					  calendar_event.regroupement = '';
-				      }
-
-				      if (event.details.matiere_id.length > 0) {
-					  if (matieres[ event.details.matiere_id ] === undefined) {
-					      if (matieres_enseignees[ event.details.matiere_id ] === undefined) {
-						  calendar_event.title = '{Matière inconnue}';
-					      } else {
-						  calendar_event.title = matieres_enseignees[ event.details.matiere_id ].libelle_long;
-					      }
-					  } else {
-					      calendar_event.title = matieres[ event.details.matiere_id ].libelle_long;
-					  }
-				      }
-
-				      return calendar_event;
-				  }
-			      };
-
 			      // édition d'un créneau existant
 			      $scope.calendar.options.eventClick = function ( event ) {
 				  var creneau_selectionne = _( event.source.events )
@@ -378,30 +297,12 @@ angular.module('cahierDeTexteApp')
 								       creneau_selectionne, creneau_selectionne.matiere_id, creneau_selectionne.regroupement_id,
 								       create_cours( creneau_selectionne ), [],
 								       function popup_callback( scope_popup ) {
-									   if ( scope_popup.dirty ) {
-									       creneau_selectionne.matiere_id = scope_popup.matiere_id;
-									       creneau_selectionne.regroupement_id = scope_popup.regroupement_id;
-									       creneau_selectionne.cahier_de_textes_id = scope_popup.cours.cahier_de_textes_id;
-									       creneau_selectionne.$update();
-
-									       _( fullCalendarize_event( {
-										   cours: scope_popup.cours,
-										   devoirs: scope_popup.devoirs,
-										   cahier_de_textes_id: scope_popup.cours.cahier_de_textes_id,
-										   creneau_emploi_du_temps_id: scope_popup.cours.creneau_emploi_du_temps_id,
-										   matiere_id: scope_popup.matiere_id,
-										   regroupement_id: scope_popup.regroupement_id,
-										   start: creneau_selectionne.heure_debut,
-										   end: creneau_selectionne.heure_fin
-									       } ) ).each( function( event ) {
-										   $scope.calendar.events[ 0 ].push( event );
-									       });
-
-									       $scope.emploi_du_temps.fullCalendar( 'renderEvent', _( $scope.calendar.events[ 0 ] )
-														    .last(), true );
-									   } else {
+									   if ( ! scope_popup.dirty ) {
 									       creneau_selectionne.$delete(); //full stop
 									   }
+
+									   var view = $scope.emploi_du_temps.fullCalendar( 'getView' );
+									   retrieve_data( view.visStart, view.visEnd );
 								       }
 								     );
 					      } );
