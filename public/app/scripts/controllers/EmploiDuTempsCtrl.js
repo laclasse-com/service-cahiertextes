@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('cahierDeTexteApp')
-    .controller('EleveEmploiDuTempsCtrl',
 		[ '$scope', '$modal', 'CALENDAR_OPTIONS', 'CALENDAR_PARAMS', 'API', 'Annuaire', 'EmploisDuTemps', 'User',
 		  function ( $scope, $modal, CALENDAR_OPTIONS, CALENDAR_PARAMS, API, Annuaire, EmploisDuTemps, User ) {
+    .controller('EmploiDuTempsCtrl',
 		      $scope.creneau_selectionne = {};
 
 		      // popup d'affichage des détails
