@@ -2,7 +2,7 @@
 require 'nokogiri'
 require 'base64'
 require 'openssl'
-require 'zipruby'
+require 'zlib'
 
 require_relative './annuaire'
 require_relative '../models/models'
@@ -11,57 +11,47 @@ require_relative '../models/models'
 module ProNote
   module_function
 
-  def decrypt_xml(encrypted_xml, xsd = nil)
-    encrypted_xml = Nokogiri::XML(encrypted_xml)
+  def decrypt_wrapped_data( data, rsa_key_filename )
+    pk = OpenSSL::PKey::RSA.new( File.read( rsa_key_filename ) )
+    pk.private_decrypt data
+  end
 
-    # fail 'fichier XML invalide' unless !xsd.nil? && Nokogiri::XML::Schema( xsd ).valid?( encrypted_xml )
-
-    xml = encrypted_xml.at 'EXPORT_INDEX_EDUCATION'
-
-    hxml = {  version: xml.at('VERSION').child.text,
-              logiciel: xml.at('LOGICIEL').child.text,
-              cles_chiffrees: xml.at('CLES').child.text,
-              contenu_chiffre: xml.at('CONTENU').child.text,
-              verification: xml.at('VERIFICATION').child.text,
-              dateheure: xml.at('DATEHEURE').child.text,
-              uai: xml.at('UAI').child.text,
-              nometablissement: xml.at('NOMETABLISSEMENT').child.text,
-              codepostalville: xml.at('CODEPOSTALVILLE').child.text }
-
-    hxml[:contenu_chiffre_debased64] = Base64.decode64 hxml[:contenu_chiffre]
-    hxml[:cles_chiffrees_debased64] = Base64.decode64 hxml[:cles_chiffrees]
-
-    pk = OpenSSL::PKey::RSA.new File.read '../clef_privee'
-
-    # FIXME: OpenSSL::PKey::RSAError: padding check failed
-    hxml[:cles_AES] = pk.private_decrypt hxml[:cles_chiffrees_debased64]
-
+  def decrypt_payload( data, aes_secret_key, aes_iv )
     aes = OpenSSL::Cipher.new 'AES-128-CBC'
     aes.decrypt
-    aes.key = hxml[:cles_AES]
-    hxml[:contenu_zippe] = aes.update( hxml[:contenu_chiffre_debased64] ) + aes.final
+    aes.key = aes_secret_key
+    aes.iv = aes_iv
+    aes.update( data ) + aes.final
+  end
 
-    hxml[:contenu] = Zip::Archive.open_buffer( hxml[:contenu_zippe] ) { |archive|
-      archive.each { |entry|
-        entry.name
-        entry.read
-      }
-    }
+  def inflate( string )
+    zstream = Zlib::Inflate.new
+    buf = zstream.inflate(string)
+    zstream.finish
+    zstream.close
+    buf
+  end
 
-    hxml[:contenu]
+  def decrypt_xml( encrypted_xml )
+    nom_integrateur = 'LaclasseCom'
+    cle_integrateur = '/home/cycojesus/projets/Erasme/service-cahiertextes/clef_privee' # FIXME
+
+    encrypted_edt_export_file = Nokogiri::XML( encrypted_xml )
+
+    crypted_wrapped_data = Base64.decode64( encrypted_edt_export_file.search( 'PARTENAIRE' ).select { |part| part.attributes[ 'NOM' ].value == nom_integrateur }.first.text )
+    decrypted_wrapped_data = decrypt_wrapped_data( crypted_wrapped_data, cle_integrateur )
+    aes_secret_key = decrypted_wrapped_data[ 0..16 ]
+    aes_iv = decrypted_wrapped_data[ 16..32 ]
+
+    crypted_payload = Base64.decode64( encrypted_edt_export_file.search( 'CONTENU' ).first.text )
+
+    decrypted_payload = decrypt_payload( crypted_payload, aes_secret_key, aes_iv )
+
+    inflate decrypted_payload
   end
 
   def load_xml(xml, xsd = nil)
-    edt_clair = Nokogiri::XML(xml)
-
-    # TODO: use XSD defined in XML
-    # if xsd != nil then
-    #   xsd = Nokogiri::XML::Schema(xsd)
-    #   if ! xsd.valid?(edt_clair) then
-    #     p xsd.validate(edt_clair)
-    #     return
-    #   end
-    # end
+    edt_clair = Nokogiri::XML( decrypt_xml( xml ) )
 
     STDERR.puts 'chargement Etablissement'
     etablissement = Etablissement.create(UAI: edt_clair.child['UAI'])
