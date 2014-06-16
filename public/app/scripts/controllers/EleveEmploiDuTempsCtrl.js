@@ -14,18 +14,19 @@ angular.module('cahierDeTexteApp')
 						    devoirs: function() { return devoirs; } },
 					 controller: [ '$scope', '$modalInstance', 'Devoirs', 'titre', 'cours', 'devoirs',
 						       function( $scope, $modalInstance, Devoirs, titre, cours, devoirs ) {
-							   $scope.titre = titre;
-							   $scope.cours = cours;
-							   $scope.devoirs = devoirs;
+							   var scope_popup = $scope;
+							   scope_popup.titre = titre;
+							   scope_popup.cours = cours;
+							   scope_popup.devoirs = devoirs;
 
-							   $scope.fait = function( devoir_id ) {
+							   scope_popup.fait = function( devoir_id ) {
 							       Devoirs.fait({ id: devoir_id },
 									    function() {
 										_(devoirs).findWhere({id: devoir_id}).fait = true;
 									    });
 							   };
 
-							   $scope.fermer = function() {
+							   scope_popup.fermer = function() {
 							       $modalInstance.close( devoirs );
 							   };
 						       } ] }
