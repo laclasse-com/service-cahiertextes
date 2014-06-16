@@ -68,6 +68,7 @@ angular.module('cahierDeTexteApp')
 			  this.allDay = false;
 			  this.title = '';
 			  this.description = '';
+			  this.regroupement = _($scope.classes).findWhere({ id: parseInt( this.details.regroupement_id ) });
 			  this.type = ( _(item).has( 'fait' ) ) ? 'devoir': 'cours';
 
 			  if ( this.type === 'cours' ) {
@@ -313,7 +314,7 @@ angular.module('cahierDeTexteApp')
 			      $scope.calendar.options.eventRender = function ( event, element ) {
 				  // FIXME: manipulation du DOM dans le contrôleur, sale, mais obligé pour l'interprétation du HTML ?
 				  element.find( '.fc-event-title' )
-				      .append( ' - ' + event.regroupement + '<br>' + event.description );
+				      .append( ' - ' + event.regroupement.libelle + '<br>' + event.description );
 			      };
 
 			      filter_data = function( raw_data ) {
