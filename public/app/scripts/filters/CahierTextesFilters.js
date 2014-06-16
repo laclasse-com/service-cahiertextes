@@ -14,7 +14,6 @@ angular.module( 'cahierDeTexteApp' )
 	function ( $filter ) {
 	    // Afficher un créneau : date + heure de début et heure de fin
 	    // ex : "Jeu 19 juin 15:00 - 16:00"
-
 	    return function ( creneau ) {
 		return $filter( 'date' )( creneau.start, 'EEE dd MMM HH:mm' ) + ' - ' + $filter( 'date' )( creneau.end, 'shortTime' );
 	    };
@@ -26,6 +25,7 @@ angular.module( 'cahierDeTexteApp' )
 		var result = text.substring( 0, length );
 		result = result.substring( 0, result.lastIndexOf( ' ' ) );
 		result += '…';
+
 		return result;
 	    } else {
 		return text;
