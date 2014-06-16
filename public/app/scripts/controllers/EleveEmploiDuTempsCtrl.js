@@ -79,22 +79,18 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      var retrieve_data = function( from_date, to_date ) {
-			  User.get_user().then( function( response ) {
-			      $scope.current_user = response.data;
-
-			      EmploisDuTemps.query(
-				  { debut: from_date,
-				    fin: to_date,
-				    uai: $scope.current_user.profil_actif.uai },
-				  function( response ) {
-				      $scope.calendar.events[0] = _.chain( response )
-					  .map( function( event ) {
-					      return fullCalendarize_event( event );
-					  } )
-					  .flatten()
-					  .value();
-				  });
-			  });
+			  EmploisDuTemps.query(
+			      { debut: from_date,
+				fin: to_date,
+				uai: $scope.current_user.profil_actif.uai },
+			      function( response ) {
+				  $scope.calendar.events[0] = _.chain( response )
+				      .map( function( event ) {
+					  return fullCalendarize_event( event );
+				      } )
+				      .flatten()
+				      .value();
+			      });
 		      };
 
 		      // configuration du composant calendrier
@@ -111,8 +107,14 @@ angular.module('cahierDeTexteApp')
 			      ouvre_popup_details( event.title, event.details.cours, event.details.devoirs );
 			  }
 		      };
-		      $scope.calendar.options.viewRender = function( view, element ) {
-			  // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
-			  retrieve_data( view.visStart, view.visEnd );
-		      };
+
+		      User.get_user().then( function( response ) {
+			  $scope.current_user = response.data;
+
+
+			  $scope.calendar.options.viewRender = function( view, element ) {
+			      // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
+			      retrieve_data( view.visStart, view.visEnd );
+			  };
+		      });
 		  } ] );
