@@ -112,7 +112,8 @@ module ProNote
     enseignants = {}
     STDERR.puts 'chargement Enseignants'
     edt_clair.search('Professeurs').children.each do |professeur|
-      enseignants[ professeur['Ident'] ] = Annuaire.search_utilisateur( etablissement.UAI, professeur['Nom'], professeur['Prenom'] )['id_ent'] unless professeur.name == 'text'
+      user_annuaire = Annuaire.search_utilisateur( etablissement.UAI, professeur['Nom'], professeur['Prenom'] )
+      enseignants[ professeur['Ident'] ] = user_annuaire['id_ent'] unless user_annuaire.nil? || professeur.name == 'text'
       STDERR.putc '.'
     end
     STDERR.puts
@@ -126,13 +127,15 @@ module ProNote
     STDERR.puts 'chargement Regroupements'
     edt_clair.search('Classes').children.each do |classe|
       unless classe.name == 'text'
-        code_annuaire = Annuaire.search_regroupement( etablissement.UAI, classe['Nom'] )['id']
+        reponse_annuaire = Annuaire.search_regroupement( etablissement.UAI, classe['Nom'] )
+        code_annuaire = reponse_annuaire['id'] unless reponse_annuaire.nil?
         regroupements[ 'Classe' ][ classe['Ident'] ] = code_annuaire
         STDERR.putc 'c'
       end
       classe.children.each do |partie_de_classe|
         unless partie_de_classe.name == 'text' || partie_de_classe['Nom'].nil?
-          code_annuaire = Annuaire.search_regroupement( etablissement.UAI, partie_de_classe['Nom'] )['id']
+          reponse_annuaire = Annuaire.search_regroupement( etablissement.UAI, partie_de_classe['Nom'] )
+          code_annuaire = reponse_annuaire['id'] unless reponse_annuaire.nil?
           regroupements[ 'PartieDeClasse' ][ partie_de_classe['Ident'] ] = code_annuaire
           STDERR.putc 'p'
         end
@@ -140,7 +143,8 @@ module ProNote
     end
     edt_clair.search('Groupes').children.each do |groupe|
       unless groupe.name == 'text'
-        code_annuaire = Annuaire.search_regroupement( etablissement.UAI, groupe['Nom'] )['id']
+        reponse_annuaire = Annuaire.search_regroupement( etablissement.UAI, groupe['Nom'] )
+        code_annuaire = reponse_annuaire['id'] unless reponse_annuaire.nil?
         regroupements[ 'Groupe' ][ groupe['Ident'] ] = code_annuaire
         STDERR.putc 'g'
       end
@@ -148,13 +152,15 @@ module ProNote
         case node.name
         when 'PartieDeClasse'
           unless node.name == 'text' || node['Nom'].nil?
-            code_annuaire = Annuaire.search_regroupement( etablissement.UAI, node['Nom'] )['id']
+            reponse_annuaire = Annuaire.search_regroupement( etablissement.UAI, node['Nom'] )
+            code_annuaire = reponse_annuaire['id'] unless reponse_annuaire.nil?
             regroupements[ 'PartieDeClasse' ][ node['Ident'] ] = code_annuaire
             STDERR.putc 'p'
           end
         when 'Classe'
           unless node.name == 'text'
-            code_annuaire = Annuaire.search_regroupement( etablissement.UAI, classe['Nom'] )['id']
+            reponse_annuaire = Annuaire.search_regroupement( etablissement.UAI, classe['Nom'] )
+            code_annuaire = reponse_annuaire['id'] unless reponse_annuaire.nil?
             regroupements[ 'Classe' ][ node['Ident'] ] = code_annuaire
             STDERR.putc 'c'
           end
