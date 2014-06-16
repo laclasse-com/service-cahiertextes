@@ -70,6 +70,7 @@ angular.module('cahierDeTexteApp')
 			  this.description = '';
 			  this.color = '';
 			  this.type = ( _(item).has( 'fait' ) ) ? 'devoir': 'cours';
+
 			  if ( this.type === 'cours' ) {
 			      item.start = event.start;
 			      item.end = event.end;
@@ -100,7 +101,6 @@ angular.module('cahierDeTexteApp')
 			  } else {
 			      this.className = 'saisie-vide un-clickable-event';
 			  }
-
 		      };
 
 		      var fullCalendarize_event = function( item_emploi_du_temps ) {
@@ -278,17 +278,6 @@ angular.module('cahierDeTexteApp')
 				  }
 			      };
 
-			      var assemble_fullCalendar_event = function(item_emploi_du_temps) {
-				  return update_fullCalendar_event({details: {matiere_id: item_emploi_du_temps.matiere_id,
-									      regroupement_id: item_emploi_du_temps.regroupement_id,
-									      cahier_de_textes_id: item_emploi_du_temps.cahier_de_textes_id,
-									      creneau_emploi_du_temps_id: item_emploi_du_temps.creneau_emploi_du_temps_id},
-								    start: item_emploi_du_temps.start,
-								    end: item_emploi_du_temps.end},
-								   item_emploi_du_temps.cours,
-								   item_emploi_du_temps.devoirs);
-			      };
-
 			      // édition d'un créneau existant
 			      $scope.calendar.options.eventClick = function ( event ) {
 				  var creneau_selectionne = _( event.source.events )
@@ -394,7 +383,8 @@ angular.module('cahierDeTexteApp')
 									       creneau_selectionne.regroupement_id = scope_popup.regroupement_id;
 									       creneau_selectionne.cahier_de_textes_id = scope_popup.cours.cahier_de_textes_id;
 									       creneau_selectionne.$update();
-									       $scope.calendar.events[ 0 ].push( assemble_fullCalendar_event( {
+
+									       _( fullCalendarize_event( {
 										   cours: scope_popup.cours,
 										   devoirs: scope_popup.devoirs,
 										   cahier_de_textes_id: scope_popup.cours.cahier_de_textes_id,
@@ -403,7 +393,9 @@ angular.module('cahierDeTexteApp')
 										   regroupement_id: scope_popup.regroupement_id,
 										   start: creneau_selectionne.heure_debut,
 										   end: creneau_selectionne.heure_fin
-									       } ) );
+									       } ) ).each( function( event ) {
+										   $scope.calendar.events[ 0 ].push( event );
+									       });
 
 									       $scope.emploi_du_temps.fullCalendar( 'renderEvent', _( $scope.calendar.events[ 0 ] )
 														    .last(), true );
