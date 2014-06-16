@@ -122,8 +122,8 @@ angular.module('cahierDeTexteApp')
 			  element.find('.fc-event-title').append( event.description );
 		      };
 		      $scope.calendar.options.eventClick = function( event ) {
-			  $scope.creneau_selectionne = _(event.source.events).findWhere({_id: event._id});
 			  if ( _(event.details.cours).has( 'contenu' ) ) {
+			      $scope.creneau_selectionne = event;
 			      ouvre_popup_details( event.title, event.details.cours, event.details.devoirs );
 			  }
 		      };
