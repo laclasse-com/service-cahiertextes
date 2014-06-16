@@ -20,7 +20,7 @@ describe CahierDeTextesAPI::API do
     last_response.status.should == 201
 
     last_response.body.should == {
-      'filename' => 'Edt_To_LaclasseCom_0134567A_Enclair.xml',
+      'filename' => 'Edt_To_LaclasseCom_0134567A.xml',
       'size' => File.size(xml_filename),
       'nb_salles' => 24,
       'nb_plages_horaires' => 20,
