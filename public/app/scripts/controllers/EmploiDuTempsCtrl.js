@@ -14,7 +14,7 @@ angular.module('cahierDeTexteApp')
 		      // popup d'affichage des détails
 		      var ouvre_popup_details = function( titre, cours, devoirs ) {
 			  $modal.open( { templateUrl: 'app/views/eleve/detail_emploi_du_temps.html',
-					 controller: 'PopupEmploiDuTempsDisplayCtrl',
+					 controller: 'EmploiDuTempsPopupDisplayCtrl',
 					 resolve: { titre: function() { return titre; },
 						    cours: function() { return cours; },
 						    devoirs: function() { return devoirs; } } }
@@ -29,7 +29,7 @@ angular.module('cahierDeTexteApp')
 		      var ouvre_popup_edition = function ( raw_data, types_de_devoir, matieres, classes, creneau_selectionne, matiere_id, regroupement_id, cours, devoirs, popup_callback ) {
 			  $modal.open( {
 			      templateUrl: 'app/views/enseignant/detail_emploi_du_temps.html',
-			      controller: 'PopupEmploiDuTempsEditionCtrl',
+			      controller: 'EmploiDuTempsPopupEditionCtrl',
 			      resolve: {
 				  raw_data: function () { return raw_data; },
 				  types_de_devoir: function () { return types_de_devoir; },
