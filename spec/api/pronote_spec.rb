@@ -15,7 +15,7 @@ describe CahierDeTextesAPI::API do
   end
 
   it 'uploads a file' do
-    xml_filename = 'spec/fixtures/Edt_To_LaclasseCom_0134567A_Enclair.xml'
+    xml_filename = 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml'
     post '/v0/pronote/xml', xml_file: Rack::Test::UploadedFile.new(xml_filename, 'text/xml')
     last_response.status.should == 201
 
@@ -39,4 +39,3 @@ describe CahierDeTextesAPI::API do
   end
 
 end
-
