@@ -27,11 +27,11 @@ angular.module('cahierDeTexteApp')
 							   };
 
 							   scope_popup.fermer = function() {
-							       $modalInstance.close( devoirs );
+							       $modalInstance.close( scope_popup );
 							   };
 						       } ] }
-				     ).result.then( function ( devoirs ) {
-					 _(devoirs).each(function(devoir) {
+				     ).result.then( function ( scope_popup ) {
+					 _(scope_popup.devoirs).each(function(devoir) {
 					     _($scope.calendar.events[0]).findWhere({type: 'devoir', id: devoir.id}).className = devoir.fait ? ' saisie-devoirs-fait' : ' saisie-devoirs';
 					 });
 					 $scope.emploi_du_temps.fullCalendar( 'renderEvent', $scope.creneau_selectionne );
