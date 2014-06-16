@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EmploiDuTempsCtrl',
-		[ '$scope', '$modal', '$q', 'CALENDAR_OPTIONS', 'CALENDAR_PARAMS', 'API', 'Annuaire', 'EmploisDuTemps', 'User', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs',
-		  function ( $scope, $modal, $q, CALENDAR_OPTIONS, CALENDAR_PARAMS, API, Annuaire, EmploisDuTemps, User, CreneauEmploiDuTemps, Cours, Devoirs ) {
+		[ '$scope', '$modal', '$q', '$filter', 'CALENDAR_OPTIONS', 'CALENDAR_PARAMS', 'API', 'Annuaire', 'EmploisDuTemps', 'User', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs',
+		  function ( $scope, $modal, $q, $filter, CALENDAR_OPTIONS, CALENDAR_PARAMS, API, Annuaire, EmploisDuTemps, User, CreneauEmploiDuTemps, Cours, Devoirs ) {
 		      var filter_data = angular.identity;
 		      var types_de_devoir = [];
 		      var matieres = [];
@@ -198,16 +198,6 @@ angular.module('cahierDeTexteApp')
 			      };
 
 			      var update_fullCalendar_event = function(event, cours, devoirs) {
-				  var clever_truncate = function(text, length) {
-				      if (text.length > length) {
-					  var result = text.substring(0, length);
-					  result = result.substring(0, result.lastIndexOf(' '));
-					  result += '…';
-					  return result;
-				      } else {
-					  return text;
-				      }
-				  };
 
 				  if (cours.deleted) {
 				      return {details: {matiere_id: event.details.matiere_id,
@@ -257,7 +247,7 @@ angular.module('cahierDeTexteApp')
 				      // composition de la description
 				      if (_(cours).size() > 0) {
 					  calendar_event.description += '<br><span style="color:' + CALENDAR_PARAMS.couleurs.cours + '">';
-					  calendar_event.description += clever_truncate(cours.contenu, CALENDAR_PARAMS.cours_max_length);
+					  calendar_event.description += $filter( 'cleverTruncate', cours.contenu, CALENDAR_PARAMS.cours_max_length );
 					  calendar_event.description += '</span>';
 				      }
 
