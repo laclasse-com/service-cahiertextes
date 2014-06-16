@@ -68,7 +68,6 @@ angular.module('cahierDeTexteApp')
 			  this.allDay = false;
 			  this.title = '';
 			  this.description = '';
-			  this.color = '';
 			  this.type = ( _(item).has( 'fait' ) ) ? 'devoir': 'cours';
 
 			  if ( this.type === 'cours' ) {
