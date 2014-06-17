@@ -88,6 +88,7 @@ angular.module('cahierDeTexteApp')
 				      _this.title = response.label;
 				  });
 			  }
+			  this.className += 'clickable-event';
 			  this.start = new Date( item.start );
 			  this.end = new Date( item.end );
 
