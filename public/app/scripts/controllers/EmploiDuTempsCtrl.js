@@ -125,21 +125,36 @@ angular.module('cahierDeTexteApp')
 		      User.get_user().then( function( response ) {
 			  $scope.current_user = response.data;
 
-			  switch ( $scope.current_user.profil_actif.type ) {
-			  case 'ELV':
-			      $scope.calendar.options.eventRender = function( event, element ) {
-				  // FIXME: manipulation du DOM dans le contrôleur, sale
-				  // ajouter la description ici permet que l'HTML soit interprété
-				  element.find('.fc-event-title').append( event.description );
-			      };
-			      $scope.calendar.options.eventClick = function( event ) {
-				  if ( _(event.details.cours).has( 'contenu' ) ) {
-				      $scope.creneau_selectionne = event;
-				      ouvre_popup_details( event.title, event.details.cours, event.details.devoirs );
-				  }
-			      };
-			      break;
+			  var populate_calendar = function( raw_data ) {
+			      $scope.calendar.events[0] = _.chain( raw_data )
+				  .map( function( event ) {
+				      return fullCalendarize_event( event );
+				  } )
+				  .flatten()
+				  .value();
+			  };
 
+			  $scope.refresh_calendar = function(  ) {
+			      populate_calendar( filter_data( $scope.raw_data ) );
+			  };
+
+			  var retrieve_data = function( from_date, to_date ) {
+			      EmploisDuTemps.query(
+				  { debut: from_date,
+				    fin: to_date,
+				    uai: $scope.current_user.profil_actif.uai },
+				  function( response ) {
+				      $scope.raw_data = response;
+				      $scope.refresh_calendar();
+				  });
+			  };
+
+			  $scope.calendar.options.viewRender = function( view, element ) {
+			      // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
+			      retrieve_data( view.visStart, view.visEnd );
+			  };
+
+			  switch ( $scope.current_user.profil_actif.type ) {
 			  case 'ENS':
 			      $scope.calendar.options.selectable = true;
 			      $scope.calendar.options.editable = true;
@@ -330,35 +345,22 @@ angular.module('cahierDeTexteApp')
 				  return filtered_data;
 			      };
 			      break;
+
+			  case 'ELV':
+			  default:
+			      $scope.calendar.options.eventRender = function( event, element ) {
+				  // FIXME: manipulation du DOM dans le contrôleur, sale
+				  // ajouter la description ici permet que l'HTML soit interprété
+				  element.find('.fc-event-title').append( event.description );
+			      };
+			      $scope.calendar.options.eventClick = function( event ) {
+				  if ( _(event.details.cours).has( 'contenu' ) ) {
+				      $scope.creneau_selectionne = event;
+				      ouvre_popup_details( event.title, event.details.cours, event.details.devoirs );
+				  }
+			      };
+			      break;
 			  }
 
-			  var populate_calendar = function( raw_data ) {
-			      $scope.calendar.events[0] = _.chain( raw_data )
-				  .map( function( event ) {
-				      return fullCalendarize_event( event );
-				  } )
-				  .flatten()
-				  .value();
-			  };
-
-			  $scope.refresh_calendar = function(  ) {
-			      populate_calendar( filter_data( $scope.raw_data ) );
-			  };
-
-			  var retrieve_data = function( from_date, to_date ) {
-			      EmploisDuTemps.query(
-				  { debut: from_date,
-				    fin: to_date,
-				    uai: $scope.current_user.profil_actif.uai },
-				  function( response ) {
-				      $scope.raw_data = response;
-				      $scope.refresh_calendar();
-				  });
-			  };
-
-			  $scope.calendar.options.viewRender = function( view, element ) {
-			      // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
-			      retrieve_data( view.visStart, view.visEnd );
-			  };
 		      } );
 		  } ] );
