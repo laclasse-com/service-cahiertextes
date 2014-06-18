@@ -142,6 +142,7 @@ angular.module('cahierDeTexteApp')
 
 			  case 'ENS':
 			      $scope.calendar.options.selectable = true;
+			      $scope.calendar.options.editable = true;
 
 			      var list_classes = function(user) {
 				  return _.chain(user.classes)
@@ -330,7 +331,6 @@ angular.module('cahierDeTexteApp')
 
 				  return filtered_data;
 			      };
-
 			      break;
 			  }
 
@@ -362,6 +362,5 @@ angular.module('cahierDeTexteApp')
 			      // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
 			      retrieve_data( view.visStart, view.visEnd );
 			  };
-
 		      } );
 		  } ] );
