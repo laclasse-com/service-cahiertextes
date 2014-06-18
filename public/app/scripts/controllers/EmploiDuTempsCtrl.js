@@ -266,17 +266,15 @@ angular.module('cahierDeTexteApp')
 			      // création d'un nouveau créneau
 			      // Le regroupement_id peut être null car on n'a pas fait de choix au niveau de la select box des classes sur full_calendar
 			      $scope.calendar.options.select = function ( start, end, allDay ) {
-				  var timezoneOffset = new Date( start )
-					  .getTimezoneOffset() * 60000;
-				  var creneau_selectionne = new CreneauEmploiDuTemps( {
+				  start = $filter('correctTimeZone')(start);
+				  end = $filter('correctTimeZone')(end);
+				  var creneau_selectionne = new CreneauEmploiDuTemps({
 				      regroupement_id: $scope.classe === null ? '' : '' + $scope.classe,
 				      jour_de_la_semaine: start.getDay() + 1,
-				      heure_debut: new Date( new Date( start ) - timezoneOffset )
-					  .toISOString(),
-				      heure_fin: new Date( new Date( end ) - timezoneOffset )
-					  .toISOString(),
+				      heure_debut: new Date(new Date(start)).toISOString(),
+				      heure_fin: new Date(new Date(end)).toISOString(),
 				      matiere_id: ''
-				  } );
+				  });
 				  creneau_selectionne.$save()
 				      .then( function () {
 					  creneau_selectionne.dirty = true;
