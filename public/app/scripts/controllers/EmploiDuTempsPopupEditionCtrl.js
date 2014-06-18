@@ -268,9 +268,11 @@ angular.module( 'cahierDeTexteApp' )
 			   scope_popup.erreurs = [];
 
 			   if ( scope_popup.matiere_id !== '' && scope_popup.regroupement_id !== '' ) {
-			       scope_popup.creneau_selectionne.matiere_id = scope_popup.matiere_id;
-			       scope_popup.creneau_selectionne.regroupement_id = scope_popup.regroupement_id;
-			       scope_popup.creneau_selectionne.$update();
+			       if ( scope_popup.creneau_en_creation ) {
+				   scope_popup.creneau_selectionne.matiere_id = scope_popup.matiere_id;
+				   scope_popup.creneau_selectionne.regroupement_id = scope_popup.regroupement_id;
+				   scope_popup.creneau_selectionne.$update();
+			       }
 
 			       // traitement de la séquence pédagogique
 			       var promesse = $q.when( true );
