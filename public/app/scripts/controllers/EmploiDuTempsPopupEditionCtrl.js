@@ -248,86 +248,92 @@ angular.module( 'cahierDeTexteApp' )
 			       date_creneau: $scope.cours.date_cours
 			   } )
 			       .$promise.then( function () {
-				   scope_popup.creneau_deleted = true;
 				   scope_popup.fermer();
 			       } );
 		       };
 
 		       scope_popup.annuler = function () {
-			   scope_popup.dirty = false;
-			   scope_popup.fermer();
+			   if ( scope_popup.creneau_en_creation ) {
+			       scope_popup.effacer_creneau();
+			   } else {
+			       scope_popup.dirty = false;
+			       scope_popup.fermer();
+			   }
 		       };
 
 		       scope_popup.valider = function () {
 			   // réinitialisation des erreurs
 			   scope_popup.erreurs = [];
 
-			   if ( scope_popup.matiere_id !== '' && scope_popup.regroupement_id !== '' ) {
-			       // traitement de la séquence pédagogique
-			       var promesse = $q.when( true );
-			       if ( _( scope_popup.cours ).has( 'contenu' ) && ( scope_popup.cours.contenu.length > 0 ) ) {
-				   scope_popup.is_dirty();
+			   if ( !scope_popup.dirty && scope_popup.creneau_en_creation ) {
+			       scope_popup.effacer_creneau();
+			   } else
+			       if ( scope_popup.matiere_id !== '' && scope_popup.regroupement_id !== '' ) {
+				   // traitement de la séquence pédagogique
+				   var promesse = $q.when( true );
+				   if ( _( scope_popup.cours ).has( 'contenu' ) && ( scope_popup.cours.contenu.length > 0 ) ) {
+				       scope_popup.is_dirty();
 
-				   if ( scope_popup.cours.create ) {
-				       scope_popup.cours.cahier_de_textes_id = _( scope_popup.classes ).findWhere( {
-					   id: scope_popup.regroupement_id
-				       } ).cahier_de_textes_id;
-				       scope_popup.cours.creneau_emploi_du_temps_id = creneau_selectionne.id;
-				       promesse = scope_popup.cours.$save();
-				   } else {
-				       promesse = scope_popup.cours.$update();
+				       if ( scope_popup.cours.create ) {
+					   scope_popup.cours.cahier_de_textes_id = _( scope_popup.classes ).findWhere( {
+					       id: scope_popup.regroupement_id
+					   } ).cahier_de_textes_id;
+					   scope_popup.cours.creneau_emploi_du_temps_id = creneau_selectionne.id;
+					   promesse = scope_popup.cours.$save();
+				       } else {
+					   promesse = scope_popup.cours.$update();
+				       }
 				   }
-			       }
 
-			       promesse.then( function ( cours_from_DB ) {
-				   // traitement des devoirs attachés
-				   var promesses = [];
-				   scope_popup.devoirs = _( scope_popup.devoirs )
-				       .map( function ( devoir ) {
-					   if ( _( devoir ).has( 'contenu' ) && ( devoir.contenu.length > 0 ) ) {
-					       // FIXME: on $save() ou $update() tous les devoirs qu'ils aient été modifiés ou non
-					       devoir.dirty = true;
+				   promesse.then( function ( cours_from_DB ) {
+				       // traitement des devoirs attachés
+				       var promesses = [];
+				       scope_popup.devoirs = _( scope_popup.devoirs )
+					   .map( function ( devoir ) {
+					       if ( _( devoir ).has( 'contenu' ) && ( devoir.contenu.length > 0 ) ) {
+						   // FIXME: on $save() ou $update() tous les devoirs qu'ils aient été modifiés ou non
+						   devoir.dirty = true;
 
-					       var prom = $q.defer();
-					       if ( devoir.create ) {
-						   devoir.cours_id = cours_from_DB.id;
-						   devoir.$save().then( function success( result ) {
-						       devoir.id = result.id;
-						       prom.resolve( result );
-						   }, function ( response ) {
-						       scope_popup.erreurs.unshift( {
-							   status: response.status,
-							   message: response.data.error
+						   var prom = $q.defer();
+						   if ( devoir.create ) {
+						       devoir.cours_id = cours_from_DB.id;
+						       devoir.$save().then( function success( result ) {
+							   devoir.id = result.id;
+							   prom.resolve( result );
+						       }, function ( response ) {
+							   scope_popup.erreurs.unshift( {
+							       status: response.status,
+							       message: response.data.error
+							   } );
+							   prom.reject( response );
 						       } );
-						       prom.reject( response );
-						   } );
-					       } else {
-						   devoir.$update().then( function success( result ) {
-						       devoir.id = result.id;
-						       prom.resolve( result );
-						   }, function ( response ) {
-						       scope_popup.erreurs.unshift( {
-							   status: response.status,
-							   message: response.data.error
+						   } else {
+						       devoir.$update().then( function success( result ) {
+							   devoir.id = result.id;
+							   prom.resolve( result );
+						       }, function ( response ) {
+							   scope_popup.erreurs.unshift( {
+							       status: response.status,
+							       message: response.data.error
+							   } );
+							   prom.reject( response );
 						       } );
-						       prom.reject( response );
-						   } );
+						   }
+
+						   promesses.push( prom.promise );
 					       }
+					       return devoir;
+					   } );
 
-					       promesses.push( prom.promise );
-					   }
-					   return devoir;
+				       $q.all( promesses ).then( function () {
+					   scope_popup.fermer();
 				       } );
-
-				   $q.all( promesses ).then( function () {
-				       scope_popup.fermer();
 				   } );
-			       } );
-			   } else {
-			       scope_popup.erreurs.push( {
-				   'message': 'Aucune matière ou classe défini'
-			       } );
-			   }
+			       } else {
+				   scope_popup.erreurs.push( {
+				       'message': 'Aucune matière ou classe défini'
+				   } );
+			       }
 		       };
 		       // }}}
 		   }
