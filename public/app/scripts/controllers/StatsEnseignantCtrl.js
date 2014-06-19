@@ -159,6 +159,7 @@ angular.module( 'cahierDeTexteApp' )
 						      .pluck( 'matiere_id' )
 						      .uniq()
 						      .compact()
+						      .reject( function( id ) { return id === 'undefined'; } )
 						      .each( function ( matiere_id ) {
 							  Annuaire.get_matiere( matiere_id ).$promise.then(
 							      function ( response ) {
@@ -174,8 +175,10 @@ angular.module( 'cahierDeTexteApp' )
 						      .flatten()
 						      .pluck( 'regroupement_id' )
 						      .uniq()
+						      .compact()
+						      .reject( function( id ) { return id === 'undefined'; } )
 						      .map( function ( regroupement_id ) {
-							  // return Annuaire.get_regroupement( regroupement_id );
+							  regroupement_id = '' + regroupement_id;
 							  Annuaire.get_regroupement( regroupement_id ).$promise.then(
 							      function ( response ) {
 								  classes[ regroupement_id ] = response.libelle;
