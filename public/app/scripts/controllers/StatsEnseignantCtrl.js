@@ -1,12 +1,11 @@
 'use strict';
 
 angular.module( 'cahierDeTexteApp' )
-    .controller( 'StatsEnseignantCtrl', [ '$scope', '$stateParams', '$q',
-					  '$locale', 'THEME',
-					  'API', 'Cours', 'Annuaire', 'User', '$sce', 'PIECHART_DEFINITION', 'BARCHART_DEFINITION',
-					  function ( $scope, $stateParams, $q, $locale, THEME, API, Cours, Annuaire, User, $sce, PIECHART_DEFINITION, BARCHART_DEFINITION ) {
-					      $scope.classe = null;
+    .controller( 'StatsEnseignantCtrl', [ '$scope', '$stateParams', '$q', '$locale', '$sce', 'API', 'Cours', 'Annuaire', 'User', 'PIECHART_DEFINITION', 'BARCHART_DEFINITION',
+					  function ( $scope, $stateParams, $q, $locale, $sce, API, Cours, Annuaire, User, PIECHART_DEFINITION, BARCHART_DEFINITION ) {
 					      $scope.mois = $locale.DATETIME_FORMATS.MONTH;
+
+					      $scope.classe = null;
 					      $scope.moisCourant = null;
 					      $scope.gridSaisies = [];
 					      $scope.selectedSaisies = [];
