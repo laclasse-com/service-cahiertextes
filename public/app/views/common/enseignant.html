@@ -5,7 +5,7 @@
 	<div class="row">
       <h4 class="col-md-6 pull-left">{{enseignant.prenom}} {{enseignant.nom}}</h4>
 
-      <select class="col-md-3 pull-right" data-ng-model="classe" data-ng-change="process_data()" data-ng-options="class as class for (id, class) in classes">
+      <select class="col-md-3 pull-right" data-ng-model="classe" data-ng-change="process_data()" data-ng-options="class as class.libelle for (id, class) in classes">
 	<option value="">Toutes les classes</option>
       </select>
 
