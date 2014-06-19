@@ -10,9 +10,10 @@ module CahierDeTextesAPI
 
         extra = Annuaire.get_user( utilisateur[ 'uid' ] )
         utilisateur[ 'profils' ] = extra['profils'].map { |profil|
-          # calcule du droit d'admin, true pour les TECH et les ADM* 
+          # calcule du droit d'admin, true pour les TECH et les ADM
           is_admin = extra['roles'].select { |r| r['etablissement_code_uai'] == profil['etablissement_code_uai'] && ( r['role_id'] == 'TECH' || r['role_id'].match('ADM.*') ) }.length > 0
-          {  type: profil['profil_id'],
+
+          { type: profil['profil_id'],
             uai: profil['etablissement_code_uai'],
             etablissement: profil['etablissement_nom'],
             nom: profil['profil_nom'],
