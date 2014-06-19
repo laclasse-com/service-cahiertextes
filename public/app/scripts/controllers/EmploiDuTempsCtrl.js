@@ -160,7 +160,7 @@ angular.module('cahierDeTexteApp')
 			      $scope.calendar.options.editable = true;
 
 			      var list_classes = function(user) {
-				  return _.chain(user.classes)
+				  return _.chain( user.profil_actif.classes )
 				      .reject(function(classe) {
 					  return classe.etablissement_code !== user.profil_actif.uai;
 				      })
