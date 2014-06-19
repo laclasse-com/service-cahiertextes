@@ -24,7 +24,7 @@ angular.module( 'cahierDeTexteApp' )
 					return { height: 600,
 						 header: { left: 'today prev,next',
 							   center: 'title',
-                                                           right: '' },
+							   right: '' },
 //							   right: 'agendaDay agendaWeek month' },
 						 firstDay: 1,
 						 minTime: 7,
@@ -57,7 +57,7 @@ angular.module( 'cahierDeTexteApp' )
 						 editable: false,
 						 eventDurationEditable: false,
 						 disableDragging: true,
-						 selectable: true,
+						 selectable: false,
 						 selectHelper: true
 					       };
 				    } ] )
@@ -74,7 +74,7 @@ angular.module( 'cahierDeTexteApp' )
 
 // options des graphiques
     .factory( 'CHART_COLORS_FUNCTION', [ 'THEME',
-					 function( THEME ) { 
+					 function( THEME ) {
 					     return function() {
 						 var couleurs = [ THEME.validated.base, THEME.filled.base ];
 						 return function( d, i ) {
@@ -83,10 +83,10 @@ angular.module( 'cahierDeTexteApp' )
 					     };
 					 } ] )
     .service( 'BARCHART_DEFINITION', [ 'CHART_COLORS_FUNCTION',
-				       function( CHART_COLORS_FUNCTION ) { 
-					   return function() { 
+				       function( CHART_COLORS_FUNCTION ) {
+					   return function() {
 					       return { data: [],
-							tooltipContent: function() { 
+							tooltipContent: function() {
 							    return function( key, x, y, e, graph ) {
 								return '<h2>' + x + '</h2><p>' + y + ' ' + key + '</p>';
 							    };
@@ -96,8 +96,8 @@ angular.module( 'cahierDeTexteApp' )
 					   };
 				       } ] )
     .service( 'PIECHART_DEFINITION', [ 'CHART_COLORS_FUNCTION',
-				       function( CHART_COLORS_FUNCTION ) { 
-					   return function() { 
+				       function( CHART_COLORS_FUNCTION ) {
+					   return function() {
 					       return { data: [ { label: 'saisie', value: 0 },
 								{ label: 'valide', value: 0 } ],
 							xFunction: function(){ return function(d) { return d.label; }; },

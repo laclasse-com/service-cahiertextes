@@ -73,7 +73,7 @@ angular.module( 'cahierDeTexteApp' )
 			   views: {
 			       'content': {
 				   templateUrl: 'app/views/eleve/emploi_du_temps.html',
-				   controller: 'EleveEmploiDuTempsCtrl'
+				   controller: 'EmploiDuTempsCtrl'
 			       }
 			   }
 		       })
@@ -95,18 +95,18 @@ angular.module( 'cahierDeTexteApp' )
 			   url: '/enseignant',
 			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ENS' ] ); } },
 			   templateUrl: 'app/views/common/tabs.html',
-                           controller: 'EnseignantCtrl'
+			   controller: 'EnseignantCtrl'
 		       })
 		       .state('enseignant.emploi_du_temps', {
-                           parent: 'enseignant',
+			   parent: 'enseignant',
 			   url: '/emploi_du_temps',
 			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ENS' ] ); } },
 			   views: {
 			       'content': {
-        			   templateUrl: 'app/views/enseignant/emploi_du_temps.html',
-                		   controller: 'EnseignantEmploiDuTempsCtrl'
-                               }
-                           }
+				   templateUrl: 'app/views/enseignant/emploi_du_temps.html',
+				   controller: 'EmploiDuTempsCtrl'
+			       }
+			   }
 		       })
 		       .state('enseignant.stats', {
 			   parent: 'enseignant',
