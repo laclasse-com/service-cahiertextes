@@ -69,6 +69,7 @@ angular.module('cahierDeTexteApp')
 				  .flatten()
 				  .pluck( 'matiere_id' )
 				  .uniq()
+				  .compact()
 				  .map( function( matiere_id ) {
 				      var matiere = { id: matiere_id,
 						      libelle: 'Matière inconnue !' };
