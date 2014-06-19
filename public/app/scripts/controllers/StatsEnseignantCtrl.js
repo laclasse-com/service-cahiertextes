@@ -167,7 +167,6 @@ angular.module('cahierDeTexteApp')
                                             function(response) {
                                                 $scope.enseignant = response;
                                                 // filtrer les classes de l'enseignnant sur l'établissement actif
-                                                $scope.enseignant.classes = $scope.current_user.profil_actif.classes;
                                                 $scope.enseignant.matieres = _($scope.enseignant.classes).uniq(function(matiere) {
                                                     return matiere.matiere_enseignee_id;
                                                 });
@@ -202,3 +201,4 @@ angular.module('cahierDeTexteApp')
                                             });
                         });
                     }]);
+						$scope.enseignant.classes = _($scope.current_user.profil_actif.classes).uniq( function( classe ) { return classe.classe_libelle; });
