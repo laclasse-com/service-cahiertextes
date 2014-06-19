@@ -166,6 +166,8 @@ angular.module('cahierDeTexteApp')
 				      })
 				      .pluck('regroupement_id')
 				      .uniq()
+				      .compact()
+				      .reject( function( id ) { return id === 'undefined'; } )
 				      .map(function(regroupement_id) {
 					  return Annuaire.get_regroupement(regroupement_id);
 				      })
@@ -180,6 +182,7 @@ angular.module('cahierDeTexteApp')
 				      .pluck('matiere_enseignee_id')
 				      .uniq()
 				      .compact()
+				      .reject( function( id ) { return id === 'undefined'; } )
 				      .map(function(matiere_id) {
 					  return [matiere_id, Annuaire.get_matiere(matiere_id)];
 				      })
@@ -193,6 +196,7 @@ angular.module('cahierDeTexteApp')
 				      .pluck('matiere_id')
 				      .uniq()
 				      .compact()
+				      .reject( function( id ) { return id === 'undefined'; } )
 				      .map(function(matiere_id) {
 					  return [matiere_id, Annuaire.get_matiere(matiere_id)];
 				      })
