@@ -13,18 +13,17 @@ angular.module( 'cahierDeTexteApp' )
 					      $scope.classes = {};
 					      $scope.montre_valides = false;
 
-					      $scope.filtre = function ( saisies ) {
+					      var filtre_saisies = function ( saisies, mois, classe ) {
 						  var data = saisies;
-						  if ( $scope.moisCourant != null ) {
+						  if ( mois != null ) {
 						      data = _( data ).where( {
-							  mois: $scope.moisCourant + 1
+							  mois: mois + 1
 						      } );
 						  }
-						  if ( $scope.classe != null ) {
+						  if ( classe != null ) {
 						      // .invert() suppose que les valeurs sont uniques
-						      var id = $scope.classe.id;
 						      data = _( data ).where( {
-							  regroupement_id: id
+							  regroupement_id: classe.id
 						      } );
 						  }
 						  return data;
@@ -83,7 +82,7 @@ angular.module( 'cahierDeTexteApp' )
 						      } );
 						  },
 						  populate: function ( saisies ) {
-						      $scope.gridSaisies = $scope.filtre( saisies );
+						      $scope.gridSaisies = filtre_saisies( saisies, $scope.moisCourant, $scope.classe );
 						      if ( !$scope.montre_valides ) {
 							  $scope.gridSaisies = _( $scope.gridSaisies ).where( {
 							      valide: false
@@ -115,7 +114,7 @@ angular.module( 'cahierDeTexteApp' )
 							  values: []
 						      };
 
-						      _.chain( $scope.filtre( data ) )
+						      _.chain( filtre_saisies( data, $scope.moisCourant, $scope.classe ) )
 							  .groupBy( 'regroupement_id' )
 							  .each( function ( classe ) {
 							      var filled = classe.length;
