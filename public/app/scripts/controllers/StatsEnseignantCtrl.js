@@ -124,7 +124,6 @@ angular.module( 'cahierDeTexteApp' )
 								  valide: true
 							      } ).length;
 
-							      console.debug($scope.classes)
 							      saisies.values.push( [ $scope.classes[ classe[ 0 ].regroupement_id ].libelle, filled ] );
 							      valides.values.push( [ $scope.classes[ classe[ 0 ].regroupement_id ].libelle, validated ] );
 
