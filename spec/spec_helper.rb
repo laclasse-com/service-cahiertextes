@@ -7,7 +7,7 @@ require 'rack/test'
 require 'sequel'
 require 'tsort'
 
-require_relative '../config/environment'
+require_relative '../config/options'
 require_relative '../config/database'
 
 require_relative '../api'

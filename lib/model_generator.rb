@@ -87,9 +87,9 @@ models_to_create.each do |m|
   writeheader(model, "model for '#{m}' table")
 
   # HEADER : Table definition
-  line = "# " << "-" * 30 << "+" << "-" * 21 << "+" << "-" * 10 << "+" << "-" * 10 << "+" << "-" * 12 << "+" << "-" * 20
+  line = "# " << "-" * 30 << "+" << "-" * 21 << "+" << "-" * 10 << "+" << "-" * 10 << "+" << "-" * 19 << "+" << "-" * 20
   model.puts(line)
-  model.puts("# COLUMN_NAME" << " " * 19 << "| DATA_TYPE" << " " * 11 << "| NULL? | KEY | DEFAULT | EXTRA")
+  model.puts("# COLUMN_NAME" << " " * 19 << "| DATA_TYPE" << " " * 11 << "| NULL?" << " " * 4 << "| KEY" << " " * 5 << " | DEFAULT" << " " * 10 << " | EXTRA")
   model.puts(line)
   DB.schema(m).each do |c|
       col = c[1]
@@ -108,7 +108,8 @@ models_to_create.each do |m|
       end
       tab4 = 9 - column_key.size
       default = col[:default].to_s
-      tab5 = 11 - default.size
+      tab5 = 18 - default.size 
+      
       extra = col[:auto_increment] ? "auto_increment" : ""
       model.puts("# #{c[0]}#{' '*tab}| #{data_type}#{' '*tab2}| #{allow_null}#{' '*tab3}| #{column_key}#{' '*tab4}| #{default}#{' '*tab5}| #{extra}")
   end
@@ -191,7 +192,6 @@ if !init.nil?
   writeheader(init, "include file to access all models")
   init.puts "# MODELS"
   models_to_create.each do |m|
-    init.puts "puts \"Loading '#{m}' model...\""
     init.puts "require_relative '#{m}'"
   end
 
