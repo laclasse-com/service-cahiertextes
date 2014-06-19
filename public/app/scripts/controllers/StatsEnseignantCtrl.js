@@ -150,18 +150,6 @@ angular.module( 'cahierDeTexteApp' )
 						  }
 					      };
 
-					      var extract = function( saisies, id_name, traitement ) {
-						  return _.chain( saisies )
-						      .flatten()
-						      .pluck( id_name )
-						      .uniq()
-						      .compact()
-						      .reject( function( item_id ) { return item_id === 'undefined'; } )
-						      .map( function( item_id ) { return traitement( item_id ); } )
-						      .object()
-						      .value();
-					      };
-
 					      User.get_user().success( function ( response ) {
 						  $scope.current_user = response;
 						  $scope.enseignant_id = $stateParams.enseignant_id;
@@ -198,6 +186,18 @@ angular.module( 'cahierDeTexteApp' )
 						  } )
 						      .$promise.then(
 							  function success( response ) {
+							      var extract = function( saisies, id_name, traitement ) {
+								  return _.chain( saisies )
+								      .flatten()
+								      .pluck( id_name )
+								      .uniq()
+								      .compact()
+								      .reject( function( item_id ) { return item_id === 'undefined'; } )
+								      .map( function( item_id ) { return traitement( item_id ); } )
+								      .object()
+								      .value();
+							      };
+
 							      $scope.raw_data = response.saisies;
 							      $scope.matieres = extract( $scope.raw_data, 'matiere_id',
 											 function( matiere_id ) {
