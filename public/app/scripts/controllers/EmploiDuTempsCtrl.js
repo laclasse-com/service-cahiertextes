@@ -179,6 +179,7 @@ angular.module('cahierDeTexteApp')
 				      })
 				      .pluck('matiere_enseignee_id')
 				      .uniq()
+				      .compact()
 				      .map(function(matiere_id) {
 					  return [matiere_id, Annuaire.get_matiere(matiere_id)];
 				      })
@@ -191,6 +192,7 @@ angular.module('cahierDeTexteApp')
 				  return _.chain(raw_data)
 				      .pluck('matiere_id')
 				      .uniq()
+				      .compact()
 				      .map(function(matiere_id) {
 					  return [matiere_id, Annuaire.get_matiere(matiere_id)];
 				      })
