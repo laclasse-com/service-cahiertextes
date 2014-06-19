@@ -158,6 +158,7 @@ angular.module( 'cahierDeTexteApp' )
 						      .flatten()
 						      .pluck( 'matiere_id' )
 						      .uniq()
+						      .compact()
 						      .each( function ( matiere_id ) {
 							  Annuaire.get_matiere( matiere_id ).$promise.then(
 							      function ( response ) {
