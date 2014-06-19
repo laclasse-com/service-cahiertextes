@@ -37,7 +37,8 @@ module CahierDeTextesAPI
           .where( '( (deleted = true and date_suppression <= ' + params[:fin].to_s + ') or (deleted = false) )')
           .where( regroupement_id: regroupements_ids )
 
-        creneaux = creneaux.where( enseignant_id: user.uid ) if Annuaire.get_user( user.uid )['profils'][0]['profil_id'] == 'ENS'
+        # le premier profil de la liste des profils est considéré comme le profil actif
+        creneaux = creneaux.where( enseignant_id: user.uid ) if Annuaire.get_user( user.uid )['profils'][ 0 ]['profil_id'] == 'ENS'
 
         creneaux.all
           .select { |creneau| weeks.reduce( true ) { |a, week| a && creneau[:semaines_de_presence][ week ] == 1 } }
@@ -78,7 +79,7 @@ module CahierDeTextesAPI
                 d[:fait]       = devoir.fait_par?( user.uid )
                 d[:start]      = Time.new( devoir.date_due.year, devoir.date_due.month, devoir.date_due.mday, hstart.hour, hstart.min ).iso8601
                 d[:end]        = Time.new( devoir.date_due.year, devoir.date_due.month, devoir.date_due.mday, hend.hour, hend.min ).iso8601
-                
+
                 d
               }
             }

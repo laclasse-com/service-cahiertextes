@@ -125,23 +125,39 @@ angular.module('cahierDeTexteApp')
 		      User.get_user().then( function( response ) {
 			  $scope.current_user = response.data;
 
-			  switch ( $scope.current_user.profil_actif.type ) {
-			  case 'ELV':
-			      $scope.calendar.options.eventRender = function( event, element ) {
-				  // FIXME: manipulation du DOM dans le contrôleur, sale
-				  // ajouter la description ici permet que l'HTML soit interprété
-				  element.find('.fc-event-title').append( event.description );
-			      };
-			      $scope.calendar.options.eventClick = function( event ) {
-				  if ( _(event.details.cours).has( 'contenu' ) ) {
-				      $scope.creneau_selectionne = event;
-				      ouvre_popup_details( event.title, event.details.cours, event.details.devoirs );
-				  }
-			      };
-			      break;
+			  var populate_calendar = function( raw_data ) {
+			      $scope.calendar.events[0] = _.chain( raw_data )
+				  .map( function( event ) {
+				      return fullCalendarize_event( event );
+				  } )
+				  .flatten()
+				  .value();
+			  };
 
+			  $scope.refresh_calendar = function(  ) {
+			      populate_calendar( filter_data( $scope.raw_data ) );
+			  };
+
+			  var retrieve_data = function( from_date, to_date ) {
+			      EmploisDuTemps.query(
+				  { debut: from_date,
+				    fin: to_date,
+				    uai: $scope.current_user.profil_actif.uai },
+				  function( response ) {
+				      $scope.raw_data = response;
+				      $scope.refresh_calendar();
+				  });
+			  };
+
+			  $scope.calendar.options.viewRender = function( view, element ) {
+			      // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
+			      retrieve_data( view.visStart, view.visEnd );
+			  };
+
+			  switch ( $scope.current_user.profil_actif.type ) {
 			  case 'ENS':
 			      $scope.calendar.options.selectable = true;
+			      $scope.calendar.options.editable = true;
 
 			      var list_classes = function(user) {
 				  return _.chain(user.classes)
@@ -198,6 +214,11 @@ angular.module('cahierDeTexteApp')
 				  return cours;
 			      };
 
+			      var popup_callback = function( scope_popup ) {
+				  var view = $scope.emploi_du_temps.fullCalendar( 'getView' );
+				  retrieve_data( view.visStart, view.visEnd );
+			      };
+
 			      // édition d'un créneau existant
 			      $scope.calendar.options.eventClick = function ( event ) {
 				  var creneau_selectionne = _( event.source.events )
@@ -240,42 +261,21 @@ angular.module('cahierDeTexteApp')
 						       types_de_devoir, matieres_enseignees, $scope.classes,
 						       creneau_selectionne, event.details.matiere_id, event.details.regroupement_id,
 						       cours, devoirs,
-						       function popup_callback( scope_popup ) {
-							   var index = _( $scope.calendar.events[ 0 ] )
-								   .indexOf( creneau_selectionne );
-							   if ( scope_popup.creneau_deleted ) {
-							       $scope.calendar.events[ 0 ].splice( index, 1 );
-							   } else {
-							       var updated_event = update_fullCalendar_event( creneau_selectionne, scope_popup.cours, scope_popup.devoirs );
-							       _.chain( updated_event )
-								   .keys()
-								   .reject( function ( key ) { //updated_event n'a pas de title
-								       return key == "title" || key == "regroupement";
-								   } )
-								   .each( function ( propriete ) {
-								       $scope.calendar.events[ 0 ][ index ][ propriete ] = updated_event[ propriete ];
-								   } );
-
-							       $scope.emploi_du_temps.fullCalendar( 'renderEvent', $scope.calendar.events[ 0 ][ index ] );
-							   }
-						       }
-						     );
+						       popup_callback );
 			      };
 
 			      // création d'un nouveau créneau
 			      // Le regroupement_id peut être null car on n'a pas fait de choix au niveau de la select box des classes sur full_calendar
 			      $scope.calendar.options.select = function ( start, end, allDay ) {
-				  var timezoneOffset = new Date( start )
-					  .getTimezoneOffset() * 60000;
-				  var creneau_selectionne = new CreneauEmploiDuTemps( {
+				  start = $filter('correctTimeZone')(start);
+				  end = $filter('correctTimeZone')(end);
+				  var creneau_selectionne = new CreneauEmploiDuTemps({
 				      regroupement_id: $scope.classe === null ? '' : '' + $scope.classe,
 				      jour_de_la_semaine: start.getDay() + 1,
-				      heure_debut: new Date( new Date( start ) - timezoneOffset )
-					  .toISOString(),
-				      heure_fin: new Date( new Date( end ) - timezoneOffset )
-					  .toISOString(),
+				      heure_debut: new Date(new Date(start)).toISOString(),
+				      heure_fin: new Date(new Date(end)).toISOString(),
 				      matiere_id: ''
-				  } );
+				  });
 				  creneau_selectionne.$save()
 				      .then( function () {
 					  creneau_selectionne.dirty = true;
@@ -297,15 +297,7 @@ angular.module('cahierDeTexteApp')
 								       types_de_devoir, matieres_enseignees, $scope.classes,
 								       creneau_selectionne, creneau_selectionne.matiere_id, creneau_selectionne.regroupement_id,
 								       create_cours( creneau_selectionne ), [],
-								       function popup_callback( scope_popup ) {
-									   if ( ! scope_popup.dirty ) {
-									       creneau_selectionne.$delete(); //full stop
-									   }
-
-									   var view = $scope.emploi_du_temps.fullCalendar( 'getView' );
-									   retrieve_data( view.visStart, view.visEnd );
-								       }
-								     );
+								       popup_callback );
 					      } );
 
 					  $scope.emploi_du_temps.fullCalendar( 'unselect' );
@@ -330,38 +322,23 @@ angular.module('cahierDeTexteApp')
 
 				  return filtered_data;
 			      };
+			      break;
 
+			  case 'ELV':
+			  default:
+			      $scope.calendar.options.eventRender = function( event, element ) {
+				  // FIXME: manipulation du DOM dans le contrôleur, sale
+				  // ajouter la description ici permet que l'HTML soit interprété
+				  element.find('.fc-event-title').append( event.description );
+			      };
+			      $scope.calendar.options.eventClick = function( event ) {
+				  if ( _(event.details.cours).has( 'contenu' ) ) {
+				      $scope.creneau_selectionne = event;
+				      ouvre_popup_details( event.title, event.details.cours, event.details.devoirs );
+				  }
+			      };
 			      break;
 			  }
-
-			  var populate_calendar = function( raw_data ) {
-			      $scope.calendar.events[0] = _.chain( raw_data )
-				  .map( function( event ) {
-				      return fullCalendarize_event( event );
-				  } )
-				  .flatten()
-				  .value();
-			  };
-
-			  $scope.refresh_calendar = function(  ) {
-			      populate_calendar( filter_data( $scope.raw_data ) );
-			  };
-
-			  var retrieve_data = function( from_date, to_date ) {
-			      EmploisDuTemps.query(
-				  { debut: from_date,
-				    fin: to_date,
-				    uai: $scope.current_user.profil_actif.uai },
-				  function( response ) {
-				      $scope.raw_data = response;
-				      $scope.refresh_calendar();
-				  });
-			  };
-
-			  $scope.calendar.options.viewRender = function( view, element ) {
-			      // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
-			      retrieve_data( view.visStart, view.visEnd );
-			  };
 
 		      } );
 		  } ] );

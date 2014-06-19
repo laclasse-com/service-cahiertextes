@@ -12,6 +12,8 @@ angular.module( 'cahierDeTexteApp' )
 		       // devoirs
 		       scope_popup.devoirs = devoirs;
 		       scope_popup.types_de_devoir = types_de_devoir;
+
+		       scope_popup.creneau_selectionne = creneau_selectionne;
 		       scope_popup.matieres = matieres;
 		       scope_popup.classes = classes;
 		       scope_popup.creneau_en_creation = matiere_id.length == 0 || regroupement_id === undefined;
@@ -244,18 +246,21 @@ angular.module( 'cahierDeTexteApp' )
 
 		       scope_popup.effacer_creneau = function () {
 			   CreneauEmploiDuTemps.delete( {
-			       id: creneau_selectionne.id,
+			       id: scope_popup.creneau_selectionne.id,
 			       date_creneau: $scope.cours.date_cours
 			   } )
 			       .$promise.then( function () {
-				   scope_popup.creneau_deleted = true;
 				   scope_popup.fermer();
 			       } );
 		       };
 
 		       scope_popup.annuler = function () {
-			   scope_popup.dirty = false;
-			   scope_popup.fermer();
+			   if ( scope_popup.creneau_en_creation ) {
+			       scope_popup.effacer_creneau();
+			   } else {
+			       scope_popup.dirty = false;
+			       scope_popup.fermer();
+			   }
 		       };
 
 		       scope_popup.valider = function () {
@@ -263,6 +268,12 @@ angular.module( 'cahierDeTexteApp' )
 			   scope_popup.erreurs = [];
 
 			   if ( scope_popup.matiere_id !== '' && scope_popup.regroupement_id !== '' ) {
+			       if ( scope_popup.creneau_en_creation ) {
+				   scope_popup.creneau_selectionne.matiere_id = scope_popup.matiere_id;
+				   scope_popup.creneau_selectionne.regroupement_id = scope_popup.regroupement_id;
+				   scope_popup.creneau_selectionne.$update();
+			       }
+
 			       // traitement de la séquence pédagogique
 			       var promesse = $q.when( true );
 			       if ( _( scope_popup.cours ).has( 'contenu' ) && ( scope_popup.cours.contenu.length > 0 ) ) {
@@ -272,7 +283,7 @@ angular.module( 'cahierDeTexteApp' )
 				       scope_popup.cours.cahier_de_textes_id = _( scope_popup.classes ).findWhere( {
 					   id: scope_popup.regroupement_id
 				       } ).cahier_de_textes_id;
-				       scope_popup.cours.creneau_emploi_du_temps_id = creneau_selectionne.id;
+				       scope_popup.cours.creneau_emploi_du_temps_id = scope_popup.creneau_selectionne.id;
 				       promesse = scope_popup.cours.$save();
 				   } else {
 				       promesse = scope_popup.cours.$update();
