@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EmploiDuTempsCtrl',
-		[ '$scope', '$modal', '$q', '$filter', 'CALENDAR_OPTIONS', 'CALENDAR_PARAMS', 'API', 'Annuaire', 'EmploisDuTemps', 'User', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs',
-		  function ( $scope, $modal, $q, $filter, CALENDAR_OPTIONS, CALENDAR_PARAMS, API, Annuaire, EmploisDuTemps, User, CreneauEmploiDuTemps, Cours, Devoirs ) {
+		[ '$scope', '$modal', '$q', '$filter', 'CALENDAR_OPTIONS', 'CALENDAR_PARAMS', 'API', 'Annuaire', 'EmploisDuTemps', 'User', 'CreneauEmploiDuTemps',
+		  function ( $scope, $modal, $q, $filter, CALENDAR_OPTIONS, CALENDAR_PARAMS, API, Annuaire, EmploisDuTemps, User, CreneauEmploiDuTemps ) {
 		      var filter_data = angular.identity;
 		      var types_de_devoir = [];
 		      var matieres = [];
@@ -209,17 +209,6 @@ angular.module('cahierDeTexteApp')
 			      matieres_enseignees = list_matieres_enseignees( $scope.current_user );
 			      $scope.classes = list_classes( $scope.current_user );
 
-			      var create_cours = function(creneau) {
-				  var cours = new Cours({
-				      cahier_de_textes_id: creneau.cahier_de_textes_id,
-				      creneau_emploi_du_temps_id: creneau.id,
-				      date_cours: new Date(creneau.start).toISOString()
-				  });
-				  cours.create = true;
-
-				  return cours;
-			      };
-
 			      var popup_callback = function( scope_popup ) {
 				  var view = $scope.emploi_du_temps.fullCalendar( 'getView' );
 				  retrieve_data( view.visStart, view.visEnd );
@@ -261,7 +250,7 @@ angular.module('cahierDeTexteApp')
 					      }
 					  } );
 				  } else {
-				      cours = create_cours( creneau_selectionne );
+				      cours = null;
 				  }
 				  ouvre_popup_edition( $scope.raw_data,
 						       types_de_devoir, matieres_enseignees, $scope.classes,
@@ -302,7 +291,7 @@ angular.module('cahierDeTexteApp')
 						  ouvre_popup_edition( $scope.raw_data,
 								       types_de_devoir, matieres_enseignees, $scope.classes,
 								       creneau_selectionne, creneau_selectionne.matiere_id, creneau_selectionne.regroupement_id,
-								       create_cours( creneau_selectionne ), [],
+								       null, [],
 								       popup_callback );
 					      } );
 
