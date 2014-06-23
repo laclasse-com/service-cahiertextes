@@ -64,7 +64,7 @@
   </div>
 
 
-      
+
     </div>
   </div>
 
@@ -75,10 +75,9 @@
 
 	  <select data-ng-required="true" data-ng-model="devoir.type_devoir_id"
 		  data-ng-options="type_de_devoir.id as type_de_devoir.description for type_de_devoir in types_de_devoir">
-	    <option value="" disabled selected>Choisissez un type de devoir</option>
 	  </select>
 
-          <select data-ng-required="true" data-ng-model="devoir.date_due" data-ng-change="set_creneau_date_due( devoir )"
+	  <select data-ng-required="true" data-ng-model="devoir.date_due" data-ng-change="set_creneau_date_due( devoir )"
 		  data-ng-options="creneau.date_due as creneau.label_sbox group by creneau.semaine for creneau in creneaux_devoirs_possibles">
 	  </select>
       </div>

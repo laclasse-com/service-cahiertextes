@@ -211,9 +211,9 @@ angular.module( 'cahierDeTexteApp' )
 		       scope_popup.ajout_devoir = function () {
 			   var devoir = new Devoirs( {
 			       cours_id: scope_popup.cours.id,
-			       date_due: new Date().toISOString(),
-			       type_devoir_id: null,
-			       creneau_emploi_du_temps_id: null
+			       date_due: $filter( 'date' )( scope_popup.creneau_selectionne.start, 'yyyy-MM-dd' ),
+			       type_devoir_id: _(scope_popup.types_de_devoir).last().id,
+			       creneau_emploi_du_temps_id: scope_popup.creneau_selectionne.id
 			   } );
 			   devoir.create = true;
 
