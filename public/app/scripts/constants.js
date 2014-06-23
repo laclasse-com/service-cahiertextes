@@ -66,7 +66,7 @@ angular.module( 'cahierDeTexteApp' )
     .constant( 'TINYMCE_OPTIONS', { menubar: false,
 				    statusbar: false,
 				    plugins: "textcolor paste contextmenu autoresize",
-				    toolbar: "undo redo | styleselect | bold italic | link image | forecolor | backcolor",
+				    toolbar: "styleselect | bold italic | link image | forecolor | backcolor",
 				    contextmenu: "bold italic",
 				    insertdatetime_formats: ["%d/%m/%Y", "%H:%M"]
 
