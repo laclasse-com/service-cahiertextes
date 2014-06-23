@@ -315,7 +315,7 @@ angular.module('cahierDeTexteApp')
 			      $scope.calendar.options.eventRender = function ( event, element ) {
 				  // FIXME: manipulation du DOM dans le contrôleur, sale, mais obligé pour l'interprétation du HTML ?
 				  var html_element = element.find( '.fc-event-title' );
-				  console.debug(event)
+
 				  html_element.append( ' - ' + event.regroupement.libelle + '<br>' + event.description );
 				  if ( event.has_resources ) {
 				      html_element.prepend( '<i class="glyphicon glyphicon-paperclip"></i>' );
