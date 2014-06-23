@@ -18,7 +18,7 @@ angular.module( 'cahierDeTexteApp' )
 		       scope_popup.classes = classes;
 		       scope_popup.creneau_en_creation = matiere_id.length == 0 || regroupement_id === undefined;
 		       scope_popup.matiere_id = matiere_id.length > 0 ? matiere_id : _.chain( scope_popup.matieres ).values().first().value().id;
-		       scope_popup.regroupement_id = regroupement_id !== undefined ? parseInt( regroupement_id ) : _( scope_popup.classes ).first().id;
+		       scope_popup.regroupement_id = regroupement_id !== 'undefined' ? parseInt( regroupement_id ) : _( scope_popup.classes ).first().id;
 		       scope_popup.classe = _( scope_popup.classes ).findWhere( {
 			   id: parseInt( scope_popup.regroupement_id )
 		       } );
