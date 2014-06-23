@@ -28,7 +28,7 @@ angular.module('cahierDeTexteApp')
 		      // popup d'édition
 		      var ouvre_popup_edition = function ( raw_data, types_de_devoir, matieres, classes, creneau_selectionne, matiere_id, regroupement_id, cours, devoirs, popup_callback ) {
 			  $modal.open( {
-			      templateUrl: 'app/views/enseignant/detail_emploi_du_temps.html',
+			      templateUrl: 'app/views/enseignant/edition_emploi_du_temps.html',
 			      controller: 'EmploiDuTempsPopupEditionCtrl',
 			      resolve: {
 				  raw_data: function () { return raw_data; },
