@@ -2,13 +2,29 @@
 
 angular.module( 'cahierDeTexteApp' )
     .controller( 'EmploiDuTempsPopupEditionCtrl',
-		 [ '$scope', '$filter', '$q', 'TINYMCE_OPTIONS', '$modalInstance', 'Documents', 'CreneauEmploiDuTemps', 'Devoirs', 'cours', 'devoirs', 'types_de_devoir', 'creneau_selectionne', 'matiere_id', 'regroupement_id', 'raw_data', 'classes', 'matieres',
-		   function ( $scope, $filter, $q, TINYMCE_OPTIONS, $modalInstance, Documents, CreneauEmploiDuTemps, Devoirs, cours, devoirs, types_de_devoir, creneau_selectionne, matiere_id, regroupement_id, raw_data, classes, matieres ) {
+		 [ '$scope', '$filter', '$q', 'TINYMCE_OPTIONS', '$modalInstance', 'Documents', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs', 'cours', 'devoirs', 'types_de_devoir', 'creneau_selectionne', 'matiere_id', 'regroupement_id', 'raw_data', 'classes', 'matieres',
+		   function ( $scope, $filter, $q, TINYMCE_OPTIONS, $modalInstance, Documents, CreneauEmploiDuTemps, Cours, Devoirs, cours, devoirs, types_de_devoir, creneau_selectionne, matiere_id, regroupement_id, raw_data, classes, matieres ) {
 		       // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
 		       var scope_popup = $scope;
+
+		       var create_cours = function( creneau ) {
+			   var cours = new Cours({
+			       cahier_de_textes_id: creneau.cahier_de_textes_id,
+			       creneau_emploi_du_temps_id: creneau.id,
+			       date_cours: new Date(creneau.start).toISOString()
+			   });
+			   cours.create = true;
+
+			   return cours;
+		       };
+
 		       // Initialisations {{{
 		       scope_popup.tinyMCEOptions = TINYMCE_OPTIONS;
-		       scope_popup.cours = cours;
+		       if ( cours === null ) {
+			   scope_popup.cours = create_cours( creneau_selectionne );
+		       } else {
+			   scope_popup.cours = cours;
+		       }
 		       // devoirs
 		       scope_popup.devoirs = devoirs;
 		       scope_popup.types_de_devoir = types_de_devoir;
