@@ -333,7 +333,7 @@ angular.module('cahierDeTexteApp')
 				  }
 
 				  if ( $scope.uniquement_mes_creneaux ) {
-				      filtered_data = _( $scope.raw_data ).filter( function( creneau ) {
+				      filtered_data = _( filtered_data ).filter( function( creneau ) {
 					  return creneau.enseignant_id === $scope.current_user.uid;
 				      } );
 				  }
