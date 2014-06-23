@@ -63,6 +63,7 @@ angular.module('cahierDeTexteApp')
 					   devoirs: event.devoirs,
 					   cahier_de_textes_id: event.cahier_de_textes_id,
 					   regroupement_id: event.regroupement_id,
+					   enseignant_id: event.enseignant_id,
 					   matiere_id: event.matiere_id,
 					   creneau_emploi_du_temps_id: event.creneau_emploi_du_temps_id };
 			  this.allDay = false;
@@ -88,7 +89,6 @@ angular.module('cahierDeTexteApp')
 				      _this.title = response.label;
 				  });
 			  }
-			  this.className += ' clickable-event';
 			  this.start = new Date( item.start );
 			  this.end = new Date( item.end );
 
@@ -97,11 +97,21 @@ angular.module('cahierDeTexteApp')
 			      this.description += item.contenu.substring( 0, CALENDAR_PARAMS.max_length );
 			      this.description += item.contenu.length > CALENDAR_PARAMS.max_length ? '…' : '';
 			      this.description += '</span>';
-			      this.className += ' clickable-event';
 			      this.id = item.id;
+			      if ( _(item).has( 'ressources' ) && item.ressources.length > 0 ) {
+				  this.className += ' has-ressources';
+			      }
 			  } else {
-			      this.className = 'saisie-vide un-clickable-event';
+			      this.className = 'saisie-vide';
 			  }
+
+			  if ( ( $scope.current_user.profil_actif.type === 'ELV' && _(item).has( 'contenu' ) && item.contenu.length > 0 ) ||
+			       ( $scope.current_user.profil_actif.type === 'ENS' && this.details.enseignant_id === $scope.current_user.uid ) ) {
+			      this.className += ' clickable-event';
+			  } else {
+			      this.className += ' unclickable-event';
+			  }
+
 		      };
 
 		      var fullCalendarize_event = function( item_emploi_du_temps ) {
@@ -225,41 +235,43 @@ angular.module('cahierDeTexteApp')
 					  } );
 				  creneau_selectionne.id = creneau_selectionne.details.creneau_emploi_du_temps_id;
 
-				  // 1. cours
-				  var cours = null;
-				  var devoirs = [];
+				  if ( creneau_selectionne.details.enseignant_id === $scope.current_user.uid ) {
+				      // 1. cours
+				      var cours = null;
+				      var devoirs = [];
 
-				  if ( creneau_selectionne.details.cours.id !== undefined ) {
-				      cours = API.get_cours( {
-					  id: creneau_selectionne.details.cours.id
-				      } );
-				      cours.create = false;
-
-				      $q.all( $scope.cours, types_de_devoir, matieres, $scope.classes )
-					  .then( function () {
-					      // 2. devoir
-					      if ( creneau_selectionne.details.devoirs.length > 0 ) {
-						  _( creneau_selectionne.details.devoirs )
-						      .each( function ( devoir ) {
-							  API.get_devoir( {
-							      id: creneau_selectionne.details.devoirs[ 0 ].id
-							  } )
-							      .$promise
-							      .then( function ( vrai_devoir ) {
-								  devoirs.push( vrai_devoir );
-							      } );
-						      } );
-						  devoirs.create = false;
-					      }
+				      if ( creneau_selectionne.details.cours.id !== undefined ) {
+					  cours = API.get_cours( {
+					      id: creneau_selectionne.details.cours.id
 					  } );
-				  } else {
-				      cours = null;
+					  cours.create = false;
+
+					  $q.all( $scope.cours, types_de_devoir, matieres, $scope.classes )
+					      .then( function () {
+						  // 2. devoir
+						  if ( creneau_selectionne.details.devoirs.length > 0 ) {
+						      _( creneau_selectionne.details.devoirs )
+							  .each( function ( devoir ) {
+							      API.get_devoir( {
+								  id: creneau_selectionne.details.devoirs[ 0 ].id
+							      } )
+								  .$promise
+								  .then( function ( vrai_devoir ) {
+								      devoirs.push( vrai_devoir );
+								  } );
+							  } );
+						      devoirs.create = false;
+						  }
+					      } );
+				      } else {
+					  cours = null;
+				      }
+				      ouvre_popup_edition( $scope.raw_data,
+							   types_de_devoir, matieres_enseignees, $scope.classes,
+							   creneau_selectionne, event.details.matiere_id, event.details.regroupement_id,
+							   cours, devoirs,
+							   popup_callback );
 				  }
-				  ouvre_popup_edition( $scope.raw_data,
-						       types_de_devoir, matieres_enseignees, $scope.classes,
-						       creneau_selectionne, event.details.matiere_id, event.details.regroupement_id,
-						       cours, devoirs,
-						       popup_callback );
 			      };
 
 			      // création d'un nouveau créneau
