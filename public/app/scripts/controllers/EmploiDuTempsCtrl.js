@@ -156,6 +156,7 @@ angular.module('cahierDeTexteApp')
 
 			  switch ( $scope.current_user.profil_actif.type ) {
 			  case 'ENS':
+			      $scope.uniquement_mes_creneaux = false;
 			      $scope.calendar.options.selectable = true;
 			      $scope.calendar.options.editable = true;
 
@@ -312,6 +313,12 @@ angular.module('cahierDeTexteApp')
 				  if ( $scope.classe != null ) {
 				      filtered_data = _( $scope.raw_data ).filter( function( creneau ) {
 					  return creneau.regroupement_id == $scope.classe;
+				      } );
+				  }
+
+				  if ( $scope.uniquement_mes_creneaux ) {
+				      filtered_data = _( $scope.raw_data ).filter( function( creneau ) {
+					  return creneau.enseignant_id === $scope.current_user.uid;
 				      } );
 				  }
 

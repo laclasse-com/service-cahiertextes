@@ -31,19 +31,14 @@ module CahierDeTextesAPI
         # FIXME: Un creneau "deleted" ne doit pas empecher les saisies déjà effectuée d'apparaitre
         # Soit le créneau est marqué deleted ET les dates debut et fin sont antérieures à la date deleted
         # Soit le créneau n'est pas marqué deleted et pas de restriction sur les dates debut et fin
-        creneaux = CreneauEmploiDuTemps
+        CreneauEmploiDuTemps
           .association_join( :regroupements )
           .association_join( :enseignants )
-          .where( '( (deleted = true and date_suppression <= ' + params[:fin].to_s + ') or (deleted = false) )')
+          .where( "( (deleted = true and date_suppression <= #{params[:fin]}) or (deleted = false) )" )
           .where( regroupement_id: regroupements_ids )
-
-        # le premier profil de la liste des profils est considéré comme le profil actif
-        creneaux = creneaux.where( enseignant_id: user.uid ) if Annuaire.get_user( user.uid )['profils'][ 0 ]['profil_id'] == 'ENS'
-
-        creneaux.all
+          .all
           .select { |creneau| weeks.reduce( true ) { |a, week| a && creneau[:semaines_de_presence][ week ] == 1 } }
           .map { |creneau|
-
           plage_debut = PlageHoraire[ creneau.debut ].debut
           plage_fin = PlageHoraire[ creneau.fin ].fin
 
@@ -86,6 +81,7 @@ module CahierDeTextesAPI
 
             {  cahier_de_textes_id: cahier_de_textes.id,
                regroupement_id: cahier_de_textes.regroupement_id,
+               enseignant_id: creneau[:enseignant_id],
                creneau_emploi_du_temps_id: creneau.id,
                matiere_id: creneau.matiere_id,
                start: Time.new( jour.year, jour.month, jour.mday, plage_debut.hour, plage_debut.min ).iso8601,
