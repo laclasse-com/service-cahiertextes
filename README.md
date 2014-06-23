@@ -1,7 +1,7 @@
 service-cahiertextes
 ====================
 
-service de cahier de textes de laclasse.com.
+service de cahier de textes pour l'ENT. Ce service peut-eêtre alimenté par les extractions de EDT.
 
 
 Documentation API
