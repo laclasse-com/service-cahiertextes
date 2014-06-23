@@ -71,6 +71,7 @@ angular.module('cahierDeTexteApp')
 			  this.description = '';
 			  this.regroupement = _($scope.classes).findWhere({ id: parseInt( this.details.regroupement_id ) });
 			  this.type = ( _(item).has( 'fait' ) ) ? 'devoir': 'cours';
+			  this.has_resources = _(item).has( 'ressources' ) && item.ressources.length > 0;
 
 			  if ( this.type === 'cours' ) {
 			      item.start = event.start;
@@ -78,7 +79,7 @@ angular.module('cahierDeTexteApp')
 			      this.className = 'saisie-invalide';
 			      if ( event.matiere_id.length > 0 ) {
 				  Annuaire.get_matiere( event.matiere_id ).$promise.then( function success( response ) {
-				      _this.title = response.libelle_long;
+				      _this.title += response.libelle_long;
 				  });
 			      }
 			  } else {
@@ -86,7 +87,7 @@ angular.module('cahierDeTexteApp')
 
 			      API.get_type_de_devoir( { id: item.type_devoir_id } )
 				  .$promise.then( function success( response ) {
-				      _this.title = response.label;
+				      _this.title += response.label;
 				  });
 			  }
 			  this.start = new Date( item.start );
@@ -98,9 +99,6 @@ angular.module('cahierDeTexteApp')
 			      this.description += item.contenu.length > CALENDAR_PARAMS.max_length ? '…' : '';
 			      this.description += '</span>';
 			      this.id = item.id;
-			      if ( _(item).has( 'ressources' ) && item.ressources.length > 0 ) {
-				  this.className += ' has-ressources';
-			      }
 			  } else {
 			      this.className = 'saisie-vide';
 			  }
@@ -316,8 +314,12 @@ angular.module('cahierDeTexteApp')
 
 			      $scope.calendar.options.eventRender = function ( event, element ) {
 				  // FIXME: manipulation du DOM dans le contrôleur, sale, mais obligé pour l'interprétation du HTML ?
-				  element.find( '.fc-event-title' )
-				      .append( ' - ' + event.regroupement.libelle + '<br>' + event.description );
+				  var html_element = element.find( '.fc-event-title' );
+				  console.debug(event)
+				  html_element.append( ' - ' + event.regroupement.libelle + '<br>' + event.description );
+				  if ( event.has_resources ) {
+				      html_element.prepend( '<i class="glyphicon glyphicon-paperclip"></i>' );
+				  }
 			      };
 
 			      filter_data = function( raw_data ) {
@@ -345,7 +347,13 @@ angular.module('cahierDeTexteApp')
 			      $scope.calendar.options.eventRender = function( event, element ) {
 				  // FIXME: manipulation du DOM dans le contrôleur, sale
 				  // ajouter la description ici permet que l'HTML soit interprété
-				  element.find('.fc-event-title').append( event.description );
+				  html_element = element.find( '.fc-event-title' );
+
+				  html_element.append( event.description );
+				  if ( event.has_resources ) {
+				      html_element.prepend( '<i class="glyphicon glyphicon-paperclip"></i>' );
+				  }
+
 			      };
 			      $scope.calendar.options.eventClick = function( event ) {
 				  if ( _(event.details.cours).has( 'contenu' ) ) {
