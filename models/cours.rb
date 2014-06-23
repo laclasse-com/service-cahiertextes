@@ -6,8 +6,8 @@ class Cours < Sequel::Model( :cours )
   many_to_one :cahier_de_textes
 
   def to_hash_avec_ressources
-    hash = this.to_hash
-    hash[:ressources] = this.ressources.map { |rsrc| rsrc.to_hash }
+    hash = self.to_hash
+    hash[:ressources] = self.ressources.map { |rsrc| rsrc.to_hash }
     hash
   end
 end
