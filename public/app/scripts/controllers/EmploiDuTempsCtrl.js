@@ -15,8 +15,8 @@ angular.module('cahierDeTexteApp')
 		      var ouvre_popup_details = function( titre, cours, devoirs ) {
 			  $modal.open( { templateUrl: 'app/views/eleve/detail_emploi_du_temps.html',
 					 controller: 'EmploiDuTempsPopupDisplayCtrl',
-					 resolve: { titre: function() { return titre; },
-						    cours: function() { return cours; },
+					 resolve: { titre  : function() { return titre; },
+						    cours  : function() { return cours; },
 						    devoirs: function() { return devoirs; } } }
 				     ).result.then( function ( scope_popup ) {
 					 _(scope_popup.devoirs).each(function(devoir) {
@@ -31,15 +31,15 @@ angular.module('cahierDeTexteApp')
 			      templateUrl: 'app/views/enseignant/edition_emploi_du_temps.html',
 			      controller: 'EmploiDuTempsPopupEditionCtrl',
 			      resolve: {
-				  raw_data: function () { return raw_data; },
-				  types_de_devoir: function () { return types_de_devoir; },
-				  matieres: function () { return matieres; },
-				  classes: function () { return classes; },
+				  raw_data	     : function () { return raw_data; },
+				  types_de_devoir    : function () { return types_de_devoir; },
+				  matieres	     : function () { return matieres; },
+				  classes	     : function () { return classes; },
 				  creneau_selectionne: function () { return creneau_selectionne; },
-				  matiere_id: function () { return matiere_id; },
-				  regroupement_id: function () { return regroupement_id; },
-				  cours: function () { return cours; },
-				  devoirs: function () { return devoirs; }
+				  matiere_id	     : function () { return matiere_id; },
+				  regroupement_id    : function () { return regroupement_id; },
+				  cours		     : function () { return cours; },
+				  devoirs	     : function () { return devoirs; }
 			      }
 			  } )
 			      .result.then( // éxécuté à la fermeture de la popup
