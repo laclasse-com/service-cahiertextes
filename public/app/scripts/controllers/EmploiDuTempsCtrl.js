@@ -126,12 +126,14 @@ angular.module('cahierDeTexteApp')
 			  $scope.current_user = response.data;
 
 			  var populate_calendar = function( raw_data ) {
-			      $scope.calendar.events[0] = _.chain( raw_data )
-				  .map( function( event ) {
-				      return fullCalendarize_event( event );
-				  } )
-				  .flatten()
-				  .value();
+			      var events = _.chain( raw_data )
+				      .map( function( event ) {
+					  return fullCalendarize_event( event );
+				      } )
+				      .flatten()
+				      .value();
+			      $scope.calendar.events[0] = _(events).filter( function( event ) { return event.type === 'cours'; } );
+			      $scope.calendar.events[1] = _(events).filter( function( event ) { return event.type === 'devoir'; } );
 			  };
 
 			  $scope.refresh_calendar = function(  ) {
