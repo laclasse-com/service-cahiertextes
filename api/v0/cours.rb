@@ -56,7 +56,7 @@ module CahierDeTextesAPI
                                                   hash: ressource['hash'] ) )
         end
 
-        cours
+        cours.to_hash_avec_ressources
       end
 
       desc 'modifie une séquence pédagogique'
@@ -72,15 +72,18 @@ module CahierDeTextesAPI
           cours.contenu = params[:contenu]
           cours.date_modification = Time.now
 
-          params[:ressources] && params[:ressources].each do
-            |ressource|
-            cours.add_ressource( Ressource.create(  name: ressource['name'],
+          if params[:ressources]
+            cours.remove_all_ressources
+            params[:ressources].each do
+              |ressource|
+              cours.add_ressource( Ressource.create(name: ressource['name'],
                                                     hash: ressource['hash'] ) )
+            end
           end
 
           cours.save
 
-          cours
+          cours.to_hash_avec_ressources
         end
       end
 
@@ -98,7 +101,7 @@ module CahierDeTextesAPI
 
           cours.save
 
-          cours
+          cours.to_hash_avec_ressources
         end
       end
 
@@ -124,19 +127,7 @@ module CahierDeTextesAPI
             new_cours.add_ressource( ressource )
           end
 
-          # Devoir.where( cours_id: cours.id ).all.each {
-          #   |devoir|
-          #   Devoir.create(  cours_id: new_cours.id,
-          #                   creneau_emploi_du_temps_id: devoir.creneau_emploi_du_temps_id, # FIXME: à recalculer
-          #                   type_devoir_id: devoir.type_devoir_id,
-          #                   contenu: devoir.contenu,
-          #                   date_creation: Time.now,
-          #                   date_modification: nil,
-          #                   date_validation: nil,
-          #                   date_due: devoir.date_due, # FIXME: à recalculer
-          #                   temps_estime: devoir.temps_estime )
-          # }
-          new_cours
+          new_cours.to_hash_avec_ressources
         end
       end
 
@@ -153,7 +144,7 @@ module CahierDeTextesAPI
 
           cours.save
 
-          cours
+          cours.to_hash_avec_ressources
         end
       end
     end
