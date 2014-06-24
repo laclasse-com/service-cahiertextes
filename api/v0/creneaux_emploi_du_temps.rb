@@ -80,6 +80,8 @@ module CahierDeTextesAPI
         requires :matiere_id
         requires :regroupement_id
 
+        optional :heure_debut, type: Time
+        optional :heure_fin, type: Time
         optional :salle_id
       }
       put '/:id'  do
@@ -87,6 +89,25 @@ module CahierDeTextesAPI
 
         creneau = CreneauEmploiDuTemps[ params[:id] ]
         unless creneau.nil?
+
+          if params[:heure_debut]
+            plage_horaire_debut = PlageHoraire.where(debut: params[:heure_debut] ).first
+            if plage_horaire_debut.nil?
+              plage_horaire_debut = PlageHoraire.create(label: '',
+                                                        debut: params[:heure_debut],
+                                                        fin: params[:heure_debut] + 1800 )
+            end
+            creneau.debut = plage_horaire_debut.id
+          end
+          if params[:heure_fin]
+            plage_horaire_fin = PlageHoraire.where(fin: params[:heure_fin] ).first
+            if plage_horaire_fin.nil?
+              plage_horaire_fin = PlageHoraire.create(label: '',
+                                                      debut: params[:heure_fin] - 1800,
+                                                      fin: params[:heure_fin] )
+            end
+            creneau.fin = plage_horaire_fin.id
+          end
           creneau.matiere_id = params[:matiere_id]
 
           creneau.save
