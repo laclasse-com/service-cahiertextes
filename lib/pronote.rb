@@ -33,13 +33,10 @@ module ProNote
   end
 
   def decrypt_xml( encrypted_xml )
-    nom_integrateur = 'LaclasseCom'
-    cle_integrateur = '/home/cycojesus/projets/Erasme/service-cahiertextes/clef_privee' # FIXME
-
     encrypted_edt_export_file = Nokogiri::XML( encrypted_xml )
 
-    crypted_wrapped_data = Base64.decode64( encrypted_edt_export_file.search( 'PARTENAIRE' ).select { |part| part.attributes[ 'NOM' ].value == nom_integrateur }.first.text )
-    decrypted_wrapped_data = decrypt_wrapped_data( crypted_wrapped_data, cle_integrateur )
+    crypted_wrapped_data = Base64.decode64( encrypted_edt_export_file.search( 'PARTENAIRE' ).select { |part| part.attributes[ 'NOM' ].value == PRONOTE[:nom_integrateur] }.first.text )
+    decrypted_wrapped_data = decrypt_wrapped_data( crypted_wrapped_data, PRONOTE[:cle_integrateur] )
     aes_secret_key = decrypted_wrapped_data[ 0..16 ]
     aes_iv = decrypted_wrapped_data[ 16..32 ]
 
