@@ -26,7 +26,7 @@ angular.module('cahierDeTexteApp')
 				     });
 		      };
 		      // popup d'édition
-		      var ouvre_popup_edition = function ( raw_data, types_de_devoir, matieres, classes, creneau_selectionne, matiere_id, regroupement_id, cours, devoirs, popup_callback ) {
+		      var ouvre_popup_edition = function ( raw_data, types_de_devoir, matieres, classes, creneau_selectionne, cours, devoirs, popup_callback ) {
 			  $modal.open( {
 			      templateUrl: 'app/views/enseignant/edition_emploi_du_temps.html',
 			      controller: 'EmploiDuTempsPopupEditionCtrl',
@@ -36,8 +36,6 @@ angular.module('cahierDeTexteApp')
 				  matieres	     : function () { return matieres; },
 				  classes	     : function () { return classes; },
 				  creneau_selectionne: function () { return creneau_selectionne; },
-				  matiere_id	     : function () { return matiere_id; },
-				  regroupement_id    : function () { return regroupement_id; },
 				  cours		     : function () { return cours; },
 				  devoirs	     : function () { return devoirs; }
 			      }
@@ -231,6 +229,8 @@ angular.module('cahierDeTexteApp')
 				      event.id = event.details.creneau_emploi_du_temps_id;
 				      event.heure_debut = event.start;
 				      event.heure_fin = event.end;
+				      event.matiere_id = event.details.matiere_id;
+				      event.regroupement_id = event.details.regroupement_id;
 
 				      // 1. cours
 				      var cours = null;
@@ -264,8 +264,7 @@ angular.module('cahierDeTexteApp')
 				      }
 				      ouvre_popup_edition( $scope.raw_data,
 							   types_de_devoir, matieres_enseignees, $scope.classes,
-							   event, event.details.matiere_id, event.details.regroupement_id,
-							   cours, devoirs,
+							   event, cours, devoirs,
 							   popup_callback );
 				  }
 			      };
@@ -273,6 +272,7 @@ angular.module('cahierDeTexteApp')
 			      // création d'un nouveau créneau
 			      // Le regroupement_id peut être null car on n'a pas fait de choix au niveau de la select box des classes sur full_calendar
 			      $scope.calendar.options.select = function ( start, end, allDay ) {
+				  // création du créneau avec les bons horaires
 				  start = $filter('correctTimeZone')(start);
 				  end = $filter('correctTimeZone')(end);
 				  var creneau_selectionne = new CreneauEmploiDuTemps({
@@ -290,14 +290,9 @@ angular.module('cahierDeTexteApp')
 					  creneau_selectionne.regroupement_id = $scope.classe === null ? undefined : '' + $scope.classe;
 					  creneau_selectionne.cahier_de_textes_id = $scope.classes[ 0 ].cahier_de_textes_id,
 
-					  creneau_selectionne.details = {
-					      cours: null,
-					      devoirs: []
-					  };
 					  ouvre_popup_edition( $scope.raw_data,
 							       types_de_devoir, matieres_enseignees, $scope.classes,
-							       creneau_selectionne, creneau_selectionne.matiere_id, creneau_selectionne.regroupement_id,
-							       creneau_selectionne.details.cours, creneau_selectionne.details.devoirs,
+							       creneau_selectionne, null, [],
 							       popup_callback );
 
 					  $scope.emploi_du_temps.fullCalendar( 'unselect' );
