@@ -2,8 +2,8 @@
 
 angular.module( 'cahierDeTexteApp' )
     .controller( 'EmploiDuTempsPopupEditionCtrl',
-		 [ '$scope', '$filter', '$q', 'TINYMCE_OPTIONS', '$modalInstance', 'Documents', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs', 'cours', 'devoirs', 'types_de_devoir', 'creneau_selectionne', 'matiere_id', 'regroupement_id', 'raw_data', 'classes', 'matieres',
-		   function ( $scope, $filter, $q, TINYMCE_OPTIONS, $modalInstance, Documents, CreneauEmploiDuTemps, Cours, Devoirs, cours, devoirs, types_de_devoir, creneau_selectionne, matiere_id, regroupement_id, raw_data, classes, matieres ) {
+		 [ '$scope', '$filter', '$q', 'TINYMCE_OPTIONS', '$modalInstance', 'Documents', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs', 'cours', 'devoirs', 'types_de_devoir', 'creneau_selectionne', 'raw_data', 'classes', 'matieres',
+		   function ( $scope, $filter, $q, TINYMCE_OPTIONS, $modalInstance, Documents, CreneauEmploiDuTemps, Cours, Devoirs, cours, devoirs, types_de_devoir, creneau_selectionne, raw_data, classes, matieres ) {
 		       // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
 		       var scope_popup = $scope;
 
@@ -32,13 +32,13 @@ angular.module( 'cahierDeTexteApp' )
 		       scope_popup.creneau_selectionne = creneau_selectionne;
 		       scope_popup.matieres = matieres;
 		       scope_popup.classes = classes;
-		       scope_popup.creneau_en_creation = matiere_id.length == 0 || regroupement_id === undefined;
+		       scope_popup.creneau_en_creation = scope_popup.creneau_selectionne.matiere_id.length == 0 || scope_popup.creneau_selectionne.regroupement_id === undefined;
 		       if ( scope_popup.creneau_en_creation ) {
 			   scope_popup.creneau_tmp_heure_debut = $filter('correctTimeZoneToGMT')( scope_popup.creneau_selectionne.heure_debut );
 			   scope_popup.creneau_tmp_heure_fin = $filter('correctTimeZoneToGMT')( scope_popup.creneau_selectionne.heure_fin );
 		       }
-		       scope_popup.matiere_id = matiere_id.length > 0 ? matiere_id : _.chain( scope_popup.matieres ).values().first().value().id;
-		       scope_popup.regroupement_id = regroupement_id !== 'undefined' ? parseInt( regroupement_id ) : _( scope_popup.classes ).first().id;
+		       scope_popup.matiere_id = scope_popup.creneau_selectionne.matiere_id.length > 0 ? scope_popup.creneau_selectionne.matiere_id : _.chain( scope_popup.matieres ).values().first().value().id;
+		       scope_popup.regroupement_id = scope_popup.creneau_selectionne.regroupement_id !== 'undefined' ? parseInt( scope_popup.creneau_selectionne.regroupement_id ) : _( scope_popup.classes ).first().id;
 		       scope_popup.classe = _( scope_popup.classes ).findWhere( {
 			   id: parseInt( scope_popup.regroupement_id )
 		       } );
