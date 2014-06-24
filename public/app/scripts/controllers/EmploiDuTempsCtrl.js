@@ -247,7 +247,7 @@ angular.module('cahierDeTexteApp')
 					  } );
 					  cours.create = false;
 
-					  $q.all( $scope.cours, types_de_devoir, matieres, $scope.classes )
+					  $q.all( cours, types_de_devoir, matieres, $scope.classes )
 					      .then( function () {
 						  // 2. devoir
 						  if ( creneau_selectionne.details.devoirs.length > 0 ) {
@@ -290,26 +290,20 @@ angular.module('cahierDeTexteApp')
 				  creneau_selectionne.$save()
 				      .then( function () {
 					  creneau_selectionne.dirty = true;
-					  creneau_selectionne.start = start;
 					  creneau_selectionne.heure_debut = start;
 					  creneau_selectionne.heure_fin = end;
-
-					  // durant le creneau_selectionne.$save() on perds regroupement_id
 					  creneau_selectionne.regroupement_id = $scope.classe === null ? undefined : '' + $scope.classe;
 					  creneau_selectionne.cahier_de_textes_id = $scope.classes[ 0 ].cahier_de_textes_id,
-					  // 3. ouverture de la popup
-					  $q.all( types_de_devoir, $scope.cours )
-					      .then( function () {
-						  creneau_selectionne.details = {
-						      cours: $scope.cours,
-						      devoirs: $scope.devoirs
-						  };
-						  ouvre_popup_edition( $scope.raw_data,
-								       types_de_devoir, matieres_enseignees, $scope.classes,
-								       creneau_selectionne, creneau_selectionne.matiere_id, creneau_selectionne.regroupement_id,
-								       null, [],
-								       popup_callback );
-					      } );
+
+					  creneau_selectionne.details = {
+					      cours: null,
+					      devoirs: []
+					  };
+					  ouvre_popup_edition( $scope.raw_data,
+							       types_de_devoir, matieres_enseignees, $scope.classes,
+							       creneau_selectionne, creneau_selectionne.matiere_id, creneau_selectionne.regroupement_id,
+							       creneau_selectionne.details.cours, creneau_selectionne.details.devoirs,
+							       popup_callback );
 
 					  $scope.emploi_du_temps.fullCalendar( 'unselect' );
 				      } );
