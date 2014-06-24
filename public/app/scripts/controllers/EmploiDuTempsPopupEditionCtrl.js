@@ -11,7 +11,7 @@ angular.module( 'cahierDeTexteApp' )
 			   var cours = new Cours({
 			       cahier_de_textes_id: creneau.cahier_de_textes_id,
 			       creneau_emploi_du_temps_id: creneau.id,
-			       date_cours: new Date(creneau.start).toISOString()
+			       date_cours: new Date(creneau.heure_debut).toISOString()
 			   });
 			   cours.create = true;
 
@@ -33,6 +33,10 @@ angular.module( 'cahierDeTexteApp' )
 		       scope_popup.matieres = matieres;
 		       scope_popup.classes = classes;
 		       scope_popup.creneau_en_creation = matiere_id.length == 0 || regroupement_id === undefined;
+		       if ( scope_popup.creneau_en_creation ) {
+			   scope_popup.creneau_tmp_heure_debut = $filter('correctTimeZoneToGMT')( scope_popup.creneau_selectionne.heure_debut );
+			   scope_popup.creneau_tmp_heure_fin = $filter('correctTimeZoneToGMT')( scope_popup.creneau_selectionne.heure_fin );
+		       }
 		       scope_popup.matiere_id = matiere_id.length > 0 ? matiere_id : _.chain( scope_popup.matieres ).values().first().value().id;
 		       scope_popup.regroupement_id = regroupement_id !== 'undefined' ? parseInt( regroupement_id ) : _( scope_popup.classes ).first().id;
 		       scope_popup.classe = _( scope_popup.classes ).findWhere( {
@@ -287,6 +291,9 @@ angular.module( 'cahierDeTexteApp' )
 			       if ( scope_popup.creneau_en_creation ) {
 				   scope_popup.creneau_selectionne.matiere_id = scope_popup.matiere_id;
 				   scope_popup.creneau_selectionne.regroupement_id = scope_popup.regroupement_id;
+				   scope_popup.creneau_selectionne.heure_debut = $filter('correctTimeZone')( scope_popup.creneau_tmp_heure_debut );
+				   scope_popup.creneau_selectionne.heure_fin = $filter('correctTimeZone')( scope_popup.creneau_tmp_heure_fin );
+
 				   scope_popup.creneau_selectionne.$update();
 			       }
 

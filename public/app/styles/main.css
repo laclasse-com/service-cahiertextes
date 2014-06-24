@@ -49,6 +49,8 @@ body {
 .saisie-devoirs,
 .saisie-devoirs-fait { font-weight:bold }
 
+.timepicker{display:inline-block}
+
 /* Principal */
 /** Enseignants **/
 .bloc-enseignant .panel{height:11em}
