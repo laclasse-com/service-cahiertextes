@@ -3,7 +3,7 @@
 
   <h5>
     <span data-ng-hide="creneau_en_creation">
-      {{classe.libelle}} - {{matiere.libelle_long}}
+      {{classe.libelle}} - {{matiere.libelle_long}} ({{creneau_selectionne.heure_debut | date: 'shortTime'}} - {{creneau_selectionne.heure_fin | date: 'shortTime'}})
     </span>
     <span data-ng-show="creneau_en_creation">
       <select data-ng-model="scope.regroupement_id" data-ng-options="classe.id as classe.libelle for classe in classes">
@@ -11,6 +11,10 @@
       -
       <select data-ng-model="scope.matiere_id" data-ng-options="id as matiere.libelle_long for (id, matiere) in matieres">
       </select>
+
+      (<timepicker class="timepicker" data-ng-model="creneau_tmp_heure_debut" data-show-meridian="false" data-minute-step="5"></timepicker>
+      -
+      <timepicker class="timepicker" data-ng-model="creneau_tmp_heure_fin" data-show-meridian="false" data-minute-step="5"></timepicker>)
     </span>
 
   </h5>

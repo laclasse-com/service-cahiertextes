@@ -231,9 +231,12 @@ angular.module('cahierDeTexteApp')
 					  .findWhere( {
 					      _id: event._id
 					  } );
-				  creneau_selectionne.id = creneau_selectionne.details.creneau_emploi_du_temps_id;
 
 				  if ( creneau_selectionne.details.enseignant_id === $scope.current_user.uid ) {
+				      creneau_selectionne.id = creneau_selectionne.details.creneau_emploi_du_temps_id;
+				      creneau_selectionne.heure_debut = creneau_selectionne.start;
+				      creneau_selectionne.heure_fin = creneau_selectionne.end;
+
 				      // 1. cours
 				      var cours = null;
 				      var devoirs = [];
