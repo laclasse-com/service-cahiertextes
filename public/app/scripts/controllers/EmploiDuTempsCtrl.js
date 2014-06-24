@@ -227,34 +227,29 @@ angular.module('cahierDeTexteApp')
 
 			      // édition d'un créneau existant
 			      $scope.calendar.options.eventClick = function ( event ) {
-				  var creneau_selectionne = _( event.source.events )
-					  .findWhere( {
-					      _id: event._id
-					  } );
-
-				  if ( creneau_selectionne.details.enseignant_id === $scope.current_user.uid ) {
-				      creneau_selectionne.id = creneau_selectionne.details.creneau_emploi_du_temps_id;
-				      creneau_selectionne.heure_debut = creneau_selectionne.start;
-				      creneau_selectionne.heure_fin = creneau_selectionne.end;
+				  if ( event.details.enseignant_id === $scope.current_user.uid ) {
+				      event.id = event.details.creneau_emploi_du_temps_id;
+				      event.heure_debut = event.start;
+				      event.heure_fin = event.end;
 
 				      // 1. cours
 				      var cours = null;
 				      var devoirs = [];
 
-				      if ( creneau_selectionne.details.cours.id !== undefined ) {
+				      if ( event.details.cours.id !== undefined ) {
 					  cours = API.get_cours( {
-					      id: creneau_selectionne.details.cours.id
+					      id: event.details.cours.id
 					  } );
 					  cours.create = false;
 
 					  $q.all( cours, types_de_devoir, matieres, $scope.classes )
 					      .then( function () {
 						  // 2. devoir
-						  if ( creneau_selectionne.details.devoirs.length > 0 ) {
-						      _( creneau_selectionne.details.devoirs )
+						  if ( event.details.devoirs.length > 0 ) {
+						      _( event.details.devoirs )
 							  .each( function ( devoir ) {
 							      API.get_devoir( {
-								  id: creneau_selectionne.details.devoirs[ 0 ].id
+								  id: event.details.devoirs[ 0 ].id
 							      } )
 								  .$promise
 								  .then( function ( vrai_devoir ) {
@@ -269,7 +264,7 @@ angular.module('cahierDeTexteApp')
 				      }
 				      ouvre_popup_edition( $scope.raw_data,
 							   types_de_devoir, matieres_enseignees, $scope.classes,
-							   creneau_selectionne, event.details.matiere_id, event.details.regroupement_id,
+							   event, event.details.matiere_id, event.details.regroupement_id,
 							   cours, devoirs,
 							   popup_callback );
 				  }
