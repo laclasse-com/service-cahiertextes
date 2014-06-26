@@ -164,7 +164,7 @@ angular.module('cahierDeTexteApp')
 
 			  switch ( $scope.current_user.profil_actif.type ) {
 			  case 'ENS':
-			      $scope.uniquement_mes_creneaux = false;
+			      $scope.uniquement_mes_creneaux = true;
 			      $scope.calendar.options.selectable = true;
 			      $scope.calendar.options.editable = true;
 
