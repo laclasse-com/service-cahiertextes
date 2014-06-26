@@ -19,7 +19,7 @@ module Annuaire
   def set_search(arg)
     @search=arg
   end
-  
+
   # Fonction de vérification du mode d'api paramétrée dans la conf et init des paramètres
   def init
     @coordination = '?'
@@ -52,11 +52,11 @@ module Annuaire
   def compat_service(srv)
     if ANNUAIRE[:api_mode] == 'v2'
       if @search
-        srv.sub! 'users', 'SearchUsers&uid='  
-        srv.sub! 'matieres/libelle', 'Matieres&lib=' 
+        srv.sub! 'users', 'SearchUsers&uid='
+        srv.sub! 'matieres/libelle', 'Matieres&lib='
       else
         srv.sub! 'users', 'Users&uid='
-        srv.sub! 'etablissements', 'Etablissements&uai=' 
+        srv.sub! 'etablissements', 'Etablissements&uai='
         srv.sub! 'matieres', 'Matieres&code='
         srv.sub! 'regroupements', 'Regroupements&grp_id='
         # En dernier pour traiter les cas des etab/[uai]/Regroupements et users/[uid]/Regroupements
@@ -76,13 +76,13 @@ module Annuaire
     canonical_string += "#{timestamp};#{ANNUAIRE[:app_id]}" if ANNUAIRE[:api_mode] == 'v3'
 
     signature = build_signature( canonical_string, timestamp )
-    
+
     # Compatibilité avec les api laclasse v2 (pl/sql): pas de mode REST, en fait.
     service = compat_service( service )
     # Fin patch compat.
 
     query = args.map { |key, value| "#{key}=#{CGI.escape(value)}" }.join( '&' )
-puts "#{uri}#{@liaison}#{service}#{@coordination}#{query};#{signature}"
+
     "#{uri}#{@liaison}#{service}#{@coordination}#{query};#{signature}"
   end
 
