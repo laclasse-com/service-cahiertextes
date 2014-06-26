@@ -46,6 +46,8 @@ module CahierDeTextesAPI
           # 1. récupération du cahier de textes
           cahier_de_textes = CahierDeTextes.where( regroupement_id: creneau[:regroupement_id] ).first
 
+          # FIXME: hack un peu rapide et pas très propre !
+          # À REFACTORER
           [
            ( params[:debut] .. params[:fin] )
              .reject { |day| day.wday != creneau.jour_de_la_semaine }
