@@ -63,7 +63,7 @@ angular.module('cahierDeTexteApp')
 					   regroupement_id: event.regroupement_id,
 					   enseignant_id: event.enseignant_id,
 					   matiere_id: event.matiere_id,
-					   creneau_emploi_du_temps_id: event.creneau_emploi_du_temps_id };
+					   creneau_emploi_du_temps_id: item.creneau_emploi_du_temps_id };
 			  this.allDay = false;
 			  this.title = '';
 			  this.description = '';
