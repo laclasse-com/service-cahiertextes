@@ -44,21 +44,21 @@ module CahierDeTextesAPI
           # FIXME: hack un peu rapide et pas très propre !
           # À REFACTORER
           [
-           ( params[:debut] .. params[:fin] )
-             .reject { |day| day.wday != creneau.jour_de_la_semaine }
-             .map do
-             |jour|
-             cours = {}
-             devoirs = []
+            ( params[:debut] .. params[:fin] )
+              .reject { |day| day.wday != creneau.jour_de_la_semaine }
+              .map do
+              |jour|
+              cours = {}
+              devoirs = []
 
-             # 2. récupération des cours
-             Cours
-               .where( creneau_emploi_du_temps_id: creneau.id )
-               .where( cahier_de_textes_id: cahier_de_textes.id )
-               .where( date_cours: jour )
-               .where( deleted: false )
-               .each do
-               |le_cours|
+              # 2. récupération des cours
+              Cours
+                .where( creneau_emploi_du_temps_id: creneau.id )
+                .where( cahier_de_textes_id: cahier_de_textes.id )
+                .where( date_cours: jour )
+                .where( deleted: false )
+                .each do
+                |le_cours|
 
                cours = le_cours.to_hash
                cours[:ressources] = le_cours.ressources.map { |rsrc| rsrc.to_hash }
@@ -82,14 +82,14 @@ module CahierDeTextesAPI
              end
 
              { cahier_de_textes_id: cahier_de_textes.id,
-              regroupement_id: cahier_de_textes.regroupement_id,
-              enseignant_id: creneau[:enseignant_id],
-              creneau_emploi_du_temps_id: creneau.id,
-              matiere_id: creneau.matiere_id,
-              start: Time.new( jour.year, jour.month, jour.mday, plage_debut.hour, plage_debut.min ).iso8601,
-              end: Time.new( jour.year, jour.month, jour.mday, plage_fin.hour, plage_fin.min ).iso8601,
-              cours: cours,
-              devoirs: devoirs
+               regroupement_id: cahier_de_textes.regroupement_id,
+               enseignant_id: creneau[:enseignant_id],
+               creneau_emploi_du_temps_id: creneau.id,
+               matiere_id: creneau.matiere_id,
+               start: Time.new( jour.year, jour.month, jour.mday, plage_debut.hour, plage_debut.min ).iso8601,
+               end: Time.new( jour.year, jour.month, jour.mday, plage_fin.hour, plage_fin.min ).iso8601,
+               cours: cours,
+               devoirs: devoirs
              }
            end,
            ( params[:debut] .. params[:fin] )
