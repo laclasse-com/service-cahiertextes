@@ -15,10 +15,15 @@ module CahierDeTextesAPI
       desc 'renvoi un créneau'
       params {
         requires :id
+
+        optional :expand, type: Boolean
       }
       get '/:id' do
+        expand = !params[:expand].nil? && params[:expand]
+
         creneau = CreneauEmploiDuTemps[ params[:id] ]
         h = creneau.to_hash
+
         h[:regroupements] = creneau.regroupements.map { |e|
           e.semaines_de_presence = e.semaines_de_presence.to_s 2
           e
@@ -31,6 +36,11 @@ module CahierDeTextesAPI
           e.semaines_de_presence = e.semaines_de_presence.to_s 2
           e
         }
+
+        if expand
+          h[:cours] = Cours.where( creneau_emploi_du_temps_id: params[:id] ).where( deleted: false )
+          h[:devoirs] = Devoir.where( creneau_emploi_du_temps_id: params[:id] )#.where( deleted: false )
+        end
 
         h
       end
