@@ -136,6 +136,12 @@ module CahierDeTextesAPI
           ]
         end
           .flatten
+          .compact
+          .uniq do |record|
+          { creneau_emploi_du_temps_id: record[:cours] == {} && record[:devoirs] == [] ? record[:creneau_emploi_du_temps_id] : nil,
+            cours_id: record[:cours] == {} ? nil : record[:cours][:id],
+            devoirs_ids: record[:devoirs].map { |devoir| devoir[:id] } }
+        end
 
       end
     end
