@@ -21,13 +21,16 @@ module CahierDeTextesAPI
         h = creneau.to_hash
         h[:regroupements] = creneau.regroupements.map { |e|
           e.semaines_de_presence = e.semaines_de_presence.to_s 2
-          e }
+          e
+        }
         h[:enseignants] = creneau.enseignants.map { |e|
           e.semaines_de_presence = e.semaines_de_presence.to_s 2
-          e }
+          e
+        }
         h[:salles] = creneau.salles.map { |e|
           e.semaines_de_presence = e.semaines_de_presence.to_s 2
-          e }
+          e
+        }
 
         h
       end
