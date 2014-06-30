@@ -97,36 +97,39 @@ module CahierDeTextesAPI
              .map do
              |jour|
              Devoir
-               .join( :cours, id: :cours_id )
-               .where( devoirs__creneau_emploi_du_temps_id: creneau.id )
-               .where( devoirs__date_due: jour )
-               .where( cours__cahier_de_textes_id: cahier_de_textes.id )
-               .where( cours__deleted: false )
+               .where( creneau_emploi_du_temps_id: creneau.id )
+               .where( date_due: jour )
                .all
                .map do
-               |devoir|
-               hstart         = PlageHoraire[ CreneauEmploiDuTemps[ devoir.creneau_emploi_du_temps_id ].debut ].debut
-               hend           = PlageHoraire[ CreneauEmploiDuTemps[ devoir.creneau_emploi_du_temps_id ].fin ].fin
-               d              = devoir.to_hash
-               d[:type_devoir_description] = TypeDevoir[ devoir.type_devoir_id ].description
-               d[:ressources] = devoir.ressources.map { |rsrc| rsrc.to_hash }
-               d[:fait]       = devoir.fait_par?( user.uid )
-               d[:start]      = Time.new( devoir.date_due.year, devoir.date_due.month, devoir.date_due.mday, hstart.hour, hstart.min ).iso8601
-               d[:end]        = Time.new( devoir.date_due.year, devoir.date_due.month, devoir.date_due.mday, hend.hour, hend.min ).iso8601
+               |record|
+               hstart         = PlageHoraire[ CreneauEmploiDuTemps[ record.creneau_emploi_du_temps_id ].debut ].debut
+               hend           = PlageHoraire[ CreneauEmploiDuTemps[ record.creneau_emploi_du_temps_id ].fin ].fin
+               devoir              = Devoir[ record.id ].to_hash
+               devoir[:type_devoir_description] = TypeDevoir[ record.type_devoir_id ].description
+               devoir[:ressources] = record.ressources.map { |rsrc| rsrc.to_hash }
+               devoir[:fait]       = record.fait_par?( user.uid )
+               devoir[:start]      = Time.new( record.date_due.year, record.date_due.month, record.date_due.mday, hstart.hour, hstart.min ).iso8601
+               devoir[:end]        = Time.new( record.date_due.year, record.date_due.month, record.date_due.mday, hend.hour, hend.min ).iso8601
 
-               cours = Cours[ devoir.cours_id ]
-               jour_cours = cours.date_cours
-               { cahier_de_textes_id: cahier_de_textes.id,
-                 regroupement_id: cahier_de_textes.regroupement_id,
-                 enseignant_id: creneau[:enseignant_id],
-                 creneau_emploi_du_temps_id: creneau.id,
-                 matiere_id: creneau.matiere_id,
-                 start: Time.new( jour_cours.year, jour_cours.month, jour_cours.mday, plage_debut.hour, plage_debut.min ).iso8601,
-                 end: Time.new( jour_cours.year, jour_cours.month, jour_cours.mday, plage_fin.hour, plage_fin.min ).iso8601,
-                 cours: cours,
-                 devoirs: [ d ]
-               }
+               cours = Cours
+                 .where( id: record.cours_id )
+                 .where( cahier_de_textes_id: cahier_de_textes.id )
+                 .where( deleted: false )
+                 .first
 
+               unless cours.nil?
+                 jour_cours = cours.date_cours
+                 { cahier_de_textes_id: cahier_de_textes.id,
+                   regroupement_id: cahier_de_textes.regroupement_id,
+                   enseignant_id: creneau[:enseignant_id],
+                   creneau_emploi_du_temps_id: creneau.id,
+                   matiere_id: creneau.matiere_id,
+                   start: Time.new( jour_cours.year, jour_cours.month, jour_cours.mday, plage_debut.hour, plage_debut.min ).iso8601,
+                   end: Time.new( jour_cours.year, jour_cours.month, jour_cours.mday, plage_fin.hour, plage_fin.min ).iso8601,
+                   cours: cours,
+                   devoirs: [ devoir ]
+                 }
+               end
              end
 
            end
