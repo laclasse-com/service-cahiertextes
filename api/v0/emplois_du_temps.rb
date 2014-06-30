@@ -13,11 +13,6 @@ module CahierDeTextesAPI
         optional :uai
       }
       get '/du/:debut/au/:fin' do
-        # if # ( user.is?( 'ENS' ) ||
-        #    #     user.is?( 'ELV' ) ||
-        #    #     user.is?( 'DIR' ) ) &&
-        #   user.methods.include? :classes
-
         params[:debut] = Date.parse( params[:debut].iso8601 )
         params[:fin] = Date.parse( params[:fin].iso8601 )
         weeks =  ( params[:debut] .. params[:fin] ).map { |d| d.cweek }.uniq
@@ -139,11 +134,7 @@ module CahierDeTextesAPI
         end
           .flatten
 
-        # else
-        #    []
-        # end
       end
-
     end
   end
 end
