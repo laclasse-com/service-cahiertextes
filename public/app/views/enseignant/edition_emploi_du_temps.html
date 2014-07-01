@@ -62,10 +62,10 @@
 	</button>
       </div>
       <div class="row-fluid" style="text-align: right">
-    <button class="btn btn-sm btn-primary" data-ng-click="ajout_devoir()">
-      <span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
-    </button>
-  </div>
+	<button class="btn btn-sm btn-primary" data-ng-click="ajout_devoir()">
+	  <span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
+	</button>
+      </div>
 
 
 
@@ -74,24 +74,24 @@
 
   <div class="panel panel-default" data-ng-repeat="devoir in devoirs">
     <div class="panel-heading enseignant-saisie">
-	<h5 class="panel-title">Travail à faire</h5>
+      <h5 class="panel-title">Travail à faire</h5>
       <div class="row-fluid">
 
-	  <select data-ng-required="true" data-ng-model="devoir.type_devoir_id"
-		  data-ng-options="type_de_devoir.id as type_de_devoir.description for type_de_devoir in types_de_devoir">
-	  </select>
+	<select data-ng-required="true" data-ng-model="devoir.type_devoir_id"
+		data-ng-options="type_de_devoir.id as type_de_devoir.description for type_de_devoir in types_de_devoir">
+	</select>
 
-	  <select data-ng-required="true" data-ng-model="devoir.date_due" data-ng-change="set_creneau_date_due( devoir )"
-		  data-ng-options="creneau.date_due as creneau.label_sbox group by creneau.semaine for creneau in creneaux_devoirs_possibles">
-	  </select>
+	<select data-ng-required="true" data-ng-model="devoir.date_due" data-ng-change="set_creneau_date_due( devoir )"
+		data-ng-options="creneau.date_due as creneau.label_sbox group by creneau.semaine for creneau in creneaux_devoirs_possibles">
+	</select>
       </div>
     </div>
     <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="devoir.contenu" data-ng-change="is_dirty()"></textarea>
 
     <div class="panel-body">
-	<h3 class="panel-title">Temps de travail estimé</h3>
-	<rating data-ng-model="devoir.temps_estime" max="15" readonly="false"  ng-click="is_dirty()" on-hover="estimation_over(devoir, value)" on-leave="estimation_leave(devoir)" state-on="'glyphicon-record'" state-off="'glyphicon-unchecked'"></rating>
-	<span class="label" data-ng-class="{'label-success': devoir.overValue<4, 'label-info': devoir.overValue>=4 && devoir.overValue<8 , 'label-warning': devoir.overValue>=8 && devoir.overValue<12, 'label-danger': devoir.overValue>=12}" data-ng-show="devoir.overValue>0 || devoir.temps_estime > 0">{{devoir.minutes || devoir.temps_estime * 5}} min</span>
+      <h3 class="panel-title">Temps de travail estimé</h3>
+      <rating data-ng-model="devoir.temps_estime" max="15" readonly="false"  ng-click="is_dirty()" on-hover="estimation_over(devoir, value)" on-leave="estimation_leave(devoir)" state-on="'glyphicon-record'" state-off="'glyphicon-unchecked'"></rating>
+      <span class="label" data-ng-class="{'label-success': devoir.overValue<4, 'label-info': devoir.overValue>=4 && devoir.overValue<8 , 'label-warning': devoir.overValue>=8 && devoir.overValue<12, 'label-danger': devoir.overValue>=12}" data-ng-show="devoir.overValue>0 || devoir.temps_estime > 0">{{devoir.minutes || devoir.temps_estime * 5}} min</span>
     </div>
 
     <div class="panel-footer">
