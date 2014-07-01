@@ -68,7 +68,7 @@
 	      data-ng-options="creneau.id as creneau.label_sbox group by creneau.classe.libelle for creneau in creneaux_similaires" >
       </select>
 
-      <button class="btn btn-sm btn-primary" data-ng-click="dupliquer()">
+      <button class="btn btn-sm btn-primary" data-ng-click="dupliquer()" data-ng-show="creneaux_similaires.selected">
 	<span class="glyphicon glyphicon-plus-sign"></span> Copier vers d'autres classes
       </button>
     </div>
