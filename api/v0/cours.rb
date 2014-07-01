@@ -26,11 +26,8 @@ module CahierDeTextesAPI
           error!( 'Cours inconnu', 404 )
         else
           cours = Cours[ params[:id] ]
-          unless cours.nil?
-            hash = cours.to_hash
-            hash[:ressources] = cours.ressources.map { |rsrc| rsrc.to_hash }
-            hash
-          end
+
+          cours.to_hash_avec_ressources unless cours.nil?
         end
       end
 
