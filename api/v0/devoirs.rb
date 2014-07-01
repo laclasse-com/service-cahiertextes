@@ -133,6 +133,21 @@ module CahierDeTextesAPI
 
         Devoir[ params[:id] ].fait_par!( user.uid )
       end
+
+      desc 'détruit un devoir'
+      params {
+        requires :id
+      }
+      delete '/:id' do
+        error!( '401 Unauthorized', 401 ) unless user.is? 'ENS'
+
+        devoir = Devoir[ params[:id] ]
+
+        devoir.update( deleted: true, date_modification: Time.now )
+        devoir.save
+
+        devoir
+      end
     end
   end
 end
