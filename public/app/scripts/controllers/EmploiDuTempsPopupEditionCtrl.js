@@ -264,6 +264,15 @@ angular.module( 'cahierDeTexteApp' )
 			       } );
 		       };
 
+		       scope_popup.effacer_devoir = function ( devoir ) {
+			   devoir.$delete().then( function() {
+			       scope_popup.devoirs = _( scope_popup.devoirs )
+				   .reject( function( devoir ) {
+				       return devoir.deleted;
+				   });
+			   });
+		       };
+
 		       scope_popup.effacer_creneau = function () {
 			   CreneauEmploiDuTemps.delete( {
 			       id: scope_popup.creneau_selectionne.id,
