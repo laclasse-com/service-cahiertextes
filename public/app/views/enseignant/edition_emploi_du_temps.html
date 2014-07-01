@@ -25,53 +25,59 @@
   <ul>
     <li data-ng-repeat="erreur in erreurs">{{erreur.message}}</li>
   </ul>
-  <div class="panel panel-default">
+
+  <div class="row-fluid" style="text-align: right" data-ng-hide="ouvre_sequence_pedagogique">
+    <button class="btn btn-sm btn-primary" data-ng-click="toggle_sequence_pedagogique()">
+      <span class="glyphicon glyphicon-plus-sign"></span> Éditer la séquence pédagogique
+    </button>
+  </div>
+
+  <div class="panel panel-default" data-ng-show="ouvre_sequence_pedagogique">
     <div class="panel-heading">
       <h5 class="panel-title">Séquence pédagogique du {{cours.date_cours | date : 'fullDate' }}</h5>
     </div>
-    <div data-ng-show="cours.$resolved && cours.date_validation === null">
+    <div data-ng-hide="readonly">
       <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="cours.contenu" data-ng-change="is_dirty()">
       </textarea>
+      <div class="panel-footer">
+	<ul>
+	  <li data-ng-repeat="ressource in cours.ressources">
+	    <a target="_blank" href="http://www.dev.laclasse.com/docs-beta/api/connector?cmd=file&target={{ressource.hash}}">{{ressource.name}}</a>
+	    <button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( cours, ressource.hash )">✕</button>
+	  </li>
+	</ul>
+
+	<input type="file" name="upload[]" multiple onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().cours, this.files)" />
+
+	<div class="treecontrol-container">
+	  <treecontrol class="light-tree"
+		       tree-model="cartable.files"
+		       options="treeOptions"
+		       on-selection="treeClicked( node )">
+	    {{node.name}} ({{node.mime}}) <button class="btn btn-sm btn-success" data-ng-click="add_ressource( cours, node.name, node.hash )">+</button>
+	  </treecontrol>
+	</div>
+      </div>
     </div>
-    <span data-ng-bind-html="cours.contenu"  data-ng-show="cours.date_validation !== null"></span>
-    <div class="panel-footer">
-      <ul>
-	<li data-ng-repeat="ressource in cours.ressources">
-	  <a target="_blank" href="http://www.dev.laclasse.com/docs-beta/api/connector?cmd=file&target={{ressource.hash}}">{{ressource.name}}</a>
-	  <button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( cours, ressource.hash )">✕</button>
-	</li>
-      </ul>
 
-      <input type="file" name="upload[]" multiple onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().cours, this.files)" />
+    <span data-ng-bind-html="cours.contenu"  data-ng-show="readonly"></span>
 
-      <div class="treecontrol-container">
-	<treecontrol class="light-tree"
-		     tree-model="cartable.files"
-		     options="treeOptions"
-		     on-selection="treeClicked( node )">
-	  {{node.name}} ({{node.mime}}) <button class="btn btn-sm btn-success" data-ng-click="add_ressource( cours, node.name, node.hash )">+</button>
-	</treecontrol>
-      </div>
+    <div class="row-fluid" data-ng-show="creneaux_similaires">
+      <select multiple
+	      data-ng-model="devoir.creneau_emploi_du_temps_id"
+	      data-ng-options="creneau.id as creneau.classe.libelle +' . '+ creneau.start_str +' - '+ creneau.end_str for creneau in creneaux_similaires" >
+      </select>
 
-      <div class="row-fluid" data-ng-show="creneaux_similaires">
-	<select multiple
-		data-ng-model="devoir.creneau_emploi_du_temps_id"
-		data-ng-options="creneau.id as creneau.classe.libelle +' . '+ creneau.start_str +' - '+ creneau.end_str for creneau in creneaux_similaires" >
-	</select>
-
-	<button class="btn btn-sm btn-primary" data-ng-click="dupliquer()">
-	  <span class="glyphicon glyphicon-plus-sign"></span> Copier vers d'autres classes
-	</button>
-      </div>
-      <div class="row-fluid" style="text-align: right">
-	<button class="btn btn-sm btn-primary" data-ng-click="ajout_devoir()">
-	  <span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
-	</button>
-      </div>
-
-
-
+      <button class="btn btn-sm btn-primary" data-ng-click="dupliquer()">
+	<span class="glyphicon glyphicon-plus-sign"></span> Copier vers d'autres classes
+      </button>
     </div>
+  </div>
+
+  <div class="row-fluid" style="text-align: right">
+    <button class="btn btn-sm btn-primary" data-ng-click="ajout_devoir()">
+      <span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
+    </button>
   </div>
 
   <div class="panel panel-default" data-ng-repeat="devoir in devoirs">

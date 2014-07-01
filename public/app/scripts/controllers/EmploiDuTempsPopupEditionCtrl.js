@@ -11,7 +11,8 @@ angular.module( 'cahierDeTexteApp' )
 			   var cours = new Cours({
 			       cahier_de_textes_id: creneau.cahier_de_textes_id,
 			       creneau_emploi_du_temps_id: creneau.id,
-			       date_cours: new Date(creneau.heure_debut).toISOString()
+			       date_cours: new Date(creneau.heure_debut).toISOString(),
+			       date_validation: null
 			   });
 			   cours.create = true;
 
@@ -24,6 +25,7 @@ angular.module( 'cahierDeTexteApp' )
 			   scope_popup.cours = create_cours( creneau_selectionne );
 		       } else {
 			   scope_popup.cours = cours;
+			   scope_popup.cours.create = false;
 		       }
 		       // devoirs
 		       scope_popup.devoirs = devoirs;
@@ -45,6 +47,8 @@ angular.module( 'cahierDeTexteApp' )
 		       scope_popup.matiere = scope_popup.matieres[ scope_popup.matiere_id ];
 
 		       // Flags et helpers
+		       scope_popup.ouvre_sequence_pedagogique = !scope_popup.cours.create;
+		       scope_popup.readonly = scope_popup.cours.date_validation !== null;
 		       scope_popup.dirty = false;
 		       scope_popup.deleted = false;
 		       scope_popup.creneau_deleted = false;
@@ -228,6 +232,9 @@ angular.module( 'cahierDeTexteApp' )
 		       // }}}
 
 		       // fonctions d'événements GUI {{{
+		       scope_popup.toggle_sequence_pedagogique = function() {
+			   scope_popup.ouvre_sequence_pedagogique = !scope_popup.ouvre_sequence_pedagogique;
+		       };
 		       scope_popup.ajout_devoir = function () {
 			   var devoir = new Devoirs( {
 			       cours_id: scope_popup.cours.id,
