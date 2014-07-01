@@ -138,12 +138,14 @@ module CahierDeTextesAPI
         cours = Cours[ params[:id] ]
 
         unless cours.nil?
-          cours.update(deleted: true)
-          cours.date_modification = Time.now
+          if cours.date_validation.nil?
+            cours.update(deleted: true)
+            cours.date_modification = Time.now
 
-          cours.save
+            cours.save
 
-          cours.to_hash_avec_ressources
+            cours.to_hash_avec_ressources
+          end
         end
       end
     end
