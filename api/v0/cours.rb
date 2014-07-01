@@ -69,21 +69,23 @@ module CahierDeTextesAPI
         cours = Cours[ params[:id] ]
 
         unless cours.nil?
-          cours.contenu = params[:contenu]
-          cours.date_modification = Time.now
+          if cours.date_validation.nil?
+            cours.contenu = params[:contenu]
+            cours.date_modification = Time.now
 
-          if params[:ressources]
-            cours.remove_all_ressources
-            params[:ressources].each do
-              |ressource|
-              cours.add_ressource( Ressource.create(name: ressource['name'],
-                                                    hash: ressource['hash'] ) )
+            if params[:ressources]
+              cours.remove_all_ressources
+              params[:ressources].each do
+                |ressource|
+                cours.add_ressource( Ressource.create(name: ressource['name'],
+                                                      hash: ressource['hash'] ) )
+              end
             end
+
+            cours.save
+
+            cours.to_hash_avec_ressources
           end
-
-          cours.save
-
-          cours.to_hash_avec_ressources
         end
       end
 
