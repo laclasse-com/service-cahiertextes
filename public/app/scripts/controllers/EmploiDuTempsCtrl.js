@@ -74,7 +74,7 @@ angular.module('cahierDeTexteApp')
 			  if ( this.type === 'cours' ) {
 			      item.start = event.start;
 			      item.end = event.end;
-			      this.className = 'saisie-invalide';
+			      this.className = item.date_validation === null ? 'saisie-invalide' : 'saisie-valide';
 			      if ( event.matiere_id.length > 0 ) {
 				  Annuaire.get_matiere( event.matiere_id ).$promise.then( function success( response ) {
 				      _this.title += response.libelle_long;
