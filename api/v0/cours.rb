@@ -37,6 +37,7 @@ module CahierDeTextesAPI
         requires :creneau_emploi_du_temps_id
         requires :date_cours, type: Date
         requires :contenu
+
         optional :ressources
       }
       post do
@@ -60,6 +61,7 @@ module CahierDeTextesAPI
       params {
         requires :id, type: Integer
         requires :contenu, type: String
+
         optional :ressources, type: Array
       }
       put '/:id' do
