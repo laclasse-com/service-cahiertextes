@@ -253,7 +253,7 @@ angular.module( 'cahierDeTexteApp' )
 			   $modalInstance.close( scope_popup );
 		       };
 
-		       scope_popup.effacer = function () {
+		       scope_popup.effacer_cours = function () {
 			   scope_popup.cours.$delete()
 			       .then( function () {
 				   _( scope_popup.devoirs ).each( function ( devoir ) {
