@@ -65,7 +65,7 @@
     <div class="row-fluid" data-ng-show="creneaux_similaires && cours.id">
       <select multiple
 	      data-ng-model="creneaux_similaires.selected"
-	      data-ng-options="creneau.id as creneau.label_sbox group by creneau.classe.libelle for creneau in creneaux_similaires" >
+	      data-ng-options="creneau as creneau.label_sbox group by creneau.classe.libelle for creneau in creneaux_similaires" >
       </select>
 
       <button class="btn btn-sm btn-primary" data-ng-click="dupliquer()" data-ng-show="creneaux_similaires.selected">
