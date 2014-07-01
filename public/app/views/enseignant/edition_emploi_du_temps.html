@@ -62,7 +62,7 @@
 
     <span data-ng-bind-html="cours.contenu"  data-ng-show="readonly"></span>
 
-    <div class="row-fluid" data-ng-show="creneaux_similaires">
+    <div class="row-fluid" data-ng-show="creneaux_similaires && cours.id">
       <select multiple
 	      data-ng-model="creneaux_similaires.selected"
 	      data-ng-options="creneau.id as creneau.label_sbox group by creneau.classe.libelle for creneau in creneaux_similaires" >
