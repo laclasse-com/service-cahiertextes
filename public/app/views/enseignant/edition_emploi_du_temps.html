@@ -64,7 +64,7 @@
 
     <div class="row-fluid" data-ng-show="creneaux_similaires">
       <select multiple
-	      data-ng-model="devoir.creneau_emploi_du_temps_id"
+	      data-ng-model="creneaux_similaires.selected"
 	      data-ng-options="creneau.id as creneau.label_sbox group by creneau.classe.libelle for creneau in creneaux_similaires" >
       </select>
 
