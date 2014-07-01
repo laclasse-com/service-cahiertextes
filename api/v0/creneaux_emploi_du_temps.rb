@@ -48,7 +48,7 @@ module CahierDeTextesAPI
         h
       end
 
-      desc 'crée un créneau s\'il n\'existe pas déjà un semblable'
+      desc 'crée un créneau'
       params {
         requires :jour_de_la_semaine, type: Integer
         requires :heure_debut, type: Time
@@ -57,6 +57,9 @@ module CahierDeTextesAPI
         requires :regroupement_id
 
         optional :salle_id
+        optional :semaines_de_presence_regroupement, type: Fixnum
+        optional :semaines_de_presence_enseignant, type: Fixnum
+        optional :semaines_de_presence_salle, type: Fixnum
       }
       post  do
         plage_horaire_debut = PlageHoraire.where(debut: params[:heure_debut] ).first
@@ -77,6 +80,7 @@ module CahierDeTextesAPI
                                               fin: plage_horaire_fin.id,
                                               jour_de_la_semaine: params[:jour_de_la_semaine] - 1, # FIXME: pas forcément toujours lundi
                                               matiere_id: params[:matiere_id] )
+
         CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
         creneau.add_enseignant enseignant_id: user.uid
         CreneauEmploiDuTempsEnseignant.restrict_primary_key
@@ -99,12 +103,15 @@ module CahierDeTextesAPI
       desc 'modifie un créneau'
       params {
         requires :id, type: Integer
-        requires :matiere_id
-        requires :regroupement_id
 
+        optional :matiere_id
+        optional :regroupement_id
         optional :heure_debut, type: Time
         optional :heure_fin, type: Time
         optional :salle_id
+        optional :semaines_de_presence_regroupement, type: Fixnum
+        optional :semaines_de_presence_enseignant, type: Fixnum
+        optional :semaines_de_presence_salle, type: Fixnum
       }
       put '/:id'  do
         error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS' ) || user.is?( 'DIR' )
@@ -121,6 +128,7 @@ module CahierDeTextesAPI
             end
             creneau.debut = plage_horaire_debut.id
           end
+
           if params[:heure_fin]
             plage_horaire_fin = PlageHoraire.where(fin: params[:heure_fin] ).first
             if plage_horaire_fin.nil?
@@ -130,16 +138,18 @@ module CahierDeTextesAPI
             end
             creneau.fin = plage_horaire_fin.id
           end
-          creneau.matiere_id = params[:matiere_id]
+          creneau.matiere_id = params[:matiere_id] if params[:matiere_id]
 
           creneau.save
 
-          if CreneauEmploiDuTempsRegroupement
-              .where( creneau_emploi_du_temps_id: params[:id] )
-              .where( regroupement_id: params[:regroupement_id] ).count < 1
-            CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
-            creneau.add_regroupement regroupement_id: params[:regroupement_id]
-            CreneauEmploiDuTempsRegroupement.restrict_primary_key
+          if params[:regroupement_id]
+            if CreneauEmploiDuTempsRegroupement
+                .where( creneau_emploi_du_temps_id: params[:id] )
+                .where( regroupement_id: params[:regroupement_id] ).count < 1
+              CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
+              creneau.add_regroupement regroupement_id: params[:regroupement_id]
+              CreneauEmploiDuTempsRegroupement.restrict_primary_key
+            end
           end
 
           if params[:salle_id]
