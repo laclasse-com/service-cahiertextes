@@ -65,6 +65,7 @@ module CahierDeTextesAPI
 
                devoirs = Devoir
                  .where( cours_id: cours[:id] )
+                 .where( deleted: false )
                  .all
                  .map do
                  |devoir|
@@ -99,6 +100,7 @@ module CahierDeTextesAPI
              Devoir
                .where( creneau_emploi_du_temps_id: creneau.id )
                .where( date_due: jour )
+               .where( deleted: false )
                .all
                .map do
                |record|
