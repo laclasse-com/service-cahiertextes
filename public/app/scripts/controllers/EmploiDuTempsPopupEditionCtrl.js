@@ -48,7 +48,6 @@ angular.module( 'cahierDeTexteApp' )
 
 		       // Flags et helpers
 		       scope_popup.ouvre_sequence_pedagogique = !scope_popup.cours.create;
-		       scope_popup.readonly = scope_popup.cours.date_validation !== null;
 		       scope_popup.dirty = false;
 		       scope_popup.deleted = false;
 		       scope_popup.creneau_deleted = false;

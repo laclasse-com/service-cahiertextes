@@ -36,7 +36,7 @@
     <div class="panel-heading">
       <h5 class="panel-title">Séquence pédagogique du {{cours.date_cours | date : 'fullDate' }}</h5>
     </div>
-    <div data-ng-hide="readonly">
+    <div data-ng-hide="cours.date_validation !== null">
       <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="cours.contenu" data-ng-change="is_dirty()">
       </textarea>
       <div class="panel-footer">
@@ -60,7 +60,7 @@
       </div>
     </div>
 
-    <span data-ng-bind-html="cours.contenu"  data-ng-show="readonly"></span>
+    <span data-ng-bind-html="cours.contenu" data-ng-show="cours.date_validation !== null"></span>
 
     <div class="row-fluid" data-ng-show="creneaux_similaires && cours.id">
       <select multiple
@@ -135,7 +135,7 @@
 </div>
 
 <div class="modal-footer">
-  <button type="button" class="btn btn-sm btn-default pull-left" data-ng-click="effacer_cours()" data-ng-hide="cours.create">
+  <button type="button" class="btn btn-sm btn-default pull-left" data-ng-click="effacer_cours()" data-ng-hide="cours.date_validation !== null || cours.create">
     <span class="glyphicon glyphicon-trash"></span> Supprimer le cours
   </button>
 
