@@ -29,9 +29,11 @@
     <div class="panel-heading">
       <h5 class="panel-title">Séquence pédagogique du {{cours.date_cours | date : 'fullDate' }}</h5>
     </div>
-    <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="cours.contenu" data-ng-show="cours.$resolved" data-ng-change="is_dirty()">
-
-    </textarea>
+    <div data-ng-show="cours.$resolved && cours.date_validation === null">
+      <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="cours.contenu" data-ng-change="is_dirty()">
+      </textarea>
+    </div>
+    <span data-ng-bind-html="cours.contenu"  data-ng-show="cours.date_validation !== null"></span>
     <div class="panel-footer">
       <ul>
 	<li data-ng-repeat="ressource in cours.ressources">
