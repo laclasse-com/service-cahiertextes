@@ -26,11 +26,8 @@ module CahierDeTextesAPI
           error!( 'Cours inconnu', 404 )
         else
           cours = Cours[ params[:id] ]
-          unless cours.nil?
-            hash = cours.to_hash
-            hash[:ressources] = cours.ressources.map { |rsrc| rsrc.to_hash }
-            hash
-          end
+
+          cours.to_hash_avec_ressources unless cours.nil?
         end
       end
 
@@ -40,6 +37,7 @@ module CahierDeTextesAPI
         requires :creneau_emploi_du_temps_id
         requires :date_cours, type: Date
         requires :contenu
+
         optional :ressources
       }
       post do
@@ -56,31 +54,37 @@ module CahierDeTextesAPI
                                                   hash: ressource['hash'] ) )
         end
 
-        cours
+        cours.to_hash_avec_ressources
       end
 
       desc 'modifie une séquence pédagogique'
       params {
         requires :id, type: Integer
         requires :contenu, type: String
+
         optional :ressources, type: Array
       }
       put '/:id' do
         cours = Cours[ params[:id] ]
 
         unless cours.nil?
-          cours.contenu = params[:contenu]
-          cours.date_modification = Time.now
+          if cours.date_validation.nil?
+            cours.contenu = params[:contenu]
+            cours.date_modification = Time.now
 
-          params[:ressources] && params[:ressources].each do
-            |ressource|
-            cours.add_ressource( Ressource.create(  name: ressource['name'],
-                                                    hash: ressource['hash'] ) )
+            if params[:ressources]
+              cours.remove_all_ressources
+              params[:ressources].each do
+                |ressource|
+                cours.add_ressource( Ressource.create(name: ressource['name'],
+                                                      hash: ressource['hash'] ) )
+              end
+            end
+
+            cours.save
+
+            cours.to_hash_avec_ressources
           end
-
-          cours.save
-
-          cours
         end
       end
 
@@ -94,11 +98,11 @@ module CahierDeTextesAPI
         cours = Cours[ params[:id] ]
 
         unless cours.nil?
-          cours.date_validation = Time.now
+          cours.date_validation = Time.now if cours.date_validation.nil?
 
           cours.save
 
-          cours
+          cours.to_hash_avec_ressources
         end
       end
 
@@ -124,19 +128,7 @@ module CahierDeTextesAPI
             new_cours.add_ressource( ressource )
           end
 
-          # Devoir.where( cours_id: cours.id ).all.each {
-          #   |devoir|
-          #   Devoir.create(  cours_id: new_cours.id,
-          #                   creneau_emploi_du_temps_id: devoir.creneau_emploi_du_temps_id, # FIXME: à recalculer
-          #                   type_devoir_id: devoir.type_devoir_id,
-          #                   contenu: devoir.contenu,
-          #                   date_creation: Time.now,
-          #                   date_modification: nil,
-          #                   date_validation: nil,
-          #                   date_due: devoir.date_due, # FIXME: à recalculer
-          #                   temps_estime: devoir.temps_estime )
-          # }
-          new_cours
+          new_cours.to_hash_avec_ressources
         end
       end
 
@@ -148,12 +140,14 @@ module CahierDeTextesAPI
         cours = Cours[ params[:id] ]
 
         unless cours.nil?
-          cours.update(deleted: true)
-          cours.date_modification = Time.now
+          if cours.date_validation.nil?
+            cours.update(deleted: true)
+            cours.date_modification = Time.now
 
-          cours.save
+            cours.save
 
-          cours
+            cours.to_hash_avec_ressources
+          end
         end
       end
     end

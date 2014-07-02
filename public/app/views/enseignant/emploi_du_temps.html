@@ -1,20 +1,21 @@
 <div class="row">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <select data-ng-model="classe" data-ng-change="refresh_calendar()" data-ng-options="classe.id as classe.libelle for classe in classes">
-                <option value="" selected>Toutes les classes</option>
-            </select>
-        </div>
-        <div class="panel-body">
-            <div data-calendar="emploi_du_temps" data-ui-calendar="calendar.options" class="col-md-12 calendar" data-ng-model="calendar.events"></div>
-            <div class="col-md-12">
-                <div class="pull-right">
-                    <span class="label saisie-vide" title="Créneaux d'emploi du temps">emploi du temps</span>
-                    <span class="label saisie-invalide" title="Saisie d'un cours sans devoir associé">cours</span>
-                    <span class="label saisie-valide" title="Cours qui a été visé par le chef d'établissement">cours visé</span>
-                    <span class="label saisie-devoirs" title="Cours auquel est rattaché un ou plusieurs devoirs">cours avec devoir</span>
-                </div>
-            </div>
-        </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <select data-ng-model="classe" data-ng-change="refresh_calendar()" data-ng-options="classe.id as classe.libelle for classe in classes">
+	<option value="" selected>Toutes les classes</option>
+      </select>
+      <label><input type="checkbox" data-ng-model="uniquement_mes_creneaux" data-ng-change="refresh_calendar()" > ne montrer que ce qui me concerne directement</label>
     </div>
+    <div class="panel-body">
+      <div data-calendar="emploi_du_temps" data-ui-calendar="calendar.options" class="col-md-12 calendar" data-ng-model="calendar.events"></div>
+      <div class="col-md-12">
+	<div class="pull-right">
+	  <span class="label saisie-vide" title="Créneau d'emploi du temps">emploi du temps</span>
+	  <span class="label saisie-invalide" title="Saisie d'un cours sans devoir associé">cours</span>
+	  <span class="label saisie-valide" title="Cours ayant été visé par le chef d'établissement">cours visé</span>
+	  <span class="label saisie-devoirs" title="Saisie d'un devoir">devoir</span>
+	</div>
+      </div>
+    </div>
+  </div>
 </div>

@@ -13,11 +13,6 @@ module CahierDeTextesAPI
         optional :uai
       }
       get '/du/:debut/au/:fin' do
-        # if # ( user.is?( 'ENS' ) ||
-        #    #     user.is?( 'ELV' ) ||
-        #    #     user.is?( 'DIR' ) ) &&
-        #   user.methods.include? :classes
-
         params[:debut] = Date.parse( params[:debut].iso8601 )
         params[:fin] = Date.parse( params[:fin].iso8601 )
         weeks =  ( params[:debut] .. params[:fin] ).map { |d| d.cweek }.uniq
@@ -31,76 +26,126 @@ module CahierDeTextesAPI
         # FIXME: Un creneau "deleted" ne doit pas empecher les saisies déjà effectuée d'apparaitre
         # Soit le créneau est marqué deleted ET les dates debut et fin sont antérieures à la date deleted
         # Soit le créneau n'est pas marqué deleted et pas de restriction sur les dates debut et fin
-        creneaux = CreneauEmploiDuTemps
+        CreneauEmploiDuTemps
           .association_join( :regroupements )
           .association_join( :enseignants )
-          .where( '( (deleted = true and date_suppression <= ' + params[:fin].to_s + ') or (deleted = false) )')
+          .where( "( (deleted = true and date_suppression <= #{params[:fin]}) or (deleted = false) )" )
           .where( regroupement_id: regroupements_ids )
-
-        # le premier profil de la liste des profils est considéré comme le profil actif
-        creneaux = creneaux.where( enseignant_id: user.uid ) if Annuaire.get_user( user.uid )['profils'][ 0 ]['profil_id'] == 'ENS'
-
-        creneaux.all
+          .all
           .select { |creneau| weeks.reduce( true ) { |a, week| a && creneau[:semaines_de_presence][ week ] == 1 } }
-          .map { |creneau|
-
+          .map do
+          |creneau|
           plage_debut = PlageHoraire[ creneau.debut ].debut
           plage_fin = PlageHoraire[ creneau.fin ].fin
 
           # 1. récupération du cahier de textes
           cahier_de_textes = CahierDeTextes.where( regroupement_id: creneau[:regroupement_id] ).first
 
-          ( params[:debut] .. params[:fin] )
-            .reject { |day| day.wday != creneau.jour_de_la_semaine }
-            .map { |jour|
-            cours = {}
-            devoirs = []
+          # FIXME: hack un peu rapide et pas très propre !
+          # À REFACTORER
+          [
+            ( params[:debut] .. params[:fin] )
+              .reject { |day| day.wday != creneau.jour_de_la_semaine }
+              .map do
+              |jour|
+              cours = {}
+              devoirs = []
 
-            # 2. récupération des cours
-            Cours.where( creneau_emploi_du_temps_id: creneau.id )
-              .where( cahier_de_textes_id: cahier_de_textes.id )
-              .where( date_cours: jour )
-              .where( deleted: false )
-              .map {
-              |le_cours|
+              # 2. récupération des cours
+              Cours
+                .where( creneau_emploi_du_temps_id: creneau.id )
+                .where( cahier_de_textes_id: cahier_de_textes.id )
+                .where( date_cours: jour )
+                .where( deleted: false )
+                .each do
+                |le_cours|
 
-              cours = le_cours.to_hash
-              cours[:ressources] = le_cours.ressources.map { |rsrc| rsrc.to_hash }
+               cours = le_cours.to_hash
+               cours[:ressources] = le_cours.ressources.map { |rsrc| rsrc.to_hash }
 
-              devoirs = Devoir
-                .where( cours_id: cours[:id] )
-                .all
-                .map { |devoir|
-                hstart         = PlageHoraire[ CreneauEmploiDuTemps[ devoir.creneau_emploi_du_temps_id ].debut ].debut
-                hend           = PlageHoraire[ CreneauEmploiDuTemps[ devoir.creneau_emploi_du_temps_id ].fin ].fin
-                d              = devoir.to_hash
-                d[:type_devoir_description]= TypeDevoir[ devoir.type_devoir_id ].description
-                d[:ressources] = devoir.ressources.map { |rsrc| rsrc.to_hash }
-                d[:fait]       = devoir.fait_par?( user.uid )
-                d[:start]      = Time.new( devoir.date_due.year, devoir.date_due.month, devoir.date_due.mday, hstart.hour, hstart.min ).iso8601
-                d[:end]        = Time.new( devoir.date_due.year, devoir.date_due.month, devoir.date_due.mday, hend.hour, hend.min ).iso8601
+               devoirs = Devoir
+                 .where( cours_id: cours[:id] )
+                 .where( deleted: false )
+                 .all
+                 .map do
+                 |devoir|
+                 hstart         = PlageHoraire[ CreneauEmploiDuTemps[ devoir.creneau_emploi_du_temps_id ].debut ].debut
+                 hend           = PlageHoraire[ CreneauEmploiDuTemps[ devoir.creneau_emploi_du_temps_id ].fin ].fin
+                 d              = devoir.to_hash
+                 d[:type_devoir_description] = TypeDevoir[ devoir.type_devoir_id ].description
+                 d[:ressources] = devoir.ressources.map { |rsrc| rsrc.to_hash }
+                 d[:fait]       = devoir.fait_par?( user.uid )
+                 d[:start]      = Time.new( devoir.date_due.year, devoir.date_due.month, devoir.date_due.mday, hstart.hour, hstart.min ).iso8601
+                 d[:end]        = Time.new( devoir.date_due.year, devoir.date_due.month, devoir.date_due.mday, hend.hour, hend.min ).iso8601
 
-                d
-              }
-            }
+                 d
+               end
+             end
 
-            {  cahier_de_textes_id: cahier_de_textes.id,
+             { cahier_de_textes_id: cahier_de_textes.id,
                regroupement_id: cahier_de_textes.regroupement_id,
+               enseignant_id: creneau[:enseignant_id],
                creneau_emploi_du_temps_id: creneau.id,
                matiere_id: creneau.matiere_id,
                start: Time.new( jour.year, jour.month, jour.mday, plage_debut.hour, plage_debut.min ).iso8601,
                end: Time.new( jour.year, jour.month, jour.mday, plage_fin.hour, plage_fin.min ).iso8601,
                cours: cours,
                devoirs: devoirs
-            }
-          }
-        }.flatten
+             }
+           end,
+           ( params[:debut] .. params[:fin] )
+             .reject { |day| day.wday != creneau.jour_de_la_semaine }
+             .map do
+             |jour|
+             Devoir
+               .where( creneau_emploi_du_temps_id: creneau.id )
+               .where( date_due: jour )
+               .where( deleted: false )
+               .all
+               .map do
+               |record|
+               hstart         = PlageHoraire[ CreneauEmploiDuTemps[ record.creneau_emploi_du_temps_id ].debut ].debut
+               hend           = PlageHoraire[ CreneauEmploiDuTemps[ record.creneau_emploi_du_temps_id ].fin ].fin
+               devoir              = Devoir[ record.id ].to_hash
+               devoir[:type_devoir_description] = TypeDevoir[ record.type_devoir_id ].description
+               devoir[:ressources] = record.ressources.map { |rsrc| rsrc.to_hash }
+               devoir[:fait]       = record.fait_par?( user.uid )
+               devoir[:start]      = Time.new( record.date_due.year, record.date_due.month, record.date_due.mday, hstart.hour, hstart.min ).iso8601
+               devoir[:end]        = Time.new( record.date_due.year, record.date_due.month, record.date_due.mday, hend.hour, hend.min ).iso8601
 
-        # else
-        #    []
-        # end
+               cours = Cours
+                 .where( id: record.cours_id )
+                 .where( cahier_de_textes_id: cahier_de_textes.id )
+                 .where( deleted: false )
+                 .first
+
+               unless cours.nil?
+                 jour_cours = cours.date_cours
+                 { cahier_de_textes_id: cahier_de_textes.id,
+                   regroupement_id: cahier_de_textes.regroupement_id,
+                   enseignant_id: creneau[:enseignant_id],
+                   creneau_emploi_du_temps_id: creneau.id,
+                   matiere_id: creneau.matiere_id,
+                   start: Time.new( jour_cours.year, jour_cours.month, jour_cours.mday, plage_debut.hour, plage_debut.min ).iso8601,
+                   end: Time.new( jour_cours.year, jour_cours.month, jour_cours.mday, plage_fin.hour, plage_fin.min ).iso8601,
+                   cours: cours,
+                   devoirs: [ devoir ]
+                 }
+               end
+             end
+
+           end
+          ]
+        end
+          .flatten
+          .compact
+          .uniq do |record|
+          { creneau_emploi_du_temps_id: record[:cours] == {} && record[:devoirs] == [] ? record[:creneau_emploi_du_temps_id] : nil,
+            cours_id: record[:cours] == {} ? nil : record[:cours][:id],
+            devoirs_ids: record[:devoirs].map { |devoir| devoir[:id] } }
+        end
+
       end
-
     end
   end
 end

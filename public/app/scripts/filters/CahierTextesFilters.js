@@ -10,6 +10,15 @@ angular.module( 'cahierDeTexteApp' )
 	    return new Date( new Date( d ) - timezoneOffset );
 	};
     } )
+    .filter( 'correctTimeZoneToGMT', function () {
+	return function ( d ) {
+	    var timezoneOffset = new Date( d ).getTimezoneOffset() / 60;
+
+	    d.setHours( d.getHours() + timezoneOffset );
+
+	    return d;
+	};
+    } )
     .filter( 'formateCreneau', [ '$filter',
 	function ( $filter ) {
 	    // Afficher un créneau : date + heure de début et heure de fin

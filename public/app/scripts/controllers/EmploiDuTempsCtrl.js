@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EmploiDuTempsCtrl',
-		[ '$scope', '$modal', '$q', '$filter', 'CALENDAR_OPTIONS', 'CALENDAR_PARAMS', 'API', 'Annuaire', 'EmploisDuTemps', 'User', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs',
-		  function ( $scope, $modal, $q, $filter, CALENDAR_OPTIONS, CALENDAR_PARAMS, API, Annuaire, EmploisDuTemps, User, CreneauEmploiDuTemps, Cours, Devoirs ) {
+		[ '$scope', '$modal', '$q', '$filter', 'CALENDAR_OPTIONS', 'CALENDAR_PARAMS', 'API', 'Annuaire', 'EmploisDuTemps', 'User', 'CreneauEmploiDuTemps',
+		  function ( $scope, $modal, $q, $filter, CALENDAR_OPTIONS, CALENDAR_PARAMS, API, Annuaire, EmploisDuTemps, User, CreneauEmploiDuTemps ) {
 		      var filter_data = angular.identity;
 		      var types_de_devoir = [];
 		      var matieres = [];
@@ -15,8 +15,8 @@ angular.module('cahierDeTexteApp')
 		      var ouvre_popup_details = function( titre, cours, devoirs ) {
 			  $modal.open( { templateUrl: 'app/views/eleve/detail_emploi_du_temps.html',
 					 controller: 'EmploiDuTempsPopupDisplayCtrl',
-					 resolve: { titre: function() { return titre; },
-						    cours: function() { return cours; },
+					 resolve: { titre  : function() { return titre; },
+						    cours  : function() { return cours; },
 						    devoirs: function() { return devoirs; } } }
 				     ).result.then( function ( scope_popup ) {
 					 _(scope_popup.devoirs).each(function(devoir) {
@@ -26,20 +26,18 @@ angular.module('cahierDeTexteApp')
 				     });
 		      };
 		      // popup d'édition
-		      var ouvre_popup_edition = function ( raw_data, types_de_devoir, matieres, classes, creneau_selectionne, matiere_id, regroupement_id, cours, devoirs, popup_callback ) {
+		      var ouvre_popup_edition = function ( raw_data, types_de_devoir, matieres, classes, creneau_selectionne, cours, devoirs, popup_callback ) {
 			  $modal.open( {
-			      templateUrl: 'app/views/enseignant/detail_emploi_du_temps.html',
+			      templateUrl: 'app/views/enseignant/edition_emploi_du_temps.html',
 			      controller: 'EmploiDuTempsPopupEditionCtrl',
 			      resolve: {
-				  raw_data: function () { return raw_data; },
-				  types_de_devoir: function () { return types_de_devoir; },
-				  matieres: function () { return matieres; },
-				  classes: function () { return classes; },
+				  raw_data	     : function () { return raw_data; },
+				  types_de_devoir    : function () { return types_de_devoir; },
+				  matieres	     : function () { return matieres; },
+				  classes	     : function () { return classes; },
 				  creneau_selectionne: function () { return creneau_selectionne; },
-				  matiere_id: function () { return matiere_id; },
-				  regroupement_id: function () { return regroupement_id; },
-				  cours: function () { return cours; },
-				  devoirs: function () { return devoirs; }
+				  cours		     : function () { return cours; },
+				  devoirs	     : function () { return devoirs; }
 			      }
 			  } )
 			      .result.then( // éxécuté à la fermeture de la popup
@@ -63,21 +61,23 @@ angular.module('cahierDeTexteApp')
 					   devoirs: event.devoirs,
 					   cahier_de_textes_id: event.cahier_de_textes_id,
 					   regroupement_id: event.regroupement_id,
+					   enseignant_id: event.enseignant_id,
 					   matiere_id: event.matiere_id,
-					   creneau_emploi_du_temps_id: event.creneau_emploi_du_temps_id };
+					   creneau_emploi_du_temps_id: item.creneau_emploi_du_temps_id };
 			  this.allDay = false;
 			  this.title = '';
 			  this.description = '';
 			  this.regroupement = _($scope.classes).findWhere({ id: parseInt( this.details.regroupement_id ) });
 			  this.type = ( _(item).has( 'fait' ) ) ? 'devoir': 'cours';
+			  this.has_resources = _(item).has( 'ressources' ) && item.ressources.length > 0;
 
 			  if ( this.type === 'cours' ) {
 			      item.start = event.start;
 			      item.end = event.end;
-			      this.className = 'saisie-invalide';
+			      this.className = item.date_validation === null ? 'saisie-invalide' : 'saisie-valide';
 			      if ( event.matiere_id.length > 0 ) {
 				  Annuaire.get_matiere( event.matiere_id ).$promise.then( function success( response ) {
-				      _this.title = response.libelle_long;
+				      _this.title += response.libelle_long;
 				  });
 			      }
 			  } else {
@@ -85,10 +85,9 @@ angular.module('cahierDeTexteApp')
 
 			      API.get_type_de_devoir( { id: item.type_devoir_id } )
 				  .$promise.then( function success( response ) {
-				      _this.title = response.label;
+				      _this.title += response.label;
 				  });
 			  }
-			  this.className += 'clickable-event';
 			  this.start = new Date( item.start );
 			  this.end = new Date( item.end );
 
@@ -97,11 +96,18 @@ angular.module('cahierDeTexteApp')
 			      this.description += item.contenu.substring( 0, CALENDAR_PARAMS.max_length );
 			      this.description += item.contenu.length > CALENDAR_PARAMS.max_length ? '…' : '';
 			      this.description += '</span>';
-			      this.className += ' clickable-event';
 			      this.id = item.id;
 			  } else {
-			      this.className = 'saisie-vide un-clickable-event';
+			      this.className = 'saisie-vide';
 			  }
+
+			  if ( ( $scope.current_user.profil_actif.type === 'ELV' && _(item).has( 'contenu' ) && item.contenu.length > 0 ) ||
+			       ( $scope.current_user.profil_actif.type === 'ENS' && this.details.enseignant_id === $scope.current_user.uid ) ) {
+			      this.className += ' clickable-event';
+			  } else {
+			      this.className += ' unclickable-event';
+			  }
+
 		      };
 
 		      var fullCalendarize_event = function( item_emploi_du_temps ) {
@@ -126,12 +132,14 @@ angular.module('cahierDeTexteApp')
 			  $scope.current_user = response.data;
 
 			  var populate_calendar = function( raw_data ) {
-			      $scope.calendar.events[0] = _.chain( raw_data )
-				  .map( function( event ) {
-				      return fullCalendarize_event( event );
-				  } )
-				  .flatten()
-				  .value();
+			      var events = _.chain( raw_data )
+				      .map( function( event ) {
+					  return fullCalendarize_event( event );
+				      } )
+				      .flatten()
+				      .value();
+			      $scope.calendar.events[0] = _(events).filter( function( event ) { return event.type === 'cours'; } );
+			      $scope.calendar.events[1] = _(events).filter( function( event ) { return event.type === 'devoir'; } );
 			  };
 
 			  $scope.refresh_calendar = function(  ) {
@@ -156,16 +164,19 @@ angular.module('cahierDeTexteApp')
 
 			  switch ( $scope.current_user.profil_actif.type ) {
 			  case 'ENS':
+			      $scope.uniquement_mes_creneaux = true;
 			      $scope.calendar.options.selectable = true;
 			      $scope.calendar.options.editable = true;
 
 			      var list_classes = function(user) {
-				  return _.chain(user.classes)
+				  return _.chain( user.profil_actif.classes )
 				      .reject(function(classe) {
 					  return classe.etablissement_code !== user.profil_actif.uai;
 				      })
 				      .pluck('regroupement_id')
 				      .uniq()
+				      .compact()
+				      .reject( function( id ) { return id === 'undefined'; } )
 				      .map(function(regroupement_id) {
 					  return Annuaire.get_regroupement(regroupement_id);
 				      })
@@ -180,6 +191,7 @@ angular.module('cahierDeTexteApp')
 				      .pluck('matiere_enseignee_id')
 				      .uniq()
 				      .compact()
+				      .reject( function( id ) { return id === 'undefined'; } )
 				      .map(function(matiere_id) {
 					  return [matiere_id, Annuaire.get_matiere(matiere_id)];
 				      })
@@ -193,6 +205,7 @@ angular.module('cahierDeTexteApp')
 				      .pluck('matiere_id')
 				      .uniq()
 				      .compact()
+				      .reject( function( id ) { return id === 'undefined'; } )
 				      .map(function(matiere_id) {
 					  return [matiere_id, Annuaire.get_matiere(matiere_id)];
 				      })
@@ -205,17 +218,6 @@ angular.module('cahierDeTexteApp')
 			      matieres_enseignees = list_matieres_enseignees( $scope.current_user );
 			      $scope.classes = list_classes( $scope.current_user );
 
-			      var create_cours = function(creneau) {
-				  var cours = new Cours({
-				      cahier_de_textes_id: creneau.cahier_de_textes_id,
-				      creneau_emploi_du_temps_id: creneau.id,
-				      date_cours: new Date(creneau.start).toISOString()
-				  });
-				  cours.create = true;
-
-				  return cours;
-			      };
-
 			      var popup_callback = function( scope_popup ) {
 				  var view = $scope.emploi_du_temps.fullCalendar( 'getView' );
 				  retrieve_data( view.visStart, view.visEnd );
@@ -223,52 +225,54 @@ angular.module('cahierDeTexteApp')
 
 			      // édition d'un créneau existant
 			      $scope.calendar.options.eventClick = function ( event ) {
-				  var creneau_selectionne = _( event.source.events )
-					  .findWhere( {
-					      _id: event._id
+				  if ( event.details.enseignant_id === $scope.current_user.uid ) {
+				      event.id = event.details.creneau_emploi_du_temps_id;
+				      event.heure_debut = event.start;
+				      event.heure_fin = event.end;
+				      event.matiere_id = event.details.matiere_id;
+				      event.regroupement_id = event.details.regroupement_id;
+
+				      // 1. cours
+				      var cours = null;
+				      var devoirs = [];
+
+				      if ( event.details.cours.id !== undefined ) {
+					  cours = API.get_cours( {
+					      id: event.details.cours.id
 					  } );
-				  creneau_selectionne.id = creneau_selectionne.details.creneau_emploi_du_temps_id;
+					  cours.create = false;
 
-				  // 1. cours
-				  var cours = null;
-				  var devoirs = [];
-
-				  if ( creneau_selectionne.details.cours.id !== undefined ) {
-				      cours = API.get_cours( {
-					  id: creneau_selectionne.details.cours.id
-				      } );
-				      cours.create = false;
-
-				      $q.all( $scope.cours, types_de_devoir, matieres, $scope.classes )
-					  .then( function () {
-					      // 2. devoir
-					      if ( creneau_selectionne.details.devoirs.length > 0 ) {
-						  _( creneau_selectionne.details.devoirs )
-						      .each( function ( devoir ) {
-							  API.get_devoir( {
-							      id: creneau_selectionne.details.devoirs[ 0 ].id
-							  } )
-							      .$promise
-							      .then( function ( vrai_devoir ) {
-								  devoirs.push( vrai_devoir );
-							      } );
-						      } );
-						  devoirs.create = false;
-					      }
-					  } );
-				  } else {
-				      cours = create_cours( creneau_selectionne );
+					  $q.all( cours, types_de_devoir, matieres, $scope.classes )
+					      .then( function () {
+						  // 2. devoir
+						  if ( event.details.devoirs.length > 0 ) {
+						      _( event.details.devoirs )
+							  .each( function ( devoir ) {
+							      API.get_devoir( {
+								  id: event.details.devoirs[ 0 ].id
+							      } )
+								  .$promise
+								  .then( function ( vrai_devoir ) {
+								      devoirs.push( vrai_devoir );
+								  } );
+							  } );
+						      devoirs.create = false;
+						  }
+					      } );
+				      } else {
+					  cours = null;
+				      }
+				      ouvre_popup_edition( $scope.raw_data,
+							   types_de_devoir, matieres_enseignees, $scope.classes,
+							   event, cours, devoirs,
+							   popup_callback );
 				  }
-				  ouvre_popup_edition( $scope.raw_data,
-						       types_de_devoir, matieres_enseignees, $scope.classes,
-						       creneau_selectionne, event.details.matiere_id, event.details.regroupement_id,
-						       cours, devoirs,
-						       popup_callback );
 			      };
 
 			      // création d'un nouveau créneau
 			      // Le regroupement_id peut être null car on n'a pas fait de choix au niveau de la select box des classes sur full_calendar
 			      $scope.calendar.options.select = function ( start, end, allDay ) {
+				  // création du créneau avec les bons horaires
 				  start = $filter('correctTimeZone')(start);
 				  end = $filter('correctTimeZone')(end);
 				  var creneau_selectionne = new CreneauEmploiDuTemps({
@@ -281,26 +285,15 @@ angular.module('cahierDeTexteApp')
 				  creneau_selectionne.$save()
 				      .then( function () {
 					  creneau_selectionne.dirty = true;
-					  creneau_selectionne.start = start;
 					  creneau_selectionne.heure_debut = start;
 					  creneau_selectionne.heure_fin = end;
-
-					  // durant le creneau_selectionne.$save() on perds regroupement_id
 					  creneau_selectionne.regroupement_id = $scope.classe === null ? undefined : '' + $scope.classe;
 					  creneau_selectionne.cahier_de_textes_id = $scope.classes[ 0 ].cahier_de_textes_id,
-					  // 3. ouverture de la popup
-					  $q.all( types_de_devoir, $scope.cours )
-					      .then( function () {
-						  creneau_selectionne.details = {
-						      cours: $scope.cours,
-						      devoirs: $scope.devoirs
-						  };
-						  ouvre_popup_edition( $scope.raw_data,
-								       types_de_devoir, matieres_enseignees, $scope.classes,
-								       creneau_selectionne, creneau_selectionne.matiere_id, creneau_selectionne.regroupement_id,
-								       create_cours( creneau_selectionne ), [],
-								       popup_callback );
-					      } );
+
+					  ouvre_popup_edition( $scope.raw_data,
+							       types_de_devoir, matieres_enseignees, $scope.classes,
+							       creneau_selectionne, null, [],
+							       popup_callback );
 
 					  $scope.emploi_du_temps.fullCalendar( 'unselect' );
 				      } );
@@ -308,8 +301,12 @@ angular.module('cahierDeTexteApp')
 
 			      $scope.calendar.options.eventRender = function ( event, element ) {
 				  // FIXME: manipulation du DOM dans le contrôleur, sale, mais obligé pour l'interprétation du HTML ?
-				  element.find( '.fc-event-title' )
-				      .append( ' - ' + event.regroupement.libelle + '<br>' + event.description );
+				  var html_element = element.find( '.fc-event-title' );
+
+				  html_element.append( ' - ' + event.regroupement.libelle + '<br>' + event.description );
+				  if ( event.has_resources ) {
+				      html_element.prepend( '<i class="glyphicon glyphicon-paperclip"></i>' );
+				  }
 			      };
 
 			      filter_data = function( raw_data ) {
@@ -322,6 +319,12 @@ angular.module('cahierDeTexteApp')
 				      } );
 				  }
 
+				  if ( $scope.uniquement_mes_creneaux ) {
+				      filtered_data = _( filtered_data ).filter( function( creneau ) {
+					  return creneau.enseignant_id === $scope.current_user.uid;
+				      } );
+				  }
+
 				  return filtered_data;
 			      };
 			      break;
@@ -331,7 +334,13 @@ angular.module('cahierDeTexteApp')
 			      $scope.calendar.options.eventRender = function( event, element ) {
 				  // FIXME: manipulation du DOM dans le contrôleur, sale
 				  // ajouter la description ici permet que l'HTML soit interprété
-				  element.find('.fc-event-title').append( event.description );
+				  html_element = element.find( '.fc-event-title' );
+
+				  html_element.append( event.description );
+				  if ( event.has_resources ) {
+				      html_element.prepend( '<i class="glyphicon glyphicon-paperclip"></i>' );
+				  }
+
 			      };
 			      $scope.calendar.options.eventClick = function( event ) {
 				  if ( _(event.details.cours).has( 'contenu' ) ) {
