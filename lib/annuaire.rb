@@ -41,7 +41,7 @@ module Annuaire
   # Construction de la signature
   def build_signature(canonical_string, ts)
     digest = OpenSSL::Digest.new( 'sha1' )
-    digested_message = Base64.encode64( OpenSSL::HMAC.digest( digest, ANNUAIRE[:secret], canonical_string ) )
+    digested_message = Base64.encode64( OpenSSL::HMAC.digest( digest, ANNUAIRE[:api_key], canonical_string ) )
     { app_id: ANNUAIRE[:app_id],
       timestamp: ts,
       signature: digested_message }.map { |key, value| "#{key}=#{CGI.escape(value)}" }.join( ';' ).chomp
