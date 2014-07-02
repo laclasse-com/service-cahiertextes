@@ -86,3 +86,7 @@ body {
 				     width:128px;
 				     border-radius:64px }
 .individualPieChart {float:left}
+
+footer { color: #555;
+	 font-size: 0.8em;
+	 text-align: right }
