@@ -1,0 +1,20 @@
+#
+# Configuration de la base de données de Backend
+#
+# Generated automatically with "rake db:configure" command at 27/02/2014.
+#
+require 'logger'
+require 'sequel'
+
+DB = Sequel.mysql2(
+  'cahiertextes',
+  host: '127.0.0.1',
+  user: 'vagrant',
+  password: 'vagrant',
+  charset: 'utf8')
+
+Sequel.extension(:pagination)
+Sequel.extension(:migration)
+
+# Uncomment this if you want to log all DB queries
+# DB.loggers << Logger.new($stdout)
