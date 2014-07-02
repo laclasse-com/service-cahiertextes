@@ -4,6 +4,7 @@
 
 angular.module( 'cahierDeTexteApp' )
     .constant( 'APP_PATH', '/ct' )
+    .constant( 'VERSION', '0.5-alpha' )
     .constant( 'DOCS_URL', 'http://www.dev.laclasse.com/docs-beta' )
 
 // définition des couleurs
@@ -25,7 +26,6 @@ angular.module( 'cahierDeTexteApp' )
 						 header: { left: 'today prev,next',
 							   center: 'title',
 							   right: '' },
-//							   right: 'agendaDay agendaWeek month' },
 						 firstDay: 1,
 						 minTime: 7,
 						 maxTime: 19,

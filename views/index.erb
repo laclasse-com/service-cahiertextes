@@ -1,20 +1,23 @@
-<!-- Add your site or application content here -->
 <div class="container">
-    <header data-ng-controller="HeaderCtrl" data-ng-hide="embedded" data-ng-cloak>
-      <div class="row">
-        <div class="navbar col-md-12">
-          <div class="pull-right">
-            {{current_user['LaclassePrenom']}} {{current_user['LaclasseNom']}}
-            <select data-ng-model="current_user['profil_actif']"
-                    data-ng-options="profil['etablissement'] + ' : ' + profil['nom'] group by profil['etablissement'] for profil in current_user['profils']" data-ng-change="reload()">
-            </select>
-            <a class="btn btn-danger" href="logout" tooltip="Déconnexion" tooltip-placement="bottom"><i class="glyphicon glyphicon-log-out"></i></a>
-          </div>
-        </div>
+
+  <header data-ng-controller="HeaderCtrl" data-ng-hide="embedded" data-ng-cloak>
+    <div class="row">
+      <div class="navbar col-md-12">
+	<div class="pull-right">
+	  {{current_user['LaclassePrenom']}} {{current_user['LaclasseNom']}}
+	  <select data-ng-model="current_user['profil_actif']"
+		  data-ng-options="profil['etablissement'] + ' : ' + profil['nom'] group by profil['etablissement'] for profil in current_user['profils']" data-ng-change="reload()">
+	  </select>
+	  <a class="btn btn-danger" href="logout" tooltip="Déconnexion" tooltip-placement="bottom"><i class="glyphicon glyphicon-log-out"></i></a>
+	</div>
       </div>
-    </header>
-  
+    </div>
+  </header>
+
   <div data-ui-view></div>
 
-  <footer></footer>
+  <footer data-ng-controller="FooterCtrl" data-ng-cloak>
+    version {{version}}
+  </footer>
+
 </div>

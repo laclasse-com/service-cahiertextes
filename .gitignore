@@ -38,3 +38,4 @@ config/constants.rb
 /spec/fixtures/UDT/*.xml
 /clef_privee
 /clef_publique
+/public/app/scripts/constants.js
