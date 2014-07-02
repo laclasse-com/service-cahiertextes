@@ -3,7 +3,7 @@
 // Note: pour des raisons pratiques certaines constantes sémantiquement parlant sont en fait des factory ou des services
 
 angular.module( 'cahierDeTexteApp' )
-    .constant( 'APP_VIRTUAL_PATH', '/ct' )
+    .constant( 'APP_PATH', '/ct' )
     .constant( 'DOCS_URL', 'http://www.dev.laclasse.com/docs-beta' )
 
 // définition des couleurs
