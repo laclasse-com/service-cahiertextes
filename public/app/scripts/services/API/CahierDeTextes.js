@@ -8,14 +8,14 @@ angular.module('cahierDeTexteApp')
 		       return $http.get( APP_VIRTUAL_PATH + '/api/v0/users/current' )
 			   .success( function( response ) {
 			       response.profil_actif = response.profils[ 0 ];
-                               // Voir quel est le profil
+			       // Voir quel est le profil
 			       response.is = function( profil_id ) {
 				   return this.profil_actif['type'] == profil_id;
 			       };
-                               // Liste des classes liées au profil actif
-			       response.profil_actif.classes = _.filter( response.classes, 
-                                                                         function(c) { return c.etablissement_code == response.profil_actif.uai } 
-                                                                       );
+			       // Liste des classes liées au profil actif
+			       response.profil_actif.classes = _(response.classes).filter( function(c) {
+				   return c.etablissement_code == response.profil_actif.uai;
+			       } );
 			       return response;
 			   } );
 		   } );

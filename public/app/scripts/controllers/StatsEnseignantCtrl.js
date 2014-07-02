@@ -1,12 +1,11 @@
 'use strict';
 
 angular.module( 'cahierDeTexteApp' )
-    .controller( 'StatsEnseignantCtrl', [ '$scope', '$stateParams', '$q',
-					  '$locale', 'THEME',
-					  'API', 'Cours', 'Annuaire', 'User', '$sce', 'PIECHART_DEFINITION', 'BARCHART_DEFINITION',
-					  function ( $scope, $stateParams, $q, $locale, THEME, API, Cours, Annuaire, User, $sce, PIECHART_DEFINITION, BARCHART_DEFINITION ) {
-					      $scope.classe = null;
+    .controller( 'StatsEnseignantCtrl', [ '$scope', '$stateParams', '$q', '$locale', '$sce', 'API', 'Cours', 'Annuaire', 'User', 'PIECHART_DEFINITION', 'BARCHART_DEFINITION',
+					  function ( $scope, $stateParams, $q, $locale, $sce, API, Cours, Annuaire, User, PIECHART_DEFINITION, BARCHART_DEFINITION ) {
 					      $scope.mois = $locale.DATETIME_FORMATS.MONTH;
+
+					      $scope.classe = null;
 					      $scope.moisCourant = null;
 					      $scope.gridSaisies = [];
 					      $scope.selectedSaisies = [];
@@ -14,18 +13,17 @@ angular.module( 'cahierDeTexteApp' )
 					      $scope.classes = {};
 					      $scope.montre_valides = false;
 
-					      $scope.filtre = function ( saisies ) {
+					      var filtre_saisies = function ( saisies, mois, classe ) {
 						  var data = saisies;
-						  if ( $scope.moisCourant != null ) {
+						  if ( mois != null ) {
 						      data = _( data ).where( {
-							  mois: $scope.moisCourant + 1
+							  mois: mois + 1
 						      } );
 						  }
-						  if ( $scope.classe != null ) {
+						  if ( classe != null ) {
 						      // .invert() suppose que les valeurs sont uniques
-						      var id = _( $scope.classes ).invert()[ $scope.classe ];
 						      data = _( data ).where( {
-							  regroupement_id: id
+							  regroupement_id: classe.id
 						      } );
 						  }
 						  return data;
@@ -41,11 +39,11 @@ angular.module( 'cahierDeTexteApp' )
 						  columnDefs: [ {
 						      field: 'classe',
 						      displayName: 'Classe',
-						      cellTemplate: '<span data-ng-bind="classes[row.entity.regroupement_id]"></span>'
+						      cellTemplate: '<span data-ng-bind="classes[row.entity.regroupement_id].libelle"></span>'
 						  }, {
 						      field: 'matiere',
 						      displayName: 'Matière',
-						      cellTemplate: '<span data-ng-bind="matieres[row.entity.matiere_id]"></span>'
+						      cellTemplate: '<span data-ng-bind="matieres[row.entity.matiere_id].libelle_long"></span>'
 						  }, {
 						      field: 'cours',
 						      displayName: 'Cours',
@@ -84,7 +82,7 @@ angular.module( 'cahierDeTexteApp' )
 						      } );
 						  },
 						  populate: function ( saisies ) {
-						      $scope.gridSaisies = $scope.filtre( saisies );
+						      $scope.gridSaisies = filtre_saisies( saisies, $scope.moisCourant, $scope.classe );
 						      if ( !$scope.montre_valides ) {
 							  $scope.gridSaisies = _( $scope.gridSaisies ).where( {
 							      valide: false
@@ -116,7 +114,7 @@ angular.module( 'cahierDeTexteApp' )
 							  values: []
 						      };
 
-						      _.chain( $scope.filtre( data ) )
+						      _.chain( filtre_saisies( data, $scope.moisCourant, $scope.classe ) )
 							  .groupBy( 'regroupement_id' )
 							  .each( function ( classe ) {
 							      var filled = classe.length;
@@ -124,8 +122,8 @@ angular.module( 'cahierDeTexteApp' )
 								  valide: true
 							      } ).length;
 
-							      saisies.values.push( [ $scope.classes[ classe[ 0 ].regroupement_id ], filled ] );
-							      valides.values.push( [ $scope.classes[ classe[ 0 ].regroupement_id ], validated ] );
+							      saisies.values.push( [ $scope.classes[ classe[ 0 ].regroupement_id ].libelle, filled ] );
+							      valides.values.push( [ $scope.classes[ classe[ 0 ].regroupement_id ].libelle, validated ] );
 
 							      $scope.graphiques.barChart.data = [ valides, saisies ];
 
@@ -150,39 +148,6 @@ angular.module( 'cahierDeTexteApp' )
 						      $scope.grid.populate( $scope.raw_data );
 						      $scope.graphiques.populate( $scope.raw_data );
 						  }
-					      };
-
-					      var extract_matieres = function ( saisies ) {
-						  var matieres = {};
-						  _.chain( saisies )
-						      .flatten()
-						      .pluck( 'matiere_id' )
-						      .uniq()
-						      .compact()
-						      .each( function ( matiere_id ) {
-							  Annuaire.get_matiere( matiere_id ).$promise.then(
-							      function ( response ) {
-								  matieres[ matiere_id ] = response.libelle_long;
-							      } );
-						      } );
-						  return matieres;
-					      };
-
-					      var extract_classes = function ( saisies ) {
-						  var classes = {};
-						  return _.chain( saisies )
-						      .flatten()
-						      .pluck( 'regroupement_id' )
-						      .uniq()
-						      .map( function ( regroupement_id ) {
-							  // return Annuaire.get_regroupement( regroupement_id );
-							  Annuaire.get_regroupement( regroupement_id ).$promise.then(
-							      function ( response ) {
-								  classes[ regroupement_id ] = response.libelle;
-							      } );
-						      } )
-						      .value();
-						  return classes;
 					      };
 
 					      User.get_user().success( function ( response ) {
@@ -221,10 +186,31 @@ angular.module( 'cahierDeTexteApp' )
 						  } )
 						      .$promise.then(
 							  function success( response ) {
+							      var extract = function( saisies, id_name, traitement ) {
+								  return _.chain( saisies )
+								      .flatten()
+								      .pluck( id_name )
+								      .uniq()
+								      .compact()
+								      .reject( function( item_id ) { return item_id === 'undefined'; } )
+								      .map( function( item_id ) { return traitement( item_id ); } )
+								      .object()
+								      .value();
+							      };
+
 							      $scope.raw_data = response.saisies;
-							      $scope.matieres = extract_matieres( $scope.raw_data );
-							      $scope.classes = extract_classes( $scope.raw_data );
-							      $scope.process_data();
+							      $scope.matieres = extract( $scope.raw_data, 'matiere_id',
+											 function( matiere_id ) {
+											     return [ matiere_id, Annuaire.get_matiere( matiere_id ) ];
+											 } );
+
+							      $scope.classes = extract( $scope.raw_data, 'regroupement_id',
+											function( regroupement_id ) {
+											    return [ regroupement_id, Annuaire.get_regroupement( regroupement_id ) ];
+											} );
+							      $q.all( $scope.classes ).then( function() {
+								  $scope.process_data();
+							      } );
 							  } );
 					      } );
 					  }

@@ -1,5 +1,6 @@
 # coding: utf-8
 
+ENV['RACK_ENV'] = 'development'
 namespace :db do
   task :load_config do
     #require(File.join(APP_ROOT, 'config/options'))

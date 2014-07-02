@@ -7,7 +7,7 @@ Encoding.default_internal = Encoding::UTF_8
 ENV[ 'RACK_ENV' ] = 'development'
 
 # Config de l'annuaire ENT de Back-end
-ANNUAIRE = { 
+ANNUAIRE = {
   url: 'http://www.dev.laclasse.com/api/app',
   app_id: 'CTXT',
   secret: 'veryverysecret',
@@ -16,3 +16,7 @@ ANNUAIRE = {
 
 # Virtual path de l'aaplication
 APP_VIRTUAL_PATH = '/ct'
+
+# Options nécessaires au décryptage des fichiers exportés par ProNote
+PRONOTE = {nom_integrateur: 'LaclasseCom',
+	   cle_integrateur: '/dummy/path' }

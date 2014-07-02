@@ -2,13 +2,31 @@
 
 angular.module( 'cahierDeTexteApp' )
     .controller( 'EmploiDuTempsPopupEditionCtrl',
-		 [ '$scope', '$filter', '$q', 'TINYMCE_OPTIONS', '$modalInstance', 'Documents', 'CreneauEmploiDuTemps', 'Devoirs', 'cours', 'devoirs', 'types_de_devoir', 'creneau_selectionne', 'matiere_id', 'regroupement_id', 'raw_data', 'classes', 'matieres',
-		   function ( $scope, $filter, $q, TINYMCE_OPTIONS, $modalInstance, Documents, CreneauEmploiDuTemps, Devoirs, cours, devoirs, types_de_devoir, creneau_selectionne, matiere_id, regroupement_id, raw_data, classes, matieres ) {
+		 [ '$scope', '$filter', '$q', 'TINYMCE_OPTIONS', '$modalInstance', 'Documents', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs', 'cours', 'devoirs', 'types_de_devoir', 'creneau_selectionne', 'raw_data', 'classes', 'matieres',
+		   function ( $scope, $filter, $q, TINYMCE_OPTIONS, $modalInstance, Documents, CreneauEmploiDuTemps, Cours, Devoirs, cours, devoirs, types_de_devoir, creneau_selectionne, raw_data, classes, matieres ) {
 		       // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
 		       var scope_popup = $scope;
+
+		       var create_cours = function( creneau ) {
+			   var cours = new Cours({
+			       cahier_de_textes_id: creneau.cahier_de_textes_id,
+			       creneau_emploi_du_temps_id: creneau.id,
+			       date_cours: new Date(creneau.heure_debut).toISOString(),
+			       date_validation: null
+			   });
+			   cours.create = true;
+
+			   return cours;
+		       };
+
 		       // Initialisations {{{
 		       scope_popup.tinyMCEOptions = TINYMCE_OPTIONS;
-		       scope_popup.cours = cours;
+		       if ( cours === null ) {
+			   scope_popup.cours = create_cours( creneau_selectionne );
+		       } else {
+			   scope_popup.cours = cours;
+			   scope_popup.cours.create = false;
+		       }
 		       // devoirs
 		       scope_popup.devoirs = devoirs;
 		       scope_popup.types_de_devoir = types_de_devoir;
@@ -16,20 +34,29 @@ angular.module( 'cahierDeTexteApp' )
 		       scope_popup.creneau_selectionne = creneau_selectionne;
 		       scope_popup.matieres = matieres;
 		       scope_popup.classes = classes;
-		       scope_popup.creneau_en_creation = matiere_id.length == 0 || regroupement_id === undefined;
-		       scope_popup.matiere_id = matiere_id.length > 0 ? matiere_id : _.chain( scope_popup.matieres ).values().first().value().id;
-		       scope_popup.regroupement_id = regroupement_id !== undefined ? parseInt( regroupement_id ) : _( scope_popup.classes ).first().id;
+		       scope_popup.creneau_en_creation = scope_popup.creneau_selectionne.matiere_id.length == 0 || scope_popup.creneau_selectionne.regroupement_id === undefined;
+		       if ( scope_popup.creneau_en_creation ) {
+			   scope_popup.creneau_tmp_heure_debut = $filter('correctTimeZoneToGMT')( scope_popup.creneau_selectionne.heure_debut );
+			   scope_popup.creneau_tmp_heure_fin = $filter('correctTimeZoneToGMT')( scope_popup.creneau_selectionne.heure_fin );
+		       }
+		       scope_popup.matiere_id = scope_popup.creneau_selectionne.matiere_id.length > 0 ? scope_popup.creneau_selectionne.matiere_id : _.chain( scope_popup.matieres ).values().first().value().id;
+		       scope_popup.regroupement_id = scope_popup.creneau_selectionne.regroupement_id !== 'undefined' ? parseInt( scope_popup.creneau_selectionne.regroupement_id ) : _( scope_popup.classes ).first().id;
 		       scope_popup.classe = _( scope_popup.classes ).findWhere( {
 			   id: parseInt( scope_popup.regroupement_id )
 		       } );
 		       scope_popup.matiere = scope_popup.matieres[ scope_popup.matiere_id ];
 
 		       // Flags et helpers
+		       scope_popup.ouvre_sequence_pedagogique = !scope_popup.cours.create;
 		       scope_popup.dirty = false;
 		       scope_popup.deleted = false;
 		       scope_popup.creneau_deleted = false;
-		       scope_popup.is_dirty = function () {
-			   scope_popup.dirty = true;
+		       scope_popup.is_dirty = function( item ) {
+			   if ( item === null || ( item !== null && item.contenu.length > 0 ) ) {
+			       scope_popup.dirty = true;
+			   } else {
+			       scope_popup.dirty = false;
+			   }
 		       };
 
 		       // fonctions UI pour le temps estimé
@@ -208,12 +235,15 @@ angular.module( 'cahierDeTexteApp' )
 		       // }}}
 
 		       // fonctions d'événements GUI {{{
+		       scope_popup.toggle_sequence_pedagogique = function() {
+			   scope_popup.ouvre_sequence_pedagogique = !scope_popup.ouvre_sequence_pedagogique;
+		       };
 		       scope_popup.ajout_devoir = function () {
 			   var devoir = new Devoirs( {
 			       cours_id: scope_popup.cours.id,
-			       date_due: new Date().toISOString(),
-			       type_devoir_id: null,
-			       creneau_emploi_du_temps_id: null
+			       date_due: $filter( 'date' )( scope_popup.creneau_selectionne.start, 'yyyy-MM-dd' ),
+			       type_devoir_id: _(scope_popup.types_de_devoir).last().id,
+			       creneau_emploi_du_temps_id: scope_popup.creneau_selectionne.id
 			   } );
 			   devoir.create = true;
 
@@ -233,7 +263,7 @@ angular.module( 'cahierDeTexteApp' )
 			   $modalInstance.close( scope_popup );
 		       };
 
-		       scope_popup.effacer = function () {
+		       scope_popup.effacer_cours = function () {
 			   scope_popup.cours.$delete()
 			       .then( function () {
 				   _( scope_popup.devoirs ).each( function ( devoir ) {
@@ -242,6 +272,15 @@ angular.module( 'cahierDeTexteApp' )
 				   scope_popup.deleted = true;
 				   scope_popup.fermer();
 			       } );
+		       };
+
+		       scope_popup.effacer_devoir = function ( devoir ) {
+			   devoir.$delete().then( function() {
+			       scope_popup.devoirs = _( scope_popup.devoirs )
+				   .reject( function( devoir ) {
+				       return devoir.deleted;
+				   });
+			   });
 		       };
 
 		       scope_popup.effacer_creneau = function () {
@@ -271,6 +310,9 @@ angular.module( 'cahierDeTexteApp' )
 			       if ( scope_popup.creneau_en_creation ) {
 				   scope_popup.creneau_selectionne.matiere_id = scope_popup.matiere_id;
 				   scope_popup.creneau_selectionne.regroupement_id = scope_popup.regroupement_id;
+				   scope_popup.creneau_selectionne.heure_debut = $filter('correctTimeZone')( scope_popup.creneau_tmp_heure_debut );
+				   scope_popup.creneau_selectionne.heure_fin = $filter('correctTimeZone')( scope_popup.creneau_tmp_heure_fin );
+
 				   scope_popup.creneau_selectionne.$update();
 			       }
 

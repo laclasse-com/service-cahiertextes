@@ -41,7 +41,7 @@ angular.module( 'cahierDeTexteApp' )
 			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } },
 			   views: {
 			       'content': {
-				   templateUrl: 'app/views/common/enseignant.html',
+				   templateUrl: 'app/views/common/stats_enseignant.html',
 				   controller: 'StatsEnseignantCtrl'
 			       }
 			   }
@@ -114,7 +114,7 @@ angular.module( 'cahierDeTexteApp' )
 			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ENS' ] ); } },
 			   views: {
 			       'content': {
-				   templateUrl: 'app/views/common/enseignant.html',
+				   templateUrl: 'app/views/common/stats_enseignant.html',
 				   controller: 'StatsEnseignantCtrl'
 			       }
 			   }

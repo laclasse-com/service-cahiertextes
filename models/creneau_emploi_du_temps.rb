@@ -4,10 +4,6 @@ module SemainesDePresenceMixin
   def present_pour_la_semaine?( n )
     semaines_de_presence[n] == 1
   end
-
-  def present_pour_la_semaine!( n )
-    semaines_de_presence[n] = 1
-  end
 end
 
 class CreneauEmploiDuTempsSalle < Sequel::Model( :creneaux_emploi_du_temps_salles )
