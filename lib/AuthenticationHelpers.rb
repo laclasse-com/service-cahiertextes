@@ -15,13 +15,13 @@ module AuthenticationHelpers
       route += "?#{env['QUERY_STRING']}" unless env['QUERY_STRING'].empty?
       route = CGI.escape( "#{env['rack.url_scheme']}://#{env['HTTP_HOST']}#{route}" )
 
-      #      redirect "#{APP_VIRTUAL_PATH}/auth/cas?url=#{URI.encode( route )}"
+      #      redirect "#{APP_PATH}/auth/cas?url=#{URI.encode( route )}"
 puts "Dans login!, route="+route.inspect
-puts "on redirige vers route="+"#{APP_VIRTUAL_PATH}/auth/cas?url=#{route}"
-    #  redirect "#{APP_VIRTUAL_PATH}/auth/cas?url=#{URI.encode( route )}"
-      redirect "#{APP_VIRTUAL_PATH}/auth/cas?url=#{route}"
+puts "on redirige vers route="+"#{APP_PATH}/auth/cas?url=#{route}"
+    #  redirect "#{APP_PATH}/auth/cas?url=#{URI.encode( route )}"
+      redirect "#{APP_PATH}/auth/cas?url=#{route}"
     end
-    redirect "#{APP_VIRTUAL_PATH}/auth/cas"
+    redirect "#{APP_PATH}/auth/cas"
   end
 
   #

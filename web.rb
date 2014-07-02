@@ -28,33 +28,33 @@ module CahierDeTextesAPI
       login! request.path_info unless is_logged?
     end
 
-    get "#{APP_VIRTUAL_PATH}/?" do
+    get "#{APP_PATH}/?" do
       erb :index
     end
 
     # routes pour la gestion de l'authentification
-    get "#{APP_VIRTUAL_PATH}/auth/:provider/callback" do
+    get "#{APP_PATH}/auth/:provider/callback" do
       init_session( request.env )
 
       redirect_uri = URI( params[:url] )
       redirect "#{redirect_uri.path}?#{redirect_uri.query}##{redirect_uri.fragment}"
     end
 
-    get "#{APP_VIRTUAL_PATH}/logout" do
-      logout! "#{env['rack.url_scheme']}://#{env['HTTP_HOST']}#{APP_VIRTUAL_PATH}/"
+    get "#{APP_PATH}/logout" do
+      logout! "#{env['rack.url_scheme']}://#{env['HTTP_HOST']}#{APP_PATH}/"
     end
 
     # Personne ne devrait jamais arriver sur les 3 routes suivantes...
-    get "#{APP_VIRTUAL_PATH}/auth/failure" do
+    get "#{APP_PATH}/auth/failure" do
       erb :auth_failure
     end
 
-    get "#{APP_VIRTUAL_PATH}/auth/:provider/deauthorized" do
+    get "#{APP_PATH}/auth/:provider/deauthorized" do
       erb :auth_deauthorized
     end
 
-    get "#{APP_VIRTUAL_PATH}/login" do
-      login! "#{APP_VIRTUAL_PATH}/"
+    get "#{APP_PATH}/login" do
+      login! "#{APP_PATH}/"
     end
 
   end
