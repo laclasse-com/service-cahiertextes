@@ -31,7 +31,7 @@ module CahierDeTextesAPI
          resource( :creneaux_emploi_du_temps ) { mount ::CahierDeTextesAPI::V0::CreneauxEmploiDuTempsAPI }
          resource( :plages_horaires          ) { mount ::CahierDeTextesAPI::V0::PlagesHorairesAPI }
 
-         add_swagger_documentation base_path: "#{APP_VIRTUAL_PATH}/api",
+         add_swagger_documentation base_path: "#{APP_PATH}/api",
             api_version: 'v0',
             hide_documentation_path: true
       end
