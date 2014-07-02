@@ -3,16 +3,8 @@
 ENV['RACK_ENV'] = 'development'
 namespace :db do
   task :load_config do
-    #require(File.join(APP_ROOT, 'config/options'))
+    require_relative('../config/options')
     require(File.join(APP_ROOT, 'api'))
-  end
-
-  desc 'Configuring database server.'
-  task :configure do
-    require 'erb'
-    File.open(File.join( APP_ROOT, 'config', 'database.rb'), 'w') do |new_file|
-      new_file.write ERB.new(File.read(File.join(APP_ROOT, 'config', 'database.erb'))).result(binding)
-    end
   end
 
   desc 'Dumps the schema to db/schema/sequel_schema.db'
