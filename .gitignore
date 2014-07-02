@@ -26,10 +26,12 @@ vagrant/
 .vagrant/
 
 #config
-/config/thin.yml
-/config/options.rb
-/config/database.rb*
-/config/CAS.rb
+config/thin.yml
+config/options.rb
+config/database.rb
+config/constants.rb
+
+# libs
 /lib/key_pronote
 
 # données de test non anonymisées
