@@ -29,8 +29,8 @@ module AuthenticationHelpers
     env['rack.session'][:authenticated] = false
     env['rack.session'][:current_user] = nil
 
-    CASAuth::OPTIONS[:ssl] ? protocol = 'https://' : protocol = 'http://'
-    redirect protocol + CASAuth::OPTIONS[:host] + CASAuth::OPTIONS[:logout_url] + '?url=' + URI.encode( url )
+    CASAUTH::CONFIG[:ssl] ? protocol = 'https://' : protocol = 'http://'
+    redirect protocol + CASAUTH::CONFIG[:host] + CASAUTH::CONFIG[:logout_url] + '?url=' + URI.encode( url )
   end
 
   def provisionning( uais )
