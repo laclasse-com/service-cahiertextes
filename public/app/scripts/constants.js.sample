@@ -4,7 +4,7 @@
 
 angular.module( 'cahierDeTexteApp' )
     .constant( 'APP_PATH', '/ct' )
-    .constant( 'VERSION', '0.9-alpha' )
+    .constant( 'VERSION', '0.numéro.de.version' )
     .constant( 'DOCS_URL', 'http://www.dev.laclasse.com/docs-beta' )
 
 // définition des couleurs
