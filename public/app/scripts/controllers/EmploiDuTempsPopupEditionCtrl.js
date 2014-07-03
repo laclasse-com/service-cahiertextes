@@ -51,7 +51,7 @@ angular.module( 'cahierDeTexteApp' )
 		       scope_popup.dirty = false;
 		       scope_popup.deleted = false;
 		       scope_popup.creneau_deleted = false;
-		       scope_popup.is_dirty = function( item ) {
+		       scope_popup.is_dirty = function( item = null ) {
 			   if ( item === null || ( item !== null && item.contenu.length > 0 ) ) {
 			       scope_popup.dirty = true;
 			   } else {
