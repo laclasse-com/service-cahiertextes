@@ -225,48 +225,46 @@ angular.module('cahierDeTexteApp')
 
 			      // édition d'un créneau existant
 			      $scope.calendar.options.eventClick = function ( event ) {
-				  if ( event.details.enseignant_id === $scope.current_user.uid ) {
-				      event.id = event.details.creneau_emploi_du_temps_id;
-				      event.heure_debut = event.start;
-				      event.heure_fin = event.end;
-				      event.matiere_id = event.details.matiere_id;
-				      event.regroupement_id = event.details.regroupement_id;
+				  event.id = event.details.creneau_emploi_du_temps_id;
+				  event.heure_debut = event.start;
+				  event.heure_fin = event.end;
+				  event.matiere_id = event.details.matiere_id;
+				  event.regroupement_id = event.details.regroupement_id;
 
-				      // 1. cours
-				      var cours = null;
-				      var devoirs = [];
+				  // 1. cours
+				  var cours = null;
+				  var devoirs = [];
 
-				      if ( event.details.cours.id !== undefined ) {
-					  cours = API.get_cours( {
-					      id: event.details.cours.id
+				  if ( event.details.cours.id !== undefined ) {
+				      cours = API.get_cours( {
+					  id: event.details.cours.id
+				      } );
+				      cours.create = false;
+
+				      $q.all( cours, types_de_devoir, matieres, $scope.classes )
+					  .then( function () {
+					      // 2. devoir
+					      if ( event.details.devoirs.length > 0 ) {
+						  _( event.details.devoirs )
+						      .each( function ( devoir ) {
+							  API.get_devoir( {
+							      id: event.details.devoirs[ 0 ].id
+							  } )
+							      .$promise
+							      .then( function ( vrai_devoir ) {
+								  devoirs.push( vrai_devoir );
+							      } );
+						      } );
+						  devoirs.create = false;
+					      }
 					  } );
-					  cours.create = false;
-
-					  $q.all( cours, types_de_devoir, matieres, $scope.classes )
-					      .then( function () {
-						  // 2. devoir
-						  if ( event.details.devoirs.length > 0 ) {
-						      _( event.details.devoirs )
-							  .each( function ( devoir ) {
-							      API.get_devoir( {
-								  id: event.details.devoirs[ 0 ].id
-							      } )
-								  .$promise
-								  .then( function ( vrai_devoir ) {
-								      devoirs.push( vrai_devoir );
-								  } );
-							  } );
-						      devoirs.create = false;
-						  }
-					      } );
-				      } else {
-					  cours = null;
-				      }
-				      ouvre_popup_edition( $scope.raw_data,
-							   types_de_devoir, matieres_enseignees, $scope.classes,
-							   event, cours, devoirs,
-							   popup_callback );
+				  } else {
+				      cours = null;
 				  }
+				  ouvre_popup_edition( $scope.raw_data,
+						       types_de_devoir, matieres_enseignees, $scope.classes,
+						       event, cours, devoirs,
+						       popup_callback );
 			      };
 
 			      // création d'un nouveau créneau
