@@ -21,7 +21,7 @@
 </div>
 
 <div class="modal-body">
-  <iframe src="http://www.dev.laclasse.com/docs-beta/login" style="display:none;"></iframe>
+  <iframe data-ng-src="{{DOCS_URL_login}}" style="display:none;"></iframe>
   <ul>
     <li data-ng-repeat="erreur in erreurs">{{erreur.message}}</li>
   </ul>
@@ -36,18 +36,20 @@
     <div class="panel-heading">
       <h5 class="panel-title">Séquence pédagogique du {{cours.date_cours | date : 'fullDate' }}</h5>
     </div>
-    <div data-ng-hide="cours.date_validation !== null || cours.enseignant_id !== current_user.uid">
+    <div data-ng-hide="cours.date_validation !== null || creneau_selectionne.details.enseignant_id !== current_user.uid">
       <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="cours.contenu" data-ng-change="is_dirty( cours )">
       </textarea>
       <div class="panel-footer">
 	<ul>
 	  <li data-ng-repeat="ressource in cours.ressources">
-	    <a target="_blank" href="http://www.dev.laclasse.com/docs-beta/api/connector?cmd=file&target={{ressource.hash}}">{{ressource.name}}</a>
+	    <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
 	    <button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( cours, ressource.hash )">✕</button>
 	  </li>
 	</ul>
 
-	<input type="file" name="upload[]" multiple onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().cours, this.files)" />
+	<span class="alert alert-danger" role="alert" data-ng-hide="cartable.files">Problème de communication avec l'application Documents</span>
+	<input type="file" name="upload[]" multiple onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().cours, this.files)"
+	       data-ng-show="cartable.files" />
 
 	<div class="treecontrol-container">
 	  <treecontrol class="light-tree"
@@ -60,7 +62,7 @@
       </div>
     </div>
 
-    <span data-ng-bind-html="cours.contenu" data-ng-show="cours.date_validation !== null || cours.enseignant_id !== current_user.uid"></span>
+    <span data-ng-bind-html="cours.contenu" data-ng-show="cours.date_validation !== null || creneau_selectionne.details.enseignant_id !== current_user.uid"></span>
 
     <div class="row-fluid" data-ng-show="creneaux_similaires && cours.id">
       <select multiple
@@ -105,12 +107,14 @@
     <div class="panel-footer">
       <ul>
 	<li data-ng-repeat="ressource in devoir.ressources">
-	  <a target="_blank" href="http://www.dev.laclasse.com/docs-beta/api/connector?cmd=file&target={{ressource.hash}}">{{ressource.name}}</a>
+	  <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
 	  <button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( devoir, ressource.hash )">&times;</button>
 	</li>
       </ul>
 
-      <input type="file" name="upload[]" multiple onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files)" />
+      <span class="alert alert-danger" role="alert" data-ng-hide="cartable.files">Problème de communication avec l'application Documents</span>
+      <input type="file" name="upload[]" multiple onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files)"
+	     data-ng-show="cartable.files" />
 
       <div class="treecontrol-container">
 	<treecontrol class="light-tree"
@@ -135,7 +139,7 @@
 </div>
 
 <div class="modal-footer">
-  <button type="button" class="btn btn-sm btn-default pull-left" data-ng-click="effacer_cours()" data-ng-hide="cours.date_validation !== null || cours.enseignant_id !== current_user.uid || cours.create">
+  <button type="button" class="btn btn-sm btn-default pull-left" data-ng-click="effacer_cours()" data-ng-hide="cours.date_validation !== null || creneau_selectionne.details.enseignant_id !== current_user.uid || cours.create">
     <span class="glyphicon glyphicon-trash"></span> Supprimer le cours
   </button>
 

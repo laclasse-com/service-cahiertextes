@@ -2,10 +2,13 @@
 
 angular.module( 'cahierDeTexteApp' )
     .controller( 'EmploiDuTempsPopupEditionCtrl',
-		 [ '$scope', '$filter', '$q', 'TINYMCE_OPTIONS', '$modalInstance', 'Documents', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs', 'cours', 'devoirs', 'types_de_devoir', 'creneau_selectionne', 'raw_data', 'classes', 'matieres',
-		   function ( $scope, $filter, $q, TINYMCE_OPTIONS, $modalInstance, Documents, CreneauEmploiDuTemps, Cours, Devoirs, cours, devoirs, types_de_devoir, creneau_selectionne, raw_data, classes, matieres ) {
+		 [ '$scope', '$filter', '$q', '$sce', 'TINYMCE_OPTIONS', '$modalInstance', 'DOCS_URL', 'Documents', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs', 'User', 'cours', 'devoirs', 'types_de_devoir', 'creneau_selectionne', 'raw_data', 'classes', 'matieres',
+		   function ( $scope, $filter, $q, $sce, TINYMCE_OPTIONS, $modalInstance, DOCS_URL, Documents, CreneauEmploiDuTemps, Cours, Devoirs, User, cours, devoirs, types_de_devoir, creneau_selectionne, raw_data, classes, matieres ) {
 		       // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
 		       var scope_popup = $scope;
+		       User.get_user().then( function( response ) {
+			   scope_popup.current_user = response.data;
+		       } );
 
 		       var create_cours = function( creneau ) {
 			   var cours = new Cours({
@@ -18,8 +21,16 @@ angular.module( 'cahierDeTexteApp' )
 
 			   return cours;
 		       };
+		       scope_popup.is_dirty = function( item = null ) {
+			   if ( item === null || ( item !== null && item.contenu.length > 0 ) ) {
+			       scope_popup.dirty = true;
+			   } else {
+			       scope_popup.dirty = false;
+			   }
+		       };
 
 		       // Initialisations {{{
+		       scope_popup.DOCS_URL_login = $sce.trustAsResourceUrl( DOCS_URL + '/login' );
 		       scope_popup.tinyMCEOptions = TINYMCE_OPTIONS;
 		       if ( cours === null ) {
 			   scope_popup.cours = create_cours( creneau_selectionne );
@@ -51,13 +62,6 @@ angular.module( 'cahierDeTexteApp' )
 		       scope_popup.dirty = false;
 		       scope_popup.deleted = false;
 		       scope_popup.creneau_deleted = false;
-		       scope_popup.is_dirty = function( item = null ) {
-			   if ( item === null || ( item !== null && item.contenu.length > 0 ) ) {
-			       scope_popup.dirty = true;
-			   } else {
-			       scope_popup.dirty = false;
-			   }
-		       };
 
 		       // fonctions UI pour le temps estimé
 		       scope_popup.estimation_over = function ( d, value ) {
@@ -175,7 +179,8 @@ angular.module( 'cahierDeTexteApp' )
 				   .success( function ( response ) {
 				       item.ressources.push( {
 					   name: name,
-					   hash: _( response.added ).first().hash
+					   hash: _( response.added ).first().hash,
+					   url: $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + _( response.added ).first().hash )
 				       } );
 				       scope_popup.is_dirty();
 				   } );
@@ -196,7 +201,8 @@ angular.module( 'cahierDeTexteApp' )
 					   } ) === undefined ) {
 					       item.ressources.push( {
 						   name: doc.name,
-						   hash: doc.hash
+						   hash: doc.hash,
+						   url: $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + doc.hash )
 					       } );
 					       scope_popup.is_dirty();
 					   }
