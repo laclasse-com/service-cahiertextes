@@ -157,7 +157,7 @@ angular.module( 'cahierDeTexteApp' )
 		       // Et voici tous les créneaux possibles !
 		       scope_popup.creneaux_devoirs_possibles = cdp_tmp;
 
-		       // Gestion des documents attachés {{{
+		       // {{{ Gestion des documents attachés
 		       scope_popup.cartable = [];
 		       Documents.list_files().success( function ( response ) {
 			   scope_popup.cartable = response;
@@ -237,8 +237,7 @@ angular.module( 'cahierDeTexteApp' )
 			   }
 		       };
 		       scope_popup.treeOptions = {
-			   nodeChildren: "children",
-			   dirSelectable: true
+			   dirSelectable: false
 		       };
 		       // }}}
 
