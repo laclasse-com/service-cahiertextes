@@ -56,6 +56,7 @@
 	      <treecontrol class="tree-classic"
 			   tree-model="cartable.files"
 			   options="treeOptions"
+			   expanded-nodes="cartable.expandedNodes"
 			   on-selection="treeClicked( node )">
 		{{node.name}} ({{node.mime}}) <button class="btn btn-sm btn-success" data-ng-click="add_ressource( cours, node.name, node.hash )">+</button>
 	      </treecontrol>

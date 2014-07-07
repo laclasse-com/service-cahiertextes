@@ -158,7 +158,8 @@ angular.module( 'cahierDeTexteApp' )
 		       scope_popup.creneaux_devoirs_possibles = cdp_tmp;
 
 		       // {{{ Gestion des documents attachés
-		       scope_popup.cartable = [];
+		       scope_popup.cartable = {};
+		       scope_popup.cartable.expandedNodes = [];
 		       Documents.list_files().success( function ( response ) {
 			   scope_popup.cartable = response;
 			   scope_popup.cartable.files = _.chain( scope_popup.cartable.files )
@@ -231,8 +232,9 @@ angular.module( 'cahierDeTexteApp' )
 				       .each( function ( elt ) {
 					   elt.children = [];
 					   noeud.children.push( elt );
-					   scope_popup.selectNodeHead( noeud );
 				       } );
+				   scope_popup.cartable.expandedNodes = [];
+				   scope_popup.cartable.expandedNodes.push( _(scope_popup.cartable.files).findWhere( noeud ) );
 			       } );
 			   }
 		       };
