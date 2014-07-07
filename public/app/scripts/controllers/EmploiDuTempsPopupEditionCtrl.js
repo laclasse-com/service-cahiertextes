@@ -22,7 +22,8 @@ angular.module( 'cahierDeTexteApp' )
 			   return cours;
 		       };
 		       scope_popup.is_dirty = function( item ) {
-			   if ( item === 'undefined' || item.contenu.length > 0 ) {
+			   item = typeof item !== 'undefined' ? item : null;
+			   if ( item === null || ( item !== null && item.contenu.length > 0 ) ) {
 			       scope_popup.dirty = true;
 			   } else {
 			       scope_popup.dirty = false;
