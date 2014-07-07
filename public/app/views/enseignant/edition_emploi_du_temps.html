@@ -32,6 +32,8 @@
     </button>
   </div>
 
+  <!-- ####################### Séquence Pédagogique ####################### -->
+
   <div class="panel panel-default" data-ng-show="ouvre_sequence_pedagogique">
     <div class="panel-heading">
       <h5 class="panel-title">Séquence pédagogique du {{cours.date_cours | date : 'fullDate' }}</h5>
@@ -40,40 +42,55 @@
       <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="cours.contenu" data-ng-change="is_dirty( cours )">
       </textarea>
       <div class="panel-footer">
-	<ul>
-	  <li data-ng-repeat="ressource in cours.ressources">
-	    <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
-	    <button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( cours, ressource.hash )">✕</button>
-	  </li>
-	</ul>
 
-	<span class="alert alert-danger" role="alert" data-ng-hide="cartable.files">Problème de communication avec l'application Documents</span>
-	<input type="file" name="upload[]" multiple onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().cours, this.files)"
-	       data-ng-show="cartable.files" />
+	<div class="row-fluid">
+	  <div class="col-md-6 ressources">
+	    <div class="alert alert-danger" role="alert" data-ng-hide="cartable.files">Problème de communication avec l'application Documents</div>
+	    <ul>
+	      <li data-ng-repeat="ressource in cours.ressources">
+		<a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
+		<button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( cours, ressource.hash )">✕</button>
+	      </li>
+	    </ul>
+	    <input type="file" name="upload[]" multiple onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().cours, this.files)"
+		   data-ng-show="cartable.files" />
 
-	<div class="treecontrol-container">
-	  <treecontrol class="light-tree"
-		       tree-model="cartable.files"
-		       options="treeOptions"
-		       on-selection="treeClicked( node )">
-	    {{node.name}} ({{node.mime}}) <button class="btn btn-sm btn-success" data-ng-click="add_ressource( cours, node.name, node.hash )">+</button>
-	  </treecontrol>
+	    <div class="treecontrol-container">
+	      <treecontrol class="light-tree"
+			   tree-model="cartable.files"
+			   options="treeOptions"
+			   on-selection="treeClicked( node )">
+		{{node.name}} ({{node.mime}}) <button class="btn btn-sm btn-success" data-ng-click="add_ressource( cours, node.name, node.hash )">+</button>
+	      </treecontrol>
+	    </div>
+	  </div>
+	  <div class="col-md-6 duplication-saisie">
+	    <div class="panel panel-default" data-ng-show="creneaux_similaires.length > 0 && cours.id">
+	      <div class="panel-body">
+		<select multiple
+			data-ng-model="creneaux_similaires.selected"
+			data-ng-options="creneau as creneau.label_sbox group by creneau.classe.libelle for creneau in creneaux_similaires" >
+		</select>
+	      </div>
+	      <div class="panel-footer" data-ng-show="creneaux_similaires.selected">
+		<button class="btn btn-sm btn-primary" data-ng-click="dupliquer()">
+		  <span data-ng-hide="creneaux_similaires.selected.length > 1">
+		    <span class="glyphicon glyphicon-share"></span> Copier vers le cours sélectionné
+		  </span>
+		  <span data-ng-show="creneaux_similaires.selected.length > 1">
+		    <span class="glyphicon glyphicon-share"></span> Copier vers les cours sélectionnés
+		  </span>
+		</button>
+	      </div>
+	    </div>
+	  </div>
 	</div>
+
       </div>
     </div>
 
     <span data-ng-bind-html="cours.contenu" data-ng-show="cours.date_validation !== null || creneau_selectionne.details.enseignant_id !== current_user.uid"></span>
 
-    <div class="row-fluid" data-ng-show="creneaux_similaires.length > 0 && cours.id">
-      <select multiple
-	      data-ng-model="creneaux_similaires.selected"
-	      data-ng-options="creneau as creneau.label_sbox group by creneau.classe.libelle for creneau in creneaux_similaires" >
-      </select>
-
-      <button class="btn btn-sm btn-primary" data-ng-click="dupliquer()" data-ng-show="creneaux_similaires.selected">
-	<span class="glyphicon glyphicon-plus-sign"></span> Copier vers d'autres classes
-      </button>
-    </div>
   </div>
 
   <div class="row-fluid" style="text-align: right" data-ng-show="cours.contenu">
@@ -81,6 +98,8 @@
       <span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
     </button>
   </div>
+
+  <!-- ####################### Devoirs ####################### -->
 
   <div class="panel panel-default" data-ng-repeat="devoir in devoirs">
     <div class="panel-heading enseignant-saisie">
