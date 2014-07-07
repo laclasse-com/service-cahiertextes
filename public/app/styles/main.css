@@ -92,3 +92,8 @@ body {
 footer { color: #555;
 	 font-size: 0.8em;
 	 text-align: right }
+
+
+
+/* TinyMCE, combiné avec content_css dans defaults.js */
+body.mce-content-body{font-size:14px}
