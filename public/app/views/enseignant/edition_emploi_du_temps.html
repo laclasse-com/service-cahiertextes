@@ -64,7 +64,7 @@
 
     <span data-ng-bind-html="cours.contenu" data-ng-show="cours.date_validation !== null || creneau_selectionne.details.enseignant_id !== current_user.uid"></span>
 
-    <div class="row-fluid" data-ng-show="creneaux_similaires && cours.id">
+    <div class="row-fluid" data-ng-show="creneaux_similaires.length > 0 && cours.id">
       <select multiple
 	      data-ng-model="creneaux_similaires.selected"
 	      data-ng-options="creneau as creneau.label_sbox group by creneau.classe.libelle for creneau in creneaux_similaires" >
