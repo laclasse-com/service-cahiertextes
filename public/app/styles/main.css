@@ -73,7 +73,8 @@ body {
 .duplication-saisie div,.duplication-saisie select{width:100%}
 
 .treecontrol-container {max-height:10em;
-			overflow:auto}
+			overflow:auto;
+			background-color:#fff}
 
 
 .message{width:40%;margin:0 auto}
