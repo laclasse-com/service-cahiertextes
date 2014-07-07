@@ -44,7 +44,7 @@
       <div class="panel-footer">
 
 	<div class="row-fluid">
-	  <div class="col-md-8 ressources">
+	  <div class="col-md-7 ressources">
 	    <div class="alert alert-danger" role="alert" data-ng-hide="cartable.files">Problème de communication avec l'application Documents</div>
 	    <ul>
 	      <li data-ng-repeat="ressource in cours.ressources">
@@ -52,9 +52,6 @@
 		<button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( cours, ressource.hash )">✕</button>
 	      </li>
 	    </ul>
-	    <input type="file" name="upload[]" multiple onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().cours, this.files)"
-		   data-ng-show="cartable.files" />
-
 	    <div class="treecontrol-container">
 	      <treecontrol class="light-tree"
 			   tree-model="cartable.files"
@@ -63,8 +60,13 @@
 		{{node.name}} ({{node.mime}}) <button class="btn btn-sm btn-success" data-ng-click="add_ressource( cours, node.name, node.hash )">+</button>
 	      </treecontrol>
 	    </div>
+	    <input type="file"
+		   name="upload[]"
+		   multiple
+		   onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().cours, this.files)"
+		   data-ng-show="cartable.files" />
 	  </div>
-	  <div class="col-md-4 duplication-saisie">
+	  <div class="col-md-5 duplication-saisie">
 	    <div class="panel panel-default" data-ng-show="creneaux_similaires.length > 0 && cours.id">
 	      <div class="panel-body">
 		<select multiple
@@ -85,7 +87,7 @@
 	    </div>
 	  </div>
 	</div>
-
+	<div class="clearfix"></div>
       </div>
     </div>
 
