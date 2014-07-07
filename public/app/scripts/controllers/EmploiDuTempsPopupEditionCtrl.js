@@ -95,7 +95,9 @@ angular.module( 'cahierDeTexteApp' )
 
 		       scope_popup.creneaux_similaires = _.chain( raw_data )
 			   .filter( function ( creneau ) {
-			       return ( creneau.regroupement_id != scope_popup.regroupement_id ) && ( creneau.matiere_id == scope_popup.matiere_id );
+			       return ( creneau.id != scope_popup.creneau_selectionne.id )
+				   && ( creneau.regroupement_id != scope_popup.regroupement_id )
+				   && ( creneau.matiere_id == scope_popup.matiere_id );
 			   } )
 			   .map( function ( creneau ) {
 			       creneau.classe = _( scope_popup.classes ).findWhere( {
