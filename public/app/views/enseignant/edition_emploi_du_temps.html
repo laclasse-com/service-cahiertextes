@@ -38,7 +38,7 @@
     <div class="panel-heading">
       <h5 class="panel-title">Séquence pédagogique du {{cours.date_cours | date : 'fullDate' }}</h5>
     </div>
-    <div data-ng-hide="cours.date_validation !== null || creneau_selectionne.details.enseignant_id !== current_user.uid">
+    <div data-ng-show="cours.date_validation === null || ( cours.date_validation === null && creneau_selectionne.details.enseignant_id === current_user.uid )">
       <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="cours.contenu" data-ng-change="is_dirty( cours )">
       </textarea>
       <div class="panel-footer">
