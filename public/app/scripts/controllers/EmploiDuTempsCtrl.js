@@ -57,13 +57,7 @@ angular.module('cahierDeTexteApp')
 		      // consommation des données
 		      var CalendarEvent = function( event, item ) {
 			  var _this = this; //pour pouvoir le référencé dans les .then()
-			  this.details = { cours: event.cours,
-					   devoirs: event.devoirs,
-					   cahier_de_textes_id: event.cahier_de_textes_id,
-					   regroupement_id: event.regroupement_id,
-					   enseignant_id: event.enseignant_id,
-					   matiere_id: event.matiere_id,
-					   creneau_emploi_du_temps_id: event.creneau_emploi_du_temps_id };
+			  this.details = event;
 			  this.allDay = false;
 			  this.title = '';
 			  this.description = '';
