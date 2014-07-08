@@ -52,6 +52,9 @@ angular.module( 'cahierDeTexteApp' )
 			   } );
 			   scope_popup.matiere = scope_popup.matieres[ scope_popup.matiere_id ];
 
+			   scope_popup.semaines_actives = { regroupement: _(creneau_selectionne.regroupements).findWhere( { regroupement_id: creneau_selectionne.regroupement_id } ).semaines_de_presence,
+							    enseignant: _(creneau_selectionne.enseignants).findWhere( { enseignant_id: scope_popup.current_user.uid } ).semaines_de_presence };
+
 			   // Flags et helpers
 			   scope_popup.ouvre_sequence_pedagogique = !scope_popup.cours.create;
 			   scope_popup.dirty = false;
