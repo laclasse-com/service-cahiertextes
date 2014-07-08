@@ -101,6 +101,13 @@
   <div class="panel panel-default" data-ng-repeat="devoir in devoirs">
     <div class="panel-heading enseignant-saisie">
       <h5 class="panel-title">Travail à faire</h5>
+
+      <button type="button" class="btn btn-sm btn-danger pull-right"
+	      data-ng-click="effacer_devoir( devoir )"
+	      data-ng-show="devoir.id">
+	<span class="glyphicon glyphicon-trash"></span> Supprimer ce devoir
+      </button>
+
       <div class="row-fluid">
 
 	<select data-ng-required="true" data-ng-model="devoir.type_devoir_id"
@@ -129,7 +136,7 @@
       </ul>
 
       <span class="alert alert-danger" role="alert" data-ng-hide="cartable.files">Problème de communication avec l'application Documents</span>
-      <input type="file" name="upload[]" multiple onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files)"
+      <input type="file" name="upload[]" multiple onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files )"
 	     data-ng-show="cartable.files" />
 
       <div class="treecontrol-container">
@@ -141,14 +148,7 @@
 	</treecontrol>
       </div>
 
-      <div class="row-fluid">
-	<button type="button" class="btn btn-sm btn-danger pull-right"
-		data-ng-click="effacer_devoir( devoir )"
-		data-ng-show="devoir.id">
-	  <span class="glyphicon glyphicon-trash"></span> Supprimer ce devoir
-	</button>
-      </div>
-
+      <div class="clearfix"></div>
     </div>
   </div>
 
