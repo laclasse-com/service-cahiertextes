@@ -219,46 +219,51 @@ angular.module('cahierDeTexteApp')
 
 			      // édition d'un créneau existant
 			      $scope.calendar.options.eventClick = function ( event ) {
-				  event.id = event.details.creneau_emploi_du_temps_id;
-				  event.heure_debut = event.start;
-				  event.heure_fin = event.end;
-				  event.matiere_id = event.details.matiere_id;
-				  event.regroupement_id = event.details.regroupement_id;
+				  CreneauEmploiDuTemps.get( { id: event.details.creneau_emploi_du_temps_id } )
+				      .$promise
+				      .then( function( response ) {
+					  var creneau_selectionne = response;
+					  creneau_selectionne.dirty = false;
+					  creneau_selectionne.heure_debut = event.start;
+					  creneau_selectionne.heure_fin = event.end;
+					  creneau_selectionne.regroupement_id = event.details.regroupement_id;
+					  creneau_selectionne.cahier_de_textes_id = event.details.cahier_de_textes_id;
 
-				  // 1. cours
-				  var cours = null;
-				  var devoirs = [];
+					  // 1. cours
+					  var cours = null;
+					  var devoirs = [];
 
-				  if ( event.details.cours.id !== undefined ) {
-				      cours = API.get_cours( {
-					  id: event.details.cours.id
-				      } );
-				      cours.create = false;
+					  if ( event.details.cours.id !== undefined ) {
+					      cours = API.get_cours( {
+						  id: event.details.cours.id
+					      } );
+					      cours.create = false;
 
-				      $q.all( cours, types_de_devoir, matieres, $scope.classes )
-					  .then( function () {
-					      // 2. devoir
-					      if ( event.details.devoirs.length > 0 ) {
-						  _( event.details.devoirs )
-						      .each( function ( devoir ) {
-							  API.get_devoir( {
-							      id: event.details.devoirs[ 0 ].id
-							  } )
-							      .$promise
-							      .then( function ( vrai_devoir ) {
-								  devoirs.push( vrai_devoir );
+					      $q.all( cours, types_de_devoir, matieres, $scope.classes )
+						  .then( function () {
+						      // 2. devoir
+						      if ( event.details.devoirs.length > 0 ) {
+							  _( event.details.devoirs )
+							      .each( function ( devoir ) {
+								  API.get_devoir( {
+								      id: event.details.devoirs[ 0 ].id
+								  } )
+								      .$promise
+								      .then( function ( vrai_devoir ) {
+									  devoirs.push( vrai_devoir );
+								      } );
 							      } );
-						      } );
-						  devoirs.create = false;
-					      }
-					  } );
-				  } else {
-				      cours = null;
-				  }
-				  ouvre_popup_edition( $scope.raw_data,
-						       types_de_devoir, matieres_enseignees, $scope.classes,
-						       event, cours, devoirs,
-						       popup_callback );
+							  devoirs.create = false;
+						      }
+						  } );
+					  } else {
+					      cours = null;
+					  }
+					  ouvre_popup_edition( $scope.raw_data,
+							       types_de_devoir, matieres_enseignees, $scope.classes,
+							       creneau_selectionne, cours, devoirs,
+							       popup_callback );
+				      } );
 			      };
 
 			      // création d'un nouveau créneau
@@ -267,24 +272,23 @@ angular.module('cahierDeTexteApp')
 				  // création du créneau avec les bons horaires
 				  start = $filter('correctTimeZone')(start);
 				  end = $filter('correctTimeZone')(end);
-				  var creneau_selectionne = new CreneauEmploiDuTemps({
-				      regroupement_id: $scope.classe === null ? '' : '' + $scope.classe,
-				      jour_de_la_semaine: start.getDay() + 1,
-				      heure_debut: new Date(new Date(start)).toISOString(),
-				      heure_fin: new Date(new Date(end)).toISOString(),
-				      matiere_id: ''
-				  });
-				  creneau_selectionne.$save()
+				  var new_creneau = new CreneauEmploiDuTemps( { regroupement_id: $scope.classe === null ? '' : '' + $scope.classe,
+										jour_de_la_semaine: start.getDay() + 1,
+										heure_debut: new Date(new Date(start)).toISOString(),
+										heure_fin: new Date(new Date(end)).toISOString(),
+										matiere_id: '' } );
+
+				  new_creneau.$save()
 				      .then( function () {
-					  creneau_selectionne.dirty = true;
-					  creneau_selectionne.heure_debut = start;
-					  creneau_selectionne.heure_fin = end;
-					  creneau_selectionne.regroupement_id = $scope.classe === null ? undefined : '' + $scope.classe;
-					  creneau_selectionne.cahier_de_textes_id = $scope.classes[ 0 ].cahier_de_textes_id,
+					  new_creneau.dirty = true;
+					  new_creneau.heure_debut = start;
+					  new_creneau.heure_fin = end;
+					  new_creneau.regroupement_id = $scope.classe === null ? undefined : '' + $scope.classe;
+					  new_creneau.cahier_de_textes_id = $scope.classes[ 0 ].cahier_de_textes_id;
 
 					  ouvre_popup_edition( $scope.raw_data,
 							       types_de_devoir, matieres_enseignees, $scope.classes,
-							       creneau_selectionne, null, [],
+							       new_creneau, null, [],
 							       popup_callback );
 
 					  $scope.emploi_du_temps.fullCalendar( 'unselect' );
