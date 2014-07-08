@@ -27,18 +27,9 @@ module CahierDeTextesAPI
         creneau = CreneauEmploiDuTemps[ params[:id] ]
         h = creneau.to_hash
 
-        h[:regroupements] = creneau.regroupements.map { |e|
-          e.semaines_de_presence = e.semaines_de_presence.to_s 2
-          e
-        }
-        h[:enseignants] = creneau.enseignants.map { |e|
-          e.semaines_de_presence = e.semaines_de_presence.to_s 2
-          e
-        }
-        h[:salles] = creneau.salles.map { |e|
-          e.semaines_de_presence = e.semaines_de_presence.to_s 2
-          e
-        }
+        h[:regroupements] = creneau.regroupements
+        h[:enseignants] = creneau.enseignants
+        h[:salles] = creneau.salles
 
         if expand
           h[:cours] = Cours.where( creneau_emploi_du_temps_id: params[:id] ).where( deleted: false ).where( date_cours: params[:debut] .. params[:fin] )
