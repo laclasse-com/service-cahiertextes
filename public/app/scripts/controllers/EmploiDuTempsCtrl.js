@@ -130,11 +130,11 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      var retrieve_data = function( from_date, to_date ) {
-			  EmploisDuTemps.query(
-			      { debut: from_date,
-				fin: to_date,
-				uai: $scope.current_user.profil_actif.uai },
-			      function( response ) {
+			  EmploisDuTemps.query( { debut: from_date,
+						  fin: to_date,
+						  uai: $scope.current_user.profil_actif.uai } )
+			      .$promise
+			      .then( function success( response ) {
 				  $scope.raw_data = response;
 				  $scope.refresh_calendar();
 			      });
