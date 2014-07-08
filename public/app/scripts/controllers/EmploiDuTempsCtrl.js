@@ -243,9 +243,7 @@ angular.module('cahierDeTexteApp')
 						      if ( event.details.devoirs.length > 0 ) {
 							  _( event.details.devoirs )
 							      .each( function ( devoir ) {
-								  API.get_devoir( {
-								      id: event.details.devoirs[ 0 ].id
-								  } )
+								  API.get_devoir( { id: devoir.id } )
 								      .$promise
 								      .then( function ( vrai_devoir ) {
 									  devoirs.push( vrai_devoir );
