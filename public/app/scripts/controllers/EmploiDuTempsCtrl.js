@@ -234,9 +234,7 @@ angular.module('cahierDeTexteApp')
 					  var devoirs = [];
 
 					  if ( event.details.cours.id !== undefined ) {
-					      cours = API.get_cours( {
-						  id: event.details.cours.id
-					      } );
+					      cours = API.get_cours( { id: event.details.cours.id } );
 					      cours.create = false;
 
 					      $q.all( cours, types_de_devoir, matieres, $scope.classes )
