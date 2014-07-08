@@ -254,9 +254,8 @@ angular.module('cahierDeTexteApp')
 							  devoirs.create = false;
 						      }
 						  } );
-					  } else {
-					      cours = null;
 					  }
+
 					  ouvre_popup_edition( $scope.raw_data,
 							       types_de_devoir, matieres_enseignees, $scope.classes,
 							       creneau_selectionne, cours, devoirs,
