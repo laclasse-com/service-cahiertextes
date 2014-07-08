@@ -21,11 +21,7 @@ angular.module( 'cahierDeTexteApp' )
 			   };
 			   scope_popup.is_dirty = function( item ) {
 			       item = typeof item !== 'undefined' ? item : null;
-			       if ( item === null || ( item !== null && item.contenu.length > 0 ) ) {
-				   scope_popup.dirty = true;
-			       } else {
-				   scope_popup.dirty = false;
-			       }
+			       scope_popup.dirty = scope_popup.dirty || ( item === null || ( item !== null && item.contenu.length > 0 ) );
 			   };
 
 			   // Initialisations {{{
