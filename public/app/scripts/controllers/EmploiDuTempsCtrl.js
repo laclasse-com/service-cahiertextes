@@ -124,43 +124,43 @@ angular.module('cahierDeTexteApp')
 			  return events;
 		      };
 
+		      var populate_calendar = function( raw_data ) {
+			  var events = _.chain( raw_data )
+				  .map( function( event ) {
+				      return fullCalendarize_event( event );
+				  } )
+				  .flatten()
+				  .value();
+			  $scope.calendar.events[0] = _(events).filter( function( event ) { return event.type === 'cours'; } );
+			  $scope.calendar.events[1] = _(events).filter( function( event ) { return event.type === 'devoir'; } );
+		      };
+
+		      var retrieve_data = function( from_date, to_date ) {
+			  EmploisDuTemps.query(
+			      { debut: from_date,
+				fin: to_date,
+				uai: $scope.current_user.profil_actif.uai },
+			      function( response ) {
+				  $scope.raw_data = response;
+				  $scope.refresh_calendar();
+			      });
+		      };
+
+		      $scope.refresh_calendar = function(  ) {
+			  populate_calendar( filter_data( $scope.raw_data ) );
+		      };
+
 		      // configuration du composant calendrier
 		      $scope.calendar = { options: CALENDAR_OPTIONS,
 					  events: [  ] };
 
+		      $scope.calendar.options.viewRender = function( view, element ) {
+			  // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
+			  retrieve_data( view.visStart, view.visEnd );
+		      };
+
 		      User.get_user().then( function( response ) {
 			  $scope.current_user = response.data;
-
-			  var populate_calendar = function( raw_data ) {
-			      var events = _.chain( raw_data )
-				      .map( function( event ) {
-					  return fullCalendarize_event( event );
-				      } )
-				      .flatten()
-				      .value();
-			      $scope.calendar.events[0] = _(events).filter( function( event ) { return event.type === 'cours'; } );
-			      $scope.calendar.events[1] = _(events).filter( function( event ) { return event.type === 'devoir'; } );
-			  };
-
-			  $scope.refresh_calendar = function(  ) {
-			      populate_calendar( filter_data( $scope.raw_data ) );
-			  };
-
-			  var retrieve_data = function( from_date, to_date ) {
-			      EmploisDuTemps.query(
-				  { debut: from_date,
-				    fin: to_date,
-				    uai: $scope.current_user.profil_actif.uai },
-				  function( response ) {
-				      $scope.raw_data = response;
-				      $scope.refresh_calendar();
-				  });
-			  };
-
-			  $scope.calendar.options.viewRender = function( view, element ) {
-			      // population des créneaux d'emploi du temps avec les cours et devoirs éventuels
-			      retrieve_data( view.visStart, view.visEnd );
-			  };
 
 			  switch ( $scope.current_user.profil_actif.type ) {
 			  case 'ENS':
