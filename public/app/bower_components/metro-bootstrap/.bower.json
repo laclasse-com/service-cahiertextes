@@ -1,0 +1,19 @@
+{
+  "name": "metro-bootstrap",
+  "dependencies": {
+    "bootstrap": "~3.1.1",
+    "font-awesome": "~4.0.0"
+  },
+  "devDependencies": {},
+  "homepage": "https://github.com/TalksLab/metro-bootstrap",
+  "_release": "971429803f",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "971429803fab833ff6593ea7ff7db42169f0389f"
+  },
+  "_source": "git://github.com/TalksLab/metro-bootstrap.git",
+  "_target": "*",
+  "_originalSource": "metro-bootstrap",
+  "_direct": true
+}
