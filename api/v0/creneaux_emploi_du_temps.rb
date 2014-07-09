@@ -73,18 +73,21 @@ module CahierDeTextesAPI
                                               matiere_id: params[:matiere_id] )
 
         CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
-        creneau.add_enseignant enseignant_id: user.uid
+        ce = creneau.add_enseignant enseignant_id: user.uid
+        ce.update semaines_de_presence: params[:semaines_de_presence_enseignant] if params[:semaines_de_presence_enseignant]
         CreneauEmploiDuTempsEnseignant.restrict_primary_key
 
         unless params[:regroupement_id].empty?
           CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
-          creneau.add_regroupement regroupement_id: params[:regroupement_id]
+          cr = creneau.add_regroupement regroupement_id: params[:regroupement_id]
+          cr.update semaines_de_presence: params[:semaines_de_presence_regroupement] if params[:semaines_de_presence_regroupement]
           CreneauEmploiDuTempsRegroupement.restrict_primary_key
         end
 
         if params[:salle_id]
           CreneauEmploiDuTempsSalle.unrestrict_primary_key
-          creneau.add_salle salle_id: params[:salle_id]
+          cs = creneau.add_salle salle_id: params[:salle_id]
+          cs.update semaines_de_presence: params[:semaines_de_presence_salle] if params[:semaines_de_presence_salle]
           CreneauEmploiDuTempsSalle.restrict_primary_key
         end
 
@@ -133,19 +136,26 @@ module CahierDeTextesAPI
 
           creneau.save
 
+          if params[:semaines_de_presence_enseignant]
+            ce = CreneauEmploiDuTempsEnseignant.where( enseignant_id: user.uid ).where( creneau_emploi_du_temps_id: params[:id] )
+            ce.update semaines_de_presence: params[:semaines_de_presence_enseignant]
+          end
+
           if params[:regroupement_id]
             if CreneauEmploiDuTempsRegroupement
                 .where( creneau_emploi_du_temps_id: params[:id] )
                 .where( regroupement_id: params[:regroupement_id] ).count < 1
               CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
-              creneau.add_regroupement regroupement_id: params[:regroupement_id]
+              cr = creneau.add_regroupement regroupement_id: params[:regroupement_id]
+              cr.update semaines_de_presence: params[:semaines_de_presence_regroupement] if params[:semaines_de_presence_regroupement]
               CreneauEmploiDuTempsRegroupement.restrict_primary_key
             end
           end
 
           if params[:salle_id]
             CreneauEmploiDuTempsSalle.unrestrict_primary_key
-            creneau.add_salle salle_id: params[:salle_id]
+            cs = creneau.add_salle salle_id: params[:salle_id]
+            cs.update semaines_de_presence: params[:semaines_de_presence_salle] if params[:semaines_de_presence_salle]
             CreneauEmploiDuTempsSalle.restrict_primary_key
           end
 
