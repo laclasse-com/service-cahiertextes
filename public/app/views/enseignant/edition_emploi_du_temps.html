@@ -32,24 +32,22 @@
 	<span class="glyphicon" ng-class="{'glyphicon-chevron-down': groups.semaines_actives.ouvert, 'glyphicon-chevron-right': !groups.semaines_actives.ouvert}"> Semaines Actives</span>
       </accordion-heading>
 
-      <label> de la classe<br>
-	<button type="button" class="btn btn-xs"
-		data-ng-class="{'btn-default': !semaine, 'btn-success': semaine}"
-		data-ng-model="semaine"
-		btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false"
-		data-ng-repeat="semaine in semaines_actives.regroupement">
-	  {{$index + 1}}
-	</button>
-      </label>
-      <label> de l'enseignant<br>
-	<button type="button" class="btn btn-xs"
-		data-ng-class="{'btn-default': !semaine, 'btn-success': semaine}"
-		data-ng-model="semaine"
-		btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false"
-		data-ng-repeat="semaine in semaines_actives.enseignant">
-	  {{$index + 1}}
-	</button>
-      </label>
+      de la classe<br>
+      <button type="button" class="btn btn-xs"
+	      data-ng-class="{'btn-default': !semaine, 'btn-success': semaine}"
+	      data-ng-model="semaines_actives.regroupement[ $index ]"
+	      btn-checkbox
+	      data-ng-repeat="semaine in semaines_actives.regroupement">
+	{{$index + 1}}
+      </button>
+      de l'enseignant<br>
+      <button type="button" class="btn btn-xs"
+	      data-ng-class="{'btn-default': !semaine, 'btn-success': semaine}"
+	      data-ng-model="semaine"
+	      btn-checkbox
+	      data-ng-repeat="semaine in semaines_actives.enseignant">
+	{{$index + 1}}
+      </button>
     </accordion-group>
 
     <!-- ####################### Séquence Pédagogique ####################### -->
