@@ -1,3 +1,4 @@
+<iframe data-ng-src="{{DOCS_URL_login}}" style="display:none;"></iframe>
 <div class="modal-header">
   <button type="button" class="close pull-right" aria-hidden="true" data-ng-click="annuler()">&times;</button>
 
@@ -21,19 +22,41 @@
 </div>
 
 <div class="modal-body">
-  <iframe data-ng-src="{{DOCS_URL_login}}" style="display:none;"></iframe>
-  <ul>
-    <li data-ng-repeat="erreur in erreurs">{{erreur.message}}</li>
-  </ul>
+  <ul><li data-ng-repeat="erreur in erreurs">{{erreur.message}}</li></ul>
 
   <accordion close-others="false">
+
+    <!-- ####################### Semaines Actives ########################### -->
+    <accordion-group data-is-open="groups.semaines_actives.ouvert">
+      <accordion-heading>
+	<span class="glyphicon" ng-class="{'glyphicon-chevron-down': groups.semaines_actives.ouvert, 'glyphicon-chevron-right': !groups.semaines_actives.ouvert}"> Semaines Actives</span>
+      </accordion-heading>
+
+      <label> de la classe<br>
+	<button type="button" class="btn btn-xs"
+		data-ng-class="{'btn-default': !semaine, 'btn-success': semaine}"
+		data-ng-model="semaine"
+		btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false"
+		data-ng-repeat="semaine in semaines_actives.regroupement">
+	  {{$index + 1}}
+	</button>
+      </label>
+      <label> de l'enseignant<br>
+	<button type="button" class="btn btn-xs"
+		data-ng-class="{'btn-default': !semaine, 'btn-success': semaine}"
+		data-ng-model="semaine"
+		btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false"
+		data-ng-repeat="semaine in semaines_actives.enseignant">
+	  {{$index + 1}}
+	</button>
+      </label>
+    </accordion-group>
 
     <!-- ####################### Séquence Pédagogique ####################### -->
     <accordion-group data-is-open="groups.sequence_pedagogique.ouvert">
       <accordion-heading>
 	<span class="glyphicon" ng-class="{'glyphicon-chevron-down': groups.sequence_pedagogique.ouvert, 'glyphicon-chevron-right': !groups.sequence_pedagogique.ouvert}"> Séquence Pédagogique</span>
       </accordion-heading>
-
       <div class="panel panel-default">
 	<div class="panel-heading">
 	  <h5 class="panel-title">Séquence pédagogique du {{cours.date_cours | date : 'fullDate' }}</h5>
@@ -85,11 +108,10 @@
 	    <div class="clearfix"></div>
 	  </div>
 	</div>
-
 	<span data-ng-bind-html="cours.contenu" data-ng-show="cours.date_validation !== null || cours.enseignant_id !== current_user.uid"></span>
-
       </div>
     </accordion-group>
+
     <!-- ####################### Devoirs ####################### -->
     <accordion-group data-is-open="groups.devoirs.ouvert">
       <accordion-heading>
@@ -99,7 +121,6 @@
 	</button>
 	<div class="clearfix"></div>
       </accordion-heading>
-
       <div class="panel panel-default" data-ng-repeat="devoir in devoirs">
 	<div class="panel-heading enseignant-saisie">
 	  <h5 class="panel-title">Travail à faire</h5>
@@ -109,26 +130,21 @@
 		  data-ng-show="devoir.id">
 	    <span class="glyphicon glyphicon-trash"></span> Supprimer ce devoir
 	  </button>
-
 	  <div class="row-fluid">
-
 	    <select data-ng-required="true" data-ng-model="devoir.type_devoir_id"
 		    data-ng-options="type_de_devoir.id as type_de_devoir.description for type_de_devoir in types_de_devoir">
 	    </select>
-
 	    <select data-ng-required="true" data-ng-model="devoir.date_due" data-ng-change="set_creneau_date_due( devoir )"
 		    data-ng-options="creneau.date_due as creneau.label_sbox group by creneau.semaine for creneau in creneaux_devoirs_possibles">
 	    </select>
 	  </div>
 	</div>
 	<textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="devoir.contenu" data-ng-change="is_dirty( devoir )"></textarea>
-
 	<div class="panel-body">
 	  <h3 class="panel-title">Temps de travail estimé</h3>
 	  <rating data-ng-model="devoir.temps_estime" max="15" readonly="false"  ng-click="is_dirty( null )" on-hover="estimation_over(devoir, value)" on-leave="estimation_leave(devoir)" state-on="'glyphicon-record'" state-off="'glyphicon-unchecked'"></rating>
 	  <span class="label" data-ng-class="{'label-success': devoir.overValue<4, 'label-info': devoir.overValue>=4 && devoir.overValue<8 , 'label-warning': devoir.overValue>=8 && devoir.overValue<12, 'label-danger': devoir.overValue>=12}" data-ng-show="devoir.overValue>0 || devoir.temps_estime > 0">{{devoir.minutes || devoir.temps_estime * 5}} min</span>
 	</div>
-
 	<div class="panel-footer">
 	  <ul>
 	    <li data-ng-repeat="ressource in devoir.ressources">
@@ -136,11 +152,9 @@
 	      <button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( devoir, ressource.hash )">&times;</button>
 	    </li>
 	  </ul>
-
 	  <span class="alert alert-danger" role="alert" data-ng-hide="cartable.files">Problème de communication avec l'application Documents</span>
 	  <input type="file" name="upload[]" multiple onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files )"
 		 data-ng-show="cartable.files" />
-
 	  <div class="treecontrol-container">
 	    <treecontrol class="tree-classic"
 			 tree-model="cartable.files"
@@ -149,11 +163,11 @@
 	      {{node.name}} ({{node.mime}}) <button  class="btn btn-sm btn-success" data-ng-click="add_ressource( devoir, node.name, node.hash )">+</button>
 	    </treecontrol>
 	  </div>
-
 	  <div class="clearfix"></div>
 	</div>
       </div>
     </accordion-group>
+
   </accordion>
 </div>
 
