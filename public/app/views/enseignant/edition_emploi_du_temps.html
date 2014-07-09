@@ -26,132 +26,135 @@
     <li data-ng-repeat="erreur in erreurs">{{erreur.message}}</li>
   </ul>
 
-  <div class="row-fluid" style="text-align: right" data-ng-hide="ouvre_sequence_pedagogique">
-    <button class="btn btn-sm btn-primary" data-ng-click="toggle_sequence_pedagogique()">
-      <span class="glyphicon glyphicon-plus-sign"></span> Éditer la séquence pédagogique
-    </button>
-  </div>
+  <accordion close-others="false">
 
-  <!-- ####################### Séquence Pédagogique ####################### -->
+    <!-- ####################### Séquence Pédagogique ####################### -->
+    <accordion-group data-is-open="groups.sequence_pedagogique.ouvert">
+      <accordion-heading>
+	<span class="glyphicon" ng-class="{'glyphicon-chevron-down': groups.sequence_pedagogique.ouvert, 'glyphicon-chevron-right': !groups.sequence_pedagogique.ouvert}"> Séquence Pédagogique</span>
+      </accordion-heading>
 
-  <div class="panel panel-default" data-ng-show="ouvre_sequence_pedagogique">
-    <div class="panel-heading">
-      <h5 class="panel-title">Séquence pédagogique du {{cours.date_cours | date : 'fullDate' }}</h5>
-    </div>
-    <div data-ng-show="cours.date_validation === null || ( cours.date_validation === null && cours.enseignant_id === current_user.uid )">
-      <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="cours.contenu" data-ng-change="is_dirty( cours )">
-      </textarea>
-      <div class="panel-footer">
+      <div class="panel panel-default">
+	<div class="panel-heading">
+	  <h5 class="panel-title">Séquence pédagogique du {{cours.date_cours | date : 'fullDate' }}</h5>
+	</div>
+	<div data-ng-show="cours.date_validation === null || ( cours.date_validation === null && cours.enseignant_id === current_user.uid )">
+	  <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="cours.contenu" data-ng-change="is_dirty( cours )">
+	  </textarea>
+	  <div class="panel-footer">
 
-	<div class="row-fluid">
-	  <div class="col-md-7 ressources">
-	    <div class="alert alert-danger" role="alert" data-ng-hide="cartable.files">Problème de communication avec l'application Documents</div>
-	    <ul>
-	      <li data-ng-repeat="ressource in cours.ressources">
-		<a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
-		<button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( cours, ressource.hash )">✕</button>
-	      </li>
-	    </ul>
-	    <div class="treecontrol-container">
-	      <treecontrol class="tree-classic"
-			   tree-model="cartable.files"
-			   options="treeOptions"
-			   expanded-nodes="cartable.expandedNodes"
-			   on-selection="treeClicked( node )">
-		{{node.name}} ({{node.mime}}) <button class="btn btn-sm btn-success" data-ng-click="add_ressource( cours, node.name, node.hash )">+</button>
-	      </treecontrol>
+	    <div class="row-fluid">
+	      <div class="col-md-7 ressources">
+		<div class="alert alert-danger" role="alert" data-ng-hide="cartable.files">Problème de communication avec l'application Documents</div>
+		<ul>
+		  <li data-ng-repeat="ressource in cours.ressources">
+		    <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
+		    <button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( cours, ressource.hash )">✕</button>
+		  </li>
+		</ul>
+		<div class="treecontrol-container">
+		  <treecontrol class="tree-classic"
+			       tree-model="cartable.files"
+			       options="treeOptions"
+			       expanded-nodes="cartable.expandedNodes"
+			       on-selection="treeClicked( node )">
+		    {{node.name}} ({{node.mime}}) <button class="btn btn-sm btn-success" data-ng-click="add_ressource( cours, node.name, node.hash )">+</button>
+		  </treecontrol>
+		</div>
+		<input type="file"
+		       name="upload[]"
+		       multiple
+		       onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().cours, this.files)"
+		       data-ng-show="cartable.files" />
+	      </div>
+	      <div class="col-md-5 duplication-saisie" data-ng-show="creneaux_similaires.length > 0 && cours.id">
+		<select multiple
+			data-ng-model="creneaux_similaires.selected"
+			data-ng-options="creneau as creneau.label_sbox group by creneau.classe.libelle for creneau in creneaux_similaires" >
+		</select>
+		<button class="btn btn-sm btn-primary" data-ng-click="dupliquer()" data-ng-show="creneaux_similaires.selected">
+		  <span data-ng-hide="creneaux_similaires.selected.length > 1">
+		    <span class="glyphicon glyphicon-share"></span> Copier vers le cours sélectionné
+		  </span>
+		  <span data-ng-show="creneaux_similaires.selected.length > 1">
+		    <span class="glyphicon glyphicon-share"></span> Copier vers les cours sélectionnés
+		  </span>
+		</button>
+	      </div>
 	    </div>
-	    <input type="file"
-		   name="upload[]"
-		   multiple
-		   onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().cours, this.files)"
-		   data-ng-show="cartable.files" />
-	  </div>
-	  <div class="col-md-5 duplication-saisie" data-ng-show="creneaux_similaires.length > 0 && cours.id">
-	    <select multiple
-		    data-ng-model="creneaux_similaires.selected"
-		    data-ng-options="creneau as creneau.label_sbox group by creneau.classe.libelle for creneau in creneaux_similaires" >
-	    </select>
-	    <button class="btn btn-sm btn-primary" data-ng-click="dupliquer()" data-ng-show="creneaux_similaires.selected">
-	      <span data-ng-hide="creneaux_similaires.selected.length > 1">
-		<span class="glyphicon glyphicon-share"></span> Copier vers le cours sélectionné
-	      </span>
-	      <span data-ng-show="creneaux_similaires.selected.length > 1">
-		<span class="glyphicon glyphicon-share"></span> Copier vers les cours sélectionnés
-	      </span>
-	    </button>
+	    <div class="clearfix"></div>
 	  </div>
 	</div>
+
+	<span data-ng-bind-html="cours.contenu" data-ng-show="cours.date_validation !== null || cours.enseignant_id !== current_user.uid"></span>
+
+      </div>
+    </accordion-group>
+    <!-- ####################### Devoirs ####################### -->
+    <accordion-group data-is-open="groups.devoirs.ouvert">
+      <accordion-heading>
+	<span class="glyphicon" ng-class="{'glyphicon-chevron-down': groups.devoirs.ouvert, 'glyphicon-chevron-right': !groups.devoirs.ouvert}"> Travail à faire</span>
+	<button class="btn btn-sm btn-primary pull-right" data-ng-click="ajout_devoir()">
+	  <span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
+	</button>
 	<div class="clearfix"></div>
+      </accordion-heading>
+
+      <div class="panel panel-default" data-ng-repeat="devoir in devoirs">
+	<div class="panel-heading enseignant-saisie">
+	  <h5 class="panel-title">Travail à faire</h5>
+
+	  <button type="button" class="btn btn-sm btn-danger pull-right"
+		  data-ng-click="effacer_devoir( devoir )"
+		  data-ng-show="devoir.id">
+	    <span class="glyphicon glyphicon-trash"></span> Supprimer ce devoir
+	  </button>
+
+	  <div class="row-fluid">
+
+	    <select data-ng-required="true" data-ng-model="devoir.type_devoir_id"
+		    data-ng-options="type_de_devoir.id as type_de_devoir.description for type_de_devoir in types_de_devoir">
+	    </select>
+
+	    <select data-ng-required="true" data-ng-model="devoir.date_due" data-ng-change="set_creneau_date_due( devoir )"
+		    data-ng-options="creneau.date_due as creneau.label_sbox group by creneau.semaine for creneau in creneaux_devoirs_possibles">
+	    </select>
+	  </div>
+	</div>
+	<textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="devoir.contenu" data-ng-change="is_dirty( devoir )"></textarea>
+
+	<div class="panel-body">
+	  <h3 class="panel-title">Temps de travail estimé</h3>
+	  <rating data-ng-model="devoir.temps_estime" max="15" readonly="false"  ng-click="is_dirty( null )" on-hover="estimation_over(devoir, value)" on-leave="estimation_leave(devoir)" state-on="'glyphicon-record'" state-off="'glyphicon-unchecked'"></rating>
+	  <span class="label" data-ng-class="{'label-success': devoir.overValue<4, 'label-info': devoir.overValue>=4 && devoir.overValue<8 , 'label-warning': devoir.overValue>=8 && devoir.overValue<12, 'label-danger': devoir.overValue>=12}" data-ng-show="devoir.overValue>0 || devoir.temps_estime > 0">{{devoir.minutes || devoir.temps_estime * 5}} min</span>
+	</div>
+
+	<div class="panel-footer">
+	  <ul>
+	    <li data-ng-repeat="ressource in devoir.ressources">
+	      <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
+	      <button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( devoir, ressource.hash )">&times;</button>
+	    </li>
+	  </ul>
+
+	  <span class="alert alert-danger" role="alert" data-ng-hide="cartable.files">Problème de communication avec l'application Documents</span>
+	  <input type="file" name="upload[]" multiple onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files )"
+		 data-ng-show="cartable.files" />
+
+	  <div class="treecontrol-container">
+	    <treecontrol class="tree-classic"
+			 tree-model="cartable.files"
+			 options="treeOptions"
+			 on-selection="treeClicked( node )">
+	      {{node.name}} ({{node.mime}}) <button  class="btn btn-sm btn-success" data-ng-click="add_ressource( devoir, node.name, node.hash )">+</button>
+	    </treecontrol>
+	  </div>
+
+	  <div class="clearfix"></div>
+	</div>
       </div>
-    </div>
-
-    <span data-ng-bind-html="cours.contenu" data-ng-show="cours.date_validation !== null || cours.enseignant_id !== current_user.uid"></span>
-
-  </div>
-
-  <div class="row-fluid" style="text-align: right" data-ng-show="cours.contenu">
-    <button class="btn btn-sm btn-primary" data-ng-click="ajout_devoir()">
-      <span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
-    </button>
-  </div>
-
-  <!-- ####################### Devoirs ####################### -->
-
-  <div class="panel panel-default" data-ng-repeat="devoir in devoirs">
-    <div class="panel-heading enseignant-saisie">
-      <h5 class="panel-title">Travail à faire</h5>
-
-      <button type="button" class="btn btn-sm btn-danger pull-right"
-	      data-ng-click="effacer_devoir( devoir )"
-	      data-ng-show="devoir.id">
-	<span class="glyphicon glyphicon-trash"></span> Supprimer ce devoir
-      </button>
-
-      <div class="row-fluid">
-
-	<select data-ng-required="true" data-ng-model="devoir.type_devoir_id"
-		data-ng-options="type_de_devoir.id as type_de_devoir.description for type_de_devoir in types_de_devoir">
-	</select>
-
-	<select data-ng-required="true" data-ng-model="devoir.date_due" data-ng-change="set_creneau_date_due( devoir )"
-		data-ng-options="creneau.date_due as creneau.label_sbox group by creneau.semaine for creneau in creneaux_devoirs_possibles">
-	</select>
-      </div>
-    </div>
-    <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="devoir.contenu" data-ng-change="is_dirty( devoir )"></textarea>
-
-    <div class="panel-body">
-      <h3 class="panel-title">Temps de travail estimé</h3>
-      <rating data-ng-model="devoir.temps_estime" max="15" readonly="false"  ng-click="is_dirty( null )" on-hover="estimation_over(devoir, value)" on-leave="estimation_leave(devoir)" state-on="'glyphicon-record'" state-off="'glyphicon-unchecked'"></rating>
-      <span class="label" data-ng-class="{'label-success': devoir.overValue<4, 'label-info': devoir.overValue>=4 && devoir.overValue<8 , 'label-warning': devoir.overValue>=8 && devoir.overValue<12, 'label-danger': devoir.overValue>=12}" data-ng-show="devoir.overValue>0 || devoir.temps_estime > 0">{{devoir.minutes || devoir.temps_estime * 5}} min</span>
-    </div>
-
-    <div class="panel-footer">
-      <ul>
-	<li data-ng-repeat="ressource in devoir.ressources">
-	  <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
-	  <button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( devoir, ressource.hash )">&times;</button>
-	</li>
-      </ul>
-
-      <span class="alert alert-danger" role="alert" data-ng-hide="cartable.files">Problème de communication avec l'application Documents</span>
-      <input type="file" name="upload[]" multiple onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files )"
-	     data-ng-show="cartable.files" />
-
-      <div class="treecontrol-container">
-	<treecontrol class="tree-classic"
-		     tree-model="cartable.files"
-		     options="treeOptions"
-		     on-selection="treeClicked( node )">
-	  {{node.name}} ({{node.mime}}) <button  class="btn btn-sm btn-success" data-ng-click="add_ressource( devoir, node.name, node.hash )">+</button>
-	</treecontrol>
-      </div>
-
-      <div class="clearfix"></div>
-    </div>
-  </div>
-
+    </accordion-group>
+  </accordion>
 </div>
 
 <div class="modal-footer">

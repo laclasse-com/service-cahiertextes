@@ -6,6 +6,7 @@ angular.module( 'cahierDeTexteApp' )
 		   function ( $scope, $filter, $q, $sce, TINYMCE_OPTIONS, $modalInstance, DOCS_URL, Documents, CreneauEmploiDuTemps, Cours, Devoirs, User, cours, devoirs, types_de_devoir, creneau_selectionne, raw_data, classes, matieres ) {
 		       // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
 		       var scope_popup = $scope;
+
 		       User.get_user().then( function( response ) {
 			   scope_popup.current_user = response.data;
 
@@ -56,10 +57,13 @@ angular.module( 'cahierDeTexteApp' )
 							    enseignant: _(creneau_selectionne.enseignants).findWhere( { enseignant_id: scope_popup.current_user.uid } ).semaines_de_presence };
 
 			   // Flags et helpers
-			   scope_popup.ouvre_sequence_pedagogique = !scope_popup.cours.create;
 			   scope_popup.dirty = false;
 			   scope_popup.deleted = false;
 			   scope_popup.creneau_deleted = false;
+
+			   scope_popup.groups = { sequence_pedagogique: { ouvert: !scope_popup.cours.create },
+						  devoirs: { ouvert: !scope_popup.cours.create && scope_popup.devoirs.length > 0 },
+						  semaines_actives: { ouvert: scope_popup.creneau_en_creation } };
 
 			   // fonctions UI pour le temps estimé
 			   scope_popup.estimation_over = function ( d, value ) {
@@ -242,9 +246,6 @@ angular.module( 'cahierDeTexteApp' )
 			   // }}}
 
 			   // fonctions d'événements GUI {{{
-			   scope_popup.toggle_sequence_pedagogique = function() {
-			       scope_popup.ouvre_sequence_pedagogique = !scope_popup.ouvre_sequence_pedagogique;
-			   };
 			   scope_popup.ajout_devoir = function () {
 			       var devoir = new Devoirs( {
 				   cours_id: scope_popup.cours.id,
@@ -255,6 +256,7 @@ angular.module( 'cahierDeTexteApp' )
 			       devoir.create = true;
 
 			       scope_popup.devoirs.unshift( devoir );
+			       scope_popup.groups.devoirs.ouvert = true;
 			   };
 
 			   scope_popup.dupliquer = function () {
