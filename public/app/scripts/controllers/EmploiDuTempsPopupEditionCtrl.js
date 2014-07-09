@@ -339,6 +339,8 @@ angular.module( 'cahierDeTexteApp' )
 				       scope_popup.creneau_selectionne.regroupement_id = scope_popup.regroupement_id;
 				       scope_popup.creneau_selectionne.heure_debut = $filter('correctTimeZone')( scope_popup.creneau_tmp_heure_debut );
 				       scope_popup.creneau_selectionne.heure_fin = $filter('correctTimeZone')( scope_popup.creneau_tmp_heure_fin );
+				       scope_popup.creneau_selectionne.semaines_de_presence_regroupement = bitfield_to_fixnum( scope_popup.semaines_actives.regroupement );
+				       scope_popup.creneau_selectionne.semaines_de_presence_enseignant = bitfield_to_fixnum( scope_popup.semaines_actives.enseignant );
 
 				       scope_popup.creneau_selectionne.$update();
 				   }
