@@ -25,7 +25,8 @@
     "angular-loading-bar": "latest",
     "charte-graphique-laclasse-com": "git@gitlab.erasme.org:laclasse/charte-graphique-laclasse-com.git#latest",
     "angularjs-nvd3-directives": "latest",
-    "angular-tree-control": "latest"
+    "angular-tree-control": "latest",
+    "metro-bootstrap": "*"
   },
   "devDependencies": {
     "angular-mocks": "latest",
