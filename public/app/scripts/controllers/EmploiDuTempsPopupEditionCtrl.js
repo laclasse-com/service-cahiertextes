@@ -53,8 +53,18 @@ angular.module( 'cahierDeTexteApp' )
 			   } );
 			   scope_popup.matiere = scope_popup.matieres[ scope_popup.matiere_id ];
 
-			   scope_popup.semaines_actives = { regroupement: _(creneau_selectionne.regroupements).findWhere( { regroupement_id: creneau_selectionne.regroupement_id } ).semaines_de_presence,
-							    enseignant: _(creneau_selectionne.enseignants).findWhere( { enseignant_id: scope_popup.current_user.uid } ).semaines_de_presence };
+			   var to_bitfield = function( fixnum ) {
+			       var result = {};
+			       _(fixnum.toString(2)).each( function( bit, i ) {
+				   if ( i > 0 ) {
+				       result[ i - 1 ] = bit ==='1';
+				   }
+			       } );
+			       return result;
+			   };
+
+			   scope_popup.semaines_actives = { regroupement: to_bitfield( _(creneau_selectionne.regroupements).findWhere( { regroupement_id: creneau_selectionne.regroupement_id } ).semaines_de_presence ),
+							    enseignant: to_bitfield( _(creneau_selectionne.enseignants).findWhere( { enseignant_id: scope_popup.current_user.uid } ).semaines_de_presence )};
 
 			   // Flags et helpers
 			   scope_popup.dirty = false;
