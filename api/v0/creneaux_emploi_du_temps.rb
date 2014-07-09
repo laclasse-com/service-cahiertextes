@@ -77,7 +77,7 @@ module CahierDeTextesAPI
         ce.update semaines_de_presence: params[:semaines_de_presence_enseignant] if params[:semaines_de_presence_enseignant]
         CreneauEmploiDuTempsEnseignant.restrict_primary_key
 
-        unless params[:regroupement_id].empty?
+        unless params[:regroupement_id].nil? || params[:regroupement_id].empty? || params[:regroupement_id] == 'undefined'
           CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
           cr = creneau.add_regroupement regroupement_id: params[:regroupement_id]
           cr.update semaines_de_presence: params[:semaines_de_presence_regroupement] if params[:semaines_de_presence_regroupement]
