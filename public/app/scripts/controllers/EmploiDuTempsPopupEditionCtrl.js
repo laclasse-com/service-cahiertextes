@@ -57,7 +57,7 @@ angular.module( 'cahierDeTexteApp' )
 			       var result = {};
 			       _(fixnum.toString(2)).each( function( bit, i ) {
 				   if ( i > 0 ) {
-				       result[ i - 1 ] = bit ==='1';
+				       result[ i - 1 ] = bit === '1';
 				   }
 			       } );
 			       return result;
