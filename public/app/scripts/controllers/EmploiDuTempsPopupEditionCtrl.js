@@ -71,9 +71,8 @@ angular.module( 'cahierDeTexteApp' )
 						.join(''),
 						2 );
 			   };
-
-			   scope_popup.semaines_actives = { regroupement: fixnum_to_bitfield( _(creneau_selectionne.regroupements).findWhere( { regroupement_id: creneau_selectionne.regroupement_id } ).semaines_de_presence ),
-							    enseignant: fixnum_to_bitfield( _(creneau_selectionne.enseignants).findWhere( { enseignant_id: scope_popup.current_user.uid } ).semaines_de_presence )};
+			   scope_popup.semaines_actives = { regroupement: fixnum_to_bitfield( scope_popup.creneau_en_creation ? 9007199254740991 : _(creneau_selectionne.regroupements).findWhere( { regroupement_id: creneau_selectionne.regroupement_id } ).semaines_de_presence ),
+							    enseignant: fixnum_to_bitfield( scope_popup.creneau_en_creation ? 9007199254740991 : _(creneau_selectionne.enseignants).findWhere( { enseignant_id: scope_popup.current_user.uid } ).semaines_de_presence )};
 
 			   // Flags et helpers
 			   scope_popup.dirty = false;
