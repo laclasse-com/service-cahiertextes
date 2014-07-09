@@ -63,7 +63,7 @@ angular.module( 'cahierDeTexteApp' )
 			       return result;
 			   };
 			   var bitfield_to_fixnum = function( bitfield ) {
-			       return parseInt( _(bitfield)
+			       return parseInt( '1' + _(bitfield)
 						.toArray()
 						.map( function( bit ) {
 						    return bit ? '1' : '0';
