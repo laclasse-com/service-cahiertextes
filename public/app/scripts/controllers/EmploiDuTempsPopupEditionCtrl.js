@@ -63,12 +63,13 @@ angular.module( 'cahierDeTexteApp' )
 			       return result;
 			   };
 			   var bitfield_to_fixnum = function( bitfield ) {
-			       return _(bitfield)
-				   .toArray()
-				   .map( function( bit ) {
-				       return bit ? '1' : '0';
-				   } )
-				   .join('');
+			       return parseInt( _(bitfield)
+						.toArray()
+						.map( function( bit ) {
+						    return bit ? '1' : '0';
+						} )
+						.join(''),
+						2 );
 			   };
 
 			   scope_popup.semaines_actives = { regroupement: fixnum_to_bitfield( _(creneau_selectionne.regroupements).findWhere( { regroupement_id: creneau_selectionne.regroupement_id } ).semaines_de_presence ),
