@@ -53,7 +53,7 @@ angular.module( 'cahierDeTexteApp' )
 			   } );
 			   scope_popup.matiere = scope_popup.matieres[ scope_popup.matiere_id ];
 
-			   var to_bitfield = function( fixnum ) {
+			   var fixnum_to_bitfield = function( fixnum ) {
 			       var result = {};
 			       _(fixnum.toString(2)).each( function( bit, i ) {
 				   if ( i > 0 ) {
@@ -62,9 +62,17 @@ angular.module( 'cahierDeTexteApp' )
 			       } );
 			       return result;
 			   };
+			   var bitfield_to_fixnum = function( bitfield ) {
+			       return _(bitfield)
+				   .toArray()
+				   .map( function( bit ) {
+				       return bit ? '1' : '0';
+				   } )
+				   .join('');
+			   };
 
-			   scope_popup.semaines_actives = { regroupement: to_bitfield( _(creneau_selectionne.regroupements).findWhere( { regroupement_id: creneau_selectionne.regroupement_id } ).semaines_de_presence ),
-							    enseignant: to_bitfield( _(creneau_selectionne.enseignants).findWhere( { enseignant_id: scope_popup.current_user.uid } ).semaines_de_presence )};
+			   scope_popup.semaines_actives = { regroupement: fixnum_to_bitfield( _(creneau_selectionne.regroupements).findWhere( { regroupement_id: creneau_selectionne.regroupement_id } ).semaines_de_presence ),
+							    enseignant: fixnum_to_bitfield( _(creneau_selectionne.enseignants).findWhere( { enseignant_id: scope_popup.current_user.uid } ).semaines_de_presence )};
 
 			   // Flags et helpers
 			   scope_popup.dirty = false;
