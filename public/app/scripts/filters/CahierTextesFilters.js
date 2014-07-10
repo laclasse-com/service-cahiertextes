@@ -1,6 +1,7 @@
 /*
  * Filtres Angulars spécifiques à l'application Cahier de Textes
  */
+'use strict';
 
 // Tenir compte de la timezone dans les dates
 angular.module( 'cahierDeTexteApp' )
