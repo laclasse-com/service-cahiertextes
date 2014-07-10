@@ -341,7 +341,7 @@ angular.module( 'cahierDeTexteApp' )
 			   };
 
 			   scope_popup.annuler = function () {
-			       if ( scope_popup.creneau_en_creation ) {
+			       if ( scope_popup.creneau_en_creation && scope_popup.creneau_selectionne.matiere_id === '' && scope_popup.creneau_selectionne.regroupement_id === 'undefined' ) {
 				   scope_popup.effacer_creneau();
 			       } else {
 				   scope_popup.dirty = false;
