@@ -4,7 +4,8 @@
   <button type="button" class="btn btn-xs pull-right"
 	  data-ng-class="{'btn-default': !semaine, 'btn-success': semaine}"
 	  data-ng-model="creneau_en_creation"
-	  btn-checkbox >
+	  btn-checkbox
+	  data-ng-show="cours.create" >
     <span class="glyphicon glyphicon-edit"></span>
   </button>
 
