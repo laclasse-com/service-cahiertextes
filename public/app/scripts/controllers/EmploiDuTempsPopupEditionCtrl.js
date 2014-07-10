@@ -55,7 +55,7 @@ angular.module( 'cahierDeTexteApp' )
 
 			   // Gestion des semaines actives
 			   var fixnum_to_bitfield = function( fixnum ) {
-			       return fixnum.toString(2).split('').map( function( e ) { return parseInt( e ); } );
+			       return _(fixnum.toString(2).split('').map( function( e ) { return parseInt( e ); } )).rest();
 			   };
 			   var bitfield_to_fixnum = function( bitfield ) {
 			       return parseInt( '1' + bitfield.join(''), 2 );
