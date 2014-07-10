@@ -297,12 +297,20 @@ angular.module( 'cahierDeTexteApp' )
 			   };
 
 			   scope_popup.effacer_devoir = function ( devoir ) {
-			       devoir.$delete().then( function() {
+			       if ( _(devoir).has('id') ) {
+				   devoir.$delete().then( function() {
+				       scope_popup.devoirs = _( scope_popup.devoirs )
+					   .reject( function( devoir ) {
+					       return devoir.deleted;
+					   });
+				   });
+			       } else {
+				   devoir.deleted = true;
 				   scope_popup.devoirs = _( scope_popup.devoirs )
 				       .reject( function( devoir ) {
 					   return devoir.deleted;
 				       });
-			       });
+			       }
 			   };
 
 			   scope_popup.effacer_creneau = function () {
