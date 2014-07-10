@@ -31,22 +31,16 @@
       <accordion-heading>
 	<span class="glyphicon" ng-class="{'glyphicon-chevron-down': groups.semaines_actives.ouvert, 'glyphicon-chevron-right': !groups.semaines_actives.ouvert}"> Semaines Actives</span>
       </accordion-heading>
-
       de la classe<br>
+      <button class="btn btn-s btn-success" data-ng-click="apply_template( 'semaine_A' )">semaine A</button>
+      <button class="btn btn-s btn-success" data-ng-click="apply_template( 'semaine_B' )">semaine B</button>
+      <button class="btn btn-s btn-success" data-ng-click="apply_template( 'initialize' )">Réinitialiser</button>
+      <br>
       <button type="button" class="btn btn-xs"
 	      data-ng-class="{'btn-default': !semaine, 'btn-success': semaine}"
 	      data-ng-model="semaines_actives.regroupement[ $index ]"
-	      btn-checkbox
+	      btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0"
 	      data-ng-repeat="semaine in semaines_actives.regroupement track by $index" >
-	{{$index + 1}}
-      </button>
-      <br>
-      de l'enseignant<br>
-      <button type="button" class="btn btn-xs"
-	      data-ng-class="{'btn-default': !semaine, 'btn-success': semaine}"
-	      data-ng-model="semaines_actives.enseignant[ $index ]"
-	      btn-checkbox
-	      data-ng-repeat="semaine in semaines_actives.enseignant track by $index" >
 	{{$index + 1}}
       </button>
     </accordion-group>

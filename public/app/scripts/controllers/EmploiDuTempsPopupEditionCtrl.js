@@ -53,21 +53,37 @@ angular.module( 'cahierDeTexteApp' )
 			   } );
 			   scope_popup.matiere = scope_popup.matieres[ scope_popup.matiere_id ];
 
+			   // Gestion des semaines actives
 			   var fixnum_to_bitfield = function( fixnum ) {
-			       return _(fixnum.toString(2)).map( function( bit, i ) {
-				   return bit === '1';
-			       } );
+			       return fixnum.toString(2).split('').map( function( e ) { return parseInt( e ); } );
 			   };
 			   var bitfield_to_fixnum = function( bitfield ) {
-			       return parseInt( '1' + _(bitfield)
-						.map( function( bit ) {
-						    return bit ? '1' : '0';
-						} )
-						.join(''),
-						2 );
+			       return parseInt( '1' + bitfield.join(''), 2 );
 			   };
-			   scope_popup.semaines_actives = { regroupement: fixnum_to_bitfield( scope_popup.creneau_en_creation ? 9007199254740991 : _(creneau_selectionne.regroupements).findWhere( { regroupement_id: creneau_selectionne.regroupement_id } ).semaines_de_presence ),
-							    enseignant: fixnum_to_bitfield( scope_popup.creneau_en_creation ? 9007199254740991 : _(creneau_selectionne.enseignants).findWhere( { enseignant_id: scope_popup.current_user.uid } ).semaines_de_presence )};
+			   scope_popup.semaines_actives = { regroupement: [] };
+			   scope_popup.apply_template = function( template_name ) {
+			       var template = [];
+			       switch( template_name ) {
+			       case 'semaine_A':
+				   _(26).times( function() {
+				       template.push( 1 );
+				       template.push( 0 );
+				   });
+				   scope_popup.semaines_actives.regroupement = template;
+				   break;
+			       case 'semaine_B':
+				   _(26).times( function() {
+				       template.push( 0 );
+				       template.push( 1 );
+				   });
+				   scope_popup.semaines_actives.regroupement = template;
+				   break;
+			       case 'initialize':
+				   scope_popup.semaines_actives.regroupement = fixnum_to_bitfield( scope_popup.creneau_en_creation ? 9007199254740991 : _(creneau_selectionne.regroupements).findWhere( { regroupement_id: creneau_selectionne.regroupement_id } ).semaines_de_presence );
+				   break;
+			       }
+			   };
+			   scope_popup.apply_template( 'initialize' );
 
 			   // Flags et helpers
 			   scope_popup.dirty = false;
