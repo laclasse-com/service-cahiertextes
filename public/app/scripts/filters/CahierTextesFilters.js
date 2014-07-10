@@ -28,17 +28,4 @@ angular.module( 'cahierDeTexteApp' )
 		return $filter( 'date' )( creneau.start, 'EEE dd MMM HH:mm' ) + ' - ' + $filter( 'date' )( creneau.end, 'shortTime' );
 	    };
 	}
-    ] )
-    .filter( 'cleverTruncate', function () {
-	return function ( text, length ) {
-	    if ( text.length > length ) {
-		var result = text.substring( 0, length );
-		result = result.substring( 0, result.lastIndexOf( ' ' ) );
-		result += '…';
-
-		return result;
-	    } else {
-		return text;
-	    }
-	};
-    } );
+			       ] );

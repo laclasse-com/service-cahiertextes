@@ -60,7 +60,6 @@ angular.module('cahierDeTexteApp')
 			  this.details = event;
 			  this.allDay = false;
 			  this.title = '';
-			  this.description = '';
 			  this.regroupement = _($scope.classes).findWhere({ id: parseInt( this.details.regroupement_id ) });
 			  this.type = ( _(item).has( 'fait' ) ) ? 'devoir': 'cours';
 			  this.has_resources = _(item).has( 'ressources' ) && item.ressources.length > 0;
@@ -86,10 +85,6 @@ angular.module('cahierDeTexteApp')
 			  this.end = new Date( item.end );
 
 			  if ( _(item).has( 'contenu' ) && item.contenu.length > 0 ) {
-			      this.description += '<br><span style="color:' + CALENDAR_PARAMS.couleurs[ this.type ] + '">';
-			      this.description += item.contenu.substring( 0, CALENDAR_PARAMS.max_length );
-			      this.description += item.contenu.length > CALENDAR_PARAMS.max_length ? '…' : '';
-			      this.description += '</span>';
 			      this.id = item.id;
 			  } else {
 			      this.className = 'saisie-vide';
@@ -295,7 +290,7 @@ angular.module('cahierDeTexteApp')
 				  var html_element = element.find( '.fc-event-title' );
 
 				  var regroupement = event.regroupement !== 'undefined' ? event.regroupement.libelle : '';
-				  html_element.append( ' - ' + regroupement + '<br>' + event.description );
+				  html_element.append( ' - ' + regroupement );
 				  if ( event.has_resources ) {
 				      html_element.prepend( '<i class="glyphicon glyphicon-paperclip"></i>' );
 				  }
@@ -324,11 +319,8 @@ angular.module('cahierDeTexteApp')
 			  case 'ELV':
 			  default:
 			      $scope.calendar.options.eventRender = function( event, element ) {
-				  // FIXME: manipulation du DOM dans le contrôleur, sale
-				  // ajouter la description ici permet que l'HTML soit interprété
 				  var html_element = element.find( '.fc-event-title' );
 
-				  html_element.append( event.description );
 				  if ( event.has_resources ) {
 				      html_element.prepend( '<i class="glyphicon glyphicon-paperclip"></i>' );
 				  }
