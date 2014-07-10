@@ -74,9 +74,9 @@ angular.module( 'cahierDeTexteApp' )
 			   scope_popup.deleted = false;
 			   scope_popup.creneau_deleted = false;
 
-			   scope_popup.groups = { sequence_pedagogique: { ouvert: !scope_popup.cours.create },
-						  devoirs: { ouvert: !scope_popup.cours.create && scope_popup.devoirs.length > 0 },
-						  semaines_actives: { ouvert: scope_popup.creneau_en_creation } };
+			   scope_popup.groups = { semaines_actives: { ouvert: scope_popup.creneau_en_creation },
+						  sequence_pedagogique: { ouvert: !scope_popup.cours.create },
+						  devoirs: { ouvert: !scope_popup.cours.create && scope_popup.devoirs.length > 0 } };
 
 			   // fonctions UI pour le temps estimé
 			   scope_popup.estimation_over = function ( d, value ) {
