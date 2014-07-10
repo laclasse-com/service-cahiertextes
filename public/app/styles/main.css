@@ -29,6 +29,9 @@ body {
 
 /* Cahier de Textes */
 /* Calendrier */
+.fc-event-vert.fc-event-end,
+.fc-event-vert.fc-event-start {border-radius:0}
+
 .cdt-agendaDay-container{overflow:auto}
 .cdt-agendaDay-event{width:220%}
 .cdt-agendaDay-cours{background-color:#aaaaff}
