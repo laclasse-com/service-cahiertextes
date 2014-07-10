@@ -326,7 +326,7 @@ angular.module('cahierDeTexteApp')
 			      $scope.calendar.options.eventRender = function( event, element ) {
 				  // FIXME: manipulation du DOM dans le contrôleur, sale
 				  // ajouter la description ici permet que l'HTML soit interprété
-				  html_element = element.find( '.fc-event-title' );
+				  var html_element = element.find( '.fc-event-title' );
 
 				  html_element.append( event.description );
 				  if ( event.has_resources ) {
