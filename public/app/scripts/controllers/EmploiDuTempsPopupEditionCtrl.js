@@ -269,7 +269,10 @@ angular.module( 'cahierDeTexteApp' )
 			       devoir.create = true;
 
 			       scope_popup.devoirs.unshift( devoir );
-			       scope_popup.groups.devoirs.ouvert = true;
+
+			       // Contre-intuitif certes, mais comme on clique dans le heading
+			       // de l'accordéon du coup ça marche comme ça
+			       scope_popup.groups.devoirs.ouvert = false;
 			   };
 
 			   scope_popup.dupliquer = function () {
