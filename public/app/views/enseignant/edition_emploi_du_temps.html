@@ -54,12 +54,9 @@
     <!-- ####################### Séquence Pédagogique ####################### -->
     <accordion-group data-is-open="groups.sequence_pedagogique.ouvert">
       <accordion-heading>
-	<span class="glyphicon" ng-class="{'glyphicon-chevron-down': groups.sequence_pedagogique.ouvert, 'glyphicon-chevron-right': !groups.sequence_pedagogique.ouvert}"> Séquence Pédagogique</span>
+	<span class="glyphicon" ng-class="{'glyphicon-chevron-down': groups.sequence_pedagogique.ouvert, 'glyphicon-chevron-right': !groups.sequence_pedagogique.ouvert}"> Séquence pédagogique du {{cours.date_cours | date : 'fullDate' }}</span>
       </accordion-heading>
       <div class="panel panel-default">
-	<div class="panel-heading">
-	  <h5 class="panel-title">Séquence pédagogique du {{cours.date_cours | date : 'fullDate' }}</h5>
-	</div>
 	<div data-ng-show="cours.date_validation === null || ( cours.date_validation === null && cours.enseignant_id === current_user.uid )">
 	  <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="cours.contenu" data-ng-change="is_dirty( cours )">
 	  </textarea>
@@ -122,8 +119,6 @@
       </accordion-heading>
       <div class="panel panel-default" data-ng-repeat="devoir in devoirs">
 	<div class="panel-heading enseignant-saisie">
-	  <h5 class="panel-title">Travail à faire</h5>
-
 	  <button type="button" class="btn btn-sm btn-danger pull-right"
 		  data-ng-click="effacer_devoir( devoir )"
 		  data-ng-show="devoir.id">
