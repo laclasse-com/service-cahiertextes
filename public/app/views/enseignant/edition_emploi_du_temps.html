@@ -1,6 +1,12 @@
 <iframe data-ng-src="{{DOCS_URL_login}}" style="display:none;"></iframe>
 <div class="modal-header">
   <button type="button" class="close pull-right" aria-hidden="true" data-ng-click="annuler()">&times;</button>
+  <button type="button" class="btn btn-xs pull-right"
+	  data-ng-class="{'btn-default': !semaine, 'btn-success': semaine}"
+	  data-ng-model="creneau_en_creation"
+	  btn-checkbox >
+    <span class="glyphicon glyphicon-edit"></span>
+  </button>
 
   <h5>
     <span data-ng-hide="creneau_en_creation">
@@ -17,15 +23,9 @@
       -
       <timepicker class="timepicker" data-ng-model="creneau_tmp_heure_fin" data-show-meridian="false" data-minute-step="5"></timepicker>)
     </span>
-
   </h5>
-</div>
-
-<div class="modal-body">
-  <ul><li data-ng-repeat="erreur in erreurs">{{erreur.message}}</li></ul>
 
   <accordion close-others="false">
-
     <!-- ####################### Semaines Actives ########################### -->
     <accordion-group data-is-open="groups.semaines_actives.ouvert">
       <accordion-heading>
@@ -38,7 +38,7 @@
       </div>
       <div class="btn-group">
 	<button type="button" class="btn btn-xs" data-ng-disabled="!creneau_en_creation"}
-		data-ng-class="{'btn-default': !semaine, 'btn-success': semaine}"
+	  data-ng-class="{'btn-default': !semaine, 'btn-success': semaine}"
 		data-ng-model="semaines_actives.regroupement[ $index ]"
 		btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0"
 		data-ng-repeat="semaine in semaines_actives.regroupement track by $index" >
@@ -46,6 +46,14 @@
 	</button>
       </div>
     </accordion-group>
+  </accordion>
+
+</div>
+
+<div class="modal-body">
+  <ul><li data-ng-repeat="erreur in erreurs">{{erreur.message}}</li></ul>
+
+  <accordion close-others="false">
 
     <!-- ####################### Séquence Pédagogique ####################### -->
     <accordion-group data-is-open="groups.sequence_pedagogique.ouvert">

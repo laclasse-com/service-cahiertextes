@@ -42,10 +42,8 @@ angular.module( 'cahierDeTexteApp' )
 			   scope_popup.matieres = matieres;
 			   scope_popup.classes = classes;
 			   scope_popup.creneau_en_creation = scope_popup.creneau_selectionne.matiere_id.length == 0 || scope_popup.creneau_selectionne.regroupement_id === undefined;
-			   if ( scope_popup.creneau_en_creation ) {
-			       scope_popup.creneau_tmp_heure_debut = $filter('correctTimeZoneToGMT')( scope_popup.creneau_selectionne.heure_debut );
-			       scope_popup.creneau_tmp_heure_fin = $filter('correctTimeZoneToGMT')( scope_popup.creneau_selectionne.heure_fin );
-			   }
+			   scope_popup.creneau_tmp_heure_debut = $filter('correctTimeZoneToGMT')( scope_popup.creneau_selectionne.heure_debut );
+			   scope_popup.creneau_tmp_heure_fin = $filter('correctTimeZoneToGMT')( scope_popup.creneau_selectionne.heure_fin );
 			   scope_popup.matiere_id = scope_popup.creneau_selectionne.matiere_id.length > 0 ? scope_popup.creneau_selectionne.matiere_id : _.chain( scope_popup.matieres ).values().first().value().id;
 			   scope_popup.regroupement_id = scope_popup.creneau_selectionne.regroupement_id !== 'undefined' ? parseInt( scope_popup.creneau_selectionne.regroupement_id ) : _( scope_popup.classes ).first().id;
 			   scope_popup.classe = _( scope_popup.classes ).findWhere( {
