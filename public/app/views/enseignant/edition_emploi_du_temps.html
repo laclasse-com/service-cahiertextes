@@ -2,7 +2,7 @@
 <div class="modal-header">
   <button type="button" class="close pull-right" aria-hidden="true" data-ng-click="annuler()">&times;</button>
   <button type="button" class="btn btn-xs pull-right"
-	  data-ng-class="{'btn-default': !semaine, 'btn-success': semaine}"
+	  data-ng-class="{'btn-default': !creneau_en_creation, 'btn-danger': creneau_en_creation}"
 	  data-ng-model="creneau_en_creation"
 	  btn-checkbox
 	  data-ng-show="cours.create" >
