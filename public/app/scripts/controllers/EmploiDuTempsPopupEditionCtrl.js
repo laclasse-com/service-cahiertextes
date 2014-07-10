@@ -54,17 +54,12 @@ angular.module( 'cahierDeTexteApp' )
 			   scope_popup.matiere = scope_popup.matieres[ scope_popup.matiere_id ];
 
 			   var fixnum_to_bitfield = function( fixnum ) {
-			       var result = {};
-			       _(fixnum.toString(2)).each( function( bit, i ) {
-				   if ( i > 0 ) {
-				       result[ i - 1 ] = bit === '1';
-				   }
+			       return _(fixnum.toString(2)).map( function( bit, i ) {
+				   return bit === '1';
 			       } );
-			       return result;
 			   };
 			   var bitfield_to_fixnum = function( bitfield ) {
 			       return parseInt( '1' + _(bitfield)
-						.toArray()
 						.map( function( bit ) {
 						    return bit ? '1' : '0';
 						} )

@@ -37,15 +37,16 @@
 	      data-ng-class="{'btn-default': !semaine, 'btn-success': semaine}"
 	      data-ng-model="semaines_actives.regroupement[ $index ]"
 	      btn-checkbox
-	      data-ng-repeat="semaine in semaines_actives.regroupement">
+	      data-ng-repeat="semaine in semaines_actives.regroupement track by $index" >
 	{{$index + 1}}
       </button>
+      <br>
       de l'enseignant<br>
       <button type="button" class="btn btn-xs"
 	      data-ng-class="{'btn-default': !semaine, 'btn-success': semaine}"
-	      data-ng-model="semaine"
+	      data-ng-model="semaines_actives.enseignant[ $index ]"
 	      btn-checkbox
-	      data-ng-repeat="semaine in semaines_actives.enseignant">
+	      data-ng-repeat="semaine in semaines_actives.enseignant track by $index" >
 	{{$index + 1}}
       </button>
     </accordion-group>
