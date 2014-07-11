@@ -60,6 +60,11 @@
     <accordion-group data-is-open="groups.sequence_pedagogique.ouvert">
       <accordion-heading>
 	<span class="glyphicon" ng-class="{'glyphicon-chevron-down': groups.sequence_pedagogique.ouvert, 'glyphicon-chevron-right': !groups.sequence_pedagogique.ouvert}"> Séquence pédagogique du {{cours.date_cours | date : 'fullDate' }}</span>
+	<button type="button" class="btn btn-sm btn-danger pull-right"
+		data-ng-click="effacer_cours(  )" >
+	  <span class="glyphicon glyphicon-trash"></span> Supprimer
+	</button>
+	<div class="clearfix"></div>
       </accordion-heading>
       <div class="panel panel-default">
 	<div data-ng-show="cours.date_validation === null || ( cours.date_validation === null && cours.enseignant_id === current_user.uid )">
@@ -126,7 +131,7 @@
 	<div class="panel-heading enseignant-saisie">
 	  <button type="button" class="btn btn-sm btn-danger pull-right"
 		  data-ng-click="effacer_devoir( devoir )" >
-	    <span class="glyphicon glyphicon-trash"></span> Supprimer ce devoir
+	    <span class="glyphicon glyphicon-trash"></span> Supprimer
 	  </button>
 	  <div class="row-fluid">
 	    <select data-ng-required="true" data-ng-model="devoir.type_devoir_id"
@@ -170,10 +175,6 @@
 </div>
 
 <div class="modal-footer">
-  <button type="button" class="btn btn-sm btn-default pull-left" data-ng-click="effacer_cours()" data-ng-hide="cours.date_validation !== null || creneau_selectionne.details.enseignant_id !== current_user.uid || cours.create">
-    <span class="glyphicon glyphicon-trash"></span> Supprimer le cours
-  </button>
-
   <button type="button" class="btn btn-sm btn-warning pull-left" data-ng-click="effacer_creneau()" data-ng-show="cours.create">
     <span class="glyphicon glyphicon-trash"></span> Supprimer le créneau
   </button>
