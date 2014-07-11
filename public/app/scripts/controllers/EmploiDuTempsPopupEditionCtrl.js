@@ -4,52 +4,49 @@ angular.module( 'cahierDeTexteApp' )
     .controller( 'EmploiDuTempsPopupEditionCtrl',
 		 [ '$scope', '$filter', '$q', '$sce', 'TINYMCE_OPTIONS', '$modalInstance', 'DOCS_URL', 'Documents', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs', 'User', 'cours', 'devoirs', 'types_de_devoir', 'creneau_selectionne', 'raw_data', 'classes', 'matieres',
 		   function ( $scope, $filter, $q, $sce, TINYMCE_OPTIONS, $modalInstance, DOCS_URL, Documents, CreneauEmploiDuTemps, Cours, Devoirs, User, cours, devoirs, types_de_devoir, creneau_selectionne, raw_data, classes, matieres ) {
-		       // Attention, $scope ici est le scope de la popup, plus celui d'EnseignantCtrl !
-		       var scope_popup = $scope;
-
 		       User.get_user().then( function( response ) {
-			   scope_popup.current_user = response.data;
+			   $scope.current_user = response.data;
 
 			   var create_cours = function( creneau ) {
 			       var cours = new Cours( { cahier_de_textes_id: creneau.cahier_de_textes_id,
 							creneau_emploi_du_temps_id: creneau.id,
 							date_cours: new Date(creneau.heure_debut).toISOString(),
 							date_validation: null,
-							enseignant_id: scope_popup.current_user.uid } );
+							enseignant_id: $scope.current_user.uid } );
 			       cours.create = true;
 
 			       return cours;
 			   };
-			   scope_popup.is_dirty = function( item ) {
+			   $scope.is_dirty = function( item ) {
 			       item = typeof item !== 'undefined' ? item : null;
-			       scope_popup.dirty = scope_popup.dirty || ( item === null || ( item !== null && item.contenu.length > 0 ) );
+			       $scope.dirty = $scope.dirty || ( item === null || ( item !== null && item.contenu.length > 0 ) );
 			   };
 
 			   // Initialisations {{{
-			   scope_popup.DOCS_URL_login = $sce.trustAsResourceUrl( DOCS_URL + '/login' );
-			   scope_popup.tinyMCEOptions = TINYMCE_OPTIONS;
+			   $scope.DOCS_URL_login = $sce.trustAsResourceUrl( DOCS_URL + '/login' );
+			   $scope.tinyMCEOptions = TINYMCE_OPTIONS;
 			   if ( cours === null ) {
-			       scope_popup.cours = create_cours( creneau_selectionne );
+			       $scope.cours = create_cours( creneau_selectionne );
 			   } else {
-			       scope_popup.cours = cours;
-			       scope_popup.cours.create = false;
+			       $scope.cours = cours;
+			       $scope.cours.create = false;
 			   }
 			   // devoirs
-			   scope_popup.devoirs = devoirs;
-			   scope_popup.types_de_devoir = types_de_devoir;
+			   $scope.devoirs = devoirs;
+			   $scope.types_de_devoir = types_de_devoir;
 
-			   scope_popup.creneau_selectionne = creneau_selectionne;
-			   scope_popup.matieres = matieres;
-			   scope_popup.classes = classes;
-			   scope_popup.creneau_en_creation = scope_popup.creneau_selectionne.matiere_id.length == 0 || scope_popup.creneau_selectionne.regroupement_id === undefined;
-			   scope_popup.creneau_tmp_heure_debut = $filter('correctTimeZoneToGMT')( scope_popup.creneau_selectionne.heure_debut );
-			   scope_popup.creneau_tmp_heure_fin = $filter('correctTimeZoneToGMT')( scope_popup.creneau_selectionne.heure_fin );
-			   scope_popup.matiere_id = scope_popup.creneau_selectionne.matiere_id.length > 0 ? scope_popup.creneau_selectionne.matiere_id : _.chain( scope_popup.matieres ).values().first().value().id;
-			   scope_popup.regroupement_id = scope_popup.creneau_selectionne.regroupement_id !== 'undefined' ? parseInt( scope_popup.creneau_selectionne.regroupement_id ) : _( scope_popup.classes ).first().id;
-			   scope_popup.classe = _( scope_popup.classes ).findWhere( {
-			       id: parseInt( scope_popup.regroupement_id )
+			   $scope.creneau_selectionne = creneau_selectionne;
+			   $scope.matieres = matieres;
+			   $scope.classes = classes;
+			   $scope.creneau_en_creation = $scope.creneau_selectionne.matiere_id.length == 0 || $scope.creneau_selectionne.regroupement_id === undefined;
+			   $scope.creneau_tmp_heure_debut = $filter('correctTimeZoneToGMT')( $scope.creneau_selectionne.heure_debut );
+			   $scope.creneau_tmp_heure_fin = $filter('correctTimeZoneToGMT')( $scope.creneau_selectionne.heure_fin );
+			   $scope.matiere_id = $scope.creneau_selectionne.matiere_id.length > 0 ? $scope.creneau_selectionne.matiere_id : _.chain( $scope.matieres ).values().first().value().id;
+			   $scope.regroupement_id = $scope.creneau_selectionne.regroupement_id !== 'undefined' ? parseInt( $scope.creneau_selectionne.regroupement_id ) : _( $scope.classes ).first().id;
+			   $scope.classe = _( $scope.classes ).findWhere( {
+			       id: parseInt( $scope.regroupement_id )
 			   } );
-			   scope_popup.matiere = scope_popup.matieres[ scope_popup.matiere_id ];
+			   $scope.matiere = $scope.matieres[ $scope.matiere_id ];
 
 			   // Gestion des semaines actives
 			   var fixnum_to_bitfield = function( fixnum ) {
@@ -58,8 +55,8 @@ angular.module( 'cahierDeTexteApp' )
 			   var bitfield_to_fixnum = function( bitfield ) {
 			       return parseInt( '1' + bitfield.join(''), 2 );
 			   };
-			   scope_popup.semaines_actives = { regroupement: [] };
-			   scope_popup.apply_template = function( template_name ) {
+			   $scope.semaines_actives = { regroupement: [] };
+			   $scope.apply_template = function( template_name ) {
 			       var template = [];
 			       switch( template_name ) {
 			       case 'semaine_A':
@@ -67,76 +64,76 @@ angular.module( 'cahierDeTexteApp' )
 				       template.push( 1 );
 				       template.push( 0 );
 				   });
-				   scope_popup.semaines_actives.regroupement = template;
+				   $scope.semaines_actives.regroupement = template;
 				   break;
 			       case 'semaine_B':
 				   _(26).times( function() {
 				       template.push( 0 );
 				       template.push( 1 );
 				   });
-				   scope_popup.semaines_actives.regroupement = template;
+				   $scope.semaines_actives.regroupement = template;
 				   break;
 			       case 'initialize':
-				   scope_popup.semaines_actives.regroupement = fixnum_to_bitfield( scope_popup.creneau_en_creation ? 9007199254740991 : _(creneau_selectionne.regroupements).findWhere( { regroupement_id: creneau_selectionne.regroupement_id } ).semaines_de_presence );
+				   $scope.semaines_actives.regroupement = fixnum_to_bitfield( $scope.creneau_en_creation ? 9007199254740991 : _(creneau_selectionne.regroupements).findWhere( { regroupement_id: creneau_selectionne.regroupement_id } ).semaines_de_presence );
 				   break;
 			       }
 			   };
-			   scope_popup.apply_template( 'initialize' );
+			   $scope.apply_template( 'initialize' );
 
 			   // Flags et helpers
-			   scope_popup.dirty = false;
-			   scope_popup.deleted = false;
-			   scope_popup.creneau_deleted = false;
+			   $scope.dirty = false;
+			   $scope.deleted = false;
+			   $scope.creneau_deleted = false;
 
-			   scope_popup.groups = { semaines_actives: { ouvert: scope_popup.creneau_en_creation },
-						  sequence_pedagogique: { ouvert: !scope_popup.cours.create },
-						  devoirs: { ouvert: !scope_popup.cours.create && scope_popup.devoirs.length > 0 } };
+			   $scope.groups = { semaines_actives: { ouvert: $scope.creneau_en_creation },
+						  sequence_pedagogique: { ouvert: !$scope.cours.create },
+						  devoirs: { ouvert: !$scope.cours.create && $scope.devoirs.length > 0 } };
 
 			   // fonctions UI pour le temps estimé
-			   scope_popup.estimation_over = function ( d, value ) {
+			   $scope.estimation_over = function ( d, value ) {
 			       d.overValue = value;
 			       d.minutes = 5 * value;
 			   };
-			   scope_popup.estimation_leave = function ( d ) {
-			       scope_popup.estimation_over( d, d.temps_estime );
+			   $scope.estimation_leave = function ( d ) {
+			       $scope.estimation_over( d, d.temps_estime );
 			   };
 
-			   _( scope_popup.devoirs ).each( function ( d ) {
-			       scope_popup.estimation_leave( d );
+			   _( $scope.devoirs ).each( function ( d ) {
+			       $scope.estimation_leave( d );
 			   } );
 
 			   // Fonction UI pour fixer l'id du créneau en fct du choix dans la sbox des créneaux possibles.
-			   scope_popup.set_creneau_date_due = function ( devoir ) {
+			   $scope.set_creneau_date_due = function ( devoir ) {
 			       // on prend le premier créneau qui correspond à cette date.
-			       var creneau_choisi = _( scope_popup.creneaux_devoirs_possibles ).findWhere( {
+			       var creneau_choisi = _( $scope.creneaux_devoirs_possibles ).findWhere( {
 				   date_due: devoir.date_due
 			       } );
 			       devoir.creneau_emploi_du_temps_id = creneau_choisi.creneau_emploi_du_temps_id;
-			       scope_popup.is_dirty();
+			       $scope.is_dirty();
 			   };
 
 
-			   scope_popup.erreurs = [];
+			   $scope.erreurs = [];
 
 			   // http://stackoverflow.com/questions/19408883/angularjs-select-not-2-way-binding-to-model
-			   scope_popup.scope = scope_popup;
+			   $scope.scope = $scope;
 			   //  ^ ^ Cette ligne est peut-être inutile ?
 
-			   scope_popup.creneaux_similaires = _.chain( raw_data )
+			   $scope.creneaux_similaires = _.chain( raw_data )
 			       .filter( function ( creneau ) {
-				   return ( creneau.id != scope_popup.creneau_selectionne.id )
-				       && ( creneau.regroupement_id != scope_popup.regroupement_id )
-				       && ( creneau.matiere_id == scope_popup.matiere_id );
+				   return ( creneau.id != $scope.creneau_selectionne.id )
+				       && ( creneau.regroupement_id != $scope.regroupement_id )
+				       && ( creneau.matiere_id == $scope.matiere_id );
 			       } )
 			       .map( function ( creneau ) {
-				   creneau.classe = _( scope_popup.classes ).findWhere( {
+				   creneau.classe = _( $scope.classes ).findWhere( {
 				       id: parseInt( creneau.regroupement_id )
 				   } );
 				   creneau.label_sbox = $filter( 'formateCreneau' )( creneau );
 				   return creneau;
 			       } )
 			       .value();
-			   scope_popup.creneaux_similaires.selected = [];
+			   $scope.creneaux_similaires.selected = [];
 
 			   //
 			   // Constitution de la liste des créneaux possibles pour les dates dues des devoirs.
@@ -144,10 +141,10 @@ angular.module( 'cahierDeTexteApp' )
 			   // 1. sélection des créneaux possibles en fonction du regroupement et de la matière.
 			   var creneaux_devoirs_possibles = _.chain( raw_data )
 				   .filter( function ( creneau ) {
-				       return ( creneau.regroupement_id == scope_popup.regroupement_id ) && ( creneau.matiere_id == scope_popup.matiere_id );
+				       return ( creneau.regroupement_id == $scope.regroupement_id ) && ( creneau.matiere_id == $scope.matiere_id );
 				   } )
 				   .map( function ( creneau ) {
-				       creneau.classe = _( scope_popup.classes ).findWhere( {
+				       creneau.classe = _( $scope.classes ).findWhere( {
 					   id: parseInt( creneau.regroupement_id )
 				       } );
 				       creneau.date_due = $filter( 'date' )( creneau.start, 'y-MM-dd' );
@@ -184,14 +181,14 @@ angular.module( 'cahierDeTexteApp' )
 			       } );
 			   } );
 			   // Et voici tous les créneaux possibles !
-			   scope_popup.creneaux_devoirs_possibles = cdp_tmp;
+			   $scope.creneaux_devoirs_possibles = cdp_tmp;
 
 			   // {{{ Gestion des documents attachés
-			   scope_popup.cartable = {};
-			   scope_popup.cartable.expandedNodes = [];
+			   $scope.cartable = {};
+			   $scope.cartable.expandedNodes = [];
 			   Documents.list_files().success( function ( response ) {
-			       scope_popup.cartable = response;
-			       scope_popup.cartable.files = _.chain( scope_popup.cartable.files )
+			       $scope.cartable = response;
+			       $scope.cartable.files = _.chain( $scope.cartable.files )
 				   .rest()
 				   .value()
 				   .map( function ( elt ) {
@@ -200,30 +197,30 @@ angular.module( 'cahierDeTexteApp' )
 				   } );
 			   } );
 
-			   scope_popup.add_ressource = function ( item, name, hash ) {
+			   $scope.add_ressource = function ( item, name, hash ) {
 			       if ( item.ressources === undefined ) {
 				   item.ressources = [];
 			       }
 			       if ( _( item.ressources ).findWhere( {
 				   hash: hash
 			       } ) === undefined ) {
-				   Documents.ajout_au_cahier_de_textes( scope_popup.classe.id, hash )
+				   Documents.ajout_au_cahier_de_textes( $scope.classe.id, hash )
 				       .success( function ( response ) {
 					   item.ressources.push( {
 					       name: name,
 					       hash: _( response.added ).first().hash,
 					       url: $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + _( response.added ).first().hash )
 					   } );
-					   scope_popup.is_dirty();
+					   $scope.is_dirty();
 				       } );
 			       }
 			   };
 
-			   scope_popup.upload_and_add_ressource = function ( item, fichiers ) {
+			   $scope.upload_and_add_ressource = function ( item, fichiers ) {
 			       if ( item.ressources === undefined ) {
 				   item.ressources = [];
 			       }
-			       var responses = Documents.upload_dans_cahier_de_textes( scope_popup.classe.id, fichiers );
+			       var responses = Documents.upload_dans_cahier_de_textes( $scope.classe.id, fichiers );
 			       for ( var i = 0; i < responses.length; i++ ) {
 				   responses[ i ]
 				       .success( function ( response ) {
@@ -236,7 +233,7 @@ angular.module( 'cahierDeTexteApp' )
 						       hash: doc.hash,
 						       url: $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + doc.hash )
 						   } );
-						   scope_popup.is_dirty();
+						   $scope.is_dirty();
 					       }
 					   } );
 				       } )
@@ -246,14 +243,14 @@ angular.module( 'cahierDeTexteApp' )
 			       }
 			   };
 
-			   scope_popup.remove_ressource = function ( item, hash ) {
+			   $scope.remove_ressource = function ( item, hash ) {
 			       item.ressources = _( item.ressources ).reject( function ( ressource ) {
 				   return ressource.hash == hash;
 			       } );
-			       scope_popup.is_dirty();
+			       $scope.is_dirty();
 			   };
 
-			   scope_popup.treeClicked = function ( noeud ) {
+			   $scope.treeClicked = function ( noeud ) {
 			       if ( noeud.mime === 'directory' ) {
 				   Documents.list_files( noeud.hash ).then( function ( response ) {
 				       _.chain( response.data.files )
@@ -262,129 +259,129 @@ angular.module( 'cahierDeTexteApp' )
 					       elt.children = [];
 					       noeud.children.push( elt );
 					   } );
-				       scope_popup.cartable.expandedNodes = [];
-				       scope_popup.cartable.expandedNodes.push( _(scope_popup.cartable.files).findWhere( noeud ) );
+				       $scope.cartable.expandedNodes = [];
+				       $scope.cartable.expandedNodes.push( _($scope.cartable.files).findWhere( noeud ) );
 				   } );
 			       }
 			   };
-			   scope_popup.treeOptions = {
+			   $scope.treeOptions = {
 			       dirSelectable: false
 			   };
 			   // }}}
 
 			   // fonctions d'événements GUI {{{
-			   scope_popup.ajout_devoir = function () {
+			   $scope.ajout_devoir = function () {
 			       var devoir = new Devoirs( {
-				   cours_id: scope_popup.cours.id,
-				   date_due: $filter( 'date' )( scope_popup.creneau_selectionne.start, 'yyyy-MM-dd' ),
-				   type_devoir_id: _(scope_popup.types_de_devoir).last().id,
-				   creneau_emploi_du_temps_id: scope_popup.creneau_selectionne.id
+				   cours_id: $scope.cours.id,
+				   date_due: $filter( 'date' )( $scope.creneau_selectionne.start, 'yyyy-MM-dd' ),
+				   type_devoir_id: _($scope.types_de_devoir).last().id,
+				   creneau_emploi_du_temps_id: $scope.creneau_selectionne.id
 			       } );
 			       devoir.create = true;
 
-			       scope_popup.devoirs.unshift( devoir );
+			       $scope.devoirs.unshift( devoir );
 
 			       // Contre-intuitif certes, mais comme on clique dans le heading
 			       // de l'accordéon du coup ça marche comme ça
-			       scope_popup.groups.devoirs.ouvert = false;
+			       $scope.groups.devoirs.ouvert = false;
 			   };
 
-			   scope_popup.dupliquer = function () {
-			       _( scope_popup.creneaux_similaires.selected ).each( function ( creneau_cible ) {
-				   scope_popup.cours.$copie( {
+			   $scope.dupliquer = function () {
+			       _( $scope.creneaux_similaires.selected ).each( function ( creneau_cible ) {
+				   $scope.cours.$copie( {
 				       regroupement_id: creneau_cible.regroupement_id,
 				       creneau_emploi_du_temps_id: creneau_cible.creneau_emploi_du_temps_id
 				   } );
 			       } );
 			   };
 
-			   scope_popup.fermer = function () {
-			       $modalInstance.close( scope_popup );
+			   $scope.fermer = function () {
+			       $modalInstance.close( $scope );
 			   };
 
-			   scope_popup.effacer_cours = function () {
-			       scope_popup.cours.$delete()
+			   $scope.effacer_cours = function () {
+			       $scope.cours.$delete()
 				   .then( function () {
-				       _( scope_popup.devoirs ).each( function ( devoir ) {
+				       _( $scope.devoirs ).each( function ( devoir ) {
 					   devoir.$delete();
 				       } );
-				       scope_popup.deleted = true;
-				       scope_popup.fermer();
+				       $scope.deleted = true;
+				       $scope.fermer();
 				   } );
 			   };
 
-			   scope_popup.effacer_devoir = function ( devoir ) {
+			   $scope.effacer_devoir = function ( devoir ) {
 			       if ( _(devoir).has('id') ) {
 				   devoir.$delete().then( function() {
-				       scope_popup.devoirs = _( scope_popup.devoirs )
+				       $scope.devoirs = _( $scope.devoirs )
 					   .reject( function( devoir ) {
 					       return devoir.deleted;
 					   });
 				   });
 			       } else {
 				   devoir.deleted = true;
-				   scope_popup.devoirs = _( scope_popup.devoirs )
+				   $scope.devoirs = _( $scope.devoirs )
 				       .reject( function( devoir ) {
 					   return devoir.deleted;
 				       });
 			       }
 			   };
 
-			   scope_popup.effacer_creneau = function () {
+			   $scope.effacer_creneau = function () {
 			       CreneauEmploiDuTemps.delete( {
-				   id: scope_popup.creneau_selectionne.id,
+				   id: $scope.creneau_selectionne.id,
 				   date_creneau: $scope.cours.date_cours
 			       } )
 				   .$promise.then( function () {
-				       scope_popup.fermer();
+				       $scope.fermer();
 				   } );
 			   };
 
-			   scope_popup.annuler = function () {
-			       if ( scope_popup.creneau_en_creation && scope_popup.creneau_selectionne.matiere_id === '' && scope_popup.creneau_selectionne.regroupement_id === 'undefined' ) {
-				   scope_popup.effacer_creneau();
+			   $scope.annuler = function () {
+			       if ( $scope.creneau_en_creation && $scope.creneau_selectionne.matiere_id === '' && $scope.creneau_selectionne.regroupement_id === 'undefined' ) {
+				   $scope.effacer_creneau();
 			       } else {
-				   scope_popup.dirty = false;
-				   scope_popup.fermer();
+				   $scope.dirty = false;
+				   $scope.fermer();
 			       }
 			   };
 
-			   scope_popup.valider = function () {
+			   $scope.valider = function () {
 			       // réinitialisation des erreurs
-			       scope_popup.erreurs = [];
+			       $scope.erreurs = [];
 
-			       if ( scope_popup.creneau_en_creation ) {
-				   scope_popup.creneau_selectionne.matiere_id = scope_popup.matiere_id;
-				   scope_popup.creneau_selectionne.regroupement_id = scope_popup.regroupement_id;
-				   scope_popup.creneau_selectionne.heure_debut = $filter('correctTimeZone')( scope_popup.creneau_tmp_heure_debut );
-				   scope_popup.creneau_selectionne.heure_fin = $filter('correctTimeZone')( scope_popup.creneau_tmp_heure_fin );
-				   scope_popup.creneau_selectionne.semaines_de_presence_regroupement = bitfield_to_fixnum( scope_popup.semaines_actives.regroupement );
+			       if ( $scope.creneau_en_creation ) {
+				   $scope.creneau_selectionne.matiere_id = $scope.matiere_id;
+				   $scope.creneau_selectionne.regroupement_id = $scope.regroupement_id;
+				   $scope.creneau_selectionne.heure_debut = $filter('correctTimeZone')( $scope.creneau_tmp_heure_debut );
+				   $scope.creneau_selectionne.heure_fin = $filter('correctTimeZone')( $scope.creneau_tmp_heure_fin );
+				   $scope.creneau_selectionne.semaines_de_presence_regroupement = bitfield_to_fixnum( $scope.semaines_actives.regroupement );
 
-				   scope_popup.creneau_selectionne.$update();
+				   $scope.creneau_selectionne.$update();
 
-				   scope_popup.is_dirty();
+				   $scope.is_dirty();
 			       }
 
 			       // traitement de la séquence pédagogique
 			       var promesse = $q.when( true );
-			       if ( _( scope_popup.cours ).has( 'contenu' ) && ( scope_popup.cours.contenu.length > 0 ) ) {
-				   if ( scope_popup.cours.create ) {
-				       scope_popup.cours.cahier_de_textes_id = _( scope_popup.classes ).findWhere( {
-					   id: scope_popup.regroupement_id
+			       if ( _( $scope.cours ).has( 'contenu' ) && ( $scope.cours.contenu.length > 0 ) ) {
+				   if ( $scope.cours.create ) {
+				       $scope.cours.cahier_de_textes_id = _( $scope.classes ).findWhere( {
+					   id: $scope.regroupement_id
 				       } ).cahier_de_textes_id;
-				       scope_popup.cours.creneau_emploi_du_temps_id = scope_popup.creneau_selectionne.id;
-				       promesse = scope_popup.cours.$save();
+				       $scope.cours.creneau_emploi_du_temps_id = $scope.creneau_selectionne.id;
+				       promesse = $scope.cours.$save();
 				   } else {
-				       promesse = scope_popup.cours.$update();
+				       promesse = $scope.cours.$update();
 				   }
 
-				   scope_popup.is_dirty();
+				   $scope.is_dirty();
 			       }
 
 			       promesse.then( function ( cours_from_DB ) {
 				   // traitement des devoirs attachés
 				   var promesses = [];
-				   scope_popup.devoirs = _( scope_popup.devoirs )
+				   $scope.devoirs = _( $scope.devoirs )
 				       .map( function ( devoir ) {
 					   if ( _( devoir ).has( 'contenu' ) && ( devoir.contenu.length > 0 ) ) {
 					       // FIXME: on $save() ou $update() tous les devoirs qu'ils aient été modifiés ou non
@@ -397,7 +394,7 @@ angular.module( 'cahierDeTexteApp' )
 						       devoir.id = result.id;
 						       prom.resolve( result );
 						   }, function ( response ) {
-						       scope_popup.erreurs.unshift( {
+						       $scope.erreurs.unshift( {
 							   status: response.status,
 							   message: response.data.error
 						       } );
@@ -408,7 +405,7 @@ angular.module( 'cahierDeTexteApp' )
 						       devoir.id = result.id;
 						       prom.resolve( result );
 						   }, function ( response ) {
-						       scope_popup.erreurs.unshift( {
+						       $scope.erreurs.unshift( {
 							   status: response.status,
 							   message: response.data.error
 						       } );
@@ -422,7 +419,7 @@ angular.module( 'cahierDeTexteApp' )
 				       } );
 
 				   $q.all( promesses ).then( function () {
-				       scope_popup.fermer();
+				       $scope.fermer();
 				   } );
 			       } );
 			   };
