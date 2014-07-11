@@ -1,8 +1,6 @@
-<div class="row">
-
-  <div class="panel panel-default">
-    <div class="panel-heading">
-	<div class="row">
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="row">
       <h4 class="col-md-6 pull-left">{{enseignant.prenom}} {{enseignant.nom}}</h4>
 
       <select class="col-md-3 pull-right" data-ng-model="classe" data-ng-change="process_data()" data-ng-options="class as class.libelle for (id, class) in classes">
@@ -13,75 +11,74 @@
       <select class="col-md-3 pull-right" data-ng-model="moisCourant" data-ng-change="process_data()" data-ng-options="mois.indexOf(m) as m for m in mois">
 	<option value="">Toute l'année</option>
       </select>
-	</div>
     </div>
+  </div>
 
-    <div class="panel-body">
-      <div class="col-md-4">
-	<div class="panel panel-default">
-	  <div class="panel-body">
-	    <p><a href="mailto:{{enseignant.emails[0].adresse}}">{{enseignant.emails[0].adresse}}</a></p>
-	    <label data-ng-show="enseignant.prof_principal.length > 0">Professeur principal en</label>
-	    <ul data-ng-show="enseignant.prof_principal.length > 0">
-	      <li data-ng-repeat="classe in enseignant.prof_principal">{{classe}}</li>
-	    </ul>
-	    <label>Matières enseignées</label>
-	    <ul>
-	      <li data-ng-repeat="matiere in enseignant.matieres">{{matiere.matiere_libelle}}</li>
-	    </ul>
-	    <label>Classes</label>
-	    <p><span data-ng-repeat="classe in enseignant.classes">{{classe.classe_libelle}}{{($last != true) && ", " || ""}}</span></p>
-	  </div>
+  <div class="panel-body">
+    <div class="col-md-4">
+      <div class="panel panel-default">
+	<div class="panel-body">
+	  <p><a href="mailto:{{enseignant.emails[0].adresse}}">{{enseignant.emails[0].adresse}}</a></p>
+	  <label data-ng-show="enseignant.prof_principal.length > 0">Professeur principal en</label>
+	  <ul data-ng-show="enseignant.prof_principal.length > 0">
+	    <li data-ng-repeat="classe in enseignant.prof_principal">{{classe}}</li>
+	  </ul>
+	  <label>Matières enseignées</label>
+	  <ul>
+	    <li data-ng-repeat="matiere in enseignant.matieres">{{matiere.matiere_libelle}}</li>
+	  </ul>
+	  <label>Classes</label>
+	  <p><span data-ng-repeat="classe in enseignant.classes">{{classe.classe_libelle}}{{($last != true) && ", " || ""}}</span></p>
 	</div>
       </div>
-      <div class="col-md-8">
-	<div class="panel panel-default">
-	  <div class="panel-body row-fluid">
-	    <nvd3-pie-chart id="globalPieChart" class="col-md-4"
-			    data="graphiques.pieChart.data"
-			    objectEquality="true"
-			    noData="Aucune saisie"
-			    margin="{left:0,top:0,bottom:0,right:0}"
-			    showLegend="true"
-			    tooltips="true"
-			    color="graphiques.pieChart.colorFunction()"
-			    legendColor="graphiques.pieChart.colorFunction()"
-			    x="graphiques.pieChart.xFunction()"
-			    y="graphiques.pieChart.yFunction()" >
-	      <svg></svg>
-	    </nvd3-pie-chart>
-	    <nvd3-multi-bar-chart id="globalBarChart" class="col-md-8"
-				  data="graphiques.barChart.data"
-				  objectEquality="true"
-				  noData="Aucune saisie"
-				  rotateLabels="20"
-				  height="256"
-				  showXAxis="true"
-				  showYAxis="true"
-				  showControls="false"
-				  showLegend="true"
-				  tooltips="true"
-				  color="graphiques.barChart.colorFunction()"
-				  legendColor="graphiques.barChart.colorFunction()"
-				  tooltipcontent="graphiques.barChart.tooltipContent()"
-				  xAxisTickFormat="graphiques.barChart.xAxisTickFormatFunction()" >
-	      <svg></svg>
-	    </nvd3-multi-bar-chart>
-	  </div>
+    </div>
+    <div class="col-md-8">
+      <div class="panel panel-default">
+	<div class="panel-body row-fluid">
+	  <nvd3-pie-chart id="globalPieChart" class="col-md-4"
+			  data="graphiques.pieChart.data"
+			  objectEquality="true"
+			  noData="Aucune saisie"
+			  margin="{left:0,top:0,bottom:0,right:0}"
+			  showLegend="true"
+			  tooltips="true"
+			  color="graphiques.pieChart.colorFunction()"
+			  legendColor="graphiques.pieChart.colorFunction()"
+			  x="graphiques.pieChart.xFunction()"
+			  y="graphiques.pieChart.yFunction()" >
+	    <svg></svg>
+	  </nvd3-pie-chart>
+	  <nvd3-multi-bar-chart id="globalBarChart" class="col-md-8"
+				data="graphiques.barChart.data"
+				objectEquality="true"
+				noData="Aucune saisie"
+				rotateLabels="20"
+				height="256"
+				showXAxis="true"
+				showYAxis="true"
+				showControls="false"
+				showLegend="true"
+				tooltips="true"
+				color="graphiques.barChart.colorFunction()"
+				legendColor="graphiques.barChart.colorFunction()"
+				tooltipcontent="graphiques.barChart.tooltipContent()"
+				xAxisTickFormat="graphiques.barChart.xAxisTickFormatFunction()" >
+	    <svg></svg>
+	  </nvd3-multi-bar-chart>
 	</div>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="panel panel-default" data-ng-show="gridSaisies.length > 0">
-    <div class="panel-heading">
-      <input type="checkbox" data-ng-model="montre_valides" name="montre_valides" id="montre_valides" data-ng-change="process_data()" />
-      <label for="montre_valides">afficher les saisies visées</label>
-      <div class="btn-group btn-group-xs pull-right" data-ng-show="current_user.is ('DIR')">
-	<a class="btn btn-default" data-ng-click="grid.selectionneNonValides()">Sélectionne les non validés</a>
-	<a class="btn btn-default" data-ng-click="grid.valideSelection()">Valider la sélection</a>
-      </div>
+<div class="panel panel-default" data-ng-show="gridSaisies.length > 0">
+  <div class="panel-heading">
+    <input type="checkbox" data-ng-model="montre_valides" name="montre_valides" id="montre_valides" data-ng-change="process_data()" />
+    <label for="montre_valides">afficher les saisies visées</label>
+    <div class="btn-group btn-group-xs pull-right" data-ng-show="current_user.is ('DIR')">
+      <a class="btn btn-default" data-ng-click="grid.selectionneNonValides()">Sélectionne les non validés</a>
+      <a class="btn btn-default" data-ng-click="grid.valideSelection()">Valider la sélection</a>
     </div>
-    <div class="panel-body principal-enseignant-grid" data-ng-grid="grid"></div>
   </div>
+  <div class="panel-body principal-enseignant-grid" data-ng-grid="grid"></div>
 </div>

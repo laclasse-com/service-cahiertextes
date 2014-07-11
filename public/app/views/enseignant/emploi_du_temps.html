@@ -1,4 +1,3 @@
-<div class="row">
   <div class="panel panel-default">
     <div class="panel-heading">
       <select data-ng-model="classe" data-ng-change="refresh_calendar()" data-ng-options="classe.id as classe.libelle for classe in classes">
@@ -7,7 +6,7 @@
       <label><input type="checkbox" data-ng-model="uniquement_mes_creneaux" data-ng-change="refresh_calendar()" > ne montrer que ce qui me concerne directement</label>
     </div>
     <div class="panel-body">
-      <div data-calendar="emploi_du_temps" data-ui-calendar="calendar.options" class="col-md-12 calendar" data-ng-model="calendar.events"></div>
+      <div data-calendar="emploi_du_temps" data-ui-calendar="calendar.options" class="calendar" data-ng-model="calendar.events"></div>
       <div class="col-md-12">
 	<div class="pull-right">
 	  <span class="label saisie-vide" title="Créneau d'emploi du temps">emploi du temps</span>
@@ -18,4 +17,3 @@
       </div>
     </div>
   </div>
-</div>
