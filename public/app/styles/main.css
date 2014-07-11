@@ -99,6 +99,23 @@ footer { color: #555;
 	 text-align: right }
 
 
+/* Elève */
+.devoir .date { color: #aba;
+		font-size: 3em;
+		font-weight: bold }
+.devoir .info,
+.devoir .contenu { margin-left: 3em }
+.devoir .info .matiere { font-weight: bold }
+.devoir .todo button { position: absolute;
+		       bottom: 1em;
+		       right: 1em }
+
+.devoir.type1 {border-left: 1em solid #f00} /*DS*/
+.devoir.type2 {border-left: 1em solid #0f0} /*DM*/
+.devoir.type3 {border-left: 1em solid #00f} /*Leçon*/
+.devoir.type4 {border-left: 1em solid #ff0} /*Exposé*/
+.devoir.type5 {border-left: 1em solid #f0f} /*Recherche*/
+.devoir.type6 {border-left: 1em solid #0ff} /*Exercice*/
 
 /* TinyMCE, combiné avec content_css dans defaults.js */
 body.mce-content-body{font-size:14px}
