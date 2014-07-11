@@ -20,7 +20,8 @@ angular.module('cahierDeTexteApp')
 		      $scope.fait = function( id ) {
 			  Devoirs.fait({ id: id }).$promise
 			      .then( function() {
-				  _($scope.devoirs).findWhere({ id: id }).fait = true;
+				  var devoir = _($scope.devoirs).findWhere({ id: id });
+				  devoir.fait = !devoir.fait;
 			      });
 		      };
 

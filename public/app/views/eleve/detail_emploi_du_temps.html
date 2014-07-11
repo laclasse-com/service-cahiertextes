@@ -20,12 +20,13 @@
 	<div class="panel-heading">
 	    <div class="row-fluid pull-left">{{devoir.type_devoir_description}} pour le {{devoir.date_due | date : 'fullDate'}}</div>
 	    <div class="row-fluid" style="text-align: right">
-		<button class="btn btn-success btn-sm" data-ng-click="fait(devoir.id)" data-ng-show="devoir.fait == false">
-		    <span class="glyphicon glyphicon-unchecked"></span> Fait
-		</button>
-		<button class="btn btn-default btn-sm" data-ng-show="devoir.fait == true" disabled>
-		    <span class="glyphicon glyphicon-check"></span> Fait
-		</button>
+	      <button class="btn" data-ng-class="{'btn-success': devoir.fait, 'btn-default': !devoir.fait}"
+		      data-ng-click="fait( devoir.id )">
+		<span class="glyphicon" data-ng-class="{'glyphicon-check': devoir.fait, 'glyphicon-unchecked': !devoir.fait}"></span>
+		<span data-ng-hide="devoir.fait">à faire</span>
+		<span data-ng-show="devoir.fait">C'est fait !</span>
+	      </button>
+
 	    </div>
 	</div>
 	<div class="panel-body" data-ng-bind-html="devoir.contenu"></div>
