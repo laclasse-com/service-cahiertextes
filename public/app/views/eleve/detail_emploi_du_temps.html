@@ -13,25 +13,23 @@
 
       <div class="panel panel-default" data-ng-repeat="devoir in devoirs">
 	<div class="panel-heading">
-	  <div class="row-fluid pull-left">{{devoir.type_devoir_description}} pour le {{devoir.date_due | date : 'fullDate'}}</div>
-	  <div class="row-fluid" style="text-align: right">
-	    <button class="btn" data-ng-class="{'btn-success': devoir.fait, 'btn-default': !devoir.fait}"
-		    data-ng-click="fait( devoir.id )">
-	      <span class="glyphicon" data-ng-class="{'glyphicon-check': devoir.fait, 'glyphicon-unchecked': !devoir.fait}"></span>
-	      <span data-ng-hide="devoir.fait">à faire</span>
-	      <span data-ng-show="devoir.fait">C'est fait !</span>
-	    </button>
-
-	  </div>
+	  {{devoir.type_devoir_description}} pour le {{devoir.date_due | date : 'fullDate'}}
 	</div>
 	<div class="panel-body" data-ng-bind-html="devoir.contenu"></div>
 	<div class="panel-footer">
+	  <button class="btn pull-right" data-ng-class="{'btn-success': devoir.fait, 'btn-default': !devoir.fait}"
+		  data-ng-click="fait( devoir.id )">
+	    <span class="glyphicon" data-ng-class="{'glyphicon-check': devoir.fait, 'glyphicon-unchecked': !devoir.fait}"></span>
+	    <span data-ng-hide="devoir.fait">à faire</span>
+	    <span data-ng-show="devoir.fait">C'est fait !</span>
+	  </button>
 	  <span>Temps estimé : {{devoir.temps_estime * 5}} minutes</span>
 	  <ul data-ng-show="devoir.ressources.length > 0">
 	    <li data-ng-repeat="ressource in devoir.ressources">
 	      <a target="_blank" href="http://www.dev.laclasse.com/docs-beta/api/connector?cmd=file&target={{ressource.hash}}">{{ressource.name}}</a>
 	    </li>
 	  </ul>
+	  <div class="clearfix"></div>
 	</div>
       </div>
     </accordion-group>
