@@ -54,6 +54,8 @@ body {
 
 .timepicker{display:inline-block}
 
+.modal-footer { text-align: center }
+
 /* Principal */
 /** Enseignants **/
 .bloc-enseignant .panel{height:11em}
