@@ -2,8 +2,18 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EleveDevoirsCtrl',
-		[ '$scope', 'API', 'Annuaire', 'Devoirs', 'Cours', 'CreneauEmploiDuTemps',
-		  function( $scope, API, Annuaire, Devoirs, Cours, CreneauEmploiDuTemps ) {
+		[ '$scope', '$modal', 'API', 'Annuaire', 'Devoirs', 'Cours', 'CreneauEmploiDuTemps',
+		  function( $scope, $modal, API, Annuaire, Devoirs, Cours, CreneauEmploiDuTemps ) {
+		      // popup d'affichage des détails
+		      $scope.ouvre_popup_details = function( titre, cours, devoirs ) {
+			  $modal.open( { templateUrl: 'app/views/eleve/detail_emploi_du_temps.html',
+					 controller: 'EmploiDuTempsPopupDisplayCtrl',
+					 resolve: { titre  : function() { return titre; },
+						    cours  : function() { return cours; },
+						    devoirs: function() { return devoirs; } } }
+				     );
+		      };
+
 		      $scope.empty = false;
 
 		      $scope.affiche_faits = false;
