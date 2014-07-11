@@ -9,10 +9,11 @@ angular.module('cahierDeTexteApp')
       scope_popup.cours = cours;
       scope_popup.devoirs = devoirs;
 
-      scope_popup.fait = function( devoir_id ) {
-	  Devoirs.fait({ id: devoir_id },
+      $scope.fait = function( id ) {
+	  Devoirs.fait({ id: id },
 		       function() {
-			   _(devoirs).findWhere({id: devoir_id}).fait = true;
+			   var devoir = _($scope.devoirs).findWhere({ id: id });
+			   devoir.fait = !devoir.fait;
 		       });
       };
 

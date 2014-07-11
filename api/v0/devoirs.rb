@@ -131,7 +131,10 @@ module CahierDeTextesAPI
       put '/:id/fait' do
         error!( '401 Unauthorized', 401 ) unless user.is? 'ELV'
 
-        Devoir[ params[:id] ].fait_par!( user.uid )
+        devoir = Devoir[ params[:id] ]
+        devoir.fait_par?( user.uid ) ? devoir.a_faire_par!( user.uid ) : devoir.fait_par!( user.uid )
+
+        devoir
       end
 
       desc 'détruit un devoir'
@@ -146,7 +149,16 @@ module CahierDeTextesAPI
         devoir.update( deleted: true, date_modification: Time.now )
         devoir.save
 
-        devoir
+        # FIXME: code dupliqué
+        hash = devoir.to_hash
+        hash[:ressources] = devoir.ressources
+
+        unless user.nil?
+          eleve_id = user.uid
+          hash[:fait] = devoir.fait_par?( eleve_id )
+        end
+
+        hash
       end
     end
   end
