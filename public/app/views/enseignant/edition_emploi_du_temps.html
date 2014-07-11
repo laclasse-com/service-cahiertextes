@@ -8,6 +8,9 @@
 	  data-ng-show="cours.create" >
     <span class="glyphicon glyphicon-edit"></span>
   </button>
+  <button type="button" class="btn btn-sm btn-warning pull-right" data-ng-click="effacer_creneau()" data-ng-show="creneau_en_creation && cours.create">
+  <span class="glyphicon glyphicon-trash"></span> Supprimer le créneau
+  </button>
 
   <h5>
     <span data-ng-hide="creneau_en_creation">
@@ -175,10 +178,6 @@
 </div>
 
 <div class="modal-footer">
-  <button type="button" class="btn btn-sm btn-warning pull-left" data-ng-click="effacer_creneau()" data-ng-show="cours.create">
-    <span class="glyphicon glyphicon-trash"></span> Supprimer le créneau
-  </button>
-
   <button type="button" class="btn btn-sm btn-info pull-right" data-ng-click="annuler()">
     <span class="glyphicon glyphicon-remove-sign"></span> <span data-ng-show="dirty || creneau_en_creation">Annuler</span><span data-ng-hide="dirty || creneau_en_creation">Fermer</span>
   </button>
