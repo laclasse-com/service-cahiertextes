@@ -106,9 +106,11 @@ footer { color: #555;
 .devoir .info,
 .devoir .contenu { margin-left: 3em }
 .devoir .info .matiere { font-weight: bold }
-.devoir .todo button { position: absolute;
-		       bottom: 1em;
-		       right: 1em }
+.devoir .todo,
+.devoir .detail { line-height:4em }
+.devoir .todo { margin-left:1em;
+		width:7.5em }
+.devoir .todo button{ border:0 }
 
 .devoir.type1 {border-left: 1em solid #f00} /*DS*/
 .devoir.type2 {border-left: 1em solid #0f0} /*DM*/

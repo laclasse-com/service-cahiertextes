@@ -27,8 +27,14 @@
 	      <div class="pull-right todo">
 		<button class="btn" data-ng-class="{'btn-success': devoir.fait, 'btn-default': !devoir.fait}"
 			data-ng-click="fait( devoir.id )" data-ng-disabled="devoir.fait">
-		  <span class="glyphicon" data-ng-class="{'glyphicon-check': devoir.fait, 'glyphicon-unchecked': !devoir.fait}"></span> Fait
+		  <span class="glyphicon" data-ng-class="{'glyphicon-check': devoir.fait, 'glyphicon-unchecked': !devoir.fait}"></span>
+		  <span data-ng-hide="devoir.fait">à faire</span>
+		  <span data-ng-show="devoir.fait">C'est fait !</span>
 		</button>
+	      </div>
+
+	      <div class="pull-right detail">
+		<button class="btn btn-default" data-ng-click="ouvre_popup_details( 'test', devoir.cours, [ devoir ] )">Détail</button>
 	      </div>
 
 	      <div class="clearfix"></div>
