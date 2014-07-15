@@ -44,7 +44,7 @@
 		  <div class="pull-left date">{{devoir.date_due | date: 'dd/MM'}}</div>
 		  <div class="pull-left info">
 		    <span class="matiere">{{devoir.matiere.libelle_court}}</span><br>
-		    {{devoir.type_devoir.label}}<br>
+		    {{devoir.type_devoir_description}}<br>
 		    <span data-ng-show="devoir.temps_estime">{{devoir.temps_estime * 5}} minutes</span>
 		  </div>
 
