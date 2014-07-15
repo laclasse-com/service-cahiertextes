@@ -64,7 +64,8 @@
       <accordion-heading>
 	<span class="glyphicon" ng-class="{'glyphicon-chevron-down': groups.sequence_pedagogique.ouvert, 'glyphicon-chevron-right': !groups.sequence_pedagogique.ouvert}"> Séquence pédagogique du {{cours.date_cours | date : 'fullDate' }}</span>
 	<button type="button" class="btn btn-sm btn-danger pull-right"
-		data-ng-click="effacer_cours(  )" >
+		data-ng-click="effacer_cours(  )"
+		data-ng-show="cours.contenu !== ''" >
 	  <span class="glyphicon glyphicon-trash"></span> Supprimer
 	</button>
 	<div class="clearfix"></div>
