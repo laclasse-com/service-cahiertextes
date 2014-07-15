@@ -3,6 +3,10 @@
 // Note: pour des raisons pratiques certaines constantes sémantiquement parlant sont en fait des factory ou des services
 
 angular.module( 'cahierDeTexteApp' )
+// Configuration d'angular-moment
+    .constant('angularMomentConfig', {
+	timezone: 'Europe/Paris'
+    })
 // définition des couleurs
     .constant( 'THEME', { filled: { base: '#aaffaa',
 				    stroke: '#88aa88' },

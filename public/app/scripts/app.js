@@ -12,4 +12,8 @@ angular.module( 'cahierDeTexteApp', [ 'ngResource',
 				      'ngAnimate',
 				      'nvd3ChartDirectives',
 				      'treeControl',
+				      'angularMoment',
 				      'frapontillo.bootstrap-switch' ] )
+    .run( function( amMoment ) {
+	amMoment.changeLanguage( 'fr' );
+    } );

@@ -27,6 +27,7 @@
     "angularjs-nvd3-directives": "latest",
     "angular-tree-control": "latest",
     "metro-bootstrap": "*",
+    "angular-moment": "latest",
     "angular-bootstrap-switch": "~0.3.0"
   },
   "devDependencies": {
