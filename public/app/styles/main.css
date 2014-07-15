@@ -107,17 +107,22 @@ footer { color: #555;
 	 text-align: right }
 
 
-/* Elève */
+.creneau .jour,
 .devoir .date { color: #aba;
 		font-size: 3em;
 		font-weight: bold }
+
+.creneau .info,
+.creneau .contenu,
 .devoir .info,
 .devoir .contenu { margin-left: 3em }
+.creneau .info .matiere,
+.creneau .info .regroupement,
 .devoir .info .matiere { font-weight: bold }
+.creneau .detail.
 .devoir .todo,
 .devoir .detail { line-height:4em }
-.devoir .todo { margin-left:1em;
-		width:7.5em }
+.devoir .todo { margin-left:1em }
 .devoir .todo button{ border:0 }
 
 .devoir.type1 {border-left: 1em solid #f00} /*DS*/
@@ -126,6 +131,11 @@ footer { color: #555;
 .devoir.type4 {border-left: 1em solid #ff0} /*Exposé*/
 .devoir.type5 {border-left: 1em solid #f0f} /*Recherche*/
 .devoir.type6 {border-left: 1em solid #0ff} /*Exercice*/
+
+
+.creneau .date span { float: left;
+		      width: 100% }
+.creneau .date .horaire { text-align: center }
 
 /* TinyMCE, combiné avec content_css dans defaults.js */
 body.mce-content-body{font-size:14px}

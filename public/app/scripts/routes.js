@@ -108,6 +108,17 @@ angular.module( 'cahierDeTexteApp' )
 			       }
 			   }
 		       })
+		       .state('enseignant.cahier_de_textes', {
+			   parent: 'enseignant',
+			   url: '/cahier_de_textes',
+			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ENS' ] ); } },
+			   views: {
+			       'content': {
+				   templateUrl: 'app/views/enseignant/liste.html',
+				   controller: 'ListeCahierDeTextesCtrl'
+			       }
+			   }
+		       })
 		       .state('enseignant.stats', {
 			   parent: 'enseignant',
 			   url: '/stats',
