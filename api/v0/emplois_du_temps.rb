@@ -18,9 +18,9 @@ module CahierDeTextesAPI
         weeks =  ( params[:debut] .. params[:fin] ).map { |d| d.cweek }.uniq
 
         regroupements_ids = Annuaire.get_user_regroupements( user.uid )['classes']
-          .reject { |classe| classe['etablissement_code'] != params[:uai] if params[:uai] }
-          .map    { |classe| classe['classe_id'] }
-          .uniq
+                                    .reject { |classe| classe['etablissement_code'] != params[:uai] if params[:uai] }
+                                    .map    { |classe| classe['classe_id'] }
+                                    .uniq
 
         # FIXME: creneau[:semaines_de_presence][ 1 ] == première semaine de janvier ?
         # FIXME: Un creneau "deleted" ne doit pas empecher les saisies déjà effectuée d'apparaitre
@@ -32,9 +32,8 @@ module CahierDeTextesAPI
           .where( "( (deleted = true and date_suppression <= #{params[:fin]}) or (deleted = false) )" )
           .where( regroupement_id: regroupements_ids )
           .all
-          .select { |creneau| weeks.reduce( true ) { |a, week| a && creneau[:semaines_de_presence][ week ] == 1 } }
-          .map do
-          |creneau|
+          .select do |creneau| weeks.reduce( true ) { |a, e| a && creneau[:semaines_de_presence][ e ] == 1 } end
+          .map do |creneau|
           plage_debut = PlageHoraire[ creneau.debut ].debut
           plage_fin = PlageHoraire[ creneau.fin ].fin
 
@@ -45,8 +44,8 @@ module CahierDeTextesAPI
           # À REFACTORER
           [
             ( params[:debut] .. params[:fin] )
-              .reject { |day| day.wday != creneau.jour_de_la_semaine }
-              .map do
+            .reject { |day| day.wday != creneau.jour_de_la_semaine }
+            .map do
               |jour|
               cours = {}
               devoirs = []
