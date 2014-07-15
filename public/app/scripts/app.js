@@ -11,4 +11,5 @@ angular.module( 'cahierDeTexteApp', [ 'ngResource',
 				      'chieffancypants.loadingBar',
 				      'ngAnimate',
 				      'nvd3ChartDirectives',
-				      'treeControl' ] );
+				      'treeControl',
+				      'frapontillo.bootstrap-switch' ] )

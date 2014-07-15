@@ -26,7 +26,8 @@
     "charte-graphique-laclasse-com": "git@gitlab.erasme.org:laclasse/charte-graphique-laclasse-com.git#latest",
     "angularjs-nvd3-directives": "latest",
     "angular-tree-control": "latest",
-    "metro-bootstrap": "*"
+    "metro-bootstrap": "*",
+    "angular-bootstrap-switch": "~0.3.0"
   },
   "devDependencies": {
     "angular-mocks": "latest",
