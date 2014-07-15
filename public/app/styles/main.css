@@ -138,6 +138,7 @@ footer { color: #555;
 .creneau .date .horaire { text-align: center }
 .creneau .devoirs { float: left;
 		    width: 100% }
+.creneau.vise {border-left: 1em solid #0f0}
 
 /* TinyMCE, combiné avec content_css dans defaults.js */
 body.mce-content-body{font-size:14px}

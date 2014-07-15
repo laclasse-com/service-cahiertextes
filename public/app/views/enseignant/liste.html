@@ -11,7 +11,8 @@
   </div>
   <div class="panel-body">
     <ul class="list-group todo-list">
-      <li data-ng-repeat="creneau in filtered_data | orderBy:'start':true" style="list-style:none" class="creneau list-group-item" >
+      <li data-ng-repeat="creneau in filtered_data | orderBy:'start':true" style="list-style:none" class="creneau list-group-item"
+	  data-ng-class="{'vise': creneau.cours.date_validation !== null}">
 
 	<div class="pull-left date">
 	  <span class="jour">{{creneau.start | date: 'dd/MM'}}</span>
