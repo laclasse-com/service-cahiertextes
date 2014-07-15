@@ -47,6 +47,9 @@ angular.module('cahierDeTexteApp')
 				  .filter( function( creneau ) {
 				      return ! _(creneau.cours).isEmpty();
 				  })
+				  .uniq( function( creneau ) {
+				      return creneau.creneau_emploi_du_temps_id;
+				  })
 				  .map( function( creneau ) {
 				      creneau.devoirs.ouvert = false;
 				      return creneau;
