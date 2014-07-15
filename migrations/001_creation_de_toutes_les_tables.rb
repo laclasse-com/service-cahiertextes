@@ -104,11 +104,11 @@ Sequel.migration do
       String :description
     }
     [ [ 'DS', 'Devoir surveillé' ],
-     [ 'DM', 'Devoir à la maison' ],
-     [ 'Leçon', 'Leçon à apprendre' ],
-     [ 'Exposé', 'Exposé à préparer' ],
-     [ 'Recherche', 'Recherche à faire' ],
-     [ 'Exercice', 'Exercice à faire' ]
+      [ 'DM', 'Devoir à la maison' ],
+      [ 'Leçon', 'Leçon à apprendre' ],
+      [ 'Exposé', 'Exposé à préparer' ],
+      [ 'Recherche', 'Recherche à faire' ],
+      [ 'Exercice', 'Exercice à faire' ]
     ].each {
       |type_devoir|
       self[:types_devoir].insert( [ :label, :description ], type_devoir )
