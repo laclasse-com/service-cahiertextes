@@ -27,6 +27,12 @@ body {
 /* Modal */
 .modal-dialog{width:800px}
 
+/* Tooltip */
+.tooltip-inner { background-color: #fff;
+		 color: #000;
+		 border: 1px solid #000;
+		 font-weight: normal }
+
 /* Cahier de Textes */
 /* Calendrier */
 .fc-event-vert.fc-event-end,
