@@ -12,11 +12,7 @@ angular.module('cahierDeTexteApp')
 			devoirs: { ouvert: true } };
 
       $scope.fait = function( id ) {
-	  Devoirs.fait({ id: id },
-		       function() {
-			   var devoir = _($scope.devoirs).findWhere({ id: id });
-			   devoir.fait = !devoir.fait;
-		       });
+	  Devoirs.fait({ id: id });
       };
 
       $scope.fermer = function() {
