@@ -22,12 +22,18 @@
 	<div class="pull-left contenu" data-ng-bind-html="devoir.contenu"></div>
 
 	<div class="pull-right todo">
-	  <button class="btn" data-ng-class="{'btn-success': devoir.fait, 'btn-default': !devoir.fait}"
-		  data-ng-click="fait( devoir.id )">
-	    <span class="glyphicon" data-ng-class="{'glyphicon-check': devoir.fait, 'glyphicon-unchecked': !devoir.fait}"></span>
-	    <span data-ng-hide="devoir.fait">à faire</span>
-	    <span data-ng-show="devoir.fait">C'est fait !</span>
-	  </button>
+	  <input bs-switch data-ng-model="devoir.fait"
+		 data-ng-change="fait( devoir.id )"
+		 type="checkbox"
+		 switch-active="true"
+		 switch-size="large"
+		 switch-animate="true"
+		 switch-label=""
+		 switch-icon="icon-save"
+		 switch-on-text="fait !"
+		 switch-off-text="à faire"
+		 switch-on-color="success"
+		 switch-off-color="warning" >
 	</div>
 
 	<div class="pull-right detail">

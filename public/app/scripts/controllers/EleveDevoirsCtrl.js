@@ -18,11 +18,7 @@ angular.module('cahierDeTexteApp')
 
 		      $scope.affiche_faits = false;
 		      $scope.fait = function( id ) {
-			  Devoirs.fait({ id: id }).$promise
-			      .then( function() {
-				  var devoir = _($scope.devoirs).findWhere({ id: id });
-				  devoir.fait = !devoir.fait;
-			      });
+			  Devoirs.fait({ id: id });
 		      };
 
 		      $scope.filtre = function() {

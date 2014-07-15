@@ -129,3 +129,14 @@ footer { color: #555;
 
 /* TinyMCE, combiné avec content_css dans defaults.js */
 body.mce-content-body{font-size:14px}
+
+.bootstrap-switch,
+.bootstrap-switch.bootstrap-switch-off .bootstrap-switch-label,
+.bootstrap-switch.bootstrap-switch-on .bootstrap-switch-label,
+.bootstrap-switch .bootstrap-switch-handle-off,
+.bootstrap-switch .bootstrap-switch-handle-on { border-radius: 0 }
+.bootstrap-switch.bootstrap-switch-large .bootstrap-switch-handle-on,
+.bootstrap-switch.bootstrap-switch-large .bootstrap-switch-handle-off,
+.bootstrap-switch.bootstrap-switch-large .bootstrap-switch-label { font-size: 14px;
+								   line-height: 1.42857;
+								   padding: 6px }
