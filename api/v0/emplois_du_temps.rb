@@ -113,11 +113,15 @@ module CahierDeTextesAPI
                devoir[:start]      = Time.new( record.date_due.year, record.date_due.month, record.date_due.mday, hstart.hour, hstart.min ).iso8601
                devoir[:end]        = Time.new( record.date_due.year, record.date_due.month, record.date_due.mday, hend.hour, hend.min ).iso8601
 
-               cours = Cours
-                 .where( id: record.cours_id )
-                 .where( cahier_de_textes_id: cahier_de_textes.id )
-                 .where( deleted: false )
-                 .first
+               if record.cours_id.nil?
+                 cours = nil
+               else
+                 cours = Cours
+                         .where( id: record.cours_id )
+                         .where( cahier_de_textes_id: cahier_de_textes.id )
+                         .where( deleted: false )
+                         .first
+               end
 
                unless cours.nil?
                  jour_cours = cours.date_cours
