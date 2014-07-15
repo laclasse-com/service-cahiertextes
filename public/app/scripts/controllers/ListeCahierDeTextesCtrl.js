@@ -47,6 +47,10 @@ angular.module('cahierDeTexteApp')
 				  .filter( function( creneau ) {
 				      return ! _(creneau.cours).isEmpty();
 				  })
+				  .map( function( creneau ) {
+				      creneau.devoirs.ouvert = false;
+				      return creneau;
+				  })
 				  .value();
 
 			  // Filtrage sur une seule classe
