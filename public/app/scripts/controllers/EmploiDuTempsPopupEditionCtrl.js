@@ -2,8 +2,8 @@
 
 angular.module( 'cahierDeTexteApp' )
     .controller( 'EmploiDuTempsPopupEditionCtrl',
-		 [ '$scope', '$filter', '$q', '$sce', 'TINYMCE_OPTIONS', '$modalInstance', 'DOCS_URL', 'Documents', 'API', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs', 'User', 'cours', 'devoirs', 'creneau_selectionne', 'raw_data', 'classes', 'matieres',
-		   function ( $scope, $filter, $q, $sce, TINYMCE_OPTIONS, $modalInstance, DOCS_URL, Documents, API, CreneauEmploiDuTemps, Cours, Devoirs, User, cours, devoirs, creneau_selectionne, raw_data, classes, matieres ) {
+		 [ '$scope', '$filter', '$q', '$sce', '$modalInstance', 'TINYMCE_OPTIONS', 'DOCS_URL', 'Documents', 'API', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs', 'User', 'cours', 'devoirs', 'creneau_selectionne', 'raw_data', 'classes', 'matieres',
+		   function ( $scope, $filter, $q, $sce, $modalInstance, TINYMCE_OPTIONS, DOCS_URL, Documents, API, CreneauEmploiDuTemps, Cours, Devoirs, User, cours, devoirs, creneau_selectionne, raw_data, classes, matieres ) {
 		       User.get_user().then( function( response ) {
 			   $scope.current_user = response.data;
 
