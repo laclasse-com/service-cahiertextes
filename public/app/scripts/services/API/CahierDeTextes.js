@@ -21,14 +21,17 @@ angular.module('cahierDeTexteApp')
 				   } )
 				   .uniq( function( item ) { return item.id + item.libelle; } )
 				   .value();
-			       response.profil_actif.matieres = _.chain(response.classes)
-				   .filter( function( classe ) { return classe.etablissement_code == response.profil_actif.uai; } )
-				   .map( function( classe ) {
-				       return { id: classe.matiere_enseignee_id,
-						libelle: classe.matiere_libelle };
-				   } )
-				   .uniq( function( item ) { return item.id + item.libelle; } )
-				   .value();
+			       if ( response.profil_actif.type === 'ENS' ) {
+				   response.profil_actif.matieres = _.chain(response.classes)
+				       .filter( function( classe ) { return classe.etablissement_code == response.profil_actif.uai; } )
+				       .map( function( classe ) {
+					   return { id: classe.matiere_enseignee_id,
+						    libelle: classe.matiere_libelle };
+				       } )
+				       .uniq( function( item ) { return item.id + item.libelle; } )
+				       .value();
+			       }
+
 			       return response;
 			   } );
 		   } );
