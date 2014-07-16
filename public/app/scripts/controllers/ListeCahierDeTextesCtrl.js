@@ -85,41 +85,6 @@ angular.module('cahierDeTexteApp')
 			      });
 		      };
 
-		      var list_classes = function(user) {
-			  var regroupements = _.chain( user.profil_actif.classes )
-				  .reject(function(classe) {
-				      return classe.etablissement_code !== user.profil_actif.uai;
-				  })
-				  .pluck('regroupement_id')
-				  .uniq()
-				  .compact()
-				  .reject( function( id ) { return id === 'undefined'; } )
-				  .map(function(regroupement_id) {
-				      return Annuaire.get_regroupement(regroupement_id);
-				  })
-				  .value();
-			      //regroupements.unshift( { id: null, libelle: 'Toutes les classes' } );
-
-			  return regroupements;
-		      };
-
-		      var list_matieres_enseignees = function(user) {
-			  return _.chain(user.classes)
-			      .reject(function(classe) {
-				  return classe.etablissement_code !== user.profil_actif.uai || classe.matiere_enseignee_id === undefined;
-			      })
-			      .pluck('matiere_enseignee_id')
-			      .uniq()
-			      .compact()
-			      .reject( function( id ) { return id === 'undefined'; } )
-			      .map(function(matiere_id) {
-				  return [matiere_id, Annuaire.get_matiere(matiere_id)];
-			      })
-			      .object()
-			      .value();
-		      };
-
-
 		      var list_matieres = function(raw_data) {
 			  return _.chain(raw_data)
 			      .pluck('matiere_id')
@@ -136,10 +101,9 @@ angular.module('cahierDeTexteApp')
 		      User.get_user().then( function( response ) {
 			  $scope.current_user = response.data;
 
-			  types_de_devoir = API.query_types_de_devoir();
-			  matieres = list_matieres( $scope.current_user );
-			  matieres_enseignees = list_matieres_enseignees( $scope.current_user );
-			  $scope.classes = list_classes( $scope.current_user );
+			  matieres = list_matieres( $scope.raw_data );
+			  matieres_enseignees = $scope.current_user.profil_actif.matieres;
+			  $scope.classes = $scope.current_user.profil_actif.classes;
 
 			  var lundi = moment().startOf( 'week' ).toDate();
 			  var dimanche = moment().endOf( 'week' ).toDate();

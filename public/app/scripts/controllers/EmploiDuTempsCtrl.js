@@ -155,38 +155,6 @@ angular.module('cahierDeTexteApp')
 			      $scope.calendar.options.selectable = true;
 			      $scope.calendar.options.editable = true;
 
-			      var list_classes = function(user) {
-				  return _.chain( user.profil_actif.classes )
-				      .reject(function(classe) {
-					  return classe.etablissement_code !== user.profil_actif.uai;
-				      })
-				      .pluck('regroupement_id')
-				      .uniq()
-				      .compact()
-				      .reject( function( id ) { return id === 'undefined'; } )
-				      .map(function(regroupement_id) {
-					  return Annuaire.get_regroupement(regroupement_id);
-				      })
-				      .value();
-			      };
-
-			      var list_matieres_enseignees = function(user) {
-				  return _.chain(user.classes)
-				      .reject(function(classe) {
-					  return classe.etablissement_code !== user.profil_actif.uai || classe.matiere_enseignee_id === undefined;
-				      })
-				      .pluck('matiere_enseignee_id')
-				      .uniq()
-				      .compact()
-				      .reject( function( id ) { return id === 'undefined'; } )
-				      .map(function(matiere_id) {
-					  return [matiere_id, Annuaire.get_matiere(matiere_id)];
-				      })
-				      .object()
-				      .value();
-			      };
-
-
 			      var list_matieres = function(raw_data) {
 				  return _.chain(raw_data)
 				      .pluck('matiere_id')
@@ -200,9 +168,9 @@ angular.module('cahierDeTexteApp')
 				      .value();
 			      };
 
-			      matieres = list_matieres( $scope.current_user );
-			      matieres_enseignees = list_matieres_enseignees( $scope.current_user );
-			      $scope.classes = list_classes( $scope.current_user );
+			      matieres = list_matieres( $scope.raw_data );
+			      matieres_enseignees = $scope.current_user.profil_actif.matieres;
+			      $scope.classes = $scope.current_user.profil_actif.classes;
 
 			      var popup_callback = function( scope_popup ) {
 				  var view = $scope.emploi_du_temps.fullCalendar( 'getView' );

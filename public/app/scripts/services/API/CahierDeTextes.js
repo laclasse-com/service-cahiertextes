@@ -13,9 +13,22 @@ angular.module('cahierDeTexteApp')
 				   return this.profil_actif['type'] == profil_id;
 			       };
 			       // Liste des classes liées au profil actif
-			       response.profil_actif.classes = _(response.classes).filter( function(c) {
-				   return c.etablissement_code == response.profil_actif.uai;
-			       } );
+			       response.profil_actif.classes = _.chain(response.classes)
+				   .filter( function( classe ) { return classe.etablissement_code == response.profil_actif.uai; } )
+				   .map( function( classe ) {
+				       return { id: classe.classe_id,
+						libelle: classe.classe_libelle };
+				   } )
+				   .uniq( function( item ) { return item.id + item.libelle; } )
+				   .value();
+			       response.profil_actif.matieres = _.chain(response.classes)
+				   .filter( function( classe ) { return classe.etablissement_code == response.profil_actif.uai; } )
+				   .map( function( classe ) {
+				       return { id: classe.matiere_enseignee_id,
+						libelle: classe.matiere_libelle };
+				   } )
+				   .uniq( function( item ) { return item.id + item.libelle; } )
+				   .value();
 			       return response;
 			   } );
 		   } );
