@@ -5,7 +5,6 @@ angular.module('cahierDeTexteApp')
 		[ '$scope', '$modal', '$q', '$filter', 'CALENDAR_OPTIONS', 'CALENDAR_PARAMS', 'API', 'Annuaire', 'EmploisDuTemps', 'User', 'CreneauEmploiDuTemps',
 		  function ( $scope, $modal, $q, $filter, CALENDAR_OPTIONS, CALENDAR_PARAMS, API, Annuaire, EmploisDuTemps, User, CreneauEmploiDuTemps ) {
 		      var filter_data = angular.identity;
-		      var types_de_devoir = [];
 		      var matieres = [];
 		      var matieres_enseignees = [];
 
@@ -26,13 +25,12 @@ angular.module('cahierDeTexteApp')
 				     });
 		      };
 		      // popup d'édition
-		      var ouvre_popup_edition = function ( raw_data, types_de_devoir, matieres, classes, creneau_selectionne, cours, devoirs, popup_callback ) {
+		      var ouvre_popup_edition = function ( raw_data, matieres, classes, creneau_selectionne, cours, devoirs, popup_callback ) {
 			  $modal.open( {
 			      templateUrl: 'app/views/enseignant/edition_emploi_du_temps.html',
 			      controller: 'EmploiDuTempsPopupEditionCtrl',
 			      resolve: {
 				  raw_data	     : function () { return raw_data; },
-				  types_de_devoir    : function () { return types_de_devoir; },
 				  matieres	     : function () { return matieres; },
 				  classes	     : function () { return classes; },
 				  creneau_selectionne: function () { return creneau_selectionne; },
@@ -202,7 +200,6 @@ angular.module('cahierDeTexteApp')
 				      .value();
 			      };
 
-			      types_de_devoir = API.query_types_de_devoir();
 			      matieres = list_matieres( $scope.current_user );
 			      matieres_enseignees = list_matieres_enseignees( $scope.current_user );
 			      $scope.classes = list_classes( $scope.current_user );
@@ -232,7 +229,7 @@ angular.module('cahierDeTexteApp')
 					      cours = API.get_cours( { id: event.details.cours.id } );
 					      cours.create = false;
 
-					      $q.all( cours, types_de_devoir, matieres, $scope.classes )
+					      $q.all( cours, matieres, $scope.classes )
 						  .then( function () {
 						      // 2. devoir
 						      if ( event.details.devoirs.length > 0 ) {
@@ -250,7 +247,7 @@ angular.module('cahierDeTexteApp')
 					  }
 
 					  ouvre_popup_edition( $scope.raw_data,
-							       types_de_devoir, matieres_enseignees, $scope.classes,
+							       matieres_enseignees, $scope.classes,
 							       creneau_selectionne, cours, devoirs,
 							       popup_callback );
 				      } );
@@ -277,7 +274,7 @@ angular.module('cahierDeTexteApp')
 					  new_creneau.cahier_de_textes_id = $scope.classes[ 0 ].cahier_de_textes_id;
 
 					  ouvre_popup_edition( $scope.raw_data,
-							       types_de_devoir, matieres_enseignees, $scope.classes,
+							       matieres_enseignees, $scope.classes,
 							       new_creneau, null, [],
 							       popup_callback );
 

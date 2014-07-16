@@ -2,8 +2,8 @@
 
 angular.module( 'cahierDeTexteApp' )
     .controller( 'EmploiDuTempsPopupEditionCtrl',
-		 [ '$scope', '$filter', '$q', '$sce', 'TINYMCE_OPTIONS', '$modalInstance', 'DOCS_URL', 'Documents', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs', 'User', 'cours', 'devoirs', 'types_de_devoir', 'creneau_selectionne', 'raw_data', 'classes', 'matieres',
-		   function ( $scope, $filter, $q, $sce, TINYMCE_OPTIONS, $modalInstance, DOCS_URL, Documents, CreneauEmploiDuTemps, Cours, Devoirs, User, cours, devoirs, types_de_devoir, creneau_selectionne, raw_data, classes, matieres ) {
+		 [ '$scope', '$filter', '$q', '$sce', 'TINYMCE_OPTIONS', '$modalInstance', 'DOCS_URL', 'Documents', 'API', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs', 'User', 'cours', 'devoirs', 'creneau_selectionne', 'raw_data', 'classes', 'matieres',
+		   function ( $scope, $filter, $q, $sce, TINYMCE_OPTIONS, $modalInstance, DOCS_URL, Documents, API, CreneauEmploiDuTemps, Cours, Devoirs, User, cours, devoirs, creneau_selectionne, raw_data, classes, matieres ) {
 		       User.get_user().then( function( response ) {
 			   $scope.current_user = response.data;
 
@@ -33,7 +33,7 @@ angular.module( 'cahierDeTexteApp' )
 			   }
 			   // devoirs
 			   $scope.devoirs = devoirs;
-			   $scope.types_de_devoir = types_de_devoir;
+			   $scope.types_de_devoir = API.query_types_de_devoir();
 
 			   $scope.creneau_selectionne = creneau_selectionne;
 			   $scope.matieres = matieres;
