@@ -68,21 +68,6 @@ angular.module('cahierDeTexteApp')
 			  $scope.filtered_data = filter_data( $scope.raw_data );
 		      };
 
-		      var retrieve_data = function( from_date, to_date ) {
-			  EmploisDuTemps.query( { debut: from_date,
-						  fin: to_date,
-						  uai: $scope.current_user.profil_actif.uai } )
-			      .$promise
-			      .then( function success( response ) {
-				  $scope.raw_data = response;
-				  _($scope.raw_data).each( function( creneau ) {
-				      creneau.matiere = Annuaire.get_matiere( creneau.matiere_id );
-				      creneau.regroupement = Annuaire.get_regroupement( creneau.regroupement_id );
-				  });
-				  $scope.refresh_data();
-			      });
-		      };
-
 		      var list_matieres = function(raw_data) {
 			  return _.chain(raw_data)
 			      .pluck('matiere_id')
@@ -96,10 +81,26 @@ angular.module('cahierDeTexteApp')
 			      .value();
 		      };
 
+		      var retrieve_data = function( from_date, to_date ) {
+			  EmploisDuTemps.query( { debut: from_date,
+						  fin: to_date,
+						  uai: $scope.current_user.profil_actif.uai } )
+			      .$promise
+			      .then( function success( response ) {
+				  $scope.raw_data = response;
+				  matieres = list_matieres( $scope.raw_data );
+
+				  _($scope.raw_data).each( function( creneau ) {
+				      creneau.matiere = Annuaire.get_matiere( creneau.matiere_id );
+				      creneau.regroupement = Annuaire.get_regroupement( creneau.regroupement_id );
+				  });
+				  $scope.refresh_data();
+			      });
+		      };
+
 		      User.get_user().then( function( response ) {
 			  $scope.current_user = response.data;
 
-			  matieres = list_matieres( $scope.raw_data );
 			  matieres_enseignees = $scope.current_user.profil_actif.matieres;
 			  $scope.classes = $scope.current_user.profil_actif.classes;
 
