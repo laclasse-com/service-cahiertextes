@@ -144,10 +144,9 @@ angular.module('cahierDeTexteApp')
 			   return Enseignants.get( params );
 		       };
 
-		   this.get_cours = // // _.memoize(
-		       function( params ) {
-			   return Cours.get( params );
-		       }; //; // );
+		   this.get_cours = function( params ) {
+		       return Cours.get( params );
+		   };
 
 		   this.query_devoirs = function( params ) {
 		       return Devoirs.query( params );
