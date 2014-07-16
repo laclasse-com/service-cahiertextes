@@ -2,8 +2,9 @@
 
 class Devoir < Sequel::Model( :devoirs )
   many_to_many :ressources
-  one_to_many :devoir_todo_items
+  many_to_one :creneau_emploi_du_temps
   many_to_one :type_devoir
+  one_to_many :devoir_todo_items
 
   def fait_par!( eleve_id )
     add_devoir_todo_item( eleve_id: eleve_id, date_fait: Time.now )
