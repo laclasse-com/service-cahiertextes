@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 class CahierDeTextes < Sequel::Model( :cahiers_de_textes )
+  one_to_many :cours, class: :Cours
+
   def statistiques
     cours = Cours
       .where( cahier_de_textes_id: id )
