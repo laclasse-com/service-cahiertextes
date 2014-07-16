@@ -26,7 +26,7 @@ angular.module('cahierDeTexteApp')
 				       .filter( function( classe ) { return classe.etablissement_code == response.profil_actif.uai; } )
 				       .map( function( classe ) {
 					   return { id: classe.matiere_enseignee_id,
-						    libelle: classe.matiere_libelle };
+						    libelle_long: classe.matiere_libelle };
 				       } )
 				       .uniq( function( item ) { return item.id + item.libelle; } )
 				       .value();
