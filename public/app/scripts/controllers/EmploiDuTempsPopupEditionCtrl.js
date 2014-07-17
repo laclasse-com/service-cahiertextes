@@ -84,10 +84,6 @@ angular.module( 'cahierDeTexteApp' )
 			   $scope.deleted = false;
 			   $scope.creneau_deleted = false;
 
-			   $scope.groups = { semaines_actives: { ouvert: $scope.creneau_en_creation },
-						  sequence_pedagogique: { ouvert: !$scope.cours.create },
-						  devoirs: { ouvert: !$scope.cours.create && $scope.devoirs.length > 0 } };
-
 			   // fonctions UI pour le temps estimé
 			   $scope.estimation_over = function ( d, value ) {
 			       d.overValue = value;
@@ -279,10 +275,6 @@ angular.module( 'cahierDeTexteApp' )
 			       devoir.create = true;
 
 			       $scope.devoirs.unshift( devoir );
-
-			       // Contre-intuitif certes, mais comme on clique dans le heading
-			       // de l'accordéon du coup ça marche comme ça
-			       $scope.groups.devoirs.ouvert = false;
 			   };
 
 			   $scope.dupliquer = function () {
