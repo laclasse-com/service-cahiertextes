@@ -292,7 +292,7 @@ angular.module('cahierDeTexteApp')
 
 			      };
 			      $scope.calendar.options.eventClick = function( event ) {
-				  if ( _(event.details.cours).has( 'contenu' ) ) {
+				  if ( ( event.details.devoirs.length > 0 ) || ( ! _(event.details.cours).isNull() && _(event.details.cours).has( 'contenu' ) ) ) {
 				      $scope.creneau_selectionne = event;
 				      ouvre_popup_details( event.title, event.details.cours, event.details.devoirs );
 				  }
