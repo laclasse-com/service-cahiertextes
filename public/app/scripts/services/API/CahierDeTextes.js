@@ -2,10 +2,10 @@
 
 angular.module('cahierDeTexteApp')
     .service('User',
-	     [ '$http', 'APP_PATH',
-	       function( $http, APP_PATH ) {
+	     [ '$http', 'APP_PATH', 'API_VERSION',
+	       function( $http, APP_PATH, API_VERSION ) {
 		   this.get_user = _.memoize( function() {
-		       return $http.get( APP_PATH + '/api/v0/users/current' )
+		       return $http.get( APP_PATH + '/api/' + API_VERSION + '/users/current' )
 			   .success( function( response ) {
 			       response.profil_actif = response.profils[ 0 ];
 			       // Voir quel est le profil
@@ -38,24 +38,24 @@ angular.module('cahierDeTexteApp')
 	       } ] );
 
 angular.module('cahierDeTexteApp')
-    .factory('Classes', [ '$resource', 'APP_PATH',
-			  function( $resource, APP_PATH ) {
-			      return $resource( APP_PATH + '/api/v0/etablissements/:uai/classes/:id',
+    .factory('Classes', [ '$resource', 'APP_PATH', 'API_VERSION',
+			  function( $resource, APP_PATH, API_VERSION ) {
+			      return $resource( APP_PATH + '/api/' + API_VERSION + '/etablissements/:uai/classes/:id',
 						{ uai: '@uai',
 						  id: '@id' } );
 			  } ] );
 
 angular.module('cahierDeTexteApp')
     .factory('Cours',
-	     [ '$resource', 'APP_PATH',
-	       function( $resource, APP_PATH ) {
-		   return $resource( APP_PATH + '/api/v0/cours/:id',
+	     [ '$resource', 'APP_PATH', 'API_VERSION',
+	       function( $resource, APP_PATH, API_VERSION ) {
+		   return $resource( APP_PATH + '/api/' + API_VERSION + '/cours/:id',
 				     { id: '@id' },
 				     { update: { method: 'PUT' },
 				       valide: { method: 'PUT',
-						 url: APP_PATH + '/api/v0/cours/:id/valide' },
+						 url: APP_PATH + '/api/' + API_VERSION + '/cours/:id/valide' },
 				       copie: { method: 'PUT',
-						url: APP_PATH + '/api/v0/cours/:id/copie/regroupement/:regroupement_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id',
+						url: APP_PATH + '/api/' + API_VERSION + '/cours/:id/copie/regroupement/:regroupement_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id',
 						params: { id: '@id',
 							  regroupement_id: '@regroupement_id',
 							  creneau_emploi_du_temps_id: '@creneau_emploi_du_temps_id' } } } );
@@ -63,9 +63,9 @@ angular.module('cahierDeTexteApp')
 
 angular.module('cahierDeTexteApp')
     .factory('CreneauEmploiDuTemps',
-	     [ '$resource', 'APP_PATH',
-	       function( $resource, APP_PATH ) {
-		   return $resource( APP_PATH + '/api/v0/creneaux_emploi_du_temps/:id',
+	     [ '$resource', 'APP_PATH', 'API_VERSION',
+	       function( $resource, APP_PATH, API_VERSION ) {
+		   return $resource( APP_PATH + '/api/' + API_VERSION + '/creneaux_emploi_du_temps/:id',
 				     { id: '@id',
 				       regroupement_id: '@regroupement_id',
 				       jour_de_la_semaine: '@jour_de_la_semaine',
@@ -77,27 +77,27 @@ angular.module('cahierDeTexteApp')
 				       semaines_de_presence_salle: '@semaines_de_presence_salle' },
 				     { update: { method: 'PUT' },
 				       delete: { method: 'DELETE',
-						 url: APP_PATH + '/api/v0/creneaux_emploi_du_temps/:id',
+						 url: APP_PATH + '/api/' + API_VERSION + '/creneaux_emploi_du_temps/:id',
 						 params: { id: '@id',
 							   date_creneau: '@date_creneau' } } } );
 	       } ] );
 
 angular.module('cahierDeTexteApp')
     .factory('Devoirs',
-	     [ '$resource', 'APP_PATH',
-	       function( $resource, APP_PATH ) {
-		   return $resource( APP_PATH + '/api/v0/devoirs/:id',
+	     [ '$resource', 'APP_PATH', 'API_VERSION',
+	       function( $resource, APP_PATH, API_VERSION ) {
+		   return $resource( APP_PATH + '/api/' + API_VERSION + '/devoirs/:id',
 				     { id: '@id' },
 				     { update: { method: 'PUT' },
 				       fait: { method: 'PUT',
-					       url: APP_PATH + '/api/v0/devoirs/:id/fait' }});
+					       url: APP_PATH + '/api/' + API_VERSION + '/devoirs/:id/fait' }});
 	       } ] );
 
 angular.module('cahierDeTexteApp')
     .factory('EmploisDuTemps',
-	     [ '$resource', 'APP_PATH',
-	       function( $resource, APP_PATH ) {
-		   return $resource( APP_PATH + '/api/v0/emplois_du_temps/du/:debut/au/:fin',
+	     [ '$resource', 'APP_PATH', 'API_VERSION',
+	       function( $resource, APP_PATH, API_VERSION ) {
+		   return $resource( APP_PATH + '/api/' + API_VERSION + '/emplois_du_temps/du/:debut/au/:fin',
 				     { debut: '@debut',
 				       fin: '@fin',
 				       uai: '@uai' } );
@@ -105,26 +105,26 @@ angular.module('cahierDeTexteApp')
 
 angular.module('cahierDeTexteApp')
     .factory('Enseignants',
-	     [ '$resource', 'APP_PATH',
-	       function( $resource, APP_PATH ) {
-		   return $resource( APP_PATH + '/api/v0/etablissements/:uai/enseignants/:enseignant_id',
+	     [ '$resource', 'APP_PATH', 'API_VERSION',
+	       function( $resource, APP_PATH, API_VERSION ) {
+		   return $resource( APP_PATH + '/api/' + API_VERSION + '/etablissements/:uai/enseignants/:enseignant_id',
 				     { uai: '@uai',
 				       enseignant_id: '@enseignant_id' } );
 	       } ] );
 
 angular.module('cahierDeTexteApp')
     .factory('TypesDeDevoir',
-	     [ '$resource', 'APP_PATH',
-	       function( $resource, APP_PATH ) {
-		   return $resource( APP_PATH + '/api/v0/types_de_devoir/:id',
+	     [ '$resource', 'APP_PATH', 'API_VERSION',
+	       function( $resource, APP_PATH, API_VERSION ) {
+		   return $resource( APP_PATH + '/api/' + API_VERSION + '/types_de_devoir/:id',
 				     { id: '@id' });
 	       } ] );
 
 angular.module('cahierDeTexteApp')
     .factory('PlagesHoraires',
-	     [ '$resource', 'APP_PATH',
-	       function( $resource, APP_PATH ) {
-		   return $resource( APP_PATH + '/api/v0/plages_horaires/:id',
+	     [ '$resource', 'APP_PATH', 'API_VERSION',
+	       function( $resource, APP_PATH, API_VERSION ) {
+		   return $resource( APP_PATH + '/api/' + API_VERSION + '/plages_horaires/:id',
 				     { id: '@id' });
 	       } ] );
 
