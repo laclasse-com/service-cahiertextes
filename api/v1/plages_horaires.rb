@@ -6,7 +6,7 @@ module CahierDeTextesAPI
 
       desc 'renvoi toutes les plages horaires'
       get '/' do
-        PlageHoraire.to_json include: PlageHoraire.associations
+        PlageHoraire.all
       end
 
       desc 'renvoi une plage horaire'
@@ -14,7 +14,7 @@ module CahierDeTextesAPI
         requires :id
       }
       get '/:id' do
-        PlageHoraire[ params[:id] ].to_json include: PlageHoraire.associations
+        PlageHoraire[ params[:id] ]
       end
 
     end

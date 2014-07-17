@@ -8,7 +8,7 @@ module CahierDeTextesAPI
         requires :regroupement_id
       }
       get '/regroupement/:regroupement_id' do
-        CahierDeTextes.where( regroupement_id: params[:regroupement_id] ).to_json include: CahierDeTextes.associations
+        CahierDeTextes.where( regroupement_id: params[:regroupement_id] ).first
       end
     end
   end

@@ -85,7 +85,7 @@ module CahierDeTextesAPI
           end
 
           # FIXME: fuite d'info sur :devoir_todo_items
-          devoir.to_json include: Devoir.associations
+          devoir.to_deep_hash
         end
       end
 
@@ -128,7 +128,7 @@ module CahierDeTextesAPI
           devoir.save
 
           # FIXME: fuite d'info sur :devoir_todo_items
-          devoir.to_json include: Devoir.associations
+          devoir.to_deep_hash
         end
       end
 
@@ -143,7 +143,7 @@ module CahierDeTextesAPI
         devoir.fait_par?( user.uid ) ? devoir.a_faire_par!( user.uid ) : devoir.fait_par!( user.uid )
 
         # FIXME: fuite d'info sur :devoir_todo_items
-        devoir.to_json include: Devoir.associations
+        devoir.to_deep_hash
       end
 
       desc 'détruit un devoir'
@@ -159,7 +159,7 @@ module CahierDeTextesAPI
         devoir.save
 
         # FIXME: fuite d'info sur :devoir_todo_items
-        devoir.to_json include: Devoir.associations
+        devoir.to_deep_hash
       end
     end
   end
