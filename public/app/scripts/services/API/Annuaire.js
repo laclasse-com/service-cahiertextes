@@ -2,27 +2,27 @@
 
 angular.module('cahierDeTexteApp')
     .factory('Matieres',
-	     [ '$resource', 'APP_PATH',
-	       function( $resource, APP_PATH ) {
-		   return $resource( APP_PATH + '/api/v0/annuaire/matieres/:matiere_id',
+	     [ '$resource', 'APP_PATH', 'API_VERSION',
+	       function( $resource, APP_PATH, API_VERSION ) {
+		   return $resource( APP_PATH + '/api/' + API_VERSION + '/annuaire/matieres/:matiere_id',
 				     { matiere_id: '@matiere_id' } );
 	       } ] );
 
 angular.module('cahierDeTexteApp')
     .factory('Regroupements',
-	     [ '$resource', 'APP_PATH',
-	       function( $resource, APP_PATH ) {
-		   return $resource( APP_PATH + '/api/v0/annuaire/regroupements/:regroupement_id',
+	     [ '$resource', 'APP_PATH', 'API_VERSION',
+	       function( $resource, APP_PATH, API_VERSION ) {
+		   return $resource( APP_PATH + '/api/' + API_VERSION + '/annuaire/regroupements/:regroupement_id',
 				     { regroupement_id: '@regroupement_id' } );
 	       } ] );
 
 angular.module('cahierDeTexteApp')
     .factory('Users',
-	     [ '$resource', 'APP_PATH',
-	       function( $resource, APP_PATH ) {
-		   return $resource( APP_PATH + '/api/v0/annuaire/users/:user_id',
+	     [ '$resource', 'APP_PATH', 'API_VERSION',
+	       function( $resource, APP_PATH, API_VERSION ) {
+		   return $resource( APP_PATH + '/api/' + API_VERSION + '/annuaire/users/:user_id',
 				     { user_id: '@user_id' } );
-              } ] );
+	      } ] );
 
 angular.module('cahierDeTexteApp')
     .service('Annuaire',

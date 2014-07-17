@@ -12,6 +12,7 @@ require_relative './models/models'
 require_relative './lib/pronote'
 
 require_relative './api/v0/api'
+require_relative './api/v1/api'
 
 module CahierDeTextesAPI
   class API < Grape::API
@@ -24,5 +25,6 @@ module CahierDeTextesAPI
     end
 
     mount ::CahierDeTextesAPI::V0::API
+    mount ::CahierDeTextesAPI::V1::API
   end
 end
