@@ -14,7 +14,7 @@
 
   <h5>
     <span data-ng-hide="creneau_en_creation">
-      {{classe.libelle}} - {{matiere.libelle}} ({{creneau_selectionne.heure_debut | date: 'shortTime'}} - {{creneau_selectionne.heure_fin | date: 'shortTime'}})
+      {{classe.libelle}} - {{matiere.libelle}} ({{creneau.heure_debut | date: 'shortTime'}} - {{creneau.heure_fin | date: 'shortTime'}})
     </span>
     <span data-ng-show="creneau_en_creation">
       <select data-ng-model="scope.regroupement_id" data-ng-options="classe.id as classe.libelle for classe in classes">
@@ -56,7 +56,7 @@
   <tabset>
 
     <!-- ####################### Séquence Pédagogique ####################### -->
-    <tab heading="Séquence pédagogique du {{cours.date_cours | date : 'fullDate' }}" >
+    <tab heading="Séquence pédagogique du {{creneau.heure_debut | date : 'fullDate' }}" >
 	<button type="button" class="btn btn-sm btn-danger pull-right"
 		data-ng-click="effacer_cours(  )"
 		data-ng-show="cours.contenu !== ''" >
@@ -116,7 +116,7 @@
     </tab>
 
     <!-- ####################### Devoirs ####################### -->
-    <tab heading="Travail à faire">
+    <tab heading="Travail à faire pour le {{creneau.heure_debut | date : 'fullDate' }}">
 	<button class="btn btn-sm btn-primary pull-right" data-ng-click="ajout_devoir()">
 	  <span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
 	</button>
