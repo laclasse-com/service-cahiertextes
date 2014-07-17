@@ -11,6 +11,7 @@ require_relative './emplois_du_temps'
 require_relative './annuaire'
 require_relative './creneaux_emploi_du_temps'
 require_relative './plages_horaires'
+require_relative './cahiers_de_textes'
 
 module CahierDeTextesAPI
    module V0
@@ -30,6 +31,7 @@ module CahierDeTextesAPI
          resource( :annuaire                 ) { mount ::CahierDeTextesAPI::V0::AnnuaireAPI }
          resource( :creneaux_emploi_du_temps ) { mount ::CahierDeTextesAPI::V0::CreneauxEmploiDuTempsAPI }
          resource( :plages_horaires          ) { mount ::CahierDeTextesAPI::V0::PlagesHorairesAPI }
+         resource( :cahiers_de_textes        ) { mount ::CahierDeTextesAPI::V0::CahiersDeTextesAPI }
 
          add_swagger_documentation base_path: "#{APP_PATH}/api",
             api_version: 'v0',
