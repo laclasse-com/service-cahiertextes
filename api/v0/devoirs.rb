@@ -53,29 +53,28 @@ module CahierDeTextesAPI
 
       desc 'renseigne un devoir'
       params {
+        requires :cours_id
         requires :type_devoir_id
         requires :contenu
         requires :creneau_emploi_du_temps_id
         requires :date_due, type: Date
-
-        optional :cours_id
         optional :ressources
         optional :temps_estime
       }
       post  do
         error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS' )
 
-        if CreneauEmploiDuTemps[ params[:creneau_emploi_du_temps_id] ].nil?
+        if Cours[ params[:cours_id] ].nil? || CreneauEmploiDuTemps[ params[:creneau_emploi_du_temps_id] ].nil?
+          # TODO: test concordance entre params[:creneau_emploi_du_temps_id] et params[:date_due]
           error!( 'Paramètres invalides', 404 )
         else
-          devoir = Devoir.create( type_devoir_id: params[:type_devoir_id],
-                                  creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
-                                  contenu: params[:contenu],
-                                  date_due: params[:date_due],
-                                  temps_estime: params[:temps_estime],
-                                  date_creation: Time.now)
-
-          devoir.update( cours_id: params[:cours_id] ) if params[ :cours_id ]
+          devoir = Devoir.create(  cours_id: params[:cours_id],
+                                   type_devoir_id: params[:type_devoir_id],
+                                   creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
+                                   contenu: params[:contenu],
+                                   date_due: params[:date_due],
+                                   temps_estime: params[:temps_estime],
+                                   date_creation: Time.now)
 
           # 3. traitement des ressources
           params[:ressources] && params[:ressources].each do
@@ -84,8 +83,7 @@ module CahierDeTextesAPI
                                                      hash: ressource['hash'] ) )
           end
 
-          # FIXME: fuite d'info sur :devoir_todo_items
-          devoir.to_json include: Devoir.associations
+          devoir
         end
       end
 
@@ -96,8 +94,6 @@ module CahierDeTextesAPI
         requires :contenu
         requires :creneau_emploi_du_temps_id
         requires :date_due, type: Date
-
-        optional :cours_id
         optional :ressources
         optional :temps_estime
       }
@@ -109,14 +105,13 @@ module CahierDeTextesAPI
           error!( 'Devoir inconnu', 404 )
         else
 
+          # TODO: test concordance entre params[:creneau_emploi_du_temps_id] et params[:date_due]
           devoir.date_due = params[:date_due] if devoir.date_due != params[:date_due]
           devoir.creneau_emploi_du_temps_id = params[:creneau_emploi_du_temps_id] if devoir.creneau_emploi_du_temps_id != params[:creneau_emploi_du_temps_id]
 
           devoir.type_devoir_id = params[:type_devoir_id] if devoir.type_devoir_id != params[:type_devoir_id]
           devoir.contenu = params[:contenu] if devoir.contenu != params[:contenu]
           devoir.temps_estime = params[:temps_estime] if devoir.temps_estime != params[:temps_estime]
-
-          devoir.update( cours_id: params[:cours_id] ) if params[ :cours_id ]
 
           params[:ressources].each do
             |ressource|
@@ -126,9 +121,6 @@ module CahierDeTextesAPI
 
           devoir.date_modification = Time.now
           devoir.save
-
-          # FIXME: fuite d'info sur :devoir_todo_items
-          devoir.to_json include: Devoir.associations
         end
       end
 
@@ -139,11 +131,7 @@ module CahierDeTextesAPI
       put '/:id/fait' do
         error!( '401 Unauthorized', 401 ) unless user.is? 'ELV'
 
-        devoir = Devoir[ params[:id] ]
-        devoir.fait_par?( user.uid ) ? devoir.a_faire_par!( user.uid ) : devoir.fait_par!( user.uid )
-
-        # FIXME: fuite d'info sur :devoir_todo_items
-        devoir.to_json include: Devoir.associations
+        Devoir[ params[:id] ].fait_par!( user.uid )
       end
 
       desc 'détruit un devoir'
@@ -158,8 +146,7 @@ module CahierDeTextesAPI
         devoir.update( deleted: true, date_modification: Time.now )
         devoir.save
 
-        # FIXME: fuite d'info sur :devoir_todo_items
-        devoir.to_json include: Devoir.associations
+        devoir
       end
     end
   end
