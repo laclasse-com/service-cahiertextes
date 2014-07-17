@@ -24,7 +24,11 @@ angular.module('cahierDeTexteApp')
 			  });
 
 			  if ( _(event.cours).isNull() || _(event.cours).isEmpty() ) {
-			      this.className = event.devoirs.length > 0 ? 'saisie-devoirs' : 'saisie-vide';
+			      if ( event.devoirs.length > 0 ) {
+				  this.className = _( _(event.devoirs).pluck( 'fait' ) ).contains( true ) ? 'saisie-devoirs-fait' : 'saisie-devoirs';
+			      } else {
+				  this.className = 'saisie-vide';
+			      }
 			  } else {
 			      this.className = !_(event.cours.date_validation).isNull() && $scope.current_user.profil_actif.type === 'ENS' ? 'saisie-valide' : 'saisie-invalide';
 			  }
