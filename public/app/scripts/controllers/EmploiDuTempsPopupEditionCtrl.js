@@ -2,8 +2,8 @@
 
 angular.module( 'cahierDeTexteApp' )
     .controller( 'EmploiDuTempsPopupEditionCtrl',
-		 [ '$scope', '$filter', '$q', '$sce', '$modalInstance', 'TINYMCE_OPTIONS', 'DOCS_URL', 'Documents', 'API', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs', 'User', 'cours', 'devoirs', 'creneau_selectionne', 'raw_data', 'classes', 'matieres',
-		   function ( $scope, $filter, $q, $sce, $modalInstance, TINYMCE_OPTIONS, DOCS_URL, Documents, API, CreneauEmploiDuTemps, Cours, Devoirs, User, cours, devoirs, creneau_selectionne, raw_data, classes, matieres ) {
+		 [ '$scope', '$filter', '$q', '$sce', '$modalInstance', 'TINYMCE_OPTIONS', 'DOCS_URL', 'Documents', 'API', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs', 'User', 'cours', 'devoirs', 'creneau', 'raw_data', 'classes', 'matieres',
+		   function ( $scope, $filter, $q, $sce, $modalInstance, TINYMCE_OPTIONS, DOCS_URL, Documents, API, CreneauEmploiDuTemps, Cours, Devoirs, User, cours, devoirs, creneau, raw_data, classes, matieres ) {
 		       User.get_user().then( function( response ) {
 			   $scope.current_user = response.data;
 
@@ -25,7 +25,7 @@ angular.module( 'cahierDeTexteApp' )
 			   $scope.DOCS_URL_login = $sce.trustAsResourceUrl( DOCS_URL + '/login' );
 			   $scope.tinyMCEOptions = TINYMCE_OPTIONS;
 			   if ( cours === null ) {
-			       $scope.cours = create_cours( creneau_selectionne );
+			       $scope.cours = create_cours( creneau );
 			   } else {
 			       $scope.cours = cours;
 			       $scope.cours.create = false;
@@ -34,14 +34,14 @@ angular.module( 'cahierDeTexteApp' )
 			   $scope.devoirs = devoirs;
 			   $scope.types_de_devoir = API.query_types_de_devoir();
 
-			   $scope.creneau_selectionne = creneau_selectionne;
+			   $scope.creneau = creneau;
 			   $scope.matieres = matieres;
 			   $scope.classes = classes;
-			   $scope.creneau_en_creation = $scope.creneau_selectionne.matiere_id.length == 0 || $scope.creneau_selectionne.regroupement_id === undefined;
-			   $scope.creneau_tmp_heure_debut = $filter('correctTimeZoneToGMT')( $scope.creneau_selectionne.heure_debut );
-			   $scope.creneau_tmp_heure_fin = $filter('correctTimeZoneToGMT')( $scope.creneau_selectionne.heure_fin );
-			   $scope.matiere_id = $scope.creneau_selectionne.matiere_id.length > 0 ? $scope.creneau_selectionne.matiere_id : _.chain( $scope.matieres ).values().first().value().id;
-			   $scope.regroupement_id = $scope.creneau_selectionne.regroupement_id !== 'undefined' ? parseInt( $scope.creneau_selectionne.regroupement_id ) : _( $scope.classes ).first().id;
+			   $scope.creneau_en_creation = $scope.creneau.matiere_id.length == 0 || $scope.creneau.regroupement_id === undefined;
+			   $scope.creneau_tmp_heure_debut = $filter('correctTimeZoneToGMT')( angular.copy( $scope.creneau.heure_debut ) );
+			   $scope.creneau_tmp_heure_fin = $filter('correctTimeZoneToGMT')( angular.copy( $scope.creneau.heure_fin ) );
+			   $scope.matiere_id = $scope.creneau.matiere_id.length > 0 ? $scope.creneau.matiere_id : _.chain( $scope.matieres ).values().first().value().id;
+			   $scope.regroupement_id = $scope.creneau.regroupement_id !== 'undefined' ? parseInt( $scope.creneau.regroupement_id ) : _( $scope.classes ).first().id;
 			   $scope.classe = _( $scope.classes ).findWhere( {
 			       id: parseInt( $scope.regroupement_id )
 			   } );
@@ -73,7 +73,7 @@ angular.module( 'cahierDeTexteApp' )
 				   $scope.semaines_actives.regroupement = template;
 				   break;
 			       case 'initialize':
-				   $scope.semaines_actives.regroupement = fixnum_to_bitfield( $scope.creneau_en_creation ? 9007199254740991 : _(creneau_selectionne.regroupements).findWhere( { regroupement_id: creneau_selectionne.regroupement_id } ).semaines_de_presence );
+				   $scope.semaines_actives.regroupement = fixnum_to_bitfield( $scope.creneau_en_creation ? 9007199254740991 : _(creneau.regroupements).findWhere( { regroupement_id: creneau.regroupement_id } ).semaines_de_presence );
 				   break;
 			       }
 			   };
@@ -116,7 +116,7 @@ angular.module( 'cahierDeTexteApp' )
 
 			   $scope.creneaux_similaires = _.chain( raw_data )
 			       .filter( function ( creneau ) {
-				   return ( creneau.id != $scope.creneau_selectionne.id )
+				   return ( creneau.id != $scope.creneau.id )
 				       && ( creneau.regroupement_id != $scope.regroupement_id )
 				       && ( creneau.matiere_id == $scope.matiere_id );
 			       } )
@@ -268,9 +268,9 @@ angular.module( 'cahierDeTexteApp' )
 			   $scope.ajout_devoir = function () {
 			       var devoir = new Devoirs( {
 				   cours_id: $scope.cours.id,
-				   date_due: $filter( 'date' )( $scope.creneau_selectionne.start, 'yyyy-MM-dd' ),
+				   date_due: $filter( 'date' )( $scope.creneau.start, 'yyyy-MM-dd' ),
 				   type_devoir_id: _($scope.types_de_devoir).last().id,
-				   creneau_emploi_du_temps_id: $scope.creneau_selectionne.id
+				   creneau_emploi_du_temps_id: $scope.creneau.id
 			       } );
 			       devoir.create = true;
 
@@ -320,7 +320,7 @@ angular.module( 'cahierDeTexteApp' )
 
 			   $scope.effacer_creneau = function () {
 			       CreneauEmploiDuTemps.delete( {
-				   id: $scope.creneau_selectionne.id,
+				   id: $scope.creneau.id,
 				   date_creneau: $scope.cours.date_cours
 			       } )
 				   .$promise.then( function () {
@@ -329,7 +329,7 @@ angular.module( 'cahierDeTexteApp' )
 			   };
 
 			   $scope.annuler = function () {
-			       if ( $scope.creneau_en_creation && $scope.creneau_selectionne.matiere_id === '' && $scope.creneau_selectionne.regroupement_id === 'undefined' ) {
+			       if ( $scope.creneau_en_creation && $scope.creneau.matiere_id === '' && $scope.creneau.regroupement_id === 'undefined' ) {
 				   $scope.effacer_creneau();
 			       } else {
 				   $scope.dirty = false;
@@ -342,77 +342,77 @@ angular.module( 'cahierDeTexteApp' )
 			       $scope.erreurs = [];
 
 			       if ( $scope.creneau_en_creation ) {
-				   $scope.creneau_selectionne.matiere_id = $scope.matiere_id;
-				   $scope.creneau_selectionne.regroupement_id = $scope.regroupement_id;
-				   $scope.creneau_selectionne.heure_debut = $filter('correctTimeZone')( $scope.creneau_tmp_heure_debut );
-				   $scope.creneau_selectionne.heure_fin = $filter('correctTimeZone')( $scope.creneau_tmp_heure_fin );
-				   $scope.creneau_selectionne.semaines_de_presence_regroupement = bitfield_to_fixnum( $scope.semaines_actives.regroupement );
+				   $scope.creneau.matiere_id = $scope.matiere_id;
+				   $scope.creneau.regroupement_id = $scope.regroupement_id;
+				   $scope.creneau.heure_debut = $filter('correctTimeZone')( $scope.creneau_tmp_heure_debut );
+				   $scope.creneau.heure_fin = $filter('correctTimeZone')( $scope.creneau_tmp_heure_fin );
+				   $scope.creneau.semaines_de_presence_regroupement = bitfield_to_fixnum( $scope.semaines_actives.regroupement );
 
-				   $scope.creneau_selectionne.$update();
+				   $scope.creneau.$update();
 
 				   $scope.is_dirty();
-			       }
+			       } else {
+				   // traitement de la séquence pédagogique
+				   var promesse = $q.when( true );
+				   if ( _( $scope.cours ).has( 'contenu' ) && ( $scope.cours.contenu.length > 0 ) ) {
+				       if ( $scope.cours.create ) {
+					   $scope.cours.cahier_de_textes_id = _( $scope.classes ).findWhere( {
+					       id: $scope.regroupement_id
+					   } ).cahier_de_textes.id;
+					   $scope.cours.creneau_emploi_du_temps_id = $scope.creneau.id;
+					   promesse = $scope.cours.$save();
+				       } else {
+					   promesse = $scope.cours.$update();
+				       }
 
-			       // traitement de la séquence pédagogique
-			       var promesse = $q.when( true );
-			       if ( _( $scope.cours ).has( 'contenu' ) && ( $scope.cours.contenu.length > 0 ) ) {
-				   if ( $scope.cours.create ) {
-				       $scope.cours.cahier_de_textes_id = _( $scope.classes ).findWhere( {
-					   id: $scope.regroupement_id
-				       } ).cahier_de_textes.id;
-				       $scope.cours.creneau_emploi_du_temps_id = $scope.creneau_selectionne.id;
-				       promesse = $scope.cours.$save();
-				   } else {
-				       promesse = $scope.cours.$update();
+				       $scope.is_dirty();
 				   }
 
-				   $scope.is_dirty();
-			       }
+				   promesse.then( function ( cours_from_DB ) {
+				       // traitement des devoirs attachés
+				       var promesses = [];
+				       $scope.devoirs = _( $scope.devoirs )
+					   .map( function ( devoir ) {
+					       if ( _( devoir ).has( 'contenu' ) && ( devoir.contenu.length > 0 ) ) {
+						   // FIXME: on $save() ou $update() tous les devoirs qu'ils aient été modifiés ou non
+						   devoir.dirty = true;
 
-			       promesse.then( function ( cours_from_DB ) {
-				   // traitement des devoirs attachés
-				   var promesses = [];
-				   $scope.devoirs = _( $scope.devoirs )
-				       .map( function ( devoir ) {
-					   if ( _( devoir ).has( 'contenu' ) && ( devoir.contenu.length > 0 ) ) {
-					       // FIXME: on $save() ou $update() tous les devoirs qu'ils aient été modifiés ou non
-					       devoir.dirty = true;
+						   var prom = $q.defer();
+						   if ( devoir.create ) {
+						       devoir.cours_id = cours_from_DB.id;
+						       devoir.$save().then( function success( result ) {
+							   devoir.id = result.id;
+							   prom.resolve( result );
+						       }, function ( response ) {
+							   $scope.erreurs.unshift( {
+							       status: response.status,
+							       message: response.data.error
+							   } );
+							   prom.reject( response );
+						       } );
+						   } else {
+						       devoir.$update().then( function success( result ) {
+							   devoir.id = result.id;
+							   prom.resolve( result );
+						       }, function ( response ) {
+							   $scope.erreurs.unshift( {
+							       status: response.status,
+							       message: response.data.error
+							   } );
+							   prom.reject( response );
+						       } );
+						   }
 
-					       var prom = $q.defer();
-					       if ( devoir.create ) {
-						   devoir.cours_id = cours_from_DB.id;
-						   devoir.$save().then( function success( result ) {
-						       devoir.id = result.id;
-						       prom.resolve( result );
-						   }, function ( response ) {
-						       $scope.erreurs.unshift( {
-							   status: response.status,
-							   message: response.data.error
-						       } );
-						       prom.reject( response );
-						   } );
-					       } else {
-						   devoir.$update().then( function success( result ) {
-						       devoir.id = result.id;
-						       prom.resolve( result );
-						   }, function ( response ) {
-						       $scope.erreurs.unshift( {
-							   status: response.status,
-							   message: response.data.error
-						       } );
-						       prom.reject( response );
-						   } );
+						   promesses.push( prom.promise );
 					       }
+					       return devoir;
+					   } );
 
-					       promesses.push( prom.promise );
-					   }
-					   return devoir;
+				       $q.all( promesses ).then( function () {
+					   $scope.fermer();
 				       } );
-
-				   $q.all( promesses ).then( function () {
-				       $scope.fermer();
 				   } );
-			       } );
+			       }
 			   };
 			   // }}}
 		       } );
