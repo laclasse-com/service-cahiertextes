@@ -19,6 +19,15 @@ class Devoir < Sequel::Model( :devoirs )
     # FIXME: peut sûrement mieux faire
     devoir_todo_items_dataset.where(eleve_id: eleve_id).destroy
   end
+
+  def to_deep_hash
+    h = self.to_hash
+    self.class.associations.each { |association|
+      h[association] = self[association]
+    }
+
+    h
+  end
 end
 
 class TypeDevoir < Sequel::Model( :types_devoir )
