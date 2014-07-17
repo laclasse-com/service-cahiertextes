@@ -29,47 +29,40 @@
     </span>
   </h5>
 
-  <accordion close-others="false">
-    <!-- ####################### Semaines Actives ########################### -->
-    <accordion-group data-is-open="groups.semaines_actives.ouvert">
-      <accordion-heading>
-	<span class="glyphicon" ng-class="{'glyphicon-chevron-down': groups.semaines_actives.ouvert, 'glyphicon-chevron-right': !groups.semaines_actives.ouvert}"> Semaines Actives</span>
-      </accordion-heading>
-      <div class="btn-group" data-ng-show="creneau_en_creation">
-	<button class="btn btn-sm btn-info" data-ng-click="apply_template( 'semaine_A' )">semaine A</button>
-	<button class="btn btn-sm btn-info" data-ng-click="apply_template( 'semaine_B' )">semaine B</button>
-	<button class="btn btn-sm btn-info" data-ng-click="apply_template( 'initialize' )">Réinitialiser</button>
-      </div>
-      <div class="btn-group">
-	<button type="button" class="btn btn-xs" data-ng-disabled="!creneau_en_creation"}
-	  data-ng-class="{'btn-default': !semaine, 'btn-success': semaine}"
-		data-ng-model="semaines_actives.regroupement[ $index ]"
-		btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0"
-		data-ng-repeat="semaine in semaines_actives.regroupement track by $index" >
-	  {{$index + 1}}
-	</button>
-      </div>
-    </accordion-group>
-  </accordion>
+  <!-- ####################### Semaines Actives ########################### -->
+  <div data-ng-show="creneau_en_creation">
+    <h5> Semaines Actives</h5>
+    <div class="btn-group">
+      <button class="btn btn-sm btn-info" data-ng-click="apply_template( 'semaine_A' )">semaine A</button>
+      <button class="btn btn-sm btn-info" data-ng-click="apply_template( 'semaine_B' )">semaine B</button>
+      <button class="btn btn-sm btn-info" data-ng-click="apply_template( 'initialize' )">Réinitialiser</button>
+    </div>
+    <div class="btn-group">
+      <button type="button" class="btn btn-xs"
+	      data-ng-class="{'btn-default': !semaine, 'btn-success': semaine}"
+	      data-ng-model="semaines_actives.regroupement[ $index ]"
+	      btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0"
+	      data-ng-repeat="semaine in semaines_actives.regroupement track by $index" >
+	{{$index + 1}}
+      </button>
+    </div>
+  </div>
 
 </div>
 
 <div class="modal-body">
   <ul><li data-ng-repeat="erreur in erreurs">{{erreur.message}}</li></ul>
 
-  <accordion close-others="false">
+  <tabset>
 
     <!-- ####################### Séquence Pédagogique ####################### -->
-    <accordion-group data-is-open="groups.sequence_pedagogique.ouvert">
-      <accordion-heading>
-	<span class="glyphicon" ng-class="{'glyphicon-chevron-down': groups.sequence_pedagogique.ouvert, 'glyphicon-chevron-right': !groups.sequence_pedagogique.ouvert}"> Séquence pédagogique du {{cours.date_cours | date : 'fullDate' }}</span>
+    <tab heading="Séquence pédagogique du {{cours.date_cours | date : 'fullDate' }}" >
 	<button type="button" class="btn btn-sm btn-danger pull-right"
 		data-ng-click="effacer_cours(  )"
 		data-ng-show="cours.contenu !== ''" >
 	  <span class="glyphicon glyphicon-trash"></span> Supprimer
 	</button>
 	<div class="clearfix"></div>
-      </accordion-heading>
       <div class="panel panel-default">
 	<div data-ng-show="cours.date_validation === null || ( cours.date_validation === null && cours.enseignant_id === current_user.uid )">
 	  <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="cours.contenu" data-ng-change="is_dirty( cours )">
@@ -120,17 +113,14 @@
 	</div>
 	<span data-ng-bind-html="cours.contenu" data-ng-show="cours.date_validation !== null || cours.enseignant_id !== current_user.uid"></span>
       </div>
-    </accordion-group>
+    </tab>
 
     <!-- ####################### Devoirs ####################### -->
-    <accordion-group data-is-open="groups.devoirs.ouvert">
-      <accordion-heading>
-	<span class="glyphicon" ng-class="{'glyphicon-chevron-down': groups.devoirs.ouvert, 'glyphicon-chevron-right': !groups.devoirs.ouvert}"> Travail à faire</span>
+    <tab heading="Travail à faire">
 	<button class="btn btn-sm btn-primary pull-right" data-ng-click="ajout_devoir()">
 	  <span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
 	</button>
 	<div class="clearfix"></div>
-      </accordion-heading>
       <div class="panel panel-default" data-ng-repeat="devoir in devoirs">
 	<div class="panel-heading enseignant-saisie">
 	  <button type="button" class="btn btn-sm btn-danger pull-right"
@@ -173,9 +163,9 @@
 	  <div class="clearfix"></div>
 	</div>
       </div>
-    </accordion-group>
+    </tab>
 
-  </accordion>
+  </tabset>
 </div>
 
 <div class="modal-footer">
