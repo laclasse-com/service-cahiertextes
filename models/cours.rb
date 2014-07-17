@@ -6,7 +6,7 @@ class Cours < Sequel::Model( :cours )
   many_to_one :cahier_de_textes
 
   def to_deep_hash
-    h = self.to_hash
+    h = to_hash
     self.class.associations.each { |association|
       h[association] = self[association]
     }
