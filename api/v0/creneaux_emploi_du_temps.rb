@@ -22,21 +22,23 @@ module CahierDeTextesAPI
 
       }
       get '/:id' do
-        expand = !params[:expand].nil? && params[:expand] && !params[:debut].nil? && !params[:fin].nil?
+        # expand = !params[:expand].nil? && params[:expand] && !params[:debut].nil? && !params[:fin].nil?
 
-        creneau = CreneauEmploiDuTemps[ params[:id] ]
-        h = creneau.to_hash
+        # creneau = CreneauEmploiDuTemps[ params[:id] ]
+        # h = creneau.to_hash
 
-        h[:regroupements] = creneau.regroupements
-        h[:enseignants] = creneau.enseignants
-        h[:salles] = creneau.salles
+        # h[:regroupements] = creneau.regroupements
+        # h[:enseignants] = creneau.enseignants
+        # h[:salles] = creneau.salles
 
-        if expand
-          h[:cours] = Cours.where( creneau_emploi_du_temps_id: params[:id] ).where( deleted: false ).where( date_cours: params[:debut] .. params[:fin] )
-          h[:devoirs] = Devoir.where( creneau_emploi_du_temps_id: params[:id] ).where( date_due: params[:debut] .. params[:fin] )
-        end
+        # if expand
+        #   h[:cours] = Cours.where( creneau_emploi_du_temps_id: params[:id] ).where( deleted: false ).where( date_cours: params[:debut] .. params[:fin] )
+        #   h[:devoirs] = Devoir.where( creneau_emploi_du_temps_id: params[:id] ).where( date_due: params[:debut] .. params[:fin] )
+        # end
 
-        h
+        # h
+
+        CreneauEmploiDuTemps[ params[:id] ].to_json include: CreneauEmploiDuTemps.associations
       end
 
       desc 'crée un créneau'
@@ -91,7 +93,7 @@ module CahierDeTextesAPI
           CreneauEmploiDuTempsSalle.restrict_primary_key
         end
 
-        creneau
+        creneau.to_json include: CreneauEmploiDuTemps.associations
       end
 
       desc 'modifie un créneau'
@@ -159,7 +161,7 @@ module CahierDeTextesAPI
             CreneauEmploiDuTempsSalle.restrict_primary_key
           end
 
-          creneau
+          creneau.to_json include: CreneauEmploiDuTemps.associations
         end
       end
 
@@ -176,7 +178,7 @@ module CahierDeTextesAPI
           creneau.update( deleted: true, date_suppression: params[:date_creneau] )
           creneau.save
 
-          creneau
+          creneau.to_json include: CreneauEmploiDuTemps.associations
         end
       end
 
