@@ -84,7 +84,8 @@ module CahierDeTextesAPI
                                                      hash: ressource['hash'] ) )
           end
 
-          devoir
+          # FIXME: fuite d'info sur :devoir_todo_items
+          devoir.to_json include: Devoir.associations
         end
       end
 
@@ -125,6 +126,9 @@ module CahierDeTextesAPI
 
           devoir.date_modification = Time.now
           devoir.save
+
+          # FIXME: fuite d'info sur :devoir_todo_items
+          devoir.to_json include: Devoir.associations
         end
       end
 
@@ -138,7 +142,8 @@ module CahierDeTextesAPI
         devoir = Devoir[ params[:id] ]
         devoir.fait_par?( user.uid ) ? devoir.a_faire_par!( user.uid ) : devoir.fait_par!( user.uid )
 
-        devoir
+        # FIXME: fuite d'info sur :devoir_todo_items
+        devoir.to_json include: Devoir.associations
       end
 
       desc 'détruit un devoir'
@@ -153,16 +158,8 @@ module CahierDeTextesAPI
         devoir.update( deleted: true, date_modification: Time.now )
         devoir.save
 
-        # FIXME: code dupliqué
-        hash = devoir.to_hash
-        hash[:ressources] = devoir.ressources
-
-        unless user.nil?
-          eleve_id = user.uid
-          hash[:fait] = devoir.fait_par?( eleve_id )
-        end
-
-        hash
+        # FIXME: fuite d'info sur :devoir_todo_items
+        devoir.to_json include: Devoir.associations
       end
     end
   end
