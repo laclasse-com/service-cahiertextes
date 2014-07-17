@@ -140,8 +140,8 @@ angular.module('cahierDeTexteApp')
 
 angular.module('cahierDeTexteApp')
     .service('API',
-	     [ 'Classes', 'Cours', 'CreneauEmploiDuTemps', 'Devoirs', 'EmploisDuTemps', 'Enseignants', 'TypesDeDevoir', 'PlagesHoraires',
-	       function( Classes, Cours, CreneauEmploiDuTemps, Devoirs, EmploisDuTemps, Enseignants, TypesDeDevoir, PlagesHoraires ) {
+	     [ 'Classes', 'Cours', 'CreneauEmploiDuTemps', 'Devoirs', 'EmploisDuTemps', 'Enseignants', 'TypesDeDevoir', 'PlagesHoraires', 'CahierDeTextes',
+	       function( Classes, Cours, CreneauEmploiDuTemps, Devoirs, EmploisDuTemps, Enseignants, TypesDeDevoir, PlagesHoraires, CahierDeTextes ) {
 		   this.query_classes = function( params ) {
 			   return Classes.query( params );
 		       };
@@ -187,7 +187,7 @@ angular.module('cahierDeTexteApp')
 		   };
 
 		   this.get_cahier_de_textes = _.memoize( function( params ) {
-		       return PlagesHoraires.get( params );
+		       return CahierDeTextes.get( params );
 		   } );
 	       }
 	     ] );
