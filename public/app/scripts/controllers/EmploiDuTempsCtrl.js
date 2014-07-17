@@ -215,9 +215,6 @@ angular.module('cahierDeTexteApp')
 
 			  case 'ELV':
 			  default:
-
-			      $scope.creneau_selectionne = {};
-
 			      // popup d'affichage des détails
 			      var ouvre_popup_details = function( titre, cours, devoirs ) {
 				  $modal.open( { templateUrl: 'app/views/eleve/detail_emploi_du_temps.html',
@@ -240,7 +237,6 @@ angular.module('cahierDeTexteApp')
 			      };
 			      $scope.calendar.options.eventClick = function( event ) {
 				  if ( ( event.details.devoirs.length > 0 ) || ( ! _(event.details.cours).isNull() && _(event.details.cours).has( 'contenu' ) ) ) {
-				      $scope.creneau_selectionne = event;
 				      ouvre_popup_details( event.title, event.details.cours, event.details.devoirs );
 				  }
 			      };
