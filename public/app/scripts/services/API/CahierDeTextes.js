@@ -128,6 +128,14 @@ angular.module('cahierDeTexteApp')
 				     { id: '@id' });
 	       } ] );
 
+angular.module('cahierDeTexteApp')
+    .factory('CahierDeTextes',
+	     [ '$resource', 'APP_PATH', 'API_VERSION',
+	       function( $resource, APP_PATH, API_VERSION ) {
+		   return $resource( APP_PATH + '/api/' + API_VERSION + '/cahiers_de_textes/regroupement/:regroupement_id',
+				     { regroupement_id: '@regroupement_id' });
+	       } ] );
+
 
 
 angular.module('cahierDeTexteApp')
@@ -177,5 +185,9 @@ angular.module('cahierDeTexteApp')
 		   this.get_plage_horaire = function( params ) {
 		       return PlagesHoraires.get( params );
 		   };
+
+		   this.get_cahier_de_textes = _.memoize( function( params ) {
+		       return PlagesHoraires.get( params );
+		   } );
 	       }
 	     ] );
