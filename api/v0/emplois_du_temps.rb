@@ -29,7 +29,7 @@ module CahierDeTextesAPI
         CreneauEmploiDuTemps
           .association_join( :regroupements )
           .association_join( :enseignants )
-          .where( "( (deleted = true and date_suppression <= #{params[:fin]}) or (deleted = false) )" )
+          .where( "( (deleted = true and date_suppression <= '#{params[:fin]}') or (deleted = false) )" )
           .where( regroupement_id: regroupements_ids )
           .all
           .select do |creneau| weeks.reduce( true ) { |a, e| a && creneau[:semaines_de_presence][ e ] == 1 } end
