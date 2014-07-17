@@ -27,7 +27,7 @@ module CahierDeTextesAPI
         else
           cours = Cours[ params[:id] ]
 
-          cours.to_hash_avec_ressources unless cours.nil?
+          cours.to_deep_hash unless cours.nil?
         end
       end
 
@@ -54,7 +54,7 @@ module CahierDeTextesAPI
                                                   hash: ressource['hash'] ) )
         end
 
-        cours.to_hash_avec_ressources
+        cours.to_deep_hash
       end
 
       desc 'modifie une séquence pédagogique'
@@ -83,7 +83,7 @@ module CahierDeTextesAPI
 
             cours.save
 
-            cours.to_hash_avec_ressources
+            cours.to_deep_hash
           end
         end
       end
@@ -102,7 +102,7 @@ module CahierDeTextesAPI
 
           cours.save
 
-          cours.to_hash_avec_ressources
+          cours.to_deep_hash
         end
       end
 
@@ -128,7 +128,7 @@ module CahierDeTextesAPI
             new_cours.add_ressource( ressource )
           end
 
-          new_cours.to_hash_avec_ressources
+          new_cours.to_deep_hash
         end
       end
 
@@ -146,7 +146,7 @@ module CahierDeTextesAPI
 
             cours.save
 
-            cours.to_hash_avec_ressources
+            cours.to_deep_hash
           end
         end
       end
