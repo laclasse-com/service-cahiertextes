@@ -6,6 +6,11 @@ angular.module('cahierDeTexteApp')
 		  function ( $scope, $modal, $q, $filter, CALENDAR_OPTIONS, CALENDAR_PARAMS, API, Annuaire, EmploisDuTemps, User, CreneauEmploiDuTemps ) {
 		      var filter_data = angular.identity;
 
+		      var popup_callback = function( scope_popup ) {
+			  var view = $scope.emploi_du_temps.fullCalendar( 'getView' );
+			  retrieve_data( view.visStart, view.visEnd );
+		      };
+
 		      // consommation des données
 		      var CalendarEvent = function( event ) {
 			  var _this = this; //pour pouvoir le référencé dans les .then()
@@ -123,11 +128,6 @@ angular.module('cahierDeTexteApp')
 				  return classe;
 			      });
 
-			      var popup_callback = function( scope_popup ) {
-				  var view = $scope.emploi_du_temps.fullCalendar( 'getView' );
-				  retrieve_data( view.visStart, view.visEnd );
-			      };
-
 			      // édition d'un créneau existant
 			      $scope.calendar.options.eventClick = function ( event ) {
 				  CreneauEmploiDuTemps.get( { id: event.details.creneau_emploi_du_temps_id } )
@@ -223,12 +223,9 @@ angular.module('cahierDeTexteApp')
 						 resolve: { titre  : function() { return titre; },
 							    cours  : function() { return cours; },
 							    devoirs: function() { return devoirs; } } }
-					     ).result.then( function ( scope_popup ) {
-						 _(scope_popup.devoirs).each(function(devoir) {
-						     _($scope.calendar.events[0]).findWhere({type: 'devoir', id: devoir.id}).className = devoir.fait ? ' saisie-devoirs-fait' : ' saisie-devoirs';
-						 });
-						 $scope.emploi_du_temps.fullCalendar( 'renderEvent', $scope.creneau_selectionne );
-					     });
+					     ).result.then( function( scope_popup ) {
+						 popup_callback( scope_popup );
+					     } );
 			      };
 
 			      $scope.calendar.options.eventRender = function( event, element ) {
