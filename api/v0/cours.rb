@@ -54,7 +54,7 @@ module CahierDeTextesAPI
                                                   hash: ressource['hash'] ) )
         end
 
-        cours.to_json include: Cours.associations
+        cours.to_hash_avec_ressources
       end
 
       desc 'modifie une séquence pédagogique'
@@ -83,7 +83,7 @@ module CahierDeTextesAPI
 
             cours.save
 
-            cours.to_json include: Cours.associations
+            cours.to_hash_avec_ressources
           end
         end
       end
@@ -102,7 +102,7 @@ module CahierDeTextesAPI
 
           cours.save
 
-          cours.to_json include: Cours.associations
+          cours.to_hash_avec_ressources
         end
       end
 
@@ -128,7 +128,7 @@ module CahierDeTextesAPI
             new_cours.add_ressource( ressource )
           end
 
-          new_cours.to_json include: Cours.associations
+          new_cours.to_hash_avec_ressources
         end
       end
 
@@ -146,7 +146,7 @@ module CahierDeTextesAPI
 
             cours.save
 
-            cours.to_json include: Cours.associations
+            cours.to_hash_avec_ressources
           end
         end
       end
