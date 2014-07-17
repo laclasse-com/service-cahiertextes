@@ -8,8 +8,7 @@ angular.module( 'cahierDeTexteApp' )
 			   $scope.current_user = response.data;
 
 			   var create_cours = function( creneau ) {
-			       var cours = new Cours( { cahier_de_textes_id: creneau.cahier_de_textes_id,
-							creneau_emploi_du_temps_id: creneau.id,
+			       var cours = new Cours( { creneau_emploi_du_temps_id: creneau.id,
 							date_cours: new Date(creneau.heure_debut).toISOString(),
 							date_validation: null,
 							enseignant_id: $scope.current_user.uid } );
