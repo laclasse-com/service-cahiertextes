@@ -91,7 +91,13 @@ body {
 
 .message{width:40%;margin:0 auto}
 
+.compteur { border-radius:1em;
+	    background-color:#f00;
+	    color:#fff;
+	    font-weight:bolder;
+	    padding:0 .4em }
 
+.body-header {text-align: center }
 
 #loading-bar .bar { height:12px }
 #loading-bar-spinner { top:calc( 50% - 64px );
