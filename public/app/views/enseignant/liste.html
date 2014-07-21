@@ -8,6 +8,16 @@
       <option value="" selected>Toutes les classes</option>
     </select>
 
+    Semaine du {{from_date | date:'longDate'}} au {{to_date | date:'longDate'}}
+
+    <div class="pull-right">
+      <button class="btn btn-primary" data-ng-click="reset_week_offset()">Aujourd'hui</button>
+      <div class="btn-group">
+	<button class="btn btn-primary" data-ng-click="incr_week_offset()"><span class="glyphicon glyphicon-chevron-left"></span></button>
+	<button class="btn btn-primary" data-ng-click="decr_week_offset()"><span class="glyphicon glyphicon-chevron-right"></span></button>
+      </div>
+    </div>
+    <div class="clearfix"></div>
   </div>
   <div class="panel-body">
     <ul class="list-group todo-list">
@@ -26,7 +36,7 @@
 	<div class="pull-left contenu" data-ng-bind-html="creneau.cours.contenu"></div>
 
 	<div class="pull-right detail">
-	  <button class="btn btn-default" data-ng-click="ouvre_popup_edition()">Éditer</button>
+	  <button class="btn btn-default" data-ng-click="eventClick( creneau )">Éditer</button>
 	</div>
 
 	<div class="devoirs">

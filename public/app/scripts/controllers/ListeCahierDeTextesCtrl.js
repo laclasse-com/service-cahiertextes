@@ -8,33 +8,47 @@ angular.module('cahierDeTexteApp')
 		      var matieres_enseignees = [];
 		      $scope.selected_regroupement_id = null;
 
-		      $scope.creneau_selectionne = {};
 		      // popup d'édition
-		      var ouvre_popup_edition = function ( raw_data, matieres, classes, creneau_selectionne, cours, devoirs, popup_callback ) {
+		      var ouvre_popup_edition = function ( raw_data, matieres, classes, creneau, cours, devoirs, popup_callback ) {
 			  $modal.open( {
 			      templateUrl: 'app/views/enseignant/edition_emploi_du_temps.html',
 			      controller: 'EmploiDuTempsPopupEditionCtrl',
 			      resolve: {
-				  raw_data	     : function () { return raw_data; },
-				  matieres	     : function () { return matieres; },
-				  classes	     : function () { return classes; },
-				  creneau_selectionne: function () { return creneau_selectionne; },
-				  cours		     : function () { return cours; },
-				  devoirs	     : function () { return devoirs; }
+				  raw_data	: function () { return raw_data; },
+				  matieres	: function () { return matieres; },
+				  classes	: function () { return classes; },
+				  creneau	: function () { return creneau; },
+				  cours		: function () { return cours; },
+				  devoirs	: function () { return devoirs; }
 			      }
 			  } )
 			      .result.then( // éxécuté à la fermeture de la popup
 				  function ( scope_popup ) {
-				      // élimination des devoirs non finalisés
-				      scope_popup.devoirs = _( scope_popup.devoirs )
-					  .filter( function ( devoir ) {
-					      return _( devoir )
-						  .has( 'id' );
-					  } );
-
 				      // appel du callback
 				      popup_callback( scope_popup );
 				  } );
+		      };
+
+		      $scope.eventClick = function ( event ) {
+			  CreneauEmploiDuTemps.get( { id: event.creneau_emploi_du_temps_id } )
+			      .$promise
+			      .then( function( creneau_selectionne ) {
+				  creneau_selectionne.dirty = false;
+				  creneau_selectionne.heure_debut = new Date( event.start );
+				  creneau_selectionne.heure_fin = new Date( event.end );
+				  creneau_selectionne.regroupement_id = event.regroupement_id;
+
+				  var cours = _(event.cours).isNull() ? null : API.get_cours( { id: event.cours.id } );
+				  var devoirs = _( event.devoirs )
+					  .map( function ( devoir ) {
+					      return API.get_devoir( { id: devoir.id } );
+					  } );
+
+				  ouvre_popup_edition( $scope.raw_data,
+						       matieres_enseignees, $scope.classes,
+						       creneau_selectionne, cours, devoirs,
+						       retrieve_data );
+			      } );
 		      };
 
 		      var filter_data = function( raw_data ) {
@@ -75,15 +89,33 @@ angular.module('cahierDeTexteApp')
 			      .compact()
 			      .reject( function( id ) { return id === 'undefined'; } )
 			      .map(function(matiere_id) {
-				  return [matiere_id, Annuaire.get_matiere(matiere_id)];
+				  return [ matiere_id, Annuaire.get_matiere( matiere_id ) ];
 			      })
 			      .object()
 			      .value();
 		      };
 
-		      var retrieve_data = function( from_date, to_date ) {
-			  EmploisDuTemps.query( { debut: from_date,
-						  fin: to_date,
+		      $scope.week_offset = 0;
+
+		      // retrieve_data() when the value of week_offset changes
+		      // n.b.: triggered when week_offset is initialized above
+		      $scope.$watch( 'week_offset', function() { retrieve_data(); } );
+
+		      $scope.incr_week_offset = function() {
+			  $scope.week_offset++;
+		      };
+		      $scope.decr_week_offset = function() {
+			  $scope.week_offset--;
+		      };
+		      $scope.reset_week_offset = function() {
+			  $scope.week_offset = 0;
+		      };
+
+		      var retrieve_data = function() {
+			  $scope.from_date = moment().startOf( 'week' ).subtract( 'days', $scope.week_offset * 7 ).toDate();
+			  $scope.to_date = moment().endOf( 'week' ).subtract( 'days', $scope.week_offset * 7 ).toDate();
+			  EmploisDuTemps.query( { debut: $scope.from_date,
+						  fin: $scope.to_date,
 						  uai: $scope.current_user.profil_actif.uai } )
 			      .$promise
 			      .then( function success( response ) {
@@ -103,10 +135,5 @@ angular.module('cahierDeTexteApp')
 
 			  matieres_enseignees = $scope.current_user.profil_actif.matieres;
 			  $scope.classes = $scope.current_user.profil_actif.classes;
-
-			  var lundi = moment().startOf( 'week' ).toDate();
-			  var dimanche = moment().endOf( 'week' ).toDate();
-
-			  retrieve_data( lundi, dimanche );
 		      } );
 		  } ] );
