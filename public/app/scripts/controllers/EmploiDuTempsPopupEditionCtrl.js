@@ -18,6 +18,7 @@ angular.module( 'cahierDeTexteApp' )
 							date_cours: new Date(creneau.heure_debut).toISOString(),
 							date_validation: null,
 							enseignant_id: $scope.current_user.uid } );
+			       cours.devoirs = [];
 			       cours.create = true;
 
 			       return cours;
@@ -75,6 +76,7 @@ angular.module( 'cahierDeTexteApp' )
 			   $scope.apply_template( 'initialize' );
 
 			   // Flags et helpers
+			   $scope.accordion_cours_devoirs_open = false;
 			   $scope.dirty = false;
 			   $scope.deleted = false;
 			   $scope.creneau_deleted = false;
@@ -119,7 +121,9 @@ angular.module( 'cahierDeTexteApp' )
 			       } else {
 				   // Gestion des Cours et Devoirs
 				   var promesse = $q.when( true );
-				   if ( _( $scope.cours ).has( 'contenu' ) && ( $scope.cours.contenu.length > 0 ) ) {
+				   var promesses = [];
+				   if ( ( $scope.cours.contenu.length > 0 ) || ( $scope.cours.devoirs.length > 0 ) ) {
+				       var cours_devoirs = angular.copy( $scope.cours.devoirs );
 				       if ( $scope.cours.create ) {
 					   $scope.cours.cahier_de_textes_id = _( $scope.classes ).findWhere( {
 					       id: $scope.regroupement_id
@@ -129,17 +133,12 @@ angular.module( 'cahierDeTexteApp' )
 				       } else {
 					   promesse = $scope.cours.$update();
 				       }
-
 				       $scope.is_dirty();
 
-				       $scope.fermer();
-				   }
-
-				   promesse.then( function ( cours_from_DB ) {
-				       // traitement des devoirs attachés
-				       var promesses = [];
-				       $scope.devoirs = _( $scope.devoirs )
-					   .map( function ( devoir ) {
+				       // Devoirs liés au cours
+				       promesse.then( function ( cours_from_DB ) {
+					   // traitement des devoirs attachés
+					   _( cours_devoirs ).each( function ( devoir ) {
 					       if ( _( devoir ).has( 'contenu' ) && ( devoir.contenu.length > 0 ) ) {
 						   // FIXME: on $save() ou $update() tous les devoirs qu'ils aient été modifiés ou non
 						   devoir.dirty = true;
@@ -172,13 +171,47 @@ angular.module( 'cahierDeTexteApp' )
 
 						   promesses.push( prom.promise );
 					       }
-					       return devoir;
 					   } );
-
-				       $q.all( promesses ).then( function () {
-					   $scope.fermer();
 				       } );
+				   }
+				   // Devoirs dûs ce jour
+				   // Devoirs liés au cours
+				   _( $scope.devoirs ).each( function ( devoir ) {
+				       if ( _( devoir ).has( 'contenu' ) && ( devoir.contenu.length > 0 ) ) {
+					   // FIXME: on $save() ou $update() tous les devoirs qu'ils aient été modifiés ou non
+					   devoir.dirty = true;
+
+					   var prom = $q.defer();
+					   if ( devoir.create ) {
+					       devoir.cours_id = -1; //FIXME: get cours_id from cours attached to creneau_emploi_du_temps_id, create it if necessary
+					       devoir.$save().then( function success( result ) {
+						   devoir.id = result.id;
+						   prom.resolve( result );
+					       }, function ( response ) {
+						   $scope.erreurs.unshift( {
+						       status: response.status,
+						       message: response.data.error
+						   } );
+						   prom.reject( response );
+					       } );
+					   } else {
+					       devoir.$update().then( function success( result ) {
+						   devoir.id = result.id;
+						   prom.resolve( result );
+					       }, function ( response ) {
+						   $scope.erreurs.unshift( {
+						       status: response.status,
+						       message: response.data.error
+						   } );
+						   prom.reject( response );
+					       } );
+					   }
+
+					   promesses.push( prom.promise );
+				       }
 				   } );
+
+				   $q.all( promesses ).then( $scope.fermer );
 			       }
 			   };
 
@@ -190,12 +223,17 @@ angular.module( 'cahierDeTexteApp' )
 			   if ( ! $scope.creneau_en_creation ) {
 			       if ( cours === null ) {
 				   $scope.cours = create_cours( creneau );
+				   $scope.cours.devoirs = [];
 			       } else {
 				   $scope.cours = cours;
 				   $scope.cours.create = false;
+				   // TODO: récupérer les devoirs liés à ce cours
+				   $scope.cours.devoirs = [];
 			       }
 
-			       $scope.devoirs = devoirs;
+			       $scope.devoirs = devoirs.map( function( devoir ) {
+				   devoir.cours = Cours.get({ id: devoir.cours_id});
+			       });
 			       $scope.types_de_devoir = API.query_types_de_devoir();
 
 			       // fonctions UI pour le temps estimé
@@ -372,7 +410,7 @@ angular.module( 'cahierDeTexteApp' )
 			       // }}}
 
 			       // fonctions d'événements GUI {{{
-			       $scope.ajout_devoir = function () {
+			       $scope.ajout_devoir = function( where ) {
 				   var devoir = new Devoirs( {
 				       cours_id: $scope.cours.id,
 				       date_due: $filter( 'date' )( $scope.creneau.start, 'yyyy-MM-dd' ),
@@ -381,7 +419,10 @@ angular.module( 'cahierDeTexteApp' )
 				   } );
 				   devoir.create = true;
 
-				   $scope.devoirs.unshift( devoir );
+				   where.unshift( devoir );
+				   if ( where === $scope.cours.devoirs ) {
+				       $scope.accordion_cours_devoirs_open = false;
+				   }
 			       };
 
 			       $scope.dupliquer = function () {
@@ -404,7 +445,24 @@ angular.module( 'cahierDeTexteApp' )
 				       } );
 			       };
 
-			       $scope.effacer_devoir = function ( devoir ) {
+			       $scope.effacer_devoir_cours = function ( devoir ) {
+				   if ( _(devoir).has('id') ) {
+				       devoir.$delete().then( function() {
+					   $scope.cours.devoirs = _( $scope.cours.devoirs )
+					       .reject( function( devoir ) {
+						   return devoir.deleted;
+					       });
+				       });
+				   } else {
+				       devoir.deleted = true;
+				       $scope.cours.devoirs = _( $scope.cours.devoirs )
+					   .reject( function( devoir ) {
+					       return devoir.deleted;
+					   });
+				   }
+			       };
+
+			       $scope.effacer_devoir_devoirs = function ( devoir ) {
 				   if ( _(devoir).has('id') ) {
 				       devoir.$delete().then( function() {
 					   $scope.devoirs = _( $scope.devoirs )

@@ -48,22 +48,25 @@
     </div>
   </div>
 
+  <div class="error-messages">
+    <ul><li data-ng-repeat="erreur in erreurs">{{erreur.message}}</li></ul>
+  </div>
 </div>
 
 <div class="modal-body" data-ng-hide="creneau_en_creation">
-  <ul><li data-ng-repeat="erreur in erreurs">{{erreur.message}}</li></ul>
-
   <tabset>
 
-    <!-- ####################### Séquence Pédagogique ####################### -->
+    <!-- ####################### Séquence Pédagogique du jour ####################### -->
     <tab heading="Séquence pédagogique du {{creneau.heure_debut | date : 'fullDate' }}" >
-	<button type="button" class="btn btn-sm btn-danger pull-right"
-		data-ng-click="effacer_cours(  )"
-		data-ng-show="cours.contenu !== ''" >
-	  <span class="glyphicon glyphicon-trash"></span> Supprimer
-	</button>
-	<div class="clearfix"></div>
+
+      <button type="button" class="btn btn-sm btn-danger pull-right"
+	      data-ng-click="effacer_cours(  )"
+	      data-ng-show="cours.contenu !== ''" >
+	<span class="glyphicon glyphicon-trash"></span> Supprimer
+      </button>
+
       <div class="panel panel-default">
+	<!-- {{{ Éditable -->
 	<div data-ng-show="cours.date_validation === null || ( cours.date_validation === null && cours.enseignant_id === current_user.uid )">
 	  <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="cours.contenu" data-ng-change="is_dirty( cours )">
 	  </textarea>
@@ -111,26 +114,87 @@
 	    <div class="clearfix"></div>
 	  </div>
 	</div>
+	<!-- }}} -->
+	<!-- {{{ Lecture seule -->
 	<span data-ng-bind-html="cours.contenu" data-ng-show="cours.date_validation !== null || cours.enseignant_id !== current_user.uid"></span>
+	<!-- }}} -->
       </div>
+
+      <accordion close-others="false">
+	<accordion-group data-is-open="accordion_cours_devoirs_open">
+	  <accordion-heading>
+	    <span class="glyphicon" ng-class="{'glyphicon-chevron-down': accordion_cours_devoirs_open, 'glyphicon-chevron-right': !accordion_cours_devoirs_open}"> Travail à faire</span>
+	    <button class="btn btn-sm btn-primary pull-right" data-ng-click="ajout_devoir( cours.devoirs )">
+	      <span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
+	    </button>
+	    <div class="clearfix"></div>
+	  </accordion-heading>
+	  <div class="panel panel-default" data-ng-repeat="devoir in cours.devoirs">
+	    <div class="panel-heading enseignant-saisie">
+	      <button type="button" class="btn btn-sm btn-danger pull-right"
+		      data-ng-click="effacer_devoir_cours( devoir )" >
+		<span class="glyphicon glyphicon-trash"></span> Supprimer
+	      </button>
+	      <div class="row-fluid">
+		<select data-ng-required="true" data-ng-model="devoir.type_devoir_id"
+			data-ng-options="type_de_devoir.id as type_de_devoir.description for type_de_devoir in types_de_devoir">
+		</select>
+		à faire pour le
+		<select data-ng-required="true" data-ng-model="devoir.date_due" data-ng-change="set_creneau_date_due( devoir )"
+			data-ng-options="creneau.date_due as creneau.label_sbox group by creneau.semaine for creneau in creneaux_devoirs_possibles"
+			data-ng-init="devoir.date_due=creneaux_devoirs_possibles[0].date_due">
+		</select>
+	      </div>
+	    </div>
+	    <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="devoir.contenu" data-ng-change="is_dirty( devoir )"></textarea>
+	    <div class="panel-body">
+	      <h3 class="panel-title">Temps de travail estimé</h3>
+	      <rating data-ng-model="devoir.temps_estime" max="15" readonly="false"  ng-click="is_dirty( null )" on-hover="estimation_over(devoir, value)" on-leave="estimation_leave(devoir)" state-on="'glyphicon-record'" state-off="'glyphicon-unchecked'"></rating>
+	      <span class="label" data-ng-class="{'label-success': devoir.overValue<4, 'label-info': devoir.overValue>=4 && devoir.overValue<8 , 'label-warning': devoir.overValue>=8 && devoir.overValue<12, 'label-danger': devoir.overValue>=12}" data-ng-show="devoir.overValue>0 || devoir.temps_estime > 0">{{devoir.minutes || devoir.temps_estime * 5}} min</span>
+	    </div>
+	    <div class="panel-footer">
+	      <ul>
+		<li data-ng-repeat="ressource in devoir.ressources">
+		  <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
+		  <button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( devoir, ressource.hash )">&times;</button>
+		</li>
+	      </ul>
+	      <span class="alert alert-danger" role="alert" data-ng-hide="cartable.files">Problème de communication avec l'application Documents</span>
+	      <input type="file" name="upload[]" multiple onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files )"
+		     data-ng-show="cartable.files" />
+	      <div class="treecontrol-container">
+		<treecontrol class="tree-classic"
+			     tree-model="cartable.files"
+			     options="treeOptions"
+			     on-selection="treeClicked( node )">
+		  {{node.name}} ({{node.mime}}) <button  class="btn btn-sm btn-success" data-ng-click="add_ressource( devoir, node.name, node.hash )">+</button>
+		</treecontrol>
+	      </div>
+	      <div class="clearfix"></div>
+	    </div>
+	  </div>
+	</accordion-group>
+      </accordion>
+
     </tab>
 
-    <!-- ####################### Devoirs ####################### -->
+    <!-- ####################### Devoirs dûs ce jour ####################### -->
     <tab heading="Travail à faire pour le {{creneau.heure_debut | date : 'fullDate' }}">
-	<button class="btn btn-sm btn-primary pull-right" data-ng-click="ajout_devoir()">
+      <button class="btn btn-sm btn-primary pull-right" data-ng-click="ajout_devoir( devoirs )">
 	  <span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
 	</button>
 	<div class="clearfix"></div>
       <div class="panel panel-default" data-ng-repeat="devoir in devoirs">
 	<div class="panel-heading enseignant-saisie">
 	  <button type="button" class="btn btn-sm btn-danger pull-right"
-		  data-ng-click="effacer_devoir( devoir )" >
+		  data-ng-click="effacer_devoir_devoirs( devoir )" >
 	    <span class="glyphicon glyphicon-trash"></span> Supprimer
 	  </button>
 	  <div class="row-fluid">
 	    <select data-ng-required="true" data-ng-model="devoir.type_devoir_id"
 		    data-ng-options="type_de_devoir.id as type_de_devoir.description for type_de_devoir in types_de_devoir">
 	    </select>
+	    à faire pour le
 	    <select data-ng-required="true" data-ng-model="devoir.date_due" data-ng-change="set_creneau_date_due( devoir )"
 		    data-ng-options="creneau.date_due as creneau.label_sbox group by creneau.semaine for creneau in creneaux_devoirs_possibles"
 		    data-ng-init="devoir.date_due=creneaux_devoirs_possibles[0].date_due">
