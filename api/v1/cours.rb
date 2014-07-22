@@ -39,7 +39,7 @@ module CahierDeTextesAPI
         if Cours[ params[:id] ].nil? || Cours[ params[:id] ].deleted
           error!( 'Cours inconnu', 404 )
         else
-          devoirs = Devoirs.where( cours_id: params[:id] )
+          devoirs = Devoir.where( cours_id: params[:id] )
 
           devoirs.map { | devoir|
             devoir.to_deep_hash
