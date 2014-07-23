@@ -125,13 +125,9 @@ angular.module( 'cahierDeTexteApp' )
 					       // FIXME: on $save() ou $update() tous les devoirs qu'ils aient été modifiés ou non
 					       var prom = $q.defer();
 					       if ( devoir.create ) {
-						   var promesse = $q.when( true );
-						   if ( _(cours).isNull() ) {
-						       console.debug( devoir )
-						       var creneau = API.get_creneau_emploi_du_temps({ id: devoir.creneau_emploi_du_temps_id });
-						       console.debug(creneau)
+						   if ( ! _(cours).isNull() ) {
+						       devoir.cours_id = cours.id;
 						   }
-						   devoir.cours_id = cours.id;
 						   devoir.$save().then( function success( result ) {
 						       devoir.id = result.id;
 						       prom.resolve( result );
