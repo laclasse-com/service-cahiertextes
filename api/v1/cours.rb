@@ -31,22 +31,6 @@ module CahierDeTextesAPI
         end
       end
 
-      desc 'renvoi les devoirs liés à une séquence pédagogique'
-      params {
-        requires :id, desc: 'id du cours'
-      }
-      get '/:id/devoirs' do
-        if Cours[ params[:id] ].nil? || Cours[ params[:id] ].deleted
-          error!( 'Cours inconnu', 404 )
-        else
-          devoirs = Devoir.where( cours_id: params[:id] )
-
-          devoirs.map { | devoir|
-            devoir.to_deep_hash
-          }
-        end
-      end
-
       desc 'renseigne une séquence pédagogique'
       params {
         requires :cahier_de_textes_id
