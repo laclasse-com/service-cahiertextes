@@ -22,9 +22,8 @@ module CahierDeTextesAPI
           .join(:creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :id)
           .where( regroupement_id: regroupements_ids )
           .map { |devoir|
-          hash = devoir.to_hash
-          hash[:ressources] = devoir.ressources.map { |rsrc| rsrc.to_hash }
-          hash[:fait] = devoir.fait_par?( user.uid )
+          hash = devoir.to_deep_hash
+          hash[:fait] = devoir.fait_par?( user.uid ) unless user.nil?
 
           hash
         }
@@ -39,13 +38,8 @@ module CahierDeTextesAPI
         if devoir.nil?
           error!( 'Devoir inconnu', 404 )
         else
-          hash = devoir.to_hash
-          hash[:ressources] = devoir.ressources
-
-          unless user.nil?
-            eleve_id = user.uid
-            hash[:fait] = devoir.fait_par?( eleve_id )
-          end
+          hash = devoir.to_deep_hash
+          hash[:fait] = devoir.fait_par?( user.uid ) unless user.nil?
 
           hash
         end
