@@ -166,9 +166,7 @@ angular.module( 'cahierDeTexteApp' )
 				       var cours_devoirs = angular.copy( $scope.cours.devoirs );
 
 				       if ( $scope.cours.create ) {
-					   $scope.cours.cahier_de_textes_id = _( $scope.classes ).findWhere( {
-					       id: $scope.regroupement_id
-					   } ).cahier_de_textes.id;
+					   $scope.cours.regroupement_id = $scope.regroupement_id;
 					   $scope.cours.creneau_emploi_du_temps_id = $scope.creneau.id;
 					   promesse = $scope.cours.$save();
 				       } else {

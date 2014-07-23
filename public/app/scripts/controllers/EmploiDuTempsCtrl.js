@@ -140,10 +140,7 @@ angular.module('cahierDeTexteApp')
 				      .value();
 			      var matieres_enseignees = $scope.current_user.profil_actif.matieres;
 
-			      $scope.classes = $scope.current_user.profil_actif.classes.map( function( classe ) {
-				  classe.cahier_de_textes = API.get_cahier_de_textes( { regroupement_id: classe.id } );
-				  return classe;
-			      });
+			      $scope.classes = $scope.current_user.profil_actif.classes;
 
 			      // édition d'un créneau existant
 			      $scope.calendar.options.eventClick = function ( event ) {
