@@ -107,6 +107,7 @@ angular.module( 'cahierDeTexteApp' )
 			   $scope.valider = function () {
 			       // réinitialisation des erreurs
 			       $scope.erreurs = [];
+			       var promesses = [];
 
 			       if ( $scope.creneau_en_creation ) {
 				   $scope.creneau.matiere_id = $scope.matiere_id;
@@ -116,14 +117,54 @@ angular.module( 'cahierDeTexteApp' )
 				   $scope.creneau.semaines_de_presence_regroupement = bitfield_to_fixnum( $scope.semaines_actives.regroupement );
 
 				   $scope.creneau.$update();
-
-				   $scope.is_dirty();
 			       } else {
 				   // Gestion des Cours et Devoirs
-				   var promesse = $q.when( true );
-				   var promesses = [];
+				   var handle_devoirs = function( devoirs, cours ) {
+				       _( devoirs ).each( function ( devoir ) {
+					   if ( _( devoir ).has( 'contenu' ) && ( devoir.contenu.length > 0 ) ) {
+					       // FIXME: on $save() ou $update() tous les devoirs qu'ils aient été modifiés ou non
+					       var prom = $q.defer();
+					       if ( devoir.create ) {
+						   var promesse = $q.when( true );
+						   if ( _(cours).isNull() ) {
+						       console.debug( devoir )
+						       var creneau = API.get_creneau_emploi_du_temps({ id: devoir.creneau_emploi_du_temps_id });
+						       console.debug(creneau)
+						   }
+						   devoir.cours_id = cours.id;
+						   devoir.$save().then( function success( result ) {
+						       devoir.id = result.id;
+						       prom.resolve( result );
+						   }, function ( response ) {
+						       $scope.erreurs.unshift( {
+							   status: response.status,
+							   message: response.data.error
+						       } );
+						       prom.reject( response );
+						   } );
+					       } else {
+						   devoir.$update().then( function success( result ) {
+						       devoir.id = result.id;
+						       prom.resolve( result );
+						   }, function ( response ) {
+						       $scope.erreurs.unshift( {
+							   status: response.status,
+							   message: response.data.error
+						       } );
+						       prom.reject( response );
+						   } );
+					       }
+
+					       promesses.push( prom.promise );
+					   }
+				       } );
+				   };
+
+				   // Séquence Pédogogique du créneau
 				   if ( ( $scope.cours.contenu.length > 0 ) || ( $scope.cours.devoirs.length > 0 ) ) {
+				       var promesse = $q.when( true );
 				       var cours_devoirs = angular.copy( $scope.cours.devoirs );
+
 				       if ( $scope.cours.create ) {
 					   $scope.cours.cahier_de_textes_id = _( $scope.classes ).findWhere( {
 					       id: $scope.regroupement_id
@@ -133,86 +174,20 @@ angular.module( 'cahierDeTexteApp' )
 				       } else {
 					   promesse = $scope.cours.$update();
 				       }
-				       $scope.is_dirty();
 
 				       // Devoirs liés au cours
-				       promesse.then( function ( cours_from_DB ) {
-					   // traitement des devoirs attachés
-					   _( cours_devoirs ).each( function ( devoir ) {
-					       if ( _( devoir ).has( 'contenu' ) && ( devoir.contenu.length > 0 ) ) {
-						   // FIXME: on $save() ou $update() tous les devoirs qu'ils aient été modifiés ou non
-						   devoir.dirty = true;
-
-						   var prom = $q.defer();
-						   if ( devoir.create ) {
-						       devoir.cours_id = cours_from_DB.id;
-						       devoir.$save().then( function success( result ) {
-							   devoir.id = result.id;
-							   prom.resolve( result );
-						       }, function ( response ) {
-							   $scope.erreurs.unshift( {
-							       status: response.status,
-							       message: response.data.error
-							   } );
-							   prom.reject( response );
-						       } );
-						   } else {
-						       devoir.$update().then( function success( result ) {
-							   devoir.id = result.id;
-							   prom.resolve( result );
-						       }, function ( response ) {
-							   $scope.erreurs.unshift( {
-							       status: response.status,
-							       message: response.data.error
-							   } );
-							   prom.reject( response );
-						       } );
-						   }
-
-						   promesses.push( prom.promise );
-					       }
+				       if ( cours_devoirs.length > 0 ) {
+					   promesse.then( function ( cours_from_DB ) {
+					       handle_devoirs( cours_devoirs, cours_from_DB );
 					   } );
-				       } );
-				   }
-				   // Devoirs dûs ce jour
-				   // Devoirs liés au cours
-				   _( $scope.devoirs ).each( function ( devoir ) {
-				       if ( _( devoir ).has( 'contenu' ) && ( devoir.contenu.length > 0 ) ) {
-					   // FIXME: on $save() ou $update() tous les devoirs qu'ils aient été modifiés ou non
-					   devoir.dirty = true;
-
-					   var prom = $q.defer();
-					   if ( devoir.create ) {
-					       devoir.cours_id = -1; //FIXME: get cours_id from cours attached to creneau_emploi_du_temps_id, create it if necessary
-					       devoir.$save().then( function success( result ) {
-						   devoir.id = result.id;
-						   prom.resolve( result );
-					       }, function ( response ) {
-						   $scope.erreurs.unshift( {
-						       status: response.status,
-						       message: response.data.error
-						   } );
-						   prom.reject( response );
-					       } );
-					   } else {
-					       devoir.$update().then( function success( result ) {
-						   devoir.id = result.id;
-						   prom.resolve( result );
-					       }, function ( response ) {
-						   $scope.erreurs.unshift( {
-						       status: response.status,
-						       message: response.data.error
-						   } );
-						   prom.reject( response );
-					       } );
-					   }
-
-					   promesses.push( prom.promise );
 				       }
-				   } );
+				   }
 
-				   $q.all( promesses ).then( $scope.fermer );
+				   // Devoirs dûs ce créneau
+				   handle_devoirs( $scope.devoirs, null );
 			       }
+
+			       $q.all( promesses ).then( $scope.fermer );
 			   };
 
 
