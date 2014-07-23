@@ -125,6 +125,7 @@ angular.module( 'cahierDeTexteApp' )
 					       // FIXME: on $save() ou $update() tous les devoirs qu'ils aient été modifiés ou non
 					       var prom = $q.defer();
 					       if ( devoir.create ) {
+						   devoir.regroupement_id = $scope.regroupement_id;
 						   if ( ! _(cours).isNull() ) {
 						       devoir.cours_id = cours.id;
 						   }

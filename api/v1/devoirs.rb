@@ -53,6 +53,7 @@ module CahierDeTextesAPI
         requires :date_due, type: Date
 
         optional :cours_id
+        optional :regroupement_id
         optional :ressources
         optional :temps_estime
       }
@@ -69,7 +70,23 @@ module CahierDeTextesAPI
                                   temps_estime: params[:temps_estime],
                                   date_creation: Time.now)
 
-          devoir.update( cours_id: params[:cours_id] ) if params[ :cours_id ]
+          if params[ :cours_id ] && !params[ :cours_id ].nil?
+            devoir.update( cours_id: params[:cours_id] )
+          else
+            cours = Cours.where( creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id] ).where( date_cours: params[:date_due] ).first
+            if cours.nil?
+              cahier_de_textes = CahierDeTextes.where( regroupement_id: params[:regroupement_id] ).first
+              cahier_de_textes = CahierDeTextes.create( regroupement_id: params[:regroupement_id] ) if cahier_de_textes.nil?
+
+              cours = Cours.create( enseignant_id: user.uid,
+                                    cahier_de_textes_id: cahier_de_textes.id,
+                                    creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
+                                    date_cours: params[:date_due],
+                                    date_creation: Time.now,
+                                    contenu: '' )
+            end
+            devoir.update( cours_id: cours.id )
+          end
 
           # 3. traitement des ressources
           params[:ressources] && params[:ressources].each do
