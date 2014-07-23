@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 
+require_relative './ToDeepHashMixin'
+
 class Devoir < Sequel::Model( :devoirs )
+  include ToDeepHashMixin
+
   many_to_many :ressources
   many_to_one :creneau_emploi_du_temps
   many_to_one :type_devoir
@@ -18,15 +22,6 @@ class Devoir < Sequel::Model( :devoirs )
   def a_faire_par!( eleve_id )
     # FIXME: peut sûrement mieux faire
     devoir_todo_items_dataset.where(eleve_id: eleve_id).destroy
-  end
-
-  def to_deep_hash
-    h = self.to_hash
-    self.class.associations.each { |association|
-      h[association] = self[association]
-    }
-
-    h
   end
 end
 
