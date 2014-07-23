@@ -196,19 +196,22 @@ angular.module( 'cahierDeTexteApp' )
 
 			   // Gestion des Cours et Devoirs ///////////////////////////////////////////////////////////////////////////
 			   if ( ! $scope.creneau_en_creation ) {
-			       if ( cours === null ) {
+			       if ( _(cours).isNull() ) {
 				   $scope.cours = create_cours( creneau );
-				   $scope.cours.devoirs = [];
 			       } else {
-				   $scope.cours = cours;
-				   $scope.cours.create = false;
-				   // TODO: récupérer les devoirs liés à ce cours
-				   $scope.cours.devoirs = [];
-			       }
+				   cours.$promise.then( function() {
+				       $scope.cours = cours;
+				       $scope.cours.create = false;
+				       $scope.cours.devoirs = $scope.cours.devoirs.map( function( devoir ) {
+					   var d = new Devoirs( devoir );
+					   $scope.estimation_leave( d );
 
-			       $scope.devoirs = devoirs.map( function( devoir ) {
-				   devoir.cours = Cours.get({ id: devoir.cours_id});
-			       });
+					   return d;
+				       });
+				   });
+			       }
+			       $scope.devoirs = devoirs;
+
 			       $scope.types_de_devoir = API.query_types_de_devoir();
 
 			       // fonctions UI pour le temps estimé
