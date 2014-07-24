@@ -30,17 +30,27 @@ angular.module('cahierDeTexteApp')
 			      _this.title += response.libelle_long;
 			  });
 
-			  if ( _(event.cours).isNull() || _(event.cours).isEmpty() ) {
-			      if ( event.devoirs.length > 0 ) {
-				  this.className = _( _(event.devoirs).pluck( 'fait' ) ).contains( true ) ? 'saisie-devoirs-fait' : 'saisie-devoirs';
-			      } else {
-				  this.className = 'saisie-vide';
+			  if ( event.devoirs.length > 0 ) {
+			      this.className = _( _(event.devoirs).pluck( 'fait' ) ).contains( true ) ? 'edt-devoir-fait' : 'edt-devoir-a-faire';
+			      if ( $scope.current_user.profil_actif.type === 'ELV' && this.className == 'edt-devoir-a-faire' ) {
+				  var types_de_devoirs_a_faire = _(event.devoirs).pluck( 'type_devoir_id' );
+				  if ( _(types_de_devoirs_a_faire).contains( 2 ) ) { // TypeDevoir[2] est un DM
+				      this.className = 'edt-devoir-note-maison';
+				  } else if ( _(types_de_devoirs_a_faire).contains( 1 ) ) { // TypeDevoir[2] est un DS
+				      this.className = 'edt-devoir-note-surveille';
+				  }
 			      }
 			  } else {
-			      this.className = !_(event.cours.date_validation).isNull() && $scope.current_user.profil_actif.type === 'ENS' ? 'saisie-valide' : 'saisie-invalide';
+			      this.className = 'edt-cours';
+			      if ( !_(event.cours).isNull() ) {
+				  this.className += '-saisie';
+				  if ( !_(event.cours.date_validation).isNull() && $scope.current_user.profil_actif.type === 'ENS' ) {
+				      this.className += '-valide';
+				  }
+			      }
 			  }
 
-			  if ( ( $scope.current_user.profil_actif.type === 'ELV' && this.className === 'saisie-vide' ) ) {
+			  if ( ( $scope.current_user.profil_actif.type === 'ELV' && _(event.cours).isNull() ) ) {
 			      this.className += ' unclickable-event';
 			  } else {
 			      this.className += ' clickable-event';

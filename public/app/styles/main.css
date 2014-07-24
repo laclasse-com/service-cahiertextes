@@ -44,19 +44,22 @@ body {
 .cdt-agendaDay-devoir{background-color:#ff6666}
 .cdt-agendaDay-devoir-fait{background-color:#66cc66}
 
+.fc-event-title{text-align:center}
 .clickable-event{ cursor:pointer }
 .un-clickable-event{ cursor:default }
 
-.saisie-vide { background-color:#a0a0a0 }
-.saisie-invalide { background-color:#aaf }
-.saisie-valide { background-color:#0f0 }
-.saisie-devoirs { background-color:#f66 }
-.saisie-devoirs-fait { background-color:#6c6 }
+.edt-cours, .edt-cours-saisie, .edt-cours-saisie-valide { background-color: #929292 }
+.edt-cours-saisie { text-decoration: underline }
+.edt-cours-saisie-valide { border-left: 8px solid #0f0 }
+.edt-permanence{ background-color: #d5d5d5 }
+.edt-devoir-a-faire{ background-color: #ae8ab8 }
+.edt-devoir-fait{ background-color: #8dc47c }
+.edt-devoir-note-maison{ background-color: #00afd4 }
+.edt-devoir-note-surveille{ background-color: #f56d68 }
 
-.saisie-invalide,
-.saisie-valide,
-.saisie-devoirs,
-.saisie-devoirs-fait { font-weight:bold }
+.edt-cours-saisie,
+.edt-devoir-a-faire,
+.edt-devoir-fait { font-weight:bold }
 
 .timepicker{display:inline-block}
 
