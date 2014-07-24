@@ -61,13 +61,13 @@
 
       <button type="button" class="btn btn-sm btn-danger pull-right"
 	      data-ng-click="effacer_cours(  )"
-	      data-ng-show="cours.contenu !== ''" >
+	      data-ng-show="cours.editable" >
 	<span class="glyphicon glyphicon-trash"></span> Supprimer
       </button>
       <div class="clearfix"></div>
       <div class="panel panel-default">
 	<!-- {{{ Éditable -->
-	<div data-ng-show="cours.date_validation === null && cours.enseignant_id == current_user.uid">
+	<div data-ng-show="cours.editable">
 	  <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="cours.contenu" data-ng-change="is_dirty( cours )">
 	  </textarea>
 	  <div class="panel-footer">
@@ -116,7 +116,7 @@
 	</div>
 	<!-- }}} -->
 	<!-- {{{ Lecture seule -->
-	<span data-ng-bind-html="cours.contenu" data-ng-show="cours.date_validation !== null || cours.enseignant_id != current_user.uid"></span>
+	<div data-ng-bind-html="cours.contenu" data-ng-hide="cours.editable"></div>
 	<!-- }}} -->
       </div>
 
@@ -150,7 +150,7 @@
 	    <div class="panel-body">
 	      <h3 class="panel-title">Temps de travail estimé</h3>
 	      <rating data-ng-model="devoir.temps_estime" max="15" readonly="false"  ng-click="is_dirty( null )" on-hover="estimation_over(devoir, value)" on-leave="estimation_leave(devoir)" state-on="'glyphicon-record'" state-off="'glyphicon-unchecked'"></rating>
-	      <span class="label" data-ng-class="{'label-success': devoir.overValue<4, 'label-info': devoir.overValue>=4 && devoir.overValue<8 , 'label-warning': devoir.overValue>=8 && devoir.overValue<12, 'label-danger': devoir.overValue>=12}" data-ng-show="devoir.overValue>0 || devoir.temps_estime > 0">{{devoir.minutes || devoir.temps_estime * 5}} min</span>
+	      <span class="label" data-ng-class="{'label-success': devoir.overValue<4, 'label-info': devoir.overValue>=4 && devoir.overValue<8 , 'label-warning': devoir.overValue>=8 && devoir.overValue<12, 'label-danger': devoir.overValue>=12}" data-ng-show="devoir.overValue > 0 || devoir.temps_estime > 0">{{devoir.minutes || devoir.temps_estime * 5}} min</span>
 	    </div>
 	    <div class="panel-footer">
 	      <ul>
@@ -205,7 +205,7 @@
 	<div class="panel-body">
 	  <h3 class="panel-title">Temps de travail estimé</h3>
 	  <rating data-ng-model="devoir.temps_estime" max="15" readonly="false"  ng-click="is_dirty( null )" on-hover="estimation_over(devoir, value)" on-leave="estimation_leave(devoir)" state-on="'glyphicon-record'" state-off="'glyphicon-unchecked'"></rating>
-	  <span class="label" data-ng-class="{'label-success': devoir.overValue<4, 'label-info': devoir.overValue>=4 && devoir.overValue<8 , 'label-warning': devoir.overValue>=8 && devoir.overValue<12, 'label-danger': devoir.overValue>=12}" data-ng-show="devoir.overValue>0 || devoir.temps_estime > 0">{{devoir.minutes || devoir.temps_estime * 5}} min</span>
+	  <span class="label" data-ng-class="{'label-success': devoir.overValue<4, 'label-info': devoir.overValue>=4 && devoir.overValue<8 , 'label-warning': devoir.overValue>=8 && devoir.overValue<12, 'label-danger': devoir.overValue>=12}" data-ng-show="devoir.overValue > 0 || devoir.temps_estime > 0">{{devoir.minutes || devoir.temps_estime * 5}} min</span>
 	</div>
 	<div class="panel-footer">
 	  <ul>

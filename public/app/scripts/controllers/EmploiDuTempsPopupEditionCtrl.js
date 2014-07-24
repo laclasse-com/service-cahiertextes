@@ -193,6 +193,7 @@ angular.module( 'cahierDeTexteApp' )
 			   if ( ! $scope.creneau.en_creation ) {
 			       if ( _(cours).isNull() ) {
 				   $scope.cours = create_cours( creneau );
+				   $scope.cours.editable = true;
 			       } else {
 				   cours.$promise.then( function() {
 				       $scope.cours = cours;
@@ -203,6 +204,10 @@ angular.module( 'cahierDeTexteApp' )
 
 					   return d;
 				       });
+				       $scope.cours.editable = _($scope.cours.date_validation).isNull() && $scope.cours.enseignant_id == $scope.current_user.uid;
+				       if ( $scope.cours.editable ) {
+					   $scope.cours.contenu = $sce.trustAsHtml( $scope.cours.contenu );
+				       }
 				   });
 			       }
 			       $scope.devoirs = devoirs;
