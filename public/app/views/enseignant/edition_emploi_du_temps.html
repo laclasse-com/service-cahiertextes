@@ -2,35 +2,35 @@
 <div class="modal-header">
   <button type="button" class="close pull-right" aria-hidden="true" data-ng-click="annuler()">&times;</button>
   <button type="button" class="btn btn-xs pull-right"
-	  data-ng-class="{'btn-default': !creneau_en_creation, 'btn-danger': creneau_en_creation}"
-	  data-ng-model="creneau_en_creation"
+	  data-ng-class="{'btn-default': !creneau.en_creation, 'btn-danger': creneau.en_creation}"
+	  data-ng-model="creneau.en_creation"
 	  btn-checkbox
 	  data-ng-show="cours.create" >
     <span class="glyphicon glyphicon-edit"></span>
   </button>
-  <button type="button" class="btn btn-sm btn-warning pull-right" data-ng-click="effacer_creneau()" data-ng-show="creneau_en_creation && cours.create">
+  <button type="button" class="btn btn-sm btn-warning pull-right" data-ng-click="effacer_creneau()" data-ng-show="creneau.en_creation && cours.create">
   <span class="glyphicon glyphicon-trash"></span> Supprimer le créneau
   </button>
 
   <h5>
-    <span data-ng-hide="creneau_en_creation">
+    <span data-ng-hide="creneau.en_creation">
       {{classe.libelle}} - {{matiere.libelle}} ({{creneau.heure_debut | date: 'shortTime'}} - {{creneau.heure_fin | date: 'shortTime'}})
     </span>
-    <span data-ng-show="creneau_en_creation">
+    <span data-ng-show="creneau.en_creation">
       <select data-ng-model="scope.regroupement_id" data-ng-options="classe.id as classe.libelle for classe in classes">
       </select>
       -
       <select data-ng-model="scope.matiere_id" data-ng-options="matiere.id as matiere.libelle_long for matiere in matieres">
       </select>
 
-      (<timepicker class="timepicker" data-ng-model="creneau_tmp_heure_debut" data-show-meridian="false" data-minute-step="5"></timepicker>
+      (<timepicker class="timepicker" data-ng-model="creneau.tmp_heure_debut" data-show-meridian="false" data-minute-step="5"></timepicker>
       -
-      <timepicker class="timepicker" data-ng-model="creneau_tmp_heure_fin" data-show-meridian="false" data-minute-step="5"></timepicker>)
+      <timepicker class="timepicker" data-ng-model="creneau.tmp_heure_fin" data-show-meridian="false" data-minute-step="5"></timepicker>)
     </span>
   </h5>
 
   <!-- ####################### Semaines Actives ########################### -->
-  <div data-ng-show="creneau_en_creation">
+  <div data-ng-show="creneau.en_creation">
     <h5> Semaines Actives</h5>
     <div class="btn-group">
       <button class="btn btn-sm btn-info" data-ng-click="apply_template( 'semaine_A' )">semaine A</button>
@@ -53,7 +53,7 @@
   </div>
 </div>
 
-<div class="modal-body" data-ng-hide="creneau_en_creation">
+<div class="modal-body" data-ng-hide="creneau.en_creation">
   <tabset>
 
     <!-- ####################### Séquence Pédagogique du jour ####################### -->
@@ -64,10 +64,10 @@
 	      data-ng-show="cours.contenu !== ''" >
 	<span class="glyphicon glyphicon-trash"></span> Supprimer
       </button>
-
+      <div class="clearfix"></div>
       <div class="panel panel-default">
 	<!-- {{{ Éditable -->
-	<div data-ng-show="cours.date_validation === null || ( cours.date_validation === null && cours.enseignant_id === current_user.uid )">
+	<div data-ng-show="cours.date_validation === null && cours.enseignant_id == current_user.uid">
 	  <textarea class="panel-body" data-ui-tinymce="tinyMCEOptions" data-ng-model="cours.contenu" data-ng-change="is_dirty( cours )">
 	  </textarea>
 	  <div class="panel-footer">
@@ -116,7 +116,7 @@
 	</div>
 	<!-- }}} -->
 	<!-- {{{ Lecture seule -->
-	<span data-ng-bind-html="cours.contenu" data-ng-show="cours.date_validation !== null || cours.enseignant_id !== current_user.uid"></span>
+	<span data-ng-bind-html="cours.contenu" data-ng-show="cours.date_validation !== null || cours.enseignant_id != current_user.uid"></span>
 	<!-- }}} -->
       </div>
 
@@ -140,7 +140,7 @@
 			data-ng-options="type_de_devoir.id as type_de_devoir.description for type_de_devoir in types_de_devoir">
 		</select>
 		à faire pour le
-		<select data-ng-required="true" data-ng-model="devoir.date_due" data-ng-change="set_creneau_date_due( devoir )"
+		<select data-ng-required="true" data-ng-model="devoir.date_due" data-ng-change="set_creneau.date_due( devoir )"
 			data-ng-options="creneau.date_due as creneau.label_sbox group by creneau.semaine for creneau in creneaux_devoirs_possibles"
 			data-ng-init="devoir.date_due=creneaux_devoirs_possibles[0].date_due">
 		</select>
@@ -195,7 +195,7 @@
 		    data-ng-options="type_de_devoir.id as type_de_devoir.description for type_de_devoir in types_de_devoir">
 	    </select>
 	    à faire pour le
-	    <select data-ng-required="true" data-ng-model="devoir.date_due" data-ng-change="set_creneau_date_due( devoir )"
+	    <select data-ng-required="true" data-ng-model="devoir.date_due" data-ng-change="set_creneau.date_due( devoir )"
 		    data-ng-options="creneau.date_due as creneau.label_sbox group by creneau.semaine for creneau in creneaux_devoirs_possibles"
 		    data-ng-init="devoir.date_due=creneaux_devoirs_possibles[0].date_due">
 	    </select>
@@ -235,9 +235,9 @@
 
 <div class="modal-footer">
   <button type="button" class="btn btn-sm btn-info" data-ng-click="annuler()">
-    <span class="glyphicon glyphicon-remove-sign"></span> <span data-ng-show="dirty || creneau_en_creation">Annuler</span><span data-ng-hide="dirty || creneau_en_creation">Fermer</span>
+    <span class="glyphicon glyphicon-remove-sign"></span> <span data-ng-show="dirty || creneau.en_creation">Annuler</span><span data-ng-hide="dirty || creneau.en_creation">Fermer</span>
   </button>
-  <button type="button" class="btn btn-sm btn-success" data-ng-click="valider()" data-ng-show="dirty || creneau_en_creation">
+  <button type="button" class="btn btn-sm btn-success" data-ng-click="valider()" data-ng-show="dirty || creneau.en_creation">
     <span class="glyphicon glyphicon-ok-sign"></span> Valider
   </button>
 </div>
