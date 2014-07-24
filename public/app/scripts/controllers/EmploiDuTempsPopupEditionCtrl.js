@@ -35,9 +35,9 @@ angular.module( 'cahierDeTexteApp' )
 			   $scope.creneau = creneau;
 			   $scope.matieres = matieres;
 			   $scope.classes = classes;
-			   $scope.creneau_en_creation = $scope.creneau.matiere_id.length == 0 || $scope.creneau.regroupement_id === undefined;
-			   $scope.creneau_tmp_heure_debut = $filter('correctTimeZoneToGMT')( angular.copy( $scope.creneau.heure_debut ) );
-			   $scope.creneau_tmp_heure_fin = $filter('correctTimeZoneToGMT')( angular.copy( $scope.creneau.heure_fin ) );
+			   $scope.creneau.en_creation = $scope.creneau.matiere_id.length == 0 || $scope.creneau.regroupement_id === undefined;
+			   $scope.creneau.tmp_heure_debut = $filter('correctTimeZoneToGMT')( angular.copy( $scope.creneau.heure_debut ) );
+			   $scope.creneau.tmp_heure_fin = $filter('correctTimeZoneToGMT')( angular.copy( $scope.creneau.heure_fin ) );
 			   $scope.matiere_id = $scope.creneau.matiere_id.length > 0 ? $scope.creneau.matiere_id : _.chain( $scope.matieres ).values().first().value().id;
 			   $scope.regroupement_id = $scope.creneau.regroupement_id !== 'undefined' ? parseInt( $scope.creneau.regroupement_id ) : _( $scope.classes ).first().id;
 			   $scope.classe = _( $scope.classes ).findWhere( { id: parseInt( $scope.regroupement_id ) } );
@@ -69,7 +69,7 @@ angular.module( 'cahierDeTexteApp' )
 				   $scope.semaines_actives.regroupement = template;
 				   break;
 			       case 'initialize':
-				   $scope.semaines_actives.regroupement = fixnum_to_bitfield( $scope.creneau_en_creation ? 9007199254740991 : _(creneau.regroupements).findWhere( { regroupement_id: creneau.regroupement_id } ).semaines_de_presence );
+				   $scope.semaines_actives.regroupement = fixnum_to_bitfield( $scope.creneau.en_creation ? 9007199254740991 : _(creneau.regroupements).findWhere( { regroupement_id: creneau.regroupement_id } ).semaines_de_presence );
 				   break;
 			       }
 			   };
@@ -79,7 +79,7 @@ angular.module( 'cahierDeTexteApp' )
 			   $scope.accordion_cours_devoirs_open = false;
 			   $scope.dirty = false;
 			   $scope.deleted = false;
-			   $scope.creneau_deleted = false;
+			   $scope.creneau.deleted = false;
 
 			   $scope.fermer = function () {
 			       $modalInstance.close( $scope );
@@ -96,7 +96,7 @@ angular.module( 'cahierDeTexteApp' )
 			   };
 
 			   $scope.annuler = function () {
-			       if ( $scope.creneau_en_creation && $scope.creneau.matiere_id === '' && $scope.creneau.regroupement_id === 'undefined' ) {
+			       if ( $scope.creneau.en_creation && $scope.creneau.matiere_id === '' && $scope.creneau.regroupement_id === 'undefined' ) {
 				   $scope.effacer_creneau();
 			       } else {
 				   $scope.dirty = false;
@@ -109,11 +109,11 @@ angular.module( 'cahierDeTexteApp' )
 			       $scope.erreurs = [];
 			       var promesses = [];
 
-			       if ( $scope.creneau_en_creation ) {
+			       if ( $scope.creneau.en_creation ) {
 				   $scope.creneau.matiere_id = $scope.matiere_id;
 				   $scope.creneau.regroupement_id = $scope.regroupement_id;
-				   $scope.creneau.heure_debut = $filter('correctTimeZone')( $scope.creneau_tmp_heure_debut );
-				   $scope.creneau.heure_fin = $filter('correctTimeZone')( $scope.creneau_tmp_heure_fin );
+				   $scope.creneau.heure_debut = $filter('correctTimeZone')( $scope.creneau.tmp_heure_debut );
+				   $scope.creneau.heure_fin = $filter('correctTimeZone')( $scope.creneau.tmp_heure_fin );
 				   $scope.creneau.semaines_de_presence_regroupement = bitfield_to_fixnum( $scope.semaines_actives.regroupement );
 
 				   $scope.creneau.$update();
@@ -190,7 +190,7 @@ angular.module( 'cahierDeTexteApp' )
 
 
 			   // Gestion des Cours et Devoirs ///////////////////////////////////////////////////////////////////////////
-			   if ( ! $scope.creneau_en_creation ) {
+			   if ( ! $scope.creneau.en_creation ) {
 			       if ( _(cours).isNull() ) {
 				   $scope.cours = create_cours( creneau );
 			       } else {
