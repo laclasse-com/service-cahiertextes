@@ -190,6 +190,13 @@
 		  data-ng-click="effacer_devoir_devoirs( devoir )" >
 	    <span class="glyphicon glyphicon-trash"></span> Supprimer
 	  </button>
+	  <button class="btn btn-default pull-right"
+		data-ng-show="devoir.cours.contenu"
+		data-tooltip-trigger="click"
+		  data-tooltip-html-unsafe="{{devoir.cours.contenu}}">
+	    <span class="glyphicon glyphicon-briefcase"></span> Séquence Pédagogique
+	  </button>
+
 	  <div class="row-fluid">
 	    <select data-ng-required="true" data-ng-model="devoir.type_devoir_id"
 		    data-ng-options="type_de_devoir.id as type_de_devoir.description for type_de_devoir in types_de_devoir">
