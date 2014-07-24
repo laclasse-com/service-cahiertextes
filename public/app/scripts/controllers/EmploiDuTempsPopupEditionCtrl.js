@@ -205,7 +205,7 @@ angular.module( 'cahierDeTexteApp' )
 					   return d;
 				       });
 				       $scope.cours.editable = _($scope.cours.date_validation).isNull() && $scope.cours.enseignant_id == $scope.current_user.uid;
-				       if ( $scope.cours.editable ) {
+				       if ( !$scope.cours.editable ) {
 					   $scope.cours.contenu = $sce.trustAsHtml( $scope.cours.contenu );
 				       }
 				   });
