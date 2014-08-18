@@ -25,8 +25,7 @@ angular.module('cahierDeTexteApp')
 				     stateName = 'eleve.emploi_du_temps';
 				     break;
 				 default:
-				     $location.url( '/logout' );
-				     $location.replace();
+				     stateName = '404';
 				 }
 				 reloadStatus = ( $state.current.name == 'index' || $state.current.name == stateName ) ? true : false;
 				 $state.transitionTo( stateName, $state.params, { reload: reloadStatus, inherit: false, notify: reloadStatus } );
