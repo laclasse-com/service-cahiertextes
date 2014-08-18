@@ -39,3 +39,4 @@ config/constants.rb
 /clef_privee
 /clef_publique
 /public/app/scripts/constants.js
+/spec/fixtures/UDT.zip
