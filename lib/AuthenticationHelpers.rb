@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 require 'rest-client'
+require 'nokogiri'
 
 module AuthenticationHelpers
   
@@ -22,35 +23,19 @@ module AuthenticationHelpers
       route = CGI.escape( "#{env['rack.url_scheme']}://#{env['HTTP_HOST']}#{route}" )
     end
     if !params[:restmod].nil?
-      puts; 120.times { putc '-' }; puts '-'
-      puts params.inspect 
-      # Mode Rest
-      # 1. Poster l'authentification CAS et récupérer un TGT
-      tgt = RestClient.post get_protocol + CASAUTH::CONFIG[:host] + CASAUTH::CONFIG[:restmod_url], 
-                      :username => params[:username],
-                      :password => params[:password]
-      puts; 120.times { putc '-' }; puts '-'
-      puts "received tgt from CAS : #{tgt}"
-      #2. Récupérer un ST
-      st = RestClient.post get_protocol + CASAUTH::CONFIG[:host] + CASAUTH::CONFIG[:restmod_url] + '/' + tgt.to_s,
-                           :service => "#{route}"
-      puts; 120.times { putc '-' }; puts '-'
-      puts "received st from CAS : #{st}"
-      # 3. valider le Service Ticket et recevoir le jeton xml
-      token = RestClient.get get_protocol + CASAUTH::CONFIG[:host] + CASAUTH::CONFIG[:service_validate_url], 
-                             {:params => {:service => "#{route}", :ticket => st.to_s}}
-                           
-      puts; 120.times { putc '-' }; puts '-'
-      puts "reading xml token from CAS : #{token}"
-      #
-      # TODO : Gestion d'erreur
-      # TODO : Parser le token xml pour trouver User et Uid
-      # TODO : Faire le boulot d'OmniAuth : session rack, notamment.
-      #
-      init_session( env, "BAS14ELV11", "VAX64436" )
-      puts; 120.times { putc '-' }; puts '-'
-      puts env.inspect      
-      puts; 120.times { putc '-' }; puts '-'; puts
+      # Mode Rest       
+      cas_token = cas_dialog_proxiing route
+     
+      # Gestion d'erreur
+      unless cas_token[:error].empty?
+        STDERR.puts "REST authentication failure !"
+        STDERR.puts cas_token[:error].to_s
+        halt 401, {:error => cas_token[:error] }.to_json
+      end
+      init_session( env, cas_token[:user], cas_token[:uid] )
+      # Ici tout est ok,on renvoie 200 ok car tout s'est admiraaaaablement bien passé....
+      status 200
+
     else
       # Mode narmol : navigateur classique
       if route.empty?
@@ -60,7 +45,38 @@ module AuthenticationHelpers
     end
     
   end
-
+  
+  #
+  #  Dialogue avec CAS et 
+  #  Analyse et lecture du jeton CAS, 
+  #  pour le mode login REST.
+  #
+  def cas_dialog_proxiing(route)
+    cas = {}
+    cas[:error] = ""
+    # 1. Poster l'authentification CAS et récupérer un TGT
+    tgt = RestClient.post get_protocol + CASAUTH::CONFIG[:host] + CASAUTH::CONFIG[:restmod_url], 
+      :username => params[:username],
+      :password => params[:password]
+    # 2. Récupérer un ST
+    st = RestClient.post get_protocol + CASAUTH::CONFIG[:host] + CASAUTH::CONFIG[:restmod_url] + '/' + tgt.to_s,
+      :service => "#{route}"
+    # 3. valider le Service Ticket et recevoir le jeton xml
+    token = RestClient.get get_protocol + CASAUTH::CONFIG[:host] + CASAUTH::CONFIG[:service_validate_url], 
+      {:params => {:service => "#{route}", :ticket => st.to_s}}
+    # 4. Analyse de la réponse de CAS.
+    doc  = Nokogiri::XML( token ).remove_namespaces!
+    cas_response = doc.xpath "//serviceResponse/authenticationSuccess"
+    # gestion d'erreur CAS
+    if cas_response.empty?
+      # authenticationSuccess n'existe pas, il y a donc une erreur d'authetification
+      cas[:error] = cas_response = doc.xpath("//serviceResponse/authenticationFailure/text()").to_s
+    end
+    cas[:user] = doc.xpath("////user/text()").to_s
+    cas[:uid]  = doc.xpath("////uid/text()").to_s
+    cas
+  end
+  
   #
   # Délogue l'utilisateur du serveur CAS et de l'application
   #
@@ -90,7 +106,6 @@ module AuthenticationHelpers
   # Initialisation de la session après l'authentification
   #
   def init_session( env, user_rest="", uid_rest="" )
-    STDERR.puts '. . initialisation de la session'
     # Voir si on est passé par Omniauth ou pas 
     # Dans le cas d'une connexion en mode REST, on ne passe pas par omniAuth
     unless env['omniauth.auth'].nil?
