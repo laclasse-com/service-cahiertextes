@@ -1,7 +1,7 @@
 # -*- coding: utf-8; mode: ruby -*-
 
 source 'https://rubygems.org'
-#source 'http://gems.erasme.org'
+source 'http://gems.erasme.org'
 
 gem 'grape'
 gem 'grape-swagger'
@@ -15,7 +15,7 @@ gem 'rest-client'
 gem 'sequel'
 gem 'sinatra'
 gem 'thin'
-gem 'zipruby'
+gem 'rubyzip'
 
 group :development do
   gem 'guard'
