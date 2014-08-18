@@ -10,6 +10,11 @@ angular.module( 'cahierDeTexteApp' )
 		   $urlRouterProvider.when( '/eleve', '/eleve/emploi_du_temps' );
 
 		   $stateProvider
+		   // 404 /////////////////////////////////////////////////////////////////
+		       .state('404', {
+			   url: '/404',
+			   templateUrl: 'app/views/common/404.html'
+		       })
 		   // index ///////////////////////////////////////////////////////////////
 		       .state('index', {
 			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'DIR', 'ENS', 'ELV' ] ); } },
