@@ -5,11 +5,11 @@ require_relative '../../lib/pronote'
 
 module CahierDeTextesAPI
   module V1
-    class ProNoteAPI < Grape::API
+    class ImportAPI < Grape::API
       format :json
 
-      desc 'Upload a XML file and load it in DB.'
-      post '/xml' do
+      desc 'Receive a Pronote XML file and load it in DB.'
+      post '/pronote' do
         # Consommation du fichier reçu
         ProNote.load_xml( File.open( params[:xml_file][:tempfile] ) )
 

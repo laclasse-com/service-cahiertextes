@@ -2,7 +2,7 @@
 
 require_relative './users'
 
-require_relative './pronote'
+require_relative './import'
 require_relative './etablissements'
 require_relative './cours'
 require_relative './devoirs'
@@ -22,7 +22,7 @@ module CahierDeTextesAPI
 
       resource( :users                    ) { mount ::CahierDeTextesAPI::V1::UsersAPI }
 
-      resource( :pronote                  ) { mount ::CahierDeTextesAPI::V1::ProNoteAPI }
+      resource( :import                   ) { mount ::CahierDeTextesAPI::V1::ImportAPI }
       resource( :etablissements           ) { mount ::CahierDeTextesAPI::V1::EtablissementsAPI }
       resource( :cours                    ) { mount ::CahierDeTextesAPI::V1::CoursAPI }
       resource( :devoirs                  ) { mount ::CahierDeTextesAPI::V1::DevoirsAPI }
