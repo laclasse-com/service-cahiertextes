@@ -23,7 +23,7 @@ module CahierDeTextesAPI
     helpers AuthenticationHelpers
 
     before  do
-      pass if %r{#{APP_PATH}/auth/}.match(request.path)
+      pass if %r{#{APP_PATH}/(auth|login)/}.match(request.path)
       login! request.path_info unless is_logged?
     end
 
@@ -43,7 +43,7 @@ module CahierDeTextesAPI
       logout! "#{env['rack.url_scheme']}://#{env['HTTP_HOST']}#{APP_PATH}/"
     end
 
-    # Personne ne devrait jamais arriver sur les 3 routes suivantes...
+    # Personne ne devrait jamais arriver sur les 2 routes suivantes...
     get "#{APP_PATH}/auth/failure" do
       erb :auth_failure
     end
@@ -52,7 +52,18 @@ module CahierDeTextesAPI
       erb :auth_deauthorized
     end
 
-    get "#{APP_PATH}/login" do
+    # Login pour les applications tierces, en mode WEB
+    get "#{APP_PATH}/login/?" do
+      login! "#{APP_PATH}/"
+    end
+
+    # POST pour le login en mode REST, pour les applications souhaitant utiliser les API du Cahier de Textes.
+    # Dans ce cas le paramètre restmod et requis.
+    # Exemple avec curl : 
+    # curl --data "username=$USER&password=$PWD" --cookie-jar ./cookieCT.txt --insecure --location http://[Server]/ct/login/?restmod=Y
+    # Voir le  script d'exemple dans les specs.
+    # @see ./spec/api/test_login_curl_proxy.sh
+    post "#{APP_PATH}/login/?" do
       login! "#{APP_PATH}/"
     end
 
