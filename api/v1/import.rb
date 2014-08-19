@@ -22,8 +22,11 @@ module CahierDeTextesAPI
       end
 
       desc 'Receive a UDT ZIP file and load it in DB.'
-      post '/udt' do
-        UDT.load_zip( File.open( params[:file][:tempfile] ) )
+      params {
+        requires :uai, desc: 'uai de l\'établissement envoyé'
+      }
+      post '/udt/uai/:uai' do
+        UDT.load_zip( File.open( params[:file][:tempfile] ), params[ :uai ] )
 
         # on retourne un log succint des infos chargées
         { filename: params[:file][:filename],
