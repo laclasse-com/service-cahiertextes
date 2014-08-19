@@ -63,16 +63,16 @@
 * UDCal_12_50.xml :
 * UDCal_12_51.xml :
 * UDCal_12_52.xml :
-* UDCal_13.xml :
-* UDCal_14.xml :
-* UDCal_15.xml :
+* UDCal_13.xml : regroupements (???)
+* UDCal_14.xml : selections (???)
+* UDCal_15.xml : selections salles (???)
 * UDCal_16.xml : occupation des salles
 * UDCal_17.xml : désirs des profs
 * UDCal_19.xml : groupes
 * UDCal_20.xml : options des élèves (latin, lv2, ...)
-* UDCal_21.xml : groupes
+* UDCal_21.xml : appartenance de chaque élève aux classes et groupes avec semainier
 * UDCal_22.xml : volumes horaires par classe/matière (calculé ?)
-* UDCal_23.xml :
+* UDCal_23.xml : coenseignements (???)
 * UDCal_23_01.xml :
 * UDCal_23_02.xml :
 * UDCal_23_03.xml :
@@ -125,8 +125,8 @@
 * UDCal_23_50.xml :
 * UDCal_23_51.xml :
 * UDCal_23_52.xml :
-* UDCal_24.xml :
-* UDCal_25.xml :
+* UDCal_24.xml : calendrier scolaire
+* UDCal_25.xml : types d'événements (???)
 * UDCal_26_01.xml :
 * UDCal_26_02.xml :
 * UDCal_26_03.xml :
