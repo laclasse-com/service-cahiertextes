@@ -16,7 +16,8 @@ describe CahierDeTextesAPI::API do
 
   it 'uploads a file' do
     xml_filename = 'spec/fixtures/UDT.zip'
-    post '/v1/import/udt', file: Rack::Test::UploadedFile.new(xml_filename, 'text/xml')
+    uai = '0987654W'
+    post "/v1/import/udt/uai/#{uai}", file: Rack::Test::UploadedFile.new(xml_filename, 'text/xml')
     last_response.status.should == 201
   end
 
