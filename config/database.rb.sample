@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 # Configuration de la base de données de Backend
 #
@@ -6,12 +7,17 @@
 require 'logger'
 require 'sequel'
 
-DB = Sequel.mysql2(
-  'cahiertextes',
-  host: '127.0.0.1',
-  user: 'vagrant',
-  password: 'vagrant',
-  charset: 'utf8')
+DB_CONFIG = { name: 'cahiertextes',
+              host: '127.0.0.1',
+              user: 'vagrant',
+              password: 'vagrant',
+              charset: 'utf-8' }
+
+DB = Sequel.mysql2( DB_CONFIG[:name],
+                    host: DB_CONFIG[:host],
+                    user: DB_CONFIG[:user],
+                    password: DB_CONFIG[:password],
+                    charset: DB_CONFIG[:charset] )
 
 Sequel.extension(:pagination)
 Sequel.extension(:migration)
