@@ -113,14 +113,15 @@ module CahierDeTextesAPI
         requires :id, type: Integer
         requires :creneau_emploi_du_temps_id
         requires :regroupement_id
+        requires :date, type: Date
       }
-      put '/:id/copie/regroupement/:regroupement_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id' do
+      put '/:id/copie/regroupement/:regroupement_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date/:date' do
         cours = Cours[ params[:id] ]
 
         unless cours.nil?
           new_cours = Cours.create(  cahier_de_textes_id: CahierDeTextes.where(regroupement_id: params[:regroupement_id]).first.id,
                                      creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
-                                     date_cours: cours.date_cours, # FIXME: comment la calculer ?
+                                     date_cours: params[:date],
                                      date_creation: Time.now,
                                      contenu: params[:contenu],
                                      enseignant_id: cours.enseignant_id )
