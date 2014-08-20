@@ -11,7 +11,7 @@ angular.module('cahierDeTexteApp')
 			      && !response.data['profil_actif']['admin'] )
 			     ) {
 				 // traiter le raffraichissement de l'app en fonction du changement de profil actif
-				 var stateName = '';
+				 var stateName = '404';
 
 				 switch ( response.data['profil_actif']['type'] ) {
 				 case 'DIR':
@@ -23,8 +23,6 @@ angular.module('cahierDeTexteApp')
 				 case 'ELV':
 				     stateName = 'eleve.emploi_du_temps';
 				     break;
-				 default:
-				     stateName = '404';
 				 }
 				 $state.go( stateName, $state.params, { reload: true, inherit: false, notify: true } );
 			     }
