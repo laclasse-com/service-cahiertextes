@@ -103,7 +103,7 @@ angular.module('cahierDeTexteApp')
 						     matieres	: function () { return matieres; },
 						     classes	: function () { return classes; },
 						     creneau	: function () { return creneau; },
-						     cours		: function () { return cours; },
+						     cours	: function () { return cours; },
 						     devoirs	: function () { return devoirs; }
 						 }
 					     } )
