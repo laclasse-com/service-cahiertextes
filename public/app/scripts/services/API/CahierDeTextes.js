@@ -145,8 +145,8 @@ angular.module('cahierDeTexteApp')
 	     [ 'Classes', 'Cours', 'CreneauEmploiDuTemps', 'Devoirs', 'EmploisDuTemps', 'Enseignants', 'TypesDeDevoir', 'PlagesHoraires', 'CahierDeTextes',
 	       function( Classes, Cours, CreneauEmploiDuTemps, Devoirs, EmploisDuTemps, Enseignants, TypesDeDevoir, PlagesHoraires, CahierDeTextes ) {
 		   this.query_classes = function( params ) {
-			   return Classes.query( params );
-		       };
+		       return Classes.query( params );
+		   };
 
 		   this.query_types_de_devoir = _.memoize( function() {
 		       return TypesDeDevoir.query();
@@ -156,19 +156,19 @@ angular.module('cahierDeTexteApp')
 		   } );
 
 		   this.query_emplois_du_temps = function() {
-			   return EmploisDuTemps.query();
-		       };
+		       return EmploisDuTemps.query();
+		   };
 
 		   this.get_creneau_emploi_du_temps = function( params ) {
-			   return CreneauEmploiDuTemps.get( params );
-		       };
+		       return CreneauEmploiDuTemps.get( params );
+		   };
 
 		   this.query_enseignants = function( params ) {
-			   return Enseignants.query( params );
-		       };
+		       return Enseignants.query( params );
+		   };
 		   this.get_enseignant = function( params ) {
-			   return Enseignants.get( params );
-		       };
+		       return Enseignants.get( params );
+		   };
 
 		   this.get_cours = function( params ) {
 		       return Cours.get( params );
@@ -176,10 +176,10 @@ angular.module('cahierDeTexteApp')
 
 		   this.query_devoirs = function( params ) {
 		       return Devoirs.query( params );
-		       };
+		   };
 		   this.get_devoir = function( params ) {
-			   return Devoirs.get( params );
-		       };
+		       return Devoirs.get( params );
+		   };
 
 		   this.query_plages_horaires = function() {
 		       return PlagesHoraires.query();
