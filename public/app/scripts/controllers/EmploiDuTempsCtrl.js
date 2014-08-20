@@ -147,7 +147,6 @@ angular.module('cahierDeTexteApp')
 						 })
 						 .object()
 						 .value();
-					 var matieres_enseignees = $scope.current_user.profil_actif.matieres;
 
 					 $scope.current_user.profil_actif.classes = $scope.current_user.profil_actif.classes;
 
@@ -168,7 +167,7 @@ angular.module('cahierDeTexteApp')
 							     } );
 
 						     ouvre_popup_edition( $scope.raw_data,
-									  matieres_enseignees, $scope.current_user.profil_actif.classes,
+									  $scope.current_user.profil_actif.matieres, $scope.current_user.profil_actif.classes,
 									  creneau_selectionne, cours, devoirs,
 									  popup_callback );
 						 } );
@@ -195,7 +194,7 @@ angular.module('cahierDeTexteApp')
 						     new_creneau.regroupement_id = regroupement_id;
 
 						     ouvre_popup_edition( $scope.raw_data,
-									  matieres_enseignees, $scope.current_user.profil_actif.classes,
+									  $scope.current_user.profil_actif.matieres, $scope.current_user.profil_actif.classes,
 									  new_creneau, null, [],
 									  popup_callback );
 
