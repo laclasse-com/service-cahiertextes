@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .service( 'Redirection',
-	      [ '$location', '$state', 'User',
-		function( $location, $state, User ) {
+	      [ '$state', 'User',
+		function( $state, User ) {
 		    this.doorman = function( allowed_types ) {
 			User.get_user().then(function( response ) {
 			    if (_(allowed_types).size() === 0 ||
