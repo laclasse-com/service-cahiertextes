@@ -43,6 +43,7 @@
     "tests"
   ],
   "resolutions": {
-    "jquery": "~2.x"
+    "jquery": "~2.x",
+    "d3": "~3.4.1"
   }
 }
