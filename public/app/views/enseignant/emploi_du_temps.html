@@ -1,6 +1,6 @@
   <div class="panel panel-default">
     <div class="panel-heading">
-      <select data-ng-model="classe" data-ng-change="refresh_calendar()" data-ng-options="classe.id as classe.libelle for classe in classes">
+      <select data-ng-model="classe" data-ng-change="refresh_calendar()" data-ng-options="classe.id as classe.libelle for classe in current_user.profil_actif.classes">
 	<option value="" selected>Toutes les classes</option>
       </select>
       <label><input type="checkbox" data-ng-model="uniquement_mes_creneaux" data-ng-change="refresh_calendar()" > ne montrer que ce qui me concerne directement</label>
