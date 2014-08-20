@@ -3,11 +3,11 @@ require 'rest-client'
 require 'nokogiri'
 
 module AuthenticationHelpers
-  
+
   def get_protocol
     CASAUTH::CONFIG[:ssl] ? 'https://' : 'http://'
   end
-  
+
   def is_logged?
     env['rack.session'][:authenticated]
   end
@@ -15,7 +15,7 @@ module AuthenticationHelpers
   #
   # Logue l'utilisateur puis redirige vers 'auth/:provider/callback' qui se charge
   #   d'initialiser la session et de rediriger vers l'url passée en paramètre
-  #  
+  #
   # En mode REST, pas de redirection vers cas/auth, création d'une session avec init_session
   def login!( route )
     unless route.empty?
@@ -23,9 +23,9 @@ module AuthenticationHelpers
       route = CGI.escape( "#{env['rack.url_scheme']}://#{env['HTTP_HOST']}#{route}" )
     end
     if !params[:restmod].nil?
-      # Mode Rest       
+      # Mode Rest
       cas_token = cas_dialog_proxiing route
-     
+
       # Gestion d'erreur
       unless cas_token[:error].empty?
         STDERR.puts "REST authentication failure !"
@@ -43,26 +43,26 @@ module AuthenticationHelpers
       end
       redirect "#{APP_PATH}/auth/cas?url=#{route}"
     end
-    
+
   end
-  
+
   #
-  #  Dialogue avec CAS et 
-  #  Analyse et lecture du jeton CAS, 
+  #  Dialogue avec CAS et
+  #  Analyse et lecture du jeton CAS,
   #  pour le mode login REST.
   #
   def cas_dialog_proxiing(route)
     cas = {}
     cas[:error] = ""
     # 1. Poster l'authentification CAS et récupérer un TGT
-    tgt = RestClient.post get_protocol + CASAUTH::CONFIG[:host] + CASAUTH::CONFIG[:restmod_url], 
+    tgt = RestClient.post get_protocol + CASAUTH::CONFIG[:host] + CASAUTH::CONFIG[:restmod_url],
       :username => params[:username],
       :password => params[:password]
     # 2. Récupérer un ST
     st = RestClient.post get_protocol + CASAUTH::CONFIG[:host] + CASAUTH::CONFIG[:restmod_url] + '/' + tgt.to_s,
       :service => "#{route}"
     # 3. valider le Service Ticket et recevoir le jeton xml
-    token = RestClient.get get_protocol + CASAUTH::CONFIG[:host] + CASAUTH::CONFIG[:service_validate_url], 
+    token = RestClient.get get_protocol + CASAUTH::CONFIG[:host] + CASAUTH::CONFIG[:service_validate_url],
       {:params => {:service => "#{route}", :ticket => st.to_s}}
     # 4. Analyse de la réponse de CAS.
     doc  = Nokogiri::XML( token ).remove_namespaces!
@@ -76,7 +76,7 @@ module AuthenticationHelpers
     cas[:uid]  = doc.xpath("////uid/text()").to_s
     cas
   end
-  
+
   #
   # Délogue l'utilisateur du serveur CAS et de l'application
   #
@@ -106,7 +106,7 @@ module AuthenticationHelpers
   # Initialisation de la session après l'authentification
   #
   def init_session( env, user_rest="", uid_rest="" )
-    # Voir si on est passé par Omniauth ou pas 
+    # Voir si on est passé par Omniauth ou pas
     # Dans le cas d'une connexion en mode REST, on ne passe pas par omniAuth
     unless env['omniauth.auth'].nil?
       username = env['omniauth.auth'].extra.user
@@ -115,10 +115,10 @@ module AuthenticationHelpers
       username = user_rest
       uid = uid_rest
     end
-    
-    unless env['rack.session'].nil? 
+
+    unless env['rack.session'].nil?
       env['rack.session'][:authenticated] = true
-      
+
       user_annuaire = Annuaire.get_user( uid )
       env['rack.session'][:current_user] = { 'user' => username,
         'uid' => uid ,
@@ -135,5 +135,5 @@ module AuthenticationHelpers
     end
     env['rack.session'][:current_user]
   end
-  
+
 end
