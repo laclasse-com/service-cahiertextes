@@ -108,12 +108,12 @@ module AuthenticationHelpers
   def init_session( env, user_rest="", uid_rest="" )
     # Voir si on est passé par Omniauth ou pas
     # Dans le cas d'une connexion en mode REST, on ne passe pas par omniAuth
-    unless env['omniauth.auth'].nil?
-      username = env['omniauth.auth'].extra.user
-      uid = env['omniauth.auth'].extra.uid
-    else
+    if env['omniauth.auth'].nil?
       username = user_rest
       uid = uid_rest
+    else
+      username = env['omniauth.auth'].extra.user
+      uid = env['omniauth.auth'].extra.uid
     end
 
     unless env['rack.session'].nil?
