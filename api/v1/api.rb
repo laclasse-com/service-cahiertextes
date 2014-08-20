@@ -23,12 +23,14 @@ module CahierDeTextesAPI
       resource( :users                    ) { mount ::CahierDeTextesAPI::V1::UsersAPI }
 
       resource( :import                   ) { mount ::CahierDeTextesAPI::V1::ImportAPI }
+
+      resource( :annuaire                 ) { mount ::CahierDeTextesAPI::V1::AnnuaireAPI }
+
       resource( :etablissements           ) { mount ::CahierDeTextesAPI::V1::EtablissementsAPI }
       resource( :cours                    ) { mount ::CahierDeTextesAPI::V1::CoursAPI }
       resource( :devoirs                  ) { mount ::CahierDeTextesAPI::V1::DevoirsAPI }
       resource( :types_de_devoir          ) { mount ::CahierDeTextesAPI::V1::TypesDeDevoirAPI }
       resource( :emplois_du_temps         ) { mount ::CahierDeTextesAPI::V1::EmploisDuTempsAPI }
-      resource( :annuaire                 ) { mount ::CahierDeTextesAPI::V1::AnnuaireAPI }
       resource( :creneaux_emploi_du_temps ) { mount ::CahierDeTextesAPI::V1::CreneauxEmploiDuTempsAPI }
       resource( :plages_horaires          ) { mount ::CahierDeTextesAPI::V1::PlagesHorairesAPI }
       resource( :cahiers_de_textes        ) { mount ::CahierDeTextesAPI::V1::CahiersDeTextesAPI }
