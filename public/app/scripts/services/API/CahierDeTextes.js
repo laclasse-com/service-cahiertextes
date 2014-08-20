@@ -19,18 +19,19 @@ angular.module('cahierDeTexteApp')
 				       return { id: classe.classe_id,
 						libelle: classe.classe_libelle };
 				   } )
-				   .uniq( function( item ) { return item.id + item.libelle; } )
+				   .uniq( function( item ) { return item.id; } )
+				   .reject( function( item ) { return _.isUndefined( item.id ); } )
 				   .value();
-			       if ( response.profil_actif.type === 'ENS' ) {
-				   response.profil_actif.matieres = _.chain(response.classes)
-				       .filter( function( classe ) { return classe.etablissement_code == response.profil_actif.uai; } )
-				       .map( function( classe ) {
-					   return { id: classe.matiere_enseignee_id,
-						    libelle_long: classe.matiere_libelle };
-				       } )
-				       .uniq( function( item ) { return item.id + item.libelle; } )
-				       .value();
-			       }
+			       // Liste des matières liées au profil actif
+			       response.profil_actif.matieres = _.chain(response.classes)
+				   .filter( function( classe ) { return classe.etablissement_code == response.profil_actif.uai; } )
+				   .map( function( classe ) {
+				       return { id: classe.matiere_enseignee_id,
+						libelle_long: classe.matiere_libelle };
+				   } )
+				   .uniq( function( item ) { return item.id; } )
+				   .reject( function( item ) { return _.isUndefined( item.id ); } )
+				   .value();
 
 			       return response;
 			   } );
