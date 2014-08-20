@@ -110,7 +110,7 @@ module AuthenticationHelpers
     # Dans le cas d'une connexion en mode REST, on ne passe pas par omniAuth
     unless env['omniauth.auth'].nil?
       username = env['omniauth.auth'].extra.user
-      uid = env['omniauth.auth'].extra.user
+      uid = env['omniauth.auth'].extra.uid
     else
       username = user_rest
       uid = uid_rest
