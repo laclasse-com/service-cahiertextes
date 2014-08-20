@@ -24,7 +24,7 @@ angular.module('cahierDeTexteApp')
 				     stateName = 'eleve.emploi_du_temps';
 				     break;
 				 }
-				 $state.go( stateName, $state.params, { reload: true, inherit: false, notify: true } );
+				 $state.go( stateName, $state.params, { reload: true, inherit: true, notify: true } );
 			     }
 		      });
 		  };
