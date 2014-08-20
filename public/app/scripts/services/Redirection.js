@@ -27,7 +27,7 @@ angular.module('cahierDeTexteApp')
 				 default:
 				     stateName = '404';
 				 }
-				 reloadStatus = ( $state.current.name == 'index' || $state.current.name == stateName ) ? true : false;
+				 reloadStatus = $state.current.name == 'index' || $state.current.name == stateName;
 				 $state.transitionTo( stateName, $state.params, { reload: reloadStatus, inherit: false, notify: reloadStatus } );
 			     }
 		      });
