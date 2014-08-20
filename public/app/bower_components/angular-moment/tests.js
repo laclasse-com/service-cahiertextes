@@ -27,11 +27,7 @@ describe('module angularMoment', function () {
 		// Ensure the language of moment.js is set to english by default
 		moment.lang('en');
 		// Add a sample timezone for tests
-		moment.tz.add({
-			zones: {
-				'Pacific/Tahiti': ['-9:58:16 - LMT 1912_9 -9:58:16', '-10 - TAHT']
-			}
-		});
+		moment.tz.add('Pacific/Tahiti|LMT TAHT|9W.g a0|01|-2joe1.I');
 	}));
 
 	afterEach(function () {
@@ -123,6 +119,56 @@ describe('module angularMoment', function () {
 			}, 50);
 		});
 
+		describe('bindonce', function () {
+			it('should change the text of the div to "3 minutes ago" when given a date 3 minutes ago with one time binding', function () {
+				$rootScope.testDate = new Date(new Date().getTime() - 3 * 60 * 1000);
+				var element = angular.element('<div am-time-ago="::testDate"></div>');
+				element = $compile(element)($rootScope);
+				$rootScope.$digest();
+				expect(element.text()).toBe('3 minutes ago');
+			});
+
+			it('should parse correctly numeric dates as milliseconds since the epoch with one time binding', function () {
+				$rootScope.testDate = new Date().getTime();
+				var element = angular.element('<div am-time-ago="::testDate"></div>');
+				element = $compile(element)($rootScope);
+				$rootScope.$digest();
+				expect(element.text()).toBe('a few seconds ago');
+			});
+
+			it('should not update the value if date changes on scope when using one time binding', function () {
+				var today = new Date();
+				$rootScope.testDate = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate()).getTime();
+				var element = angular.element('<div am-time-ago="::testDate"></div>');
+				element = $compile(element)($rootScope);
+				$rootScope.$digest();
+				expect(element.text()).toBe('a year ago');
+				$rootScope.testDate = new Date();
+				$rootScope.$digest();
+				expect(element.text()).toBe('a year ago');
+			});
+
+			it('should not update the span text as time passes when using one time binding', function (done) {
+				$rootScope.testDate = new Date(new Date().getTime() - 44000);
+				var element = angular.element('<div am-time-ago="::testDate"></div>');
+				element = $compile(element)($rootScope);
+				$rootScope.$digest();
+				expect(element.text()).toBe('a few seconds ago');
+
+				var waitsInterval = setInterval(function () {
+					// Wait until $rootScope.date is more than 45 seconds old
+					if (new Date().getTime() - $rootScope.testDate.getTime() < 45000) {
+						return;
+					}
+
+					clearInterval(waitsInterval);
+					$rootScope.$digest();
+					expect(element.text()).toBe('a few seconds ago');
+					done();
+				}, 50);
+			});
+		});
+
 		it('should handle undefined data', function () {
 			$rootScope.testDate = null;
 			var element = angular.element('<div am-time-ago="testDate"></div>');
@@ -187,6 +233,14 @@ describe('module angularMoment', function () {
 			expect(element.text()).toBe('il y a quelques secondes');
 		});
 
+		it('should update the `datetime` attr if applied to a TIME element', function () {
+			$rootScope.testDate = Date.UTC(2012, 8, 20, 15, 20, 12);
+			var element = angular.element('<time am-time-ago="testDate"></span>');
+			element = $compile(element)($rootScope);
+			$rootScope.$digest();
+			expect(element.attr('datetime')).toBe('2012-09-20T15:20:12.000Z');
+		});
+
 		describe('am-without-suffix attribute', function () {
 			it('should generate a time string without suffix when true', function () {
 				$rootScope.testDate = new Date();
@@ -246,6 +300,39 @@ describe('module angularMoment', function () {
 				$rootScope.dateFormat = 'MM@YYYY@DD';
 				$rootScope.$digest();
 				expect(element.text()).toBe('a month ago');
+			});
+		});
+
+		describe('format config property', function () {
+			it('should be used when no `am-format` attribute is found', function () {
+				angularMomentConfig.format = 'MM@YYYY@DD';
+				var today = new Date();
+				$rootScope.testDate = today.getMonth() + '@' + today.getFullYear() + '@' + today.getDate();
+				var element = angular.element('<span am-time-ago="testDate"></span>');
+				element = $compile(element)($rootScope);
+				$rootScope.$digest();
+				expect(element.text()).toBe('a month ago');
+			});
+
+			it('should be overridable by `am-format` attribute', function () {
+				angularMomentConfig.format = 'YYYY@MM@@DD';
+				var today = new Date();
+				$rootScope.testDate = today.getMonth() + '@' + today.getFullYear() + '@' + today.getDate();
+				var element = angular.element('<span am-format="MM@YYYY@DD" am-time-ago="testDate"></span>');
+				element = $compile(element)($rootScope);
+				$rootScope.$digest();
+				expect(element.text()).toBe('a month ago');
+			});
+		});
+
+		describe('serverTime configuration', function () {
+			it('should calculate time ago in respect to the configured server time', function () {
+				amTimeAgoConfig.serverTime = Date.UTC(2014, 5, 12, 5, 22, 11);
+				$rootScope.testDate = Date.UTC(2014, 5, 12, 9, 22, 11);
+				var element = angular.element('<span am-time-ago="testDate"></span>');
+				element = $compile(element)($rootScope);
+				$rootScope.$digest();
+				expect(element.text()).toBe('in 4 hours');
 			});
 		});
 	});
@@ -413,7 +500,7 @@ describe('module angularMoment', function () {
 				amMoment.preprocessors.foobar = function (value) {
 					return moment(value.date);
 				};
-				
+
 				expect(amMoment.preprocessDate(meeting, 'foobar').valueOf()).toEqual(testDate.getTime());
 			});
 

@@ -25,7 +25,7 @@
   <script type="text/javascript">
     $(function () {
       window.swaggerUi = new SwaggerUi({
-      url: "/ct/api/v1/swagger_doc.json",
+      url: "http://petstore.swagger.wordnik.com/api/api-docs",
       dom_id: "swagger-ui-container",
       supportedSubmitMethods: ['get', 'post', 'put', 'delete'],
       onComplete: function(swaggerApi, swaggerUi){
@@ -47,7 +47,8 @@
       onFailure: function(data) {
         log("Unable to Load SwaggerUI");
       },
-      docExpansion: "none"
+      docExpansion: "none",
+      sorter : "alpha"
     });
 
     $('#input_apiKey').change(function() {
