@@ -11,7 +11,6 @@ angular.module('cahierDeTexteApp')
 			      && !response.data['profil_actif']['admin'] )
 			     ) {
 				 // traiter le raffraichissement de l'app en fonction du changement de profil actif
-				 var reloadStatus = true;
 				 var stateName = '';
 
 				 switch ( response.data['profil_actif']['type'] ) {
@@ -27,8 +26,7 @@ angular.module('cahierDeTexteApp')
 				 default:
 				     stateName = '404';
 				 }
-				 reloadStatus = $state.current.name == 'index' || $state.current.name == stateName;
-				 $state.transitionTo( stateName, $state.params, { reload: reloadStatus, inherit: false, notify: reloadStatus } );
+				 $state.go( stateName, $state.params, { reload: true, inherit: false, notify: true } );
 			     }
 		      });
 		  };
