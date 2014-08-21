@@ -27,8 +27,8 @@
     "angular-tree-control": "latest",
     "metro-bootstrap": "*",
     "angular-moment": "latest",
-    "angular-bootstrap-switch": "~0.3.0",
-    "textAngular": "~1.2.2"
+    "textAngular": "~1.2.2",
+    "ng-switcher": "*"
   },
   "devDependencies": {
     "angular-mocks": "latest",

@@ -19,18 +19,7 @@
 	<div class="panel-footer">
 
 	  <div class="pull-right">
-	    <input bs-switch data-ng-model="devoir.fait"
-		   data-ng-change="fait( devoir.id )"
-		   type="checkbox"
-		   switch-active="true"
-		   switch-size="large"
-		   switch-animate="true"
-		   switch-label=""
-		   switch-icon="icon-save"
-		   switch-on-text="fait !"
-		   switch-off-text="à faire"
-		   switch-on-color="success"
-		   switch-off-color="warning" />
+	    <div data-ng-switcher data-ng-model="devoir.fait"></div>
 	  </div>
 	  <span>Temps estimé : {{devoir.temps_estime * 5}} minutes</span>
 	  <ul data-ng-show="devoir.ressources.length > 0">
