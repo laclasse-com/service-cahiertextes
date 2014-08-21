@@ -12,7 +12,7 @@ angular.module( 'cahierDeTexteApp', [ 'ngResource',
 				      'nvd3ChartDirectives',
 				      'treeControl',
 				      'angularMoment',
-				      'frapontillo.bootstrap-switch',
+				      'theaquaNg',
 				      'textAngular' ] )
     .run( function( amMoment ) {
 	amMoment.changeLanguage( 'fr' );

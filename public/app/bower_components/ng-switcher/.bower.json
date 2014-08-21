@@ -1,0 +1,34 @@
+{
+  "name": "ng-switcher",
+  "homepage": "https://github.com/theaqua/ng-switcher",
+  "authors": [
+    "Eugene Rodionov <hello@theaqua.im>"
+  ],
+  "description": "Simple AngularJS directive for toggle switch",
+  "main": "ng-switcher.coffee",
+  "keywords": [
+    "angular",
+    "toggle",
+    "switch",
+    "ng-switcher",
+    "ng-toggler"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "_release": "d8047384de",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "d8047384de3a9f41f03b897ea3c212560bc82197"
+  },
+  "_source": "git://github.com/theaqua/ng-switcher.git",
+  "_target": "*",
+  "_originalSource": "ng-switcher",
+  "_direct": true
+}
