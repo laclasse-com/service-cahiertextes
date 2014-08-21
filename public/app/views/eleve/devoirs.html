@@ -22,7 +22,8 @@
 	<div class="pull-left contenu" data-ng-bind-html="devoir.contenu"></div>
 
 	<div class="pull-right todo">
-	  <div data-ng-switcher data-ng-model="devoir.fait"></div>
+	  <div data-ng-switcher data-ng-hide="devoir.type_devoir_id == 1"
+	       data-ng-model="devoir.fait"></div>
 	</div>
 
 	<div class="pull-right detail">
