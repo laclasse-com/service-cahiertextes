@@ -7,7 +7,6 @@ angular.module('cahierDeTexteApp')
 		   this.get_user = _.memoize( function() {
 		       return $http.get( APP_PATH + '/api/' + API_VERSION + '/users/current' )
 			   .success( function( response ) {
-			       console.debug( response )
 			       _(response.profils).each( function( profil ) {
 				   // Liste des classes liées au profil
 				   profil.classes = _.chain(response.classes)
