@@ -7,31 +7,36 @@ angular.module('cahierDeTexteApp')
 		   this.get_user = _.memoize( function() {
 		       return $http.get( APP_PATH + '/api/' + API_VERSION + '/users/current' )
 			   .success( function( response ) {
+			       console.debug( response )
+			       _(response.profils).each( function( profil ) {
+				   // Liste des classes liées au profil
+				   profil.classes = _.chain(response.classes)
+				       .filter( function( classe ) { return classe.etablissement_code == profil.uai; } )
+				       .map( function( classe ) {
+					   return { id: classe.classe_id,
+						    libelle: classe.classe_libelle };
+				       } )
+				       .uniq( function( item ) { return item.id; } )
+				       .reject( function( item ) { return _.isUndefined( item.id ); } )
+				       .value();
+
+				   // Liste des matières liées au profil
+				   profil.matieres = _.chain(response.classes)
+				       .filter( function( classe ) { return classe.etablissement_code == profil.uai; } )
+				       .map( function( classe ) {
+					   return { id: classe.matiere_enseignee_id,
+						    libelle_long: classe.matiere_libelle };
+				       } )
+				       .uniq( function( item ) { return item.id; } )
+				       .reject( function( item ) { return _.isUndefined( item.id ); } )
+				       .value();
+			       } );
 			       response.profil_actif = response.profils[ 0 ];
+
 			       // Voir quel est le profil
 			       response.is = function( profil_id ) {
 				   return this.profil_actif['type'] == profil_id;
 			       };
-			       // Liste des classes liées au profil actif
-			       response.profil_actif.classes = _.chain(response.classes)
-				   .filter( function( classe ) { return classe.etablissement_code == response.profil_actif.uai; } )
-				   .map( function( classe ) {
-				       return { id: classe.classe_id,
-						libelle: classe.classe_libelle };
-				   } )
-				   .uniq( function( item ) { return item.id; } )
-				   .reject( function( item ) { return _.isUndefined( item.id ); } )
-				   .value();
-			       // Liste des matières liées au profil actif
-			       response.profil_actif.matieres = _.chain(response.classes)
-				   .filter( function( classe ) { return classe.etablissement_code == response.profil_actif.uai; } )
-				   .map( function( classe ) {
-				       return { id: classe.matiere_enseignee_id,
-						libelle_long: classe.matiere_libelle };
-				   } )
-				   .uniq( function( item ) { return item.id; } )
-				   .reject( function( item ) { return _.isUndefined( item.id ); } )
-				   .value();
 
 			       return response;
 			   } );
