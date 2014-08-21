@@ -19,7 +19,7 @@ module CahierDeTextesAPI
         }.uniq
 
         Devoir
-          .join(:creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :id)
+          .join(:creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :creneau_emploi_du_temps_id)
           .where( regroupement_id: regroupements_ids )
           .map { |devoir|
           hash = devoir.to_deep_hash
