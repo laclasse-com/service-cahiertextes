@@ -21,12 +21,12 @@ module CahierDeTextesAPI
         Devoir
           .join(:creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :creneau_emploi_du_temps_id)
           .where( regroupement_id: regroupements_ids )
-          .map { |devoir|
+          .map do |devoir|
           hash = devoir.to_deep_hash
           hash[:fait] = devoir.fait_par?( user.uid ) unless user.nil?
 
           hash
-        }
+        end
       end
 
       desc 'renvoi le détail d\'un devoir'
