@@ -149,9 +149,6 @@ footer { color: #555;
 		    width: 100% }
 .creneau.vise {border-left: 1em solid #0f0}
 
-/* TinyMCE, combiné avec content_css dans defaults.js */
-body.mce-content-body{font-size:14px}
-
 .bootstrap-switch,
 .bootstrap-switch.bootstrap-switch-off .bootstrap-switch-label,
 .bootstrap-switch.bootstrap-switch-on .bootstrap-switch-label,
