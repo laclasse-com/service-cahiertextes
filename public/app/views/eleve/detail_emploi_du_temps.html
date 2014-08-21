@@ -37,7 +37,6 @@
 	<span class="glyphicon" ng-class="{'glyphicon-chevron-down': groups.sequence_pedagogique.ouvert, 'glyphicon-chevron-right': !groups.sequence_pedagogique.ouvert}"> Séquence pédagogique du {{cours.date_cours | date : 'fullDate' }}</span>
       </accordion-heading>
       <div class="panel panel-default">
-	<div class="panel-heading">Cours du {{cours.date_cours | date : 'fullDate'}}</div>
 	<div class="panel-body" data-ng-bind-html="cours.contenu"></div>
 	<div class="panel-footer" data-ng-show="cours.ressources.length > 0">
 	  <ul>
