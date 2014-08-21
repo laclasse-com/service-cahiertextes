@@ -23,7 +23,8 @@
 
 	<div class="pull-right todo">
 	  <div data-ng-switcher data-ng-hide="devoir.type_devoir_id == 1"
-	       data-ng-model="devoir.fait"></div>
+	       data-ng-model="devoir.fait"
+	       data-ng-change="fait( devoir.id )" ></div>
 	</div>
 
 	<div class="pull-right detail">
