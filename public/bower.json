@@ -13,7 +13,6 @@
     "angular-scenario": "latest",
     "angular-ui-calendar": "latest",
     "angular-ui-router": "latest",
-    "angular-ui-tinymce": "latest",
     "bootstrap": "latest",
     "es5-shim": "latest",
     "json3": "latest",
@@ -28,7 +27,8 @@
     "angular-tree-control": "latest",
     "metro-bootstrap": "*",
     "angular-moment": "latest",
-    "angular-bootstrap-switch": "~0.3.0"
+    "angular-bootstrap-switch": "~0.3.0",
+    "textAngular": "~1.2.2"
   },
   "devDependencies": {
     "angular-mocks": "latest",

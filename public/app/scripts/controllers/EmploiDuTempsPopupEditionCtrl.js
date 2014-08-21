@@ -2,8 +2,8 @@
 
 angular.module( 'cahierDeTexteApp' )
     .controller( 'EmploiDuTempsPopupEditionCtrl',
-		 [ '$scope', '$filter', '$q', '$sce', '$modalInstance', 'TINYMCE_OPTIONS', 'DOCS_URL', 'Documents', 'API', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs', 'User', 'cours', 'devoirs', 'creneau', 'raw_data', 'classes', 'matieres',
-		   function ( $scope, $filter, $q, $sce, $modalInstance, TINYMCE_OPTIONS, DOCS_URL, Documents, API, CreneauEmploiDuTemps, Cours, Devoirs, User, cours, devoirs, creneau, raw_data, classes, matieres ) {
+		 [ '$scope', '$filter', '$q', '$sce', '$modalInstance', 'DOCS_URL', 'Documents', 'API', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs', 'User', 'cours', 'devoirs', 'creneau', 'raw_data', 'classes', 'matieres',
+		   function ( $scope, $filter, $q, $sce, $modalInstance, DOCS_URL, Documents, API, CreneauEmploiDuTemps, Cours, Devoirs, User, cours, devoirs, creneau, raw_data, classes, matieres ) {
 		       $scope.erreurs = [];
 
 		       // http://stackoverflow.com/questions/19408883/angularjs-select-not-2-way-binding-to-model
@@ -30,7 +30,6 @@ angular.module( 'cahierDeTexteApp' )
 
 			   // Initialisations {{{
 			   $scope.DOCS_URL_login = $sce.trustAsResourceUrl( DOCS_URL + '/login' );
-			   $scope.tinyMCEOptions = TINYMCE_OPTIONS;
 
 			   $scope.creneau = creneau;
 			   $scope.matieres = matieres;
@@ -195,21 +194,20 @@ angular.module( 'cahierDeTexteApp' )
 				   $scope.cours = create_cours( creneau );
 				   $scope.cours.editable = true;
 			       } else {
-				   cours.$promise.then( function() {
-				       $scope.cours = cours;
-				       $scope.cours.create = false;
-				       $scope.cours.devoirs = $scope.cours.devoirs.map( function( devoir ) {
-					   var d = new Devoirs( devoir );
-					   $scope.estimation_leave( d );
+				   $scope.cours = cours;
+				   $scope.cours.create = false;
+				   $scope.cours.devoirs = $scope.cours.devoirs.map( function( devoir ) {
+				       var d = new Devoirs( devoir );
+				       $scope.estimation_leave( d );
 
-					   return d;
-				       });
-				       $scope.cours.editable = _($scope.cours.date_validation).isNull() && $scope.cours.enseignant_id == $scope.current_user.uid;
-				       if ( !$scope.cours.editable ) {
-					   $scope.cours.contenu = $sce.trustAsHtml( $scope.cours.contenu );
-				       }
+				       return d;
 				   });
+				   $scope.cours.editable = _($scope.cours.date_validation).isNull() && $scope.cours.enseignant_id == $scope.current_user.uid;
+				   if ( !$scope.cours.editable ) {
+				       $scope.cours.contenu = $sce.trustAsHtml( $scope.cours.contenu );
+				   }
 			       }
+			       console.debug($scope.cours)
 			       $scope.devoirs = devoirs;
 
 			       $scope.types_de_devoir = API.query_types_de_devoir();
@@ -396,7 +394,6 @@ angular.module( 'cahierDeTexteApp' )
 				       creneau_emploi_du_temps_id: $scope.creneau.id
 				   } );
 				   devoir.create = true;
-
 				   where.unshift( devoir );
 				   if ( where === $scope.cours.devoirs ) {
 				       $scope.accordion_cours_devoirs_open = false;

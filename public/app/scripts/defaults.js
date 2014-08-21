@@ -63,15 +63,6 @@ angular.module( 'cahierDeTexteApp' )
 					       };
 				    } ] )
 
-// options de tinyMCE
-    .constant( 'TINYMCE_OPTIONS', { menubar: false,
-				    statusbar: false,
-				    plugins: "textcolor paste autoresize",
-				    toolbar: "styleselect | bold italic | link image | forecolor | backcolor",
-				    insertdatetime_formats: ["%d/%m/%Y", "%H:%M"],
-				    content_css: "/app/styles/main.css"
-				  } )
-
 // options des graphiques
     .factory( 'CHART_COLORS_FUNCTION', [ 'THEME',
 					 function( THEME ) {
