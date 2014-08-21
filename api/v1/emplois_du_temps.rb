@@ -25,9 +25,6 @@ module CahierDeTextesAPI
                                     .uniq
 
         # FIXME: creneau[:semaines_de_presence][ 1 ] == première semaine de janvier ?
-        # FIXME: Un creneau "deleted" ne doit pas empecher les saisies déjà effectuée d'apparaitre
-        # Soit le créneau est marqué deleted ET les dates debut et fin sont antérieures à la date deleted
-        # Soit le créneau n'est pas marqué deleted et pas de restriction sur les dates debut et fin
         CreneauEmploiDuTemps
           .association_join( :regroupements )
           .association_join( :enseignants )
@@ -52,10 +49,10 @@ module CahierDeTextesAPI
               cahier_de_textes_id: cahier_de_textes.id,  # utilisé lors de la création d'un cours côté client
               start: Time.new( jour.year, jour.month, jour.mday, creneau.plage_horaire_debut.debut.hour, creneau.plage_horaire_debut.debut.min ).iso8601,
               end: Time.new( jour.year, jour.month, jour.mday, creneau.plage_horaire_fin.fin.hour, creneau.plage_horaire_fin.fin.min ).iso8601,
-              cours:  creneau.cours.select do |cours|
+              cours: creneau.cours.select do |cours|
                 cours[:deleted] == false &&  cours.date_cours == jour
               end
-                                   .map do |cours|
+                                  .map do |cours|
                 hcours = cours.to_hash
                 hcours[:ressources] = cours.ressources.map { |rsrc| rsrc.to_hash }
 
