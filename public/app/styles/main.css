@@ -149,13 +149,29 @@ footer { color: #555;
 		    width: 100% }
 .creneau.vise {border-left: 1em solid #0f0}
 
-.bootstrap-switch,
-.bootstrap-switch.bootstrap-switch-off .bootstrap-switch-label,
-.bootstrap-switch.bootstrap-switch-on .bootstrap-switch-label,
-.bootstrap-switch .bootstrap-switch-handle-off,
-.bootstrap-switch .bootstrap-switch-handle-on { border-radius: 0 }
-.bootstrap-switch.bootstrap-switch-large .bootstrap-switch-handle-on,
-.bootstrap-switch.bootstrap-switch-large .bootstrap-switch-handle-off,
-.bootstrap-switch.bootstrap-switch-large .bootstrap-switch-label { font-size: 14px;
-								   line-height: 1.42857;
-								   padding: 6px }
+
+/* Pour ngSwitcher */
+
+.switch { border-radius: 13px }
+.switch.switch-left { background-color:#ae8ab8;
+		      border-color:#ae8ab8 }
+.switch.switch-right { background-color:#8dc47c;
+		       border-color:#8dc47c;
+		       color: #8dc47c }
+.switch .switch-button { height: 26px;
+			 width: 26px;
+			 margin-top: 1px;
+			 border: 0 }
+.switch.switch-left .switch-button { left: 1px }
+.switch.switch-right .switch-button { left: 21px }
+
+/* next 2 rules copied from font-awesome css */
+.switch .switch-button{ font-family: FontAwesome;
+			font-style: normal;
+			font-weight: normal;
+			line-height: 1;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+			font-size: 1.5em;
+			padding: 3px; }
+.switch.switch-right .switch-button::before { content: " \f00c"; }
