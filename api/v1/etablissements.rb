@@ -20,10 +20,10 @@ module CahierDeTextesAPI
       desc 'statistiques du cahier de textes d\'une classe'
       params {
         requires :uai, desc: 'Code UAI de l\'établissement'
-        requires :classe_id, desc: 'identifiant annuaire de la classe'
+        requires :regroupement_id, desc: 'identifiant annuaire de la classe'
       }
-      get '/:uai/classes/:classe_id' do
-        cahier_de_textes = CahierDeTextes[ regroupement_id: params[:classe_id] ]
+      get '/:uai/classes/:regroupement_id' do
+        cahier_de_textes = CahierDeTextes[ regroupement_id: params[:regroupement_id] ]
 
         error!( 'Classe inconnue', 404 ) if cahier_de_textes.nil?
 
