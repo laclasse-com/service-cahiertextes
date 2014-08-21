@@ -134,12 +134,13 @@ footer { color: #555;
 .devoir .todo { margin-left:1em }
 .devoir .todo button{ border:0 }
 
-.devoir.type1 {border-left: 1em solid #f00} /*DS*/
-.devoir.type2 {border-left: 1em solid #0f0} /*DM*/
-.devoir.type3 {border-left: 1em solid #00f} /*Leçon*/
-.devoir.type4 {border-left: 1em solid #ff0} /*Exposé*/
-.devoir.type5 {border-left: 1em solid #f0f} /*Recherche*/
-.devoir.type6 {border-left: 1em solid #0ff} /*Exercice*/
+.devoir {border-left: 1.5em solid #fff}
+.devoir.type1 {border-color: #f00} /*DS*/
+.devoir.type2 {border-color: #0f0} /*DM*/
+.devoir.type3 {border-color: #00f} /*Leçon*/
+.devoir.type4 {border-color: #ff0} /*Exposé*/
+.devoir.type5 {border-color: #f0f} /*Recherche*/
+.devoir.type6 {border-color: #0ff} /*Exercice*/
 
 
 .creneau .date span { float: left;
