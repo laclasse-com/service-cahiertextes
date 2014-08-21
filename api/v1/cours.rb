@@ -119,7 +119,10 @@ module CahierDeTextesAPI
         cours = Cours[ params[:id] ]
 
         unless cours.nil?
-          new_cours = Cours.create(  cahier_de_textes_id: CahierDeTextes.where(regroupement_id: params[:regroupement_id]).first.id,
+          cahier_de_textes = CahierDeTextes.where(regroupement_id: params[:regroupement_id]).first
+          cahier_de_textes = CahierDeTextes.create( regroupement_id: params[:regroupement_id] ) if  cahier_de_textes.nil?
+
+          new_cours = Cours.create(  cahier_de_textes_id: cahier_de_textes.id,
                                      creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
                                      date_cours: params[:date],
                                      date_creation: Time.now,

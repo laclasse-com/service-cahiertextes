@@ -42,11 +42,14 @@ module CahierDeTextesAPI
             .map do
             |jour|
 
+            cahier_de_textes = CahierDeTextes.where( regroupement_id: creneau[:regroupement_id] ).first
+            cahier_de_textes = CahierDeTextes.create( regroupement_id: creneau[:regroupement_id] ) if cahier_de_textes.nil?
+
             { regroupement_id: creneau[ :regroupement_id ],
               enseignant_id: creneau[ :enseignant_id ],
               creneau_emploi_du_temps_id: creneau.id,
               matiere_id: creneau.matiere_id,
-              cahier_de_textes_id: CahierDeTextes.where( regroupement_id: creneau[:regroupement_id] ).first.id,  # utilisé lors de la création d'un cours côté client
+              cahier_de_textes_id: cahier_de_textes.id,  # utilisé lors de la création d'un cours côté client
               start: Time.new( jour.year, jour.month, jour.mday, creneau.plage_horaire_debut.debut.hour, creneau.plage_horaire_debut.debut.min ).iso8601,
               end: Time.new( jour.year, jour.month, jour.mday, creneau.plage_horaire_fin.fin.hour, creneau.plage_horaire_fin.fin.min ).iso8601,
               cours:  creneau.cours.select do |cours|
