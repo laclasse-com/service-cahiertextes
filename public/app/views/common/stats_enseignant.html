@@ -25,10 +25,10 @@
 	  </ul>
 	  <label>Matières enseignées</label>
 	  <ul>
-	    <li data-ng-repeat="matiere in enseignant.matieres">{{matiere.matiere_libelle}}</li>
+	    <li data-ng-repeat="matiere in enseignant.matieres">{{matiere.libelle}}</li>
 	  </ul>
 	  <label>Classes</label>
-	  <p><span data-ng-repeat="classe in enseignant.classes">{{classe.classe_libelle}}{{($last != true) && ", " || ""}}</span></p>
+	  <p><span data-ng-repeat="classe in enseignant.classes">{{classe.libelle}}{{($last != true) && ", " || ""}}</span></p>
 	</div>
       </div>
     </div>
