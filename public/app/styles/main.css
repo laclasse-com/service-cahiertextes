@@ -160,6 +160,7 @@ footer { color: #555;
 .modal-body .infos ul li em { font-weight: bold;
 			       font-style: normal }
 .modal-body .toggle-fait { margin-bottom: 5px }
+.modal-body .toggle-fait .switch {margin:0 auto;}
 .modal-body .infos .clickable { border: 1px solid #666;
 				cursor: pointer; }
 .modal-body .infos .type1,
