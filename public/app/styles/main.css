@@ -180,6 +180,15 @@ footer { color: #555;
 .modal-body .infos .type6, .type6 {border-color: #0ff} /*Exercice*/
 .modal-body .infos .fait, .fait {border-color: #8dc47c}  /*Devoir fait*/
 
+
+.temps-est-on, .temps-est-off { display: inline-block;
+				border: 2px solid #666;
+				border-radius: 1em;
+				height: 1.2em;
+				width: 1.2em;
+				margin: 0 0.33em; }
+.temps-est-on { background-color: #eecd6c }
+
 /* pictos */
 .picto { display: inline-block;
 	 height: 1em;
