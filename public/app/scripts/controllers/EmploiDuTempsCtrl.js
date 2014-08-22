@@ -160,15 +160,9 @@ angular.module('cahierDeTexteApp')
 						     creneau_selectionne.heure_fin = event.end;
 						     creneau_selectionne.regroupement_id = event.details.regroupement_id;
 
-						     var cours = _(event.details.cours).isNull() ? null : API.get_cours( { id: event.details.cours.id } );
-						     var devoirs = _( event.details.devoirs )
-							     .map( function ( devoir ) {
-								 return API.get_devoir( { id: devoir.id } );
-							     } );
-
 						     ouvre_popup_edition( $scope.raw_data,
 									  $scope.current_user.profil_actif.matieres, $scope.current_user.profil_actif.classes,
-									  creneau_selectionne, cours, devoirs,
+									  creneau_selectionne, event.details.cours, event.details.devoirs,
 									  popup_callback );
 						 } );
 					 };
