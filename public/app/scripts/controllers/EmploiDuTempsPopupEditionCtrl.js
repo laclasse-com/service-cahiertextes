@@ -203,25 +203,32 @@ angular.module( 'cahierDeTexteApp' )
 				   $scope.cours = create_cours( creneau );
 				   $scope.cours.editable = true;
 			       } else {
-				   $scope.cours = cours;
+				   $scope.cours = Cours.get( { id: cours.id } );
+				   $scope.cours.$promise.then( function( cours ) {
+				       _(cours.devoirs).each( function( devoir ) {
+					   $scope.estimation_leave( devoir );
+					   devoir.tooltip = devoir.contenu;
+					   if ( devoir.temps_estime > 0 ) {
+					       devoir.tooltip = '<span><i class="picto temps"></i>' + devoir.temps_estime * 5 + ' minutes</span><hr>' + devoir.tooltip;
+					   }
+				       } );
+				   } );
 				   $scope.cours.create = false;
-				   $scope.cours.devoirs = $scope.cours.devoirs.map( function( devoir ) {
-				       var d = new Devoirs( devoir );
-				       $scope.estimation_leave( d );
-
-				       return d;
-				   });
 				   $scope.cours.editable = _($scope.cours.date_validation).isNull() && $scope.cours.enseignant_id == $scope.current_user.uid;
 				   if ( !$scope.cours.editable ) {
 				       $scope.cours.contenu = $sce.trustAsHtml( $scope.cours.contenu );
 				   }
 			       }
-			       $scope.devoirs = devoirs;
+			       $scope.devoirs = devoirs.map( function( devoir ) {
+				   return Devoirs.get( { id: devoir.id } );
+			       } );
 
 			       $scope.types_de_devoir = API.query_types_de_devoir();
 
-			       _( $scope.devoirs ).each( function ( d ) {
-				   $scope.estimation_leave( d );
+			       _( $scope.devoirs ).each( function ( devoir ) {
+				   devoir.$promise.then( function() {
+				       $scope.estimation_leave( devoir );
+				   } );
 			       } );
 
 			       // Fonction UI pour fixer l'id du créneau en fct du choix dans la sbox des créneaux possibles.
