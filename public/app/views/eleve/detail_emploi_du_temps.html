@@ -21,6 +21,13 @@
 	      <span><i class="picto cours"></i> Séquence pédagogique : <em>{{devoir.cours.date_cours | date : 'dd/MM'}}</em></span>
 	    </li>
 	  </ul>
+
+	  <div data-ng-switcher
+	       class="toggle-fait"
+	       data-ng-hide="devoir.type_devoir_id == 1"
+	       data-ng-model="devoir.fait"
+	       data-ng-change="fait( devoir.id )" ></div>
+
 	</div>
 	<div class="col-md-6 contenu">
 	  <span data-ng-bind-html="devoir.contenu"></span>
@@ -30,13 +37,6 @@
 	      <a target="_blank" href="http://www.dev.laclasse.com/docs-beta/api/connector?cmd=file&target={{ressource.hash}}">{{ressource.name}}</a>
 	    </li>
 	  </ul>
-	</div>
-	<div class="col-md-12">
-	  <div data-ng-switcher
-	       class="toggle-fait pull-right"
-	       data-ng-hide="devoir.type_devoir_id == 1"
-	       data-ng-model="devoir.fait"
-	       data-ng-change="fait( devoir.id )" ></div>
 	</div>
       </div>
       <div class="clearfix"></div>
