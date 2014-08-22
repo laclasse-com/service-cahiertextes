@@ -7,9 +7,7 @@ angular.module('cahierDeTexteApp')
       $scope.titre = titre;
       $scope.cours = cours;
       $scope.devoirs = devoirs;
-
-      $scope.groups = { sequence_pedagogique: { ouvert: false },
-			devoirs: { ouvert: true } };
+      $scope.tab_SP_active = $scope.devoirs.length == 0;
 
       $scope.fait = function( id ) {
 	  Devoirs.fait({ id: id });

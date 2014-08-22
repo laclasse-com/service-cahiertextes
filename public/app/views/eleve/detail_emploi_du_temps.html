@@ -1,54 +1,61 @@
 <div class="modal-header">
-  <button type="button" class="close pull-right" aria-hidden="true" data-ng-click="fermer()">&times;</button>
-  <h3>{{titre}}</h3>
+  <button type="button" class="close pull-right" aria-hidden="true" data-ng-click="fermer()"><i class="picto cross"></i></button>
+  <h3>{{titre}} - {{cours.date_cours | date : 'fullDate' }}</h3>
 </div>
 <div class="modal-body">
 
-  <accordion close-others="false">
+  <tabset>
     <!-- ####################### Devoirs ####################### -->
-    <accordion-group data-is-open="groups.devoirs.ouvert">
-      <accordion-heading>
-	<span class="glyphicon" ng-class="{'glyphicon-chevron-down': groups.devoirs.ouvert, 'glyphicon-chevron-right': !groups.devoirs.ouvert}"> Travail à faire</span>
-      </accordion-heading>
-
-      <div class="panel panel-default" data-ng-repeat="devoir in devoirs">
-	<div class="panel-heading">
-	  {{devoir.type_devoir_description}} pour le {{devoir.date_due | date : 'fullDate'}}
+    <tab data-ng-show="devoirs.length > 0" heading="Travail à faire">
+      <div data-ng-repeat="devoir in devoirs"
+	   class="devoir col-md-12"
+	   data-ng-class="{ 'type1': devoir.type_devoir_id == 1, 'type2': devoir.type_devoir_id == 2, 'type3': devoir.type_devoir_id == 3, 'type4': devoir.type_devoir_id == 4, 'type5': devoir.type_devoir_id == 5, 'type6': devoir.type_devoir_id == 6, 'fait': devoir.fait }" >
+	<div class="col-md-5 infos">
+	  <ul>
+	    <li><span ><i class="picto matiere"></i> Matière : <em>{{titre}}</em></span></li>
+	    <li><span ><i class="picto devoir"></i> Type de devoir : <em>{{devoir.type_devoir_description}}</em></span></li>
+	    <li><span><i class="picto temps"></i> Temps estimé : <em>{{devoir.temps_estime * 5}} minutes</em></span></li>
+	    <li><span><i class="picto cours"></i> Séquence pédagogique</span></li>
+	  </ul>
 	</div>
-	<div class="panel-body" data-ng-bind-html="devoir.contenu"></div>
-	<div class="panel-footer">
+	<div class="col-md-6 contenu">
+	  <span data-ng-bind-html="devoir.contenu"></span>
 
-	  <div class="pull-right">
-	    <div data-ng-switcher data-ng-hide="devoir.type_devoir_id == 1"
-		 data-ng-model="devoir.fait"
-		 data-ng-change="fait( devoir.id )" ></div>
-	  </div>
-	  <span>Temps estimé : {{devoir.temps_estime * 5}} minutes</span>
 	  <ul data-ng-show="devoir.ressources.length > 0">
 	    <li data-ng-repeat="ressource in devoir.ressources">
 	      <a target="_blank" href="http://www.dev.laclasse.com/docs-beta/api/connector?cmd=file&target={{ressource.hash}}">{{ressource.name}}</a>
 	    </li>
 	  </ul>
-	  <div class="clearfix"></div>
+	</div>
+	<div class="col-md-12">
+	  <div data-ng-switcher
+	       class="toggle-fait pull-right"
+	       data-ng-hide="devoir.type_devoir_id == 1"
+	       data-ng-model="devoir.fait"
+	       data-ng-change="fait( devoir.id )" ></div>
 	</div>
       </div>
-    </accordion-group>
-    <accordion-group data-is-open="groups.sequence_pedagogique.ouvert">
-      <accordion-heading>
-	<span class="glyphicon" ng-class="{'glyphicon-chevron-down': groups.sequence_pedagogique.ouvert, 'glyphicon-chevron-right': !groups.sequence_pedagogique.ouvert}"> Séquence pédagogique du {{cours.date_cours | date : 'fullDate' }}</span>
-      </accordion-heading>
-      <div class="panel panel-default">
-	<div class="panel-body" data-ng-bind-html="cours.contenu"></div>
-	<div class="panel-footer" data-ng-show="cours.ressources.length > 0">
+      <div class="clearfix"></div>
+    </tab>
+
+    <tab heading="Séquence pédagogique" data-active="tab_SP_active">
+	<div class="col-md-5 infos">
 	  <ul>
+	    <li><span ><i class="picto matiere"></i> Matière : <em>{{titre}}</em></span></li>
+	  </ul>
+	</div>
+	<div class="col-md-6 contenu">
+	  <span data-ng-bind-html="cours.contenu"></span>
+
+	  <ul data-ng-show="cours.ressources.length > 0">
 	    <li data-ng-repeat="ressource in cours.ressources">
 	      <a target="_blank" href="http://www.dev.laclasse.com/docs-beta/api/connector?cmd=file&target={{ressource.hash}}">{{ressource.name}}</a>
 	    </li>
 	  </ul>
 	</div>
-      </div>
-    </accordion-group>
-  </accordion>
+	<div class="clearfix"></div>
+    </tab>
+  </tabset>
 </div>
 <div class="modal-footer">
   <button class="btn btn-info btn-sm" data-ng-click="fermer()">
