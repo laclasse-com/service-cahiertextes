@@ -42,7 +42,7 @@
 	  <button class="btn btn-default" data-ng-click="eventClick( creneau )">Éditer</button>
 	</div>
 
-	<div class="devoirs">
+	<div class="devoirs" data-ng-show="creneau.devoirs.length > 0">
 
 	  <accordion close-others="false">
 	    <accordion-group data-is-open="creneau.devoirs.ouvert">

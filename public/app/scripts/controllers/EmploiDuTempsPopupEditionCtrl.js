@@ -190,6 +190,15 @@ angular.module( 'cahierDeTexteApp' )
 
 			   // Gestion des Cours et Devoirs ///////////////////////////////////////////////////////////////////////////
 			   if ( ! $scope.creneau.en_creation ) {
+			       // fonctions UI pour le temps estimé
+			       $scope.estimation_over = function ( d, value ) {
+				   d.overValue = value;
+				   d.minutes = 5 * value;
+			       };
+			       $scope.estimation_leave = function ( d ) {
+				   $scope.estimation_over( d, d.temps_estime );
+			       };
+
 			       if ( _(cours).isNull() ) {
 				   $scope.cours = create_cours( creneau );
 				   $scope.cours.editable = true;
@@ -207,19 +216,9 @@ angular.module( 'cahierDeTexteApp' )
 				       $scope.cours.contenu = $sce.trustAsHtml( $scope.cours.contenu );
 				   }
 			       }
-			       console.debug($scope.cours)
 			       $scope.devoirs = devoirs;
 
 			       $scope.types_de_devoir = API.query_types_de_devoir();
-
-			       // fonctions UI pour le temps estimé
-			       $scope.estimation_over = function ( d, value ) {
-				   d.overValue = value;
-				   d.minutes = 5 * value;
-			       };
-			       $scope.estimation_leave = function ( d ) {
-				   $scope.estimation_over( d, d.temps_estime );
-			       };
 
 			       _( $scope.devoirs ).each( function ( d ) {
 				   $scope.estimation_leave( d );
