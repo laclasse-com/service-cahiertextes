@@ -395,7 +395,7 @@ angular.module( 'cahierDeTexteApp' )
 			       $scope.ajout_devoir = function( where ) {
 				   var devoir = new Devoirs( {
 				       cours_id: $scope.cours.id,
-				       date_due: $filter( 'date' )( $scope.creneau.start, 'yyyy-MM-dd' ),
+				       date_due: $filter( 'date' )( $scope.creneau.heure_debut, 'yyyy-MM-dd' ),
 				       type_devoir_id: _($scope.types_de_devoir).last().id,
 				       creneau_emploi_du_temps_id: $scope.creneau.id
 				   } );
