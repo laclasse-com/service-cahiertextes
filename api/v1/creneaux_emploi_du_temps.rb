@@ -102,6 +102,7 @@ module CahierDeTextesAPI
 
         optional :matiere_id
         optional :regroupement_id
+        optional :previous_regroupement_id
         optional :heure_debut, type: Time
         optional :heure_fin, type: Time
         optional :salle_id
@@ -148,8 +149,14 @@ module CahierDeTextesAPI
                 .where( creneau_emploi_du_temps_id: params[:id] )
                 .where( regroupement_id: params[:regroupement_id] ).count < 1
               CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
+
+              # 1. first remove previous créneau-regroupement association
+              CreneauEmploiDuTemps.last.regroupements.select { |cr| cr.regroupement_id == params[:previous_regroupement_id] }.first.destroy
+
+              # 2. create the new one
               cr = creneau.add_regroupement regroupement_id: params[:regroupement_id]
               cr.update semaines_de_presence: params[:semaines_de_presence_regroupement] if params[:semaines_de_presence_regroupement]
+
               CreneauEmploiDuTempsRegroupement.restrict_primary_key
             end
           end

@@ -74,6 +74,7 @@ angular.module('cahierDeTexteApp')
 		   return $resource( APP_PATH + '/api/' + API_VERSION + '/creneaux_emploi_du_temps/:id',
 				     { id: '@id',
 				       regroupement_id: '@regroupement_id',
+				       previous_regroupement_id: '@previous_regroupement_id',
 				       jour_de_la_semaine: '@jour_de_la_semaine',
 				       heure_debut: '@heure_debut',
 				       heure_fin: '@heure_fin',

@@ -32,6 +32,7 @@ angular.module( 'cahierDeTexteApp' )
 			   $scope.DOCS_URL_login = $sce.trustAsResourceUrl( DOCS_URL + '/login' );
 
 			   $scope.creneau = creneau;
+			   $scope.creneau.previous_regroupement_id = $scope.creneau.regroupement_id;
 			   $scope.matieres = matieres;
 			   $scope.classes = classes;
 			   $scope.creneau.en_creation = $scope.creneau.matiere_id.length == 0 || $scope.creneau.regroupement_id === undefined;
