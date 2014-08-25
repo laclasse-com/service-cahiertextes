@@ -52,7 +52,7 @@ module CahierDeTextesAPI
               start: Time.new( jour.year, jour.month, jour.mday, creneau.plage_horaire_debut.debut.hour, creneau.plage_horaire_debut.debut.min ).iso8601,
               end: Time.new( jour.year, jour.month, jour.mday, creneau.plage_horaire_fin.fin.hour, creneau.plage_horaire_fin.fin.min ).iso8601,
               cours: creneau.cours.select do |cours|
-                cours[:deleted] == false &&  cours.date_cours == jour
+                cours[:deleted] == false && cours.date_cours == jour
               end
                                   .map do |cours|
                 hcours = cours.to_hash
