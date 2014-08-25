@@ -41,7 +41,7 @@ angular.module( 'cahierDeTexteApp' )
 			   $scope.matiere_id = $scope.creneau.matiere_id.length > 0 ? $scope.creneau.matiere_id : _.chain( $scope.matieres ).values().first().value().id;
 			   $scope.regroupement_id = $scope.creneau.regroupement_id !== 'undefined' ? parseInt( $scope.creneau.regroupement_id ) : _( $scope.classes ).first().id;
 			   $scope.classe = _( $scope.classes ).findWhere( { id: parseInt( $scope.regroupement_id ) } );
-			   $scope.matiere = $scope.matieres[ $scope.matiere_id ];
+			   $scope.matiere = _($scope.matieres).findWhere( { id: $scope.matiere_id } );
 
 			   // Gestion des semaines actives
 			   var fixnum_to_bitfield = function( fixnum ) {
