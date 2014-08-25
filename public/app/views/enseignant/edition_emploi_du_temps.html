@@ -11,27 +11,27 @@
     <span class="glyphicon glyphicon-trash"></span> Supprimer le créneau
   </button>
 
+  <!-- {{{ Lecture seule -->
   <h3>
-    <!-- {{{ Lecture seule -->
     <span data-ng-hide="creneau.en_creation">
-      {{classe.libelle}} - {{matiere.libelle}} ({{creneau.heure_debut | date: 'shortTime'}} - {{creneau.heure_fin | date: 'shortTime'}})
+      {{classe.libelle}} - {{matiere.libelle_long}} ({{creneau.heure_debut | date: 'shortTime'}} - {{creneau.heure_fin | date: 'shortTime'}})
     </span>
-    <!-- }}} -->
-
-    <!-- {{{ Édition -->
-    <span data-ng-show="creneau.en_creation">
-      <select data-ng-model="scope.regroupement_id" data-ng-options="classe.id as classe.libelle for classe in classes">
-      </select>
-      -
-      <select data-ng-model="scope.matiere_id" data-ng-options="matiere.id as matiere.libelle_long for matiere in matieres">
-      </select>
-
-      (<timepicker class="timepicker" data-ng-model="creneau.tmp_heure_debut" data-show-meridian="false" data-minute-step="5"></timepicker>
-      -
-      <timepicker class="timepicker" data-ng-model="creneau.tmp_heure_fin" data-show-meridian="false" data-minute-step="5"></timepicker>)
-    </span>
-    <!-- }}} -->
   </h3>
+  <!-- }}} -->
+
+  <!-- {{{ Édition -->
+  <span data-ng-show="creneau.en_creation">
+    <select data-ng-model="scope.regroupement_id" data-ng-options="classe.id as classe.libelle for classe in classes">
+    </select>
+    -
+    <select data-ng-model="scope.matiere_id" data-ng-options="matiere.id as matiere.libelle_long for matiere in matieres">
+    </select>
+
+    (<timepicker class="timepicker" data-ng-model="creneau.tmp_heure_debut" data-show-meridian="false" data-minute-step="5"></timepicker>
+    -
+    <timepicker class="timepicker" data-ng-model="creneau.tmp_heure_fin" data-show-meridian="false" data-minute-step="5"></timepicker>)
+  </span>
+  <!-- }}} -->
 
   <!-- ####################### Semaines Actives ########################### -->
   <!-- {{{ Édition -->
