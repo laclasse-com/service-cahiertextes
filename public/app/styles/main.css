@@ -184,11 +184,11 @@ footer { color: #555;
 
 
 .temps-est-on, .temps-est-off { display: inline-block;
-				border: 2px solid #666;
+				border: 1px solid #666;
 				border-radius: 1em;
-				height: 1.2em;
-				width: 1.2em;
-				margin: 0 0.33em; }
+				height: 12px;
+				width: 12px;
+				margin: 0 0 0 3px; }
 .temps-est-on { background-color: #eecd6c }
 
 /* pictos */
