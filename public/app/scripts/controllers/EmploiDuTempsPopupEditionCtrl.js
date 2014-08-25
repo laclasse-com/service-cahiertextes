@@ -31,6 +31,7 @@ angular.module( 'cahierDeTexteApp' )
 			   // Initialisations {{{
 			   $scope.DOCS_URL_login = $sce.trustAsResourceUrl( DOCS_URL + '/login' );
 
+			   $scope.mode_duplication = false;
 			   $scope.creneau = creneau;
 			   $scope.creneau.previous_regroupement_id = $scope.creneau.regroupement_id;
 			   $scope.matieres = matieres;
@@ -117,6 +118,8 @@ angular.module( 'cahierDeTexteApp' )
 				   $scope.creneau.semaines_de_presence_regroupement = bitfield_to_fixnum( $scope.semaines_actives.regroupement );
 
 				   $scope.creneau.$update();
+			       } else if ( $scope.mode_duplication ) {
+				   $scope.dupliquer();
 			       } else {
 				   // Gestion des Cours et Devoirs
 				   var handle_devoirs = function( devoirs, cours ) {
@@ -244,20 +247,19 @@ angular.module( 'cahierDeTexteApp' )
 				   $scope.is_dirty();
 			       };
 
-			       $scope.creneaux_similaires = _.chain( raw_data )
+			       $scope.creneaux_similaires = _( raw_data )
 				   .filter( function ( creneau ) {
 				       return ( creneau.id != $scope.creneau.id )
-					   && ( creneau.regroupement_id != $scope.regroupement_id )
-					   && ( creneau.matiere_id == $scope.matiere_id );
+					   && ( creneau.matiere_id == $scope.creneau.matiere_id )
+					   && ( _(creneau.cours).isNull() );
 				   } )
 				   .map( function ( creneau ) {
 				       creneau.classe = _( $scope.classes ).findWhere( {
 					   id: parseInt( creneau.regroupement_id )
 				       } );
-				       creneau.label_sbox = $filter( 'formateCreneau' )( creneau );
+
 				       return creneau;
-				   } )
-				   .value();
+				   } );
 			       $scope.creneaux_similaires.selected = [];
 
 			       //
@@ -273,7 +275,6 @@ angular.module( 'cahierDeTexteApp' )
 					       id: parseInt( creneau.regroupement_id )
 					   } );
 					   creneau.date_due = $filter( 'date' )( creneau.start, 'y-MM-dd' );
-					   creneau.label_sbox = $filter( 'formateCreneau' )( creneau.start );
 					   creneau.semaine = "cette semaine";
 
 					   return creneau;
@@ -300,7 +301,6 @@ angular.module( 'cahierDeTexteApp' )
 				       cdp_futurs.semaine = ( n == 0 ) ? "cette semaine" : "dans " + n + " semaine";
 				       cdp_futurs.semaine += ( n > 1 ) ? "s" : "";
 				       cdp_futurs.date_due = $filter( 'date' )( cdp_futurs.start, 'y-MM-dd' );
-				       cdp_futurs.label_sbox = $filter( 'formateCreneau' )( cdp_futurs );
 
 				       cdp_tmp.push( cdp_futurs );
 				   } );
@@ -462,6 +462,14 @@ angular.module( 'cahierDeTexteApp' )
 					       return devoir.deleted;
 					   });
 				   }
+			       };
+
+			       $scope.switch_to_duplication_mode = function() {
+				   $scope.mode_duplication = true;
+			       };
+
+			       $scope.switch_to_creneau_edition = function() {
+				   $scope.creneau.en_creation = true;
 			       };
 			   }	// /fin gestion des Cours et Devoirs
 			   // }}}
