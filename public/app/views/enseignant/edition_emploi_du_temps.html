@@ -7,9 +7,6 @@
 	  data-ng-show="cours.create" >
     <span class="glyphicon glyphicon-edit"></span>
   </button>
-  <button type="button" class="btn btn-sm btn-warning pull-right" data-ng-click="effacer_creneau()" data-ng-show="creneau.en_creation && cours.create">
-    <span class="glyphicon glyphicon-trash"></span> Supprimer le créneau
-  </button>
 
   <!-- {{{ Lecture seule -->
   <h3>
@@ -20,7 +17,7 @@
   <!-- }}} -->
 
   <!-- {{{ Édition -->
-  <span data-ng-show="creneau.en_creation">
+  <span class="edition-creneau" data-ng-show="creneau.en_creation">
     <select data-ng-model="scope.regroupement_id" data-ng-options="classe.id as classe.libelle for classe in classes">
     </select>
     -
@@ -113,7 +110,7 @@
 			 onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().cours, this.files)"
 			 data-ng-show="cartable.files" />
 		</div>
-		<div class="col-md-5 duplication-saisie" data-ng-show="creneaux_similaires.length > 0 && cours.id">
+		<div class="col-md-5 duplication-saisie" data-ng-show="creneaux_similaires.length > 0">
 		  <select multiple
 			  data-ng-model="creneaux_similaires.selected"
 			  data-ng-options="creneau as creneau.label_sbox group by creneau.classe.libelle for creneau in creneaux_similaires" >
@@ -285,6 +282,10 @@
 </div>
 
 <div class="modal-footer">
+  <button type="button" class="btn btn-sm btn-warning pull-left" data-ng-click="effacer_creneau()" data-ng-show="creneau.en_creation && cours.create">
+    <span class="glyphicon glyphicon-trash"></span> Supprimer le créneau
+  </button>
+
   <button type="button" class="btn btn-sm btn-info" data-ng-click="annuler()">
     <span class="glyphicon glyphicon-remove-sign"></span> <span data-ng-show="dirty || creneau.en_creation">Annuler</span><span data-ng-hide="dirty || creneau.en_creation">Fermer</span>
   </button>
