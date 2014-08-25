@@ -206,6 +206,11 @@ angular.module( 'cahierDeTexteApp' )
 			       } else {
 				   $scope.cours = Cours.get( { id: cours.id } );
 				   $scope.cours.$promise.then( function( cours ) {
+				       $scope.cours.editable = _($scope.cours.date_validation).isNull() && $scope.cours.enseignant_id === $scope.current_user.uid;
+				       if ( !$scope.cours.editable ) {
+					   $scope.cours.contenu = $sce.trustAsHtml( $scope.cours.contenu );
+				       }
+
 				       _(cours.devoirs).each( function( devoir ) {
 					   $scope.estimation_leave( devoir );
 					   devoir.tooltip = devoir.contenu;
@@ -215,11 +220,8 @@ angular.module( 'cahierDeTexteApp' )
 				       } );
 				   } );
 				   $scope.cours.create = false;
-				   $scope.cours.editable = _($scope.cours.date_validation).isNull() && $scope.cours.enseignant_id == $scope.current_user.uid;
-				   if ( !$scope.cours.editable ) {
-				       $scope.cours.contenu = $sce.trustAsHtml( $scope.cours.contenu );
-				   }
 			       }
+
 			       $scope.devoirs = devoirs.map( function( devoir ) {
 				   return Devoirs.get( { id: devoir.id } );
 			       } );
