@@ -119,22 +119,27 @@ module CahierDeTextesAPI
         cours = Cours[ params[:id] ]
 
         unless cours.nil?
-          cahier_de_textes = CahierDeTextes.where(regroupement_id: params[:regroupement_id]).first
-          cahier_de_textes = CahierDeTextes.create( regroupement_id: params[:regroupement_id] ) if  cahier_de_textes.nil?
+          cahier_de_textes = CahierDeTextes.where( regroupement_id: params[:regroupement_id] ).first
+          cahier_de_textes = CahierDeTextes.create( regroupement_id: params[:regroupement_id] ) if cahier_de_textes.nil?
 
-          new_cours = Cours.create(  cahier_de_textes_id: cahier_de_textes.id,
-                                     creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
-                                     date_cours: params[:date],
-                                     date_creation: Time.now,
-                                     contenu: params[:contenu],
-                                     enseignant_id: cours.enseignant_id )
+          cours = Cours.where( cahier_de_textes_id: cahier_de_textes.id,
+                               creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
+                               date_cours: params[:date] )
+          if cours.nil?
+            cours = Cours.create( cahier_de_textes_id: cahier_de_textes.id,
+                                  creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
+                                  date_cours: params[:date],
+                                  date_creation: Time.now,
+                                  contenu: params[:contenu],
+                                  enseignant_id: cours.enseignant_id )
 
-          cours.ressources.each do
-            |ressource|
-            new_cours.add_ressource( ressource )
+            cours.ressources.each do
+              |ressource|
+              cours.add_ressource( ressource )
+            end
           end
 
-          new_cours.to_deep_hash
+          cours.to_deep_hash
         end
       end
 
