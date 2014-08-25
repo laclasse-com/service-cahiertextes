@@ -1,12 +1,5 @@
 <div class="modal-header">
   <button type="button" class="close pull-right" aria-hidden="true" data-ng-click="annuler()">&times;</button>
-  <button type="button" class="btn btn-xs pull-right"
-	  data-ng-class="{'btn-default': !creneau.en_creation, 'btn-danger': creneau.en_creation}"
-	  data-ng-model="creneau.en_creation"
-	  btn-checkbox
-	  data-ng-show="cours.create" >
-    <span class="glyphicon glyphicon-edit"></span>
-  </button>
 
   <!-- {{{ Lecture seule -->
   <h3>
@@ -56,20 +49,11 @@
   </div>
 </div>
 
-<div class="modal-body" data-ng-hide="creneau.en_creation">
+<div class="modal-body" data-ng-hide="creneau.en_creation || mode_duplication">
   <tabset>
 
     <!-- ####################### Séquence Pédagogique du jour ####################### -->
     <tab heading="Séquence pédagogique du {{creneau.heure_debut | date : 'fullDate' }}" >
-      <div class="row">
-	<button type="button" class="btn btn-sm btn-danger pull-right"
-		data-ng-click="effacer_cours(  )"
-		data-ng-show="cours.editable" >
-	  <span class="glyphicon glyphicon-trash"></span> Supprimer
-	</button>
-      </div>
-      <div class="clearfix"></div>
-
       <div class="row">
 	<div class="col-md-9 contenu">
 	  <div class="panel panel-default">
@@ -77,12 +61,11 @@
 	    <div class="panel-body">
 	      <div data-text-angular
 		   data-ng-model="cours.contenu"
-		   data-ng-change="is_dirty( cours )" >
-		<!-- data-ng-show="cours.editable" > -->
+		   data-ng-change="is_dirty( cours )"
+		   data-ng-show="cours.editable" ></div>
+	      <div data-ng-bind-html="cours.contenu"
+		   data-ng-hide="cours.editable" >
 	      </div>
-	      <!-- <div data-ng-bind-html="cours.contenu"
-	      data-ng-hide="cours.editable" >
-	      </div> -->
 	    </div>
 	    <div class="panel-footer">
 
@@ -110,26 +93,18 @@
 			 onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().cours, this.files)"
 			 data-ng-show="cartable.files" />
 		</div>
-		<div class="col-md-5 duplication-saisie" data-ng-show="creneaux_similaires.length > 0">
-		  <select multiple
-			  data-ng-model="creneaux_similaires.selected"
-			  data-ng-options="creneau as creneau.label_sbox group by creneau.classe.libelle for creneau in creneaux_similaires" >
-		  </select>
-		  <button class="btn btn-sm btn-primary" data-ng-click="dupliquer()" data-ng-show="creneaux_similaires.selected">
-		    <span data-ng-hide="creneaux_similaires.selected.length > 1">
-		      <span class="glyphicon glyphicon-share"></span> Copier vers le cours sélectionné
-		    </span>
-		    <span data-ng-show="creneaux_similaires.selected.length > 1">
-		      <span class="glyphicon glyphicon-share"></span> Copier vers les cours sélectionnés
-		    </span>
-		  </button>
-		</div>
 	      </div>
 	      <div class="clearfix"></div>
 	    </div>
 	  </div>
 	</div>
 	<div class="col-md-3 infos">
+	  <button type="button" class="btn btn-sm btn-danger pull-right"
+		  data-ng-click="effacer_cours(  )"
+		  data-ng-show="cours.editable" >
+	    <span class="glyphicon glyphicon-trash"></span> Supprimer
+	  </button>
+
 	  <ul>
 	    <li class="clickable" data-ng-repeat="devoir in cours.devoirs"
 		tooltip-trigger="click"
@@ -160,7 +135,7 @@
 		  </select>
 		  à faire pour le
 		  <select data-ng-required="true" data-ng-model="devoir.date_due" data-ng-change="set_creneau.date_due( devoir )"
-			  data-ng-options="creneau.date_due as creneau.label_sbox group by creneau.semaine for creneau in creneaux_devoirs_possibles"
+			  data-ng-options="creneau.date_due as ( creneau | formateCreneau ) group by creneau.semaine for creneau in creneaux_devoirs_possibles"
 			  data-ng-init="devoir.date_due=creneaux_devoirs_possibles[0].date_due">
 		  </select>
 		</div>
@@ -281,16 +256,36 @@
   </tabset>
 </div>
 
+<div class="modal-body" data-ng-show="mode_duplication">
+  <div class="duplication-saisie" data-ng-show="creneaux_similaires.length > 0" >
+    <select multiple
+	    data-ng-model="creneaux_similaires.selected"
+	    data-ng-options="creneau as ( creneau | formateCreneau ) group by creneau.classe.libelle for creneau in creneaux_similaires" >
+    </select>
+  </div>
+</div>
+
 <div class="modal-footer">
   <button type="button" class="btn btn-sm btn-warning pull-left" data-ng-click="effacer_creneau()" data-ng-show="creneau.en_creation && cours.create">
     <span class="glyphicon glyphicon-trash"></span> Supprimer le créneau
   </button>
-
-  <button type="button" class="btn btn-sm btn-info" data-ng-click="annuler()">
-    <span class="glyphicon glyphicon-remove-sign"></span> <span data-ng-show="dirty || creneau.en_creation">Annuler</span><span data-ng-hide="dirty || creneau.en_creation">Fermer</span>
+  <button type="button" class="btn btn-sm btn-default pull-left"
+	  data-ng-click="switch_to_creneau_edition()"
+	  data-ng-show="cours.create && !creneau.en_creation" >
+    <span class="glyphicon glyphicon-edit"> Modifier le créneau</span>
   </button>
-  <button type="button" class="btn btn-sm btn-success" data-ng-click="valider()" data-ng-show="dirty || creneau.en_creation">
+
+  <button type="button" class="btn btn-sm btn-default"
+	  data-ng-click="switch_to_duplication_mode()"
+	  data-ng-hide="creneau.en_creation || mode_duplication || creneaux_similaires.length < 1" >
+    <span class="glyphicon glyphicon-transfer"> Copier le cours à d'autres créneaux</span>
+  </button>
+
+  <button type="button" class="btn btn-sm btn-success pull-right" data-ng-click="valider()" data-ng-show="dirty || creneau.en_creation">
     <span class="glyphicon glyphicon-ok-sign"></span> Valider
+  </button>
+  <button type="button" class="btn btn-sm btn-info pull-right" data-ng-click="annuler()">
+    <span class="glyphicon glyphicon-remove-sign"></span> <span data-ng-show="dirty || creneau.en_creation">Annuler</span><span data-ng-hide="dirty || creneau.en_creation">Fermer</span>
   </button>
 </div>
 
