@@ -88,6 +88,8 @@ body {
 .panel-heading.enseignant-saisie .panel-title{width:33%}
 .panel-heading.enseignant-saisie input{border:1px solid #aaa}
 
+.edition-creneau select{width:12.5em}
+
 .accordion-toggle{cursor:pointer}
 .duplication-saisie div,.duplication-saisie select{width:100%}
 
