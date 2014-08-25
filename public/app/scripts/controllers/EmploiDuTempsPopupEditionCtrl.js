@@ -413,7 +413,8 @@ angular.module( 'cahierDeTexteApp' )
 				   _( $scope.creneaux_similaires.selected ).each( function ( creneau_cible ) {
 				       $scope.cours.$copie( {
 					   regroupement_id: creneau_cible.regroupement_id,
-					   creneau_emploi_du_temps_id: creneau_cible.creneau_emploi_du_temps_id
+					   creneau_emploi_du_temps_id: creneau_cible.creneau_emploi_du_temps_id,
+					   date: creneau_cible.start
 				       } );
 				   } );
 			       };
