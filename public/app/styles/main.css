@@ -205,8 +205,10 @@ footer { color: #555;
 .picto.matiere { background-image: url( '/app/bower_components/charte-graphique-laclasse-com/images/picto_matiere.svg' ) }
 .picto.temps { background-image: url( '/app/bower_components/charte-graphique-laclasse-com/images/picto_temps.svg' ) }
 
-/* Pour ngSwitcher */
 
+fieldset .label {margin: 1px;}
+
+/* Pour ngSwitcher */
 .switch { border-radius: 13px }
 .switch.switch-left { background-color:#ae8ab8;
 		      border-color:#ae8ab8 }
