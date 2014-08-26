@@ -164,7 +164,9 @@ footer { color: #555;
 .modal-body .toggle-fait { margin-bottom: 5px }
 .modal-body .toggle-fait .switch {margin:0 auto;}
 .modal-body .infos .clickable { border: 1px solid #666;
-				cursor: pointer; }
+				cursor: pointer;
+				font-size: 0.9em;
+				padding:0 o.15em; }
 .modal-body .infos .type1,
 .modal-body .infos .type2,
 .modal-body .infos .type3,

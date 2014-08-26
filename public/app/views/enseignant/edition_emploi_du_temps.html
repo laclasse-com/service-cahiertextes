@@ -105,7 +105,7 @@
 	    <span class="glyphicon glyphicon-trash"></span> Supprimer
 	  </button>
 
-	  <ul>
+	  <ul class="pull-left">
 	    <li class="clickable" data-ng-repeat="devoir in cours.devoirs"
 		tooltip-trigger="click"
 		tooltip-html-unsafe="{{devoir.tooltip}}"
@@ -129,16 +129,17 @@
 
 	    <div class="col-md-9">
 	      <div class="panel-heading enseignant-saisie">
-		<div class="col-md-12">
+		<label class="col-md-6">Type de travail :
 		  <select data-ng-required="true" data-ng-model="devoir.type_devoir_id"
 			  data-ng-options="type_de_devoir.id as type_de_devoir.description for type_de_devoir in types_de_devoir">
 		  </select>
-		  à faire pour le
+		</label>
+		<label class="col-md-6">Date de rendu :
 		  <select data-ng-required="true" data-ng-model="devoir.date_due" data-ng-change="set_creneau.date_due( devoir )"
 			  data-ng-options="creneau.date_due as ( creneau | formateCreneau ) group by creneau.semaine for creneau in creneaux_devoirs_possibles"
 			  data-ng-init="devoir.date_due=creneaux_devoirs_possibles[0].date_due">
 		  </select>
-		</div>
+		</label>
 
 		<div class="col-md-12">
 		  <label>Temps de travail estimé : </label>
@@ -183,6 +184,8 @@
 		<span class="glyphicon glyphicon-trash"></span> Supprimer
 	      </button>
 	    </div>
+
+	    <div class="clearfix"></div>
 	  </div>
 	</accordion-group>
       </accordion>
@@ -195,61 +198,78 @@
 	<span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
       </button>
       <div class="clearfix"></div>
+
       <div class="panel panel-default" data-ng-repeat="devoir in devoirs">
-	<div class="panel-heading enseignant-saisie">
+
+	<div class="col-md-9">
+
+	  <div class="panel-heading enseignant-saisie">
+
+	    <label class="col-md-12">Type de travail :
+	      <select data-ng-required="true" data-ng-model="devoir.type_devoir_id"
+		      data-ng-options="type_de_devoir.id as type_de_devoir.description for type_de_devoir in types_de_devoir">
+	      </select>
+	    </label>
+
+	    <div class="col-md-12">
+	      <label>Temps de travail estimé : </label>
+	      <rating data-ng-model="devoir.temps_estime"
+		      max="15"
+		      readonly="false"
+		      ng-click="is_dirty( null )"
+		      on-hover="estimation_over(devoir, value)"
+		      on-leave="estimation_leave(devoir)"
+		      state-on="'temps-est-on'"
+		      state-off="'temps-est-off'"></rating>
+	      <span class="label pull-right" data-ng-class="{'label-success': devoir.overValue<4, 'label-info': devoir.overValue>=4 && devoir.overValue<8 , 'label-warning': devoir.overValue>=8 && devoir.overValue<12, 'label-danger': devoir.overValue>=12}" data-ng-show="devoir.overValue > 0 || devoir.temps_estime > 0">{{devoir.minutes || devoir.temps_estime * 5}} min</span>
+	    </div>
+
+	    <div class="clearfix"></div>
+	  </div>
+
+	  <text-angular class="panel-body" data-ng-model="devoir.contenu" data-ng-change="is_dirty( devoir )"></text-angular>
+
+	  <div class="panel-footer">
+	    <ul>
+	      <li data-ng-repeat="ressource in devoir.ressources">
+		<a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
+		<button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( devoir, ressource.hash )">&times;</button>
+	      </li>
+	    </ul>
+	    <span class="alert alert-danger" role="alert" data-ng-hide="cartable.files">Problème de communication avec l'application Documents</span>
+	    <input type="file" name="upload[]" multiple onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files )"
+		   data-ng-show="cartable.files" />
+	    <div class="treecontrol-container">
+	      <treecontrol class="tree-classic"
+			   tree-model="cartable.files"
+			   options="treeOptions"
+			   on-selection="treeClicked( node )">
+		{{node.name}} ({{node.mime}}) <button  class="btn btn-sm btn-success" data-ng-click="add_ressource( devoir, node.name, node.hash )">+</button>
+	      </treecontrol>
+	    </div>
+	  </div>
+
+	  <div class="clearfix"></div>
+	</div>
+
+	<div class="col-md-3 infos">
 	  <button type="button" class="btn btn-sm btn-danger pull-right"
 		  data-ng-click="effacer_devoir_devoirs( devoir )" >
 	    <span class="glyphicon glyphicon-trash"></span> Supprimer
 	  </button>
-	  <button class="btn btn-default pull-right"
-		  data-ng-show="devoir.cours.contenu"
-		  data-tooltip-trigger="click"
-		  data-tooltip-html-unsafe="{{devoir.cours.contenu}}">
-	    <span class="glyphicon glyphicon-briefcase"></span> Séquence Pédagogique
-	  </button>
 
-	  <div class="row-fluid">
-	    <select data-ng-required="true" data-ng-model="devoir.type_devoir_id"
-		    data-ng-options="type_de_devoir.id as type_de_devoir.description for type_de_devoir in types_de_devoir">
-	    </select>
-	  </div>
-
-	  <div class="row">
-	    <label>Temps de travail estimé : </label>
-	    <rating data-ng-model="devoir.temps_estime"
-		    max="15"
-		    readonly="false"
-		    ng-click="is_dirty( null )"
-		    on-hover="estimation_over(devoir, value)"
-		    on-leave="estimation_leave(devoir)"
-		    state-on="'temps-est-on'"
-		    state-off="'temps-est-off'"></rating>
-	    <span class="label pull-right" data-ng-class="{'label-success': devoir.overValue<4, 'label-info': devoir.overValue>=4 && devoir.overValue<8 , 'label-warning': devoir.overValue>=8 && devoir.overValue<12, 'label-danger': devoir.overValue>=12}" data-ng-show="devoir.overValue > 0 || devoir.temps_estime > 0">{{devoir.minutes || devoir.temps_estime * 5}} min</span>
-	  </div>
-	</div>
-	<text-angular class="panel-body" data-ng-model="devoir.contenu" data-ng-change="is_dirty( devoir )"></text-angular>
-	<div class="panel-body">
-	</div>
-	<div class="panel-footer">
-	  <ul>
-	    <li data-ng-repeat="ressource in devoir.ressources">
-	      <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
-	      <button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( devoir, ressource.hash )">&times;</button>
+	  <ul class="pull-left">
+	    <li class="clickable">
+	      <span data-ng-show="devoir.cours.contenu"
+		    data-tooltip-trigger="click"
+		    data-tooltip-html-unsafe="{{devoir.cours.contenu}}">
+		<span class="glyphicon glyphicon-briefcase"></span> Séquence Pédagogique
+	      </span>
 	    </li>
 	  </ul>
-	  <span class="alert alert-danger" role="alert" data-ng-hide="cartable.files">Problème de communication avec l'application Documents</span>
-	  <input type="file" name="upload[]" multiple onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files )"
-		 data-ng-show="cartable.files" />
-	  <div class="treecontrol-container">
-	    <treecontrol class="tree-classic"
-			 tree-model="cartable.files"
-			 options="treeOptions"
-			 on-selection="treeClicked( node )">
-	      {{node.name}} ({{node.mime}}) <button  class="btn btn-sm btn-success" data-ng-click="add_ressource( devoir, node.name, node.hash )">+</button>
-	    </treecontrol>
-	  </div>
-	  <div class="clearfix"></div>
 	</div>
+
+	<div class="clearfix"></div>
       </div>
     </tab>
 
