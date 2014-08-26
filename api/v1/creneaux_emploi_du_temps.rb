@@ -151,7 +151,8 @@ module CahierDeTextesAPI
               CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
 
               # 1. first remove previous créneau-regroupement association
-              CreneauEmploiDuTemps.last.regroupements.select { |cr| cr.regroupement_id == params[:previous_regroupement_id] }.first.destroy
+              previous_creneau_regroupement = CreneauEmploiDuTemps.last.regroupements.select { |cr| cr.regroupement_id == params[:previous_regroupement_id] }.first
+              previous_creneau_regroupement.destroy unless previous_creneau_regroupement.nil?
 
               # 2. create the new one
               cr = creneau.add_regroupement regroupement_id: params[:regroupement_id]
