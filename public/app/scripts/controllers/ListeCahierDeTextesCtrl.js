@@ -7,6 +7,7 @@ angular.module('cahierDeTexteApp')
 		      var matieres = [];
 		      var matieres_enseignees = [];
 		      $scope.selected_regroupement_id = null;
+		      $scope.selected_creneau_vide = null;
 
 		      // popup d'édition
 		      var ouvre_popup_edition = function ( raw_data, matieres, classes, creneau, cours, devoirs, popup_callback ) {
@@ -29,7 +30,7 @@ angular.module('cahierDeTexteApp')
 				  } );
 		      };
 
-		      $scope.eventClick = function ( event ) {
+		      $scope.edition_creneau = function ( event ) {
 			  CreneauEmploiDuTemps.get( { id: event.creneau_emploi_du_temps_id } )
 			      .$promise
 			      .then( function( creneau_selectionne ) {
@@ -51,13 +52,23 @@ angular.module('cahierDeTexteApp')
 			      } );
 		      };
 
-		      var filter_data = function( raw_data ) {
+		      var filter_class = function( data, selected_regroupement_id ) {
+			  // Filtrage sur une seule classe
+			  if ( ! _(selected_regroupement_id).isNull() ) {
+			      data = _( data ).filter( function( creneau ) {
+				  return creneau.regroupement_id == selected_regroupement_id;
+			      } );
+			  }
+			  return data;
+		      };
+
+		      var filter_creneaux_avec_saisies = function( raw_data ) {
 			  var filtered_data = _.chain(raw_data)
 				  .filter( function( creneau ) {
 				      return creneau.enseignant_id === $scope.current_user.uid;
 				  } )
-				  .filter( function( creneau ) {
-				      return ! _(creneau.cours).isEmpty();
+				  .reject( function( creneau ) {
+				      return _(creneau.cours).isEmpty();
 				  })
 				  .uniq( function( creneau ) {
 				      return creneau.creneau_emploi_du_temps_id;
@@ -68,18 +79,29 @@ angular.module('cahierDeTexteApp')
 				  })
 				  .value();
 
-			  // Filtrage sur une seule classe
-			  if ( ! _($scope.selected_regroupement_id).isNull() ) {
-			      filtered_data = _( $scope.filtered_data ).filter( function( creneau ) {
-				  return creneau.regroupement_id == $scope.selected_regroupement_id;
-			      } );
-			  }
+			  return filtered_data;
+		      };
+
+		      var filter_creneaux_vides = function( raw_data ) {
+			  var filtered_data = _.chain(raw_data)
+				  .filter( function( creneau ) {
+				      return creneau.enseignant_id === $scope.current_user.uid;
+				  } )
+				  .filter( function( creneau ) {
+				      return _(creneau.cours).isEmpty();
+				  })
+				  .uniq( function( creneau ) {
+				      return creneau.creneau_emploi_du_temps_id;
+				  })
+				  .value();
 
 			  return filtered_data;
 		      };
 
 		      $scope.refresh_data = function() {
-			  $scope.filtered_data = filter_data( $scope.raw_data );
+			  $scope.creneaux_saisies = filter_class( filter_creneaux_avec_saisies( $scope.raw_data ), $scope.selected_regroupement_id );
+			  $scope.creneaux_vides = filter_class( filter_creneaux_vides( $scope.raw_data ), $scope.selected_regroupement_id );
+			  $scope.selected_creneau_vide = null;
 		      };
 
 		      var list_matieres = function(raw_data) {
@@ -99,7 +121,9 @@ angular.module('cahierDeTexteApp')
 
 		      // retrieve_data() when the value of week_offset changes
 		      // n.b.: triggered when week_offset is initialized above
-		      $scope.$watch( 'week_offset', function() { retrieve_data(); } );
+		      $scope.$watch( 'week_offset', function() {
+			  retrieve_data();
+		      } );
 
 		      $scope.incr_week_offset = function() {
 			  $scope.week_offset++;
