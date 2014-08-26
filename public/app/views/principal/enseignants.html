@@ -1,6 +1,6 @@
 <div class="panel panel-default">
   <div class="panel-body">
-    <select class="col-md-2" data-ng-model="mois" data-ng-change="process_data()" data-ng-options="annee.indexOf(m) as m for m in annee">
+    <select class="col-md-2" data-ng-model="mois" data-ng-change="process_data()" data-ng-options="annee.indexOf(m)+1 as m for m in annee">
       <option value="">Toute l'année</option>
     </select>
     <select class="col-md-2" data-ng-model="classe" data-ng-change="process_data()" data-ng-options="class as class for (id, class) in classes">

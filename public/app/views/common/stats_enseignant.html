@@ -8,7 +8,7 @@
       </select>
 
 
-      <select class="col-md-3 pull-right" data-ng-model="moisCourant" data-ng-change="process_data()" data-ng-options="mois.indexOf(m) as m for m in mois">
+      <select class="col-md-3 pull-right" data-ng-model="moisCourant" data-ng-change="process_data()" data-ng-options="mois.indexOf(m)+1 as m for m in mois">
 	<option value="">Toute l'année</option>
       </select>
     </div>
