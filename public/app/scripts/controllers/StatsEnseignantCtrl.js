@@ -167,7 +167,7 @@ angular.module( 'cahierDeTexteApp' )
 								  return classe.classe_libelle;
 							      } );
 
-							      $scope.enseignant.matieres = _.chain( $scope.enseignant.classes ).pluck('matiere_libelle').uniq().value();
+							      $scope.enseignant.liste_matieres = _.chain( $scope.enseignant.classes ).pluck('matiere_libelle').uniq().value();
 
 							      $scope.enseignant.prof_principal = _.chain( $scope.enseignant.classes )
 								  .filter( function ( matiere ) {
