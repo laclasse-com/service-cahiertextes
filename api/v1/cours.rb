@@ -122,24 +122,25 @@ module CahierDeTextesAPI
           cahier_de_textes = CahierDeTextes.where( regroupement_id: params[:regroupement_id] ).first
           cahier_de_textes = CahierDeTextes.create( regroupement_id: params[:regroupement_id] ) if cahier_de_textes.nil?
 
-          cours = Cours.where( cahier_de_textes_id: cahier_de_textes.id,
-                               creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
-                               date_cours: params[:date] )
-          if cours.nil?
-            cours = Cours.create( cahier_de_textes_id: cahier_de_textes.id,
-                                  creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
-                                  date_cours: params[:date],
-                                  date_creation: Time.now,
-                                  contenu: params[:contenu],
-                                  enseignant_id: cours.enseignant_id )
+          target_cours = Cours.where( cahier_de_textes_id: cahier_de_textes.id,
+                                      creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
+                                      date_cours: params[:date] ).first
 
-            cours.ressources.each do
+          if target_cours.nil?
+            target_cours = Cours.create( cahier_de_textes_id: cahier_de_textes.id,
+                                         creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
+                                         date_cours: params[:date],
+                                         date_creation: Time.now,
+                                         contenu: cours.contenu,
+                                         enseignant_id: cours.enseignant_id )
+
+            target_cours.ressources.each do
               |ressource|
-              cours.add_ressource( ressource )
+              target_cours.add_ressource( ressource )
             end
-          end
 
-          cours.to_deep_hash
+            target_cours.to_deep_hash
+          end
         end
       end
 
