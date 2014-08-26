@@ -4,7 +4,7 @@ angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantsCtrl',
 		[ '$scope', '$locale', 'THEME', '$q', 'API', 'Annuaire', 'User', 'PIECHART_DEFINITION', 'BARCHART_DEFINITION',
 		  function( $scope, $locale, THEME, $q, API, Annuaire, User, PIECHART_DEFINITION, BARCHART_DEFINITION ) {
-		      $scope.annee = $locale.DATETIME_FORMATS.MONTH;
+		      $scope.annee = _($locale.DATETIME_FORMATS.MONTH).toArray();
 		      $scope.classe = null;
 		      $scope.mois = null;
 		      $scope.classes = {};

@@ -12,7 +12,7 @@ angular.module('cahierDeTexteApp')
 			  $scope.displayed_data  = [];
 			  $scope.classes	 = {};
 			  $scope.matieres	 = [];
-			  $scope.annee = $locale.DATETIME_FORMATS.MONTH;
+			  $scope.annee = _($locale.DATETIME_FORMATS.MONTH).toArray();
 
 			  $scope.classe		 = null;
 			  $scope.moisCourant	 = null;
