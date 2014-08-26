@@ -10,15 +10,16 @@ module CahierDeTextesAPI
 
         extra = Annuaire.get_user( utilisateur[ 'uid' ] )
         utilisateur[ 'profils' ] = extra['profils'].map { |profil|
-          # calcule du droit d'admin, true pour les TECH et les ADM
-          is_admin = extra['roles'].select { |r| r['etablissement_code_uai'] == profil['etablissement_code_uai'] && ( r['role_id'] == 'TECH' || r['role_id'].match('ADM.*') ) }.length > 0
+          # renommage de champs
+          profil['type'] = profil['profil_id']
+          profil['uai'] = profil['etablissement_code_uai']
+          profil['etablissement'] = profil['etablissement_nom']
+          profil['nom'] = profil['profil_nom']
 
-          { type: profil['profil_id'],
-            uai: profil['etablissement_code_uai'],
-            etablissement: profil['etablissement_nom'],
-            nom: profil['profil_nom'],
-            admin: is_admin
-          }
+          # calcule du droit d'admin, true pour les TECH et les ADM
+          profil['admin'] = extra['roles'].select { |r| r['etablissement_code_uai'] == profil['etablissement_code_uai'] && ( r['role_id'] == 'TECH' || r['role_id'].match('ADM.*') ) }.length > 0
+
+          profil
         }
 
         utilisateur[ 'classes' ] = Annuaire.get_user_regroupements( utilisateur[ 'uid' ] )[ 'classes' ].map { |classe|
