@@ -208,6 +208,10 @@ footer { color: #555;
 
 fieldset .label {margin: 1px;}
 
+label { color: #999; }
+h3, .h3 { text-transform: uppercase; }
+
+.edition-creneau .row-fluid { min-height:4em; }
 .edition-creneau .horaire { display:inline-block;
 			    font-weight: bold;
 			    font-size: 1.2em; }
