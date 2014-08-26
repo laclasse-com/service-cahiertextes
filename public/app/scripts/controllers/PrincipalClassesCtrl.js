@@ -42,6 +42,7 @@ angular.module('cahierDeTexteApp')
 			      }, { filled: angular.copy( data_bootstrap ),
 				   validated: angular.copy( data_bootstrap ) } );
 
+			      $scope.barChart.data = [];
 			      $scope.barChart.data.push( { key: 'saisie',
 							   values: barChart_data.filled } );
 			      $scope.barChart.data.push( { key: 'valide',
