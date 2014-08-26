@@ -27,11 +27,11 @@
 
 	  <fieldset>
 	    <legend><span class="glyphicon glyphicon-briefcase"></span> Matières enseignées</legend>
-	    <span class="label label-primary pull-left" data-ng-repeat="matiere in enseignant.matieres">{{matiere}}</span>
+	    <span class="label label-primary pull-left" data-ng-repeat="matiere in enseignant.liste_matieres">{{matiere}}</span>
 	  </fieldset>
 	  <fieldset>
 	    <legend><span class="glyphicon glyphicon-envelope"></span> Classes</legend>
-	    <span class="label label-info pull-left" data-ng-repeat="classe in enseignant.classes">{{classe.classe_libelle}}</span>
+	    <span class="label label-info pull-left" data-ng-repeat="classe in enseignant.liste_classes">{{classe.classe_libelle}}</span>
 	  </fieldset>
 	</div>
       </div>
