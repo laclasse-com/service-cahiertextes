@@ -242,3 +242,9 @@ h3, .h3 { text-transform: uppercase; }
 			font-size: 1.5em;
 			padding: 3px; }
 .switch.switch-right .switch-button::before { content: " \f00c"; }
+
+
+/* textAngular */
+.ta-root { padding: 0; }
+.ta-toolbar { background-color: #eee; }
+.panel-footer { background-color: #888; }
