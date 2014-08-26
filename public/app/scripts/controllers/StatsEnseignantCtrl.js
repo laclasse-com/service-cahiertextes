@@ -16,15 +16,10 @@ angular.module( 'cahierDeTexteApp' )
 					      var filtre_saisies = function ( saisies, mois, classe ) {
 						  var data = saisies;
 						  if ( mois != null ) {
-						      data = _( data ).where( {
-							  mois: mois + 1
-						      } );
+						      data = _( data ).where( { mois: mois } );
 						  }
 						  if ( classe != null ) {
-						      // .invert() suppose que les valeurs sont uniques
-						      data = _( data ).where( {
-							  regroupement_id: classe.id
-						      } );
+						      data = _( data ).where( { regroupement_id: classe.id } );
 						  }
 						  return data;
 					      };
