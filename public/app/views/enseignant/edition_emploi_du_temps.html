@@ -88,14 +88,14 @@
 	<div class="col-md-9 contenu">
 	  <div class="panel panel-default">
 
-	    <div class="panel-body">
-	      <div data-text-angular
-		   data-ng-model="cours.contenu"
-		   data-ng-change="is_dirty( cours )"
-		   data-ng-show="cours.editable" ></div>
-	      <div data-ng-bind-html="cours.contenu"
-		   data-ng-hide="cours.editable" >
-	      </div>
+	    <div data-text-angular
+		 class="panel-body"
+		 data-ng-model="cours.contenu"
+		 data-ng-change="is_dirty( cours )"
+		 data-ng-show="cours.editable" ></div>
+	    <div class="panel-body"
+		 data-ng-bind-html="cours.contenu"
+		 data-ng-hide="cours.editable" >
 	    </div>
 	    <div class="panel-footer">
 
@@ -186,26 +186,37 @@
 		<div class="clearfix"></div>
 	      </div>
 	      <text-angular class="panel-body" data-ng-model="devoir.contenu" data-ng-change="is_dirty( devoir )"></text-angular>
+
 	      <div class="panel-footer">
-		<ul>
-		  <li data-ng-repeat="ressource in devoir.ressources">
-		    <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
-		    <button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( devoir, ressource.hash )">&times;</button>
-		  </li>
-		</ul>
-		<span class="alert alert-danger" role="alert" data-ng-hide="cartable.files">Problème de communication avec l'application Documents</span>
-		<input type="file" name="upload[]" multiple onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files )"
-		       data-ng-show="cartable.files" />
-		<div class="treecontrol-container">
-		  <treecontrol class="tree-classic"
-			       tree-model="cartable.files"
-			       options="treeOptions"
-			       on-selection="treeClicked( node )">
-		    {{node.name}} ({{node.mime}}) <button  class="btn btn-sm btn-success" data-ng-click="add_ressource( devoir, node.name, node.hash )">+</button>
-		  </treecontrol>
+
+		<div class="row-fluid" data-ng-show="cours.editable">
+		  <div class="col-md-7 ressources">
+		    <div class="alert alert-danger" role="alert" data-ng-hide="cartable.files">Problème de communication avec l'application Documents</div>
+		    <ul>
+		      <li data-ng-repeat="ressource in devoir.ressources">
+			<a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
+			<button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( devoir, ressource.hash )">✕</button>
+		      </li>
+		    </ul>
+		    <div class="treecontrol-container">
+		      <treecontrol class="tree-classic"
+				   tree-model="cartable.files"
+				   options="treeOptions"
+				   expanded-nodes="cartable.expandedNodes"
+				   on-selection="treeClicked( node )">
+			{{node.name}} ({{node.mime}}) <button class="btn btn-sm btn-success" data-ng-click="add_ressource( devoir, node.name, node.hash )">+</button>
+		      </treecontrol>
+		    </div>
+		    <input type="file"
+			   name="upload[]"
+			   multiple
+			   onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files)"
+			   data-ng-show="cartable.files" />
+		  </div>
 		</div>
 		<div class="clearfix"></div>
 	      </div>
+	      <div class="clearfix"></div>
 	    </div>
 
 	    <div class="col-md-3">
@@ -260,23 +271,33 @@
 	  <text-angular class="panel-body" data-ng-model="devoir.contenu" data-ng-change="is_dirty( devoir )"></text-angular>
 
 	  <div class="panel-footer">
-	    <ul>
-	      <li data-ng-repeat="ressource in devoir.ressources">
-		<a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
-		<button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( devoir, ressource.hash )">&times;</button>
-	      </li>
-	    </ul>
-	    <span class="alert alert-danger" role="alert" data-ng-hide="cartable.files">Problème de communication avec l'application Documents</span>
-	    <input type="file" name="upload[]" multiple onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files )"
-		   data-ng-show="cartable.files" />
-	    <div class="treecontrol-container">
-	      <treecontrol class="tree-classic"
-			   tree-model="cartable.files"
-			   options="treeOptions"
-			   on-selection="treeClicked( node )">
-		{{node.name}} ({{node.mime}}) <button  class="btn btn-sm btn-success" data-ng-click="add_ressource( devoir, node.name, node.hash )">+</button>
-	      </treecontrol>
+
+	    <div class="row-fluid" data-ng-show="cours.editable">
+	      <div class="col-md-7 ressources">
+		<div class="alert alert-danger" role="alert" data-ng-hide="cartable.files">Problème de communication avec l'application Documents</div>
+		<ul>
+		  <li data-ng-repeat="ressource in devoir.ressources">
+		    <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
+		    <button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( devoir, ressource.hash )">✕</button>
+		  </li>
+		</ul>
+		<div class="treecontrol-container">
+		  <treecontrol class="tree-classic"
+			       tree-model="cartable.files"
+			       options="treeOptions"
+			       expanded-nodes="cartable.expandedNodes"
+			       on-selection="treeClicked( node )">
+		    {{node.name}} ({{node.mime}}) <button class="btn btn-sm btn-success" data-ng-click="add_ressource( devoir, node.name, node.hash )">+</button>
+		  </treecontrol>
+		</div>
+		<input type="file"
+		       name="upload[]"
+		       multiple
+		       onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files)"
+		       data-ng-show="cartable.files" />
+	      </div>
 	    </div>
+	    <div class="clearfix"></div>
 	  </div>
 
 	  <div class="clearfix"></div>
