@@ -163,13 +163,12 @@ angular.module( 'cahierDeTexteApp' )
 							  function ( response ) {
 							      $scope.enseignant = response;
 							      // filtrer les classes de l'enseignant sur l'établissement actif
-							      $scope.enseignant.classes = _( $scope.current_user.profil_actif.classes ).uniq( function ( classe ) {
+							      $scope.enseignant.liste_classes = _( $scope.enseignant.classes ).uniq( function ( classe ) {
 								  return classe.classe_libelle;
 							      } );
 
-							      $scope.enseignant.matieres = _( $scope.enseignant.classes ).uniq( function ( matiere ) {
-								  return matiere.matiere_enseignee_id;
-							      } );
+							      $scope.enseignant.matieres = _.chain( $scope.enseignant.classes ).pluck('matiere_libelle').uniq().value();
+
 							      $scope.enseignant.prof_principal = _.chain( $scope.enseignant.classes )
 								  .filter( function ( matiere ) {
 								      return matiere.prof_principal == 'O';
