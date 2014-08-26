@@ -10,23 +10,44 @@
   <!-- }}} -->
 
   <!-- {{{ Édition -->
-  <span class="edition-creneau" data-ng-show="creneau.en_creation">
-    <select data-ng-model="scope.regroupement_id" data-ng-options="classe.id as classe.libelle for classe in classes">
-    </select>
-    -
-    <select data-ng-model="scope.matiere_id" data-ng-options="matiere.id as matiere.libelle_long for matiere in matieres">
-    </select>
+  <div class="edition-creneau" data-ng-show="creneau.en_creation">
+    <h3>Ajouter un créneau - {{creneau.heure_debut | date: 'fullDate'}}</h3>
+    <div class="col-md-6">
+      <label>Choisir la classe :</label>
+      <select data-ng-model="scope.regroupement_id" data-ng-options="classe.id as classe.libelle for classe in classes">
+      </select>
+    </div>
 
-    (<timepicker class="timepicker" data-ng-model="creneau.tmp_heure_debut" data-show-meridian="false" data-minute-step="5"></timepicker>
-    -
-    <timepicker class="timepicker" data-ng-model="creneau.tmp_heure_fin" data-show-meridian="false" data-minute-step="5"></timepicker>)
-  </span>
+    <div class="col-md-6">
+      <label>Choisir la matière :</label>
+      <select data-ng-model="scope.matiere_id" data-ng-options="matiere.id as matiere.libelle_long for matiere in matieres">
+      </select>
+    </div>
+
+    <div class="col-md-12">
+      <label>Choisir l'horaire :</label>
+      de
+      <div class="dropdown horaire">
+	<a class="dropdown-toggle" id="dLabeldebut" role="button" data-toggle="dropdown" data-target="#" href="">{{creneau.tmp_heure_debut | date: 'shortTime'}}</a>
+	<ul class="dropdown-menu" role="menu" aria-labelledby="dLabeldebut">
+	  <timepicker class="timepicker" data-ng-model="creneau.tmp_heure_debut" data-show-meridian="false" data-minute-step="5"></timepicker>
+	</ul>
+      </div>
+      à
+      <div class="dropdown horaire">
+	<a class="dropdown-toggle" id="dLabelfin" role="button" data-toggle="dropdown" data-target="#" href="">{{creneau.tmp_heure_fin | date: 'shortTime'}}</a>
+	<ul class="dropdown-menu" role="menu" aria-labelledby="dLabelfin">
+	  <timepicker class="timepicker" data-ng-model="creneau.tmp_heure_fin" data-show-meridian="false" data-minute-step="5"></timepicker>
+	</ul>
+      </div>
+    </div>
+  </div>
   <!-- }}} -->
 
   <!-- ####################### Semaines Actives ########################### -->
   <!-- {{{ Édition -->
   <div data-ng-show="creneau.en_creation">
-    <h5> Semaines Actives</h5>
+    <label>Coisir les semaines actives :</label>
     <div class="btn-group">
       <button class="btn btn-sm btn-info" data-ng-click="apply_template( 'semaine_A' )">semaine A</button>
       <button class="btn btn-sm btn-info" data-ng-click="apply_template( 'semaine_B' )">semaine B</button>

@@ -208,6 +208,12 @@ footer { color: #555;
 
 fieldset .label {margin: 1px;}
 
+.edition-creneau .horaire { display:inline-block;
+			    font-weight: bold;
+			    font-size: 1.2em; }
+.edition-creneau .horaire a { color:#000 }
+.edition-creneau .horaire a:hover { text-decoration: none }
+
 /* Pour ngSwitcher */
 .switch { border-radius: 13px }
 .switch.switch-left { background-color:#ae8ab8;
