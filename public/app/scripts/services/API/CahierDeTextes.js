@@ -30,7 +30,7 @@ angular.module('cahierDeTexteApp')
 				       .reject( function( item ) { return _.isUndefined( item.id ); } )
 				       .value();
 			       } );
-			       response.profil_actif = response.profils[ 0 ];
+			       response.profil_actif = _(response.profils).findWhere( { actif: true } );
 
 			       // Voir quel est le profil
 			       response.is = function( profil_id ) {
