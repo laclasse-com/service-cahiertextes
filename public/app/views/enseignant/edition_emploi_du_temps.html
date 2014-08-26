@@ -278,7 +278,7 @@
 
 <div class="modal-body" data-ng-show="mode_duplication">
   <div class="duplication-saisie" data-ng-show="creneaux_similaires.length > 0" >
-    <select multiple
+    <select multiple data-ng-change="is_dirty( null )"
 	    data-ng-model="creneaux_similaires.selected"
 	    data-ng-options="creneau as ( creneau | formateCreneau ) group by creneau.classe.libelle for creneau in creneaux_similaires" >
     </select>
@@ -305,7 +305,8 @@
     <span class="glyphicon glyphicon-ok-sign"></span> Valider
   </button>
   <button type="button" class="btn btn-sm btn-info pull-right" data-ng-click="annuler()">
-    <span class="glyphicon glyphicon-remove-sign"></span> <span data-ng-show="dirty || creneau.en_creation">Annuler</span><span data-ng-hide="dirty || creneau.en_creation">Fermer</span>
+    <span class="glyphicon glyphicon-remove-sign"></span> <span data-ng-show="dirty || creneau.en_creation">Annuler</span>
+    <span data-ng-hide="dirty || creneau.en_creation">Fermer</span>
   </button>
 </div>
 
