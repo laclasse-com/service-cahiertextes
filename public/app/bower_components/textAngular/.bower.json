@@ -37,7 +37,6 @@
     "commit": "75f8ede6f2a7a834179ca336bc5159f4a6615da5"
   },
   "_source": "git://github.com/fraywing/textAngular.git",
-  "_target": "~1.2.2",
-  "_originalSource": "textAngular",
-  "_direct": true
+  "_target": "*",
+  "_originalSource": "textAngular"
 }

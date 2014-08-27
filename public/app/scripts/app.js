@@ -13,7 +13,8 @@ angular.module( 'cahierDeTexteApp', [ 'ngResource',
 				      'treeControl',
 				      'angularMoment',
 				      'theaquaNg',
-				      'textAngular' ] )
+				      'textAngular',
+				      'angularFileUpload' ] )
     .run( function( amMoment ) {
 	amMoment.changeLanguage( 'fr' );
     } );
