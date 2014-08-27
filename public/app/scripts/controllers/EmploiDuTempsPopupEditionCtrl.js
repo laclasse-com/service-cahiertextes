@@ -93,7 +93,7 @@ angular.module( 'cahierDeTexteApp' )
 			   $scope.effacer_creneau = function () {
 			       CreneauEmploiDuTemps.delete( {
 				   id: $scope.creneau.id,
-				   date_creneau: $scope.cours.date_cours
+				   date_creneau: $scope.creneau.heure_debut
 			       } )
 				   .$promise.then( function () {
 				       $scope.fermer();
