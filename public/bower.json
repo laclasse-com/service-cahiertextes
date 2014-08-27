@@ -25,10 +25,10 @@
     "charte-graphique-laclasse-com": "git@gitlab.erasme.org:laclasse/charte-graphique-laclasse-com.git#latest",
     "angularjs-nvd3-directives": "latest",
     "angular-tree-control": "latest",
-    "metro-bootstrap": "*",
     "angular-moment": "latest",
-    "textAngular": "~1.2.2",
-    "ng-switcher": "*"
+    "textAngular": "latest",
+    "ng-switcher": "latest",
+    "font-awesome": "latest"
   },
   "devDependencies": {
     "angular-mocks": "latest",
@@ -42,9 +42,5 @@
     "test",
     "tests"
   ],
-  "resolutions": {
-    "jquery": "~2.x",
-    "d3": "~3.4.1",
-    "angular": "1.2.23"
-  }
+  "resolutions": {}
 }
