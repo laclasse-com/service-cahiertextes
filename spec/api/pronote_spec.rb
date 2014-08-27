@@ -16,7 +16,7 @@ describe CahierDeTextesAPI::API do
 
   it 'uploads a file' do
     xml_filename = 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml'
-    post '/v0/pronote/xml', xml_file: Rack::Test::UploadedFile.new(xml_filename, 'text/xml')
+    post '/v0/pronote/xml', file: Rack::Test::UploadedFile.new(xml_filename, 'text/xml')
     last_response.status.should == 201
 
     last_response.body.should == {
