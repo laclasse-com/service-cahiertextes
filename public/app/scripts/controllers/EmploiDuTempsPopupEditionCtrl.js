@@ -39,6 +39,10 @@ angular.module( 'cahierDeTexteApp' )
 			   $scope.creneau.en_creation = $scope.creneau.matiere_id.length == 0 || $scope.creneau.regroupement_id === undefined;
 			   $scope.creneau.tmp_heure_debut = angular.copy( $scope.creneau.heure_debut );
 			   $scope.creneau.tmp_heure_fin = angular.copy( $scope.creneau.heure_fin );
+			   if ( $scope.creneau.en_creation ) {
+			       $scope.creneau.tmp_heure_debut = $filter( 'correctTimeZoneToGMT' )( $scope.creneau.heure_debut );
+			       $scope.creneau.tmp_heure_fin = $filter( 'correctTimeZoneToGMT' )( $scope.creneau.heure_fin );
+			   }
 			   $scope.matiere_id = $scope.creneau.matiere_id.length > 0 ? $scope.creneau.matiere_id : _.chain( $scope.matieres ).values().first().value().id;
 			   $scope.regroupement_id = $scope.creneau.regroupement_id !== 'undefined' ? parseInt( $scope.creneau.regroupement_id ) : _( $scope.classes ).first().id;
 			   $scope.classe = _( $scope.classes ).findWhere( { id: parseInt( $scope.regroupement_id ) } );
