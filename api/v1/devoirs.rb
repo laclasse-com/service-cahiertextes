@@ -11,12 +11,9 @@ module CahierDeTextesAPI
 
       desc 'renvoi tous les devoirs concernant l\'utilisateur durant la période donnée'
       get '/' do
-        return [] unless user.methods.include? :classes
-
-        regroupements_ids = user.classes.map {
-          |classe|
-          classe['classe_id']
-        }.uniq
+        regroupements_ids = Annuaire.get_user( user.uid )['classes']
+                                    .map { |classe| classe['classe_id'] }
+                                    .uniq
 
         Devoir
           .join(:creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :creneau_emploi_du_temps_id)
