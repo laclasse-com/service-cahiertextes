@@ -21,6 +21,13 @@ angular.module( 'cahierDeTexteApp' )
 			   url: '/',
 			   controller: 'IndexCtrl'
 		       })
+		   // import //////////////////////////////////////////////////////////////
+		       .state('import', {
+			       //resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } },
+			   url: '/import',
+			   controller: 'ImportCtrl',
+			   templateUrl: 'app/views/import.html'
+		       })
 		   // Principal ///////////////////////////////////////////////////////////
 		       .state('principal', {
 			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } },
