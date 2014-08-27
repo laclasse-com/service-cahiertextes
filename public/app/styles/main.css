@@ -39,8 +39,17 @@ body {
 
 /* Cahier de Textes */
 /* Calendrier */
+.fc-state-default {
+    background-image: none;
+    box-shadow: 0;
+    color: #333;
+    text-shadow: 0;
+}
+
 .fc-event-vert.fc-event-end,
-.fc-event-vert.fc-event-start {border-radius:0}
+.fc-event-vert.fc-event-start,
+.fc-state-default.fc-corner-left,
+.fc-state-default.fc-corner-right {border-radius:0}
 
 .cdt-agendaDay-container{overflow:auto}
 .cdt-agendaDay-event{width:220%}
@@ -48,7 +57,10 @@ body {
 .cdt-agendaDay-devoir{background-color:#ff6666}
 .cdt-agendaDay-devoir-fait{background-color:#66cc66}
 
-.fc-event-title{text-align:center}
+.fc-event-title{ position: absolute;
+		 text-align: center;
+		 top: calc(50% - 0.75em);
+		 width: 100%; }
 .clickable-event{ cursor:pointer }
 .un-clickable-event{ cursor:default }
 
