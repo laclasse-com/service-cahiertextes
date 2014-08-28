@@ -78,8 +78,6 @@ module CahierDeTextesAPI
         CreneauEmploiDuTempsEnseignant.restrict_primary_key
 
         unless params[:regroupement_id].nil? || params[:regroupement_id].empty? || params[:regroupement_id] == 'undefined'
-          CahierDeTextes.create( regroupement_id: params[:regroupement_id] ) if  CahierDeTextes.where( regroupement_id: creneau[:regroupement_id] ).first.nil?
-
           CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
           cr = creneau.add_regroupement regroupement_id: params[:regroupement_id]
           cr.update semaines_de_presence: params[:semaines_de_presence_regroupement] if params[:semaines_de_presence_regroupement]
