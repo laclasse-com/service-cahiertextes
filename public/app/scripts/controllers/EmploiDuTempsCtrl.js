@@ -3,9 +3,9 @@
 angular.module('cahierDeTexteApp')
     .controller('EmploiDuTempsCtrl',
 		[ '$scope', '$modal', '$q', '$filter',
-		  'CALENDAR_OPTIONS', 'CALENDAR_PARAMS', 'API', 'Annuaire', 'EmploisDuTemps', 'User', 'CreneauEmploiDuTemps',
+		  'CALENDAR_OPTIONS', 'CALENDAR_PARAMS', 'APP_PATH', 'API', 'Annuaire', 'EmploisDuTemps', 'User', 'CreneauEmploiDuTemps',
 		  function ( $scope, $modal, $q, $filter,
-			     CALENDAR_OPTIONS, CALENDAR_PARAMS, API, Annuaire, EmploisDuTemps, User, CreneauEmploiDuTemps ) {
+			     CALENDAR_OPTIONS, CALENDAR_PARAMS, APP_PATH, API, Annuaire, EmploisDuTemps, User, CreneauEmploiDuTemps ) {
 				 var filter_data = angular.identity;
 
 				 var popup_callback = function( scope_popup ) {
@@ -96,7 +96,7 @@ angular.module('cahierDeTexteApp')
 					 // popup d'édition
 					 var ouvre_popup_edition = function ( raw_data, matieres, classes, creneau, cours, devoirs, popup_callback ) {
 					     $modal.open( {
-						 templateUrl: 'app/views/enseignant/edition_emploi_du_temps.html',
+						 templateUrl: APP_PATH + 'app/views/enseignant/edition_emploi_du_temps.html',
 						 controller: 'EmploiDuTempsPopupEditionCtrl',
 						 resolve: {
 						     raw_data	: function () { return raw_data; },
@@ -212,7 +212,7 @@ angular.module('cahierDeTexteApp')
 				     default:
 					 // popup d'affichage des détails
 					 var ouvre_popup_details = function( titre, cours, devoirs ) {
-					     $modal.open( { templateUrl: 'app/views/eleve/detail_emploi_du_temps.html',
+					     $modal.open( { templateUrl: APP_PATH + 'app/views/eleve/detail_emploi_du_temps.html',
 							    controller: 'EmploiDuTempsPopupDisplayCtrl',
 							    resolve: { titre  : function() { return titre; },
 								       cours  : function() { return cours; },

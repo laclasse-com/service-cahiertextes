@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('ListeCahierDeTextesCtrl',
-		[ '$scope', '$modal', '$q', 'API', 'Annuaire', 'EmploisDuTemps', 'User', 'CreneauEmploiDuTemps',
-		  function ( $scope, $modal, $q, API, Annuaire, EmploisDuTemps, User, CreneauEmploiDuTemps ) {
+		[ '$scope', '$modal', '$q', 'APP_PATH', 'API', 'Annuaire', 'EmploisDuTemps', 'User', 'CreneauEmploiDuTemps',
+		  function ( $scope, $modal, $q, APP_PATH, API, Annuaire, EmploisDuTemps, User, CreneauEmploiDuTemps ) {
 		      var matieres = [];
 		      var matieres_enseignees = [];
 		      $scope.selected_regroupement_id = null;
@@ -12,7 +12,7 @@ angular.module('cahierDeTexteApp')
 		      // popup d'édition
 		      var ouvre_popup_edition = function ( raw_data, matieres, classes, creneau, cours, devoirs, popup_callback ) {
 			  $modal.open( {
-			      templateUrl: 'app/views/enseignant/edition_emploi_du_temps.html',
+			      templateUrl: APP_PATH + 'app/views/enseignant/edition_emploi_du_temps.html',
 			      controller: 'EmploiDuTempsPopupEditionCtrl',
 			      resolve: {
 				  raw_data	: function () { return raw_data; },
