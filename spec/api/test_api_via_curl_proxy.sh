@@ -20,19 +20,19 @@ result=$(eval $curl_cmd)
 echo "Received Data : "$result;
 
 # Intérrogation de l'api cahier de textes
-curl_cmd='curl --cookie ./cookieCT.txt '$URL_CT'/ct/api/v1/users/current.json'
+curl_cmd='curl --cookie ./cookieCT.txt '$URL_CT'/api/v1/users/current'
 result=$(eval $curl_cmd)
 echo "Received Data : "$result;
 
-curl_cmd='curl --cookie ./cookieCT.txt '$URL_CT'/ct/api/v1/plages_horaires.json'
+curl_cmd='curl --cookie ./cookieCT.txt '$URL_CT'/api/v1/plages_horaires'
 result=$(eval $curl_cmd)
 echo "Received Data : "$result;
 
-curl_cmd='curl --cookie ./cookieCT.txt '$URL_CT'/ct/api/v1/annuaire/regroupements/31499.json'
+curl_cmd='curl --cookie ./cookieCT.txt '$URL_CT'/api/v1/annuaire/regroupements/31499'
 result=$(eval $curl_cmd)
 echo "Received Data : "$result;
 
-curl_cmd='curl --cookie ./cookieCT.txt '$URL_CT'/ct/api/v1/cahiers_de_textes/regroupement/31499.json'
+curl_cmd='curl --cookie ./cookieCT.txt '$URL_CT'/api/v1/cahiers_de_textes/regroupement/31499'
 result=$(eval $curl_cmd)
 echo "Received Data : "$result;
 
