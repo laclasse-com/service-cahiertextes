@@ -24,7 +24,13 @@ module CahierDeTextesAPI
                             .concat( regroupements_annuaire['groupes_eleves'] )
                             .concat( regroupements_annuaire['groupes_libres'] )
                             .reject { |regroupement| regroupement['etablissement_code'] != params[:uai] if params[:uai] }
-                            .map    { |regroupement| regroupement['regroupement_id'] }
+                            .map    { |regroupement|
+          if regroupement.key? 'classe_id'
+            regroupement['classe_id']
+          elsif regroupement.key? 'groupe_id'
+            regroupement['groupe_id']
+          end
+        }
                             .uniq
 
         # FIXME: creneau[:semaines_de_presence][ 1 ] == première semaine de janvier ?
