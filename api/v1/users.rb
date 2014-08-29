@@ -22,11 +22,10 @@ module CahierDeTextesAPI
           profil
         }
 
-        utilisateur[ 'classes' ] = Annuaire.get_user_regroupements( utilisateur[ 'uid' ] )[ 'classes' ].map { |classe|
-          classe[ 'regroupement_id' ] = classe[ 'classe_id' ]
-
-          classe
-        }
+        regroupements_annuaire = Annuaire.get_user_regroupements( utilisateur[ 'uid' ] )
+        utilisateur[ 'classes' ] = regroupements_annuaire[ 'classes' ]
+                                   .concat( regroupements_annuaire['groupes_eleves'] )
+                                   .concat( regroupements_annuaire['groupes_libres'] )
 
         utilisateur
       end
