@@ -28,13 +28,4 @@ namespace :db do
     Sequel::Migrator.run( DB, 'migrations' )
   end
 
-  desc 'Open pry with DB environment setup'
-  task pry: :load_config do
-    require 'pry'
-    require 'sequel'
-    require './config/database'
-    require './models/models'
-    pry.binding
-  end
-
 end
