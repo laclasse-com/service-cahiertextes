@@ -30,7 +30,6 @@ module CahierDeTextesAPI
           if regroupement.key? 'groupe_id'
             regroupement['classe_id'] = regroupement['groupe_id']
             regroupement['classe_libelle'] = regroupement['groupe_libelle']
-            p regroupement
           end
           regroupement
         end
