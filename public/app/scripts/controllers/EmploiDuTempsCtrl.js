@@ -137,19 +137,6 @@ angular.module('cahierDeTexteApp')
 					     return filtered_data;
 					 };
 
-					 var matieres = _.chain($scope.raw_data)
-						 .pluck('matiere_id')
-						 .uniq()
-						 .compact()
-						 .reject( function( id ) { return id === 'undefined'; } )
-						 .map(function(matiere_id) {
-						     return [matiere_id, Annuaire.get_matiere(matiere_id)];
-						 })
-						 .object()
-						 .value();
-
-					 $scope.current_user.profil_actif.classes = $scope.current_user.profil_actif.classes;
-
 					 // édition d'un créneau existant
 					 $scope.calendar.options.eventClick = function ( event ) {
 					     CreneauEmploiDuTemps.get( { id: event.details.creneau_emploi_du_temps_id } )
