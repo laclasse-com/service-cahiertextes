@@ -116,15 +116,16 @@ module AuthenticationHelpers
       uid = env['omniauth.auth'].extra.uid
     end
 
-    unless env['rack.session'].nil?
+    user_annuaire = Annuaire.get_user( uid )
+
+    unless env['rack.session'].nil? || user_annuaire.nil?
       env['rack.session'][:authenticated] = true
 
-      user_annuaire = Annuaire.get_user( uid )
       env['rack.session'][:current_user] = { 'user' => username,
-        'uid' => uid ,
-        'LaclasseNom' => user_annuaire['nom'],
-        'LaclassePrenom' => user_annuaire['prenom'],
-        'ENTPersonProfils' => user_annuaire['profils'].map { |p| "#{p['profil_id']}:#{p['etablissement_code_uai']}" }.join( ',' ) }
+                                             'uid' => uid,
+                                             'LaclasseNom' => user_annuaire['nom'],
+                                             'LaclassePrenom' => user_annuaire['prenom'],
+                                             'ENTPersonProfils' => user_annuaire['profils'].map { |p| "#{p['profil_id']}:#{p['etablissement_code_uai']}" }.join( ',' ) }
 
       uais = user_annuaire['profils'].map {
         |profil|
