@@ -94,9 +94,12 @@ module AuthenticationHelpers
       if Etablissement.where(UAI: uai).first.nil?
         etablissement = Annuaire.get_etablissement( uai )
         Etablissement.create(UAI: etablissement['code_uai'])
-        etablissement['classes'].each {
-          |classe|
-          CahierDeTextes.create( regroupement_id: classe['id']  )
+        etablissement['classes']
+          .concat( etablissement['groupes_eleves'] )
+          .concat( etablissement['groupes_libres'] )
+          .each {
+          |regroupement|
+          CahierDeTextes.create( regroupement_id: regroupement['id']  )
         }
       end
     }

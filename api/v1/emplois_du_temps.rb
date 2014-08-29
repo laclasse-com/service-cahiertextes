@@ -19,10 +19,13 @@ module CahierDeTextesAPI
         params[:fin] = Date.parse( params[:fin].iso8601 )
         weeks =  ( params[:debut] .. params[:fin] ).map { |d| d.cweek }.uniq
 
-        regroupements_ids = Annuaire.get_user_regroupements( user.uid )['classes']
-                                    .reject { |classe| classe['etablissement_code'] != params[:uai] if params[:uai] }
-                                    .map    { |classe| classe['classe_id'] }
-                                    .uniq
+        regroupements_annuaire = Annuaire.get_user_regroupements( user.uid )
+        regroupements_ids = regroupements_annuaire['classes']
+                            .concat( regroupements_annuaire['groupes_eleves'] )
+                            .concat( regroupements_annuaire['groupes_libres'] )
+                            .reject { |regroupement| regroupement['etablissement_code'] != params[:uai] if params[:uai] }
+                            .map    { |regroupement| regroupement['regroupement_id'] }
+                            .uniq
 
         # FIXME: creneau[:semaines_de_presence][ 1 ] == première semaine de janvier ?
         CreneauEmploiDuTemps
