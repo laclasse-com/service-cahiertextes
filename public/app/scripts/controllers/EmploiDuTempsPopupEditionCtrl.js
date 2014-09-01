@@ -165,7 +165,7 @@ angular.module( 'cahierDeTexteApp' )
 				   };
 
 				   // Séquence Pédogogique du créneau
-				   if ( ( $scope.cours.contenu.length > 0 ) || ( $scope.cours.devoirs.length > 0 ) ) {
+				   if ( ( _($scope.cours).has('contenu') && $scope.cours.contenu.length > 0 ) || ( $scope.cours.devoirs.length > 0 ) ) {
 				       var promesse = $q.when( true );
 				       var cours_devoirs = angular.copy( $scope.cours.devoirs );
 
