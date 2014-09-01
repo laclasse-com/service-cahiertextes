@@ -21,7 +21,8 @@ angular.module('cahierDeTexteApp')
 					 this.allDay = false;
 					 this.title = '';
 					 this.regroupement = _($scope.current_user.profil_actif.classes).findWhere({ id: parseInt( this.details.regroupement_id ) });
-					 this.has_resources = false;//_(item).has( 'ressources' ) && item.ressources.length > 0;
+					 this.has_resources = _(event.cours).has( 'ressources' ) && event.cours.ressources.length > 0;
+					 _(event.devoirs).each( function( devoir ) { _this.has_ressources = _this.has_ressources && _(devoir).has( 'ressources' ) && devoir.ressources.length > 0; } );
 					 this.start = new Date( event.start );
 					 this.end = new Date( event.end );
 					 this.className = 'saisie-vide';
