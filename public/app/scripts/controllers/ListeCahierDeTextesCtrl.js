@@ -39,15 +39,9 @@ angular.module('cahierDeTexteApp')
 				  creneau_selectionne.heure_fin = new Date( event.end );
 				  creneau_selectionne.regroupement_id = event.regroupement_id;
 
-				  var cours = _(event.cours).isNull() ? null : API.get_cours( { id: event.cours.id } );
-				  var devoirs = _( event.devoirs )
-					  .map( function ( devoir ) {
-					      return API.get_devoir( { id: devoir.id } );
-					  } );
-
 				  ouvre_popup_edition( $scope.raw_data,
 						       matieres_enseignees, $scope.classes,
-						       creneau_selectionne, cours, devoirs,
+						       creneau_selectionne, event.cours, event.devoirs,
 						       retrieve_data );
 			      } );
 		      };
