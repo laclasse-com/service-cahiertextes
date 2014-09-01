@@ -11,7 +11,6 @@ require_relative './lib/UserHelpers'
 require_relative './models/models'
 require_relative './lib/pronote'
 
-require_relative './api/v0/api'
 require_relative './api/v1/api'
 
 module CahierDeTextesAPI
@@ -24,7 +23,6 @@ module CahierDeTextesAPI
       error!( '401 Unauthorized', 401 ) unless is_logged? || !request.env['PATH_INFO'].match(/.*swagger.*\.json$/).nil?
     end
 
-    mount ::CahierDeTextesAPI::V0::API
     mount ::CahierDeTextesAPI::V1::API
   end
 end
