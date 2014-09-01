@@ -100,9 +100,9 @@
 	    <div class="panel-footer">
 
 	      <div class="row" data-ng-show="cours.editable">
-		<div class="col-md-7 ressources">
+		<div class="col-md-12 ressources">
 		  <div class="alert alert-danger" role="alert" data-ng-hide="cartable.files">Problème de communication avec l'application Documents</div>
-		  <ul>
+		  <ul class="documents-attaches">
 		    <li data-ng-repeat="ressource in cours.ressources">
 		      <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
 		      <button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( cours, ressource.hash )">✕</button>

@@ -105,6 +105,8 @@ body {
 .accordion-toggle{cursor:pointer}
 .duplication-saisie div,.duplication-saisie select{width:100%}
 
+.documents-attaches,
+.documents-attaches a { color: #fff }
 .treecontrol-container {max-height:10em;
 			overflow:auto;
 			background-color:#fff}
