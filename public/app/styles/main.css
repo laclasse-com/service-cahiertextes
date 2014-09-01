@@ -105,8 +105,13 @@ body {
 .accordion-toggle{cursor:pointer}
 .duplication-saisie div,.duplication-saisie select{width:100%}
 
-.documents-attaches,
-.documents-attaches a { color: #fff }
+.ressources .attached-document { float: left;
+				 border: 1px solid #aaa;
+				 margin: 3px;
+				 padding-left: 2px; }
+.ressources .upload,
+.ressources .treecontrol-container {float: left;
+				    width: 100%}
 .treecontrol-container {max-height:10em;
 			overflow:auto;
 			background-color:#fff}
