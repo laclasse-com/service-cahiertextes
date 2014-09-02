@@ -166,12 +166,16 @@
 	    <div class="col-md-9">
 	      <div class="panel-heading enseignant-saisie">
 		<label class="col-md-6">Type de travail :
-		  <select data-ng-required="true" data-ng-model="devoir.type_devoir_id"
+		  <select data-ng-required="true"
+			  data-ng-change="is_dirty( null )"
+			  data-ng-model="devoir.type_devoir_id"
 			  data-ng-options="type_de_devoir.id as type_de_devoir.description for type_de_devoir in types_de_devoir">
 		  </select>
 		</label>
 		<label class="col-md-6">Date de rendu :
-		  <select data-ng-required="true" data-ng-model="devoir.date_due" data-ng-change="set_creneau.date_due( devoir )"
+		  <select data-ng-required="true"
+			  data-ng-model="devoir.date_due"
+			  data-ng-change="set_creneau.date_due( devoir )"
 			  data-ng-options="creneau.date_due as ( creneau | formateCreneau ) group by creneau.semaine for creneau in creneaux_devoirs_possibles"
 			  data-ng-init="devoir.date_due=creneaux_devoirs_possibles[0].date_due">
 		  </select>
@@ -259,7 +263,9 @@
 	  <div class="panel-heading enseignant-saisie">
 
 	    <label class="col-md-12">Type de travail :
-	      <select data-ng-required="true" data-ng-model="devoir.type_devoir_id"
+	      <select data-ng-required="true"
+		      data-ng-change="is_dirty( null )"
+		      data-ng-model="devoir.type_devoir_id"
 		      data-ng-options="type_de_devoir.id as type_de_devoir.description for type_de_devoir in types_de_devoir">
 	      </select>
 	    </label>
