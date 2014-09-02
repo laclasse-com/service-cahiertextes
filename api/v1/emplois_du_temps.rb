@@ -33,8 +33,8 @@ module CahierDeTextesAPI
 
         # FIXME: creneau[:semaines_de_presence][ 1 ] == première semaine de janvier ?
         CreneauEmploiDuTemps
-          .association_join( :regroupements )
           .association_join( :enseignants )
+          .association_join( :regroupements )
           .where( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{params[:fin]}')" )
           .where( regroupement_id: regroupements_ids )
           .all
