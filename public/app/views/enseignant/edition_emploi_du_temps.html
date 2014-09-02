@@ -156,11 +156,10 @@
 	<accordion-group data-is-open="accordion_cours_devoirs_open">
 	  <accordion-heading>
 	    <span class="glyphicon" ng-class="{'glyphicon-chevron-down': accordion_cours_devoirs_open, 'glyphicon-chevron-right': !accordion_cours_devoirs_open}"> Travail à faire</span>
-	    <button class="btn btn-sm btn-primary pull-right" data-ng-click="ajout_devoir( cours.devoirs )">
-	      <span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
-	    </button>
-	    <div class="clearfix"></div>
 	  </accordion-heading>
+	  <button class="btn btn-default ajout-devoir" data-ng-click="ajout_devoir( cours.devoirs )">
+	    <span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
+	  </button>
 	  <div class="panel panel-default" data-ng-repeat="devoir in cours.devoirs">
 
 	    <div class="col-md-9">
@@ -246,7 +245,7 @@
 
     <!-- ####################### Devoirs dûs ce jour ####################### -->
     <tab heading="Travail à faire pour le {{creneau.heure_debut | date : 'fullDate' }}">
-      <button class="btn btn-sm btn-primary pull-right" data-ng-click="ajout_devoir( devoirs )">
+      <button class="btn btn-default ajout-devoir" data-ng-click="ajout_devoir( devoirs )">
 	<span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
       </button>
       <div class="clearfix"></div>
