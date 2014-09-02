@@ -102,7 +102,7 @@
 		<button class="btn btn-sm btn-primary dropdown-toggle" id="dLabelRessourceCours" role="button" data-toggle="dropdown" data-target="#" href="">
 		  <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
 		</button>
-		<ul class="dropdown-menu" role="menu" aria-labelledby="dLabelRessourceCours">
+		<ul class="dropdown-menu" role="menu" aria-labelledby="dLabelRessourceCours" ng-click="$event.stopPropagation()">
 		  <div class="alert alert-danger" role="alert" data-ng-show="faulty_docs_app">Problème de communication avec l'application Documents</div>
 		  <div class="treecontrol-container"
 		       data-ng-hide="faulty_docs_app">
@@ -199,7 +199,7 @@
 		  <button class="btn btn-sm btn-primary dropdown-toggle" id="dLabelRessourceDevoir" role="button" data-toggle="dropdown" data-target="#" href="">
 		    <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
 		  </button>
-		  <ul class="dropdown-menu" role="menu" aria-labelledby="dLabelRessourceDevoir">
+		  <ul class="dropdown-menu" role="menu" aria-labelledby="dLabelRessourceDevoir" ng-click="$event.stopPropagation()">
 		    <div class="alert alert-danger" role="alert" data-ng-show="faulty_docs_app">Problème de communication avec l'application Documents</div>
 		    <div class="treecontrol-container"
 			 data-ng-hide="faulty_docs_app">
@@ -289,7 +289,7 @@
 	      <button class="btn btn-sm btn-primary dropdown-toggle" id="dLabelRessourceDevoir" role="button" data-toggle="dropdown" data-target="#" href="">
 		<span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
 	      </button>
-	      <ul class="dropdown-menu" role="menu" aria-labelledby="dLabelRessourceDevoir">
+	      <ul class="dropdown-menu" role="menu" aria-labelledby="dLabelRessourceDevoir" ng-click="$event.stopPropagation()">
 		<div class="alert alert-danger" role="alert" data-ng-show="faulty_docs_app">Problème de communication avec l'application Documents</div>
 		<div class="treecontrol-container"
 		     data-ng-hide="faulty_docs_app">
