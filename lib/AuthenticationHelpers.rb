@@ -28,9 +28,9 @@ module AuthenticationHelpers
 
       # Gestion d'erreur
       unless cas_token[:error].empty?
-        STDERR.puts "REST authentication failure !"
+        STDERR.puts 'REST authentication failure !'
         STDERR.puts cas_token[:error].to_s
-        halt 401, {:error => cas_token[:error] }.to_json
+        halt 401, { error: cas_token[:error] }.to_json
       end
       init_session( env, cas_token[:user], cas_token[:uid] )
       # Ici tout est ok,on renvoie 200 ok car tout s'est admiraaaaablement bien passé....
@@ -38,12 +38,10 @@ module AuthenticationHelpers
 
     else
       # Mode narmol : navigateur classique
-      if route.empty?
-        redirect "#{APP_PATH}/auth/cas"
-      end
+      redirect "#{APP_PATH}/auth/cas" if route.empty?
+
       redirect "#{APP_PATH}/auth/cas?url=#{route}"
     end
-
   end
 
   #
@@ -53,27 +51,27 @@ module AuthenticationHelpers
   #
   def cas_dialog_proxiing(route)
     cas = {}
-    cas[:error] = ""
+    cas[:error] = ''
     # 1. Poster l'authentification CAS et récupérer un TGT
     tgt = RestClient.post get_protocol + CASAUTH::CONFIG[:host] + CASAUTH::CONFIG[:restmod_url],
-      :username => params[:username],
-      :password => params[:password]
+                          username: params[:username],
+                          password: params[:password]
     # 2. Récupérer un ST
     st = RestClient.post get_protocol + CASAUTH::CONFIG[:host] + CASAUTH::CONFIG[:restmod_url] + '/' + tgt.to_s,
-      :service => "#{route}"
+                         service: "#{route}"
     # 3. valider le Service Ticket et recevoir le jeton xml
     token = RestClient.get get_protocol + CASAUTH::CONFIG[:host] + CASAUTH::CONFIG[:service_validate_url],
-      {:params => {:service => "#{route}", :ticket => st.to_s}}
+                           params: { service: "#{route}", ticket: st.to_s }
     # 4. Analyse de la réponse de CAS.
     doc  = Nokogiri::XML( token ).remove_namespaces!
-    cas_response = doc.xpath "//serviceResponse/authenticationSuccess"
+    cas_response = doc.xpath '//serviceResponse/authenticationSuccess'
     # gestion d'erreur CAS
     if cas_response.empty?
       # authenticationSuccess n'existe pas, il y a donc une erreur d'authetification
-      cas[:error] = cas_response = doc.xpath("//serviceResponse/authenticationFailure/text()").to_s
+      cas[:error] = cas_response = doc.xpath('//serviceResponse/authenticationFailure/text()').to_s
     end
-    cas[:user] = doc.xpath("////user/text()").to_s
-    cas[:uid]  = doc.xpath("////uid/text()").to_s
+    cas[:user] = doc.xpath('////user/text()').to_s
+    cas[:uid]  = doc.xpath('////uid/text()').to_s
     cas
   end
 
@@ -108,7 +106,7 @@ module AuthenticationHelpers
   #
   # Initialisation de la session après l'authentification
   #
-  def init_session( env, user_rest="", uid_rest="" )
+  def init_session( env, user_rest = '', uid_rest = '' )
     # Voir si on est passé par Omniauth ou pas
     # Dans le cas d'une connexion en mode REST, on ne passe pas par omniAuth
     if env['omniauth.auth'].nil?
@@ -139,5 +137,4 @@ module AuthenticationHelpers
     end
     env['rack.session'][:current_user]
   end
-
 end
