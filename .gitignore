@@ -40,3 +40,4 @@ config/constants.rb
 /clef_publique
 /public/app/scripts/constants.js
 /spec/fixtures/UDT.zip
+/spec/api/cookieCT.txt
