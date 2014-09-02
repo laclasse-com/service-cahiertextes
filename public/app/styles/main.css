@@ -125,7 +125,13 @@ body {
 .treecontrol-container {max-height:10em;
 			overflow:auto;
 			background-color:#fff}
-
+.tree-label button {
+    float: right;
+    line-height: 1.4em;
+    padding: 0 5px;
+}
+.tree-leaf.odd {background-color:#ded}
+.tree-leaf.even {background-color:#fff}
 
 .message{width:40%;margin:0 auto}
 
