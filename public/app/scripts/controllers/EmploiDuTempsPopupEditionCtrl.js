@@ -476,6 +476,15 @@ angular.module( 'cahierDeTexteApp' )
 				   $scope.creneau.en_creation = true;
 			       };
 			   }	// /fin gestion des Cours et Devoirs
+
+			   $scope.types_de_devoir.$promise.then( function() {
+			       if ( _($scope.cours.devoirs).isEmpty() ) {
+				   $scope.ajout_devoir( $scope.cours.devoirs );
+			       }
+			       if ( _($scope.devoirs).isEmpty() ) {
+				   $scope.ajout_devoir( $scope.devoirs );
+			       }
+			   } );
 			   // }}}
 		       } );
 		   }
