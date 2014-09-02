@@ -242,15 +242,6 @@ angular.module( 'cahierDeTexteApp' )
 				   } );
 			       } );
 
-			       $scope.types_de_devoir.$promise.then( function() {
-				   if ( _($scope.cours.devoirs).isEmpty() ) {
-				       $scope.ajout_devoir( $scope.cours.devoirs );
-				   }
-				   if ( _($scope.devoirs).isEmpty() ) {
-				       $scope.ajout_devoir( $scope.devoirs );
-				   }
-			       } );
-
 			       // Fonction UI pour fixer l'id du créneau en fct du choix dans la sbox des créneaux possibles.
 			       $scope.set_creneau_date_due = function ( devoir ) {
 				   // on prend le premier créneau qui correspond à cette date.
