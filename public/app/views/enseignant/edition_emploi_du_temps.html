@@ -103,8 +103,9 @@
 		  <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
 		</button>
 		<ul class="dropdown-menu" role="menu" aria-labelledby="dLabelRessourceCours">
-		  <div class="alert alert-danger" role="alert" data-ng-hide="cartable.files">Problème de communication avec l'application Documents</div>
-		  <div class="treecontrol-container">
+		  <div class="alert alert-danger" role="alert" data-ng-show="faulty_docs_app">Problème de communication avec l'application Documents</div>
+		  <div class="treecontrol-container"
+		       data-ng-hide="faulty_docs_app">
 		    <treecontrol class="tree-classic"
 				 tree-model="cartable.files"
 				 options="treeOptions"
@@ -119,7 +120,7 @@
 			 name="upload[]"
 			 multiple
 			 onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().cours, this.files)"
-			 data-ng-show="cartable.files" />
+			 data-ng-hide="faulty_docs_app" />
 		</ul>
 	      </div>
 
@@ -198,8 +199,9 @@
 		    <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
 		  </button>
 		  <ul class="dropdown-menu" role="menu" aria-labelledby="dLabelRessourceDevoir">
-		    <div class="alert alert-danger" role="alert" data-ng-hide="cartable.files">Problème de communication avec l'application Documents</div>
-		    <div class="treecontrol-container">
+		    <div class="alert alert-danger" role="alert" data-ng-show="faulty_docs_app">Problème de communication avec l'application Documents</div>
+		    <div class="treecontrol-container"
+			 data-ng-hide="faulty_docs_app">
 		      <treecontrol class="tree-classic"
 				   tree-model="cartable.files"
 				   options="treeOptions"
@@ -214,7 +216,7 @@
 			   name="upload[]"
 			   multiple
 			   onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files)"
-			   data-ng-show="cartable.files" />
+			   data-ng-hide="faulty_docs_app" />
 		  </ul>
 		</div>
 
@@ -286,8 +288,9 @@
 		<span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
 	      </button>
 	      <ul class="dropdown-menu" role="menu" aria-labelledby="dLabelRessourceDevoir">
-		<div class="alert alert-danger" role="alert" data-ng-hide="cartable.files">Problème de communication avec l'application Documents</div>
-		<div class="treecontrol-container">
+		<div class="alert alert-danger" role="alert" data-ng-show="faulty_docs_app">Problème de communication avec l'application Documents</div>
+		<div class="treecontrol-container"
+		     data-ng-hide="faulty_docs_app">
 		  <treecontrol class="tree-classic"
 			       tree-model="cartable.files"
 			       options="treeOptions"
@@ -302,7 +305,7 @@
 		       name="upload[]"
 		       multiple
 		       onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files)"
-		       data-ng-show="cartable.files" />
+		       data-ng-hide="faulty_docs_app" />
 	      </ul>
 	    </div>
 
