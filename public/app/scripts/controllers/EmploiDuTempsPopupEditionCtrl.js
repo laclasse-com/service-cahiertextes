@@ -5,6 +5,7 @@ angular.module( 'cahierDeTexteApp' )
 		 [ '$scope', '$filter', '$q', '$sce', '$modalInstance', 'DOCS_URL', 'Documents', 'API', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs', 'User', 'cours', 'devoirs', 'creneau', 'raw_data', 'classes', 'matieres',
 		   function ( $scope, $filter, $q, $sce, $modalInstance, DOCS_URL, Documents, API, CreneauEmploiDuTemps, Cours, Devoirs, User, cours, devoirs, creneau, raw_data, classes, matieres ) {
 		       $scope.erreurs = [];
+		       $scope.faulty_docs_app = false;
 
 		       // http://stackoverflow.com/questions/19408883/angularjs-select-not-2-way-binding-to-model
 		       $scope.scope = $scope;
@@ -324,7 +325,10 @@ angular.module( 'cahierDeTexteApp' )
 					   elt.children = [];
 					   return elt;
 				       } );
-			       } );
+			       } )
+				   .error( function() {
+				       $scope.faulty_docs_app = true;
+				   });
 
 			       $scope.add_ressource = function ( item, name, hash ) {
 				   if ( item.ressources === undefined ) {
