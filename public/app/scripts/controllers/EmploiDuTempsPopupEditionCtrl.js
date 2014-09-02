@@ -6,6 +6,9 @@ angular.module( 'cahierDeTexteApp' )
 		   function ( $scope, $filter, $q, $sce, $modalInstance, DOCS_URL, Documents, API, CreneauEmploiDuTemps, Cours, Devoirs, User, cours, devoirs, creneau, raw_data, classes, matieres ) {
 		       $scope.erreurs = [];
 		       $scope.faulty_docs_app = false;
+		       $scope.dirty = false;
+		       $scope.accordion_cours_devoirs_open = false;
+		       $scope.deleted = false;
 
 		       // http://stackoverflow.com/questions/19408883/angularjs-select-not-2-way-binding-to-model
 		       $scope.scope = $scope;
@@ -34,6 +37,7 @@ angular.module( 'cahierDeTexteApp' )
 
 			   $scope.mode_duplication = false;
 			   $scope.creneau = creneau;
+			   $scope.creneau.deleted = false;
 			   $scope.creneau.previous_regroupement_id = $scope.creneau.regroupement_id;
 			   $scope.matieres = matieres;
 			   $scope.classes = classes;
@@ -81,12 +85,7 @@ angular.module( 'cahierDeTexteApp' )
 			   };
 			   $scope.apply_template( 'initialize' );
 
-			   // Flags et helpers
-			   $scope.accordion_cours_devoirs_open = false;
-			   $scope.dirty = false;
-			   $scope.deleted = false;
-			   $scope.creneau.deleted = false;
-
+			   // helpers
 			   $scope.fermer = function () {
 			       $modalInstance.close( $scope );
 			   };
