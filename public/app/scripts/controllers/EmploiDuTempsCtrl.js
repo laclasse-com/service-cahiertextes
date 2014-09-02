@@ -106,7 +106,8 @@ angular.module('cahierDeTexteApp')
 						     creneau	: function () { return creneau; },
 						     cours	: function () { return cours; },
 						     devoirs	: function () { return devoirs; }
-						 }
+						 },
+						 backdrop: 'static'
 					     } )
 						 .result.then( // éxécuté à la fermeture de la popup
 						     function ( scope_popup ) {
@@ -204,7 +205,8 @@ angular.module('cahierDeTexteApp')
 							    controller: 'EmploiDuTempsPopupDisplayCtrl',
 							    resolve: { titre  : function() { return titre; },
 								       cours  : function() { return cours; },
-								       devoirs: function() { return devoirs; } } }
+								       devoirs: function() { return devoirs; } },
+							    backdrop: 'static' }
 							).result.then( function( scope_popup ) {
 							    popup_callback( scope_popup );
 							} );

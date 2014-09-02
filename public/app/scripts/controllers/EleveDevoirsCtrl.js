@@ -10,8 +10,8 @@ angular.module('cahierDeTexteApp')
 					 controller: 'EmploiDuTempsPopupDisplayCtrl',
 					 resolve: { titre  : function() { return titre; },
 						    cours  : function() { return cours; },
-						    devoirs: function() { return devoirs; } } }
-				     );
+						    devoirs: function() { return devoirs; } },
+					 backdrop: 'static' } );
 		      };
 
 		      $scope.empty = false;

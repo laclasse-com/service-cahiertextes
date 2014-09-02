@@ -21,7 +21,8 @@ angular.module('cahierDeTexteApp')
 				  creneau	: function () { return creneau; },
 				  cours		: function () { return cours; },
 				  devoirs	: function () { return devoirs; }
-			      }
+			      },
+			      backdrop: 'static'
 			  } )
 			      .result.then( // éxécuté à la fermeture de la popup
 				  function ( scope_popup ) {
