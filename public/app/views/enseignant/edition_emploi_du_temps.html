@@ -98,8 +98,15 @@
 		 data-ng-hide="cours.editable" >
 	    </div>
 	    <div class="panel-footer ressources">
-	      <div class="dropdown pull-right">
-		<button class="btn btn-sm btn-primary dropdown-toggle" id="dLabelRessourceCours" role="button" data-toggle="dropdown" data-target="#" href="">
+	      <div class="row">
+		<div class="attached-document" data-ng-repeat="ressource in cours.ressources">
+		  <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
+		  <button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( cours, ressource.hash )">✕</button>
+		</div>
+	      </div>
+
+	      <div class="dropdown row">
+		<button class="btn btn-sm btn-primary dropdown-toggle pull-right" id="dLabelRessourceCours" role="button" data-toggle="dropdown" data-target="#" href="">
 		  <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
 		</button>
 		<ul class="dropdown-menu" role="menu" aria-labelledby="dLabelRessourceCours" ng-click="$event.stopPropagation()">
@@ -124,14 +131,6 @@
 			 data-ng-hide="faulty_docs_app" />
 		</ul>
 	      </div>
-
-	      <div class="row">
-		<div class="attached-document" data-ng-repeat="ressource in cours.ressources">
-		  <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
-		  <button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( cours, ressource.hash )">✕</button>
-		</div>
-	      </div>
-
 	    </div>
 	  </div>
 	</div>
@@ -195,8 +194,15 @@
 	      <text-angular class="panel-body" data-ng-model="devoir.contenu" data-ng-change="is_dirty( devoir )"></text-angular>
 
 	      <div class="panel-footer ressources">
-		<div class="dropdown pull-right">
-		  <button class="btn btn-sm btn-primary dropdown-toggle" id="dLabelRessourceDevoir" role="button" data-toggle="dropdown" data-target="#" href="">
+		<div class="row">
+		  <div class="attached-document" data-ng-repeat="ressource in devoir.ressources">
+		    <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
+		    <button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( devoir, ressource.hash )">✕</button>
+		  </div>
+		</div>
+
+		<div class="dropdown row">
+		  <button class="btn btn-sm btn-primary dropdown-toggle pull-right" id="dLabelRessourceDevoir" role="button" data-toggle="dropdown" data-target="#" href="">
 		    <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
 		  </button>
 		  <ul class="dropdown-menu" role="menu" aria-labelledby="dLabelRessourceDevoir" ng-click="$event.stopPropagation()">
@@ -221,14 +227,6 @@
 			   data-ng-hide="faulty_docs_app" />
 		  </ul>
 		</div>
-
-		<div class="row">
-		  <div class="attached-document" data-ng-repeat="ressource in devoir.ressources">
-		    <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
-		    <button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( devoir, ressource.hash )">✕</button>
-		  </div>
-		</div>
-
 	      </div>
 
 	    </div>
@@ -285,8 +283,15 @@
 	  <text-angular class="panel-body" data-ng-model="devoir.contenu" data-ng-change="is_dirty( devoir )"></text-angular>
 
 	  <div class="panel-footer ressources">
-	    <div class="dropdown pull-right">
-	      <button class="btn btn-sm btn-primary dropdown-toggle" id="dLabelRessourceDevoir" role="button" data-toggle="dropdown" data-target="#" href="">
+	    <div class="row">
+	      <div class="attached-document" data-ng-repeat="ressource in devoir.ressources">
+		<a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
+		<button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( devoir, ressource.hash )">✕</button>
+	      </div>
+	    </div>
+
+	    <div class="dropdown row">
+	      <button class="btn btn-sm btn-primary dropdown-toggle pull-right" id="dLabelRessourceDevoir" role="button" data-toggle="dropdown" data-target="#" href="">
 		<span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
 	      </button>
 	      <ul class="dropdown-menu" role="menu" aria-labelledby="dLabelRessourceDevoir" ng-click="$event.stopPropagation()">
@@ -311,14 +316,6 @@
 		       data-ng-hide="faulty_docs_app" />
 	      </ul>
 	    </div>
-
-	    <div class="row">
-	      <div class="attached-document" data-ng-repeat="ressource in devoir.ressources">
-		<a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
-		<button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( devoir, ressource.hash )">✕</button>
-	      </div>
-	    </div>
-
 	  </div>
 	</div>
 
