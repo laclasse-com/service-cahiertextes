@@ -97,17 +97,13 @@
 		 data-ng-bind-html="cours.contenu"
 		 data-ng-hide="cours.editable" >
 	    </div>
-	    <div class="panel-footer">
-
-	      <div class="row" data-ng-show="cours.editable">
-		<div class="col-md-12 ressources">
+	    <div class="panel-footer ressources">
+	      <div class="dropdown pull-right">
+		<button class="btn btn-sm btn-primary dropdown-toggle" id="dLabelRessourceCours" role="button" data-toggle="dropdown" data-target="#" href="">
+		  <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
+		</button>
+		<ul class="dropdown-menu" role="menu" aria-labelledby="dLabelRessourceCours">
 		  <div class="alert alert-danger" role="alert" data-ng-hide="cartable.files">Problème de communication avec l'application Documents</div>
-
-		  <div class="attached-document" data-ng-repeat="ressource in cours.ressources">
-		    <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
-		    <button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( cours, ressource.hash )">✕</button>
-		  </div>
-
 		  <div class="treecontrol-container">
 		    <treecontrol class="tree-classic"
 				 tree-model="cartable.files"
@@ -124,19 +120,20 @@
 			 multiple
 			 onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().cours, this.files)"
 			 data-ng-show="cartable.files" />
+		</ul>
+	      </div>
+
+	      <div class="row">
+		<div class="attached-document" data-ng-repeat="ressource in cours.ressources">
+		  <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
+		  <button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( cours, ressource.hash )">✕</button>
 		</div>
 	      </div>
-	      <div class="clearfix"></div>
+
 	    </div>
 	  </div>
 	</div>
 	<div class="col-md-3 infos">
-	  <button type="button" class="btn btn-sm btn-danger pull-right"
-		  data-ng-click="effacer_cours(  )"
-		  data-ng-show="cours.editable" >
-	    <span class="glyphicon glyphicon-trash"></span> Supprimer
-	  </button>
-
 	  <ul class="pull-left">
 	    <li class="clickable" data-ng-repeat="devoir in cours.devoirs"
 		tooltip-trigger="click"
@@ -145,6 +142,13 @@
 	      <span><i class="picto devoir"></i> Devoir associé : <em>{{devoir.date_due | date : 'dd/MM'}}</em></span>
 	    </li>
 	  </ul>
+	</div>
+	<div class="col-md-12" data-ng-show="cours.id">
+	  <button type="button" class="btn btn-sm btn-danger pull-right supprimer"
+		  data-ng-click="effacer_cours(  )"
+		  data-ng-show="cours.editable" >
+	    <span class="glyphicon glyphicon-trash"></span> Supprimer la séquence pédagogique
+	  </button>
 	</div>
       </div>
 
@@ -189,15 +193,13 @@
 	      </div>
 	      <text-angular class="panel-body" data-ng-model="devoir.contenu" data-ng-change="is_dirty( devoir )"></text-angular>
 
-	      <div class="panel-footer">
-
-		<div class="row" data-ng-show="cours.editable">
-		  <div class="col-md-7 ressources">
+	      <div class="panel-footer ressources">
+		<div class="dropdown pull-right">
+		  <button class="btn btn-sm btn-primary dropdown-toggle" id="dLabelRessourceDevoir" role="button" data-toggle="dropdown" data-target="#" href="">
+		    <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
+		  </button>
+		  <ul class="dropdown-menu" role="menu" aria-labelledby="dLabelRessourceDevoir">
 		    <div class="alert alert-danger" role="alert" data-ng-hide="cartable.files">Problème de communication avec l'application Documents</div>
-		    <div class="attached-document" data-ng-repeat="ressource in devoir.ressources">
-		      <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
-		      <button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( cours, ressource.hash )">✕</button>
-		    </div>
 		    <div class="treecontrol-container">
 		      <treecontrol class="tree-classic"
 				   tree-model="cartable.files"
@@ -207,23 +209,31 @@
 			{{node.name}} ({{node.mime}}) <button class="btn btn-sm btn-success" data-ng-click="add_ressource( devoir, node.name, node.hash )">+</button>
 		      </treecontrol>
 		    </div>
+
 		    <input type="file"
 			   class="upload"
 			   name="upload[]"
 			   multiple
 			   onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files)"
 			   data-ng-show="cartable.files" />
+		  </ul>
+		</div>
+
+		<div class="row">
+		  <div class="attached-document" data-ng-repeat="ressource in devoir.ressources">
+		    <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
+		    <button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( devoir, ressource.hash )">✕</button>
 		  </div>
 		</div>
-		<div class="clearfix"></div>
+
 	      </div>
-	      <div class="clearfix"></div>
+
 	    </div>
 
-	    <div class="col-md-3">
-	      <button type="button" class="btn btn-sm btn-danger pull-right"
+	    <div class="col-md-12">
+	      <button type="button" class="btn btn-sm btn-danger pull-right supprimer"
 		      data-ng-click="effacer_devoir_cours( devoir )" >
-		<span class="glyphicon glyphicon-trash"></span> Supprimer
+		<span class="glyphicon glyphicon-trash"></span> Supprimer le devoir
 	      </button>
 	    </div>
 
@@ -271,15 +281,13 @@
 
 	  <text-angular class="panel-body" data-ng-model="devoir.contenu" data-ng-change="is_dirty( devoir )"></text-angular>
 
-	  <div class="panel-footer">
-
-	    <div class="row" data-ng-show="cours.editable">
-	      <div class="col-md-7 ressources">
+	  <div class="panel-footer ressources">
+	    <div class="dropdown pull-right">
+	      <button class="btn btn-sm btn-primary dropdown-toggle" id="dLabelRessourceDevoir" role="button" data-toggle="dropdown" data-target="#" href="">
+		<span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
+	      </button>
+	      <ul class="dropdown-menu" role="menu" aria-labelledby="dLabelRessourceDevoir">
 		<div class="alert alert-danger" role="alert" data-ng-hide="cartable.files">Problème de communication avec l'application Documents</div>
-		<div class="attached-document" data-ng-repeat="ressource in devoir.ressources">
-		  <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
-		  <button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( cours, ressource.hash )">✕</button>
-		</div>
 		<div class="treecontrol-container">
 		  <treecontrol class="tree-classic"
 			       tree-model="cartable.files"
@@ -289,26 +297,27 @@
 		    {{node.name}} ({{node.mime}}) <button class="btn btn-sm btn-success" data-ng-click="add_ressource( devoir, node.name, node.hash )">+</button>
 		  </treecontrol>
 		</div>
+
 		<input type="file"
 		       class="upload"
 		       name="upload[]"
 		       multiple
 		       onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files)"
 		       data-ng-show="cartable.files" />
+	      </ul>
+	    </div>
+
+	    <div class="row">
+	      <div class="attached-document" data-ng-repeat="ressource in devoir.ressources">
+		<a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
+		<button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( devoir, ressource.hash )">✕</button>
 	      </div>
 	    </div>
-	    <div class="clearfix"></div>
-	  </div>
 
-	  <div class="clearfix"></div>
+	  </div>
 	</div>
 
 	<div class="col-md-3 infos">
-	  <button type="button" class="btn btn-sm btn-danger pull-right"
-		  data-ng-click="effacer_devoir_devoirs( devoir )" >
-	    <span class="glyphicon glyphicon-trash"></span> Supprimer
-	  </button>
-
 	  <ul class="pull-left">
 	    <li class="clickable">
 	      <span data-ng-show="devoir.cours.contenu"
@@ -318,6 +327,12 @@
 	      </span>
 	    </li>
 	  </ul>
+	</div>
+	<div class="col-md-12">
+	  <button type="button" class="btn btn-sm btn-danger pull-right supprimer"
+		  data-ng-click="effacer_devoir_devoirs( devoir )" >
+	    <span class="glyphicon glyphicon-trash"></span> Supprimer le devoir
+	  </button>
 	</div>
 
 	<div class="clearfix"></div>

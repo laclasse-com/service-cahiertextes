@@ -112,6 +112,7 @@ body {
 				 margin: 3px;
 				 padding-left: 2px; }
 .ressources .attached-document a { color: #fff }
+.ressources .dropdown-menu { width:333%; }
 .ressources .upload,
 .ressources .treecontrol-container {float: left;
 				    width: 100%}
