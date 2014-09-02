@@ -110,7 +110,8 @@
 				 tree-model="cartable.files"
 				 options="treeOptions"
 				 expanded-nodes="cartable.expandedNodes"
-				 on-selection="treeClicked( node )">
+				 on-selection="treeClicked( node )"
+				 data-ng-class="{'even': $even, 'odd': $odd}">
 		      {{node.name}} ({{node.mime}}) <button class="btn btn-sm btn-success" data-ng-click="add_ressource( cours, node.name, node.hash )">+</button>
 		    </treecontrol>
 		  </div>
@@ -206,7 +207,8 @@
 				   tree-model="cartable.files"
 				   options="treeOptions"
 				   expanded-nodes="cartable.expandedNodes"
-				   on-selection="treeClicked( node )">
+				   on-selection="treeClicked( node )"
+				   data-ng-class="{'even': $even, 'odd': $odd}">
 			{{node.name}} ({{node.mime}}) <button class="btn btn-sm btn-success" data-ng-click="add_ressource( devoir, node.name, node.hash )">+</button>
 		      </treecontrol>
 		    </div>
@@ -295,7 +297,8 @@
 			       tree-model="cartable.files"
 			       options="treeOptions"
 			       expanded-nodes="cartable.expandedNodes"
-			       on-selection="treeClicked( node )">
+			       on-selection="treeClicked( node )"
+			       data-ng-class="{'even': $even, 'odd': $odd}">
 		    {{node.name}} ({{node.mime}}) <button class="btn btn-sm btn-success" data-ng-click="add_ressource( devoir, node.name, node.hash )">+</button>
 		  </treecontrol>
 		</div>
