@@ -166,6 +166,11 @@ module CahierDeTextesAPI
             end
           end
 
+          if params[:semaines_de_presence_regroupement] && params[:regroupement_id]
+            cr = CreneauEmploiDuTempsRegroupement.where( regroupement_id: params[:regroupement_id])
+            cr.update semaines_de_presence: params[:semaines_de_presence_regroupement] unless cr.nil?
+          end
+
           if params[:salle_id]
             CreneauEmploiDuTempsSalle.unrestrict_primary_key
             cs = creneau.add_salle salle_id: params[:salle_id]
