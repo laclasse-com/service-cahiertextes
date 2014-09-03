@@ -23,7 +23,7 @@ angular.module( 'cahierDeTexteApp' )
 		       })
 		   // import //////////////////////////////////////////////////////////////
 		       .state('import', {
-			       //resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } },
+			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } },
 			   url: '/import',
 			   controller: 'ImportCtrl',
 			   templateUrl: APP_PATH + '/app/views/import.html'
