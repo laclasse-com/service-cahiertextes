@@ -5,6 +5,8 @@ angular.module('cahierDeTexteApp')
 		[ '$scope', '$upload', 'APP_PATH',
 		  function ( $scope, $upload, APP_PATH ) {
 		      $scope.in_progress = false;
+		      $scope.result = false;
+
 		      $scope.onFileSelect = function($files) {
 			  //$files: an array of files selected, each file has name, size, and type.
 			  for (var i = 0; i < $files.length; i++) {
@@ -20,6 +22,7 @@ angular.module('cahierDeTexteApp')
 				  })
 				  .success( function( data, status, headers, config ) {
 				      $scope.in_progress = false;
+				      $scope.result = data;
 				  })
 				  .error( function() {
 				      $scope.in_progress = false;
