@@ -28,8 +28,12 @@ angular.module('cahierDeTexteApp')
 					 this.className = 'saisie-vide';
 
 					 Annuaire.get_matiere( event.matiere_id ).$promise.then( function success( response ) {
-					     _this.title += response.libelle_long;
-					 });
+					     if ( _(response.libelle_long).isUndefined() ) {
+						 _this.title += event.matiere_id;
+					     } else {
+						 _this.title += response.libelle_long;
+					     }
+					 } );
 
 					 if ( event.devoirs.length > 0 ) {
 					     this.className = _( _(event.devoirs).pluck( 'fait' ) ).contains( true ) ? 'edt-devoir-fait' : 'edt-devoir-a-faire';
