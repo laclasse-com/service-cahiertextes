@@ -82,6 +82,7 @@ module CahierDeTextesAPI
           end
         end
           .flatten
+          .compact
       end
     end
   end
