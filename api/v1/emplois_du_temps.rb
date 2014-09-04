@@ -30,7 +30,7 @@ module CahierDeTextesAPI
         }
                             .uniq
 
-        # FIXME: creneau[:semaines_de_presence][ 1 ] == première semaine de janvier ?
+        # Nota Bene: creneau[:semaines_de_presence][ 1 ] == première semaine de janvier
         CreneauEmploiDuTemps
           .association_join( :enseignants )
           .association_join( :regroupements )
