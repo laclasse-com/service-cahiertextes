@@ -41,8 +41,7 @@ module CahierDeTextesAPI
 
           ( params[:debut] .. params[:fin] )
             .reject { |day| day.wday != creneau.jour_de_la_semaine }
-            .map do
-            |jour|
+            .map do |jour|
             if creneau[:semaines_de_presence][ jour.cweek ] == 1
               cahier_de_textes = CahierDeTextes.where( regroupement_id: creneau[:regroupement_id] ).first
               cahier_de_textes = CahierDeTextes.create( regroupement_id: creneau[:regroupement_id] ) if cahier_de_textes.nil?
@@ -56,9 +55,7 @@ module CahierDeTextesAPI
                 cahier_de_textes_id: cahier_de_textes.id,  # utilisé lors de la création d'un cours côté client
                 start: Time.new( jour.year, jour.month, jour.mday, creneau.plage_horaire_debut.debut.hour, creneau.plage_horaire_debut.debut.min ).iso8601,
                 end: Time.new( jour.year, jour.month, jour.mday, creneau.plage_horaire_fin.fin.hour, creneau.plage_horaire_fin.fin.min ).iso8601,
-                cours: creneau.cours.select do |cours|
-                  cours[:deleted] == false && cours.date_cours == jour
-                end
+                cours: creneau.cours.select { |cours| cours[:deleted] == false && cours.date_cours == jour }
                                     .map do |cours|
                   hcours = cours.to_hash
                   hcours[:ressources] = cours.ressources.map { |rsrc| rsrc.to_hash }
@@ -66,9 +63,7 @@ module CahierDeTextesAPI
                   hcours
                 end
                                     .first,
-                devoirs: creneau.devoirs.select do |devoir|
-                  devoir[:deleted] == false && devoir.date_due == jour
-                end
+                devoirs: creneau.devoirs.select { |devoir| devoir[:deleted] == false && devoir.date_due == jour }
                                         .map do |devoir|
                   hdevoir = devoir.to_hash
                   hdevoir[:ressources] = devoir.ressources.map { |rsrc| rsrc.to_hash }
@@ -78,6 +73,8 @@ module CahierDeTextesAPI
                   hdevoir
                 end
               }
+            else
+              next
             end
           end
         end
