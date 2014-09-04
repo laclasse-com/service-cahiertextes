@@ -31,12 +31,6 @@ module CahierDeTextesAPI
         h[:enseignants] = creneau.enseignants
         h[:salles] = creneau.salles
 
-        h[:heure_debut] = PlageHoraire[ h[:debut] ].debut
-        h[:heure_fin] = PlageHoraire[ h[:fin] ].fin
-
-        # TODO: memoize this
-        h[:matiere] = Annuaire.get_matiere( h[:matiere_id] )
-
         if expand
           h[:cours] = Cours.where( creneau_emploi_du_temps_id: params[:id] ).where( deleted: false ).where( date_cours: params[:debut] .. params[:fin] )
           h[:devoirs] = Devoir.where( creneau_emploi_du_temps_id: params[:id] ).where( date_due: params[:debut] .. params[:fin] )
