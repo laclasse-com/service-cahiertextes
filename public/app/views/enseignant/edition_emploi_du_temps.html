@@ -15,13 +15,17 @@
     <div class="row">
       <div class="col-md-6">
 	<label>Choisir la classe :</label>
-	<select data-ng-model="scope.regroupement_id" data-ng-options="classe.id as classe.libelle for classe in classes">
+	<select data-ng-model="scope.regroupement_id"
+		data-ng-options="classe.id as classe.libelle for classe in classes"
+		data-ng-init="scope.regroupement_id = classes[ 0 ].id">
 	</select>
       </div>
 
       <div class="col-md-6">
 	<label>Choisir la matière :</label>
-	<select data-ng-model="scope.matiere_id" data-ng-options="matiere.id as matiere.libelle_long for matiere in matieres">
+	<select data-ng-model="scope.matiere_id"
+		data-ng-options="matiere.id as matiere.libelle_long for matiere in matieres"
+		data-ng-init="scope.matiere_id = matieres[ 0 ].id">
 	</select>
       </div>
     </div>
