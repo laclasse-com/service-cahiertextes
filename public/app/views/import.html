@@ -1,9 +1,9 @@
 <input type="file" ng-file-select="onFileSelect($files)" />
 
-<button data-ng-show="in_progress"
+<button data-ng-if="in_progress"
 	data-ng-click="upload.abort()">Cancel Upload</button>
 
-<div data-ng-show="result.rapport">
+<div data-ng-if="result.rapport">
   <div class="row">
     <label>{{result.rapport.plages_horaires.success.length}} Plages Horaires crées</label>
   </div>

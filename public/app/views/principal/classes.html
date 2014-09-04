@@ -1,8 +1,8 @@
-<div class="message" data-ng-show="empty">
+<div class="message" data-ng-if="empty">
   <h1><span class="label label-danger"><span class="glyphicon glyphicon-warning-sign"></span> Aucune donnée</span></h1>
 </div>
 
-<div class="panel panel-default" data-ng-hide="empty">
+<div class="panel panel-default" data-ng-if="!empty">
   <div class="panel-body">
     <select data-ng-model="classe" data-ng-change="process_data()" data-ng-options="classe.id as classe.libelle for classe in classes">
       <option value="" selected>Toute les classes</option>
@@ -53,7 +53,7 @@
   </div>
 </div>
 
-<div class="col-md-12" data-ng-hide="classe">
+<div class="col-md-12" data-ng-if="!classe">
   <div class="col-md-3" data-ng-repeat="classe in individualCharts.classes">
     <div class="panel panel-default">
       <div class="panel-heading"><h3 class="panel-title">{{classe.regroupement.libelle}}</h3></div>

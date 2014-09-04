@@ -1,8 +1,8 @@
-<div class="message" data-ng-show="empty">
+<div class="message" data-ng-if="empty">
   <h1><span class="label label-danger"><span class="glyphicon glyphicon-warning-sign"></span> Aucune donnée</span></h1>
 </div>
 
-<div class="panel panel-default"data-ng-hide="empty">
+<div class="panel panel-default"data-ng-if="!empty">
   <div class="panel-heading">
     <input data-ng-model="affiche_faits" type="checkbox" id="display-done" name="display-done" data-ng-change="filtre()"/>
     <label for="display-done">Afficher les devoirs déjà fait</label>
@@ -16,13 +16,13 @@
 	<div class="pull-left info">
 	  <span class="matiere">{{devoir.matiere.libelle_court}}</span><br>
 	  {{devoir.type_devoir.label}}<br>
-	  <span data-ng-show="devoir.temps_estime">{{devoir.temps_estime * 5}} minutes</span>
+	  <span data-ng-if="devoir.temps_estime">{{devoir.temps_estime * 5}} minutes</span>
 	</div>
 
 	<div class="pull-left contenu" data-ng-bind-html="devoir.contenu"></div>
 
 	<div class="pull-right todo">
-	  <div data-ng-switcher data-ng-hide="devoir.type_devoir_id == 1"
+	  <div data-ng-switcher data-ng-if="!(devoir.type_devoir_id == 1)"
 	       data-ng-model="devoir.fait"
 	       data-ng-change="fait( devoir.id )" ></div>
 	</div>

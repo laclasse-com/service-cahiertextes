@@ -1,8 +1,8 @@
-<div class="message" data-ng-show="empty">
+<div class="message" data-ng-if="empty">
   <h1><span class="label label-danger"><span class="glyphicon glyphicon-warning-sign"></span> Aucune donnée</span></h1>
 </div>
 
-<div class="panel panel-default"data-ng-hide="empty">
+<div class="panel panel-default"data-ng-if="!empty">
   <div class="panel-heading">
     <select class="col-md-3 pull-left" data-ng-model="selected_regroupement_id" data-ng-change="refresh_data()" data-ng-options="classe.id as classe.libelle for classe in classes">
       <option value="" selected>Toutes les classes</option>
@@ -16,7 +16,7 @@
 	<option value="" selected>Sélectionnez un créneau pour le saisir</option>
       </select>
       <button class="btn btn-sm btn-primary pull-right"
-	      data-ng-show="selected_creneau_vide"
+	      data-ng-if="selected_creneau_vide"
 	      data-ng-click="edition_creneau( selected_creneau_vide )" >
 	<span class="glyphicon glyphicon-plus-sign"></span> Saisir une nouvelle séquence pédagogique
       </button>
@@ -57,7 +57,7 @@
 	  <button class="btn btn-default" data-ng-click="edition_creneau( creneau )">Accéder</button>
 	</div>
 
-	<div class="devoirs" data-ng-show="creneau.devoirs.length > 0">
+	<div class="devoirs" data-ng-if="creneau.devoirs.length > 0">
 
 	  <accordion close-others="false">
 	    <accordion-group data-is-open="creneau.devoirs.ouvert">
@@ -73,7 +73,7 @@
 		  <div class="pull-left info">
 		    <span class="matiere">{{devoir.matiere.libelle_court}}</span><br>
 		    {{devoir.type_devoir_description}}<br>
-		    <span data-ng-show="devoir.temps_estime">{{devoir.temps_estime * 5}} minutes</span>
+		    <span data-ng-if="devoir.temps_estime">{{devoir.temps_estime * 5}} minutes</span>
 		  </div>
 
 		  <div class="pull-left contenu" data-ng-bind-html="devoir.contenu"></div>
