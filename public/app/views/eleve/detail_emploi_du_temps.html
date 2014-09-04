@@ -6,7 +6,7 @@
 
   <tabset>
     <!-- ####################### Devoirs ####################### -->
-    <tab data-ng-show="devoirs.length > 0" heading="Travail à faire">
+    <tab data-ng-if="devoirs.length > 0" heading="Travail à faire">
       <div data-ng-repeat="devoir in devoirs"
 	   class="devoir col-md-12"
 	   data-ng-class="{ 'type1': devoir.type_devoir_id == 1, 'type2': devoir.type_devoir_id == 2, 'type3': devoir.type_devoir_id == 3, 'type4': devoir.type_devoir_id == 4, 'type5': devoir.type_devoir_id == 5, 'type6': devoir.type_devoir_id == 6, 'fait': devoir.fait }" >
@@ -14,7 +14,7 @@
 	  <ul>
 	    <li><span ><i class="picto matiere"></i> Matière : <em>{{titre}}</em></span></li>
 	    <li><span ><i class="picto devoir"></i> Type de devoir : <em>{{devoir.type_devoir_description}}</em></span></li>
-	    <li data-ng-show="devoir.temps_estime > 0"><span><i class="picto temps"></i> Temps estimé : <em>{{devoir.temps_estime * 5}} minutes</em></span></li>
+	    <li data-ng-if="devoir.temps_estime > 0"><span><i class="picto temps"></i> Temps estimé : <em>{{devoir.temps_estime * 5}} minutes</em></span></li>
 	    <li class="clickable"
 		tooltip-trigger="click"
 		tooltip-html-unsafe="{{devoir.cours.contenu}}">
@@ -24,7 +24,7 @@
 
 	  <div data-ng-switcher
 	       class="toggle-fait"
-	       data-ng-hide="devoir.type_devoir_id == 1"
+	       data-ng-if="!(devoir.type_devoir_id == 1)"
 	       data-ng-model="devoir.fait"
 	       data-ng-change="fait( devoir.id )" ></div>
 
@@ -32,7 +32,7 @@
 	<div class="col-md-6 contenu">
 	  <span data-ng-bind-html="devoir.contenu"></span>
 
-	  <ul data-ng-show="devoir.ressources.length > 0">
+	  <ul data-ng-if="devoir.ressources.length > 0">
 	    <li data-ng-repeat="ressource in devoir.ressources">
 	      <a target="_blank" href="http://www.dev.laclasse.com/docs-beta/api/connector?cmd=file&target={{ressource.hash}}">{{ressource.name}}</a>
 	    </li>
@@ -57,7 +57,7 @@
 	<div class="col-md-6 contenu">
 	  <span data-ng-bind-html="cours.contenu"></span>
 
-	  <ul data-ng-show="cours.ressources.length > 0">
+	  <ul data-ng-if="cours.ressources.length > 0">
 	    <li data-ng-repeat="ressource in cours.ressources">
 	      <a target="_blank" href="http://www.dev.laclasse.com/docs-beta/api/connector?cmd=file&target={{ressource.hash}}">{{ressource.name}}</a>
 	    </li>
