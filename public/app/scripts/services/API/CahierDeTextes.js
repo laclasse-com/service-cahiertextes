@@ -23,7 +23,7 @@ angular.module('cahierDeTexteApp')
 				   profil.matieres = _.chain(response.classes)
 				       .filter( function( classe ) { return classe.etablissement_code == profil.uai; } )
 				       .map( function( classe ) {
-					   return { id: classe.matiere_enseignee_id,
+					   return { id: _(classe.matiere_enseignee_id).isNull() ? classe.matiere_libelle : classe.matiere_enseignee_id,
 						    libelle_long: classe.matiere_libelle };
 				       } )
 				       .uniq( function( item ) { return item.id; } )
