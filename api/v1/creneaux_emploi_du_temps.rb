@@ -138,7 +138,9 @@ module CahierDeTextesAPI
           creneau.save
 
           if params[:semaines_de_presence_enseignant]
-            ce = CreneauEmploiDuTempsEnseignant.where( enseignant_id: user.uid ).where( creneau_emploi_du_temps_id: params[:id] )
+            ce = CreneauEmploiDuTempsEnseignant
+                 .where( enseignant_id: user.uid )
+                 .where( creneau_emploi_du_temps_id: params[:id] )
             ce.update semaines_de_presence: params[:semaines_de_presence_enseignant]
           end
 
@@ -161,7 +163,9 @@ module CahierDeTextesAPI
           end
 
           if params[:semaines_de_presence_regroupement] && params[:regroupement_id]
-            cr = CreneauEmploiDuTempsRegroupement.where( regroupement_id: params[:regroupement_id])
+            cr = CreneauEmploiDuTempsRegroupement
+                 .where( creneau_emploi_du_temps_id: params[:id] )
+                 .where( regroupement_id: params[:regroupement_id])
             cr.update semaines_de_presence: params[:semaines_de_presence_regroupement] unless cr.nil?
           end
 
