@@ -15,6 +15,12 @@ angular.module( 'cahierDeTexteApp' )
 
 					      var filtre_saisies = function ( saisies, mois, classe ) {
 						  var data = saisies;
+						  if ( $scope.current_user[ 'profil_actif' ][ 'profil_id' ] === 'DIR' ) {
+						      var _2_semaines_avant = moment().subtract( 2, 'weeks' );
+						      data = _( data ).select( function( saisie ) {
+							  return moment( saisie.cours.date_cours ).isBefore( _2_semaines_avant );
+						      } );
+						  }
 						  if ( mois != null ) {
 						      data = _( data ).where( { mois: mois } );
 						  }
