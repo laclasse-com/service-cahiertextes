@@ -9,6 +9,9 @@ angular.module('cahierDeTexteApp')
 					active: false },
 				      { heading: 'Tableaux de bord par classe',
 					uisref: 'principal.classes',
+					active: false },
+				      { heading: 'Import',
+					uisref: 'import',
 					active: false } ];
 		      _($scope.tabs).each( function( tab ) {
 			  tab.active = tab.uisref == $state.current.name;
