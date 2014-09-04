@@ -66,15 +66,15 @@ angular.module( 'cahierDeTexteApp' )
 			       switch( template_name ) {
 			       case 'semaine_A':
 				   _(26).times( function() {
-				       template.push( 1 );
 				       template.push( 0 );
+				       template.push( 1 );
 				   });
 				   $scope.semaines_actives.regroupement = template;
 				   break;
 			       case 'semaine_B':
 				   _(26).times( function() {
-				       template.push( 0 );
 				       template.push( 1 );
+				       template.push( 0 );
 				   });
 				   $scope.semaines_actives.regroupement = template;
 				   break;
