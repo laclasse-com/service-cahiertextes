@@ -47,6 +47,14 @@ module ProNote
     inflate decrypted_payload
   end
 
+  def corrige_semainiers( semainier, decalage )
+    semainier = semainier.to_s 2
+    pivot = semainier.length - decalage
+    debut = semainier.slice( pivot, semainier.length )
+    fin = semainier.slice( 0, pivot )
+    "#{debut}#{fin}".to_i 2
+  end
+
   def load_xml(xml, xsd = nil)
     rapport = {}
     edt_clair = Nokogiri::XML( decrypt_xml( xml ) )
@@ -61,6 +69,7 @@ module ProNote
         etablissement.save
       end
     end
+    offset_semainiers = etablissement.date_premier_jour_premiere_semaine.cweek
 
     rapport[:plages_horaires] = { success: [], error: [] }
     edt_clair.search('PlacesParJour').children.each do
@@ -200,7 +209,7 @@ module ProNote
               else
                 CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
                 creneau.add_enseignant(enseignant_id: enseignants[ node['Ident'] ],
-                                       semaines_de_presence: node['Semaines'] )
+                                       semaines_de_presence: corrige_semainiers( node['Semaines'], offset_semainiers ) )
                 CreneauEmploiDuTempsEnseignant.restrict_primary_key
               end
             when 'Classe', 'PartieDeClasse', 'Groupe' # on ne distingue pas les 3 types de regroupements
@@ -209,13 +218,13 @@ module ProNote
               else
                 CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
                 creneau.add_regroupement(regroupement_id: regroupements[ node.name ][ node['Ident'] ],
-                                         semaines_de_presence: node['Semaines'] )
+                                         semaines_de_presence: corrige_semainiers( node['Semaines'], offset_semainiers ) )
                 CreneauEmploiDuTempsRegroupement.restrict_primary_key
               end
             when 'Salle'
               CreneauEmploiDuTempsSalle.unrestrict_primary_key
               creneau.add_salle(salle_id: Salle[ identifiant: node['Ident'] ][:id],
-                                semaines_de_presence: node['Semaines'] )
+                                semaines_de_presence: corrige_semainiers( node['Semaines'], offset_semainiers ) )
               CreneauEmploiDuTempsSalle.restrict_primary_key
             end
           end
