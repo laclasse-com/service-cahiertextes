@@ -2,8 +2,9 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EmploiDuTempsPopupDisplayCtrl',
-		[ '$scope', '$modalInstance', 'Cours', 'Devoirs', 'titre', 'cours', 'devoirs',
-		  function( $scope, $modalInstance, Cours, Devoirs, titre, cours, devoirs ) {
+		[ '$scope', '$modalInstance', 'APP_PATH', 'Cours', 'Devoirs', 'titre', 'cours', 'devoirs',
+		  function( $scope, $modalInstance, APP_PATH, Cours, Devoirs, titre, cours, devoirs ) {
+		      $scope.app_path = APP_PATH;
 		      $scope.titre = titre;
 		      $scope.cours = Cours.get( { id: cours.id } );
 		      $scope.devoirs = devoirs.map( function( devoir ) {

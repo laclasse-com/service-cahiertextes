@@ -236,12 +236,6 @@ footer { color: #555;
 	 width: 1em;
 	 background-size: cover;
 	 color: #111; }
-.picto.cours { background-image: url( '/app/bower_components/charte-graphique-laclasse-com/images/picto_cours.svg' ) }
-.picto.cross { background-image: url( '/app/bower_components/charte-graphique-laclasse-com/images/picto_cross.svg' ) }
-.picto.devoir { background-image: url( '/app/bower_components/charte-graphique-laclasse-com/images/picto_devoir.svg' ) }
-.picto.matiere { background-image: url( '/app/bower_components/charte-graphique-laclasse-com/images/picto_matiere.svg' ) }
-.picto.temps { background-image: url( '/app/bower_components/charte-graphique-laclasse-com/images/picto_temps.svg' ) }
-
 
 fieldset .label {margin: 1px;}
 
