@@ -218,6 +218,8 @@ angular.module( 'cahierDeTexteApp' )
 					   $scope.cours.contenu = $sce.trustAsHtml( $scope.cours.contenu );
 				       }
 
+				       $scope.accordion_cours_devoirs_open = $scope.cours.devoirs.length > 0;
+
 				       _(cours.devoirs).each( function( devoir ) {
 					   $scope.estimation_leave( devoir );
 					   devoir.tooltip = devoir.contenu;
