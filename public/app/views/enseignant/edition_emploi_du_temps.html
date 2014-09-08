@@ -376,8 +376,8 @@
 
   <button type="button" class="btn btn-sm btn-default"
 	  data-ng-click="switch_to_duplication_mode()"
-	  data-ng-if="!creneau.en_creation && !mode_duplication && !(creneaux_similaires.length < 1)" >
-    <span class="glyphicon glyphicon-transfer"> Copier le cours à d'autres créneaux</span>
+	  data-ng-if="cours.contenu && !creneau.en_creation && !mode_duplication && creneaux_similaires.length > 0" >
+    <span class="glyphicon glyphicon-transfer"> Copier à d'autres créneaux</span>
   </button>
 
   <button type="button" class="btn btn-sm btn-success pull-right" data-ng-click="valider()" data-ng-if="dirty || creneau.en_creation">
