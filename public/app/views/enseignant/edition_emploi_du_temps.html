@@ -180,7 +180,7 @@
 		<label class="col-md-6">Date de rendu :
 		  <select data-ng-required="true"
 			  data-ng-model="devoir.date_due"
-			  data-ng-change="set_creneau.date_due( devoir )"
+			  data-ng-change="set_creneau_date_due( devoir )"
 			  data-ng-options="creneau.date_due as ( creneau | formateCreneau ) group by creneau.semaine for creneau in creneaux_devoirs_possibles">
 		  </select>
 		</label>
