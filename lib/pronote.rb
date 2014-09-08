@@ -109,10 +109,9 @@ module ProNote
         rapport[:matieres][:error] << matiere if matieres[ matiere['Ident'] ].nil?
       end
     end
+
     ####
     # Les enseignants sont dans l'annuaire
-    # TODO: On va interroger l'annuaire pour construire une table de correspondance temporaire
-    # entre ce que nous envoi ProNote et ce que nous avons dans l'annuaire.
     ####
     rapport[:enseignants] = { success: [], error: [] }
     enseignants = {}
@@ -128,8 +127,6 @@ module ProNote
 
     ####
     # Les classes, parties de classe et groupes sont dans l'annuaire
-    # TODO: On va interroger l'annuaire pour construire une table de correspondance temporaire
-    # entre ce que nous envoi ProNote et ce que nous avons dans l'annuaire.
     ####
     rapport[:regroupements] = { classes: { success: [], error: [] },
                                 groupes: { success: [], error: [] },
