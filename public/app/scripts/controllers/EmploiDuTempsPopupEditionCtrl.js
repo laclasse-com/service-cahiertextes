@@ -37,6 +37,7 @@ angular.module( 'cahierDeTexteApp' )
 
 			   $scope.mode_duplication = false;
 			   $scope.creneau = creneau;
+			   $scope.creneau.etranger = !_.chain( $scope.creneau.enseignants ).pluck( 'enseignant_id' ).include( $scope.current_user.uid ).value();
 			   $scope.creneau.deleted = false;
 			   $scope.creneau.previous_regroupement_id = $scope.creneau.regroupement_id;
 			   $scope.matieres = matieres;
@@ -210,8 +211,10 @@ angular.module( 'cahierDeTexteApp' )
 			       };
 
 			       if ( _(cours).isNull() ) {
-				   $scope.cours = create_cours( creneau );
-				   $scope.cours.editable = true;
+				   if ( !$scope.creneau.etranger ) {
+				       $scope.cours = create_cours( creneau );
+				       $scope.cours.editable = true;
+				   }
 			       } else {
 				   $scope.cours = Cours.get( { id: cours.id } );
 				   $scope.cours.$promise.then( function( cours ) {
