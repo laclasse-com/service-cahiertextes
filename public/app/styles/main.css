@@ -25,7 +25,7 @@ body {
 .nav-tabs > li{cursor:pointer}
 
 /* Modal */
-.modal-dialog{width:800px}
+.modal-dialog {width:640px}
 
 /* Tooltip */
 .tooltip-inner { background-color: #fff;
@@ -188,6 +188,9 @@ footer { color: #555;
 		   text-align: center; }
 
 .modal-body .tab-content { min-height: 11em;
+			   max-height: 34em;
+			   overflow-x: hidden;
+			   overflow-y: auto;
 			   border: 1px solid #aaa;
 			   border-top: 0; }
 .modal-body .infos ul { padding-left:0 }
