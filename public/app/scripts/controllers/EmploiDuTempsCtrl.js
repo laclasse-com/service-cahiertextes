@@ -41,7 +41,7 @@ angular.module('cahierDeTexteApp')
 						 var types_de_devoirs_a_faire = _(event.devoirs).pluck( 'type_devoir_id' );
 						 if ( _(types_de_devoirs_a_faire).contains( 2 ) ) { // TypeDevoir[2] est un DM
 						     this.className = 'edt-devoir-note-maison';
-						 } else if ( _(types_de_devoirs_a_faire).contains( 1 ) ) { // TypeDevoir[2] est un DS
+						 } else if ( _(types_de_devoirs_a_faire).contains( 1 ) ) { // TypeDevoir[1] est un DS
 						     this.className = 'edt-devoir-note-surveille';
 						 }
 					     }
