@@ -181,8 +181,7 @@
 		  <select data-ng-required="true"
 			  data-ng-model="devoir.date_due"
 			  data-ng-change="set_creneau.date_due( devoir )"
-			  data-ng-options="creneau.date_due as ( creneau | formateCreneau ) group by creneau.semaine for creneau in creneaux_devoirs_possibles"
-			  data-ng-init="devoir.date_due=creneaux_devoirs_possibles[0].date_due">
+			  data-ng-options="creneau.date_due as ( creneau | formateCreneau ) group by creneau.semaine for creneau in creneaux_devoirs_possibles">
 		  </select>
 		</label>
 
