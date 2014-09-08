@@ -4,7 +4,7 @@
 	<option value="" selected>Toutes les classes</option>
       </select>
 
-      <label><input type="checkbox" data-ng-model="uniquement_mes_creneaux" />Ne montrer que ce qui me concerne directement</label>
+      <label><input type="checkbox" data-ng-model="uniquement_mes_creneaux" data-ng-change="refresh_calendar()" />Ne montrer que ce qui me concerne directement</label>
     </div>
     <div class="panel-body">
       <div data-calendar="emploi_du_temps" data-ui-calendar="calendar.options" class="calendar" data-ng-model="calendar.events"></div>
