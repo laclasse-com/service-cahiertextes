@@ -37,7 +37,7 @@ angular.module('cahierDeTexteApp')
 
 					 if ( event.devoirs.length > 0 ) {
 					     this.className = _( _(event.devoirs).pluck( 'fait' ) ).contains( true ) ? 'edt-devoir-fait' : 'edt-devoir-a-faire';
-					     if ( $scope.current_user.profil_actif.type === 'ELV' && this.className == 'edt-devoir-a-faire' ) {
+					     if ( this.className == 'edt-devoir-a-faire' ) {
 						 var types_de_devoirs_a_faire = _(event.devoirs).pluck( 'type_devoir_id' );
 						 if ( _(types_de_devoirs_a_faire).contains( 2 ) ) { // TypeDevoir[2] est un DM
 						     this.className = 'edt-devoir-note-maison';
