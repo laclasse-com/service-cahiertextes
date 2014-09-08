@@ -14,7 +14,7 @@ angular.module('cahierDeTexteApp')
 				 };
 
 				 // consommation des données
-				 var populate_calendar = function( raw_data ) {
+				 var populate_calendar = function( filtered_data ) {
 				     var CalendarEvent = function( event ) {
 					 var _this = this; //pour pouvoir le référencé dans les .then()
 					 this.details = event;
@@ -62,7 +62,7 @@ angular.module('cahierDeTexteApp')
 					 }
 				     };
 
-				     $scope.calendar.events[ 0 ] = _.chain( raw_data )
+				     $scope.calendar.events[ 0 ] = _.chain( filtered_data )
 					 .map( function( event ) {
 					     return new CalendarEvent( event );
 					 } )
