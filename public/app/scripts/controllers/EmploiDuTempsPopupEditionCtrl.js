@@ -2,8 +2,9 @@
 
 angular.module( 'cahierDeTexteApp' )
     .controller( 'EmploiDuTempsPopupEditionCtrl',
-		 [ '$scope', '$filter', '$q', '$sce', '$modalInstance', 'DOCS_URL', 'Documents', 'API', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs', 'User', 'cours', 'devoirs', 'creneau', 'raw_data', 'classes', 'matieres',
-		   function ( $scope, $filter, $q, $sce, $modalInstance, DOCS_URL, Documents, API, CreneauEmploiDuTemps, Cours, Devoirs, User, cours, devoirs, creneau, raw_data, classes, matieres ) {
+		 [ '$scope', '$filter', '$q', '$sce', '$modalInstance', 'APP_PATH', 'DOCS_URL', 'Documents', 'API', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs', 'User', 'cours', 'devoirs', 'creneau', 'raw_data', 'classes', 'matieres',
+		   function ( $scope, $filter, $q, $sce, $modalInstance, APP_PATH, DOCS_URL, Documents, API, CreneauEmploiDuTemps, Cours, Devoirs, User, cours, devoirs, creneau, raw_data, classes, matieres ) {
+		       $scope.app_path = APP_PATH;
 		       $scope.erreurs = [];
 		       $scope.faulty_docs_app = false;
 		       $scope.dirty = false;

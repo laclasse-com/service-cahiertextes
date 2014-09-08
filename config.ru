@@ -8,7 +8,7 @@ require ::File.expand_path( '../web', __FILE__ )
 
 use Rack::Rewrite do
   rewrite %r{^/logout/?$}, "#{APP_PATH}/logout"
-  rewrite %r{^#{APP_PATH}(/.*(css|js|ttf|woff|html|png|jpg|jpeg|gif)[?v=0-9.]*$)}, '$1'
+  rewrite %r{^#{APP_PATH}(/.*(css|js|ttf|woff|html|png|jpg|jpeg|gif|svg)[?v=0-9.]*$)}, '$1'
 end
 
 use Rack::Session::Cookie,
