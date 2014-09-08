@@ -13,7 +13,7 @@
 	<div class="col-md-5 infos">
 	  <ul>
 	    <li><span ><i class="picto matiere"></i> Matière : <em>{{titre}}</em></span></li>
-	    <li><span ><i class="picto devoir"></i> Type de devoir : <em>{{devoir.type_devoir_description}}</em></span></li>
+	    <li><span ><i class="picto devoir"></i> Type de devoir : <em>{{devoir.type_devoir.description}}</em></span></li>
 	    <li data-ng-if="devoir.temps_estime > 0"><span><i class="picto temps"></i> Temps estimé : <em>{{devoir.temps_estime * 5}} minutes</em></span></li>
 	    <li class="clickable"
 		tooltip-trigger="click"
