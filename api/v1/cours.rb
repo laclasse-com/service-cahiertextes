@@ -22,13 +22,16 @@ module CahierDeTextesAPI
         requires :id, desc: 'id du cours'
       }
       get '/:id' do
-        if Cours[ params[:id] ].nil? || Cours[ params[:id] ].deleted
-          error!( 'Cours inconnu', 404 )
-        else
-          cours = Cours[ params[:id] ]
+        cours = Cours[ params[:id] ]
+        error!( 'Cours inconnu', 404 ) if cours.nil? || cours.deleted
 
-          cours.to_deep_hash unless cours.nil?
+        hcours = cours.to_deep_hash
+        # BUG: to_deep_hash casse les hash des ressources
+        hcours[:ressources] = cours.ressources.map do |ressource|
+          ressource.to_hash
         end
+
+        hcours
       end
 
       desc 'renseigne une séquence pédagogique'

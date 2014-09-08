@@ -232,6 +232,16 @@ angular.module( 'cahierDeTexteApp' )
 					       devoir.tooltip = '<span><i class="picto temps"></i>' + devoir.temps_estime * 5 + ' minutes</span><hr>' + devoir.tooltip;
 					   }
 				       } );
+
+				       _($scope.cours.ressources).each( function( ressource ) {
+					   ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+				       } );
+				       _($scope.cours.devoirs).each( function( devoir ) {
+					   _(devoir.ressources).each( function( ressource ) {
+					       ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+					   } );
+				       } );
+
 				   } );
 				   $scope.cours.create = false;
 			       }
@@ -245,6 +255,9 @@ angular.module( 'cahierDeTexteApp' )
 			       _( $scope.devoirs ).each( function ( devoir ) {
 				   devoir.$promise.then( function() {
 				       $scope.estimation_leave( devoir );
+				       _(devoir.ressources).each( function( ressource ) {
+					   ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+				       } );
 				   } );
 			       } );
 
