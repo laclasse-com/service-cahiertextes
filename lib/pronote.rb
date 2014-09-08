@@ -48,10 +48,12 @@ module ProNote
   end
 
   def corrige_semainiers( semainier, decalage )
+    semainier = semainier.to_i if semainier.is_a? String
     semainier = semainier.to_s 2
     pivot = semainier.length - decalage
     debut = semainier.slice( pivot, semainier.length )
     fin = semainier.slice( 0, pivot )
+
     "#{debut}#{fin}".to_i 2
   end
 
