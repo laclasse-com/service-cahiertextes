@@ -175,7 +175,7 @@ module ProNote
           end
         when 'Classe'
           unless node.name == 'text'
-            reponse_annuaire = Annuaire.search_regroupement( etablissement.UAI, classe['Nom'] )
+            reponse_annuaire = Annuaire.search_regroupement( etablissement.UAI, node['Nom'] )
             code_annuaire = reponse_annuaire['id'] unless reponse_annuaire.nil?
             regroupements[ 'Classe' ][ node['Ident'] ] = code_annuaire
 
