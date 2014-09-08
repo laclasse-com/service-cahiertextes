@@ -173,7 +173,7 @@ module ProNote
             rapport[:regroupements][:parties_de_classe][:error] << node if regroupements[ 'PartieDeClasse' ][ classe['Ident'] ].nil?
           end
         when 'Classe'
-          unless node.name == 'text'
+          unless node.name == 'text' || node['Nom'].nil?
             reponse_annuaire = Annuaire.search_regroupement( etablissement.UAI, node['Nom'] )
             code_annuaire = reponse_annuaire['id'] unless reponse_annuaire.nil?
             regroupements[ 'Classe' ][ node['Ident'] ] = code_annuaire
