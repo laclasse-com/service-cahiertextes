@@ -6,9 +6,11 @@ angular.module('cahierDeTexteApp')
 		  'CALENDAR_OPTIONS', 'CALENDAR_PARAMS', 'APP_PATH', 'API', 'Annuaire', 'EmploisDuTemps', 'User', 'CreneauEmploiDuTemps',
 		  function ( $scope, $modal, $q, $filter,
 			     CALENDAR_OPTIONS, CALENDAR_PARAMS, APP_PATH, API, Annuaire, EmploisDuTemps, User, CreneauEmploiDuTemps ) {
+				 var popup_ouverte = false;
 				 var filter_data = angular.identity;
 
 				 var popup_callback = function( scope_popup ) {
+				     popup_ouverte = false;
 				     var view = $scope.emploi_du_temps.fullCalendar( 'getView' );
 				     retrieve_data( view.visStart, view.visEnd );
 				 };
@@ -145,48 +147,54 @@ angular.module('cahierDeTexteApp')
 
 					 // édition d'un créneau existant
 					 $scope.calendar.options.eventClick = function ( event ) {
-					     CreneauEmploiDuTemps.get( { id: event.details.creneau_emploi_du_temps_id } )
-						 .$promise
-						 .then( function( creneau_selectionne ) {
-						     creneau_selectionne.dirty = false;
-						     creneau_selectionne.heure_debut = event.start;
-						     creneau_selectionne.heure_fin = event.end;
-						     creneau_selectionne.regroupement_id = event.details.regroupement_id;
+					     if ( !popup_ouverte ) {
+						 popup_ouverte = true;
+						 CreneauEmploiDuTemps.get( { id: event.details.creneau_emploi_du_temps_id } )
+						     .$promise
+						     .then( function( creneau_selectionne ) {
+							 creneau_selectionne.dirty = false;
+							 creneau_selectionne.heure_debut = event.start;
+							 creneau_selectionne.heure_fin = event.end;
+							 creneau_selectionne.regroupement_id = event.details.regroupement_id;
 
-						     ouvre_popup_edition( $scope.raw_data,
-									  $scope.current_user.profil_actif.matieres, $scope.current_user.profil_actif.classes,
-									  creneau_selectionne, event.details.cours, event.details.devoirs,
-									  popup_callback );
-						 } );
+							 ouvre_popup_edition( $scope.raw_data,
+									      $scope.current_user.profil_actif.matieres, $scope.current_user.profil_actif.classes,
+									      creneau_selectionne, event.details.cours, event.details.devoirs,
+									      popup_callback );
+						     } );
+					     }
 					 };
 
 					 // création d'un nouveau créneau
 					 // Le regroupement_id peut être null car on n'a pas fait de choix au niveau de la select box des classes sur full_calendar
 					 $scope.calendar.options.select = function ( start, end, allDay ) {
-					     // création du créneau avec les bons horaires
-					     start = $filter('correctTimeZone')(start);
-					     end = $filter('correctTimeZone')(end);
-					     var regroupement_id = _($scope.classe).isNull() ? null : '' + $scope.classe;
-					     var new_creneau = new CreneauEmploiDuTemps( { regroupement_id: regroupement_id,
-											   jour_de_la_semaine: start.getDay() + 1,
-											   heure_debut: new Date(new Date(start)).toISOString(),
-											   heure_fin: new Date(new Date(end)).toISOString(),
-											   matiere_id: '' } );
+					     if ( !popup_ouverte ) {
+						 popup_ouverte = true;
+						 // création du créneau avec les bons horaires
+						 start = $filter('correctTimeZone')(start);
+						 end = $filter('correctTimeZone')(end);
+						 var regroupement_id = _($scope.classe).isNull() ? null : '' + $scope.classe;
+						 var new_creneau = new CreneauEmploiDuTemps( { regroupement_id: regroupement_id,
+											       jour_de_la_semaine: start.getDay() + 1,
+											       heure_debut: new Date(new Date(start)).toISOString(),
+											       heure_fin: new Date(new Date(end)).toISOString(),
+											       matiere_id: '' } );
 
-					     new_creneau.$save()
-						 .then( function () {
-						     new_creneau.dirty = true;
-						     new_creneau.heure_debut = start;
-						     new_creneau.heure_fin = end;
-						     new_creneau.regroupement_id = regroupement_id;
+						 new_creneau.$save()
+						     .then( function () {
+							 new_creneau.dirty = true;
+							 new_creneau.heure_debut = start;
+							 new_creneau.heure_fin = end;
+							 new_creneau.regroupement_id = regroupement_id;
 
-						     ouvre_popup_edition( $scope.raw_data,
-									  $scope.current_user.profil_actif.matieres, $scope.current_user.profil_actif.classes,
-									  new_creneau, null, [],
-									  popup_callback );
+							 ouvre_popup_edition( $scope.raw_data,
+									      $scope.current_user.profil_actif.matieres, $scope.current_user.profil_actif.classes,
+									      new_creneau, null, [],
+									      popup_callback );
 
-						     $scope.emploi_du_temps.fullCalendar( 'unselect' );
-						 } );
+							 $scope.emploi_du_temps.fullCalendar( 'unselect' );
+						     } );
+					     }
 					 };
 
 					 $scope.calendar.options.eventRender = function ( event, element ) {
