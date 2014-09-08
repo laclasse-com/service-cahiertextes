@@ -311,6 +311,7 @@ angular.module( 'cahierDeTexteApp' )
 			       // 2. on ajoute les créneaux possible sur un mois.
 			       var cdp_tmp = [];
 			       var nb_semaines = 4;
+			       // FIXME: prendre en compte les semaines actives
 			       _( nb_semaines + 1 ).times( function ( n ) {
 				   _( creneaux_devoirs_possibles ).each( function ( c ) {
 				       var cdp_futurs = angular.copy( c );
