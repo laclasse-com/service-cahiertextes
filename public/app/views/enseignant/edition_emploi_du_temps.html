@@ -1,6 +1,7 @@
 <div class="modal-header">
   <button type="button" class="close pull-right" aria-hidden="true" data-ng-click="annuler()">&times;</button>
 
+  <h3>{{creneau.heure_debut | date : 'fullDate' }}</h3>
   <!-- {{{ Lecture seule -->
   <h3>
     <span data-ng-if="!creneau.en_creation">
@@ -87,7 +88,7 @@
   <tabset>
 
     <!-- ####################### Séquence Pédagogique du jour ####################### -->
-    <tab heading="Séquence pédagogique du {{creneau.heure_debut | date : 'fullDate' }}" >
+    <tab heading="Séquence pédagogique du jour" >
       <div class="row">
 	<div class="col-md-9 contenu">
 	  <div class="panel panel-default">
@@ -254,7 +255,7 @@
     </tab>
 
     <!-- ####################### Devoirs dûs ce jour ####################### -->
-    <tab heading="Travail à faire pour le {{creneau.heure_debut | date : 'fullDate' }}">
+    <tab heading="Travail à faire pour ce jour">
       <button class="btn btn-default ajout-devoir" data-ng-click="ajout_devoir( devoirs )">
 	<span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
       </button>
