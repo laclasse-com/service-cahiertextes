@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('ListeCahierDeTextesCtrl',
-		[ '$scope', '$modal', '$q', 'APP_PATH', 'API', 'Annuaire', 'EmploisDuTemps', 'User', 'CreneauEmploiDuTemps',
-		  function ( $scope, $modal, $q, APP_PATH, API, Annuaire, EmploisDuTemps, User, CreneauEmploiDuTemps ) {
+		[ '$scope', '$sce', '$modal', '$q', 'APP_PATH', 'API', 'Annuaire', 'EmploisDuTemps', 'User', 'CreneauEmploiDuTemps',
+		  function ( $scope, $sce, $modal, $q, APP_PATH, API, Annuaire, EmploisDuTemps, User, CreneauEmploiDuTemps ) {
 		      var matieres = [];
 		      var matieres_enseignees = [];
 		      $scope.selected_regroupement_id = null;
@@ -94,9 +94,19 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      $scope.refresh_data = function() {
-			  $scope.creneaux_saisies = filter_class( filter_creneaux_avec_saisies( $scope.raw_data ), $scope.selected_regroupement_id );
 			  $scope.creneaux_vides = filter_class( filter_creneaux_vides( $scope.raw_data ), $scope.selected_regroupement_id );
 			  $scope.selected_creneau_vide = null;
+			  $scope.creneaux_saisies = filter_class( filter_creneaux_avec_saisies( $scope.raw_data ), $scope.selected_regroupement_id );
+			  _($scope.creneaux_saisies).each( function( creneau ) {
+			      _(creneau.cours.ressources).each( function( ressource ) {
+				  ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+			      } );
+			      _(creneau.devoirs).each( function( devoir ) {
+				  _(devoir.ressources).each( function( ressource ) {
+				      ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+				  } );
+			      } );
+			  } );
 		      };
 
 		      var list_matieres = function(raw_data) {

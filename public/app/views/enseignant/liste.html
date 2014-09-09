@@ -52,6 +52,11 @@
 	</div>
 
 	<div class="pull-left contenu" data-ng-bind-html="creneau.cours.contenu"></div>
+	<ul>
+	  <li data-ng-repeat="ressource in creneau.cours.ressources">
+	    <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
+	  </li>
+	</ul>
 
 	<div class="pull-right detail">
 	  <button class="btn btn-default" data-ng-click="edition_creneau( creneau )">Accéder</button>
@@ -77,6 +82,12 @@
 		  </div>
 
 		  <div class="pull-left contenu" data-ng-bind-html="devoir.contenu"></div>
+		  <ul>
+		    <li data-ng-repeat="ressource in devoir.ressources">
+		      <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
+		    </li>
+		  </ul>
+
 		  <div class="clearfix"></div>
 		</li>
 	      </ul>
