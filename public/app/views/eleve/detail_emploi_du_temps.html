@@ -34,7 +34,7 @@
 
 	  <ul data-ng-if="devoir.ressources.length > 0">
 	    <li data-ng-repeat="ressource in devoir.ressources">
-	      <a target="_blank" href="http://www.dev.laclasse.com/docs-beta/api/connector?cmd=file&target={{ressource.hash}}">{{ressource.name}}</a>
+	      <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
 	    </li>
 	  </ul>
 	</div>
@@ -59,7 +59,7 @@
 
 	  <ul data-ng-if="cours.ressources.length > 0">
 	    <li data-ng-repeat="ressource in cours.ressources">
-	      <a target="_blank" href="http://www.dev.laclasse.com/docs-beta/api/connector?cmd=file&target={{ressource.hash}}">{{ressource.name}}</a>
+	      <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
 	    </li>
 	  </ul>
 	</div>
