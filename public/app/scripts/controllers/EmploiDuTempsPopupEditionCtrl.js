@@ -65,6 +65,7 @@ angular.module( 'cahierDeTexteApp' )
 			   };
 			   $scope.semaines_actives = { regroupement: [] };
 			   $scope.apply_template = function( template_name ) {
+			       // TODO: Gestion des vacances scolaires
 			       var template = [];
 			       switch( template_name ) {
 			       case 'semaine_A':
