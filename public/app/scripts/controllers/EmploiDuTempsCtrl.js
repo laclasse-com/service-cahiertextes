@@ -119,6 +119,7 @@ angular.module('cahierDeTexteApp')
 						     function ( scope_popup ) {
 							 popup_callback( scope_popup );
 						     } );
+					     popup_ouverte = false;
 					 };
 
 					 $scope.uniquement_mes_creneaux = true;
@@ -222,6 +223,7 @@ angular.module('cahierDeTexteApp')
 							).result.then( function( scope_popup ) {
 							    popup_callback( scope_popup );
 							} );
+					     popup_ouverte = false;
 					 };
 
 					 $scope.calendar.options.eventRender = function( event, element ) {
