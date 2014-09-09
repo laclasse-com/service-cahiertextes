@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('ListeCahierDeTextesCtrl',
-		[ '$scope', '$sce', '$modal', '$q', 'APP_PATH', 'API', 'Annuaire', 'EmploisDuTemps', 'User', 'CreneauEmploiDuTemps',
-		  function ( $scope, $sce, $modal, $q, APP_PATH, API, Annuaire, EmploisDuTemps, User, CreneauEmploiDuTemps ) {
+		[ '$scope', '$sce', '$modal', '$q', 'APP_PATH', 'DOCS_URL', 'API', 'Annuaire', 'EmploisDuTemps', 'User', 'CreneauEmploiDuTemps',
+		  function ( $scope, $sce, $modal, $q, APP_PATH, DOCS_URL, API, Annuaire, EmploisDuTemps, User, CreneauEmploiDuTemps ) {
 		      var matieres = [];
 		      var matieres_enseignees = [];
 		      $scope.selected_regroupement_id = null;
