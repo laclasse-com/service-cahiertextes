@@ -3,7 +3,8 @@
 // Note: pour des raisons pratiques certaines constantes sémantiquement parlant sont en fait des factory ou des services
 
 angular.module( 'cahierDeTexteApp' )
-    .constant('API_VERSION', 'v1')
+    .constant( 'API_VERSION', 'v1' )
+    .constant( 'SEMAINES_TOUTES_ACTIVES', 9007199254740991 )
 // Configuration d'angular-moment
     .constant('angularMomentConfig', {
 	timezone: 'Europe/Paris'

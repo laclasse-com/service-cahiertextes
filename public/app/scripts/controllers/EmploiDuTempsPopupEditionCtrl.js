@@ -2,8 +2,8 @@
 
 angular.module( 'cahierDeTexteApp' )
     .controller( 'EmploiDuTempsPopupEditionCtrl',
-		 [ '$scope', '$filter', '$q', '$sce', '$modalInstance', 'APP_PATH', 'DOCS_URL', 'Documents', 'API', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs', 'User', 'cours', 'devoirs', 'creneau', 'raw_data', 'classes', 'matieres',
-		   function ( $scope, $filter, $q, $sce, $modalInstance, APP_PATH, DOCS_URL, Documents, API, CreneauEmploiDuTemps, Cours, Devoirs, User, cours, devoirs, creneau, raw_data, classes, matieres ) {
+		 [ '$scope', '$filter', '$q', '$sce', '$modalInstance', 'APP_PATH', 'DOCS_URL', 'SEMAINES_TOUTES_ACTIVES', 'Documents', 'API', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs', 'User', 'cours', 'devoirs', 'creneau', 'raw_data', 'classes', 'matieres',
+		   function ( $scope, $filter, $q, $sce, $modalInstance, APP_PATH, DOCS_URL, SEMAINES_TOUTES_ACTIVES, Documents, API, CreneauEmploiDuTemps, Cours, Devoirs, User, cours, devoirs, creneau, raw_data, classes, matieres ) {
 		       $scope.app_path = APP_PATH;
 		       $scope.erreurs = [];
 		       $scope.faulty_docs_app = false;
@@ -81,7 +81,7 @@ angular.module( 'cahierDeTexteApp' )
 				   $scope.semaines_actives.regroupement = template;
 				   break;
 			       case 'initialize':
-				   $scope.semaines_actives.regroupement = fixnum_to_bitfield( $scope.creneau.en_creation ? 9007199254740991 : _(creneau.regroupements).findWhere( { regroupement_id: creneau.regroupement_id } ).semaines_de_presence );
+				   $scope.semaines_actives.regroupement = fixnum_to_bitfield( $scope.creneau.en_creation ? SEMAINES_TOUTES_ACTIVES : _(creneau.regroupements).findWhere( { regroupement_id: creneau.regroupement_id } ).semaines_de_presence );
 				   break;
 			       }
 			   };
