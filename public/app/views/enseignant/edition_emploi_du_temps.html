@@ -4,7 +4,7 @@
   <h3>{{creneau.heure_debut | date : 'fullDate' }}</h3>
   <!-- {{{ Lecture seule -->
   <h3>
-    <span data-ng-if="!creneau.en_creation">
+    <span data-ng-if="!creneau.en_creation || !creneau.vierge">
       {{classe.libelle}} - {{matiere.libelle_long}} ({{creneau.heure_debut | date: 'shortTime'}} - {{creneau.heure_fin | date: 'shortTime'}})
     </span>
   </h3>
@@ -12,8 +12,7 @@
 
   <!-- {{{ Édition -->
   <div class="edition-creneau" data-ng-if="creneau.en_creation">
-    <h3>Ajouter un créneau - {{creneau.heure_debut | date: 'fullDate'}}</h3>
-    <div class="row">
+    <div class="row" data-ng-if="creneau.vierge">
       <div class="col-md-6">
 	<label>Choisir la classe :</label>
 	<select data-ng-model="scope.classe"
@@ -31,7 +30,7 @@
       </div>
     </div>
 
-    <div class="row">
+    <div class="row" data-ng-if="creneau.vierge">
       <div class="col-md-12">
 	<label>Choisir l'horaire :</label>
 	de

@@ -25,6 +25,7 @@ module CahierDeTextesAPI
         h[:regroupements] = creneau.regroupements
         h[:enseignants] = creneau.enseignants
         h[:salles] = creneau.salles
+        h[:vierge] = creneau.cours.count == 0 && creneau.devoirs.count == 0
 
         if expand
           h[:cours] = Cours.where( creneau_emploi_du_temps_id: params[:id] ).where( deleted: false ).where( date_cours: params[:debut] .. params[:fin] )
