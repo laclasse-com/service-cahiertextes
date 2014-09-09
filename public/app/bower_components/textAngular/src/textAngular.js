@@ -32,7 +32,7 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 			globalContentEditableBlur = false;
 		}, false); // add global click handler
 		angular.element(document).ready(function () {
-			angular.element(document.body).append(angular.element('<input id="textAngular-editableFix-010203040506070809" style="width:1px;height:1px;border:none;margin:0;padding:0;position:absolute; top: -10000; left: -10000;" unselectable="on" tabIndex="-1">'));
+			angular.element(document.body).append(angular.element('<input id="textAngular-editableFix-010203040506070809" style="width:1px;height:1px;border:none;margin:0;padding:0;position:absolute; top: -10000px; left: -10000px;" unselectable="on" tabIndex="-1">'));
 		});
 	}
 	// IE version detection - http://stackoverflow.com/questions/4169160/javascript-ie-detection-why-not-use-simple-conditional-comments
@@ -68,11 +68,11 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 		return ((rv > -1) ? rv : undef);
 	}());
 
-	// Thanks to answer in http://stackoverflow.com/questions/2308134/trim-in-javascript-not-working-in-ie
+	// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim#Compatibility
 	/* istanbul ignore next: trim shim for older browsers */
-	if(typeof String.prototype.trim !== 'function') {
-		String.prototype.trim = function() {
-			return this.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+	if (!String.prototype.trim) {
+		String.prototype.trim = function () {
+			return this.replace(/^\s+|\s+$/g, '');
 		};
 	}
 
@@ -784,7 +784,7 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 		return function(taDefaultWrap){
 			taDefaultWrap = taBrowserTag(taDefaultWrap);
 			return function(command, showUI, options){
-				var i, $target, html, _nodes, next;
+				var i, $target, html, _nodes, next, optionsTagName;
 				var defaultWrapper = angular.element('<' + taDefaultWrap + '>');
 				var selectedElement = taSelection.getSelectionElement();
 				var $selected = angular.element(selectedElement);
@@ -849,7 +849,7 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 							return;
 						}
 					}else if(command.toLowerCase() === 'formatblock'){
-						var optionsTagName = options.toLowerCase().replace(/[<>]/ig, '');
+						optionsTagName = options.toLowerCase().replace(/[<>]/ig, '');
 						if(tagName === 'li') $target = $selected.parent();
 						else $target = $selected;
 						// find the first blockElement
@@ -958,16 +958,18 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 				var _isReadonly = false;
 				var _focussed = false;
 				var _disableSanitizer = attrs.taUnsafeSanitizer || taOptions.disableSanitizer;
+				var BLOCKED_KEYS = /^(9|19|20|27|33|34|35|36|37|38|39|40|45|46|112|113|114|115|116|117|118|119|120|121|122|123|144|145)$/;
 				
 				// defaults to the paragraph element, but we need the line-break or it doesn't allow you to type into the empty element
 				// non IE is '<p><br/></p>', ie is '<p></p>' as for once IE gets it correct...
-				var _defaultVal, _defaultTest;
+				var _defaultVal, _defaultTest, _trimTest;
 				// set the default to be a paragraph value
 				if(attrs.taDefaultWrap === undefined) attrs.taDefaultWrap = 'p';
 				/* istanbul ignore next: ie specific test */
 				if(attrs.taDefaultWrap === ''){
 					_defaultVal = '';
 					_defaultTest = (ie === undefined)? '<div><br></div>' : (ie >= 11)? '<p><br></p>' : (ie <= 8)? '<P>&nbsp;</P>' : '<p>&nbsp;</p>';
+					_trimTest = (ie === undefined)? /^<div>(\s|&nbsp;)*<\/div>$/ig : /^<p>(\s|&nbsp;)*<\/p>$/ig;
 				}else{
 					_defaultVal = (ie === undefined || ie >= 11)?
 						'<' + attrs.taDefaultWrap + '><br></' + attrs.taDefaultWrap + '>' :
@@ -979,8 +981,9 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 						(ie <= 8)?
 							'<' + attrs.taDefaultWrap.toUpperCase() + '>&nbsp;</' + attrs.taDefaultWrap.toUpperCase() + '>' :
 							'<' + attrs.taDefaultWrap + '>&nbsp;</' + attrs.taDefaultWrap + '>';
+					_trimTest = new RegExp('^<' + attrs.taDefaultWrap + '>(\\s|&nbsp;)*<\\/' + attrs.taDefaultWrap + '>$', 'ig');
 				}
-
+				
 				element.addClass('ta-bind');
 
 				// in here we are undoing the converts used elsewhere to prevent the < > and & being displayed when they shouldn't in the code.
@@ -992,7 +995,7 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 				
 				var _setViewValue = function(val){
 					if(!val) val = _compileHtml();
-					if(val === _defaultTest){
+					if(val === _defaultTest || val.match(_trimTest)){
 						// this avoids us from tripping the ng-pristine flag if we click in and out with out typing
 						if(ngModel.$viewValue !== '') ngModel.$setViewValue('');
 					}else{
@@ -1061,7 +1064,7 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 						element.on('keyup', function(event, eventData){
 							/* istanbul ignore else: this is for catching the jqLite testing*/
 							if(eventData) angular.extend(event, eventData);
-							if(!_isReadonly){
+							if(!_isReadonly && !BLOCKED_KEYS.test(event.keyCode)){
 								// if enter - insert new taDefaultWrap, if shift+enter insert <br/>
 								if(_defaultVal !== '' && event.keyCode === 13){
 									if(!event.shiftKey){
@@ -1125,7 +1128,7 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 				
 				// trigger the validation calls
 				var _validity = function(value){
-					if(attrs.required) ngModel.$setValidity('required', !(!value || value.trim() === _defaultTest || value.trim() === ''));
+					if(attrs.required) ngModel.$setValidity('required', !(!value || value.trim() === _defaultTest || value.trim().match(_trimTest) || value.trim() === ''));
 					return value;
 				};
 				// parsers trigger from the above keyup function or any other time that the viewValue is updated and parses it for storage in the ngModel
@@ -1934,22 +1937,13 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 			return rangeNodes;
 		};
 		return {
-			getOnlySelectedElements: function(){
-				if (window.getSelection) {
-					var sel = $window.getSelection();
-					if (!sel.isCollapsed) {
-						return getRangeSelectedNodes(sel.getRangeAt(0));
-					}
-				}
-				return [];
-			},
-			// Some basic selection functions
-			getSelectionElement: function () {
+			getSelection: function(){
 				var range, sel, container;
 				if (_document.selection && _document.selection.createRange) {
 					// IE case
 					range = _document.selection.createRange();
-					return range.parentElement();
+					container = range.parentElement();
+					sel = {isCollapsed: range.text.length === 0};
 				} else if ($window.getSelection) {
 					sel = $window.getSelection();
 					if (sel.getRangeAt) {
@@ -1962,7 +1956,7 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 						range = _document.createRange();
 						range.setStart(sel.anchorNode, sel.anchorOffset);
 						range.setEnd(sel.focusNode, sel.focusOffset);
-
+						
 						// Handle the case when the selection was selected backwards (from the end to the start in the document)
 						if (range.collapsed !== sel.isCollapsed) {
 							range.setStart(sel.focusNode, sel.focusOffset);
@@ -1974,9 +1968,45 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 						container = range.commonAncestorContainer;
 
 						// Check if the container is a text node and return its parent if so
-						return container.nodeType === 3 ? container.parentNode : container;
+						container = container.nodeType === 3 ? container.parentNode : container;
 					}
 				}
+				if (range) return {
+					start: {
+						element: range.startContainer,
+						offset: range.startOffset
+					},
+					end: {
+						element: range.endContainer,
+						offset: range.endOffset
+					},
+					container: container,
+					collapsed: sel.isCollapsed
+					
+				};
+				else return {
+					start: {
+						offset: 0
+					},
+					end: {
+						offset: 0
+					},
+					container: undefined,
+					collapsed: true
+				};
+			},
+			getOnlySelectedElements: function(){
+				if (window.getSelection) {
+					var sel = $window.getSelection();
+					if (!sel.isCollapsed) {
+						return getRangeSelectedNodes(sel.getRangeAt(0));
+					}
+				}
+				return [];
+			},
+			// Some basic selection functions
+			getSelectionElement: function () {
+				return this.getSelection().container;
 			},
 			setSelectionToElementStart: function (el){
 				if (_document.createRange && $window.getSelection) {

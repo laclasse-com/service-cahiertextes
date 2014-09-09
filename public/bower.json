@@ -1,46 +1,50 @@
 {
-    "name": "cahierDeTexte",
-    "version": "0.0.0",
-    "dependencies": {
-	"angular": "latest",
-	"angular-bootstrap": "latest",
-	"angular-cookies": "latest",
-	"ng-grid": "latest",
-	"angular-i18n": "latest",
-	"angular-mocks": "latest",
-	"angular-resource": "latest",
-	"angular-sanitize": "latest",
-	"angular-scenario": "latest",
-	"angular-ui-calendar": "latest",
-	"angular-ui-router": "latest",
-	"bootstrap": "latest",
-	"es5-shim": "latest",
-	"json3": "latest",
-	"select2-bootstrap-css": "latest",
-	"sizzle": "latest",
-	"swagger-ui": "latest",
-	"underscore": "latest",
-	"angular-animate": "latest",
-	"angular-loading-bar": "latest",
-	"charte-graphique-laclasse-com": "git@gitlab.erasme.org:laclasse/charte-graphique-laclasse-com.git#latest",
-	"angularjs-nvd3-directives": "latest",
-	"angular-tree-control": "latest",
-	"angular-moment": "latest",
-	"textAngular": "latest",
-	"ng-switcher": "latest",
-	"font-awesome": "latest",
-	"ng-file-upload": "latest"
-    },
-    "devDependencies": {
-	"angular-mocks": "latest",
-	"angular-scenario": "latest"
-    },
-    "ignore": [
-	"**/.*",
-	"node_modules",
-	"components",
-	"bower_components",
-	"test",
-	"tests"
-    ]
+  "name": "cahierDeTexte",
+  "version": "0.0.0",
+  "dependencies": {
+    "angular": "latest",
+    "angular-bootstrap": "latest",
+    "angular-cookies": "latest",
+    "ng-grid": "latest",
+    "angular-i18n": "latest",
+    "angular-mocks": "latest",
+    "angular-resource": "latest",
+    "angular-sanitize": "latest",
+    "angular-scenario": "latest",
+    "angular-ui-calendar": "latest",
+    "angular-ui-router": "latest",
+    "bootstrap": "latest",
+    "es5-shim": "latest",
+    "json3": "latest",
+    "select2-bootstrap-css": "latest",
+    "sizzle": "latest",
+    "swagger-ui": "latest",
+    "underscore": "latest",
+    "angular-animate": "latest",
+    "angular-loading-bar": "latest",
+    "charte-graphique-laclasse-com": "git@gitlab.erasme.org:laclasse/charte-graphique-laclasse-com.git#latest",
+    "angularjs-nvd3-directives": "latest",
+    "angular-tree-control": "latest",
+    "angular-moment": "latest",
+      "textAngular": "https://github.com/fraywing/textAngular.git#master",
+    "ng-switcher": "latest",
+    "font-awesome": "latest",
+    "ng-file-upload": "latest"
+  },
+  "devDependencies": {
+    "angular-mocks": "latest",
+    "angular-scenario": "latest"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "resolutions": {
+    "jquery": "~2.x",
+    "d3": "~3.4.1"
+  }
 }

@@ -1,6 +1,6 @@
 {
   "name": "angular-moment",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "Moment.JS directives & filters for Angular.JS (timeago alternative)",
   "author": "Uri Shaked",
   "license": "MIT",
@@ -19,11 +19,11 @@
     "type": "git",
     "url": "git://github.com/urish/angular-moment.git"
   },
-  "_release": "0.8.1",
+  "_release": "0.8.2",
   "_resolution": {
     "type": "version",
-    "tag": "0.8.1",
-    "commit": "1cf5e5682544096d65c2884c345d575c39737eb5"
+    "tag": "0.8.2",
+    "commit": "62b9f6027ebcc9d95ab07626a6d80ede4b170c65"
   },
   "_source": "git://github.com/urish/angular-moment.git",
   "_target": "*",
