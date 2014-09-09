@@ -34,6 +34,7 @@ module CahierDeTextesAPI
         CreneauEmploiDuTemps
           .association_join( :enseignants )
           .association_join( :regroupements )
+          .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{1.year.ago}'" )
           .where( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{params[:fin]}')" )
           .where( regroupement_id: regroupements_ids )
           .all
