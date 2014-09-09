@@ -347,16 +347,17 @@ angular.module( 'cahierDeTexteApp' )
 			       // {{{ Gestion des documents attachés
 			       $scope.cartable = {};
 			       $scope.cartable.expandedNodes = [];
-			       Documents.list_files().success( function ( response ) {
-				   $scope.cartable = response;
-				   $scope.cartable.files = _.chain( $scope.cartable.files )
-				       .rest()
-				       .value()
-				       .map( function ( elt ) {
-					   elt.children = [];
-					   return elt;
-				       } );
-			       } )
+			       Documents.list_files()
+				   .success( function ( response ) {
+				       $scope.cartable = response;
+				       $scope.cartable.files = _.chain( response.files )
+					   .rest()
+					   .value()
+					   .map( function ( elt ) {
+					       elt.children = [];
+					       return elt;
+					   } );
+				   } )
 				   .error( function() {
 				       $scope.faulty_docs_app = true;
 				   });
