@@ -7,11 +7,6 @@ module CahierDeTextesAPI
   module V1
     class CreneauxEmploiDuTempsAPI < Grape::API
 
-      desc 'renvoi les créneaux'
-      get  do
-        CreneauEmploiDuTemps.all
-      end
-
       desc 'renvoi un créneau'
       params {
         requires :id
