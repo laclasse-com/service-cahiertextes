@@ -213,6 +213,12 @@ angular.module( 'cahierDeTexteApp' )
 				   $scope.estimation_over( d, d.temps_estime );
 			       };
 
+			       $scope.devoirs = devoirs.map( function( devoir ) {
+				   return Devoirs.get( { id: devoir.id } );
+			       } );
+
+			       $scope.types_de_devoir = API.query_types_de_devoir();
+
 			       if ( _(cours).isNull() ) {
 				   if ( !$scope.creneau.etranger ) {
 				       $scope.cours = create_cours( creneau );
@@ -236,6 +242,12 @@ angular.module( 'cahierDeTexteApp' )
 					   }
 				       } );
 
+				       $q.all( $scope.devoirs ).then( function() {
+					   $scope.cours.devoirs = _($scope.cours.devoirs).filter( function( devoir ) {
+					       return _.chain($scope.devoirs).findWhere({ id: devoir.id }).isUndefined().value();
+					   } );
+				       } );
+
 				       _($scope.cours.ressources).each( function( ressource ) {
 					   ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
 				       } );
@@ -249,29 +261,15 @@ angular.module( 'cahierDeTexteApp' )
 				   $scope.cours.create = false;
 			       }
 
-			       $scope.devoirs = devoirs.map( function( devoir ) {
-				   return Devoirs.get( { id: devoir.id } );
-			       } );
-
-			       $scope.types_de_devoir = API.query_types_de_devoir();
-
-			       $scope.devoirs = _.chain( $scope.devoirs )
-				   .map( function ( devoir ) {
+			       _( $scope.devoirs )
+				   .each( function ( devoir ) {
 				       devoir.$promise.then( function() {
-					   var devoir_du_cours = _($scope.cours.devoirs).findWhere( { id: devoir.id } );
-					   if ( !_(devoir_du_cours).isUndefined() ) {
-					       devoir = devoir_du_cours;
-					   }
 					   $scope.estimation_leave( devoir );
 					   _(devoir.ressources).each( function( ressource ) {
 					       ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
 					   } );
-
-					   return devoir;
 				       } );
-				   } )
-				   .compact()
-				   .value();
+				   } );
 
 			       // Fonction UI pour fixer l'id du créneau en fct du choix dans la sbox des créneaux possibles.
 			       $scope.set_creneau_date_due = function ( devoir ) {
