@@ -5,11 +5,14 @@ angular.module( 'cahierDeTexteApp' )
 		 [ '$scope', '$filter', '$q', '$sce', '$modalInstance', 'APP_PATH', 'DOCS_URL', 'SEMAINES_TOUTES_ACTIVES', 'Documents', 'API', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs', 'User', 'cours', 'devoirs', 'creneau', 'raw_data', 'classes', 'matieres',
 		   function ( $scope, $filter, $q, $sce, $modalInstance, APP_PATH, DOCS_URL, SEMAINES_TOUTES_ACTIVES, Documents, API, CreneauEmploiDuTemps, Cours, Devoirs, User, cours, devoirs, creneau, raw_data, classes, matieres ) {
 		       $scope.app_path = APP_PATH;
-		       $scope.erreurs = [];
+		       $scope.DOCS_URL_login = $sce.trustAsResourceUrl( DOCS_URL + '/login' );
 		       $scope.faulty_docs_app = false;
+
+		       $scope.erreurs = [];
 		       $scope.dirty = false;
 		       $scope.accordion_cours_devoirs_open = false;
 		       $scope.deleted = false;
+		       $scope.mode_duplication = false;
 
 		       // http://stackoverflow.com/questions/19408883/angularjs-select-not-2-way-binding-to-model
 		       $scope.scope = $scope;
@@ -34,26 +37,24 @@ angular.module( 'cahierDeTexteApp' )
 			   };
 
 			   // Initialisations {{{
-			   $scope.DOCS_URL_login = $sce.trustAsResourceUrl( DOCS_URL + '/login' );
+			   $scope.classes = classes;
+			   $scope.matieres = matieres;
 
-			   $scope.mode_duplication = false;
 			   $scope.creneau = creneau;
 			   $scope.creneau.etranger = !_.chain( $scope.creneau.enseignants ).pluck( 'enseignant_id' ).include( $scope.current_user.uid ).value();
-			   $scope.creneau.deleted = false;
 			   $scope.creneau.previous_regroupement_id = $scope.creneau.regroupement_id;
-			   $scope.matieres = matieres;
-			   $scope.classes = classes;
-			   $scope.creneau.en_creation = $scope.creneau.matiere_id.length == 0 || $scope.creneau.regroupement_id === undefined;
-			   $scope.creneau.tmp_heure_debut = angular.copy( $scope.creneau.heure_debut );
-			   $scope.creneau.tmp_heure_fin = angular.copy( $scope.creneau.heure_fin );
+			   $scope.creneau.en_creation = _($scope.creneau.matiere_id).isEmpty() || $scope.creneau.regroupement_id === 'undefined';
 			   if ( $scope.creneau.en_creation ) {
 			       $scope.creneau.tmp_heure_debut = $filter( 'correctTimeZoneToGMT' )( $scope.creneau.heure_debut );
 			       $scope.creneau.tmp_heure_fin = $filter( 'correctTimeZoneToGMT' )( $scope.creneau.heure_fin );
+			       $scope.classe = _( $scope.classes ).first();
+			       $scope.matiere = _( $scope.matieres ).first();
+			   } else {
+			       $scope.creneau.tmp_heure_debut = angular.copy( $scope.creneau.heure_debut );
+			       $scope.creneau.tmp_heure_fin = angular.copy( $scope.creneau.heure_fin );
+			       $scope.classe = _( $scope.classes ).findWhere( { id: parseInt( $scope.creneau.regroupement_id ) } );
+			       $scope.matiere = _($scope.matieres).findWhere( { id: $scope.creneau.matiere_id } );
 			   }
-			   $scope.matiere_id = $scope.creneau.matiere_id.length > 0 ? $scope.creneau.matiere_id : _.chain( $scope.matieres ).values().first().value().id;
-			   $scope.regroupement_id = $scope.creneau.regroupement_id !== 'undefined' ? parseInt( $scope.creneau.regroupement_id ) : _( $scope.classes ).first().id;
-			   $scope.classe = _( $scope.classes ).findWhere( { id: parseInt( $scope.regroupement_id ) } );
-			   $scope.matiere = _($scope.matieres).findWhere( { id: $scope.matiere_id } );
 
 			   // Gestion des semaines actives
 			   var fixnum_to_bitfield = function( fixnum ) {
@@ -103,7 +104,7 @@ angular.module( 'cahierDeTexteApp' )
 			   };
 
 			   $scope.annuler = function () {
-			       if ( $scope.creneau.en_creation && $scope.creneau.matiere_id === '' && $scope.creneau.regroupement_id === 'undefined' ) {
+			       if ( $scope.creneau.en_creation && _($scope.creneau.matiere_id).isEmpty() && $scope.creneau.regroupement_id === 'undefined' ) {
 				   $scope.effacer_creneau();
 			       } else {
 				   $scope.dirty = false;
@@ -117,8 +118,8 @@ angular.module( 'cahierDeTexteApp' )
 			       var promesses = [];
 
 			       if ( $scope.creneau.en_creation ) {
-				   $scope.creneau.matiere_id = $scope.matiere_id;
-				   $scope.creneau.regroupement_id = $scope.regroupement_id;
+				   $scope.creneau.matiere_id = $scope.matiere.id;
+				   $scope.creneau.regroupement_id = $scope.classe.id;
 				   $scope.creneau.heure_debut = $filter('correctTimeZone')( $scope.creneau.tmp_heure_debut );
 				   $scope.creneau.heure_fin = $filter('correctTimeZone')( $scope.creneau.tmp_heure_fin );
 				   $scope.creneau.semaines_de_presence_regroupement = bitfield_to_fixnum( $scope.semaines_actives.regroupement );
@@ -134,7 +135,7 @@ angular.module( 'cahierDeTexteApp' )
 					       // FIXME: on $save() ou $update() tous les devoirs qu'ils aient été modifiés ou non
 					       var prom = $q.defer();
 					       if ( devoir.create ) {
-						   devoir.regroupement_id = $scope.regroupement_id;
+						   devoir.regroupement_id = $scope.classe.id;
 						   if ( ! _(cours).isNull() ) {
 						       devoir.cours_id = cours.id;
 						   }
@@ -174,7 +175,7 @@ angular.module( 'cahierDeTexteApp' )
 				       });
 
 				       if ( $scope.cours.create ) {
-					   $scope.cours.regroupement_id = $scope.regroupement_id;
+					   $scope.cours.regroupement_id = $scope.classe.id;
 					   $scope.cours.creneau_emploi_du_temps_id = $scope.creneau.id;
 					   promesse = $scope.cours.$save();
 				       } else {
@@ -302,7 +303,7 @@ angular.module( 'cahierDeTexteApp' )
 			       // 1. sélection des créneaux possibles en fonction du regroupement et de la matière.
 			       var creneaux_devoirs_possibles = _.chain( raw_data )
 				       .filter( function ( creneau ) {
-					   return ( creneau.regroupement_id == $scope.regroupement_id ) && ( creneau.matiere_id == $scope.matiere_id );
+					   return ( creneau.regroupement_id == $scope.classe.id ) && ( creneau.matiere_id == $scope.matiere.id );
 				       } )
 				       .map( function ( creneau ) {
 					   creneau.classe = _( $scope.classes ).findWhere( {
