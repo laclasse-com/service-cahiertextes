@@ -99,30 +99,58 @@ angular.module( 'cahierDeTexteApp' )
 				       } ] )
     .config(['$provide', function($provide){
 	// this demonstrates how to register a new tool and add it to the default toolbar
-	$provide.decorator('taOptions', ['$delegate', function(taOptions){
-	    // $delegate is the taOptions we are decorating
-	    // here we override the default toolbars and classes specified in taOptions.
-	    // taOptions.toolbar = [
-	    //     ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'pre', 'quote'],
-	    //     ['bold', 'italics', 'underline', 'ul', 'ol', 'redo', 'undo', 'clear'],
-	    //     ['justifyLeft','justifyCenter','justifyRight'],
-	    //     ['html', 'insertImage', 'insertLink', 'unlink']
-	    // ];
-	    taOptions.toolbar = [
-		[ 'bold', 'italics', 'underline', 'ul', 'ol', 'quote', 'justifyLeft', 'justifyCenter', 'justifyRight', 'insertLink', 'redo', 'undo', 'clear' ]
-	    ];
-	    taOptions.classes = {
-		focussed: 'focussed',
-		toolbar: 'btn-toolbar',
-		toolbarGroup: 'btn-group',
-		toolbarButton: 'btn btn-default',
-		toolbarButtonActive: 'active',
-		disabled: 'disabled',
-		textEditor: 'form-control',
-		htmlEditor: 'form-control'
-	    };
-	    return taOptions; // whatever you return will be the taOptions
-	}]);
+	$provide.decorator( 'taOptions',
+			    [ '$delegate', 'taRegisterTool',
+			      function( taOptions, taRegisterTool ){
+				  // $delegate is the taOptions we are decorating
+				  // here we override the default toolbars and classes specified in taOptions.
+				  // taOptions.toolbar = [
+				  //     ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'pre', 'quote'],
+				  //     ['bold', 'italics', 'underline', 'ul', 'ol', 'redo', 'undo', 'clear'],
+				  //     ['justifyLeft','justifyCenter','justifyRight'],
+				  //     ['html', 'insertImage', 'insertLink', 'unlink']
+				  // ];
+
+				  taOptions.toolbar = [
+				      [ 'bold', 'italics', 'underline', 'ul', 'ol', 'quote', 'justifyLeft', 'justifyCenter', 'justifyRight', 'insertLink', 'redo', 'undo' ]
+				  ];
+
+				  taRegisterTool( 'fontColor', {
+				      display: "<span class='bar-btn-dropdown'><button type='button' colorpicker colorpicker-text-editor='true' colorpicker-parent='true' class='btn btn-default' ng-disabled='showHtml()' tooltip='couleur du texte'> <i class='fa fa-font' style='color:red'></i><i class='fa fa-caret-down'></i></button></span>",
+				      action: function( color ) {
+					  if ( color !== '' && !_(color).isObject() ) {
+					      return this.$editor().wrapSelection('forecolor', color);
+					  } else {
+					      return null;
+					  }
+				      }
+				  });
+				  taOptions.toolbar[0].push( 'fontColor' );
+
+				  taRegisterTool( 'backgroundColor', {
+				      display: "<span class='bar-btn-dropdown'><button type='button' colorpicker colorpicker-text-editor='true' colorpicker-parent='true' class='btn btn-default' ng-disabled='showHtml()' tooltip='couleur du fond'> <i class='fa fa-font' style='background-color:red'></i><i class='fa fa-caret-down'></i></button></span>",
+				      action: function( color ) {
+					  if ( color !== '' && !_(color).isObject() ) {
+					      return this.$editor().wrapSelection('backcolor', color);
+					  } else {
+					      return null;
+					  }
+				      }
+				  });
+				  taOptions.toolbar[0].push( 'backgroundColor' );
+
+				  taOptions.classes = {
+				      focussed: 'focussed',
+				      toolbar: 'btn-toolbar',
+				      toolbarGroup: 'btn-group',
+				      toolbarButton: 'btn btn-default',
+				      toolbarButtonActive: 'active',
+				      disabled: 'disabled',
+				      textEditor: 'form-control',
+				      htmlEditor: 'form-control'
+				  };
+				  return taOptions; // whatever you return will be the taOptions
+			      }]);
 	// this demonstrates changing the classes of the icons for the tools for font-awesome v3.x
 	// $provide.decorator('taTools', ['$delegate', function(taTools){
 	//     taTools.bold.iconclass = 'icon-bold';

@@ -278,4 +278,5 @@ h3, .h3 { text-transform: uppercase; }
 /* textAngular */
 .ta-root { padding: 0; }
 .ta-toolbar { background-color: #eee; }
+.ta-toolbar button.btn { padding: 6px 7px; }
 .panel-footer { background-color: #888; }
