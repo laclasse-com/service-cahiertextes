@@ -35,35 +35,41 @@ module CahierDeTextesAPI
       desc 'renvoi les créneaux similaires à ce créneau'
       params {
         requires :id
+        requires :debut, type: Date
         requires :fin, type: Date
-
-        optional :regroupement_id #
       }
       get '/:id/similaires' do
         creneau = CreneauEmploiDuTemps[ params[:id] ]
-        creneaux = CreneauEmploiDuTemps
-                   .exclude( id: params[:id] )
-                   .where( matiere_id: creneau.matiere_id )
-                   .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{1.year.ago}'" )
-                   .where( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{params[:fin]}')" )
-                   .association_join( :enseignants )
-                   .where( enseignant_id: user.uid )
-        if params[:regroupement]
-          creneaux = creneaux
-                     .association_join( :regroupements )
-                     .where( regroupement_id: params[:regroupement_id] )
+        CreneauEmploiDuTemps
+          .association_join( :enseignants )
+          .where( enseignant_id: user.uid )
+          .where( matiere_id: creneau.matiere_id )
+          .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{1.year.ago}'" )
+          .where( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{params[:fin]}')" )
+          .all
+          .map do |c|
+          ( params[:debut] .. params[:fin] )
+            .reject { |day| day.wday != c.jour_de_la_semaine }
+            .map do |jour|
+            c.regroupements.map do |regroupement|
+              if regroupement.semaines_de_presence[ jour.cweek ] == 1
+                { creneau_emploi_du_temps_id: c.id,
+                  start: Time.new( jour.year, jour.month, jour.mday, c.plage_horaire_debut.debut.hour, c.plage_horaire_debut.debut.min ).iso8601,
+                  end: Time.new( jour.year, jour.month, jour.mday, c.plage_horaire_fin.fin.hour, c.plage_horaire_fin.fin.min ).iso8601,
+                  has_cours: c.cours.select { |cours| cours.date_cours == jour }.count > 0,
+                  jour_de_la_semaine: c.jour_de_la_semaine,
+                  matiere_id: c.matiere_id,
+                  regroupement_id: regroupement.regroupement_id,
+                  semaines_de_presence: regroupement.semaines_de_presence,
+                  vierge: c.cours.count == 0 && c.devoirs.count == 0 }
+              else
+                next
+              end
+            end
+          end
         end
-
-        creneaux.all.map do |c|
-          h = c.to_hash
-          h[:regroupements] = c.regroupements
-          h[:enseignants] = c.enseignants
-          h[:salles] = c.salles
-          h[:has_cours] = c.cours.count > 0
-          h[:vierge] = h[:has_cours] && c.devoirs.count == 0
-
-          h
-        end
+          .flatten
+          .compact
       end
 
       desc 'crée un créneau'
