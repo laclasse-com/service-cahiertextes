@@ -11,7 +11,7 @@ angular.module( 'cahierDeTexteApp' )
 			   },
 			   'responseError': function( rejection ) {
 			       if ( rejection.status === 401 ) {
-				   // location.reload();
+				   location.reload();
 			       }
 			       return $q.reject( rejection );
 			   }
