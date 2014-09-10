@@ -41,9 +41,12 @@ angular.module( 'cahierDeTexteApp' )
 			   $scope.matieres = matieres;
 
 			   $scope.creneau = creneau;
-			   $scope.creneau.etranger = !_.chain( $scope.creneau.enseignants ).pluck( 'enseignant_id' ).include( $scope.current_user.uid ).value();
-			   $scope.creneau.previous_regroupement_id = $scope.creneau.regroupement_id;
 			   $scope.creneau.en_creation = _($scope.creneau.matiere_id).isEmpty() || $scope.creneau.regroupement_id === 'undefined';
+			   $scope.creneau.etranger = !$scope.creneau.en_creation && !_.chain( $scope.creneau.enseignants ).pluck( 'enseignant_id' ).include( $scope.current_user.uid ).value();
+			   $scope.creneau.previous_regroupement_id = $scope.creneau.regroupement_id;
+			   if ( _(creneau.vierge).isUndefined() ) {
+			       creneau.vierge = true;
+			   }
 			   if ( $scope.creneau.en_creation ) {
 			       $scope.creneau.tmp_heure_debut = $filter( 'correctTimeZoneToGMT' )( $scope.creneau.heure_debut );
 			       $scope.creneau.tmp_heure_fin = $filter( 'correctTimeZoneToGMT' )( $scope.creneau.heure_fin );
