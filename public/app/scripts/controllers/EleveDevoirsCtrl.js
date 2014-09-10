@@ -21,16 +21,6 @@ angular.module('cahierDeTexteApp')
 			  Devoirs.fait({ id: id });
 		      };
 
-		      $scope.filtre = function() {
-			  if ( ! $scope.affiche_faits ) {
-			      $scope.devoirs = _($scope.all_devoirs).reject(function( devoir ) {
-				  return devoir.fait;
-			      });
-			  } else {
-			      $scope.devoirs = $scope.all_devoirs;
-			  }
-		      };
-
 		      API.query_types_de_devoir()
 			  .$promise.then( function( types_de_devoir ) {
 			      API.query_devoirs()
