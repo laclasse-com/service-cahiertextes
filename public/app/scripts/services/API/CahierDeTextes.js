@@ -84,7 +84,6 @@ angular.module('cahierDeTexteApp')
 				       semaines_de_presence_salle: '@semaines_de_presence_salle' },
 				     { update: { method: 'PUT' },
 				       delete: { method: 'DELETE',
-						 url: APP_PATH + '/api/' + API_VERSION + '/creneaux_emploi_du_temps/:id',
 						 params: { id: '@id',
 							   date_creneau: '@date_creneau' } } } );
 	       } ] );
