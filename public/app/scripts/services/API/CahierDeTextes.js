@@ -147,8 +147,8 @@ angular.module('cahierDeTexteApp')
 
 angular.module('cahierDeTexteApp')
     .service('API',
-	     [ 'Classes', 'Cours', 'CreneauEmploiDuTemps', 'Devoirs', 'EmploisDuTemps', 'Enseignants', 'TypesDeDevoir', 'PlagesHoraires', 'CahierDeTextes',
-	       function( Classes, Cours, CreneauEmploiDuTemps, Devoirs, EmploisDuTemps, Enseignants, TypesDeDevoir, PlagesHoraires, CahierDeTextes ) {
+	     [ '$http', 'APP_PATH', 'API_VERSION', 'Classes', 'Cours', 'CreneauEmploiDuTemps', 'Devoirs', 'EmploisDuTemps', 'Enseignants', 'TypesDeDevoir', 'PlagesHoraires', 'CahierDeTextes',
+	       function( $http, APP_PATH, API_VERSION, Classes, Cours, CreneauEmploiDuTemps, Devoirs, EmploisDuTemps, Enseignants, TypesDeDevoir, PlagesHoraires, CahierDeTextes ) {
 		   this.query_classes = function( params ) {
 		       return Classes.query( params );
 		   };
@@ -166,6 +166,9 @@ angular.module('cahierDeTexteApp')
 
 		   this.get_creneau_emploi_du_temps = function( params ) {
 		       return CreneauEmploiDuTemps.get( params );
+		   };
+		   this.get_creneaux_emploi_du_temps_similaires = function( params ) { //params: { id: creneau.id, fin: Date, regroupement_id: 'XX' }
+		       return $http.get( APP_PATH + '/api/' + API_VERSION + '/creneaux_emploi_du_temps/' + params.id + '/similaires?fin=' + params.fin.toISOString() );
 		   };
 
 		   this.query_enseignants = function( params ) {
