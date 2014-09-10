@@ -290,64 +290,38 @@ angular.module( 'cahierDeTexteApp' )
 				   $scope.is_dirty();
 			       };
 
-			       $scope.creneaux_similaires = _( raw_data )
-				   .filter( function ( creneau ) {
-				       return ( creneau.id != $scope.creneau.id )
-					   && ( creneau.matiere_id == $scope.creneau.matiere_id )
-					   && ( _(creneau.cours).isNull() );
-				   } )
-				   .map( function ( creneau ) {
-				       creneau.classe = _( $scope.classes ).findWhere( { id: parseInt( creneau.regroupement_id ) } );
+			       var liste_créneaux_cibles_duplication = function( creneau, n_semaines_futures ) {
+				   return API.get_creneaux_emploi_du_temps_similaires({ id: creneau.id,
+											debut: creneau.heure_debut,
+											fin: moment( creneau.heure_debut.toISOString() ).add( n_semaines_futures, 'weeks' ).toDate() } );
+			       };
 
-				       return creneau;
+			       liste_créneaux_cibles_duplication( $scope.creneau, 4 )
+				   .then( function( response ) {
+				       $scope.creneaux_similaires = _.chain(response.data)
+					   .reject( function( creneau ) { return creneau.has_cours; } )
+					   .map( function ( creneau ) {
+					       creneau.classe = _( $scope.classes ).findWhere( { id: parseInt( creneau.regroupement_id ) } );
+
+					       return creneau;
+					   } )
+					   .value();
+				       $scope.creneaux_similaires.selected = [];
+
+				       $scope.creneaux_devoirs_possibles = _.chain(response.data)
+					   .select( function( creneau ) { return creneau.regroupement_id == $scope.creneau.regroupement_id; } )
+					   .map( function ( creneau ) {
+					       creneau.classe = _( $scope.classes ).findWhere( { id: parseInt( creneau.regroupement_id ) } );
+					       creneau.date_due = $filter( 'date' )( creneau.start, 'y-MM-dd' );
+					       creneau.semaine = moment( creneau.start).from( moment( $scope.creneau.heure_debut ), true ) + ' plus tard';
+
+					       return creneau;
+					   } )
+					   .sortBy( function ( creneau ) { // Trie par dates croissantes
+					       return creneau.start;
+					   } )
+					   .value();
 				   } );
-			       $scope.creneaux_similaires.selected = [];
-
-			       //
-			       // Constitution de la liste des créneaux possibles pour les dates dues des devoirs.
-			       //
-			       // 1. sélection des créneaux possibles en fonction du regroupement et de la matière.
-			       var creneaux_devoirs_possibles = _.chain( raw_data )
-				       .filter( function ( creneau ) {
-					   return ( creneau.regroupement_id == $scope.classe.id )
-					       && ( creneau.matiere_id == $scope.matiere.id );
-				       } )
-				       .map( function ( creneau ) {
-					   creneau.classe = _( $scope.classes ).findWhere( { id: parseInt( creneau.regroupement_id ) } );
-					   creneau.date_due = $filter( 'date' )( creneau.start, 'y-MM-dd' );
-					   creneau.semaine = "cette semaine";
-
-					   return creneau;
-				       } )
-				       .sortBy( function ( creneau ) { // Trie par dates croissantes
-					   return creneau.start;
-				       } )
-				       .value();
-
-			       // 2. on ajoute les créneaux possible sur un mois.
-			       var cdp_tmp = [];
-			       var nb_semaines = 4;
-			       // FIXME: prendre en compte les semaines actives
-			       _( nb_semaines + 1 ).times( function ( n ) {
-				   _( creneaux_devoirs_possibles ).each( function ( c ) {
-				       var cdp_futurs = angular.copy( c );
-				       var d = new Date( cdp_futurs.start );
-				       d.setDate( d.getDate() + n * 7 );
-				       var f = new Date( cdp_futurs.end );
-				       f.setDate( f.getDate() + n * 7 );
-
-				       cdp_futurs.start = d.toISOString();
-				       cdp_futurs.end = f.toISOString();
-				       // calcul d'un attribut permettant de grouper les dates dans la selectbox
-				       cdp_futurs.semaine = ( n == 0 ) ? "cette semaine" : "dans " + n + " semaine";
-				       cdp_futurs.semaine += ( n > 1 ) ? "s" : "";
-				       cdp_futurs.date_due = $filter( 'date' )( cdp_futurs.start, 'y-MM-dd' );
-
-				       cdp_tmp.push( cdp_futurs );
-				   } );
-			       } );
-			       // Et voici tous les créneaux possibles !
-			       $scope.creneaux_devoirs_possibles = cdp_tmp;
 
 			       // {{{ Gestion des documents attachés
 			       $scope.cartable = {};
