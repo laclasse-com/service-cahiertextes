@@ -57,7 +57,7 @@ angular.module('cahierDeTexteApp')
 					     }
 					 }
 
-					 if ( ( $scope.current_user.profil_actif.type === 'ELV' && _(event.cours).isNull() ) ) {
+					 if ( ( $scope.current_user.profil_actif.type === 'ELV' && _(event.cours).isNull() && _(event.devoirs).isEmpty() ) ) {
 					     this.className += ' unclickable-event';
 					 } else {
 					     this.className += ' clickable-event';
