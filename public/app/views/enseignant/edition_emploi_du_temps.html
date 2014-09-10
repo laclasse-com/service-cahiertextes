@@ -204,7 +204,7 @@
 
 
 	      <div class="panel-heading enseignant-saisie" data-ng-if="creneau.etranger">
-		<label class="col-md-12">Type de travail : <em>{{devoir.type_devoir.description}}</em></label>
+		<label>Type de travail : <em>{{devoir.type_devoir.description}}</em></label>
 		<label data-ng-if="devoir.temps_estime">Temps de travail estimé : <em>{{devoir.temps_estime * 5}} min</em></label>
 	      </div>
 	      <div class="panel-body" data-ng-bind-html="devoir.contenu" data-ng-if="creneau.etranger"></div>
@@ -299,7 +299,7 @@
 	  <text-angular class="panel-body" data-ng-model="devoir.contenu" data-ng-change="is_dirty( devoir )" data-ng-if="!creneau.etranger"></text-angular>
 
 	  <div class="panel-heading enseignant-saisie" data-ng-if="creneau.etranger">
-	    <label class="col-md-12">Type de travail : <em>{{devoir.type_devoir.description}}</em></label>
+	    <label>Type de travail : <em>{{devoir.type_devoir.description}}</em></label>
 	    <label data-ng-if="devoir.temps_estime">Temps de travail estimé : <em>{{devoir.temps_estime * 5}} min</em></label>
 	  </div>
 	  <div class="panel-body" data-ng-bind-html="devoir.contenu" data-ng-if="creneau.etranger"></div>
