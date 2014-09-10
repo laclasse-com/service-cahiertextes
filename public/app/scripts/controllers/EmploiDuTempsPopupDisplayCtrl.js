@@ -14,6 +14,7 @@ angular.module('cahierDeTexteApp')
 			  } );
 
 			  $scope.cours.$promise.then( function( cours ) {
+			      $scope.date = $scope.cours.date_cours;
 			      _(cours.devoirs).each( function( devoir ) {
 				  devoir.tooltip = devoir.contenu;
 				  if ( devoir.temps_estime > 0 ) {
@@ -21,7 +22,6 @@ angular.module('cahierDeTexteApp')
 				  }
 			      } );
 			  } );
-			  $scope.date = $scope.cours.date_cours;
 		      }
 		      $scope.devoirs = devoirs.map( function( devoir ) {
 			  return Devoirs.get( { id: devoir.id } );
@@ -32,7 +32,9 @@ angular.module('cahierDeTexteApp')
 			  } );
 		      } );
 		      if ( _($scope.date).isNull() && !_($scope.devoirs).isEmpty() ) {
-			  $scope.date = $scope.devoirs[0].date_due;
+			  $scope.devoirs[0].$promise.then( function() {
+			      $scope.date = $scope.devoirs[0].date_due;
+			  } );
 		      }
 
 		      $scope.tab_SP_active = _($scope.devoirs).isEmpty();
