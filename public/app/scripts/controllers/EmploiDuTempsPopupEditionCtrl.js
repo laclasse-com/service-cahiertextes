@@ -288,9 +288,7 @@ angular.module( 'cahierDeTexteApp' )
 					   && ( _(creneau.cours).isNull() );
 				   } )
 				   .map( function ( creneau ) {
-				       creneau.classe = _( $scope.classes ).findWhere( {
-					   id: parseInt( creneau.regroupement_id )
-				       } );
+				       creneau.classe = _( $scope.classes ).findWhere( { id: parseInt( creneau.regroupement_id ) } );
 
 				       return creneau;
 				   } );
@@ -302,12 +300,11 @@ angular.module( 'cahierDeTexteApp' )
 			       // 1. sélection des créneaux possibles en fonction du regroupement et de la matière.
 			       var creneaux_devoirs_possibles = _.chain( raw_data )
 				       .filter( function ( creneau ) {
-					   return ( creneau.regroupement_id == $scope.classe.id ) && ( creneau.matiere_id == $scope.matiere.id );
+					   return ( creneau.regroupement_id == $scope.classe.id )
+					       && ( creneau.matiere_id == $scope.matiere.id );
 				       } )
 				       .map( function ( creneau ) {
-					   creneau.classe = _( $scope.classes ).findWhere( {
-					       id: parseInt( creneau.regroupement_id )
-					   } );
+					   creneau.classe = _( $scope.classes ).findWhere( { id: parseInt( creneau.regroupement_id ) } );
 					   creneau.date_due = $filter( 'date' )( creneau.start, 'y-MM-dd' );
 					   creneau.semaine = "cette semaine";
 
