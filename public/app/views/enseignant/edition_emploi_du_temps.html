@@ -170,7 +170,7 @@
 	  <div class="panel panel-default" data-ng-repeat="devoir in cours.devoirs">
 
 	    <div class="col-md-9">
-	      <div class="panel-heading enseignant-saisie">
+	      <div class="panel-heading enseignant-saisie" data-ng-if="!creneau.etranger">
 		<label class="col-md-6">Type de travail :
 		  <select data-ng-required="true"
 			  data-ng-change="is_dirty( null )"
@@ -200,7 +200,8 @@
 		</div>
 		<div class="clearfix"></div>
 	      </div>
-	      <text-angular class="panel-body" data-ng-model="devoir.contenu" data-ng-change="is_dirty( devoir )"></text-angular>
+	      <text-angular class="panel-body" data-ng-model="devoir.contenu" data-ng-change="is_dirty( devoir )" data-ng-if="!creneau.etranger"></text-angular>
+	      <div class="panel-body" data-ng-bind-html="devoir.contenu" data-ng-if="creneau.etranger"></div>
 
 	      <div class="panel-footer ressources">
 		<div class="row">
@@ -210,7 +211,7 @@
 		  </div>
 		</div>
 
-		<div class="dropdown row">
+		<div class="dropdown row" data-ng-if="!creneau.etranger">
 		  <button class="btn btn-sm btn-primary dropdown-toggle pull-right" role="button" data-toggle="dropdown" data-target="#" href="">
 		    <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
 		  </button>
@@ -266,8 +267,7 @@
 
 	<div class="col-md-9">
 
-	  <div class="panel-heading enseignant-saisie">
-
+	  <div class="panel-heading enseignant-saisie" data-ng-if="!creneau.etranger">
 	    <label class="col-md-12">Type de travail :
 	      <select data-ng-required="true"
 		      data-ng-change="is_dirty( null )"
@@ -288,11 +288,11 @@
 		      state-off="'temps-est-off'"></rating>
 	      <span class="label pull-right" data-ng-class="{'label-success': devoir.overValue<4, 'label-info': devoir.overValue>=4 && devoir.overValue<8 , 'label-warning': devoir.overValue>=8 && devoir.overValue<12, 'label-danger': devoir.overValue>=12}" data-ng-if="devoir.overValue > 0 || devoir.temps_estime > 0">{{devoir.minutes || devoir.temps_estime * 5}} min</span>
 	    </div>
-
 	    <div class="clearfix"></div>
 	  </div>
 
-	  <text-angular class="panel-body" data-ng-model="devoir.contenu" data-ng-change="is_dirty( devoir )"></text-angular>
+	  <text-angular class="panel-body" data-ng-model="devoir.contenu" data-ng-change="is_dirty( devoir )" data-ng-if="!creneau.etranger"></text-angular>
+	  <div class="panel-body" data-ng-bind-html="devoir.contenu" data-ng-if="creneau.etranger"></div>
 
 	  <div class="panel-footer ressources">
 	    <div class="row">
