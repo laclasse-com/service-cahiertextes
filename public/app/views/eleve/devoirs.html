@@ -2,14 +2,17 @@
   <h1><span class="label label-danger"><span class="glyphicon glyphicon-warning-sign"></span> Aucune donnée</span></h1>
 </div>
 
-<div class="panel panel-default"data-ng-if="!empty">
+<div class="panel panel-default" data-ng-if="!empty">
   <div class="panel-heading">
-    <input data-ng-model="affiche_faits" type="checkbox" id="display-done" name="display-done" data-ng-change="filtre()"/>
+    <input data-ng-model="affiche_faits" type="checkbox" id="display-done" name="display-done"/>
     <label for="display-done">Afficher les devoirs déjà fait</label>
   </div>
   <div class="panel-body">
     <ul class="list-group todo-list">
-      <li data-ng-repeat="devoir in devoirs | orderBy:'date_due':true" style="list-style:none" class="devoir list-group-item"
+      <li data-ng-repeat="devoir in devoirs | orderBy:'date_due':true"
+	  data-ng-if="!devoir.fait || affiche_faits"
+	  style="list-style:none"
+	  class="devoir list-group-item"
 	  data-ng-class="{ 'type1': devoir.type_devoir_id == 1, 'type2': devoir.type_devoir_id == 2, 'type3': devoir.type_devoir_id == 3, 'type4': devoir.type_devoir_id == 4, 'type5': devoir.type_devoir_id == 5, 'type6': devoir.type_devoir_id == 6, 'fait': devoir.fait }" >
 
 	<div class="pull-left date">{{devoir.date_due | date: 'dd/MM'}}</div>
