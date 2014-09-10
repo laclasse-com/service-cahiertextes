@@ -25,7 +25,7 @@ angular.module('cahierDeTexteApp')
 			  .$promise.then( function( types_de_devoir ) {
 			      API.query_devoirs()
 				  .$promise.then(function( response ) {
-				      $scope.all_devoirs = _(response).map( function( devoir ) {
+				      $scope.devoirs = _(response).map( function( devoir ) {
 					  devoir.type_devoir = _(types_de_devoir).findWhere({id: devoir.type_devoir_id});
 					  devoir.creneau_emploi_du_temps = CreneauEmploiDuTemps.get({ id: devoir.creneau_emploi_du_temps_id });
 					  devoir.creneau_emploi_du_temps.$promise.then( function success(  ) {
@@ -38,9 +38,8 @@ angular.module('cahierDeTexteApp')
 
 					  return devoir;
 				      });
-				      $scope.filtre();
 
-				      $scope.empty = $scope.all_devoirs.length == 0;
+				      $scope.empty = $scope.devoirs.length == 0;
 				  });
 			  });
 		  } ] );
