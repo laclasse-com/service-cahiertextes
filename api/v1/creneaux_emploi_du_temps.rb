@@ -14,25 +14,56 @@ module CahierDeTextesAPI
         optional :expand, type: Boolean
         optional :debut, type: Date
         optional :fin, type: Date
-
       }
       get '/:id' do
         expand = !params[:expand].nil? && params[:expand] && !params[:debut].nil? && !params[:fin].nil?
 
         creneau = CreneauEmploiDuTemps[ params[:id] ]
         h = creneau.to_hash
-
         h[:regroupements] = creneau.regroupements
         h[:enseignants] = creneau.enseignants
         h[:salles] = creneau.salles
         h[:vierge] = creneau.cours.count == 0 && creneau.devoirs.count == 0
-
         if expand
           h[:cours] = Cours.where( creneau_emploi_du_temps_id: params[:id] ).where( deleted: false ).where( date_cours: params[:debut] .. params[:fin] )
           h[:devoirs] = Devoir.where( creneau_emploi_du_temps_id: params[:id] ).where( date_due: params[:debut] .. params[:fin] )
         end
 
         h
+      end
+
+      desc 'renvoi les créneaux similaires à ce créneau'
+      params {
+        requires :id
+        requires :fin, type: Date
+
+        optional :regroupement_id #
+      }
+      get '/:id/similaires' do
+        creneau = CreneauEmploiDuTemps[ params[:id] ]
+        creneaux = CreneauEmploiDuTemps
+                   .exclude( id: params[:id] )
+                   .where( matiere_id: creneau.matiere_id )
+                   .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{1.year.ago}'" )
+                   .where( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{params[:fin]}')" )
+                   .association_join( :enseignants )
+                   .where( enseignant_id: user.uid )
+        if params[:regroupement]
+          creneaux = creneaux
+                     .association_join( :regroupements )
+                     .where( regroupement_id: params[:regroupement_id] )
+        end
+
+        creneaux.all.map do |c|
+          h = c.to_hash
+          h[:regroupements] = c.regroupements
+          h[:enseignants] = c.enseignants
+          h[:salles] = c.salles
+          h[:has_cours] = c.cours.count > 0
+          h[:vierge] = h[:has_cours] && c.devoirs.count == 0
+
+          h
+        end
       end
 
       desc 'crée un créneau'
