@@ -63,36 +63,37 @@ module ProNote
 
     etablissement = Etablissement.create(UAI: edt_clair.child['UAI'])
 
-    edt_clair.search('AnneeScolaire').each do |node|
-      if node.name != 'text'
-        etablissement.debut_annee_scolaire = node['DateDebut']
-        etablissement.fin_annee_scolaire = node['DateFin']
-        etablissement.date_premier_jour_premiere_semaine = node['DatePremierJourSemaine1']
-        etablissement.save
-      end
+    edt_clair.search('AnneeScolaire').reject { |child| child.name == 'text' }.each do |node|
+      etablissement.debut_annee_scolaire = node['DateDebut']
+      etablissement.fin_annee_scolaire = node['DateFin']
+      etablissement.date_premier_jour_premiere_semaine = node['DatePremierJourSemaine1']
+      etablissement.save
     end
     offset_semainiers = etablissement.date_premier_jour_premiere_semaine.cweek
 
     rapport[:plages_horaires] = { success: [], error: [] }
-    edt_clair.search('PlacesParJour').children.each do
-      |place|
-      unless place.name == 'text'
-        plage = PlageHoraire.create(label: place['Numero'],
-                                    debut: place['LibelleHeureDebut'],
-                                    fin: place['LibelleHeureFin'])
+    edt_clair.search('PlacesParJour').children.reject { |child| child.name == 'text' }.each do |node|
+      plage = PlageHoraire.create(label: node['Numero'],
+                                  debut: node['LibelleHeureDebut'],
+                                  fin: node['LibelleHeureFin'])
 
-        rapport[:plages_horaires][:success] << plage unless plage.nil?
+      if plage.nil?
+        rapport[:plages_horaires][:error] << node
+      else
+        rapport[:plages_horaires][:success] << plage
       end
     end
 
     rapport[:salles] =  { success: [], error: [] }
-    edt_clair.search('Salles').children.each do |salle|
-      unless salle.name == 'text'
-        salle = Salle.create(etablissement_id: etablissement.id,
-                             identifiant: salle['Ident'],
-                             nom: salle['Nom'])
+    edt_clair.search('Salles').children.reject { |child| child.name == 'text' }.each do |node|
+      salle = Salle.create(etablissement_id: etablissement.id,
+                           identifiant: node['Ident'],
+                           nom: node['Nom'])
 
-        rapport[:salles][:success] << salle unless salle.nil?
+      if salle.nil?
+        rapport[:salles][:error] << node
+      else
+        rapport[:salles][:success] << salle
       end
     end
 
@@ -101,12 +102,23 @@ module ProNote
     ####
     rapport[:matieres] = { success: [], error: [] }
     matieres = {}
-    edt_clair.search('Matieres').children.each do |matiere|
-      unless matiere.name == 'text'
-        matieres[ matiere['Ident'] ] = Annuaire.search_matiere( matiere['Libelle'] )['id']
+    edt_clair.search('Matieres').children.reject { |child| child.name == 'text' }.each do |node|
+      matieres[ node['Ident'] ] = Annuaire.search_matiere( node['Libelle'] )['id']
+      if matieres[ node['Ident'] ].nil?
+        sha256 = Digest::SHA256.hexdigest( { Libelle: node['Libelle'] }.to_json )
 
-        rapport[:matieres][:success] << matieres[ matiere['Ident'] ] unless matieres[ matiere['Ident'] ].nil?
-        rapport[:matieres][:error] << matiere if matieres[ matiere['Ident'] ].nil?
+        manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
+        if manually_linked_id.nil?
+          FailedIdentification.create( sha256: sha256 )
+        else
+          matieres[ node['Ident'] ] = manually_linked_id.id_annuaire
+        end
+      end
+
+      if matieres[ node['Ident'] ].nil?
+        rapport[:matieres][:error] << node
+      else
+        rapport[:matieres][:success] << matieres[ node['Ident'] ]
       end
     end
 
@@ -115,130 +127,220 @@ module ProNote
     ####
     rapport[:enseignants] = { success: [], error: [] }
     enseignants = {}
-    edt_clair.search('Professeurs').children.each do |professeur|
-      unless professeur.name == 'text'
-        user_annuaire = Annuaire.search_utilisateur( etablissement.UAI, professeur['Nom'], professeur['Prenom'] )
-        enseignants[ professeur['Ident'] ] = user_annuaire['id_ent'] unless user_annuaire.nil?
+    edt_clair.search('Professeurs').children.reject { |child| child.name == 'text' }.each do |node|
+      user_annuaire = Annuaire.search_utilisateur( etablissement.UAI, node['Nom'], node['Prenom'] )
+      enseignants[ node['Ident'] ] = user_annuaire.nil? ? nil : user_annuaire['id_ent']
+      if enseignants[ node['Ident'] ].nil?
+        sha256 = Digest::SHA256.hexdigest( { UAI: etablissement.UAI, Nom: node['Nom'], Prenom: node['Prenom'] }.to_json )
 
-        rapport[:enseignants][:success] << enseignants[ professeur['Ident'] ] unless user_annuaire.nil?
-        rapport[:enseignants][:error] << professeur if user_annuaire.nil?
+        manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
+        if manually_linked_id.nil?
+          FailedIdentification.create( sha256: sha256 )
+        else
+          enseignants[ node['Ident'] ] = manually_linked_id.id_annuaire
+        end
+      end
+
+      if enseignants[ node['Ident'] ].nil?
+        rapport[:enseignants][:error] << node
+      else
+        rapport[:enseignants][:success] << enseignants[ node['Ident'] ]
       end
     end
 
     ####
     # Les classes, parties de classe et groupes sont dans l'annuaire
     ####
-    rapport[:regroupements] = { classes: { success: [], error: [] },
-                                groupes: { success: [], error: [] },
-                                parties_de_classe: { success: [], error: [] } }
+    rapport[:regroupements] = { Classe: { success: [], error: [] },
+                                Groupe: { success: [], error: [] },
+                                PartieDeClasse: { success: [], error: [] } }
     regroupements = { 'Classe' => {}, 'PartieDeClasse' => {}, 'Groupe' => {} }
-    edt_clair.search('Classes').children.each do |classe|
-      unless classe.name == 'text'
-        reponse_annuaire = Annuaire.search_regroupement( etablissement.UAI, classe['Nom'] )
-        code_annuaire = reponse_annuaire['id'] unless reponse_annuaire.nil?
-        regroupements[ 'Classe' ][ classe['Ident'] ] = code_annuaire
 
-        rapport[:regroupements][:classes][:success] << regroupements[ 'Classe' ][ classe['Ident'] ] unless regroupements[ 'Classe' ][ classe['Ident'] ].nil?
-        rapport[:regroupements][:classes][:error] << classe if regroupements[ 'Classe' ][ classe['Ident'] ].nil?
-      end
-      classe.children.each do |partie_de_classe|
-        unless partie_de_classe.name == 'text' || partie_de_classe['Nom'].nil?
-          reponse_annuaire = Annuaire.search_regroupement( etablissement.UAI, partie_de_classe['Nom'] )
-          code_annuaire = reponse_annuaire['id'] unless reponse_annuaire.nil?
-          regroupements[ 'PartieDeClasse' ][ partie_de_classe['Ident'] ] = code_annuaire
+    edt_clair.search('Classes').children.reject { |child| child.name == 'text' }.each do |node|
+      reponse_annuaire = Annuaire.search_regroupement( etablissement.UAI, node['Nom'] )
+      code_annuaire = reponse_annuaire['id'] unless reponse_annuaire.nil?
+      regroupements[ node.name ][ node['Ident'] ] = code_annuaire
+      if regroupements[ node.name ][ node['Ident'] ].nil?
+        sha256 = Digest::SHA256.hexdigest( { UAI: etablissement.UAI, Nom: node['Nom'] }.to_json )
 
-          rapport[:regroupements][:parties_de_classe][:success] << regroupements[ 'PartieDeClasse' ][ partie_de_classe['Ident'] ] unless regroupements[ 'Classe' ][ classe['Ident'] ].nil?
-          rapport[:regroupements][:parties_de_classe][:error] << partie_de_classe if regroupements[ 'PartieDeClasse' ][ classe['Ident'] ].nil?
+        manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
+        if manually_linked_id.nil?
+          FailedIdentification.create( sha256: sha256 )
+        else
+          regroupements[ node.name ][ node['Ident'] ] = manually_linked_id.id_annuaire
         end
       end
-    end
-    edt_clair.search('Groupes').children.each do |groupe|
-      unless groupe.name == 'text'
-        reponse_annuaire = Annuaire.search_regroupement( etablissement.UAI, groupe['Nom'] )
-        code_annuaire = reponse_annuaire['id'] unless reponse_annuaire.nil?
-        regroupements[ 'Groupe' ][ groupe['Ident'] ] = code_annuaire
 
-        rapport[:regroupements][:groupes][:success] << regroupements[ 'Groupe' ][ groupe['Ident'] ] unless regroupements[ 'Groupe' ][ groupe['Ident'] ].nil?
-        rapport[:regroupements][:groupes][:error] << groupe if regroupements[ 'Groupe' ][ groupe['Ident'] ].nil?
+      if regroupements[ node.name ][ node['Ident'] ].nil?
+        rapport[:regroupements][node.name.to_sym][:error] << node
+      else
+        rapport[:regroupements][node.name.to_sym][:success] << regroupements[ node.name ][ node['Ident'] ]
       end
-      groupe.children.each do  |node|
-        case node.name
-        when 'PartieDeClasse'
-          unless node.name == 'text' || node['Nom'].nil?
-            reponse_annuaire = Annuaire.search_regroupement( etablissement.UAI, node['Nom'] )
-            code_annuaire = reponse_annuaire['id'] unless reponse_annuaire.nil?
-            regroupements[ 'PartieDeClasse' ][ node['Ident'] ] = code_annuaire
 
-            rapport[:regroupements][:parties_de_classe][:success] << regroupements[ 'PartieDeClasse' ][ node['Ident'] ] unless regroupements[ 'Classe' ][ classe['Ident'] ].nil?
-            rapport[:regroupements][:parties_de_classe][:error] << node if regroupements[ 'PartieDeClasse' ][ classe['Ident'] ].nil?
-          end
-        when 'Classe'
-          unless node.name == 'text' || node['Nom'].nil?
-            reponse_annuaire = Annuaire.search_regroupement( etablissement.UAI, node['Nom'] )
+      unless regroupements[ 'Classe' ][ node['Ident'] ].nil?
+        node.children.reject { |child| child.name == 'text' }.each do |subnode|
+          if subnode['Nom'].nil?
+            regroupements[ 'PartieDeClasse' ][ subnode['Ident'] ] = regroupements[ 'Classe' ][ node['Ident'] ]
+          else
+            reponse_annuaire = Annuaire.search_regroupement( etablissement.UAI, subnode['Nom'] )
             code_annuaire = reponse_annuaire['id'] unless reponse_annuaire.nil?
-            regroupements[ 'Classe' ][ node['Ident'] ] = code_annuaire
+            regroupements[ subnode.name ][ subnode['Ident'] ] = code_annuaire
+            if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
+              sha256 = Digest::SHA256.hexdigest( { UAI: etablissement.UAI, Nom: subnode['Nom'] }.to_json )
 
-            rapport[:regroupements][:classes][:success] << regroupements[ 'Classe' ][ node['Ident'] ] unless regroupements[ 'Classe' ][ classe['Ident'] ].nil?
-            rapport[:regroupements][:classes][:error] << node if regroupements[ 'Classe' ][ classe['Ident'] ].nil?
+              manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
+              if manually_linked_id.nil?
+                FailedIdentification.create( sha256: sha256 )
+              else
+                regroupements[ subnode.name ][ subnode['Ident'] ] = manually_linked_id.id_annuaire
+              end
+            end
+
+            if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
+              rapport[:regroupements][subnode.name.to_sym][:error] << subnode
+            else
+              rapport[:regroupements][subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
+            end
           end
         end
       end
     end
+    edt_clair.search('Groupes').children.reject { |child| child.name == 'text' }.each do |node|
+      reponse_annuaire = Annuaire.search_regroupement( etablissement.UAI, node['Nom'] )
+      code_annuaire = reponse_annuaire['id'] unless reponse_annuaire.nil?
+      regroupements[ node.name ][ node['Ident'] ] = code_annuaire
+      if regroupements[ node.name ][ node['Ident'] ].nil?
+        sha256 = Digest::SHA256.hexdigest( { UAI: etablissement.UAI, Nom: node['Nom'] }.to_json )
 
-    rapport[:creneaux] = { success: [], error: [] }
-    edt_clair.search('Cours/Cours').each do |creneau_emploi_du_temps|
-      unless creneau_emploi_du_temps.name == 'text'
-        debut = PlageHoraire[ label: creneau_emploi_du_temps['NumeroPlaceDebut'] ][:id]
-        fin = PlageHoraire[ label: creneau_emploi_du_temps['NumeroPlaceDebut'].to_i + creneau_emploi_du_temps['NombrePlaces'].to_i - 1 ][:id]
-        matiere_id = nil
-
-        creneau_emploi_du_temps.children.each do |node|  # FIXME: peut sûrement mieux faire
-          matiere_id = matieres[ node['Ident'] ] if node.name == 'Matiere'
+        manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
+        if manually_linked_id.nil?
+          FailedIdentification.create( sha256: sha256 )
+        else
+          regroupements[ node.name ][ node['Ident'] ] = manually_linked_id.id_annuaire
         end
-        unless matiere_id.nil?
-          creneau = CreneauEmploiDuTemps.create(jour_de_la_semaine: creneau_emploi_du_temps['Jour'].to_i + etablissement.date_premier_jour_premiere_semaine.wday, # 1: 'lundi' .. 7: 'dimanche', norme ISO-8601
-                                                debut: debut,
-                                                fin: fin,
-                                                matiere_id: matiere_id)
-          creneau_emploi_du_temps.children.each do |node|
-            case node.name
-            when 'Professeur'
-              if enseignants[ node['Ident'] ].nil?
-                rapport[:creneaux][:error] << node
-              else
-                CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
-                creneau.add_enseignant(enseignant_id: enseignants[ node['Ident'] ],
-                                       semaines_de_presence: corrige_semainiers( node['Semaines'], offset_semainiers ) )
-                CreneauEmploiDuTempsEnseignant.restrict_primary_key
+      end
+
+      if regroupements[ node.name ][ node['Ident'] ].nil?
+        rapport[:regroupements][node.name.to_sym][:error] << node
+      else
+        rapport[:regroupements][node.name.to_sym][:success] << regroupements[ node.name ][ node['Ident'] ]
+      end
+
+      unless regroupements[ node.name ][ node['Ident'] ].nil?
+        node.children.each do |subnode|
+          case subnode.name
+          when 'PartieDeClasse'
+            if subnode['Nom'].nil?
+              regroupements[ 'PartieDeClasse' ][ subnode['Ident'] ] = regroupements[ 'Classe' ][ node['Ident'] ]
+            else
+              reponse_annuaire = Annuaire.search_regroupement( etablissement.UAI, subnode['Nom'] )
+              code_annuaire = reponse_annuaire['id'] unless reponse_annuaire.nil?
+              regroupements[ subnode.name ][ subnode['Ident'] ] = code_annuaire
+              if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
+                sha256 = Digest::SHA256.hexdigest( { UAI: etablissement.UAI, Nom: subnode['Nom'] }.to_json )
+
+                manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
+                if manually_linked_id.nil?
+                  FailedIdentification.create( sha256: sha256 )
+                else
+                  regroupements[ subnode.name ][ subnode['Ident'] ] = manually_linked_id.id_annuaire
+                end
               end
-            when 'Classe', 'PartieDeClasse', 'Groupe' # on ne distingue pas les 3 types de regroupements
-              if regroupements[ node['Ident'] ].nil?
-                rapport[:creneaux][:error] << node
+
+              if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
+                rapport[:regroupements][subnode.name.to_sym][:error] << subnode
               else
-                CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
-                creneau.add_regroupement(regroupement_id: regroupements[ node.name ][ node['Ident'] ],
-                                         semaines_de_presence: corrige_semainiers( node['Semaines'], offset_semainiers ) )
-                CreneauEmploiDuTempsRegroupement.restrict_primary_key
+                rapport[:regroupements][subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
               end
-            when 'Salle'
-              CreneauEmploiDuTempsSalle.unrestrict_primary_key
-              creneau.add_salle(salle_id: Salle[ identifiant: node['Ident'] ][:id],
-                                semaines_de_presence: corrige_semainiers( node['Semaines'], offset_semainiers ) )
-              CreneauEmploiDuTempsSalle.restrict_primary_key
+            end
+          when 'Classe'
+            unless subnode.name == 'text'
+              reponse_annuaire = Annuaire.search_regroupement( etablissement.UAI, subnode['Nom'] )
+              code_annuaire = reponse_annuaire['id'] unless reponse_annuaire.nil?
+              regroupements[ subnode.name ][ subnode['Ident'] ] = code_annuaire
+              if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
+                sha256 = Digest::SHA256.hexdigest( { UAI: etablissement.UAI, Nom: subnode['Nom'] }.to_json )
+
+                manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
+                if manually_linked_id.nil?
+                  FailedIdentification.create( sha256: sha256 )
+                else
+                  regroupements[ subnode.name ][ subnode['Ident'] ] = manually_linked_id.id_annuaire
+                end
+              end
+
+              if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
+                rapport[:regroupements][subnode.name.to_sym][:error] << subnode
+              else
+                rapport[:regroupements][subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
+              end
             end
           end
         end
       end
     end
 
+    rapport[:creneaux] = { matieres: { success: [], error: [] },
+                           enseignants: { success: [], error: [] },
+                           regroupements: { success: [], error: [] },
+                           salles: { success: [], error: [] } }
+    edt_clair.search('Cours/Cours').reject { |child| child.name == 'text' }.each do |node|
+      debut = PlageHoraire[ label: node['NumeroPlaceDebut'] ][:id]
+      fin = PlageHoraire[ label: node['NumeroPlaceDebut'].to_i + node['NombrePlaces'].to_i - 1 ][:id]
+      matiere_id = nil
+
+      node.children.reject { |child| child.name == 'text' }.each do |subnode|  # FIXME: peut sûrement mieux faire
+        matiere_id = matieres[ subnode['Ident'] ] if subnode.name == 'Matiere'
+        if matiere_id.nil?
+          rapport[:creneaux][:matieres][:error] << subnode
+        else
+          rapport[:creneaux][:matieres][:success] << matiere_id
+        end
+      end
+      unless matiere_id.nil?
+        creneau = CreneauEmploiDuTemps.create(jour_de_la_semaine: node['Jour'].to_i + etablissement.date_premier_jour_premiere_semaine.wday, # 1: 'lundi' .. 7: 'dimanche', norme ISO-8601
+                                              debut: debut,
+                                              fin: fin,
+                                              matiere_id: matiere_id)
+        node.children.each do |subnode|
+          case subnode.name
+          when 'Professeur'
+            if enseignants[ subnode['Ident'] ].nil?
+              rapport[:creneaux][:enseignants][:error] << subnode
+            else
+              rapport[:creneaux][:enseignants][:success] << enseignants[ subnode['Ident'] ]
+              CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
+              creneau.add_enseignant(enseignant_id: enseignants[ subnode['Ident'] ],
+                                     semaines_de_presence: corrige_semainiers( subnode['Semaines'], offset_semainiers ) )
+              CreneauEmploiDuTempsEnseignant.restrict_primary_key
+            end
+          when 'Classe', 'PartieDeClasse', 'Groupe' # on ne distingue pas les 3 types de regroupements
+            if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
+              rapport[:creneaux][:regroupements][:error] << "#{subnode.name} : #{subnode['Ident']} ( #{regroupements[ subnode.name ][ subnode['Ident'] ]} )"
+            else
+              rapport[:creneaux][:regroupements][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
+              CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
+              creneau.add_regroupement(regroupement_id: regroupements[ subnode.name ][ subnode['Ident'] ],
+                                       semaines_de_presence: corrige_semainiers( subnode['Semaines'], offset_semainiers ) )
+              CreneauEmploiDuTempsRegroupement.restrict_primary_key
+            end
+          when 'Salle'
+            CreneauEmploiDuTempsSalle.unrestrict_primary_key
+            creneau.add_salle(salle_id: Salle[ identifiant: subnode['Ident'] ][:id],
+                              semaines_de_presence: corrige_semainiers( subnode['Semaines'], offset_semainiers ) )
+            CreneauEmploiDuTempsSalle.restrict_primary_key
+          end
+        end
+      end
+    end
+
     CreneauEmploiDuTempsRegroupement
-    .select(:regroupement_id)
-    .map { |r| r.regroupement_id }
-    .uniq
-    .each {
-      |regroupement_id|
+      .select(:regroupement_id)
+      .map { |r| r.regroupement_id }
+      .uniq
+      .each do |regroupement_id|
       CahierDeTextes.create( regroupement_id: regroupement_id ) unless CahierDeTextes.where( regroupement_id: regroupement_id ).count > 0
-    }
+    end
 
     rapport
   end
