@@ -195,12 +195,12 @@ module ProNote
                 regroupements[ subnode.name ][ subnode['Ident'] ] = manually_linked_id.id_annuaire
               end
             end
+          end
 
-            if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
-              rapport[:regroupements][subnode.name.to_sym][:error] << subnode
-            else
-              rapport[:regroupements][subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
-            end
+          if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
+            rapport[:regroupements][subnode.name.to_sym][:error] << subnode
+          else
+            rapport[:regroupements][subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
           end
         end
       end
@@ -246,12 +246,11 @@ module ProNote
                   regroupements[ subnode.name ][ subnode['Ident'] ] = manually_linked_id.id_annuaire
                 end
               end
-
-              if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
-                rapport[:regroupements][subnode.name.to_sym][:error] << subnode
-              else
-                rapport[:regroupements][subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
-              end
+            end
+            if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
+              rapport[:regroupements][subnode.name.to_sym][:error] << subnode
+            else
+              rapport[:regroupements][subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
             end
           when 'Classe'
             unless subnode.name == 'text'
