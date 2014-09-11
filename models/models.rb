@@ -22,3 +22,6 @@ require_relative './cours'
 
 # Devoirs
 require_relative './devoir'
+
+# Données non identifiable par l'annuaire lors des imports (Pronote, UDT, ...)
+require_relative './failed_identification'
