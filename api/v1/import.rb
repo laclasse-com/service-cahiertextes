@@ -31,7 +31,7 @@ module CahierDeTextesAPI
           rapport: UDT.load_zip( File.open( params[:file][:tempfile] ), params[ :uai ] ) }
       end
 
-      desc 'Identifie une Matière/Regroupement/Personne-Non-Idtenfié en lui donnant un ID Annuaire manuellement'
+      desc 'Identifie une Matière/Regroupement/Personne-Non-Identifié en lui donnant un ID Annuaire manuellement'
       params {
         requires :sha256
         requires :id_annuaire
