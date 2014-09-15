@@ -38,8 +38,10 @@ module CahierDeTextesAPI
       }
       put '/mrpni/:sha256/est/:id_annuaire' do
         fi = FailedIdentification.where( sha256: params[:sha256] ).first
-        fi.update( id_annuaire: params[:id_annuaire] )
-        fi.save
+        unless fi.nil?
+          fi.update( id_annuaire: params[:id_annuaire] )
+          fi.save
+        end
 
         fi
       end
