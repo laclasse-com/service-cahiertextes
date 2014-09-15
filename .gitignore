@@ -41,3 +41,6 @@ config/constants.rb
 /public/app/scripts/constants.js
 /spec/fixtures/UDT.zip
 /spec/api/cookieCT.txt
+/config/*.before
+/config/*.after
+/config/*.orig
