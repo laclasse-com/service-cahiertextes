@@ -78,7 +78,9 @@ module ProNote
                                   fin: node['LibelleHeureFin'])
 
       if plage.nil?
-        rapport[:plages_horaires][:error] << node
+        rapport[:plages_horaires][:error] << { label: node['Numero'],
+                                               debut: node['LibelleHeureDebut'],
+                                               fin: node['LibelleHeureFin'] }
       else
         rapport[:plages_horaires][:success] << plage
       end
@@ -91,7 +93,9 @@ module ProNote
                            nom: node['Nom'])
 
       if salle.nil?
-        rapport[:salles][:error] << node
+        rapport[:salles][:error] << { etablissement_id: etablissement.id,
+                                      identifiant: node['Ident'],
+                                      nom: node['Nom'] }
       else
         rapport[:salles][:success] << salle
       end
@@ -105,19 +109,19 @@ module ProNote
     edt_clair.search('Matieres').children.reject { |child| child.name == 'text' }.each do |node|
       matieres[ node['Ident'] ] = Annuaire.search_matiere( node['Libelle'] )['id']
       if matieres[ node['Ident'] ].nil?
-        sha256 = Digest::SHA256.hexdigest( { Libelle: node['Libelle'] }.to_json )
+        objet = { Libelle: node['Libelle'] }
+        sha256 = Digest::SHA256.hexdigest( objet.to_json )
 
         manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
         if manually_linked_id.nil?
           FailedIdentification.create( sha256: sha256 )
+          rapport[:matieres][:error] << { sha256: sha256,
+                                          objet: objet }
         else
           matieres[ node['Ident'] ] = manually_linked_id.id_annuaire
         end
       end
-
-      if matieres[ node['Ident'] ].nil?
-        rapport[:matieres][:error] << node
-      else
+      unless matieres[ node['Ident'] ].nil?
         rapport[:matieres][:success] << matieres[ node['Ident'] ]
       end
     end
@@ -131,19 +135,20 @@ module ProNote
       user_annuaire = Annuaire.search_utilisateur( etablissement.UAI, node['Nom'], node['Prenom'] )
       enseignants[ node['Ident'] ] = user_annuaire.nil? ? nil : user_annuaire['id_ent']
       if enseignants[ node['Ident'] ].nil?
-        sha256 = Digest::SHA256.hexdigest( { UAI: etablissement.UAI, Nom: node['Nom'], Prenom: node['Prenom'] }.to_json )
+        objet = { UAI: etablissement.UAI, Nom: node['Nom'], Prenom: node['Prenom'] }
+        sha256 = Digest::SHA256.hexdigest( objet.to_json )
 
         manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
         if manually_linked_id.nil?
           FailedIdentification.create( sha256: sha256 )
+          rapport[:enseignants][:error] << { sha256: sha256,
+                                             objet: objet }
         else
           enseignants[ node['Ident'] ] = manually_linked_id.id_annuaire
         end
       end
 
-      if enseignants[ node['Ident'] ].nil?
-        rapport[:enseignants][:error] << node
-      else
+      unless enseignants[ node['Ident'] ].nil?
         rapport[:enseignants][:success] << enseignants[ node['Ident'] ]
       end
     end
@@ -161,19 +166,20 @@ module ProNote
       code_annuaire = reponse_annuaire['id'] unless reponse_annuaire.nil?
       regroupements[ node.name ][ node['Ident'] ] = code_annuaire
       if regroupements[ node.name ][ node['Ident'] ].nil?
-        sha256 = Digest::SHA256.hexdigest( { UAI: etablissement.UAI, Nom: node['Nom'] }.to_json )
+        objet = { UAI: etablissement.UAI, Nom: node['Nom'] }
+        sha256 = Digest::SHA256.hexdigest( objet.to_json )
 
         manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
         if manually_linked_id.nil?
           FailedIdentification.create( sha256: sha256 )
+          rapport[:regroupements][node.name.to_sym][:error] << { sha256: sha256,
+                                                                 objet: objet }
         else
           regroupements[ node.name ][ node['Ident'] ] = manually_linked_id.id_annuaire
         end
       end
 
-      if regroupements[ node.name ][ node['Ident'] ].nil?
-        rapport[:regroupements][node.name.to_sym][:error] << node
-      else
+      unless regroupements[ node.name ][ node['Ident'] ].nil?
         rapport[:regroupements][node.name.to_sym][:success] << regroupements[ node.name ][ node['Ident'] ]
       end
 
@@ -186,20 +192,21 @@ module ProNote
             code_annuaire = reponse_annuaire['id'] unless reponse_annuaire.nil?
             regroupements[ subnode.name ][ subnode['Ident'] ] = code_annuaire
             if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
-              sha256 = Digest::SHA256.hexdigest( { UAI: etablissement.UAI, Nom: subnode['Nom'] }.to_json )
+              objet = { UAI: etablissement.UAI, Nom: subnode['Nom'] }
+              sha256 = Digest::SHA256.hexdigest( objet.to_json )
 
               manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
               if manually_linked_id.nil?
                 FailedIdentification.create( sha256: sha256 )
+                rapport[:regroupements][subnode.name.to_sym][:error] << { sha256: sha256,
+                                                                          objet: objet }
               else
                 regroupements[ subnode.name ][ subnode['Ident'] ] = manually_linked_id.id_annuaire
               end
             end
           end
 
-          if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
-            rapport[:regroupements][subnode.name.to_sym][:error] << subnode
-          else
+          unless regroupements[ subnode.name ][ subnode['Ident'] ].nil?
             rapport[:regroupements][subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
           end
         end
@@ -210,19 +217,20 @@ module ProNote
       code_annuaire = reponse_annuaire['id'] unless reponse_annuaire.nil?
       regroupements[ node.name ][ node['Ident'] ] = code_annuaire
       if regroupements[ node.name ][ node['Ident'] ].nil?
-        sha256 = Digest::SHA256.hexdigest( { UAI: etablissement.UAI, Nom: node['Nom'] }.to_json )
+        objet = { UAI: etablissement.UAI, Nom: node['Nom'] }
+        sha256 = Digest::SHA256.hexdigest( objet.to_json )
 
         manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
         if manually_linked_id.nil?
           FailedIdentification.create( sha256: sha256 )
+          rapport[:regroupements][node.name.to_sym][:error] << { sha256: sha256,
+                                                                 objet: objet }
         else
           regroupements[ node.name ][ node['Ident'] ] = manually_linked_id.id_annuaire
         end
       end
 
-      if regroupements[ node.name ][ node['Ident'] ].nil?
-        rapport[:regroupements][node.name.to_sym][:error] << node
-      else
+      unless regroupements[ node.name ][ node['Ident'] ].nil?
         rapport[:regroupements][node.name.to_sym][:success] << regroupements[ node.name ][ node['Ident'] ]
       end
 
@@ -237,19 +245,20 @@ module ProNote
               code_annuaire = reponse_annuaire['id'] unless reponse_annuaire.nil?
               regroupements[ subnode.name ][ subnode['Ident'] ] = code_annuaire
               if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
-                sha256 = Digest::SHA256.hexdigest( { UAI: etablissement.UAI, Nom: subnode['Nom'] }.to_json )
+                objet = { UAI: etablissement.UAI, Nom: subnode['Nom'] }
+                sha256 = Digest::SHA256.hexdigest( objet.to_json )
 
                 manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
                 if manually_linked_id.nil?
                   FailedIdentification.create( sha256: sha256 )
+                  rapport[:regroupements][subnode.name.to_sym][:error] << { sha256: sha256,
+                                                                            objet: objet }
                 else
                   regroupements[ subnode.name ][ subnode['Ident'] ] = manually_linked_id.id_annuaire
                 end
               end
             end
-            if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
-              rapport[:regroupements][subnode.name.to_sym][:error] << subnode
-            else
+            unless regroupements[ subnode.name ][ subnode['Ident'] ].nil?
               rapport[:regroupements][subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
             end
           when 'Classe'
@@ -258,19 +267,20 @@ module ProNote
               code_annuaire = reponse_annuaire['id'] unless reponse_annuaire.nil?
               regroupements[ subnode.name ][ subnode['Ident'] ] = code_annuaire
               if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
-                sha256 = Digest::SHA256.hexdigest( { UAI: etablissement.UAI, Nom: subnode['Nom'] }.to_json )
+                objet = { UAI: etablissement.UAI, Nom: subnode['Nom'] }
+                sha256 = Digest::SHA256.hexdigest( objet.to_json )
 
                 manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
                 if manually_linked_id.nil?
                   FailedIdentification.create( sha256: sha256 )
+                  rapport[:regroupements][subnode.name.to_sym][:error] << { sha256: sha256,
+                                                                            objet: objet }
                 else
                   regroupements[ subnode.name ][ subnode['Ident'] ] = manually_linked_id.id_annuaire
                 end
               end
 
-              if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
-                rapport[:regroupements][subnode.name.to_sym][:error] << subnode
-              else
+              unless regroupements[ subnode.name ][ subnode['Ident'] ].nil?
                 rapport[:regroupements][subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
               end
             end
@@ -291,7 +301,7 @@ module ProNote
       node.children.reject { |child| child.name == 'text' }.each do |subnode|  # FIXME: peut sûrement mieux faire
         matiere_id = matieres[ subnode['Ident'] ] if subnode.name == 'Matiere'
         if matiere_id.nil?
-          rapport[:creneaux][:matieres][:error] << subnode
+          rapport[:creneaux][:matieres][:error] << subnode['Ident']
         else
           rapport[:creneaux][:matieres][:success] << matiere_id
         end
@@ -305,7 +315,7 @@ module ProNote
           case subnode.name
           when 'Professeur'
             if enseignants[ subnode['Ident'] ].nil?
-              rapport[:creneaux][:enseignants][:error] << subnode
+              rapport[:creneaux][:enseignants][:error] << subnode['Ident']
             else
               rapport[:creneaux][:enseignants][:success] << enseignants[ subnode['Ident'] ]
               CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
@@ -315,7 +325,7 @@ module ProNote
             end
           when 'Classe', 'PartieDeClasse', 'Groupe' # on ne distingue pas les 3 types de regroupements
             if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
-              rapport[:creneaux][:regroupements][:error] << "#{subnode.name} : #{subnode['Ident']} ( #{regroupements[ subnode.name ][ subnode['Ident'] ]} )"
+              rapport[:creneaux][:regroupements][:error] << "#{subnode['Ident']} (#{subnode.name})"
             else
               rapport[:creneaux][:regroupements][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
               CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
