@@ -10,7 +10,7 @@ angular.module('cahierDeTexteApp')
 				      { heading: 'Tableaux de bord par classe',
 					uisref: 'principal.classes',
 					active: false },
-				      { heading: 'Import',
+				      { heading: 'Import Pronote',
 					uisref: 'import',
 					active: false } ];
 		      _($scope.tabs).each( function( tab ) {
