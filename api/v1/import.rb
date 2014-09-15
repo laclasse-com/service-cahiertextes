@@ -31,14 +31,6 @@ module CahierDeTextesAPI
           rapport: UDT.load_zip( File.open( params[:file][:tempfile] ), params[ :uai ] ) }
       end
 
-      desc ''
-      params {
-        requires :sha256
-      }
-      get '/mrpni/:sha256' do
-        FailedIdentification.where( sha256: params[:sha256] ).first
-      end
-
       desc 'Identifie une Matière/Regroupement/Personne-Non-Idtenfié en lui donnant un ID Annuaire manuellement'
       params {
         requires :sha256
