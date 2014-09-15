@@ -10,9 +10,6 @@ module CahierDeTextesAPI
       format :json
 
       before do
-        # pas de gestion restriction d'accès sur les get
-        next if request.get?
-
         error!( '401 Unauthorized', 401 ) unless user.is?( 'DIR' )
       end
 
