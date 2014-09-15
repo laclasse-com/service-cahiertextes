@@ -237,15 +237,21 @@ angular.module( 'cahierDeTexteApp' )
 
 				       $scope.accordion_cours_devoirs_open = $scope.cours.devoirs.length > 0;
 
+				       cours.devoirs = _(cours.devoirs).map( function( devoir ) {
+					   return Devoirs.get( { id: devoir.id } );
+				       } );
+
 				       _(cours.devoirs).each( function( devoir ) {
-					   $scope.estimation_leave( devoir );
-					   devoir.tooltip = devoir.contenu;
-					   if ( devoir.temps_estime > 0 ) {
-					       devoir.tooltip = '<span><i class="picto temps"></i>' + devoir.temps_estime * 5 + ' minutes</span><hr>' + devoir.tooltip;
-					   }
-					   if ( $scope.creneau.etranger ) {
-					       devoir.contenu = $sce.trustAsHtml( devoir.contenu );
-					   }
+					   devoir.$promise.then( function( d ) {
+					       $scope.estimation_leave( d );
+					       d.tooltip = d.contenu;
+					       if ( d.temps_estime > 0 ) {
+						   d.tooltip = '<span><i class="picto temps"></i>' + d.temps_estime * 5 + ' minutes</span><hr>' + d.tooltip;
+					       }
+					       if ( $scope.creneau.etranger ) {
+						   d.contenu = $sce.trustAsHtml( d.contenu );
+					       }
+					   } );
 				       } );
 
 				       $q.all( $scope.devoirs ).then( function() {
