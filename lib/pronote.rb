@@ -57,7 +57,12 @@ module ProNote
     "#{debut}#{fin}".to_i 2
   end
 
-  def load_xml(xml, xsd = nil)
+  def extract_uai_from_xml( xml, xsd = nil )
+    edt_clair = Nokogiri::XML( decrypt_xml( xml ) )
+    edt_clair.child['UAI']
+  end
+
+  def load_xml( xml, xsd = nil )
     rapport = {}
     edt_clair = Nokogiri::XML( decrypt_xml( xml ) )
 
