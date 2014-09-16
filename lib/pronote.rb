@@ -158,7 +158,7 @@ module ProNote
 
     edt_clair.search('Classes').children.reject { |child| child.name == 'text' }.each do |node|
       reponse_annuaire = Annuaire.search_regroupement( etablissement.UAI, node['Nom'] )
-      code_annuaire = reponse_annuaire['id'] unless reponse_annuaire.nil?
+      code_annuaire = reponse_annuaire.nil? ? nil : reponse_annuaire['id']
       regroupements[ node.name ][ node['Ident'] ] = code_annuaire
       if regroupements[ node.name ][ node['Ident'] ].nil?
         sha256 = Digest::SHA256.hexdigest( { UAI: etablissement.UAI, Nom: node['Nom'] }.to_json )
@@ -183,7 +183,7 @@ module ProNote
             regroupements[ 'PartieDeClasse' ][ subnode['Ident'] ] = regroupements[ 'Classe' ][ node['Ident'] ]
           else
             reponse_annuaire = Annuaire.search_regroupement( etablissement.UAI, subnode['Nom'] )
-            code_annuaire = reponse_annuaire['id'] unless reponse_annuaire.nil?
+            code_annuaire = reponse_annuaire.nil? ? nil : reponse_annuaire['id']
             regroupements[ subnode.name ][ subnode['Ident'] ] = code_annuaire
             if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
               sha256 = Digest::SHA256.hexdigest( { UAI: etablissement.UAI, Nom: subnode['Nom'] }.to_json )
@@ -207,7 +207,7 @@ module ProNote
     end
     edt_clair.search('Groupes').children.reject { |child| child.name == 'text' }.each do |node|
       reponse_annuaire = Annuaire.search_regroupement( etablissement.UAI, node['Nom'] )
-      code_annuaire = reponse_annuaire['id'] unless reponse_annuaire.nil?
+      code_annuaire = reponse_annuaire.nil? ? nil : reponse_annuaire['id']
       regroupements[ node.name ][ node['Ident'] ] = code_annuaire
       if regroupements[ node.name ][ node['Ident'] ].nil?
         sha256 = Digest::SHA256.hexdigest( { UAI: etablissement.UAI, Nom: node['Nom'] }.to_json )
@@ -234,7 +234,7 @@ module ProNote
               regroupements[ 'PartieDeClasse' ][ subnode['Ident'] ] = regroupements[ 'Classe' ][ node['Ident'] ]
             else
               reponse_annuaire = Annuaire.search_regroupement( etablissement.UAI, subnode['Nom'] )
-              code_annuaire = reponse_annuaire['id'] unless reponse_annuaire.nil?
+              code_annuaire = reponse_annuaire.nil? ? nil : reponse_annuaire['id']
               regroupements[ subnode.name ][ subnode['Ident'] ] = code_annuaire
               if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
                 sha256 = Digest::SHA256.hexdigest( { UAI: etablissement.UAI, Nom: subnode['Nom'] }.to_json )
@@ -255,7 +255,7 @@ module ProNote
           when 'Classe'
             unless subnode.name == 'text'
               reponse_annuaire = Annuaire.search_regroupement( etablissement.UAI, subnode['Nom'] )
-              code_annuaire = reponse_annuaire['id'] unless reponse_annuaire.nil?
+              code_annuaire = reponse_annuaire.nil? ? nil : reponse_annuaire['id']
               regroupements[ subnode.name ][ subnode['Ident'] ] = code_annuaire
               if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
                 sha256 = Digest::SHA256.hexdigest( { UAI: etablissement.UAI, Nom: subnode['Nom'] }.to_json )
