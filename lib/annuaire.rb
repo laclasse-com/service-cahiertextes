@@ -87,7 +87,7 @@ module Annuaire
   end
 
   def send_request( service, param, expand, error_msg )
-    RestClient.get( sign( ANNUAIRE[:url], "#{service}/#{CGI.escape( param )}", { expand: expand } ) ) do
+    RestClient.get( sign( ANNUAIRE[:url], "#{service}#{CGI.escape( param )}", { expand: expand } ) ) do
       |response, _request, _result|
       if response.code == 200
         return JSON.parse( response )
@@ -146,19 +146,19 @@ module Annuaire
   # API d'interfaçage avec l'annuaire à destination du client
   def get_matiere( id )
     @search = false
-    send_request 'matieres', CGI.escape( id ), 'false', 'Matière inconnue'
+    send_request 'matieres/', CGI.escape( id ), 'false', 'Matière inconnue'
   end
 
   # Service classes et groupes d'élèves
   def get_regroupement( id )
     @search = false
-    send_request 'regroupements', CGI.escape( id ), 'false', 'Regroupement inconnu'
+    send_request 'regroupements/', CGI.escape( id ), 'false', 'Regroupement inconnu'
   end
 
   # Service Utilisateur : init de la session et de son environnement
   def get_user( id )
     @search = false
-    send_request 'users', CGI.escape( id ), 'true', 'User inconnu'
+    send_request 'users/', CGI.escape( id ), 'true', 'User inconnu'
   end
 
   def get_user_regroupements( id )
@@ -192,7 +192,7 @@ module Annuaire
   # Service etablissement
   def get_etablissement( uai )
     @search = false
-    send_request 'etablissements', CGI.escape( uai ), 'true', 'Etablissement inconnu'
+    send_request 'etablissements/', CGI.escape( uai ), 'true', 'Etablissement inconnu'
   end
 
   def get_etablissement_regroupements( uai )
