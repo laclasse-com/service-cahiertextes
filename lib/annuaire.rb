@@ -173,6 +173,22 @@ module Annuaire
     end
   end
 
+  def put_user_profil_actif( id, profil_id, code_uai )
+    id = URI.escape( id )
+    profil_id = URI.escape( profil_id )
+    code_uai = URI.escape( code_uai )
+
+    RestClient.put( sign( ANNUAIRE[:url], "users/#{id}/profil_actif", uai: code_uai, profil_id: profil_id ), '' ) do
+      |response, _request, _result|
+      if response.code == 200
+        return JSON.parse( response )[0]
+      else
+        STDERR.puts "Error seeting profil_actif to #{profil_id} for user #{id} and etablissement #{code_uai}"
+        return { 'id' => nil }
+      end
+    end
+  end
+
   # Service etablissement
   def get_etablissement( uai )
     @search = false
