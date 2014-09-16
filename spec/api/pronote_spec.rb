@@ -38,4 +38,19 @@ describe CahierDeTextesAPI::API do
     }
   end
 
+  it 'links a failed identification to an Annuaire\'s ID' do
+    sha256 = Digest::SHA256.hexdigest "test#{rand}"
+    id_annuaire = 'test'
+    FailedIdentification.create( sha256: sha256 )
+
+    put "/v1/import/mrpni/#{sha256}/est/#{id_annuaire}",
+        {}.to_json,
+        'CONTENT_TYPE' => 'application/json'
+
+    last_response.status.should == 200
+
+    body = JSON.parse( last_response.body )
+    body['sha256'].should == sha256
+    body['id_annuaire'].should == id_annuaire
+  end
 end

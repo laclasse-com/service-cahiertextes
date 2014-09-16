@@ -16,7 +16,13 @@
   <div class="row">
     <label>{{result.rapport.matieres.error.length}} Matières non prises en compte</label>
     <ul>
-      <li data-ng-repeat="matiere in result.rapport.matieres.error track by $index">{{matiere}}</li>
+      <li data-ng-repeat="matiere in result.rapport.matieres.error track by $index">
+	<label>{{matiere.objet.Nom}}
+	  <select data-ng-options="m.id as m.libelle in matieres"
+		  data-ng-model="matiere.id_annuaire"
+		  data-ng-change="identifie_objet( matiere.sha256, matiere.id_annuaire )"></select>
+	</label>
+      </li>
     </ul>
   </div>
   <div class="row">
@@ -25,7 +31,13 @@
   <div class="row">
     <label>{{result.rapport.enseignants.error.length}} Enseignants non prises en compte</label>
     <ul>
-      <li data-ng-repeat="enseignant in result.rapport.enseignants.error track by $index">{{enseignant}}</li>
+      <li data-ng-repeat="enseignant in result.rapport.enseignants.error track by $index">
+	<label>{{enseignant.objet.Nom}} {{enseignant.objet.Prenom}}
+	  <select data-ng-options="m.id as m.libelle in enseignants"
+		  data-ng-model="enseignant.id_annuaire"
+		  data-ng-change="identifie_objet( enseignant.sha256, enseignant.id_annuaire )"></select>
+	</label>
+      </li>
     </ul>
   </div>
   <div class="row">
@@ -34,7 +46,13 @@
   <div class="row">
     <label>{{result.rapport.regroupements.classes.error.length}} Classes non prises en compte</label>
     <ul>
-      <li data-ng-repeat="regroupement in result.rapport.regroupements.classes.error track by $index">{{regroupement}}</li>
+      <li data-ng-repeat="regroupement in result.rapport.regroupements.classes.error track by $index">
+	<label>{{regroupement.objet.Nom}} {{regroupement.objet.Prenom}}
+	  <select data-ng-options="m.id as m.libelle in regroupements"
+		  data-ng-model="regroupement.id_annuaire"
+		  data-ng-change="identifie_objet( regroupement.sha256, regroupement.id_annuaire )"></select>
+	</label>
+      </li>
     </ul>
   </div>
   <div class="row">
@@ -43,7 +61,13 @@
   <div class="row">
     <label>{{result.rapport.regroupements.parties_de_classe.error.length}} Parties de Classes non prises en compte</label>
     <ul>
-      <li data-ng-repeat="regroupement in result.rapport.regroupements.parties_de_classe.error track by $index">{{regroupement}}</li>
+      <li data-ng-repeat="regroupement in result.rapport.regroupements.parties_de_classe.error track by $index">
+	<label>{{regroupement.objet.Nom}} {{regroupement.objet.Prenom}}
+	  <select data-ng-options="m.id as m.libelle in regroupements"
+		  data-ng-model="regroupement.id_annuaire"
+		  data-ng-change="identifie_objet( regroupement.sha256, regroupement.id_annuaire )"></select>
+	</label>
+      </li>
     </ul>
   </div>
   <div class="row">
@@ -52,7 +76,13 @@
   <div class="row">
     <label>{{result.rapport.regroupements.groupes.error.length}} Groupes non prises en compte</label>
     <ul>
-      <li data-ng-repeat="regroupement in result.rapport.regroupements.groupes.error track by $index">{{regroupement}}</li>
+      <li data-ng-repeat="regroupement in result.rapport.regroupements.groupes.error track by $index">
+	<label>{{regroupement.objet.Nom}} {{regroupement.objet.Prenom}}
+	  <select data-ng-options="m.id as m.libelle in regroupements"
+		  data-ng-model="regroupement.id_annuaire"
+		  data-ng-change="identifie_objet( regroupement.sha256, regroupement.id_annuaire )"></select>
+	</label>
+      </li>
     </ul>
   </div>
   <div class="row">

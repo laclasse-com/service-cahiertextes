@@ -176,8 +176,7 @@ module CahierDeTextesAPI
         devoir.update( deleted: true, date_modification: Time.now )
         devoir.save
 
-        # FIXME: fuite d'info sur :devoir_todo_items
-        devoir.to_deep_hash
+        devoir
       end
     end
   end
