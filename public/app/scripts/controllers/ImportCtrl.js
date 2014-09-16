@@ -7,7 +7,9 @@ angular.module('cahierDeTexteApp')
 		      $scope.in_progress = false;
 		      $scope.result = false;
 
-		      $scope.onFileSelect = function($files) {
+		      $scope.fichiers = null;
+		      $scope.launch_import = function( $files ) {
+			  $scope.result = false;
 			  //$files: an array of files selected, each file has name, size, and type.
 			  for (var i = 0; i < $files.length; i++) {
 			      var file = $files[i];
@@ -27,29 +29,51 @@ angular.module('cahierDeTexteApp')
 				      $scope.in_progress = false;
 				      $scope.result = data;
 
-				      $scope.identifie_objet = function( sha256, id_annuaire ) {
-					  $http.post( APP_PATH + '/api/v1/import/mrpni/' + sha256 + '/est/' + id_annuaire );
+				      $scope.identifie_objet = function( mrpni ) {
+					  $http.put( APP_PATH + '/api/v1/import/mrpni/' + mrpni.sha256 + '/est/' + mrpni.id_annuaire )
+					      .success( function() {
+						  mrpni.identified = true;
+					      });
+				      };
+				      $scope.identifie_massivement_objets = function( mrpnis ) {
+					  _(mrpnis).each( function( mrpni ) {
+					      if ( !_(mrpni.id_annuaire).isNull() ) {
+						  $scope.identifie_objet( mrpni );
+					      }
+					  } );
 				      };
 
 				      if ( !_($scope.result.rapport.matieres.error).isEmpty() ) {
-					  // TODO
-					  $scope.matieres = Annuaire.get_all_matieres();
+					  Annuaire.get_matieres()
+					      .then( function( response ) {
+						  $scope.matieres = response.data;
+					      } );
 				      }
 				      if ( !_($scope.result.rapport.enseignants.error).isEmpty() ) {
-					  // TODO
 					  User.get_user().success( function ( response ) {
 					      $scope.current_user = response;
-					      $scope.enseignants = Annuaire.get_all_enseignants( { uai: $scope.current_user.profil_actif.uai } );
+					      Annuaire.get_etablissement_enseignants( $scope.current_user.profil_actif.uai )
+						  .then( function( response ) {
+						      $scope.enseignants = response.data;
+						  } );
 					  } );
 				      }
-				      if ( !_($scope.result.rapport.regroupements.error).isEmpty() ) {
-					  // TODO
+				      if ( !_($scope.result.rapport.regroupements.Classe.error).isEmpty()
+					   || !_($scope.result.rapport.regroupements.Groupe.error).isEmpty()
+					   || !_($scope.result.rapport.regroupements.PartieDeClasse.error).isEmpty() ) {
 					  User.get_user().success( function ( response ) {
 					      $scope.current_user = response;
-					      $scope.enseignants = Annuaire.get_all_regroupements( { uai: $scope.current_user.profil_actif.uai } );
+					      Annuaire.get_etablissement_regroupements( $scope.current_user.profil_actif.uai )
+						  .then( function( response ) {
+						      $scope.regroupements = response.data;
+						  } );;
 					  } );
 				      }
 				  });
 			  }
+		      };
+
+		      $scope.onFileSelect = function( $files ) {
+			  $scope.fichiers = $files;
 		      };
 		  } ] );

@@ -26,8 +26,20 @@ angular.module('cahierDeTexteApp')
 
 angular.module('cahierDeTexteApp')
     .service('Annuaire',
-	     [ 'Matieres', 'Regroupements', 'Users',
-	       function( Matieres, Regroupements, Users ) {
+	     [ '$http', 'Matieres', 'Regroupements', 'Users', 'APP_PATH', 'API_VERSION',
+	       function( $http, Matieres, Regroupements, Users, APP_PATH, API_VERSION ) {
+		   this.get_matieres = _.memoize( function(  ) {
+		       return $http.get( APP_PATH + '/api/' + API_VERSION + '/annuaire/matieres' );
+		   });
+
+		   this.get_etablissement_enseignants = _.memoize( function( uai ) {
+		       return $http.get( APP_PATH + '/api/' + API_VERSION + '/annuaire/etablissements/' + uai + '/enseignants' );
+		   });
+
+		   this.get_etablissement_regroupements = _.memoize( function( uai ) {
+		       return $http.get( APP_PATH + '/api/' + API_VERSION + '/annuaire/etablissements/' + uai + '/regroupements' );
+		   });
+
 		   this.get_matiere = _.memoize( function( matiere_id ) {
 		       return Matieres.get({ matiere_id: matiere_id });
 		   });
