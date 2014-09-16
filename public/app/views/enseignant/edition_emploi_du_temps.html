@@ -56,27 +56,27 @@
 	  </ul>
 	</div>
       </div>
-      </div>
+    </div>
 
-      <div class="row">
-	<div class="col-md-12">
-	  <label>Choisir les semaines actives :</label>
-	  <div class="btn-group">
-	    <button class="btn btn-sm btn-warning" data-ng-click="apply_template( 'semaine_A' )">semaine A</button>
-	    <button class="btn btn-sm btn-warning" data-ng-click="apply_template( 'semaine_B' )">semaine B</button>
-	    <button class="btn btn-sm btn-warning" data-ng-click="apply_template( 'initialize' )">Réinitialiser</button>
-	  </div>
-	  <div class="btn-group">
-	    <button type="button" class="btn btn-xs"
-		    data-ng-class="{'btn-default': !semaine, 'btn-warning': semaine}"
-		    data-ng-model="semaines_actives.regroupement[ $index ]"
-		    btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0"
-		    data-ng-repeat="semaine in semaines_actives.regroupement track by $index" >
-	      {{$index + 1}}
-	    </button>
-	  </div>
+    <div class="row">
+      <div class="col-md-12">
+	<label>Choisir les semaines actives :</label>
+	<div class="btn-group">
+	  <button class="btn btn-sm btn-warning" data-ng-click="apply_template( 'semaine_A' )">semaine A</button>
+	  <button class="btn btn-sm btn-warning" data-ng-click="apply_template( 'semaine_B' )">semaine B</button>
+	  <button class="btn btn-sm btn-warning" data-ng-click="apply_template( 'initialize' )">Réinitialiser</button>
+	</div>
+	<div class="btn-group">
+	  <button type="button" class="btn btn-xs"
+		  data-ng-class="{'btn-default': !semaine, 'btn-warning': semaine}"
+		  data-ng-model="semaines_actives.regroupement[ $index ]"
+		  btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0"
+		  data-ng-repeat="semaine in semaines_actives.regroupement track by $index" >
+	    {{$index + 1}}
+	  </button>
 	</div>
       </div>
+    </div>
   </div>
   <!-- }}} -->
 
