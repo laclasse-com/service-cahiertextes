@@ -21,13 +21,6 @@ angular.module( 'cahierDeTexteApp' )
 			   url: '/',
 			   controller: 'IndexCtrl'
 		       })
-		   // import //////////////////////////////////////////////////////////////
-		       .state('import', {
-			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } },
-			   url: '/import',
-			   controller: 'ImportCtrl',
-			   templateUrl: APP_PATH + '/app/views/import.html'
-		       })
 		   // Principal ///////////////////////////////////////////////////////////
 		       .state('principal', {
 			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } },
@@ -35,6 +28,17 @@ angular.module( 'cahierDeTexteApp' )
 			   url: '/principal',
 			   templateUrl: APP_PATH + '/app/views/common/tabs.html',
 			   controller: 'PrincipalCtrl'
+		       })
+		       .state('principal.import', {
+			   parent: 'principal',
+			   url: '/import',
+			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } },
+			   views: {
+			       'content': {
+				   controller: 'ImportCtrl',
+				   templateUrl: APP_PATH + '/app/views/import.html'
+			       }
+			   }
 		       })
 		       .state('principal.enseignants', {
 			   parent: 'principal',

@@ -11,7 +11,7 @@ angular.module('cahierDeTexteApp')
 					uisref: 'principal.classes',
 					active: false },
 				      { heading: 'Import Pronote',
-					uisref: 'import',
+					uisref: 'principal.import',
 					active: false } ];
 		      _($scope.tabs).each( function( tab ) {
 			  tab.active = tab.uisref == $state.current.name;
