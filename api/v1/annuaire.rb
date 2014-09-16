@@ -8,12 +8,33 @@ module CahierDeTextesAPI
     class AnnuaireAPI < Grape::API
       format :json
 
+      desc 'Renvoi la liste de toutes les matières'
+      get '/matieres' do
+        Annuaire.get_matieres
+      end
+
       desc 'Renvoi le détail d\'une matière'
       params {
         requires :id, desc: 'id de la matière'
       }
       get '/matieres/:id' do
         Annuaire.get_matiere( params[:id] )
+      end
+
+      desc 'retourne la liste des enseignants de l\'établissement'
+      params {
+        requires :uai, desc: 'Code UAI de l\'établissement'
+      }
+      get 'etablissements/:uai/enseignants' do
+        Annuaire.get_etablissement_enseignants( params[:uai] )
+      end
+
+      desc 'retourne la liste des regroupements de l\'établissement'
+      params {
+        requires :uai, desc: 'Code UAI de l\'établissement'
+      }
+      get 'etablissements/:uai/regroupements' do
+        Annuaire.get_etablissement_regroupements( params[:uai] )
       end
 
       desc 'Renvoi le détail d\'un regroupement'
