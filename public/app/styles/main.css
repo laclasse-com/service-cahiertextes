@@ -109,7 +109,8 @@ body {
 .edition-creneau select{width:12.5em}
 
 .accordion-toggle{cursor:pointer}
-.duplication-saisie div,.duplication-saisie select{width:100%}
+.duplication-saisie div,.duplication-saisie select { width:100%;
+						     min-height: 20em; }
 
 .ressources .attached-document { float: left;
 				 border: 1px solid #aaa;
@@ -187,7 +188,7 @@ footer { color: #555;
 		   color:#aaa;
 		   text-align: center; }
 
-.modal-body .tab-content { min-height: 11em;
+.modal-body .tab-content { min-height: 20em;
 			   max-height: 34em;
 			   overflow-x: hidden;
 			   overflow-y: auto;
