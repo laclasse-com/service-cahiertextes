@@ -16,7 +16,6 @@
     "bootstrap": "latest",
     "es5-shim": "latest",
     "json3": "latest",
-    "select2-bootstrap-css": "latest",
     "sizzle": "latest",
     "swagger-ui": "latest",
     "underscore": "latest",
@@ -26,7 +25,7 @@
     "angularjs-nvd3-directives": "latest",
     "angular-tree-control": "latest",
     "angular-moment": "latest",
-      "textAngular": "https://github.com/fraywing/textAngular.git#master",
+    "textAngular": "https://github.com/fraywing/textAngular.git#master",
     "ng-switcher": "latest",
     "font-awesome": "latest",
     "ng-file-upload": "latest"
