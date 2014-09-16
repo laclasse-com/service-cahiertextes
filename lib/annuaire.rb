@@ -144,6 +144,11 @@ module Annuaire
   end
 
   # API d'interfaçage avec l'annuaire à destination du client
+  def get_matieres
+    @search = false
+    send_request 'matieres', '', 'true', ''
+  end
+
   def get_matiere( id )
     @search = false
     send_request 'matieres/', CGI.escape( id ), 'false', 'Matière inconnue'
@@ -203,6 +208,18 @@ module Annuaire
         return JSON.parse( response )
       else
         STDERR.puts "erreur getting etablissement's regroupements : #{CGI.escape( uai )}"
+      end
+    end
+  end
+
+  def get_etablissement_enseignants( uai )
+    @search = false
+    RestClient.get( sign( ANNUAIRE[:url], "etablissements/#{CGI.escape( uai )}/enseignants", {} ) ) do
+      |response, _request, _result|
+      if response.code == 200
+        return JSON.parse( response )
+      else
+        STDERR.puts "erreur getting etablissement's enseignants : #{CGI.escape( uai )}"
       end
     end
   end
