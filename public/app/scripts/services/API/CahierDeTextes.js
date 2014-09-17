@@ -13,7 +13,8 @@ angular.module('cahierDeTexteApp')
 				       .filter( function( classe ) { return classe.etablissement_code == profil.uai; } )
 				       .map( function( classe ) {
 					   return { id: classe.classe_id,
-						    libelle: classe.classe_libelle };
+						    libelle: classe.classe_libelle,
+						    type: classe.type };
 				       } )
 				       .uniq( function( item ) { return item.id; } )
 				       .reject( function( item ) { return _.isUndefined( item.id ); } )
