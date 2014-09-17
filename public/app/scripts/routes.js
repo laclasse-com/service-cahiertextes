@@ -78,14 +78,14 @@ angular.module( 'cahierDeTexteApp' )
 		       .state('eleve', {
 			   abstract: true,
 			   url: '/eleve',
-			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ELV', 'PAR' ] ); } },
+			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ELV', 'TUT' ] ); } },
 			   controller: 'EleveCtrl',
 			   templateUrl: APP_PATH + '/app/views/common/tabs.html'
 		       })
 		       .state('eleve.emploi_du_temps', {
 			   parent: 'eleve',
 			   url: '/emploi_du_temps',
-			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ELV', 'PAR' ] ); } },
+			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ELV', 'TUT' ] ); } },
 			   views: {
 			       'content': {
 				   templateUrl: APP_PATH + '/app/views/eleve/emploi_du_temps.html',
@@ -96,7 +96,7 @@ angular.module( 'cahierDeTexteApp' )
 		       .state('eleve.devoirs', {
 			   parent: 'eleve',
 			   url: '/devoirs',
-			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ELV', 'PAR' ] ); } },
+			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ELV', 'TUT' ] ); } },
 			   views: {
 			       'content': {
 				   templateUrl: APP_PATH + '/app/views/eleve/devoirs.html',

@@ -106,7 +106,8 @@ angular.module('cahierDeTexteApp')
 		   return $resource( APP_PATH + '/api/' + API_VERSION + '/emplois_du_temps/du/:debut/au/:fin',
 				     { debut: '@debut',
 				       fin: '@fin',
-				       uai: '@uai' } );
+				       uai: '@uai',
+				       uid: '@uid' } );
 	       } ] );
 
 angular.module('cahierDeTexteApp')
