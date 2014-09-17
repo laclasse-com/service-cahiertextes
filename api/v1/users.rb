@@ -29,8 +29,11 @@ module CahierDeTextesAPI
                                    .concat( regroupements_annuaire['groupes_libres'] )
                                    .map do |regroupement|
           if regroupement.key? 'groupe_id'
+            regroupement['type'] = 'groupe'
             regroupement['classe_id'] = regroupement['groupe_id']
             regroupement['classe_libelle'] = regroupement['groupe_libelle']
+          else
+            regroupement['type'] = 'classe'
           end
           regroupement
         end
