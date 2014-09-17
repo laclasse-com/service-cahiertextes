@@ -1,15 +1,24 @@
 <div class="panel panel-default">
   <div class="panel-body">
+    <div class="row">
+      <div class="col-md-12">
+	<select data-ng-options="enfant.enfant.id_ent as enfant.enfant.prenom+' '+enfant.enfant.nom for enfant in current_user.enfants"
+		data-ng-model="uid_enfant_actif"
+		data-ng-change="reload_data()"></select>
+      </div>
+    </div>
     <div data-calendar="emploi_du_temps" data-ui-calendar="calendar.options" class="calendar" data-ng-model="calendar.events"></div>
-    <div class="col-md-12">
-      <div class="pull-right">
-	<label>Légende :</label>
-	<span class="label edt-cours" title="Cours">Cours</span>
-	<!-- <span class="label edt-permanence" title="Permanence">Permanence</span> -->
-	<span class="label edt-devoir-a-faire" title="Devoir à faire">devoir à faire</span>
-	<span class="label edt-devoir-fait" title="Devoir fait ! Youpi !">devoir fait</span>
-	<span class="label edt-devoir-note-maison" title="Devoir noté à faire à la maison">DM - devoir maison noté</span>
-	<span class="label edt-devoir-note-surveille" title="Devoir noté surveillé">DS - devoir surveillé noté</span>
+    <div class="row">
+      <div class="col-md-12">
+	<div class="pull-right">
+	  <label>Légende :</label>
+	  <span class="label edt-cours" title="Cours">Cours</span>
+	  <!-- <span class="label edt-permanence" title="Permanence">Permanence</span> -->
+	  <span class="label edt-devoir-a-faire" title="Devoir à faire">devoir à faire</span>
+	  <span class="label edt-devoir-fait" title="Devoir fait ! Youpi !">devoir fait</span>
+	  <span class="label edt-devoir-note-maison" title="Devoir noté à faire à la maison">DM - devoir maison noté</span>
+	  <span class="label edt-devoir-note-surveille" title="Devoir noté surveillé">DS - devoir surveillé noté</span>
+	</div>
       </div>
     </div>
   </div>

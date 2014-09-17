@@ -8,6 +8,7 @@ angular.module('cahierDeTexteApp')
 			     CALENDAR_OPTIONS, CALENDAR_PARAMS, APP_PATH, API, Annuaire, EmploisDuTemps, User, CreneauEmploiDuTemps ) {
 				 var popup_ouverte = false;
 				 var filter_data = angular.identity;
+				 $scope.uid_enfant_actif = null;
 
 				 var popup_callback = function( scope_popup ) {
 				     popup_ouverte = false;
@@ -78,7 +79,8 @@ angular.module('cahierDeTexteApp')
 				 var retrieve_data = function( from_date, to_date ) {
 				     EmploisDuTemps.query( { debut: from_date,
 							     fin: to_date,
-							     uai: $scope.current_user.profil_actif.uai } )
+							     uai: $scope.current_user.profil_actif.uai,
+							     uid: $scope.uid_enfant_actif } )
 					 .$promise
 					 .then( function success( response ) {
 					     $scope.raw_data = response;
@@ -212,6 +214,11 @@ angular.module('cahierDeTexteApp')
 
 				     case 'ELV':
 				     case 'TUT':
+					 if ( $scope.current_user.profil_actif.type === 'TUT' ) {
+					     $scope.uid_enfant_actif = $scope.current_user.enfants[0].enfant.id_ent;
+					     $scope.reload_data = popup_callback;
+					 }
+
 					 // popup d'affichage des détails
 					 var ouvre_popup_details = function( titre, cours, devoirs ) {
 					     $modal.open( { templateUrl: APP_PATH + '/app/views/eleve/detail_emploi_du_temps.html',
