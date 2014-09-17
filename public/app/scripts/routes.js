@@ -36,7 +36,7 @@ angular.module( 'cahierDeTexteApp' )
 			   views: {
 			       'content': {
 				   controller: 'ImportCtrl',
-				   templateUrl: APP_PATH + '/app/views/import.html'
+				   templateUrl: APP_PATH + '/app/views/principal/import.html'
 			       }
 			   }
 		       })
@@ -88,7 +88,7 @@ angular.module( 'cahierDeTexteApp' )
 			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ELV', 'TUT' ] ); } },
 			   views: {
 			       'content': {
-				   templateUrl: APP_PATH + '/app/views/eleve/emploi_du_temps.html',
+				   templateUrl: APP_PATH + '/app/views/common/emploi_du_temps.html',
 				   controller: 'EmploiDuTempsCtrl'
 			       }
 			   }
@@ -119,7 +119,7 @@ angular.module( 'cahierDeTexteApp' )
 			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ENS' ] ); } },
 			   views: {
 			       'content': {
-				   templateUrl: APP_PATH + '/app/views/enseignant/emploi_du_temps.html',
+				   templateUrl: APP_PATH + '/app/views/common/emploi_du_temps.html',
 				   controller: 'EmploiDuTempsCtrl'
 			       }
 			   }
