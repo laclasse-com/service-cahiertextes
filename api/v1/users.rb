@@ -9,7 +9,7 @@ module CahierDeTextesAPI
         utilisateur = env['rack.session'][:current_user]
 
         extra = Annuaire.get_user( utilisateur[ 'uid' ] )
-        utilisateur[ 'profils' ] = extra['profils'].map { |profil|
+        utilisateur[ 'profils' ] = extra['profils'].map do |profil|
           # renommage de champs
           profil['type'] = profil['profil_id']
           profil['uai'] = profil['etablissement_code_uai']
@@ -20,7 +20,8 @@ module CahierDeTextesAPI
           profil['admin'] = extra['roles'].select { |r| r['etablissement_code_uai'] == profil['etablissement_code_uai'] && ( r['role_id'] == 'TECH' || r['role_id'].match('ADM.*') ) }.length > 0
 
           profil
-        }
+        end
+        utilisateur[ 'enfants' ] = extra [ 'enfants' ]
 
         regroupements_annuaire = Annuaire.get_user_regroupements( utilisateur[ 'uid' ] )
         utilisateur[ 'classes' ] = regroupements_annuaire[ 'classes' ]
