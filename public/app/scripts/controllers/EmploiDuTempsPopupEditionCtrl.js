@@ -354,7 +354,7 @@ angular.module( 'cahierDeTexteApp' )
 				   if ( _( item.ressources ).findWhere( {
 				       hash: hash
 				   } ) === undefined ) {
-				       Documents.ajout_au_cahier_de_textes( $scope.classe.id, hash )
+				       Documents.ajout_au_cahier_de_textes( $scope.classe, hash )
 					   .success( function ( response ) {
 					       item.ressources.push( {
 						   name: name,
@@ -370,7 +370,7 @@ angular.module( 'cahierDeTexteApp' )
 				   if ( item.ressources === undefined ) {
 				       item.ressources = [];
 				   }
-				   var responses = Documents.upload_dans_cahier_de_textes( $scope.classe.id, fichiers );
+				   var responses = Documents.upload_dans_cahier_de_textes( $scope.classe, fichiers );
 				   for ( var i = 0; i < responses.length; i++ ) {
 				       responses[ i ]
 					   .success( function ( response ) {
