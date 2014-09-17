@@ -1,0 +1,36 @@
+  <div class="panel panel-default">
+    <div class="panel-heading" data-ng-if="current_user.profil_actif.type === 'ENS' || current_user.profil_actif.type === 'TUT'">
+      <select data-ng-if="current_user.profil_actif.type === 'ENS'"
+	      data-ng-model="classe"
+	      data-ng-change="refresh_calendar()"
+	      data-ng-options="classe.id as classe.libelle for classe in current_user.profil_actif.classes">
+	<option value="" selected>Toutes les classes</option>
+      </select>
+      <label data-ng-if="current_user.profil_actif.type === 'ENS'">
+	<input type="checkbox"
+	       data-ng-model="uniquement_mes_creneaux"
+	       data-ng-change="refresh_calendar()" />
+	Ne montrer que ce qui me concerne directement
+      </label>
+
+      <select data-ng-if="current_user.profil_actif.type === 'TUT'"
+	      data-ng-options="enfant.enfant.id_ent as enfant.enfant.prenom+' '+enfant.enfant.nom for enfant in current_user.enfants"
+	      data-ng-model="uid_enfant_actif"
+	      data-ng-change="reload_data()"></select>
+
+    </div>
+    <div class="panel-body">
+      <div data-calendar="emploi_du_temps" data-ui-calendar="calendar.options" class="calendar" data-ng-model="calendar.events"></div>
+      <div class="col-md-12">
+	<div class="pull-right">
+	  <label>Légende :</label>
+	  <span class="label edt-cours" title="Cours">Cours</span>
+	  <!-- <span class="label edt-permanence" title="Permanence">Permanence</span> -->
+	  <span class="label edt-devoir-a-faire" title="Devoir à faire">devoir à faire</span>
+	  <span class="label edt-devoir-fait" title="Devoir fait ! Youpi !" data-ng-if="current_user.profil_actif.type === 'ELV'">devoir fait</span>
+	  <span class="label edt-devoir-note-maison" title="Devoir noté à faire à la maison">DM - devoir maison noté</span>
+	  <span class="label edt-devoir-note-surveille" title="Devoir noté surveillé">DS - devoir surveillé noté</span>
+	</div>
+      </div>
+    </div>
+  </div>
