@@ -21,6 +21,7 @@ module CahierDeTextesAPI
 
           profil
         end
+        utilisateur[ 'enfants' ] = extra [ 'enfants' ]
 
         regroupements_annuaire = Annuaire.get_user_regroupements( utilisateur[ 'uid' ] )
         utilisateur[ 'classes' ] = regroupements_annuaire[ 'classes' ]
