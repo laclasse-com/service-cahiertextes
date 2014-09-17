@@ -211,7 +211,7 @@ angular.module('cahierDeTexteApp')
 					 break;
 
 				     case 'ELV':
-				     default:
+				     case 'TUT':
 					 // popup d'affichage des détails
 					 var ouvre_popup_details = function( titre, cours, devoirs ) {
 					     $modal.open( { templateUrl: APP_PATH + '/app/views/eleve/detail_emploi_du_temps.html',
