@@ -21,6 +21,7 @@ angular.module('cahierDeTexteApp')
 				   case 'ENS':
 				       stateName = 'enseignant.emploi_du_temps';
 				       break;
+				   case 'TUT':
 				   case 'ELV':
 				       stateName = 'eleve.emploi_du_temps';
 				       break;
