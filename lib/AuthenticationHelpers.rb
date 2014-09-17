@@ -97,7 +97,8 @@ module AuthenticationHelpers
           .concat( etablissement['groupes_libres'] )
           .each {
           |regroupement|
-          CahierDeTextes.create( regroupement_id: regroupement['id']  )
+          cdt = CahierDeTextes.where( regroupement_id: regroupement['id'] ).first
+          CahierDeTextes.create( regroupement_id: regroupement['id'] ) if cdt.nil?
         }
       end
     }
