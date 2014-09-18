@@ -122,27 +122,27 @@ angular.module('cahierDeTexteApp')
 			      .value();
 		      };
 
-		      $scope.week_offset = 0;
+		      $scope.month_offset = 0;
 
 		      // retrieve_data() when the value of week_offset changes
 		      // n.b.: triggered when week_offset is initialized above
-		      $scope.$watch( 'week_offset', function() {
+		      $scope.$watch( 'month_offset', function() {
 			  retrieve_data();
 		      } );
 
-		      $scope.incr_week_offset = function() {
-			  $scope.week_offset++;
+		      $scope.incr_offset = function() {
+			  $scope.month_offset++;
 		      };
-		      $scope.decr_week_offset = function() {
-			  $scope.week_offset--;
+		      $scope.decr_offset = function() {
+			  $scope.month_offset--;
 		      };
-		      $scope.reset_week_offset = function() {
-			  $scope.week_offset = 0;
+		      $scope.reset_offset = function() {
+			  $scope.month_offset = 0;
 		      };
 
 		      var retrieve_data = function() {
-			  $scope.from_date = moment().startOf( 'week' ).subtract( 'days', $scope.week_offset * 7 ).toDate();
-			  $scope.to_date = moment().endOf( 'week' ).subtract( 'days', $scope.week_offset * 7 ).toDate();
+			  $scope.from_date = moment().startOf( 'month' ).subtract( 'months', $scope.month_offset ).toDate();
+			  $scope.to_date = moment().endOf( 'month' ).subtract( 'months', $scope.month_offset ).toDate();
 			  EmploisDuTemps.query( { debut: $scope.from_date,
 						  fin: $scope.to_date,
 						  uai: $scope.current_user.profil_actif.uai } )
