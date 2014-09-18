@@ -159,11 +159,11 @@
 	</div>
       </div>
 
-      <accordion close-others="false">
-	<accordion-group data-is-open="accordion_cours_devoirs_open">
-	  <accordion-heading>
-	    <span class="glyphicon" ng-class="{'glyphicon-chevron-down': accordion_cours_devoirs_open, 'glyphicon-chevron-right': !accordion_cours_devoirs_open}"> Travail à faire</span>
-	  </accordion-heading>
+      <div class="panel panel-default">
+	<div class="panel-heading">
+	  Travail à faire suite à cette séquence pédagogique
+	</div>
+	<div class="panel-body">
 	  <button class="btn btn-default ajout-devoir" data-ng-if="!creneau.etranger" data-ng-click="ajout_devoir( cours.devoirs )">
 	    <span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
 	  </button>
@@ -257,8 +257,8 @@
 
 	    <div class="clearfix"></div>
 	  </div>
-	</accordion-group>
-      </accordion>
+	</div>
+      </div>
 
     </tab>
 
