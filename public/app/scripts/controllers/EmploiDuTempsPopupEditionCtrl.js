@@ -301,11 +301,14 @@ angular.module( 'cahierDeTexteApp' )
 
 			       liste_créneaux_similaires( $scope.creneau, 4 )
 				   .then( function( response ) {
+				       $scope.creneaux_devoirs_possibles_duplication = [];
 				       $scope.creneaux_similaires = _.chain(response.data)
 					   .reject( function( creneau ) { return creneau.regroupement_id === 'undefined'; } )
 					   .reject( function( creneau ) { return creneau.has_cours; } )
 					   .map( function ( creneau ) {
 					       creneau.classe = _( $scope.classes ).findWhere( { id: parseInt( creneau.regroupement_id ) } );
+					       creneau.heure_debut = new Date( creneau.heure_debut );
+					       creneau.heure_fin = new Date( creneau.heure_fin );
 
 					       return creneau;
 					   } )
@@ -318,6 +321,8 @@ angular.module( 'cahierDeTexteApp' )
 					       creneau.classe = _( $scope.classes ).findWhere( { id: parseInt( creneau.regroupement_id ) } );
 					       creneau.date_due = $filter( 'date' )( creneau.start, 'y-MM-dd' );
 					       creneau.semaine = moment( creneau.start).from( moment( $scope.creneau.heure_debut ), true ) + ' plus tard';
+					       creneau.heure_debut = new Date( creneau.heure_debut );
+					       creneau.heure_fin = new Date( creneau.heure_fin );
 
 					       return creneau;
 					   } )
@@ -432,12 +437,41 @@ angular.module( 'cahierDeTexteApp' )
 				   where.unshift( devoir );
 			       };
 
+			       $scope.creneau_cible_duplication_SP_updated = function() {
+				   $scope.dirty = true;
+
+				   // Calcul des créneaux cibles pour les devoirs
+				   liste_créneaux_similaires( $scope.creneaux_similaires.selected, 4 )
+				       .then( function( response ) {
+					   $scope.creneaux_devoirs_possibles_duplication = _.chain(response.data)
+					       .select( function( creneau ) { return creneau.regroupement_id == $scope.creneaux_similaires.selected.regroupement_id; } )
+					       .map( function ( creneau ) {
+						   creneau.classe = _( $scope.classes ).findWhere( { id: parseInt( creneau.regroupement_id ) } );
+						   creneau.date_due = $filter( 'date' )( creneau.start, 'y-MM-dd' );
+						   creneau.semaine = moment( creneau.start).from( moment( $scope.creneau.heure_debut ), true ) + ' plus tard';
+						   creneau.heure_debut = new Date( creneau.heure_debut );
+						   creneau.heure_fin = new Date( creneau.heure_fin );
+
+						   return creneau;
+					       } )
+					       .value();
+				       } );
+			       };
 			       $scope.dupliquer = function () {
+				   var devoirs = angular.copy( $scope.cours.devoirs );
 				   $scope.cours.$copie( {
 				       regroupement_id: $scope.creneaux_similaires.selected.regroupement_id,
 				       creneau_emploi_du_temps_id: $scope.creneaux_similaires.selected.creneau_emploi_du_temps_id,
 				       date: $scope.creneaux_similaires.selected.start
-				   } );
+				   } ).then( function() {
+				       _(devoirs).each( function( devoir ) {
+					   devoir.$copie( {
+					       cours_id: $scope.cours.id,
+					       creneau_emploi_du_temps_id: devoir.creneau_cible.id,
+					       date_due: devoir.creneau_cible.date_due
+					   } );
+				       } );
+				   });
 			       };
 
 			       $scope.effacer_cours = function () {

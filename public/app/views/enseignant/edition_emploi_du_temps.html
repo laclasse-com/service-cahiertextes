@@ -374,12 +374,27 @@
   <div class="duplication-saisie" data-ng-if="creneaux_similaires.length > 0" >
     <ol>
       <li>
-	<label>Choisir le créneau vers lequel copier la séquence pédagogique</label>
-	<select data-ng-change="is_dirty( null )"
+	<label>Choisir le créneau vers lequel copier la séquence pédagogique :</label>
+	<select data-ng-change="creneau_cible_duplication_SP_updated()"
 		data-ng-model="creneaux_similaires.selected"
 		data-ng-options="creneau as ( creneau | formateCreneau ) group by creneau.classe.libelle for creneau in creneaux_similaires | orderBy:['+classe.libelle', '+date_due']" >
 	</select>
       </li>
+      <li>
+	<label>Choisir le créneau vers lequel copier ses devoirs :</label>
+	<ol>
+	  <li data-ng-repeat="devoir in cours.devoirs">
+	    <ul>
+	      <li><i class="picto" data-ng-style="{'background-image':'url(' + app_path + '/app/bower_components/charte-graphique-laclasse-com/images/picto_devoir.svg)'}"></i> Type de devoir : <em>{{devoir.type_devoir.description}}</em></li>
+	      <li>Date due : <em>{{devoir.date_due | date:'fullDate'}}</em></li>
+	    </ul>
+	    <select data-ng-model="devoir.creneau_cible"
+		    data-ng-options="creneau as ( creneau | formateCreneau ) for creneau in creneaux_devoirs_possibles_duplication | orderBy:'date_due'" >
+	    </select>
+	  </li>
+	</ol>
+      </li>
+    </ol>
   </div>
 </div>
 <!-- /Duplication de Séquence Pédagogique -->

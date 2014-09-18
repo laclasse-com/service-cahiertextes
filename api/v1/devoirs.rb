@@ -150,6 +150,31 @@ module CahierDeTextesAPI
         end
       end
 
+      desc 'copie un devoir pour le rattacher à une autre SP et un créneau et une date_due différente'
+      params {
+        requires :id
+        requires :cours_id
+        requires :creneau_emploi_du_temps_id
+        requires :date_due
+      }
+      put '/:id/copie/cours/:cours_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date_due/:date_due' do
+        devoir = Devoir[ params[:id] ]
+
+        nouveau_devoir = Devoir.create( cours_id: params[:cours_id],
+                                        type_devoir_id: devoir[:type_devoir_id],
+                                        creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
+                                        contenu: devoir[:contenu],
+                                        date_due: params[:date_due],
+                                        temps_estime: devoir[:temps_estime],
+                                        date_creation: Time.now )
+
+        devoir.ressources.each do |ressource|
+          nouveau_devoir.add_ressource ressource
+        end
+
+        nouveau_devoir
+      end
+
       desc 'marque un devoir comme fait'
       params {
         requires :id
