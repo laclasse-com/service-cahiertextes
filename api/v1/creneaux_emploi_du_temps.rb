@@ -53,9 +53,12 @@ module CahierDeTextesAPI
             .map do |jour|
             c.regroupements.map do |regroupement|
               if regroupement.semaines_de_presence[ jour.cweek ] == 1
-                { creneau_emploi_du_temps_id: c.id,
+                { id: c.id,
+                  creneau_emploi_du_temps_id: c.id,
                   start: Time.new( jour.year, jour.month, jour.mday, c.plage_horaire_debut.debut.hour, c.plage_horaire_debut.debut.min ).iso8601,
                   end: Time.new( jour.year, jour.month, jour.mday, c.plage_horaire_fin.fin.hour, c.plage_horaire_fin.fin.min ).iso8601,
+                  heure_debut: Time.new( jour.year, jour.month, jour.mday, c.plage_horaire_debut.debut.hour, c.plage_horaire_debut.debut.min ).iso8601,
+                  heure_fin: Time.new( jour.year, jour.month, jour.mday, c.plage_horaire_fin.fin.hour, c.plage_horaire_fin.fin.min ).iso8601,
                   has_cours: c.cours.select { |cours| cours.date_cours == jour }.count > 0,
                   jour_de_la_semaine: c.jour_de_la_semaine,
                   matiere_id: c.matiere_id,

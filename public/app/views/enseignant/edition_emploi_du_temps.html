@@ -164,7 +164,7 @@
 	  Travail à faire suite à cette séquence pédagogique
 	</div>
 	<div class="panel-body">
-	  <button class="btn btn-default ajout-devoir" data-ng-if="!creneau.etranger" data-ng-click="ajout_devoir( cours.devoirs )">
+	  <button class="btn btn-default ajout-devoir" data-ng-if="!creneau.etranger" data-ng-click="ajout_devoir( cours.devoirs, creneaux_devoirs_possibles[ 1 ] )">
 	    <span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
 	  </button>
 	  <div class="panel panel-default" data-ng-repeat="devoir in cours.devoirs">
@@ -264,7 +264,7 @@
 
     <!-- ####################### Devoirs dûs ce jour ####################### -->
     <tab heading="Travail à faire pour ce jour">
-      <button class="btn btn-default ajout-devoir" data-ng-click="ajout_devoir( devoirs )" data-ng-if="!creneau.etranger">
+      <button class="btn btn-default ajout-devoir" data-ng-click="ajout_devoir( devoirs, creneau )" data-ng-if="!creneau.etranger">
 	<span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
       </button>
       <div class="clearfix"></div>

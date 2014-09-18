@@ -417,12 +417,15 @@ angular.module( 'cahierDeTexteApp' )
 			       // }}}
 
 			       // fonctions d'événements GUI {{{
-			       $scope.ajout_devoir = function( where ) {
+			       $scope.ajout_devoir = function( where, creneau_cible ) {
+				   if ( _(creneau_cible).isNull() ) {
+				       creneau_cible = $scope.creneau;
+				   }
 				   var devoir = new Devoirs( {
 				       cours_id: $scope.cours.id,
-				       date_due: $filter( 'date' )( $scope.creneau.heure_debut, 'yyyy-MM-dd' ),
+				       date_due: $filter( 'date' )( creneau_cible.heure_debut, 'yyyy-MM-dd' ),
 				       type_devoir_id: _($scope.types_de_devoir).last().id,
-				       creneau_emploi_du_temps_id: $scope.creneau.id
+				       creneau_emploi_du_temps_id: creneau_cible.id
 				   } );
 				   devoir.create = true;
 				   where.unshift( devoir );
