@@ -302,7 +302,7 @@ angular.module( 'cahierDeTexteApp' )
 			       liste_créneaux_similaires( $scope.creneau, 4 )
 				   .then( function( response ) {
 				       response.data = _(response.data).reject( function( creneau ) {
-					   return _(creneau.classe).isNull();
+					   return _(creneau.classe).isUndefined();
 				       } );
 				       $scope.creneaux_similaires = _.chain(response.data)
 					   .reject( function( creneau ) { return creneau.has_cours; } )
