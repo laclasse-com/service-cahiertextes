@@ -4,7 +4,7 @@
 
 <div class="panel panel-default"data-ng-if="!empty">
   <div class="panel-heading">
-    <select class="col-md-3 pull-left" data-ng-model="selected_regroupement_id" data-ng-change="refresh_data()" data-ng-options="classe.id as classe.libelle for classe in classes">
+    <select class="col-md-3 pull-left" data-ng-model="scope.selected_regroupement_id" data-ng-change="refresh_data()" data-ng-options="classe.id as classe.libelle for classe in classes">
       <option value="" selected>Toutes les classes</option>
     </select>
 

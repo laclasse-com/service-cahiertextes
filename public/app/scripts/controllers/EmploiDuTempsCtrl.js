@@ -8,7 +8,10 @@ angular.module('cahierDeTexteApp')
 			     CALENDAR_OPTIONS, CALENDAR_PARAMS, APP_PATH, API, Annuaire, EmploisDuTemps, User, CreneauEmploiDuTemps ) {
 				 var popup_ouverte = false;
 				 var filter_data = angular.identity;
+				 $scope.scope = $scope;
+
 				 $scope.uid_enfant_actif = null;
+				 $scope.classe = undefined;
 
 				 var popup_callback = function( scope_popup ) {
 				     popup_ouverte = false;
@@ -144,7 +147,7 @@ angular.module('cahierDeTexteApp')
 					     var filtered_data = raw_data;
 
 					     // Filtrage sur une seule classe
-					     if ( $scope.classe != null ) {
+					     if ( !_($scope.classe).isUndefined() && !_($scope.classe).isNull() ) {
 						 filtered_data = _( filtered_data ).filter( function( creneau ) {
 						     return creneau.regroupement_id == $scope.classe;
 						 } );

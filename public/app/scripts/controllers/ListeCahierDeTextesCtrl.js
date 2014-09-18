@@ -6,6 +6,7 @@ angular.module('cahierDeTexteApp')
 		  function ( $scope, $sce, $modal, $q, APP_PATH, DOCS_URL, API, Annuaire, EmploisDuTemps, User, CreneauEmploiDuTemps ) {
 		      var matieres = [];
 		      var matieres_enseignees = [];
+		      $scope.scope = $scope;
 		      $scope.selected_regroupement_id = null;
 		      $scope.selected_creneau_vide = null;
 
