@@ -301,10 +301,8 @@ angular.module( 'cahierDeTexteApp' )
 
 			       liste_créneaux_similaires( $scope.creneau, 4 )
 				   .then( function( response ) {
-				       response.data = _(response.data).reject( function( creneau ) {
-					   return _(creneau.classe).isUndefined();
-				       } );
 				       $scope.creneaux_similaires = _.chain(response.data)
+					   .reject( function( creneau ) { return _(creneau.regroupement_id).isUndefined(); } )
 					   .reject( function( creneau ) { return creneau.has_cours; } )
 					   .map( function ( creneau ) {
 					       creneau.classe = _( $scope.classes ).findWhere( { id: parseInt( creneau.regroupement_id ) } );
