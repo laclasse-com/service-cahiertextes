@@ -164,10 +164,13 @@
 	  Travail à faire suite à cette séquence pédagogique
 	</div>
 	<div class="panel-body">
-	  <button class="btn btn-default ajout-devoir" data-ng-if="!creneau.etranger" data-ng-click="ajout_devoir( cours.devoirs, creneaux_devoirs_possibles[ 1 ] )">
+	  <button class="btn btn-default ajout-devoir"
+		  data-ng-if="!creneau.etranger"
+		  data-ng-click="ajout_devoir( cours.devoirs, creneaux_devoirs_possibles[ 1 ] )">
 	    <span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
 	  </button>
-	  <div class="panel panel-default" data-ng-repeat="devoir in cours.devoirs">
+	  <div class="panel panel-default"
+	       data-ng-repeat="devoir in cours.devoirs">
 
 	    <div class="col-md-9">
 	      <div class="panel-heading enseignant-saisie" data-ng-if="!creneau.etranger">
@@ -366,14 +369,20 @@
   </tabset>
 </div>
 
+<!-- Duplication de Séquence Pédagogique -->
 <div class="modal-body" data-ng-if="mode_duplication">
   <div class="duplication-saisie" data-ng-if="creneaux_similaires.length > 0" >
-    <select multiple data-ng-change="is_dirty( null )"
-	    data-ng-model="creneaux_similaires.selected"
-	    data-ng-options="creneau as ( creneau | formateCreneau ) group by creneau.classe.libelle for creneau in creneaux_similaires | orderBy:['+classe.libelle', '+date_due']" >
-    </select>
+    <ol>
+      <li>
+	<label>Choisir le créneau vers lequel copier la séquence pédagogique</label>
+	<select data-ng-change="is_dirty( null )"
+		data-ng-model="creneaux_similaires.selected"
+		data-ng-options="creneau as ( creneau | formateCreneau ) group by creneau.classe.libelle for creneau in creneaux_similaires | orderBy:['+classe.libelle', '+date_due']" >
+	</select>
+      </li>
   </div>
 </div>
+<!-- /Duplication de Séquence Pédagogique -->
 
 <div class="modal-footer">
   <button type="button" class="btn btn-sm btn-warning pull-left" data-ng-click="effacer_creneau()" data-ng-if="!creneau.etranger && creneau.en_creation && cours.create">
