@@ -370,7 +370,7 @@
   <div class="duplication-saisie" data-ng-if="creneaux_similaires.length > 0" >
     <select multiple data-ng-change="is_dirty( null )"
 	    data-ng-model="creneaux_similaires.selected"
-	    data-ng-options="creneau as ( creneau | formateCreneau ) group by creneau.classe.libelle for creneau in creneaux_similaires | orderBy:'date_due'" >
+	    data-ng-options="creneau as ( creneau | formateCreneau ) group by creneau.classe.libelle for creneau in creneaux_similaires | orderBy:['+classe.libelle', '+date_due']" >
     </select>
   </div>
 </div>
