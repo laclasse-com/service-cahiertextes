@@ -24,7 +24,7 @@
 
 	  <div data-ng-switcher
 	       class="toggle-fait"
-	       data-ng-if="!(devoir.type_devoir_id == 1)"
+	       data-ng-if="!(devoir.type_devoir_id == 1) && current_user.profil_actif.type === 'ELV'"
 	       data-ng-model="devoir.fait"
 	       data-ng-change="fait( devoir.id )" ></div>
 

@@ -2,11 +2,12 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EmploiDuTempsPopupDisplayCtrl',
-		[ '$scope', '$sce', '$modalInstance', 'APP_PATH', 'DOCS_URL', 'Cours', 'Devoirs', 'titre', 'cours', 'devoirs',
-		  function( $scope, $sce, $modalInstance, APP_PATH, DOCS_URL, Cours, Devoirs, titre, cours, devoirs ) {
+		[ '$scope', '$sce', '$modalInstance', 'APP_PATH', 'DOCS_URL', 'Cours', 'Devoirs', 'User', 'titre', 'cours', 'devoirs',
+		  function( $scope, $sce, $modalInstance, APP_PATH, DOCS_URL, Cours, Devoirs, User, titre, cours, devoirs ) {
 		      $scope.app_path = APP_PATH;
 		      $scope.titre = titre;
 		      $scope.date = null;
+
 		      if ( ! _(cours).isNull() ) {
 			  $scope.cours = Cours.get( { id: cours.id } );
 			  _($scope.cours.ressources).each( function( ressource ) {
@@ -23,6 +24,7 @@ angular.module('cahierDeTexteApp')
 			      } );
 			  } );
 		      }
+
 		      $scope.devoirs = devoirs.map( function( devoir ) {
 			  return Devoirs.get( { id: devoir.id } );
 		      } );
@@ -38,12 +40,17 @@ angular.module('cahierDeTexteApp')
 		      }
 
 		      $scope.tab_SP_active = _($scope.devoirs).isEmpty();
-
-		      $scope.fait = function( id ) {
-			  Devoirs.fait({ id: id });
-		      };
-
 		      $scope.fermer = function() {
 			  $modalInstance.close( $scope );
 		      };
+
+		      User.get_user().then( function( response ) {
+			  $scope.current_user = response.data;
+
+			  if ( $scope.current_user.profil_actif.type === 'ELV' ) {
+			      $scope.fait = function( id ) {
+				  Devoirs.fait({ id: id });
+			      };
+			  }
+		      } );
 		  } ] );
