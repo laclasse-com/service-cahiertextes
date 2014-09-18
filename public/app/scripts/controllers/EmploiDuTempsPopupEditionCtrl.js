@@ -293,14 +293,17 @@ angular.module( 'cahierDeTexteApp' )
 				   $scope.is_dirty();
 			       };
 
-			       var liste_créneaux_cibles_duplication = function( creneau, n_semaines_futures ) {
+			       var liste_créneaux_similaires = function( creneau, n_semaines_futures ) {
 				   return API.get_creneaux_emploi_du_temps_similaires({ id: creneau.id,
 											debut: creneau.heure_debut,
 											fin: moment( creneau.heure_debut.toISOString() ).add( n_semaines_futures, 'weeks' ).toDate() } );
 			       };
 
-			       liste_créneaux_cibles_duplication( $scope.creneau, 4 )
+			       liste_créneaux_similaires( $scope.creneau, 4 )
 				   .then( function( response ) {
+				       response.data = _(response.data).reject( function( creneau ) {
+					   return _(creneau.classe).isNull();
+				       } );
 				       $scope.creneaux_similaires = _.chain(response.data)
 					   .reject( function( creneau ) { return creneau.has_cours; } )
 					   .map( function ( creneau ) {
