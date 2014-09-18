@@ -10,7 +10,6 @@ angular.module( 'cahierDeTexteApp' )
 
 		       $scope.erreurs = [];
 		       $scope.dirty = false;
-		       $scope.accordion_cours_devoirs_open = false;
 		       $scope.deleted = false;
 		       $scope.mode_duplication = false;
 
@@ -235,8 +234,6 @@ angular.module( 'cahierDeTexteApp' )
 					   $scope.cours.contenu = $sce.trustAsHtml( $scope.cours.contenu );
 				       }
 
-				       $scope.accordion_cours_devoirs_open = $scope.cours.devoirs.length > 0;
-
 				       cours.devoirs = _(cours.devoirs).map( function( devoir ) {
 					   return Devoirs.get( { id: devoir.id } );
 				       } );
@@ -429,9 +426,6 @@ angular.module( 'cahierDeTexteApp' )
 				   } );
 				   devoir.create = true;
 				   where.unshift( devoir );
-				   if ( where === $scope.cours.devoirs ) {
-				       $scope.accordion_cours_devoirs_open = false;
-				   }
 			       };
 
 			       $scope.dupliquer = function () {
