@@ -71,8 +71,10 @@ body {
 .edt-permanence{ background-color: #d5d5d5 }
 .edt-devoir-a-faire{ background-color: #ae8ab8 }
 .edt-devoir-fait{ background-color: #8dc47c }
-.edt-devoir-note-maison{ background-color: #00afd4 }
-.edt-devoir-note-surveille{ background-color: #f56d68 }
+/* .edt-devoir-note-maison{ background-color: #00afd4 } */
+/* .edt-devoir-note-surveille{ background-color: #f56d68 } */
+.edt-devoir-note-maison{ background-color: #9d79a7 }
+.edt-devoir-note-surveille{ background-color: #8c6896 }
 
 .edt-cours-saisie,
 .edt-devoir-a-faire,
