@@ -137,8 +137,7 @@ module CahierDeTextesAPI
                                          contenu: cours.contenu,
                                          enseignant_id: cours.enseignant_id )
 
-            target_cours.ressources.each do
-              |ressource|
+            cours.ressources.each do |ressource|
               target_cours.add_ressource( ressource )
             end
 
