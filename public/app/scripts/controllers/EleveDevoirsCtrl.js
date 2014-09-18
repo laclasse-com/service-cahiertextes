@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EleveDevoirsCtrl',
-		[ '$scope', '$sce', '$modal', 'APP_PATH', 'DOCS_URL', 'API', 'Annuaire', 'Devoirs', 'Cours', 'CreneauEmploiDuTemps',
-		  function( $scope, $sce, $modal, APP_PATH, DOCS_URL, API, Annuaire, Devoirs, Cours, CreneauEmploiDuTemps ) {
+		[ '$scope', '$sce', '$modal', 'APP_PATH', 'DOCS_URL', 'API', 'Annuaire', 'Devoirs', 'Cours', 'CreneauEmploiDuTemps', 'User',
+		  function( $scope, $sce, $modal, APP_PATH, DOCS_URL, API, Annuaire, Devoirs, Cours, CreneauEmploiDuTemps, User ) {
 		      // popup d'affichage des détails
 		      $scope.ouvre_popup_details = function( titre, cours, devoirs ) {
 			  $modal.open( { templateUrl: APP_PATH + '/app/views/eleve/detail_emploi_du_temps.html',
@@ -20,6 +20,10 @@ angular.module('cahierDeTexteApp')
 		      $scope.fait = function( id ) {
 			  Devoirs.fait({ id: id });
 		      };
+
+		      User.get_user().then( function( response ) {
+			  $scope.current_user = response.data;
+		      } );
 
 		      API.query_types_de_devoir()
 			  .$promise.then( function( types_de_devoir ) {
