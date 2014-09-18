@@ -109,9 +109,9 @@ body {
 .edition-creneau select{width:12.5em}
 
 .accordion-toggle{cursor:pointer}
-.duplication-saisie div,.duplication-saisie select { width:100%;
-						     min-height: 20em; }
-
+.duplication-saisie div { width:100%;
+			  min-height: 20em; }
+.duplication-saisie select { width:100%; }
 .ressources .attached-document { float: left;
 				 border: 1px solid #aaa;
 				 background-color: #999;

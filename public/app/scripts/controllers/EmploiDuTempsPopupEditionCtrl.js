@@ -433,12 +433,10 @@ angular.module( 'cahierDeTexteApp' )
 			       };
 
 			       $scope.dupliquer = function () {
-				   _( $scope.creneaux_similaires.selected ).each( function ( creneau_cible ) {
-				       $scope.cours.$copie( {
-					   regroupement_id: creneau_cible.regroupement_id,
-					   creneau_emploi_du_temps_id: creneau_cible.creneau_emploi_du_temps_id,
-					   date: creneau_cible.start
-				       } );
+				   $scope.cours.$copie( {
+				       regroupement_id: $scope.creneaux_similaires.selected.regroupement_id,
+				       creneau_emploi_du_temps_id: $scope.creneaux_similaires.selected.creneau_emploi_du_temps_id,
+				       date: $scope.creneaux_similaires.selected.start
 				   } );
 			       };
 
