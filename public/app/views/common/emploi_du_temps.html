@@ -1,7 +1,7 @@
   <div class="panel panel-default">
     <div class="panel-heading" data-ng-if="current_user.profil_actif.type === 'ENS' || current_user.profil_actif.type === 'TUT'">
       <select data-ng-if="current_user.profil_actif.type === 'ENS'"
-	      data-ng-model="classe"
+	      data-ng-model="scope.classe"
 	      data-ng-change="refresh_calendar()"
 	      data-ng-options="classe.id as classe.libelle for classe in current_user.profil_actif.classes">
 	<option value="" selected>Toutes les classes</option>
