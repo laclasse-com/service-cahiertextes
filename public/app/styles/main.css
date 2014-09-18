@@ -216,13 +216,13 @@ footer { color: #555;
 .modal-body .infos .fait { border-left: 0.5em solid #fff }
 
 .type1, .type2, .type3, .type4, .type5, .type6, .fait { border-left: 1.5em solid #fff }
-.modal-body .infos .type1, .type1 {border-color: #f00} /*DS*/
-.modal-body .infos .type2, .type2 {border-color: #fc0} /*DM*/
-.modal-body .infos .type3, .type3 {border-color: #00f} /*Leçon*/
-.modal-body .infos .type4, .type4 {border-color: #ff0} /*Exposé*/
-.modal-body .infos .type5, .type5 {border-color: #f0f} /*Recherche*/
-.modal-body .infos .type6, .type6 {border-color: #0ff} /*Exercice*/
-.modal-body .infos .fait, .fait {border-color: #8dc47c}  /*Devoir fait*/
+.modal-body .infos .type1, .type1 {border-color: #8c6896 } /*DS*/
+.modal-body .infos .type2, .type2 {border-color: #9d79a7 } /*DM*/
+.modal-body .infos .type3, .type3 {border-color: #ae8ab8 } /*Leçon*/
+.modal-body .infos .type4, .type4 {border-color: #be8bb8 } /*Exposé*/
+.modal-body .infos .type5, .type5 {border-color: #ce8cb8 } /*Recherche*/
+.modal-body .infos .type6, .type6 {border-color: #de8db8 } /*Exercice*/
+.modal-body .infos .fait, .fait {border-color: #8dc47c }  /*Devoir fait*/
 
 
 .temps-est-on, .temps-est-off { display: inline-block;
