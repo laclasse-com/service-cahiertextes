@@ -2,10 +2,10 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EmploiDuTempsCtrl',
-		[ '$scope', '$modal', '$q', '$filter',
-		  'CALENDAR_OPTIONS', 'CALENDAR_PARAMS', 'APP_PATH', 'API', 'Annuaire', 'EmploisDuTemps', 'User', 'CreneauEmploiDuTemps',
-		  function ( $scope, $modal, $q, $filter,
-			     CALENDAR_OPTIONS, CALENDAR_PARAMS, APP_PATH, API, Annuaire, EmploisDuTemps, User, CreneauEmploiDuTemps ) {
+		[ '$scope', '$q', '$filter',
+		  'CALENDAR_OPTIONS', 'CALENDAR_PARAMS', 'APP_PATH', 'API', 'Annuaire', 'EmploisDuTemps', 'User', 'PopupsCreneau', 'CreneauEmploiDuTemps',
+		  function ( $scope, $q, $filter,
+			     CALENDAR_OPTIONS, CALENDAR_PARAMS, APP_PATH, API, Annuaire, EmploisDuTemps, User, PopupsCreneau, CreneauEmploiDuTemps ) {
 				 var popup_ouverte = false;
 				 var filter_data = angular.identity;
 				 $scope.scope = $scope;
@@ -14,7 +14,6 @@ angular.module('cahierDeTexteApp')
 				 $scope.classe = undefined;
 
 				 var popup_callback = function( scope_popup ) {
-				     popup_ouverte = false;
 				     var view = $scope.emploi_du_temps.fullCalendar( 'getView' );
 				     retrieve_data( view.visStart, view.visEnd );
 				 };
@@ -116,28 +115,6 @@ angular.module('cahierDeTexteApp')
 				     // ############################## Profile-specific code ##############################################
 				     switch ( $scope.current_user.profil_actif.type ) {
 				     case 'ENS':
-					 // popup d'édition
-					 var ouvre_popup_edition = function ( raw_data, matieres, classes, creneau, cours, devoirs, popup_callback ) {
-					     $modal.open( {
-						 templateUrl: APP_PATH + '/app/views/enseignant/popup_edition.html',
-						 controller: 'PopupEditionCtrl',
-						 resolve: {
-						     raw_data	: function () { return raw_data; },
-						     matieres	: function () { return matieres; },
-						     classes	: function () { return classes; },
-						     creneau	: function () { return creneau; },
-						     cours	: function () { return cours; },
-						     devoirs	: function () { return devoirs; }
-						 },
-						 backdrop: 'static'
-					     } )
-						 .result.then( // éxécuté à la fermeture de la popup
-						     function ( scope_popup ) {
-							 popup_callback( scope_popup );
-						     } );
-					     popup_ouverte = false;
-					 };
-
 					 $scope.uniquement_mes_creneaux = true;
 					 $scope.calendar.options.selectable = true;
 					 $scope.calendar.options.editable = true;
@@ -165,7 +142,6 @@ angular.module('cahierDeTexteApp')
 					 // édition d'un créneau existant
 					 $scope.calendar.options.eventClick = function ( event ) {
 					     if ( !popup_ouverte ) {
-						 popup_ouverte = true;
 						 CreneauEmploiDuTemps.get( { id: event.details.creneau_emploi_du_temps_id } )
 						     .$promise
 						     .then( function( creneau_selectionne ) {
@@ -174,10 +150,10 @@ angular.module('cahierDeTexteApp')
 							 creneau_selectionne.heure_fin = event.end;
 							 creneau_selectionne.regroupement_id = event.details.regroupement_id;
 
-							 ouvre_popup_edition( $scope.raw_data,
-									      $scope.current_user.profil_actif.matieres, $scope.current_user.profil_actif.classes,
-									      creneau_selectionne, event.details.cours, event.details.devoirs,
-									      popup_callback );
+							 PopupsCreneau.edition( $scope.raw_data,
+										$scope.current_user.profil_actif.matieres, $scope.current_user.profil_actif.classes,
+										creneau_selectionne, event.details.cours, event.details.devoirs,
+										popup_callback, popup_ouverte );
 						     } );
 					     }
 					 };
@@ -186,7 +162,6 @@ angular.module('cahierDeTexteApp')
 					 // Le regroupement_id peut être null car on n'a pas fait de choix au niveau de la select box des classes sur full_calendar
 					 $scope.calendar.options.select = function ( start, end, allDay ) {
 					     if ( !popup_ouverte ) {
-						 popup_ouverte = true;
 						 // création du créneau avec les bons horaires
 						 start = $filter('correctTimeZone')(start);
 						 end = $filter('correctTimeZone')(end);
@@ -204,10 +179,10 @@ angular.module('cahierDeTexteApp')
 							 new_creneau.heure_fin = end;
 							 new_creneau.regroupement_id = regroupement_id;
 
-							 ouvre_popup_edition( $scope.raw_data,
-									      $scope.current_user.profil_actif.matieres, $scope.current_user.profil_actif.classes,
-									      new_creneau, null, [],
-									      popup_callback );
+							 PopupsCreneau.edition( $scope.raw_data,
+										$scope.current_user.profil_actif.matieres, $scope.current_user.profil_actif.classes,
+										new_creneau, null, [],
+										popup_callback, popup_ouverte );
 
 							 $scope.emploi_du_temps.fullCalendar( 'unselect' );
 						     } );
@@ -222,23 +197,9 @@ angular.module('cahierDeTexteApp')
 					     $scope.reload_data = popup_callback;
 					 }
 
-					 // popup d'affichage des détails
-					 var ouvre_popup_details = function( titre, cours, devoirs ) {
-					     $modal.open( { templateUrl: APP_PATH + '/app/views/eleve/popup_display.html',
-							    controller: 'PopupDisplayCtrl',
-							    resolve: { titre  : function() { return titre; },
-								       cours  : function() { return cours; },
-								       devoirs: function() { return devoirs; } },
-							    backdrop: 'static' }
-							).result.then( function( scope_popup ) {
-							    popup_callback( scope_popup );
-							} );
-					     popup_ouverte = false;
-					 };
-
 					 $scope.calendar.options.eventClick = function( event ) {
-					     if ( ( event.details.devoirs.length > 0 ) || ( ! _(event.details.cours).isNull() && _(event.details.cours).has( 'contenu' ) ) ) {
-						 ouvre_popup_details( event.title, event.details.cours, event.details.devoirs );
+					     if ( !popup_ouverte && ( ( event.details.devoirs.length > 0 ) || ( ! _(event.details.cours).isNull() && _(event.details.cours).has( 'contenu' ) ) ) ) {
+						 PopupsCreneau.display( event.title, event.details.cours, event.details.devoirs, popup_callback, popup_ouverte );
 					     }
 					 };
 					 break;
