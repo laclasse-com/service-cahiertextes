@@ -10,7 +10,6 @@ angular.module('cahierDeTexteApp')
 		      $scope.scope = $scope;
 		      $scope.selected_regroupement_id = null;
 		      $scope.selected_creneau_vide = null;
-		      var popup_callback = retrieve_data;
 
 		      var filter_class = function( data, selected_regroupement_id ) {
 			  // Filtrage sur une seule classe
@@ -88,9 +87,23 @@ angular.module('cahierDeTexteApp')
 				      creneau.matiere = Annuaire.get_matiere( creneau.matiere_id );
 				      creneau.regroupement = Annuaire.get_regroupement( creneau.regroupement_id );
 				  });
+
+				  $scope.creneaux_saisies = filter_class( filter_creneaux_avec_saisies( $scope.raw_data ), $scope.selected_regroupement_id );
+				  _($scope.creneaux_saisies).each( function( creneau ) {
+				      _(creneau.cours.ressources).each( function( ressource ) {
+					  ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+				      } );
+				      _(creneau.devoirs).each( function( devoir ) {
+					  _(devoir.ressources).each( function( ressource ) {
+					      ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+					  } );
+				      } );
+				  } );
+
 				  $scope.refresh_data();
 			      });
 		      };
+		      $scope.popup_callback = retrieve_data;
 
 		      User.get_user().then( function( response ) {
 			  $scope.current_user = response.data;
@@ -115,17 +128,6 @@ angular.module('cahierDeTexteApp')
 			      $scope.refresh_data = function() {
 				  $scope.creneaux_vides = filter_class( filter_creneaux_vides( $scope.raw_data ), $scope.selected_regroupement_id );
 				  $scope.selected_creneau_vide = null;
-				  $scope.creneaux_saisies = filter_class( filter_creneaux_avec_saisies( $scope.raw_data ), $scope.selected_regroupement_id );
-				  _($scope.creneaux_saisies).each( function( creneau ) {
-				      _(creneau.cours.ressources).each( function( ressource ) {
-					  ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
-				      } );
-				      _(creneau.devoirs).each( function( devoir ) {
-					  _(devoir.ressources).each( function( ressource ) {
-					      ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
-					  } );
-				      } );
-				  } );
 			      };
 
 			      $scope.edition_creneau = function ( event ) {
@@ -140,7 +142,7 @@ angular.module('cahierDeTexteApp')
 					  PopupsCreneau.edition( $scope.raw_data,
 								 matieres_enseignees, $scope.classes,
 								 creneau_selectionne, event.cours, event.devoirs,
-								 popup_callback, popup_ouverte );
+								 $scope.popup_callback, popup_ouverte );
 				      } );
 			      };
 			      matieres_enseignees = $scope.current_user.profil_actif.matieres;
@@ -150,23 +152,11 @@ angular.module('cahierDeTexteApp')
 			  case 'TUT':
 			      $scope.display_creneau = function( event ) {
 				  if ( !popup_ouverte && ( ( event.devoirs.length > 0 ) || ( ! _(event.cours).isNull() && _(event.cours).has( 'contenu' ) ) ) ) {
-				      PopupsCreneau.display( event.title, event.cours, event.devoirs, popup_callback, popup_ouverte );
+				      PopupsCreneau.display( event.title, event.cours, event.devoirs, $scope.popup_callback, popup_ouverte );
 				  }
 			      };
 
-			      $scope.refresh_data = function() {
-				  $scope.creneaux_saisies = filter_class( filter_creneaux_avec_saisies( $scope.raw_data ), $scope.selected_regroupement_id );
-				  _($scope.creneaux_saisies).each( function( creneau ) {
-				      _(creneau.cours.ressources).each( function( ressource ) {
-					  ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
-				      } );
-				      _(creneau.devoirs).each( function( devoir ) {
-					  _(devoir.ressources).each( function( ressource ) {
-					      ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
-					  } );
-				      } );
-				  } );
-			      };
+			      $scope.refresh_data = function() {};
 			      break;
 			  }
 		      } );
