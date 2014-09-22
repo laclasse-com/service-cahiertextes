@@ -5,13 +5,10 @@ angular.module('cahierDeTexteApp')
 		[ '$scope', '$sce', 'APP_PATH', 'DOCS_URL', 'API', 'Annuaire', 'PopupsCreneau', 'Devoirs', 'Cours', 'CreneauEmploiDuTemps', 'User',
 		  function( $scope, $sce, APP_PATH, DOCS_URL, API, Annuaire, PopupsCreneau, Devoirs, Cours, CreneauEmploiDuTemps, User ) {
 		      // popup d'affichage des détails
+		      $scope.affiche_faits = false;
 		      $scope.popup_ouverte = false;
 		      $scope.popup_callback = function() {};
 		      $scope.ouvre_popup_details = PopupsCreneau.display;
-
-		      $scope.empty = false;
-
-		      $scope.affiche_faits = false;
 		      $scope.fait = function( id ) {
 			  Devoirs.fait({ id: id });
 		      };
@@ -37,8 +34,6 @@ angular.module('cahierDeTexteApp')
 
 					  return devoir;
 				      });
-
-				      $scope.empty = $scope.devoirs.length == 0;
 				  });
 			  });
 		  } ] );

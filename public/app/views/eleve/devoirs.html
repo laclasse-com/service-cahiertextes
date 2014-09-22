@@ -1,8 +1,4 @@
-<div class="message" data-ng-if="empty">
-  <h1><span class="label label-danger"><span class="glyphicon glyphicon-warning-sign"></span> Aucune donnée</span></h1>
-</div>
-
-<div class="panel panel-default" data-ng-if="!empty">
+<div class="panel panel-default" data-ng-if="devoirs">
   <div class="panel-heading">
     <input data-ng-model="affiche_faits" type="checkbox" id="display-done" name="display-done"/>
     <label for="display-done">Afficher les devoirs déjà fait</label>
