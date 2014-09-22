@@ -2,35 +2,14 @@
 
 angular.module('cahierDeTexteApp')
     .controller('CahierDeTextesCtrl',
-		[ '$scope', '$sce', '$modal', '$q', 'APP_PATH', 'DOCS_URL', 'API', 'Annuaire', 'EmploisDuTemps', 'User', 'CreneauEmploiDuTemps',
-		  function ( $scope, $sce, $modal, $q, APP_PATH, DOCS_URL, API, Annuaire, EmploisDuTemps, User, CreneauEmploiDuTemps ) {
+		[ '$scope', '$sce', '$q', 'APP_PATH', 'DOCS_URL', 'API', 'Annuaire', 'EmploisDuTemps', 'User', 'PopupsCreneau', 'CreneauEmploiDuTemps',
+		  function ( $scope, $sce, $q, APP_PATH, DOCS_URL, API, Annuaire, EmploisDuTemps, User, PopupsCreneau, CreneauEmploiDuTemps ) {
 		      var matieres = [];
 		      var matieres_enseignees = [];
+		      var popup_ouverte = false;
 		      $scope.scope = $scope;
 		      $scope.selected_regroupement_id = null;
 		      $scope.selected_creneau_vide = null;
-
-		      // popup d'édition
-		      var ouvre_popup_edition = function ( raw_data, matieres, classes, creneau, cours, devoirs, popup_callback ) {
-			  $modal.open( {
-			      templateUrl: APP_PATH + '/app/views/enseignant/popup_edition.html',
-			      controller: 'PopupEditionCtrl',
-			      resolve: {
-				  raw_data	: function () { return raw_data; },
-				  matieres	: function () { return matieres; },
-				  classes	: function () { return classes; },
-				  creneau	: function () { return creneau; },
-				  cours		: function () { return cours; },
-				  devoirs	: function () { return devoirs; }
-			      },
-			      backdrop: 'static'
-			  } )
-			      .result.then( // éxécuté à la fermeture de la popup
-				  function ( scope_popup ) {
-				      // appel du callback
-				      popup_callback( scope_popup );
-				  } );
-		      };
 
 		      $scope.edition_creneau = function ( event ) {
 			  CreneauEmploiDuTemps.get( { id: event.creneau_emploi_du_temps_id } )
@@ -41,10 +20,10 @@ angular.module('cahierDeTexteApp')
 				  creneau_selectionne.heure_fin = new Date( event.end );
 				  creneau_selectionne.regroupement_id = event.regroupement_id;
 
-				  ouvre_popup_edition( $scope.raw_data,
-						       matieres_enseignees, $scope.classes,
-						       creneau_selectionne, event.cours, event.devoirs,
-						       retrieve_data );
+				  PopupsCreneau.edition( $scope.raw_data,
+							 matieres_enseignees, $scope.classes,
+							 creneau_selectionne, event.cours, event.devoirs,
+							 retrieve_data, popup_ouverte );
 			      } );
 		      };
 
