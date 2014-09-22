@@ -10,22 +10,7 @@ angular.module('cahierDeTexteApp')
 		      $scope.scope = $scope;
 		      $scope.selected_regroupement_id = null;
 		      $scope.selected_creneau_vide = null;
-
-		      $scope.edition_creneau = function ( event ) {
-			  CreneauEmploiDuTemps.get( { id: event.creneau_emploi_du_temps_id } )
-			      .$promise
-			      .then( function( creneau_selectionne ) {
-				  creneau_selectionne.dirty = false;
-				  creneau_selectionne.heure_debut = new Date( event.start );
-				  creneau_selectionne.heure_fin = new Date( event.end );
-				  creneau_selectionne.regroupement_id = event.regroupement_id;
-
-				  PopupsCreneau.edition( $scope.raw_data,
-							 matieres_enseignees, $scope.classes,
-							 creneau_selectionne, event.cours, event.devoirs,
-							 retrieve_data, popup_ouverte );
-			      } );
-		      };
+		      var popup_callback = retrieve_data;
 
 		      var filter_class = function( data, selected_regroupement_id ) {
 			  // Filtrage sur une seule classe
@@ -55,38 +40,6 @@ angular.module('cahierDeTexteApp')
 				  .value();
 
 			  return filtered_data;
-		      };
-
-		      var filter_creneaux_vides = function( raw_data ) {
-			  var filtered_data = _.chain(raw_data)
-				  .filter( function( creneau ) {
-				      return creneau.enseignant_id === $scope.current_user.uid;
-				  } )
-				  .filter( function( creneau ) {
-				      return _(creneau.cours).isEmpty();
-				  })
-				  .uniq( function( creneau ) {
-				      return creneau.creneau_emploi_du_temps_id;
-				  })
-				  .value();
-
-			  return filtered_data;
-		      };
-
-		      $scope.refresh_data = function() {
-			  $scope.creneaux_vides = filter_class( filter_creneaux_vides( $scope.raw_data ), $scope.selected_regroupement_id );
-			  $scope.selected_creneau_vide = null;
-			  $scope.creneaux_saisies = filter_class( filter_creneaux_avec_saisies( $scope.raw_data ), $scope.selected_regroupement_id );
-			  _($scope.creneaux_saisies).each( function( creneau ) {
-			      _(creneau.cours.ressources).each( function( ressource ) {
-				  ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
-			      } );
-			      _(creneau.devoirs).each( function( devoir ) {
-				  _(devoir.ressources).each( function( ressource ) {
-				      ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
-				  } );
-			      } );
-			  } );
 		      };
 
 		      var list_matieres = function(raw_data) {
@@ -141,8 +94,80 @@ angular.module('cahierDeTexteApp')
 
 		      User.get_user().then( function( response ) {
 			  $scope.current_user = response.data;
+			  switch ( $scope.current_user.profil_actif.type ) {
+			  case 'ENS':
+			      var filter_creneaux_vides = function( raw_data ) {
+				  var filtered_data = _.chain(raw_data)
+					  .filter( function( creneau ) {
+					      return creneau.enseignant_id === $scope.current_user.uid;
+					  } )
+					  .filter( function( creneau ) {
+					      return _(creneau.cours).isEmpty();
+					  })
+					  .uniq( function( creneau ) {
+					      return creneau.creneau_emploi_du_temps_id;
+					  })
+					  .value();
 
-			  matieres_enseignees = $scope.current_user.profil_actif.matieres;
-			  $scope.classes = $scope.current_user.profil_actif.classes;
+				  return filtered_data;
+			      };
+
+			      $scope.refresh_data = function() {
+				  $scope.creneaux_vides = filter_class( filter_creneaux_vides( $scope.raw_data ), $scope.selected_regroupement_id );
+				  $scope.selected_creneau_vide = null;
+				  $scope.creneaux_saisies = filter_class( filter_creneaux_avec_saisies( $scope.raw_data ), $scope.selected_regroupement_id );
+				  _($scope.creneaux_saisies).each( function( creneau ) {
+				      _(creneau.cours.ressources).each( function( ressource ) {
+					  ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+				      } );
+				      _(creneau.devoirs).each( function( devoir ) {
+					  _(devoir.ressources).each( function( ressource ) {
+					      ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+					  } );
+				      } );
+				  } );
+			      };
+
+			      $scope.edition_creneau = function ( event ) {
+				  CreneauEmploiDuTemps.get( { id: event.creneau_emploi_du_temps_id } )
+				      .$promise
+				      .then( function( creneau_selectionne ) {
+					  creneau_selectionne.dirty = false;
+					  creneau_selectionne.heure_debut = new Date( event.start );
+					  creneau_selectionne.heure_fin = new Date( event.end );
+					  creneau_selectionne.regroupement_id = event.regroupement_id;
+
+					  PopupsCreneau.edition( $scope.raw_data,
+								 matieres_enseignees, $scope.classes,
+								 creneau_selectionne, event.cours, event.devoirs,
+								 popup_callback, popup_ouverte );
+				      } );
+			      };
+			      matieres_enseignees = $scope.current_user.profil_actif.matieres;
+			      $scope.classes = $scope.current_user.profil_actif.classes;
+			      break;
+			  case 'ELV':
+			  case 'TUT':
+			      $scope.display_creneau = function( event ) {
+				  if ( !popup_ouverte && ( ( event.devoirs.length > 0 ) || ( ! _(event.cours).isNull() && _(event.cours).has( 'contenu' ) ) ) ) {
+				      PopupsCreneau.display( event.title, event.cours, event.devoirs, popup_callback, popup_ouverte );
+				  }
+			      };
+
+			      $scope.refresh_data = function() {
+				  $scope.creneaux_saisies = filter_class( filter_creneaux_avec_saisies( $scope.raw_data ), $scope.selected_regroupement_id );
+				  _($scope.creneaux_saisies).each( function( creneau ) {
+				      _(creneau.cours.ressources).each( function( ressource ) {
+					  ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+				      } );
+				      _(creneau.devoirs).each( function( devoir ) {
+					  _(devoir.ressources).each( function( ressource ) {
+					      ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+					  } );
+				      } );
+				  } );
+			      };
+			      break;
+			  }
 		      } );
 		  } ] );

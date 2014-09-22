@@ -1,9 +1,5 @@
-<div class="message" data-ng-if="empty">
-  <h1><span class="label label-danger"><span class="glyphicon glyphicon-warning-sign"></span> Aucune donnée</span></h1>
-</div>
-
-<div class="panel panel-default"data-ng-if="!empty">
-  <div class="panel-heading">
+<div class="panel panel-default">
+  <div class="panel-heading" data-ng-if="current_user.profil_actif.type === 'ENS'">
     <select class="col-md-3 pull-left" data-ng-model="scope.selected_regroupement_id" data-ng-change="refresh_data()" data-ng-options="classe.id as classe.libelle for classe in classes">
       <option value="" selected>Toutes les classes</option>
     </select>
@@ -54,7 +50,12 @@
 	<div class="pull-left contenu" data-ng-bind-html="creneau.cours.contenu"></div>
 
 	<div class="pull-right detail">
-	  <button class="btn btn-default" data-ng-click="edition_creneau( creneau )">Accéder</button>
+	  <button class="btn btn-default"
+		  data-ng-click="edition_creneau( creneau )"
+		  data-ng-if="current_user.profil_actif.type === 'ENS'">Accéder</button>
+	  <button class="btn btn-default"
+		  data-ng-click="display_creneau( creneau )"
+		  data-ng-if="current_user.profil_actif.type === 'ELV' || current_user.profil_actif.type === 'TUT'">Accéder</button>
 	</div>
 	<div class="row col-md-12 ressources">
 	  <div class="attached-document" data-ng-repeat="ressource in creneau.cours.ressources">
