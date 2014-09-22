@@ -30,7 +30,7 @@ angular.module('cahierDeTexteApp')
 					  devoir.creneau_emploi_du_temps.$promise.then( function success(  ) {
 					      devoir.matiere = Annuaire.get_matiere( devoir.creneau_emploi_du_temps.matiere_id );
 					  });
-					  devoir.cours = Cours.get({ id: devoir.cours_id });
+					  devoir.cours = _(devoir.cours_id).isNull() ? null : Cours.get({ id: devoir.cours_id });
 					  _(devoir.ressources).each( function( ressource ) {
 					      ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
 					  } );
