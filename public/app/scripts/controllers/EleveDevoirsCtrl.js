@@ -6,8 +6,8 @@ angular.module('cahierDeTexteApp')
 		  function( $scope, $sce, $modal, APP_PATH, DOCS_URL, API, Annuaire, Devoirs, Cours, CreneauEmploiDuTemps, User ) {
 		      // popup d'affichage des détails
 		      $scope.ouvre_popup_details = function( titre, cours, devoirs ) {
-			  $modal.open( { templateUrl: APP_PATH + '/app/views/eleve/detail_emploi_du_temps.html',
-					 controller: 'EmploiDuTempsPopupDisplayCtrl',
+			  $modal.open( { templateUrl: APP_PATH + '/app/views/eleve/popup_display.html',
+					 controller: 'PopupDisplayCtrl',
 					 resolve: { titre  : function() { return titre; },
 						    cours  : function() { return cours; },
 						    devoirs: function() { return devoirs; } },
