@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('cahierDeTexteApp')
-    .controller('EmploiDuTempsPopupDisplayCtrl',
+    .controller('PopupDisplayCtrl',
 		[ '$scope', '$sce', '$modalInstance', 'APP_PATH', 'DOCS_URL', 'Cours', 'Devoirs', 'User', 'titre', 'cours', 'devoirs',
 		  function( $scope, $sce, $modalInstance, APP_PATH, DOCS_URL, Cours, Devoirs, User, titre, cours, devoirs ) {
 		      $scope.app_path = APP_PATH;

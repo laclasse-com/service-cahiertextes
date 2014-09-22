@@ -130,8 +130,8 @@ angular.module( 'cahierDeTexteApp' )
 			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ENS' ] ); } },
 			   views: {
 			       'content': {
-				   templateUrl: APP_PATH + '/app/views/enseignant/liste.html',
-				   controller: 'ListeCahierDeTextesCtrl'
+				   templateUrl: APP_PATH + '/app/views/common/cahier_de_textes.html',
+				   controller: 'CahierDeTextesCtrl'
 			       }
 			   }
 		       })

@@ -119,8 +119,8 @@ angular.module('cahierDeTexteApp')
 					 // popup d'édition
 					 var ouvre_popup_edition = function ( raw_data, matieres, classes, creneau, cours, devoirs, popup_callback ) {
 					     $modal.open( {
-						 templateUrl: APP_PATH + '/app/views/enseignant/edition_emploi_du_temps.html',
-						 controller: 'EmploiDuTempsPopupEditionCtrl',
+						 templateUrl: APP_PATH + '/app/views/enseignant/popup_edition.html',
+						 controller: 'PopupEditionCtrl',
 						 resolve: {
 						     raw_data	: function () { return raw_data; },
 						     matieres	: function () { return matieres; },
@@ -224,8 +224,8 @@ angular.module('cahierDeTexteApp')
 
 					 // popup d'affichage des détails
 					 var ouvre_popup_details = function( titre, cours, devoirs ) {
-					     $modal.open( { templateUrl: APP_PATH + '/app/views/eleve/detail_emploi_du_temps.html',
-							    controller: 'EmploiDuTempsPopupDisplayCtrl',
+					     $modal.open( { templateUrl: APP_PATH + '/app/views/eleve/popup_display.html',
+							    controller: 'PopupDisplayCtrl',
 							    resolve: { titre  : function() { return titre; },
 								       cours  : function() { return cours; },
 								       devoirs: function() { return devoirs; } },
