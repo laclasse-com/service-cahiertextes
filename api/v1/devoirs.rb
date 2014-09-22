@@ -185,8 +185,10 @@ module CahierDeTextesAPI
         devoir = Devoir[ params[:id] ]
         devoir.fait_par?( user.uid ) ? devoir.a_faire_par!( user.uid ) : devoir.fait_par!( user.uid )
 
-        # FIXME: fuite d'info sur :devoir_todo_items
-        devoir.to_deep_hash
+        hash = devoir.to_deep_hash
+        hash[:fait] = devoir.fait_par?( user.uid ) unless user.nil?
+
+        hash
       end
 
       desc 'détruit un devoir'
