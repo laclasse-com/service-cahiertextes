@@ -161,6 +161,9 @@ angular.module('cahierDeTexteApp')
 					 // création d'un nouveau créneau
 					 // Le regroupement_id peut être null car on n'a pas fait de choix au niveau de la select box des classes sur full_calendar
 					 $scope.calendar.options.select = function ( start, end, allDay ) {
+					     if ( end - start == 1800000 ) {
+						 end = moment( end ).add( 30, 'minutes' ).toDate();
+					     }
 					     if ( !popup_ouverte ) {
 						 // création du créneau avec les bons horaires
 						 start = $filter('correctTimeZone')(start);
