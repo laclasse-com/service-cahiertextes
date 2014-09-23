@@ -19,6 +19,11 @@ module CahierDeTextesAPI
     helpers AuthenticationHelpers
     helpers UserHelpers
 
+    format :txt
+    get '/version' do
+      `git describe`
+    end
+
     before do
       error!( '401 Unauthorized', 401 ) unless is_logged? || !request.env['PATH_INFO'].match(/.*swagger.*\.json$/).nil?
     end
