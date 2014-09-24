@@ -10,25 +10,37 @@ module CahierDeTextesAPI
     class DevoirsAPI < Grape::API
 
       desc 'renvoi tous les devoirs concernant l\'utilisateur durant la période donnée'
+      params {
+        optional :debut, type: Date
+        optional :fin, type: Date
+      }
       get '/' do
         regroupements_annuaire = Annuaire.get_user_regroupements( user.uid )
         regroupements_ids = regroupements_annuaire['classes']
                             .concat( regroupements_annuaire['groupes_eleves'] )
                             .concat( regroupements_annuaire['groupes_libres'] )
                             .reject { |regroupement| regroupement['etablissement_code'] != params[:uai] if params[:uai] }
-                            .map    { |regroupement|
+                            .map do |regroupement|
           if regroupement.key? 'classe_id'
             regroupement['classe_id']
           elsif regroupement.key? 'groupe_id'
             regroupement['groupe_id']
           end
-        }
+        end
                             .uniq
 
-        Devoir
-          .join(:creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :creneau_emploi_du_temps_id)
-          .where( regroupement_id: regroupements_ids )
-          .map do |devoir|
+        if params[:debut].nil? || params[:fin].nil?
+          devoirs = Devoir
+                    .join(:creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :creneau_emploi_du_temps_id)
+                    .where( regroupement_id: regroupements_ids )
+        else
+          devoirs = Devoir
+                    .join(:creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :creneau_emploi_du_temps_id)
+                    .where( regroupement_id: regroupements_ids )
+                    .where( date_due: params[:debut] .. params[:fin] )
+        end
+
+        devoirs.map do |devoir|
           hash = devoir.to_deep_hash
           hash[:fait] = devoir.fait_par?( user.uid ) unless user.nil?
 
