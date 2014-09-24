@@ -136,6 +136,11 @@ module AuthenticationHelpers
 
       provisionning( uais )
     end
+
+    env['rack.session'][:current_user].each do |key, _value|
+      env['rack.session'][:current_user][ key ] = URI.unescape( env['rack.session'][:current_user][ key ] ) if env['rack.session'][:current_user][ key ].is_a? String
+    end
+
     env['rack.session'][:current_user]
   end
 end
