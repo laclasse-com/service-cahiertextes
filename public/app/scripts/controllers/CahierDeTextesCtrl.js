@@ -73,8 +73,8 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      var retrieve_data = function() {
-			  $scope.from_date = moment().startOf( 'month' ).subtract( 'months', $scope.month_offset ).toDate();
-			  $scope.to_date = moment().endOf( 'month' ).subtract( 'months', $scope.month_offset ).toDate();
+			  $scope.from_date = moment().subtract( $scope.month_offset, 'months' ).subtract( 15, 'days' ).toDate();
+			  $scope.to_date = moment().subtract( $scope.month_offset, 'months' ).add( 15, 'days' ).toDate();
 			  EmploisDuTemps.query( { debut: $scope.from_date,
 						  fin: $scope.to_date,
 						  uai: $scope.current_user.profil_actif.uai } )
