@@ -1,10 +1,23 @@
-<div class="panel panel-default" data-ng-if="devoirs">
+<div class="panel panel-default">
   <div class="panel-heading">
     <input data-ng-model="affiche_faits" type="checkbox" id="display-done" name="display-done"/>
     <label for="display-done">Afficher les devoirs déjà fait</label>
   </div>
   <div class="panel-body">
-    <ul class="list-group todo-list">
+    <div class="body-header">
+      <h2>
+	Du {{from_date | date:'longDate'}} au {{to_date | date:'longDate'}}
+
+	<div class="pull-right">
+	  <button class="btn btn-default" data-ng-click="reset_offset()">Aujourd'hui</button>
+	  <div class="btn-group">
+	    <button class="btn btn-default" data-ng-click="incr_offset()"><span class="glyphicon glyphicon-chevron-left"></span></button>
+	    <button class="btn btn-default" data-ng-click="decr_offset()"><span class="glyphicon glyphicon-chevron-right"></span></button>
+	  </div>
+	</div>
+      </h2>
+    </div>
+    <ul class="list-group todo-list" data-ng-if="devoirs">
       <li data-ng-repeat="devoir in devoirs | orderBy:'date_due':true"
 	  data-ng-if="!devoir.fait || affiche_faits"
 	  style="list-style:none"
