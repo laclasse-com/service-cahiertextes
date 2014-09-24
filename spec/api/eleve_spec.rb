@@ -21,9 +21,9 @@ describe CahierDeTextesAPI::API do
     debut = Date.today
     fin = debut + 7
 
-    get "/v0/emplois_du_temps/du/#{debut}/au/#{fin}"
+    get "/v1/emplois_du_temps/du/#{debut}/au/#{fin}"
 
-    last_response.status.should == 200
+    expect( last_response.status ).to eq 200
   end
   # }}}
 
@@ -32,20 +32,20 @@ describe CahierDeTextesAPI::API do
   it 'récupère le détail d\'une séquence pédagogique' do
     cours = Cours.last
 
-    get "/v0/cours/#{cours.id}"
-    last_response.status.should == 200
+    get "/v1/cours/#{cours.id}"
+    expect( last_response.status ).to eq 200
 
     response_body = JSON.parse(last_response.body)
 
-    response_body['cahier_de_textes_id'].should == cours.cahier_de_textes_id
-    response_body['creneau_emploi_du_temps_id'].should == cours.creneau_emploi_du_temps_id
-    response_body['date_cours'].should == cours.date_cours.to_s
+    expect( response_body['cahier_de_textes_id'] ).to eq cours.cahier_de_textes_id
+    expect( response_body['creneau_emploi_du_temps_id'] ).to eq cours.creneau_emploi_du_temps_id
+    expect( response_body['date_cours'] ).to eq cours.date_cours.to_s
     expect( Date.parse( response_body['date_creation'] ) ).to eq Date.parse( cours.date_creation.to_s ) unless cours.date_creation.nil?
     expect( Date.parse( response_body['date_modification'] ) ).to eq Date.parse( cours.date_modification.to_s ) unless cours.date_modification.nil?
     expect( Date.parse( response_body['date_validation'] ) ).to eq Date.parse( cours.date_validation.to_s ) unless cours.date_validation.nil?
-    response_body['contenu'].should == cours.contenu
-    response_body['deleted'].should be_false
-    response_body['ressources'].size.should == cours.ressources.size
+    expect( response_body['contenu'] ).to eq cours.contenu
+    expect( response_body['deleted'] ).to eq false
+    expect( response_body['ressources'].size ).to eq cours.ressources.size
   end
   # }}}
 
@@ -54,25 +54,26 @@ describe CahierDeTextesAPI::API do
   it 'récupère les détails d\'un devoir' do
     devoir = Devoir.all.sample
 
-    get "/v0/devoirs/#{devoir.id}"
-    last_response.status.should == 200
+    get "/v1/devoirs/#{devoir.id}"
+    expect( last_response.status ).to eq 200
 
     response_body = JSON.parse( last_response.body )
 
-    response_body['cours_id'].should == devoir.cours_id
-    response_body['type_devoir_id'].should == devoir.type_devoir_id
-    response_body['contenu'].should == devoir.contenu
+    expect( response_body['cours_id'] ).to eq devoir.cours_id
+    expect( response_body['type_devoir_id'] ).to eq devoir.type_devoir_id
+    expect( response_body['contenu'] ).to eq devoir.contenu
   end
 
   ############ PUT ############
   it 'note un devoir comme fait' do
-    eleve_id = 'VAA61181'
-    devoir = Devoir.all.sample
+    eleve_id = 'VAC65103'
+    devoir = Devoir.last
 
-    put "/v0/devoirs/#{devoir.id}/fait"
-    last_response.status.should == 200
+    put "/v1/devoirs/#{devoir.id}/fait"
 
-    devoir.fait_par?( eleve_id ).should be_true
+    expect( last_response.status ).to eq 200
+
+    expect( devoir.fait_par?( eleve_id ) ).to eq true
   end
   # }}}
 end

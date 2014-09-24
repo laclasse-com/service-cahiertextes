@@ -19,10 +19,10 @@ describe CahierDeTextesAPI::API do
   it 'valide un cours' do
     cours_id = Cours.where( 'date_validation IS NULL' ).first.id
 
-    put "/v0/cours/#{cours_id}/valide", {}
-    last_response.status.should == 200
+    put "/v1/cours/#{cours_id}/valide", {}
+    expect( last_response.status ).to eq 200
 
-    Cours[ cours_id ].date_validation.nil?.should be_false
+    Cours[ cours_id ].date_validation.nil?.should eq false
   end
   # }}}
 
@@ -30,30 +30,30 @@ describe CahierDeTextesAPI::API do
   it 'récupère les statistiques par enseignants et par mois' do
     uai = '0699999Z'
 
-    get "/v0/etablissements/#{uai}/enseignants"
-    last_response.status.should == 200
+    get "/v1/etablissements/#{uai}/enseignants"
+    expect( last_response.status ).to eq 200
 
     response_body = JSON.parse( last_response.body )
 
-    response_body.reduce( true ) {
-      |are_we_good, enseignant|
-      are_we_good && enseignant['classes'].reduce( true ) {
-        |are_we_good_yet, regroupement|
-        are_we_good_yet && regroupement['statistiques'].size == 12
-      }
-    }.should be_true
+    expect( response_body.reduce( true ) {
+              |are_we_good, enseignant|
+              are_we_good && enseignant['classes'].reduce( true ) {
+                |are_we_good_yet, regroupement|
+                are_we_good_yet && regroupement['statistiques'].size == 12
+              }
+            } ).to eq true
   end
 
   it 'récupère les statistiques d\'un enseignant par mois' do
     uai = '0699999Z'
     enseignant_id = Cours.select(:enseignant_id).first[:enseignant_id].to_s
 
-    get "/v0/etablissements/#{uai}/enseignants/#{enseignant_id}"
-    last_response.status.should == 200
+    get "/v1/etablissements/#{uai}/enseignants/#{enseignant_id}"
+    expect( last_response.status ).to eq 200
 
     response_body = JSON.parse( last_response.body )
 
-    response_body['enseignant_id'].should == enseignant_id
+    expect( response_body['enseignant_id'] ).to eq enseignant_id
   end
   # }}}
 
@@ -61,8 +61,8 @@ describe CahierDeTextesAPI::API do
   it 'récupère les statistiques des classes d\'un établissement' do
     uai = '0699999Z'
 
-    get "/v0/etablissements/#{uai}/classes"
-    last_response.status.should == 200
+    get "/v1/etablissements/#{uai}/classes"
+    expect( last_response.status ).to eq 200
 
     response_body = JSON.parse( last_response.body )
 
@@ -70,7 +70,7 @@ describe CahierDeTextesAPI::API do
       |regroupement|
       regroupement['matieres'].each {
         |matiere|
-        matiere['mois'].size.should == 12
+        expect( matiere['mois'].size ).to eq 12
       }
     }
   end
@@ -79,14 +79,14 @@ describe CahierDeTextesAPI::API do
     uai = '0699999Z'
     classe_id = CreneauEmploiDuTempsRegroupement.select(:regroupement_id).map { |r| r.regroupement_id }.uniq.sample
 
-    get "/v0/etablissements/#{uai}/classes/#{classe_id}"
-    last_response.status.should == 200
+    get "/v1/etablissements/#{uai}/classes/#{classe_id}"
+    expect( last_response.status ).to eq 200
 
     response_body = JSON.parse( last_response.body )
 
     response_body['matieres'].each {
       |matiere|
-      matiere['mois'].size.should == 12
+      expect( matiere['mois'].size ).to eq 12
     }
   end
 

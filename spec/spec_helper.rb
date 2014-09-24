@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 require 'rubygems'
 
-ENV["RACK_ENV"] ||= 'test'
+ENV['RACK_ENV'] ||= 'test'
 
 require 'rack/test'
 require 'sequel'
 require 'tsort'
 
+require_relative '../config/constants'
 require_relative '../config/options'
 require_relative '../config/database'
 
@@ -19,46 +20,44 @@ module AuthenticationHelpers
 end
 
 module UserHelpers
-   @@user = nil
+  @@user = nil
 
-   class HashIt
-      def initialize( hash )
-         hash.each do |k, v|
-            instance_variable_set( "@#{k}", v )
-            # create the getter
-            self.class.send(:define_method, k, proc{ instance_variable_get( "@#{k}" ) } )
-            # create the setter
-            # self.class.send(:define_method, "#{k}=", proc{|v| self.instance_variable_set("@#{k}", v)})
-         end
+  class HashIt
+    def initialize( hash )
+      hash.each do |k, v|
+        instance_variable_set( "@#{k}", v )
+        # create the getter
+        self.class.send(:define_method, k, proc { instance_variable_get( "@#{k}" ) } )
+        # create the setter
+        # self.class.send(:define_method, "#{k}=", proc{|v| self.instance_variable_set("@#{k}", v)})
       end
-   end
+    end
+  end
 
-   class HashedUser < HashIt
-      def is?( profil, uai )
-         if @ENTPersonProfils.index("#{profil}:#{uai}")
-            true
-         else
-            false
-         end
-      end
-   end
+  class HashedUser < HashIt
+    def is?( profil )
+      # FIXME
+      profils = Annuaire.get_user( @uid )['profils']
+      @ENTPersonProfils.include? "#{profil}:#{profils[0]['uai']}"
+    end
+  end
 
-   def user
-      test_user = {   "user"                      => "gwenhael",
-                      "idEnt"                     => "Laclasse",
-                      "ENT_id"                    => "1182",
-                      "uid"                       => "VAA61181",
-                      "LaclasseNom"               => "Le Moine",
-                      "LaclassePrenom"            => "Gwenhael",
-                      "LaclasseCivilite"          => "Mr",
-                      "ENTPersonStructRattachRNE" => "0699999Z",
-                      "ENTStructureNomCourant"    => "ERASME",
-                      "ENTPersonProfils"          => "DIR:0699999Z;ENV:0699999Z;ELV:0699999Z",
-                      "ENTPersonRoles"            => "DIR_ETB:0699999Z:1" }
-      @@user = HashedUser.new test_user
+  def user
+    test_user = { 'user'                      => 'gwenhael',
+                  'idEnt'                     => 'Laclasse',
+                  'ENT_id'                    => '1182',
+                  'uid'                       => 'VAC65103',
+                  'LaclasseNom'               => 'Le Moine',
+                  'LaclassePrenom'            => 'Gwenhael',
+                  'LaclasseCivilite'          => 'Mr',
+                  'ENTPersonStructRattachRNE' => '0699999Z',
+                  'ENTStructureNomCourant'    => 'ERASME',
+                  'ENTPersonProfils'          => 'DIR:0699999Z;ENS:0699999Z;ELV:0699999Z;DIR:0134567A',
+                  'ENTPersonRoles'            => 'DIR_ETB:0699999Z:1' }
+    @@user = HashedUser.new test_user
 
-      @@user
-   end
+    @@user
+  end
 end
 
 RSpec.configure do |config|
@@ -66,7 +65,7 @@ RSpec.configure do |config|
   config.expect_with :rspec
 
   # Use color in STDOUT
-  config.color_enabled = true
+  config.color = true
 
   # Use color not only in STDOUT but also in pagers and files
   config.tty = true
@@ -74,7 +73,6 @@ RSpec.configure do |config|
   # Use the specified formatter
   config.formatter = :documentation # :progress, :html, :textmate
 end
-
 
 # # Example usage.
 # cleaner = TableCleaner.new DB, [:spatial_ref_sys]
@@ -94,19 +92,20 @@ class TableCleaner
   end
 
   private
+
   include TSort
 
-  def tables_to_clean &block
-    tsort.reverse.each &block
+  def tables_to_clean( &block )
+    tsort.reverse.each( &block )
   end
 
-  def tsort_each_node &block
+  def tsort_each_node( &block )
     @db.tables.each do |t|
       block.call t unless @excluded_tables.include? t
     end
   end
 
-  def tsort_each_child table, &block
+  def tsort_each_child( table, &block )
     @db.foreign_key_list(table).each do |fk|
       block.call fk[:table] unless @excluded_tables.include? fk[:table]
     end
@@ -114,26 +113,26 @@ class TableCleaner
 end
 
 def load_test_data
-  system 'mysql -u ' + DB_CONFIG[:user] + ' -p' + DB_CONFIG[:password] + ' ' + DB_CONFIG[:name] + ' < spec/fixtures/db_dump.sql'
+  system 'mysql -u ' + DB_CONFIG[:user] + ' -p' + DB_CONFIG[:password] + ' ' + DB_CONFIG[:name] + ' < spec/fixtures/db_dump3.sql'
 end
 
 def generate_test_data
-  STDERR.puts 'Remplissage des Cahiers de textes'
-  [ [ 'DS', 'Devoir surveillé' ],
-    [ 'DM', 'Devoir à la maison' ],
-    [ 'Leçon', 'Leçon à apprendre' ],
-    [ 'Exposé', 'Exposé à préparer' ],
-    [ 'Recherche', 'Recherche à faire' ],
-    [ 'Exercice', 'Exercice à faire' ] ].each { |type|
-    TypeDevoir.create(label: type[0],
-                      description: type[1] )
-    STDERR.putc '.'
-  }
+  # STDERR.puts 'Remplissage des Cahiers de textes'
+  # [ [ 'DS', 'Devoir surveillé' ],
+  #   [ 'DM', 'Devoir à la maison' ],
+  #   [ 'Leçon', 'Leçon à apprendre' ],
+  #   [ 'Exposé', 'Exposé à préparer' ],
+  #   [ 'Recherche', 'Recherche à faire' ],
+  #   [ 'Exercice', 'Exercice à faire' ] ].each { |type|
+  #   TypeDevoir.create(label: type[0],
+  #                     description: type[1] )
+  #   STDERR.putc '.'
+  # }
 
-  CahierDeTextes.all.each { |cahier_de_textes|
-    12.times {
+  CahierDeTextes.all.each do |cahier_de_textes|
+    12.times do
       |month|
-      rand(2..4).times {
+      rand(2..4).times do
         creneau = CreneauEmploiDuTempsEnseignant.all.sample
 
         cours = Cours.create(cahier_de_textes_id: cahier_de_textes.id,
@@ -145,11 +144,11 @@ def generate_test_data
 
         if rand > 0.25
           creneau_emploi_du_temps = CreneauEmploiDuTemps
-            .where(matiere_id: CreneauEmploiDuTemps[ creneau.creneau_emploi_du_temps_id ].matiere_id)
-            .where(jour_de_la_semaine: Date.tomorrow.wday)
-            .join(:creneaux_emploi_du_temps_enseignants, creneau_emploi_du_temps_id: :id)
-            .where(enseignant_id: cours.enseignant_id)
-            .first                # FIXME: arbitrairement on choisi d'attacher le devoir au premier créneau
+                                    .where(matiere_id: CreneauEmploiDuTemps[ creneau.creneau_emploi_du_temps_id ].matiere_id)
+                                    .where(jour_de_la_semaine: Date.tomorrow.wday)
+                                    .join(:creneaux_emploi_du_temps_enseignants, creneau_emploi_du_temps_id: :id)
+                                    .where(enseignant_id: cours.enseignant_id)
+                                    .first                # FIXME: arbitrairement on choisi d'attacher le devoir au premier créneau
 
           Devoir.create(cours_id: cours.id,
                         type_devoir_id: TypeDevoir.all.sample.id,
@@ -159,8 +158,8 @@ def generate_test_data
                         temps_estime: rand(0..120) ) unless creneau_emploi_du_temps.nil?
           STDERR.putc '.'
         end
-      }
-    }
-  }
+      end
+    end
+  end
   STDERR.puts
 end
