@@ -17,16 +17,17 @@ module Annuaire
 
   # Petit setter pour les tests unitaires
   def set_search(arg)
-    @search=arg
+    @search = arg
   end
 
   # Fonction de vérification du mode d'api paramétrée dans la conf et init des paramètres
   def init
-    @coordination = '?'
-    @liaison = '/'
     if ANNUAIRE[:api_mode] == 'v2'
       @coordination = '&'
       @liaison = ''
+    else
+      @coordination = '?'
+      @liaison = '/'
     end
   end
 
@@ -61,7 +62,7 @@ module Annuaire
         srv.sub! 'regroupements', 'Regroupements&grp_id='
         # En dernier pour traiter les cas des etab/[uai]/Regroupements et users/[uid]/Regroupements
         # Les services Users et Etablissements, donnent l'info des regroupements en mode expand.
-        srv.sub! '/Regroupements&grp_id=', '&expand=true' if ( !srv.match('Users&uid=').nil? || !srv.match('Etablissements&uai=').nil? )
+        srv.sub! '/Regroupements&grp_id=', '&expand=true' if !srv.match('Users&uid=').nil? || !srv.match('Etablissements&uai=').nil?
       end
       srv.sub! '/', '' # Supprimer les '/' devant les data : &grp_id=/19 devient &grp_id=19
     end
@@ -87,7 +88,7 @@ module Annuaire
   end
 
   def send_request( service, param, expand, error_msg )
-    RestClient.get( sign( ANNUAIRE[:url], "#{service}#{CGI.escape( param )}", { expand: expand } ) ) do
+    RestClient.get( sign( ANNUAIRE[:url], "#{service}#{CGI.escape( param )}", expand: expand ) ) do
       |response, _request, _result|
       if response.code == 200
         return JSON.parse( response )
@@ -116,7 +117,7 @@ module Annuaire
     code_uai = URI.escape( code_uai )
     nom = URI.escape( nom )
     @search = true
-    RestClient.get( sign( ANNUAIRE[:url], 'regroupement', { etablissement: code_uai, nom: nom, expand: "false" } ) ) do
+    RestClient.get( sign( ANNUAIRE[:url], 'regroupement', etablissement: code_uai, nom: nom, expand: 'false' ) ) do
       |response, _request, _result|
       if response.code == 200
         return JSON.parse( response )[0]
@@ -132,7 +133,7 @@ module Annuaire
     nom = URI.escape( nom )
     prenom = URI.escape( prenom )
     @search = true
-    RestClient.get( sign( ANNUAIRE[:url], 'users', { nom: nom, prenom: prenom, etablissement: code_uai } ) ) do
+    RestClient.get( sign( ANNUAIRE[:url], 'users', nom: nom, prenom: prenom, etablissement: code_uai ) ) do
       |response, _request, _result|
       if response.code == 200
         return JSON.parse( response )[0]
