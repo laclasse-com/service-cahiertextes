@@ -148,8 +148,8 @@ module CahierDeTextesAPI
 
           devoir.update( cours_id: params[:cours_id] ) if params[ :cours_id ]
 
-          params[:ressources].each do
-            |ressource|
+          devoir.remove_all_ressources if params[:ressources]
+          params[:ressources].each do |ressource|
             devoir.add_ressource( Ressource.create(  name: ressource['name'],
                                                      hash: ressource['hash'] ) )
           end if params[:ressources]
