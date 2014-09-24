@@ -1,10 +1,6 @@
 <div class="panel panel-default">
   <div class="panel-heading">
-    <input data-ng-model="affiche_faits" type="checkbox" id="display-done" name="display-done"/>
-    <label for="display-done">Afficher les devoirs déjà fait</label>
-  </div>
-  <div class="panel-body">
-    <div class="body-header">
+    <div class="row col-md-12">
       <h2>
 	Du {{from_date | date:'longDate'}} au {{to_date | date:'longDate'}}
 
@@ -17,6 +13,14 @@
 	</div>
       </h2>
     </div>
+
+    <div class="row col-md-12">
+      <input data-ng-model="affiche_faits" type="checkbox" id="display-done" name="display-done"/>
+      <label for="display-done"> Afficher les devoirs déjà fait</label>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+  <div class="panel-body">
     <ul class="list-group todo-list" data-ng-if="devoirs">
       <li data-ng-repeat="devoir in devoirs | orderBy:'date_due':true"
 	  data-ng-if="!devoir.fait || affiche_faits"

@@ -1,27 +1,25 @@
 <div class="panel panel-default">
-  <div class="panel-heading" data-ng-if="current_user.profil_actif.type === 'ENS'">
-    <select class="col-md-3 pull-left" data-ng-model="scope.selected_regroupement_id" data-ng-change="refresh_data()" data-ng-options="classe.id as classe.libelle for classe in classes">
-      <option value="" selected>Toutes les classes</option>
-    </select>
-
-    <div class="col-md-7 pull-right">
-      <label>Séquences pédagogiques non renseignées : </label>
-      <select class="pull-right"
-	      data-ng-model="selected_creneau_vide"
-	      data-ng-options="creneau as ( creneau | formateCreneau ) group by creneau.regroupement.libelle for creneau in creneaux_vides" >
-	<option value="" selected>Sélectionnez un créneau pour le saisir</option>
+  <div class="panel-heading">
+    <div class="row col-md-12" data-ng-if="current_user.profil_actif.type === 'ENS'">
+      <select class="col-md-3 pull-left" data-ng-model="scope.selected_regroupement_id" data-ng-change="refresh_data()" data-ng-options="classe.id as classe.libelle for classe in classes">
+	<option value="" selected>Toutes les classes</option>
       </select>
-      <button class="btn btn-sm btn-primary pull-right"
-	      data-ng-if="selected_creneau_vide"
-	      data-ng-click="edition_creneau( selected_creneau_vide )" >
-	<span class="glyphicon glyphicon-plus-sign"></span> Saisir une nouvelle séquence pédagogique
-      </button>
-    </div>
 
-    <div class="clearfix"></div>
+      <div class="col-md-7 pull-right">
+	<label>Séquences pédagogiques non renseignées : </label>
+	<select class="pull-right"
+		data-ng-model="selected_creneau_vide"
+		data-ng-options="creneau as ( creneau | formateCreneau ) group by creneau.regroupement.libelle for creneau in creneaux_vides" >
+	  <option value="" selected>Sélectionnez un créneau pour le saisir</option>
+	</select>
+	<button class="btn btn-sm btn-primary pull-right"
+		data-ng-if="selected_creneau_vide"
+		data-ng-click="edition_creneau( selected_creneau_vide )" >
+	  <span class="glyphicon glyphicon-plus-sign"></span> Saisir une nouvelle séquence pédagogique
+	</button>
+      </div>
     </div>
-  <div class="panel-body">
-    <div class="body-header">
+    <div class="row col-md-12">
       <h2>
 	Du {{from_date | date:'longDate'}} au {{to_date | date:'longDate'}}
 
@@ -34,6 +32,9 @@
 	</div>
       </h2>
     </div>
+    <div class="clearfix"></div>
+  </div>
+  <div class="panel-body">
     <ul class="list-group todo-list">
       <li data-ng-repeat="creneau in creneaux_saisies | orderBy:'start':true" style="list-style:none" class="creneau list-group-item"
 	  data-ng-class="{'vise': creneau.cours.date_validation !== null}">
