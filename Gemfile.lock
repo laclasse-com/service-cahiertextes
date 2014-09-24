@@ -1,3 +1,9 @@
+GIT
+  remote: https://github.com/laclasse-com/gem_annuaire.git
+  revision: 1ed105e05ec4a2f5d774c0da3f8333f624377a40
+  specs:
+    annuaire (0.0.1)
+
 GEM
   remote: https://rubygems.org/
   remote: http://gems.erasme.org/
@@ -161,6 +167,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  annuaire!
   grape
   grape-swagger
   guard

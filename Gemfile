@@ -17,6 +17,8 @@ gem 'sinatra'
 gem 'thin'
 gem 'rubyzip'
 
+gem 'annuaire', git: 'https://github.com/laclasse-com/gem_annuaire.git'
+
 group :development do
   gem 'guard'
   gem 'guard-rake'
