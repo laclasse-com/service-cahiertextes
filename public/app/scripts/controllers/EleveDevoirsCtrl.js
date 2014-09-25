@@ -62,7 +62,5 @@ angular.module('cahierDeTexteApp')
 			      $scope.reset_offset = function() {
 				  $scope.month_offset = 0;
 			      };
-
-			      retrieve_data(  );
 			  });
 		  } ] );
