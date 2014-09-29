@@ -404,9 +404,21 @@
 <!-- /Duplication de Séquence Pédagogique -->
 
 <div class="modal-footer">
-  <button type="button" class="btn btn-sm btn-warning pull-left" data-ng-click="effacer_creneau()" data-ng-if="!creneau.etranger && creneau.en_creation && cours.create">
-    <span class="glyphicon glyphicon-trash"></span> Supprimer le créneau
-  </button>
+  <div class="dropdown supprimer" data-ng-if="!creneau.etranger && creneau.en_creation">
+    <a class="dropdown-toggle btn btn-sm btn-warning pull-left" role="button"
+       data-toggle="dropdown"
+       data-target="#" href="">
+      <span class="glyphicon glyphicon-trash"></span> Supprimer le créneau
+    </a>
+    <ul class="dropdown-menu" role="menu">
+      <p>Ceci supprimera le créneau à compter du {{creneau.heure_debut | date : 'fullDate' }}.</p>
+      <p>Le créneau avec ses séquences pédagogiques et devoirs associés restera visibles pour les dates antérieures.</p>
+      <button type="button" class="btn btn-sm btn-warning pull-right" data-ng-click="effacer_creneau()">
+	<span class="glyphicon glyphicon-trash"></span>  Confirmer
+      </button>
+    </ul>
+  </div>
+
   <button type="button" class="btn btn-sm btn-default pull-left"
 	  data-ng-click="switch_to_creneau_edition()"
 	  data-ng-if="!creneau.etranger && !creneau.en_creation" >
