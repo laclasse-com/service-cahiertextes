@@ -31,10 +31,11 @@ angular.module('cahierDeTexteApp')
 				      .$promise.then(function( response ) {
 					  $scope.devoirs = _(response).map( function( devoir ) {
 					      devoir.type_devoir = _(types_de_devoir).findWhere({id: devoir.type_devoir_id});
-					      devoir.creneau_emploi_du_temps = CreneauEmploiDuTemps.get({ id: devoir.creneau_emploi_du_temps_id });
-					      devoir.creneau_emploi_du_temps.$promise.then( function success(  ) {
-						  devoir.matiere = Annuaire.get_matiere( devoir.creneau_emploi_du_temps.matiere_id );
-					      });
+					      CreneauEmploiDuTemps.get({ id: devoir.creneau_emploi_du_temps_id })
+						  .$promise.then( function success( response ) {
+						      devoir.creneau_emploi_du_temps = response;
+						      devoir.matiere = Annuaire.get_matiere( devoir.creneau_emploi_du_temps.matiere_id );
+						  });
 					      devoir.cours = _(devoir.cours_id).isNull() ? null : Cours.get({ id: devoir.cours_id });
 					      _(devoir.ressources).each( function( ressource ) {
 						  ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
