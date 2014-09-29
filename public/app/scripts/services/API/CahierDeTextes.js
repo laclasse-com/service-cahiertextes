@@ -98,7 +98,8 @@ angular.module('cahierDeTexteApp')
 	     [ '$resource', 'APP_PATH', 'API_VERSION',
 	       function( $resource, APP_PATH, API_VERSION ) {
 		   return $resource( APP_PATH + '/api/' + API_VERSION + '/devoirs/:id',
-				     { id: '@id' },
+				     { id: '@id',
+				       uid: '@uid'},
 				     { update: { method: 'PUT' },
 				       fait: { method: 'PUT',
 					       url: APP_PATH + '/api/' + API_VERSION + '/devoirs/:id/fait' },

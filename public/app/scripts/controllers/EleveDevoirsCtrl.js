@@ -27,7 +27,8 @@ angular.module('cahierDeTexteApp')
 				  $scope.to_date = moment().subtract( $scope.month_offset, 'months' ).add( 15, 'days' ).toDate();
 
 				  API.query_devoirs({ debut: $scope.from_date,
-						      fin: $scope.to_date })
+						      fin: $scope.to_date,
+						      uid: $scope.current_user.profil_actif.type == 'TUT' ? $scope.current_user.enfant_actif.enfant.id_ent : null })
 				      .$promise.then(function( response ) {
 					  $scope.devoirs = _(response).map( function( devoir ) {
 					      devoir.type_devoir = _(types_de_devoir).findWhere({id: devoir.type_devoir_id});

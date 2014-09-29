@@ -13,9 +13,20 @@ module CahierDeTextesAPI
       params {
         optional :debut, type: Date
         optional :fin, type: Date
+        optional :uid
       }
       get '/' do
-        regroupements_annuaire = Annuaire.get_user_regroupements( user.uid )
+        if params[:uid]
+          user_annuaire = Annuaire.get_user( user.uid )
+          if user_annuaire['profils'].select { |p| p['actif'] }.first['profil_id'] == 'TUT' && !( user_annuaire['enfants'].select { |e| e['enfant']['id_ent'] == params[:uid] }.first.nil? )
+            regroupements_annuaire = Annuaire.get_user_regroupements( params[:uid] )
+          else
+            error!( '401 Unauthorized', 401 )
+          end
+        else
+          regroupements_annuaire = Annuaire.get_user_regroupements( user.uid )
+        end
+
         regroupements_ids = regroupements_annuaire['classes']
                             .concat( regroupements_annuaire['groupes_eleves'] )
                             .concat( regroupements_annuaire['groupes_libres'] )
