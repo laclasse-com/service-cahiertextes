@@ -102,8 +102,10 @@ angular.module('cahierDeTexteApp')
 				     // FIXME: manipulation du DOM dans le contrôleur, sale, mais obligé pour l'interprétation du HTML ?
 				     var html_element = element.find( '.fc-event-title' );
 
-				     var regroupement = event.regroupement !== 'undefined' ? event.regroupement.libelle : '';
-				     html_element.prepend( regroupement + ' - ' );
+				     if ( $scope.current_user.profil_actif.classes.length > 0 ) {
+					 var regroupement = event.regroupement !== 'undefined' ? event.regroupement.libelle : '';
+					 html_element.prepend( regroupement + ' - ' );
+				     }
 				     if ( event.has_resources ) {
 					 html_element.prepend( '<i class="glyphicon glyphicon-paperclip"></i>' );
 				     }
