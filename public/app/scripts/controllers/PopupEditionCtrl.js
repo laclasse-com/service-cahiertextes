@@ -328,7 +328,7 @@ angular.module( 'cahierDeTexteApp' )
 											fin: moment( creneau.heure_debut.toISOString() ).add( n_semaines_futures, 'weeks' ).toDate() } );
 			       };
 
-			       liste_créneaux_similaires( $scope.creneau, 4 )
+			       liste_créneaux_similaires( $scope.creneau, 12 )
 				   .then( function( response ) {
 				       $scope.creneaux_devoirs_possibles_duplication = [];
 				       $scope.creneaux_similaires = _.chain(response.data)
