@@ -50,7 +50,7 @@ angular.module('cahierDeTexteApp')
 			      $scope.month_offset = 0;
 
 			      // retrieve_data() when the value of week_offset changes
-			      // n.b.: triggered when week_offset is initialized above
+			      // n.b.: triggered when month_offset is initialized above
 			      $scope.$watch( 'month_offset', function() {
 				  retrieve_data();
 			      } );
