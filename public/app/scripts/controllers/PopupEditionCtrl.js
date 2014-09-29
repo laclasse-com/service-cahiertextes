@@ -24,7 +24,8 @@ angular.module( 'cahierDeTexteApp' )
 			       var cours = new Cours( { creneau_emploi_du_temps_id: creneau.id,
 							date_cours: new Date(creneau.heure_debut).toISOString(),
 							date_validation: null,
-							enseignant_id: $scope.current_user.uid } );
+							enseignant_id: $scope.current_user.uid,
+							contenu: ''} );
 			       cours.devoirs = [];
 			       cours.create = true;
 
