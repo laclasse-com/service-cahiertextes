@@ -33,6 +33,10 @@ angular.module('cahierDeTexteApp')
 			       } );
 			       response.profil_actif = _(response.profils).findWhere( { actif: true } );
 
+			       if ( response.enfants.length > 0 ) {
+				   response.enfant_actif = response.enfants[ 0 ];
+			       }
+
 			       // Voir quel est le profil
 			       response.is = function( profil_id ) {
 				   return this.profil_actif['type'] == profil_id;

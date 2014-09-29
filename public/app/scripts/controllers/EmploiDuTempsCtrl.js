@@ -10,7 +10,6 @@ angular.module('cahierDeTexteApp')
 				 var filter_data = angular.identity;
 				 $scope.scope = $scope;
 
-				 $scope.uid_enfant_actif = null;
 				 $scope.classe = undefined;
 
 				 var popup_callback = function( scope_popup ) {
@@ -82,7 +81,7 @@ angular.module('cahierDeTexteApp')
 				     EmploisDuTemps.query( { debut: from_date,
 							     fin: to_date,
 							     uai: $scope.current_user.profil_actif.uai,
-							     uid: $scope.uid_enfant_actif } )
+							     uid: $scope.current_user.profil_actif.type == 'TUT' ? $scope.current_user.enfant_actif.enfant.id_ent : null } )
 					 .$promise
 					 .then( function success( response ) {
 					     $scope.raw_data = response;
