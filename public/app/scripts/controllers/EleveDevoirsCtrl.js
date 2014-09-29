@@ -7,6 +7,7 @@ angular.module('cahierDeTexteApp')
 		      // popup d'affichage des détails
 		      var types_de_devoir = [];
 		      $scope.affiche_faits = false;
+		      $scope.tri_ascendant = true;
 		      $scope.popup_ouverte = false;
 		      $scope.popup_callback = function() {};
 		      $scope.ouvre_popup_details = PopupsCreneau.display;
