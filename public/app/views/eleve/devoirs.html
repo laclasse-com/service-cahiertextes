@@ -23,12 +23,15 @@
 
       <input data-ng-model="affiche_faits" type="checkbox" id="display-done" name="display-done"/>
       <label for="display-done"> Afficher les devoirs déjà fait</label>
+
+      <input data-ng-model="tri_ascendant" type="checkbox" id="asc" name="asc"/>
+      <label for="asc"> Tri ascendant</label>
     </div>
     <div class="clearfix"></div>
   </div>
   <div class="panel-body">
     <ul class="list-group todo-list" data-ng-if="devoirs">
-      <li data-ng-repeat="devoir in devoirs | orderBy:'date_due':true"
+      <li data-ng-repeat="devoir in devoirs | orderBy:'date_due':tri_ascendant"
 	  data-ng-if="!devoir.fait || affiche_faits"
 	  style="list-style:none"
 	  class="devoir list-group-item"
