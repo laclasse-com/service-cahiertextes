@@ -7,9 +7,6 @@ angular.module('cahierDeTexteApp')
 		      $scope.tabs = [ { heading: 'Emploi du temps',
 					uisref: 'eleve.emploi_du_temps',
 					active: false },
-				      { heading: 'Cahier de textes',
-					uisref: 'eleve.cahier_de_textes',
-					active: false },
 				      { heading: 'Liste des devoirs',
 					uisref: 'eleve.devoirs',
 					active: false } ];

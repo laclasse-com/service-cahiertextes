@@ -93,17 +93,6 @@ angular.module( 'cahierDeTexteApp' )
 			       }
 			   }
 		       })
-		       .state('eleve.cahier_de_textes', {
-			   parent: 'eleve',
-			   url: '/cahier_de_textes',
-			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ELV', 'TUT' ] ); } },
-			   views: {
-			       'content': {
-				   templateUrl: APP_PATH + '/app/views/common/cahier_de_textes.html',
-				   controller: 'CahierDeTextesCtrl'
-			       }
-			   }
-		       })
 		       .state('eleve.devoirs', {
 			   parent: 'eleve',
 			   url: '/devoirs',
