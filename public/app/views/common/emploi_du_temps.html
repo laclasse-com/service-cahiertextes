@@ -1,5 +1,5 @@
   <div class="panel panel-default">
-    <div class="panel-heading" data-ng-if="current_user.profil_actif.type === 'ENS' || current_user.profil_actif.type === 'TUT'">
+    <div class="panel-heading" data-ng-if="current_user.profil_actif.type === 'ENS'">
       <select class="pull-left"
 	      data-ng-if="current_user.profil_actif.type === 'ENS'"
 	      data-ng-model="scope.classe"
@@ -12,11 +12,6 @@
 		      data-ng-model="uniquement_mes_creneaux"
 		      data-ng-change="refresh_calendar()" /> Ne montrer que ce qui me concerne directement</label>
       </div>
-
-      <select data-ng-if="current_user.profil_actif.type === 'TUT'"
-	      data-ng-options="enfant.enfant.id_ent as enfant.enfant.prenom+' '+enfant.enfant.nom for enfant in current_user.enfants"
-	      data-ng-model="scope.uid_enfant_actif"
-	      data-ng-change="reload_data()"></select>
 
       <div class="clearfix"></div>
     </div>
