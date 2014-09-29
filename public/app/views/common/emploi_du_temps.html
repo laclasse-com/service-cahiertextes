@@ -15,7 +15,7 @@
 
       <select data-ng-if="current_user.profil_actif.type === 'TUT'"
 	      data-ng-options="enfant.enfant.id_ent as enfant.enfant.prenom+' '+enfant.enfant.nom for enfant in current_user.enfants"
-	      data-ng-model="uid_enfant_actif"
+	      data-ng-model="scope.uid_enfant_actif"
 	      data-ng-change="reload_data()"></select>
 
       <div class="clearfix"></div>
