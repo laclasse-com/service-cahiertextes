@@ -9,8 +9,11 @@ angular.module('cahierDeTexteApp')
 		      User.get_user().then( function( response ) {
 			  $scope.current_user = response.data;
 
-			  $scope.reload = function() {
-			      $state.reload();
+			  $scope.save_and_reload = function() {
+			      User.update_parameters( $scope.current_user.parametrage_cahier_de_textes )
+				  .success( function() {
+				      $state.reload();
+				  } );
 			  };
 		      } );
 		  } ] );

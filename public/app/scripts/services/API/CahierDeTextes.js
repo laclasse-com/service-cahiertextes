@@ -45,6 +45,11 @@ angular.module('cahierDeTexteApp')
 			       return response;
 			   } );
 		   } );
+
+		   this.update_parameters = function( parametres ) {
+		       return $http.put( APP_PATH + '/api/' + API_VERSION + '/users/current/parametres',
+					 { parametres: JSON.stringify( parametres ) } );
+		   };
 	       } ] );
 
 angular.module('cahierDeTexteApp')
