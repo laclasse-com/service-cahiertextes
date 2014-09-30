@@ -113,6 +113,10 @@ body {
 .accordion-toggle{cursor:pointer}
 .duplication-saisie div { width:100%;
 			  min-height: 20em; }
+.duplication-saisie .footer { min-height: 2.5em;
+			      max-height: 2.5em;
+			      height: 2.5em; }
+
 .duplication-saisie select { width:100%; }
 .ressources .attached-document { float: left;
 				 border: 1px solid #aaa;
