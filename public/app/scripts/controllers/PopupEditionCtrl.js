@@ -279,12 +279,16 @@ angular.module( 'cahierDeTexteApp' )
 					   } );
 				       } );
 
-				       _($scope.cours.ressources).each( function( ressource ) {
-					   ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+				       $scope.cours.$promise.then( function() {
+					   _($scope.cours.ressources).each( function( ressource ) {
+					       ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+					   } );
 				       } );
 				       _($scope.cours.devoirs).each( function( devoir ) {
-					   _(devoir.ressources).each( function( ressource ) {
-					       ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+					   devoir.$promise.then( function() {
+					       _(devoir.ressources).each( function( ressource ) {
+						   ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+					       } );
 					   } );
 				       } );
 

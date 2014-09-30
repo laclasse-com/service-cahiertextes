@@ -10,8 +10,10 @@ angular.module('cahierDeTexteApp')
 
 		      if ( ! _(cours).isNull() ) {
 			  $scope.cours = Cours.get( { id: cours.id } );
-			  _($scope.cours.ressources).each( function( ressource ) {
-			      ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+			  $scope.cours.$promise.then( function() {
+			      _($scope.cours.ressources).each( function( ressource ) {
+				  ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+			      } );
 			  } );
 
 			  $scope.cours.$promise.then( function( cours ) {
@@ -29,8 +31,10 @@ angular.module('cahierDeTexteApp')
 			  return Devoirs.get( { id: devoir.id } );
 		      } );
 		      _($scope.devoirs).each( function( devoir ) {
-			  _(devoir.ressources).each( function( ressource ) {
-			      ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+			  devoir.$promise.then( function() {
+			      _(devoir.ressources).each( function( ressource ) {
+				  ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+			      } );
 			  } );
 		      } );
 		      if ( _($scope.date).isNull() && !_($scope.devoirs).isEmpty() ) {
