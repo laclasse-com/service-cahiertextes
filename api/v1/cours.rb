@@ -141,7 +141,13 @@ module CahierDeTextesAPI
               target_cours.add_ressource( ressource )
             end
 
-            target_cours.to_deep_hash
+            hcours = cours.to_deep_hash
+            # BUG: to_deep_hash casse les hash des ressources
+            hcours[:ressources] = cours.ressources.map do |ressource|
+              ressource.to_hash
+            end
+            hcours[:copie_id] = target_cours.id
+            hcours
           end
         end
       end

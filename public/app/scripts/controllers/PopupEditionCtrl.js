@@ -157,8 +157,6 @@ angular.module( 'cahierDeTexteApp' )
 				   $scope.creneau.semaines_de_presence_regroupement = bitfield_to_fixnum( $scope.semaines_actives.regroupement );
 
 				   $scope.creneau.$update();
-			       } else if ( $scope.mode_duplication ) {
-				   $scope.dupliquer();
 			       } else {
 				   // Gestion des Cours et Devoirs
 				   var handle_devoirs = function( devoirs, cours ) {
@@ -250,12 +248,7 @@ angular.module( 'cahierDeTexteApp' )
 
 			       $scope.types_de_devoir = API.query_types_de_devoir();
 
-			       if ( _(cours).isNull() ) {
-				   if ( !$scope.creneau.etranger ) {
-				       $scope.cours = create_cours( creneau );
-				       $scope.cours.editable = true;
-				   }
-			       } else {
+			       var init_cours_existant = function( cours ) {
 				   $scope.cours = Cours.get( { id: cours.id } );
 				   $scope.cours.$promise.then( function( cours ) {
 				       $scope.cours.editable = _($scope.cours.date_validation).isNull() && $scope.cours.enseignant_id === $scope.current_user.uid;
@@ -297,6 +290,15 @@ angular.module( 'cahierDeTexteApp' )
 
 				   } );
 				   $scope.cours.create = false;
+			       };
+
+			       if ( _(cours).isNull() ) {
+				   if ( !$scope.creneau.etranger ) {
+				       $scope.cours = create_cours( creneau );
+				       $scope.cours.editable = true;
+				   }
+			       } else {
+				   init_cours_existant( cours );
 			       }
 
 			       _( $scope.devoirs )
@@ -466,9 +468,13 @@ angular.module( 'cahierDeTexteApp' )
 				   where.unshift( devoir );
 			       };
 
-			       $scope.creneau_cible_duplication_SP_updated = function() {
-				   $scope.dirty = true;
+			       $scope.ok_go_for_duplication = false;
+			       $scope.are_we_go_for_duplication = function() {
+				   $scope.ok_go_for_duplication = !_($scope.creneaux_similaires.selected).isEmpty()
+				       && _($scope.cours.devoirs).reduce( function( is_it, devoir ) { return is_it && _(devoir).has('creneau_cible'); }, true );
+			       };
 
+			       $scope.creneau_cible_duplication_SP_updated = function() {
 				   // Calcul des créneaux cibles pour les devoirs
 				   liste_créneaux_similaires( $scope.creneaux_similaires.selected, 4 )
 				       .then( function( response ) {
@@ -485,7 +491,9 @@ angular.module( 'cahierDeTexteApp' )
 					       } )
 					       .value();
 				       } );
+				   $scope.are_we_go_for_duplication();
 			       };
+
 			       $scope.dupliquer = function () {
 				   var devoirs = angular.copy( $scope.cours.devoirs );
 				   $scope.cours.$copie( {
@@ -495,11 +503,19 @@ angular.module( 'cahierDeTexteApp' )
 				   } ).then( function() {
 				       _(devoirs).each( function( devoir ) {
 					   devoir.$copie( {
-					       cours_id: $scope.cours.id,
+					       cours_id: $scope.cours.copie_id,
 					       creneau_emploi_du_temps_id: devoir.creneau_cible.id,
 					       date_due: devoir.creneau_cible.date_due
-					   } );
+					   } )
+					       .then( function() {
+						   devoir.creneau_cible = [];
+					       } );
 				       } );
+				       $scope.creneaux_similaires = _($scope.creneaux_similaires).reject( function( creneau ) {
+					   return creneau.id + creneau.start == $scope.creneaux_similaires.selected.id + $scope.creneaux_similaires.selected.start;
+				       } );
+				       $scope.creneaux_similaires.selected = [];
+				       init_cours_existant( $scope.cours );
 				   });
 			       };
 
@@ -550,6 +566,10 @@ angular.module( 'cahierDeTexteApp' )
 
 			       $scope.switch_to_duplication_mode = function() {
 				   $scope.mode_duplication = true;
+			       };
+
+			       $scope.switch_to_modification_mode = function() {
+				   $scope.mode_duplication = false;
 			       };
 
 			       $scope.switch_to_creneau_edition = function() {
