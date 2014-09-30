@@ -21,14 +21,13 @@
     "test",
     "tests"
   ],
-  "_release": "d8047384de",
+  "_release": "ba3e3fdbf0",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "d8047384de3a9f41f03b897ea3c212560bc82197"
+    "commit": "ba3e3fdbf0a23cf7f4038ec834708bd40c6f6998"
   },
   "_source": "git://github.com/theaqua/ng-switcher.git",
   "_target": "*",
-  "_originalSource": "ng-switcher",
-  "_direct": true
+  "_originalSource": "ng-switcher"
 }

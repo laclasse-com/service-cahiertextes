@@ -1,11 +1,15 @@
-Angular Tree Control [![Build Status](https://travis-ci.org/wix/angular-tree-control.png)](https://travis-ci.org/wix/angular-tree-control) [![Coverage Status](https://coveralls.io/repos/wix/angular-tree-control/badge.png)](https://coveralls.io/r/wix/angular-tree-control)
+Angular Tree Control
 ================
+
+[![Bower version](https://badge.fury.io/bo/angular-tree-control.svg)](http://badge.fury.io/bo/angular-tree-control)
+[![Build Status](https://travis-ci.org/wix/angular-tree-control.png)](https://travis-ci.org/wix/angular-tree-control)
+[![Coverage Status](https://coveralls.io/repos/wix/angular-tree-control/badge.png)](https://coveralls.io/r/wix/angular-tree-control)
 
 Pure [AngularJS](http://www.angularjs.org) based tree control component.
 
 [![ScreenShot](https://raw.github.com/wix/angular-tree-control/master/images/sample.png)](http://jsfiddle.net/8ApLX/5/)
 
-Running sample on [jsFiddle](http://jsfiddle.net/8ApLX/5/)
+To get started, check out [wix.github.io/angular-tree-control](http://wix.github.io/angular-tree-control/)
 
 ## Why yet another tree control
 
@@ -123,6 +127,8 @@ Attributes of angular treecontrol
     - `labelSelected` : inject classes into the div element around the label only when the node is selected
 - `order-by` : value for ng-repeat to use for ordering sibling nodes
 - `reverse-order` : whether or not to reverse the ordering of sibling nodes based on the value of `order-by`
+- `filter-expression` : value for ng-repeat to use for filtering the sibling nodes
+- `filter-comparator` : value for ng-repeat to use for comparing nodes with the filter expression
 
 ### The tree labels
 
