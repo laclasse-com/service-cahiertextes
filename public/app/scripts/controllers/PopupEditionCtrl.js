@@ -159,7 +159,7 @@ angular.module( 'cahierDeTexteApp' )
 				   $scope.creneau.$update();
 			       } else {
 				   // Gestion des Cours et Devoirs
-				   var handle_devoirs = function( devoirs, cours ) {
+				   var valider_devoirs = function( devoirs, cours ) {
 				       _( devoirs ).each( function ( devoir ) {
 					   if ( _( devoir ).has( 'contenu' ) && ( devoir.contenu.length > 0 ) ) {
 					       // FIXME: on $save() ou $update() tous les devoirs qu'ils aient été modifiés ou non
@@ -215,13 +215,13 @@ angular.module( 'cahierDeTexteApp' )
 				       // Devoirs liés au cours
 				       if ( cours_devoirs.length > 0 ) {
 					   promesse.then( function ( cours_from_DB ) {
-					       handle_devoirs( cours_devoirs, cours_from_DB );
+					       valider_devoirs( cours_devoirs, cours_from_DB );
 					   } );
 				       }
 				   }
 
 				   // Devoirs dûs ce créneau
-				   handle_devoirs( $scope.devoirs, null );
+				   valider_devoirs( $scope.devoirs, null );
 			       }
 
 			       $q.all( promesses ).then( $scope.fermer );
