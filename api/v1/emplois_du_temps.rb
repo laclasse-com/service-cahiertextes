@@ -53,8 +53,9 @@ module CahierDeTextesAPI
           .map do |creneau|
 
           ( params[:debut] .. params[:fin] )
-            .reject { |day| day.wday != creneau.jour_de_la_semaine }
+            .select { |day| day.wday == creneau.jour_de_la_semaine } # only the same weekday as the creneau
             .map do |jour|
+
             if creneau[:semaines_de_presence][ jour.cweek ] == 1
               cahier_de_textes = CahierDeTextes.where( regroupement_id: creneau[:regroupement_id] ).first
               cahier_de_textes = CahierDeTextes.create( regroupement_id: creneau[:regroupement_id] ) if cahier_de_textes.nil?
