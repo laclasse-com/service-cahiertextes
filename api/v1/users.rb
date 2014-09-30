@@ -38,6 +38,11 @@ module CahierDeTextesAPI
           regroupement
         end
 
+        parametres = UserParameters.where( uid: utilisateur[ 'uid' ] ).first
+        parametres = UserParameters.create( uid: utilisateur[ 'uid' ] ) if parametres.nil?
+
+        utilisateur['parametrage_cahier_de_textes'] = JSON.parse( parametres[:parameters] )
+
         utilisateur
       end
 

@@ -74,6 +74,7 @@ angular.module('cahierDeTexteApp')
 				 };
 
 				 $scope.refresh_calendar = function(  ) {
+				     $scope.calendar.options.weekends = $scope.current_user.parametrage_cahier_de_textes.affichage_week_ends;
 				     populate_calendar( filter_data( $scope.raw_data ) );
 				 };
 
@@ -112,6 +113,7 @@ angular.module('cahierDeTexteApp')
 
 				 User.get_user().then( function( response ) {
 				     $scope.current_user = response.data;
+				     $scope.calendar.options.weekends = $scope.current_user.parametrage_cahier_de_textes.affichage_week_ends;
 
 				     // ############################## Profile-specific code ##############################################
 				     switch ( $scope.current_user.profil_actif.type ) {

@@ -17,7 +17,21 @@
   <div data-ui-view></div>
 
   <footer data-ng-controller="FooterCtrl" data-ng-cloak>
-    version {{version}}
+    <div class="pull-left">
+      <a class="dropdown-toggle btn btn-xs btn-default pull-left" role="button"
+	 data-toggle="dropdown"
+	 data-target="#" href="">
+	<span class="glyphicon glyphicon-cog"></span> Préférences
+      </a>
+      <ul class="dropdown-menu user-preferences" role="menu">
+	<li><label><input type="checkbox" data-ng-model="current_user.parametrage_cahier_de_textes.affichage_week_ends"
+			  data-ng-change="reload()" /> Afficher les week-ends</label></li>
+	<li><label><input type="checkbox" data-ng-model="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir"
+			  data-ng-change="reload()" /> Afficher les types de devoirs</label></li>
+      </ul>
+
+    </div>
+    <span class="pull-right">version {{version}}</span>
   </footer>
 
 </div>

@@ -2,7 +2,15 @@
 
 angular.module('cahierDeTexteApp')
     .controller('FooterCtrl',
-		[ '$scope', 'VERSION',
-		  function ( $scope, VERSION ) {
+		[ '$scope', '$state', 'VERSION', 'User',
+		  function ( $scope, $state, VERSION, User ) {
 		      $scope.version = VERSION;
+
+		      User.get_user().then( function( response ) {
+			  $scope.current_user = response.data;
+
+			  $scope.reload = function() {
+			      $state.reload();
+			  };
+		      } );
 		  } ] );
