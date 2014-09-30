@@ -186,7 +186,7 @@
 
 	    <div class="col-md-9">
 	      <div class="panel-heading enseignant-saisie" data-ng-if="!creneau.etranger">
-		<label class="col-md-6">Type de travail :
+		<label class="col-md-6" data-ng-if="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir">Type de travail :
 		  <select data-ng-required="true"
 			  data-ng-change="is_dirty( null )"
 			  data-ng-model="devoir.type_devoir_id"
@@ -219,7 +219,7 @@
 
 
 	      <div class="panel-heading enseignant-saisie" data-ng-if="creneau.etranger">
-		<label>Type de travail : <em>{{devoir.type_devoir.description}}</em></label>
+		<label data-ng-if="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir">Type de travail : <em>{{devoir.type_devoir.description}}</em></label>
 		<label data-ng-if="devoir.temps_estime">Temps de travail estimé : <em>{{devoir.temps_estime * 5}} min</em></label>
 	      </div>
 	      <div class="panel-body" data-ng-bind-html="devoir.contenu" data-ng-if="creneau.etranger"></div>
@@ -289,7 +289,7 @@
 	<div class="col-md-9">
 
 	  <div class="panel-heading enseignant-saisie" data-ng-if="!creneau.etranger">
-	    <label class="col-md-12">Type de travail :
+	    <label class="col-md-12" data-ng-if="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir">Type de travail :
 	      <select data-ng-required="true"
 		      data-ng-change="is_dirty( null )"
 		      data-ng-model="devoir.type_devoir_id"
@@ -404,7 +404,7 @@
 	  <ol>
 	    <li data-ng-repeat="devoir in cours.devoirs">
 	      <ul>
-		<li><i class="picto" data-ng-style="{'background-image':'url(' + app_path + '/app/bower_components/charte-graphique-laclasse-com/images/picto_devoir.svg)'}"></i> Type de devoir : <em>{{devoir.type_devoir.description}}</em></li>
+		<li data-ng-if="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir"><i class="picto" data-ng-style="{'background-image':'url(' + app_path + '/app/bower_components/charte-graphique-laclasse-com/images/picto_devoir.svg)'}"></i> Type de devoir : <em>{{devoir.type_devoir.description}}</em></li>
 		<li>Date due : <em>{{devoir.date_due | date:'fullDate'}}</em></li>
 		<li data-ng-bind-html="devoir.contenu"></li>
 	      </ul>

@@ -277,6 +277,12 @@ h3, .h3 { text-transform: uppercase; }
 
 .supprimer ul { padding: 6px; }
 
+
+.user-preferences { margin-left: -30%;
+		    margin-top: -21%;
+		    padding: 6px;
+		    position: relative; }
+
 /* next 2 rules copied from font-awesome css */
 .switch .switch-button{ font-family: FontAwesome;
 			font-style: normal;
