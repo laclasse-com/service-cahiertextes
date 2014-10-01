@@ -1,9 +1,12 @@
 <div class="panel panel-default">
   <div class="panel-body">
-    <select class="col-md-2" data-ng-model="mois" data-ng-change="process_data()" data-ng-options="annee.indexOf(m)+1 as m for m in annee">
+    <select class="col-md-2" data-ng-model="scope.selected_mois" data-ng-change="process_data()" data-ng-options="annee.indexOf(m)+1 as m for m in annee">
       <option value="">Toute l'année</option>
     </select>
-    <select class="col-md-2" data-ng-model="classe" data-ng-change="process_data()" data-ng-options="class as class for (id, class) in classes">
+    <select class="col-md-2"
+	    data-ng-model="scope.selected_regroupement_id"
+	    data-ng-change="process_data()"
+	    data-ng-options="id as classe for (id, classe) in classes">
       <option value="">Toutes les classes</option>
     </select>
   </div>
@@ -44,7 +47,7 @@
   </div>
 </div>
 
-<div class="col-md-3 bloc-enseignant" data-ng-repeat="individualChart in individualCharts.enseignants">
+<div class="col-md-3 bloc-enseignant" data-ng-repeat="individualChart in individualCharts.enseignants | orderBy:'enseignant.full_name'">
   <div class="panel panel-default">
     <div class="panel-heading">
       <h4>

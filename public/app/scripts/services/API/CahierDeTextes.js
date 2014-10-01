@@ -55,7 +55,7 @@ angular.module('cahierDeTexteApp')
 angular.module('cahierDeTexteApp')
     .factory('Classes', [ '$resource', 'APP_PATH', 'API_VERSION',
 			  function( $resource, APP_PATH, API_VERSION ) {
-			      return $resource( APP_PATH + '/api/' + API_VERSION + '/etablissements/:uai/classes/:id',
+			      return $resource( APP_PATH + '/api/' + API_VERSION + '/etablissements/:uai/statistiques/classes/:id',
 						{ uai: '@uai',
 						  id: '@id' } );
 			  } ] );
@@ -131,7 +131,7 @@ angular.module('cahierDeTexteApp')
     .factory('Enseignants',
 	     [ '$resource', 'APP_PATH', 'API_VERSION',
 	       function( $resource, APP_PATH, API_VERSION ) {
-		   return $resource( APP_PATH + '/api/' + API_VERSION + '/etablissements/:uai/enseignants/:enseignant_id',
+		   return $resource( APP_PATH + '/api/' + API_VERSION + '/etablissements/:uai/statistiques/enseignants/:enseignant_id',
 				     { uai: '@uai',
 				       enseignant_id: '@enseignant_id' } );
 	       } ] );
