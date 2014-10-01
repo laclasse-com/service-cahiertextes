@@ -389,11 +389,13 @@ angular.module( 'cahierDeTexteApp' )
 				   if ( item.ressources === undefined ) {
 				       item.ressources = [];
 				   }
-				   if ( _( item.ressources ).findWhere( {
-				       hash: hash
-				   } ) === undefined ) {
+				   if ( _( item.ressources ).findWhere( { hash: hash } ) === undefined ) {
 				       Documents.ajout_au_cahier_de_textes( $scope.classe, hash )
 					   .success( function ( response ) {
+					       $scope.erreurs = [];
+					       if ( !_(response.error).isEmpty() ) {
+						   $scope.erreurs.push( { message: response.error } );
+					       }
 					       item.ressources.push( {
 						   name: name,
 						   hash: _( response.added ).first().hash,
@@ -412,10 +414,12 @@ angular.module( 'cahierDeTexteApp' )
 				   for ( var i = 0; i < responses.length; i++ ) {
 				       responses[ i ]
 					   .success( function ( response ) {
+					       $scope.erreurs = [];
+					       if ( !_(response.error).isEmpty() ) {
+						   $scope.erreurs.push( { message: response.error } );
+					       }
 					       _( response.added ).each( function ( doc ) {
-						   if ( _( item.ressources ).findWhere( {
-						       hash: doc.hash
-						   } ) === undefined ) {
+						   if ( _( item.ressources ).findWhere( { hash: doc.hash } ) === undefined ) {
 						       item.ressources.push( {
 							   name: doc.name,
 							   hash: doc.hash,
