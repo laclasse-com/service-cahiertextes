@@ -8,7 +8,7 @@ angular.module('cahierDeTexteApp')
 		      $scope.annee = _($locale.DATETIME_FORMATS.MONTH).toArray();
 		      $scope.selected_regroupement_id = null;
 		      $scope.selected_mois = null;
-		      $scope.classes = {};
+		      $scope.classes = [];
 		      $scope.details_enseignants = {};
 
 		      $scope.pieChart = PIECHART_DEFINITION();
@@ -165,8 +165,9 @@ angular.module('cahierDeTexteApp')
 
 				      $q.all( $scope.extract_classes_promises( $scope.details_enseignants ) )
 					  .then( function( classes ) {
-					      _(classes).each(function( classe ) {
-						  $scope.classes[classe.id] = classe.libelle !== null ? classe.libelle : classe.libelle_aaf;
+					      $scope.classes = _(classes).map(function( classe ) {
+						  return { id: classe.id,
+							   libelle : classe.libelle !== null ? classe.libelle : classe.libelle_aaf };
 					      });
 					      $scope.process_data();
 					  });
