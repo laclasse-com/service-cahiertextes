@@ -104,7 +104,7 @@ angular.module('cahierDeTexteApp')
 				  $scope.displayed_data = _($scope.displayed_data).map( function( enseignant ) {
 				      return { enseignant_id: enseignant.enseignant_id,
 					       classes: _(enseignant.classes).map( function( classe ) {
-						   return { regroupement: classe.regroupement_id,
+						   return { regroupement_id: classe.regroupement_id,
 							    statistiques: _(classe.statistiques).reject( function( mois ) {
 								return mois.month != $scope.selected_mois;
 							    })
