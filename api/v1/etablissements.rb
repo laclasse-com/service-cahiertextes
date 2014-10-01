@@ -13,7 +13,7 @@ module CahierDeTextesAPI
       params {
         requires :uai, desc: 'Code UAI de l\'établissement'
       }
-      get '/:uai/classes' do
+      get '/:uai/statistiques/classes' do
         Etablissement.where(uai: params[:uai]).first.statistiques_classes
       end
 
@@ -22,7 +22,7 @@ module CahierDeTextesAPI
         requires :uai, desc: 'Code UAI de l\'établissement'
         requires :regroupement_id, desc: 'identifiant annuaire de la classe'
       }
-      get '/:uai/classes/:regroupement_id' do
+      get '/:uai/statistiques/classes/:regroupement_id' do
         cahier_de_textes = CahierDeTextes[ regroupement_id: params[:regroupement_id] ]
 
         error!( 'Classe inconnue', 404 ) if cahier_de_textes.nil?
@@ -34,7 +34,7 @@ module CahierDeTextesAPI
       params {
         requires :uai, desc: 'Code UAI de l\'établissement'
       }
-      get '/:uai/enseignants' do
+      get '/:uai/statistiques/enseignants' do
         Etablissement.where(UAI: params[:uai]).first.statistiques_enseignants
       end
 
@@ -43,7 +43,7 @@ module CahierDeTextesAPI
         requires :uai, desc: 'Code UAI de l\'établissement'
         requires :enseignant_id, desc: 'identifiant annuaire de l\'enseignant'
       }
-      get '/:uai/enseignants/:enseignant_id' do
+      get '/:uai/statistiques/enseignants/:enseignant_id' do
         Etablissement.where(uai: params[:uai]).first.saisies_enseignant( params[:enseignant_id] )
       end
     end
