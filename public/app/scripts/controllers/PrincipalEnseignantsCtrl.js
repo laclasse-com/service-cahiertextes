@@ -83,15 +83,18 @@ angular.module('cahierDeTexteApp')
 			      // filtrage sur la classe sélectionnée
 			      if ( $scope.selected_regroupement_id != null ) {
 				  $scope.displayed_data = _.chain($scope.displayed_data)
+				      .reject( function( enseignant ) {
+					  return _.chain($scope.details_enseignants[ enseignant.enseignant_id ].classes)
+					      .findWhere({ classe_id: $scope.selected_regroupement_id })
+					      .isUndefined()
+					      .value();
+				      })
 				      .map( function( enseignant ) {
 					  return { enseignant_id: enseignant.enseignant_id,
 						   classes: _(enseignant.classes).reject( function( classe ) {
 						       return classe.regroupement_id != $scope.selected_regroupement_id;
 						   })
 						 };
-				      })
-				      .reject( function( enseignant ) { // TODO: chercher une meilleure solution
-					  return enseignant.classes.length === 0;
 				      })
 				      .value();
 			      }
