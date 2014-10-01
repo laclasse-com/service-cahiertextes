@@ -4,15 +4,15 @@
 
 <div class="panel panel-default" data-ng-if="!empty">
   <div class="panel-body">
-    <select data-ng-model="classe" data-ng-change="process_data()" data-ng-options="classe.id as classe.libelle for classe in classes">
+    <select data-ng-model="scope.selected_regroupement_id" data-ng-options="classe.id as classe.libelle for classe in classes">
       <option value="" selected>Toute les classes</option>
     </select>
 
-    <select class="col-md-3" data-ng-model="moisCourant" data-ng-change="process_data()" data-ng-options="annee.indexOf(m)+1 as m for m in annee">
+    <select class="col-md-3" data-ng-model="scope.selected_mois" data-ng-change="process_data()" data-ng-options="annee.indexOf(m)+1 as m for m in annee">
       <option value="">Toute l'année</option>
     </select>
 
-    <select class="col-md-3" data-ng-model="matiereCourante" data-ng-change="process_data()" data-ng-options="m.id as m.libelle for m in matieres">
+    <select class="col-md-3" data-ng-model="scope.selected_matiere" data-ng-change="process_data()" data-ng-options="m.id as m.libelle for m in matieres">
       <option value="">Toute les matières</option>
     </select>
   </div>
@@ -54,7 +54,9 @@
 </div>
 
 <div class="col-md-12" data-ng-if="!classe">
-  <div class="col-md-3" data-ng-repeat="classe in individualCharts.classes">
+  <div class="col-md-3"
+       data-ng-repeat="classe in individualCharts.classes | orderBy:'regroupement.libelle'"
+       data-ng-if="selected_regroupement_id == null || classe.regroupement.id == selected_regroupement_id">
     <div class="panel panel-default">
       <div class="panel-heading"><h3 class="panel-title">{{classe.regroupement.libelle}}</h3></div>
       <div class="panel-body">
