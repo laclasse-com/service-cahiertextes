@@ -85,7 +85,7 @@ angular.module('cahierDeTexteApp')
 				  $scope.displayed_data = _.chain($scope.displayed_data)
 				      .reject( function( enseignant ) {
 					  return _.chain($scope.details_enseignants[ enseignant.enseignant_id ].classes)
-					      .findWhere({ classe_id: $scope.selected_regroupement_id })
+					      .findWhere({ classe_id: parseInt( $scope.selected_regroupement_id ) })
 					      .isUndefined()
 					      .value();
 				      })
