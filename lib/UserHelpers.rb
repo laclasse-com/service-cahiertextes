@@ -34,6 +34,7 @@ module UserHelpers
         # calcule du droit d'admin, true pour les TECH et les ADM
         profil['admin'] = extra['roles'].select { |r| r['etablissement_code_uai'] == profil['etablissement_code_uai'] && ( r['role_id'] == 'TECH' || r['role_id'].match('ADM.*') ) }.length > 0
 
+        profil['classes'] = Annuaire.get_etablissement_regroupements( profil['uai'] ) if profil['type'] == 'EVS'
         profil
       end
       utilisateur[ 'enfants' ] = extra [ 'enfants' ]
