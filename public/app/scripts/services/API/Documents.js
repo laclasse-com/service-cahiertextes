@@ -10,9 +10,7 @@ angular.module('cahierDeTexteApp')
 		   };
 
 		   this.ajout_au_cahier_de_textes = function( classe, hash ) {
-		       // v v Remettre la ligne ci-dessous quand les nouveaux docs seront opérationnels v v
-		       //return $http.get( DOCS_URL + '/api/ctxt/copy/regroupement/' + classe.type + '/share/' + classe.id + '?cmd=paste&targets[]=' + hash + '&cut=0&attachment=CAHIERTXT' );
-		       return $http.get( DOCS_URL + "/api/ctxt/copy?cmd=paste&targets[]=" + hash + "&cut=0&attachment=CAHIERTXT&share=" + classe.id );
+		       return $http.get( DOCS_URL + '/api/ctxt/copy/regroupement/' + classe.type + '/share/' + classe.id + '?cmd=paste&targets[]=' + hash + '&cut=0&attachment=CAHIERTXT' );
 		   };
 
 		   this.upload_dans_cahier_de_textes = function( classe, fichiers ) {
