@@ -4,9 +4,10 @@ angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantsCtrl',
 		[ '$scope', '$locale', 'THEME', '$q', 'API', 'Annuaire', 'User', 'PIECHART_DEFINITION', 'BARCHART_DEFINITION',
 		  function( $scope, $locale, THEME, $q, API, Annuaire, User, PIECHART_DEFINITION, BARCHART_DEFINITION ) {
+		      $scope.scope = $scope;
 		      $scope.annee = _($locale.DATETIME_FORMATS.MONTH).toArray();
-		      $scope.classe = null;
-		      $scope.mois = null;
+		      $scope.selected_regroupement_id = null;
+		      $scope.selected_mois = null;
 		      $scope.classes = {};
 		      $scope.details_enseignants = {};
 
@@ -82,14 +83,12 @@ angular.module('cahierDeTexteApp')
 			      $scope.displayed_data = $scope.raw_data;
 
 			      // filtrage sur la classe sélectionnée
-			      if ( $scope.classe != null ) {
-				  // .invert() suppose que les valeurs sont uniques
-				  var id = _($scope.classes).invert()[$scope.classe];
+			      if ( $scope.selected_regroupement_id != null ) {
 				  $scope.displayed_data = _.chain($scope.displayed_data)
 				      .map( function( enseignant ) {
 					  return { enseignant_id: enseignant.enseignant_id,
 						   classes: _(enseignant.classes).reject( function( classe ) {
-						       return classe.regroupement_id != id;
+						       return classe.regroupement_id != $scope.selected_regroupement_id;
 						   })
 						 };
 				      })
@@ -100,13 +99,13 @@ angular.module('cahierDeTexteApp')
 			      }
 
 			      // filtrage sur le mois sélectionné
-			      if ( $scope.mois != null ) {
+			      if ( $scope.selected_mois != null ) {
 				  $scope.displayed_data = _($scope.displayed_data).map( function( enseignant ) {
 				      return { enseignant_id: enseignant.enseignant_id,
 					       classes: _(enseignant.classes).map( function( classe ) {
 						   return { regroupement: classe.regroupement_id,
 							    statistiques: _(classe.statistiques).reject( function( mois ) {
-								return mois.month != $scope.mois;
+								return mois.month != $scope.selected_mois;
 							    })
 							  };
 					       })
