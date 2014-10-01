@@ -4,9 +4,10 @@ angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantsCtrl',
 		[ '$scope', '$locale', 'THEME', '$q', 'API', 'Annuaire', 'User', 'PIECHART_DEFINITION', 'BARCHART_DEFINITION',
 		  function( $scope, $locale, THEME, $q, API, Annuaire, User, PIECHART_DEFINITION, BARCHART_DEFINITION ) {
+		      $scope.scope = $scope;
 		      $scope.annee = _($locale.DATETIME_FORMATS.MONTH).toArray();
-		      $scope.classe = null;
-		      $scope.mois = null;
+		      $scope.selected_regroupement_id = null;
+		      $scope.selected_mois = null;
 		      $scope.classes = {};
 		      $scope.details_enseignants = {};
 
@@ -55,15 +56,13 @@ angular.module('cahierDeTexteApp')
 				  });
 			  } };
 
-		      $scope.extract_classes_promises = function( data ) {
-			  return _.chain(data)
+		      $scope.extract_classes_promises = function( details_enseignants ) {
+			  return _.chain(details_enseignants)
+			      .toArray()
 			      .pluck('classes')
 			      .flatten()
-			      .pluck('regroupement_id')
+			      .pluck('classe_id')
 			      .uniq()
-			      .reject(function( regroupement_id ) {
-				  return ( regroupement_id === '' );
-			      })
 			      .map(function( regroupement_id ) {
 				  return Annuaire.get_regroupement( regroupement_id ).$promise;
 			      })
@@ -82,31 +81,32 @@ angular.module('cahierDeTexteApp')
 			      $scope.displayed_data = $scope.raw_data;
 
 			      // filtrage sur la classe sélectionnée
-			      if ( $scope.classe != null ) {
-				  // .invert() suppose que les valeurs sont uniques
-				  var id = _($scope.classes).invert()[$scope.classe];
+			      if ( $scope.selected_regroupement_id != null ) {
 				  $scope.displayed_data = _.chain($scope.displayed_data)
+				      .reject( function( enseignant ) {
+					  return _.chain($scope.details_enseignants[ enseignant.enseignant_id ].classes)
+					      .findWhere({ classe_id: parseInt( $scope.selected_regroupement_id ) })
+					      .isUndefined()
+					      .value();
+				      })
 				      .map( function( enseignant ) {
 					  return { enseignant_id: enseignant.enseignant_id,
 						   classes: _(enseignant.classes).reject( function( classe ) {
-						       return classe.regroupement_id != id;
+						       return classe.regroupement_id != $scope.selected_regroupement_id;
 						   })
 						 };
-				      })
-				      .reject( function( enseignant ) { // TODO: chercher une meilleure solution
-					  return enseignant.classes.length === 0;
 				      })
 				      .value();
 			      }
 
 			      // filtrage sur le mois sélectionné
-			      if ( $scope.mois != null ) {
+			      if ( $scope.selected_mois != null ) {
 				  $scope.displayed_data = _($scope.displayed_data).map( function( enseignant ) {
 				      return { enseignant_id: enseignant.enseignant_id,
 					       classes: _(enseignant.classes).map( function( classe ) {
 						   return { regroupement: classe.regroupement_id,
 							    statistiques: _(classe.statistiques).reject( function( mois ) {
-								return mois.month != $scope.mois;
+								return mois.month != $scope.selected_mois;
 							    })
 							  };
 					       })
@@ -163,7 +163,7 @@ angular.module('cahierDeTexteApp')
 					  $scope.details_enseignants[enseignant.id_ent] = enseignant;
 				      });
 
-				      $q.all( $scope.extract_classes_promises( $scope.raw_data ) )
+				      $q.all( $scope.extract_classes_promises( $scope.details_enseignants ) )
 					  .then( function( classes ) {
 					      _(classes).each(function( classe ) {
 						  $scope.classes[classe.id] = classe.libelle !== null ? classe.libelle : classe.libelle_aaf;
