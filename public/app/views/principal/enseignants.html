@@ -44,7 +44,7 @@
   </div>
 </div>
 
-<div class="col-md-3 bloc-enseignant" data-ng-repeat="individualChart in individualCharts.enseignants">
+<div class="col-md-3 bloc-enseignant" data-ng-repeat="individualChart in individualCharts.enseignants | orderBy:'enseignant.full_name'">
   <div class="panel panel-default">
     <div class="panel-heading">
       <h4>
