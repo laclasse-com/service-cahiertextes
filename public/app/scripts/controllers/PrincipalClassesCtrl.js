@@ -5,6 +5,7 @@ angular.module('cahierDeTexteApp')
 		[ '$scope', 'THEME', '$locale', '$q', 'API', 'Annuaire', 'User', 'PIECHART_DEFINITION', 'BARCHART_DEFINITION',
 		  function ( $scope, THEME, $locale, $q, API, Annuaire, User, PIECHART_DEFINITION, BARCHART_DEFINITION ) {
 		      $scope.empty = false;
+		      $scope.scope = $scope;
 
 		      User.get_user().then( function( response ) {
 			  var current_user = response.data;
@@ -14,9 +15,9 @@ angular.module('cahierDeTexteApp')
 			  $scope.matieres	 = [];
 			  $scope.annee = _($locale.DATETIME_FORMATS.MONTH).toArray();
 
-			  $scope.classe		 = null;
-			  $scope.moisCourant	 = null;
-			  $scope.matiereCourante = null;
+			  $scope.selected_regroupement_id		 = null;
+			  $scope.selected_mois	 = null;
+			  $scope.selected_matiere = null;
 
 			  $scope.global_stats    = { filled: 0,
 						     validated: 0 };
@@ -96,19 +97,11 @@ angular.module('cahierDeTexteApp')
 			      if ( $scope.raw_data.length > 0 ) {
 				  $scope.displayed_data = $scope.raw_data;
 
-
-				  // Filtrage sur une seule classe
-				  if ( $scope.classe != null ) {
-				      $scope.displayed_data = _($scope.raw_data).filter( function( creneau ) {
-					  return creneau.regroupement_id == ''+$scope.classe;
-				      });
-				  }
-
 				  // Filtrage sur une matière
-				  if ( $scope.matiereCourante != null ) {
+				  if ( $scope.selected_matiere != null ) {
 				      $scope.displayed_data = $scope.displayed_data.map( function( regroupement ) {
 					  var matieres = _(regroupement.matieres).filter( function( r ) {
-					      return r.matiere_id == $scope.matiereCourante;
+					      return r.matiere_id == $scope.selected_matiere;
 					  });
 
 					  return { regroupement_id: regroupement.regroupement_id,
@@ -117,13 +110,13 @@ angular.module('cahierDeTexteApp')
 				  }
 
 				  // filtrage sur un mois
-				  if ( $scope.moisCourant != null ) {
+				  if ( $scope.selected_mois != null ) {
 				      $scope.displayed_data = $scope.displayed_data.map( function( regroupement ) {
 					  return { regroupement_id: regroupement.regroupement_id,
 						   matieres: regroupement.matieres.map( function( matiere ) {
 						       return { matiere_id: matiere.matiere_id,
 								mois: _(matiere.mois).filter( function( mois ) {
-								    return mois.mois == $scope.moisCourant;
+								    return mois.mois == $scope.selected_mois;
 								}) };
 						   }) };
 				      });
