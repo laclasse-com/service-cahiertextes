@@ -56,15 +56,13 @@ angular.module('cahierDeTexteApp')
 				  });
 			  } };
 
-		      $scope.extract_classes_promises = function( data ) {
-			  return _.chain(data)
+		      $scope.extract_classes_promises = function( details_enseignants ) {
+			  return _.chain(details_enseignants)
+			      .toArray()
 			      .pluck('classes')
 			      .flatten()
-			      .pluck('regroupement_id')
+			      .pluck('classe_id')
 			      .uniq()
-			      .reject(function( regroupement_id ) {
-				  return ( regroupement_id === '' );
-			      })
 			      .map(function( regroupement_id ) {
 				  return Annuaire.get_regroupement( regroupement_id ).$promise;
 			      })
@@ -162,7 +160,7 @@ angular.module('cahierDeTexteApp')
 					  $scope.details_enseignants[enseignant.id_ent] = enseignant;
 				      });
 
-				      $q.all( $scope.extract_classes_promises( $scope.raw_data ) )
+				      $q.all( $scope.extract_classes_promises( $scope.details_enseignants ) )
 					  .then( function( classes ) {
 					      _(classes).each(function( classe ) {
 						  $scope.classes[classe.id] = classe.libelle !== null ? classe.libelle : classe.libelle_aaf;
