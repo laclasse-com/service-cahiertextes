@@ -11,16 +11,6 @@ angular.module('cahierDeTexteApp')
 		      $scope.selected_regroupement_id = null;
 		      $scope.selected_creneau_vide = null;
 
-		      var filter_class = function( data, selected_regroupement_id ) {
-			  // Filtrage sur une seule classe
-			  if ( ! _(selected_regroupement_id).isNull() ) {
-			      data = _( data ).filter( function( creneau ) {
-				  return creneau.regroupement_id == selected_regroupement_id;
-			      } );
-			  }
-			  return data;
-		      };
-
 		      var filter_creneaux_avec_saisies = function( raw_data ) {
 			  var filtered_data = _.chain(raw_data)
 				  .filter( function( creneau ) {
@@ -85,7 +75,7 @@ angular.module('cahierDeTexteApp')
 				      creneau.regroupement = Annuaire.get_regroupement( creneau.regroupement_id );
 				  });
 
-				  $scope.creneaux_saisies = filter_class( filter_creneaux_avec_saisies( $scope.raw_data ), $scope.selected_regroupement_id );
+				  $scope.creneaux_saisies = filter_creneaux_avec_saisies( $scope.raw_data );
 				  _($scope.creneaux_saisies).each( function( creneau ) {
 				      _(creneau.cours.ressources).each( function( ressource ) {
 					  ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
@@ -97,7 +87,7 @@ angular.module('cahierDeTexteApp')
 				      } );
 				  } );
 
-				  $scope.refresh_data();
+				  $scope.selected_creneau_vide = null;
 			      });
 		      };
 		      $scope.popup_callback = retrieve_data;
@@ -115,11 +105,6 @@ angular.module('cahierDeTexteApp')
 				      .value();
 
 			      return filtered_data;
-			  };
-
-			  $scope.refresh_data = function() {
-			      $scope.creneaux_vides = filter_class( filter_creneaux_vides( $scope.raw_data ), $scope.selected_regroupement_id );
-			      $scope.selected_creneau_vide = null;
 			  };
 
 			  $scope.edition_creneau = function ( event ) {

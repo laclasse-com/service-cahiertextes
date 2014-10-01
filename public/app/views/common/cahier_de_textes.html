@@ -1,7 +1,8 @@
 <div class="panel panel-default">
   <div class="panel-heading">
     <div class="row col-md-12" data-ng-if="current_user.profil_actif.type === 'ENS'">
-      <select class="col-md-3 pull-left" data-ng-model="scope.selected_regroupement_id" data-ng-change="refresh_data()" data-ng-options="classe.id as classe.libelle for classe in classes">
+      <select class="col-md-3 pull-left" data-ng-model="scope.selected_regroupement_id"
+	      data-ng-options="classe.id as classe.libelle for classe in classes">
 	<option value="" selected>Toutes les classes</option>
       </select>
 
@@ -37,7 +38,8 @@
   <div class="panel-body">
     <ul class="list-group todo-list">
       <li data-ng-repeat="creneau in creneaux_saisies | orderBy:'start':true" style="list-style:none" class="creneau list-group-item"
-	  data-ng-class="{'vise': creneau.cours.date_validation !== null}">
+	  data-ng-class="{'vise': creneau.cours.date_validation !== null}"
+	  data-ng-if="scope.selected_regroupement_id === null || creneau.regroupement_id == scope.selected_regroupement_id">
 
 	<div class="pull-left date">
 	  <span class="jour">{{creneau.start | date: 'dd/MM'}}</span>
