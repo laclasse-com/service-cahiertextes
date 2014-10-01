@@ -6,7 +6,7 @@
     <select class="col-md-2"
 	    data-ng-model="scope.selected_regroupement_id"
 	    data-ng-change="process_data()"
-	    data-ng-options="id as classe for (id, classe) in classes">
+	    data-ng-options="classe.id as classe.libelle for classe in classes | orderBy:'libelle'">
       <option value="">Toutes les classes</option>
     </select>
   </div>
