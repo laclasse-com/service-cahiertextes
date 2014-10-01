@@ -24,7 +24,7 @@ angular.module('cahierDeTexteApp')
 			   form_data.append( 'attachment', 'CAHIERTXT' );
 			   form_data.append( 'share', classe.id );
 			   form_data.append( 'regroupement', classe.type );
-			   responses.push( $http.post( DOCS_URL + '/api/ctxt/add',
+			   responses.push( $http.post( DOCS_URL + '/api/ctxt/add/regroupement/' + classe.type + '/share/' + classe.id,
 						       form_data,
 						       { headers: {'Content-Type': undefined },
 							 transformRequest: angular.identity }
