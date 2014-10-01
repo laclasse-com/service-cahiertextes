@@ -10,6 +10,9 @@ angular.module('cahierDeTexteApp')
 				      { heading: 'Tableaux de bord par classe',
 					uisref: 'principal.classes',
 					active: false },
+				      { heading: 'Emplois du Temps',
+					uisref: 'principal.emploi_du_temps',
+					active: false },
 				      { heading: 'Import Pronote',
 					uisref: 'principal.import',
 					active: false } ];

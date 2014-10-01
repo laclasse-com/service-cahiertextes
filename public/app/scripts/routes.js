@@ -73,6 +73,37 @@ angular.module( 'cahierDeTexteApp' )
 			       }
 			   }
 		       })
+		       .state('principal.emploi_du_temps', {
+			   parent: 'principal',
+			   url: '/emploi_du_temps',
+			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } },
+			   views: {
+			       'content': {
+				   templateUrl: APP_PATH + '/app/views/common/emploi_du_temps.html',
+				   controller: 'EmploiDuTempsCtrl'
+			       }
+			   }
+		       })
+
+		   // Vie Scolaire ///////////////////////////////////////////////////////////////
+		       .state('vie_scolaire', {
+			   abstract: true,
+			   url: '/vie_scolaire',
+			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'EVS' ] ); } },
+			   controller: 'VieScolaireCtrl',
+			   templateUrl: APP_PATH + '/app/views/common/tabs.html'
+		       })
+		       .state('vie_scolaire.emploi_du_temps', {
+			   parent: 'vie_scolaire',
+			   url: '/emploi_du_temps',
+			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'EVS' ] ); } },
+			   views: {
+			       'content': {
+				   templateUrl: APP_PATH + '/app/views/common/emploi_du_temps.html',
+				   controller: 'EmploiDuTempsCtrl'
+			       }
+			   }
+		       })
 
 		   // Élève ///////////////////////////////////////////////////////////////
 		       .state('eleve', {

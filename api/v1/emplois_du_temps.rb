@@ -18,13 +18,16 @@ module CahierDeTextesAPI
         params[:debut] = Date.parse( params[:debut].iso8601 )
         params[:fin] = Date.parse( params[:fin].iso8601 )
 
+        user_annuaire = Annuaire.get_user( user.uid )
+        user_annuaire['profil_actif'] = user_annuaire['profils'].select { |p| p['actif'] }.first
         if params[:uid]
-          user_annuaire = Annuaire.get_user( user.uid )
-          if user_annuaire['profils'].select { |p| p['actif'] }.first['profil_id'] == 'TUT' && !( user_annuaire['enfants'].select { |e| e['enfant']['id_ent'] == params[:uid] }.first.nil? )
+          if %w( TUT ).include?( user_annuaire['profil_actif']['profil_id'] ) && !( user_annuaire['enfants'].select { |e| e['enfant']['id_ent'] == params[:uid] }.first.nil? )
             regroupements_annuaire = Annuaire.get_user_regroupements( params[:uid] )
           else
             error!( '401 Unauthorized', 401 )
           end
+        elsif %w( EVS DIR ).include?( user_annuaire['profil_actif']['profil_id'] )
+          Annuaire.get_etablissement_regroupements( user_annuaire['profil_actif']['etablissement_code_uai'] )
         else
           regroupements_annuaire = Annuaire.get_user_regroupements( user.uid )
         end
