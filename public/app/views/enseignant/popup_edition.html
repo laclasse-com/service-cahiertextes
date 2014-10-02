@@ -124,11 +124,11 @@
 	      </div>
 
 	      <div class="dropdown row" data-ng-if="!creneau.etranger">
-		<button class="btn btn-sm btn-primary dropdown-toggle pull-right" role="button" data-toggle="dropdown" data-target="#" href="">
+		<button class="btn btn-sm btn-primary dropdown-toggle pull-right" role="button" data-toggle="dropdown" data-target="#" href=""
+			data-ng-class="{'disabled': faulty_docs_app}">
 		  <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
 		</button>
 		<ul class="dropdown-menu" role="menu" ng-click="$event.stopPropagation()">
-		  <div class="alert alert-danger" role="alert" data-ng-if="faulty_docs_app">Problème de communication avec l'application Documents</div>
 		  <div class="treecontrol-container"
 		       data-ng-if="!faulty_docs_app">
 		    <treecontrol class="tree-classic"
