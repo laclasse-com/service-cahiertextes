@@ -214,7 +214,7 @@ module CahierDeTextesAPI
         hash
       end
 
-      desc 'détruit un devoir'
+      desc 'marque un devoir comme éffacé et inversement'
       params {
         requires :id
       }
@@ -223,10 +223,12 @@ module CahierDeTextesAPI
 
         devoir = Devoir[ params[:id] ]
 
-        devoir.update( deleted: true, date_modification: Time.now )
-        devoir.save
+        unless devoir.nil?
+          devoir.update( deleted: !devoir.deleted, date_modification: Time.now )
+          devoir.save
 
-        devoir
+          devoir
+        end
       end
     end
   end

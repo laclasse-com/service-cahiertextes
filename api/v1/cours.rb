@@ -152,22 +152,18 @@ module CahierDeTextesAPI
         end
       end
 
-      desc 'efface une séquence pédagogique'
+      desc 'marque une séquence pédagogique comme éffacée et inversement'
       params {
         requires :id
       }
       delete '/:id' do
         cours = Cours[ params[:id] ]
 
-        unless cours.nil?
-          if cours.date_validation.nil?
-            cours.update(deleted: true)
-            cours.date_modification = Time.now
+        unless cours.nil? || !cours.date_validation.nil?
+          cours.update( deleted: !cours.deleted, date_modification: Time.now )
+          cours.save
 
-            cours.save
-
-            cours.to_deep_hash
-          end
+          cours.to_deep_hash
         end
       end
     end

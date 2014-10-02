@@ -216,7 +216,7 @@ module CahierDeTextesAPI
         end
       end
 
-      desc 'Supprime un créneau'
+      desc 'marque un créneau comme éffacé et inversement'
       params {
         requires :id, type: Integer
         requires :date_creneau, type: Date
@@ -226,7 +226,11 @@ module CahierDeTextesAPI
 
         creneau = CreneauEmploiDuTemps[ params[:id] ]
         unless creneau.nil?
-          creneau.update( deleted: true, date_suppression: params[:date_creneau] )
+          if creneau.deleted
+            creneau.update( deleted: false, date_suppression: nil )
+          else
+            creneau.update( deleted: true, date_suppression: params[:date_creneau] )
+          end
           creneau.save
 
           creneau
