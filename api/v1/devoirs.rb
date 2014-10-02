@@ -65,7 +65,7 @@ module CahierDeTextesAPI
       }
       get '/:id' do
         devoir = Devoir[ params[:id] ]
-        if devoir.nil?
+        if devoir.nil? || ( devoir.deleted && devoir.date_modification < UNDELETE_TIME_WINDOW.minutes.ago )
           error!( 'Devoir inconnu', 404 )
         else
           hash = devoir.to_deep_hash

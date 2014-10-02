@@ -9,15 +9,18 @@ Encoding.default_internal = Encoding::UTF_8
 def __DIR__(*args)
   filename = caller[0][/^(.*):/, 1]
   dir = File.expand_path(File.dirname(filename))
-  ::File.expand_path(::File.join(dir, *args.map{|a| a.to_s}))
+  ::File.expand_path( ::File.join( dir, *args.map { |a| a.to_s } ) )
 end
 
 # Require settings
-puts "loading config/options"
+puts 'loading config/options'
 require __DIR__('options')
 
-puts "loading config/database"
+puts 'loading config/database'
 require __DIR__('database')
 
-puts "loading config/constants"
+puts 'loading config/constants'
 require __DIR__('constants')
+
+puts 'loading config/internal_constants'
+require __DIR__('internal_constants')
