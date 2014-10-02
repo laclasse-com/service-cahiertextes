@@ -4,7 +4,10 @@
 
 angular.module( 'cahierDeTexteApp' )
     .constant( 'API_VERSION', 'v1' )
-    .constant( 'SEMAINES_TOUTES_ACTIVES', 9007199254740991 )
+    .constant( 'SEMAINES_VACANCES', { A: [ 1, 7, 8, 16, 17, 28, 29, 30, 31, 32, 33, 34, 43, 44 ],
+				      B: [ 1, 7, 8, 16, 17, 28, 29, 30, 31, 32, 33, 34, 43, 44 ],
+				      C: [ 1, 7, 8, 16, 17, 28, 29, 30, 31, 32, 33, 34, 43, 44 ] } )
+    .constant( 'ZONE', 'A' )
 // Configuration d'angular-moment
     .constant('angularMomentConfig', {
 	timezone: 'Europe/Paris'
