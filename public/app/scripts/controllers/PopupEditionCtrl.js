@@ -393,20 +393,27 @@ angular.module( 'cahierDeTexteApp' )
 			       // {{{ Gestion des documents attachés
 			       $scope.cartable = {};
 			       $scope.cartable.expandedNodes = [];
+			       var dead_Documents = function() {
+				   $scope.erreurs.push( { message: "Application Documents non disponible" } );
+				   $scope.faulty_docs_app = true;
+			       };
+
 			       Documents.list_files()
 				   .success( function ( response ) {
-				       $scope.cartable = response;
-				       $scope.cartable.files = _.chain( response.files )
-					   .rest()
-					   .value()
-					   .map( function ( elt ) {
-					       elt.children = [];
-					       return elt;
-					   } );
+				       if ( _(response.error).isEmpty() ) {
+					   $scope.cartable = response;
+					   $scope.cartable.files = _.chain( response.files )
+					       .rest()
+					       .value()
+					       .map( function ( elt ) {
+						   elt.children = [];
+						   return elt;
+					       } );
+				       } else {
+					   dead_Documents();
+				       }
 				   } )
-				   .error( function() {
-				       $scope.faulty_docs_app = true;
-				   });
+				   .error( dead_Documents );
 
 			       var is_ressource_hash_valid = function( hash ) {
 				   return !_( hash.toString().match( /_+/ ) ).isNull();
