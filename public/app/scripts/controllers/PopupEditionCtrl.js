@@ -408,23 +408,37 @@ angular.module( 'cahierDeTexteApp' )
 				       $scope.faulty_docs_app = true;
 				   });
 
+			       var is_ressource_hash_valid = function( hash ) {
+				   return !_( hash.toString().match( /_+/ ) ).isNull();
+			       };
+
+			       var consume_Documents_response_callback = function( item ) {
+				   return function( response ) {
+				       $scope.erreurs = [];
+				       if ( !_(response.error).isEmpty() ) {
+					   $scope.erreurs.push( { message: response.error } );
+				       } else if ( is_ressource_hash_valid( _( response.added ).first().hash ) ) {
+					   item.ressources.push( {
+					       name: _( response.added ).first().name,
+					       hash: _( response.added ).first().hash,
+					       url: $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + _( response.added ).first().hash )
+					   } );
+					   $scope.is_dirty();
+				       } else {
+					   $scope.erreurs.push( { message: 'L\'identifiant retourné par l\'application Documents n\'est pas valide.' } );
+				       }
+				   };
+			       };
+
 			       $scope.add_ressource = function ( item, name, hash ) {
 				   if ( item.ressources === undefined ) {
 				       item.ressources = [];
 				   }
 				   if ( _( item.ressources ).findWhere( { hash: hash } ) === undefined ) {
 				       Documents.ajout_au_cahier_de_textes( $scope.classe, hash )
-					   .success( function ( response ) {
-					       $scope.erreurs = [];
-					       if ( !_(response.error).isEmpty() ) {
-						   $scope.erreurs.push( { message: response.error } );
-					       }
-					       item.ressources.push( {
-						   name: name,
-						   hash: _( response.added ).first().hash,
-						   url: $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + _( response.added ).first().hash )
-					       } );
-					       $scope.is_dirty();
+					   .success( consume_Documents_response_callback( item ) )
+					   .error( function ( response ) {
+					       console.debug( response.error );
 					   } );
 				   }
 			       };
@@ -436,22 +450,7 @@ angular.module( 'cahierDeTexteApp' )
 				   var responses = Documents.upload_dans_cahier_de_textes( $scope.classe, fichiers );
 				   for ( var i = 0; i < responses.length; i++ ) {
 				       responses[ i ]
-					   .success( function ( response ) {
-					       $scope.erreurs = [];
-					       if ( !_(response.error).isEmpty() ) {
-						   $scope.erreurs.push( { message: response.error } );
-					       }
-					       _( response.added ).each( function ( doc ) {
-						   if ( _( item.ressources ).findWhere( { hash: doc.hash } ) === undefined ) {
-						       item.ressources.push( {
-							   name: doc.name,
-							   hash: doc.hash,
-							   url: $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + doc.hash )
-						       } );
-						       $scope.is_dirty();
-						   }
-					       } );
-					   } )
+					   .success( consume_Documents_response_callback( item ) )
 					   .error( function ( response ) {
 					       console.debug( response.error );
 					   } );
