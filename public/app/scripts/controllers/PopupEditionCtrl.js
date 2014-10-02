@@ -2,10 +2,12 @@
 
 angular.module( 'cahierDeTexteApp' )
     .controller( 'PopupEditionCtrl',
-		 [ '$scope', '$filter', '$q', '$sce', '$modalInstance', 'APP_PATH', 'DOCS_URL', 'SEMAINES_TOUTES_ACTIVES', 'Documents', 'API', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs', 'User', 'cours', 'devoirs', 'creneau', 'raw_data', 'classes', 'matieres',
-		   function ( $scope, $filter, $q, $sce, $modalInstance, APP_PATH, DOCS_URL, SEMAINES_TOUTES_ACTIVES, Documents, API, CreneauEmploiDuTemps, Cours, Devoirs, User, cours, devoirs, creneau, raw_data, classes, matieres ) {
+		 [ '$scope', '$filter', '$q', '$sce', '$modalInstance', 'APP_PATH', 'DOCS_URL', 'SEMAINES_VACANCES', 'ZONE', 'Documents', 'API', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs', 'User', 'cours', 'devoirs', 'creneau', 'raw_data', 'classes', 'matieres',
+		   function ( $scope, $filter, $q, $sce, $modalInstance, APP_PATH, DOCS_URL, SEMAINES_VACANCES, ZONE, Documents, API, CreneauEmploiDuTemps, Cours, Devoirs, User, cours, devoirs, creneau, raw_data, classes, matieres ) {
 		       $scope.app_path = APP_PATH;
 		       $scope.DOCS_URL_login = $sce.trustAsResourceUrl( DOCS_URL + '/login' );
+		       $scope.ZONE = ZONE;
+
 		       $scope.faulty_docs_app = false;
 
 		       $scope.erreurs = [];
@@ -74,13 +76,28 @@ angular.module( 'cahierDeTexteApp' )
 			   var bitfield_to_fixnum = function( bitfield ) {
 			       return parseInt( bitfield.reverse().join('') + '0', 2 );
 			   };
+			   $scope.sont_ce_les_vacances = function( i_semaine, zone ) {
+			       return SEMAINES_VACANCES[ zone ].indexOf( i_semaine ) != -1;
+			   };
+			   var semaines_toutes_actives = function() {
+			       var semainier = [];
+			       _(52).times( function( i ) {
+				   if ( !$scope.sont_ce_les_vacances( i + 1, ZONE ) ) {
+				       semainier.push( 1 );
+				   } else {
+				       semainier.push( 0 );
+				   }
+			       });
+
+			       return semainier;
+			   };
+
 			   $scope.semaines_actives = { regroupement: [] };
 			   $scope.apply_template = function( template_name ) {
-			       // TODO: Gestion des vacances scolaires
 			       var template = [];
 			       switch( template_name ) {
 			       case 'tout':
-				   $scope.semaines_actives.regroupement = fixnum_to_bitfield( SEMAINES_TOUTES_ACTIVES );
+				   $scope.semaines_actives.regroupement = semaines_toutes_actives();
 				   break;
 			       case 'rien':
 				   _(52).times( function() {
@@ -89,16 +106,22 @@ angular.module( 'cahierDeTexteApp' )
 				   $scope.semaines_actives.regroupement = template;
 				   break;
 			       case 'paires':
-				   _(26).times( function() {
-				       template.push( 0 );
-				       template.push( 1 );
+				   _(52).times( function( i ) {
+				       if ( !$scope.sont_ce_les_vacances( i + 1, ZONE ) && ( ( i + 1 ) % 2 == 0 ) ) {
+					   template.push( 1 );
+				       } else {
+					   template.push( 0 );
+				       }
 				   });
 				   $scope.semaines_actives.regroupement = template;
 				   break;
 			       case 'impaires':
-				   _(26).times( function() {
-				       template.push( 1 );
-				       template.push( 0 );
+				   _(52).times( function( i ) {
+				       if ( !$scope.sont_ce_les_vacances( i + 1, ZONE ) && ( ( i + 1 ) % 2 == 1 ) ) {
+					   template.push( 1 );
+				       } else {
+					   template.push( 0 );
+				       }
 				   });
 				   $scope.semaines_actives.regroupement = template;
 				   break;
@@ -109,12 +132,12 @@ angular.module( 'cahierDeTexteApp' )
 				   $scope.semaines_actives.regroupement = template;
 				   break;
 			       case 'inverser':
-				   $scope.semaines_actives.regroupement = _($scope.semaines_actives.regroupement).map( function( w ) {
-				       return ( w == 0 ) ? 1 : 0;
+				   $scope.semaines_actives.regroupement = _($scope.semaines_actives.regroupement).map( function( w, i ) {
+				       return ( ( w == 0 ) && !$scope.sont_ce_les_vacances( i + 1, ZONE ) ) ? 1 : 0;
 				   } );
 				   break;
 			       case 'reinitialiser':
-				   $scope.semaines_actives.regroupement = fixnum_to_bitfield( $scope.creneau.en_creation ? SEMAINES_TOUTES_ACTIVES : _(creneau.regroupements).findWhere( { regroupement_id: creneau.regroupement_id } ).semaines_de_presence );
+				   $scope.semaines_actives.regroupement = $scope.creneau.en_creation ? semaines_toutes_actives() : fixnum_to_bitfield( _(creneau.regroupements).findWhere( { regroupement_id: creneau.regroupement_id } ).semaines_de_presence );
 				   break;
 			       }
 			   };

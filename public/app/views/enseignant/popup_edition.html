@@ -72,7 +72,7 @@
 	</div>
 	<div class="btn-group">
 	  <button type="button" class="btn btn-xs"
-		  data-ng-class="{'btn-default': !semaine, 'btn-warning': semaine}"
+		  data-ng-class="{'btn-default': !semaine, 'btn-warning': semaine, 'btn-info': sont_ce_les_vacances( $index + 1, ZONE )}"
 		  data-ng-model="semaines_actives.regroupement[ $index ]"
 		  btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0"
 		  data-ng-repeat="semaine in semaines_actives.regroupement track by $index" >
@@ -84,7 +84,7 @@
 	  <label>Légende :</label>
 	  <span class="btn btn-xs btn-default" title="Créneau absent de cette semaine">Créneau absent de cette semaine</span>
 	  <span class="btn btn-xs btn-warning" title="Créneau présent cette semaine">Créneau présent cette semaine</span>
-	  <!-- <span class="btn btn-xs btn-info" title="Vacances scolaires">Vacances scolaires</span> -->
+	  <span class="btn btn-xs btn-info" title="Vacances scolaires">Vacances scolaires</span>
 	</div>
 
       </div>
