@@ -606,6 +606,7 @@ angular.module( 'cahierDeTexteApp' )
 			       };
 
 			       $scope.switch_to_modification_mode = function() {
+				   $scope.creneau.en_creation = false;
 				   $scope.mode_duplication = false;
 			       };
 
