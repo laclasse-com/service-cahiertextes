@@ -110,12 +110,13 @@
 		 class="panel-body"
 		 data-ng-model="cours.contenu"
 		 data-ng-change="is_dirty( cours )"
-		 data-ng-if="cours.editable" ></div>
+		 data-ng-if="cours.editable && !cours.deleted" ></div>
 	    <div class="panel-body"
 		 data-ng-bind-html="cours.contenu"
-		 data-ng-if="!cours.editable" >
-	    </div>
-	    <div class="panel-footer ressources">
+		 data-ng-if="!cours.editable && !cours.deleted" ></div>
+	    <div class="panel-body deleted"
+		 data-ng-if="cours.deleted" >(Séquence pédagogique supprimée)</div>
+	    <div class="panel-footer ressources" data-ng-if="!cours.deleted">
 	      <div class="row">
 		<div class="attached-document" data-ng-repeat="ressource in cours.ressources">
 		  <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
@@ -152,7 +153,9 @@
 	</div>
 	<div class="col-md-3 infos">
 	  <ul class="pull-left">
-	    <li class="clickable" data-ng-repeat="devoir in cours.devoirs"
+	    <li class="clickable"
+		data-ng-repeat="devoir in cours.devoirs"
+		data-ng-if="!devoir.deleted"
 		tooltip-trigger="click"
 		tooltip-html-unsafe="{{devoir.tooltip}}"
 		data-ng-class="{ 'type1': devoir.type_devoir_id == 1, 'type2': devoir.type_devoir_id == 2, 'type3': devoir.type_devoir_id == 3, 'type4': devoir.type_devoir_id == 4, 'type5': devoir.type_devoir_id == 5, 'type6': devoir.type_devoir_id == 6, 'fait': devoir.fait }" >
@@ -163,8 +166,9 @@
 	<div class="col-md-12" data-ng-if="cours.id">
 	  <button type="button" class="btn btn-sm btn-danger pull-right supprimer"
 		  data-ng-click="effacer_cours(  )"
-		  data-ng-if="!creneau.etranger && cours.editable" >
-	    <span class="glyphicon glyphicon-trash"></span> Supprimer la séquence pédagogique
+		  data-ng-if="cours.deleted || ( !creneau.etranger && cours.editable )" >
+	    <span class="glyphicon glyphicon-trash" data-ng-if="!cours.deleted"> Supprimer la séquence pédagogique</span>
+	    <span class="glyphicon glyphicon-trash" data-ng-if="cours.deleted"> Annuler la suppression</span>
 	  </button>
 	</div>
       </div>
@@ -182,7 +186,8 @@
 	  <div class="panel panel-default"
 	       data-ng-repeat="devoir in cours.devoirs">
 
-	    <div class="col-md-9">
+	    <div class="col-md-9"
+		 data-ng-if="!devoir.deleted">
 	      <div class="panel-heading enseignant-saisie" data-ng-if="!creneau.etranger">
 		<label class="col-md-6" data-ng-if="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir">Type de travail :
 		  <select data-ng-required="true"
@@ -214,7 +219,6 @@
 		<div class="clearfix"></div>
 	      </div>
 	      <text-angular class="panel-body" data-ng-model="devoir.contenu" data-ng-change="is_dirty( devoir )" data-ng-if="!creneau.etranger"></text-angular>
-
 
 	      <div class="panel-heading enseignant-saisie" data-ng-if="creneau.etranger">
 		<label data-ng-if="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir">Type de travail : <em>{{devoir.type_devoir.description}}</em></label>
@@ -258,11 +262,15 @@
 
 	    </div>
 
+	    <div class="col-md-9 deleted"
+		 data-ng-if="devoir.deleted" >(Devoir supprimé)</div>
+
 	    <div class="col-md-12">
 	      <button type="button" class="btn btn-sm btn-danger pull-right supprimer"
-		      data-ng-click="effacer_devoir_cours( devoir )"
-		      data-ng-if="!creneau.etranger">
-		<span class="glyphicon glyphicon-trash"></span> Supprimer le devoir
+		      data-ng-click="effacer_devoir( devoir )"
+		      data-ng-if="!creneau.etranger && !devoir.cours.deleted">
+		<span class="glyphicon glyphicon-trash" data-ng-if="!devoir.deleted"> Supprimer le devoir</span>
+		<span class="glyphicon glyphicon-trash" data-ng-if="devoir.deleted"> Annuler la suppression</span>
 	      </button>
 	    </div>
 
@@ -282,7 +290,8 @@
 
       <div class="panel panel-default" data-ng-repeat="devoir in devoirs">
 
-	<div class="col-md-9">
+	<div class="col-md-9"
+	     data-ng-if="!devoir.deleted">
 
 	  <div class="panel-heading enseignant-saisie" data-ng-if="!creneau.etranger">
 	    <label class="col-md-12" data-ng-if="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir">Type de travail :
@@ -350,7 +359,8 @@
 	  </div>
 	</div>
 
-	<div class="col-md-3 infos">
+	<div class="col-md-3 infos"
+	     data-ng-if="!devoir.deleted">
 	  <ul class="pull-left">
 	    <li class="clickable">
 	      <span data-ng-if="devoir.cours.contenu"
@@ -361,10 +371,15 @@
 	    </li>
 	  </ul>
 	</div>
+
+	<div class="col-md-9 deleted"
+	     data-ng-if="devoir.deleted" >(Devoir supprimé)</div>
+
 	<div class="col-md-12">
 	  <button type="button" class="btn btn-sm btn-danger pull-right supprimer"
-		  data-ng-click="effacer_devoir_devoirs( devoir )" data-ng-if="!creneau.etranger">
-	    <span class="glyphicon glyphicon-trash"></span> Supprimer le devoir
+		  data-ng-click="effacer_devoir( devoir )" data-ng-if="!creneau.etranger && !devoir.cours.deleted">
+	    <span class="glyphicon glyphicon-trash" data-ng-if="!devoir.deleted"> Supprimer le devoir</span>
+	    <span class="glyphicon glyphicon-trash" data-ng-if="devoir.deleted"> Annuler la suppression</span>
 	  </button>
 	</div>
 
@@ -396,7 +411,8 @@
 	<li data-ng-if="cours.devoirs.length > 0">
 	  <label>Choisir le créneau vers lequel copier ses devoirs :</label>
 	  <ol>
-	    <li data-ng-repeat="devoir in cours.devoirs">
+	    <li data-ng-repeat="devoir in cours.devoirs"
+		data-ng-if="!devoir.deleted">
 	      <ul>
 		<li data-ng-if="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir"><i class="picto" data-ng-style="{'background-image':'url(' + app_path + '/app/bower_components/charte-graphique-laclasse-com/images/picto_devoir.svg)'}"></i> Type de devoir : <em>{{devoir.type_devoir.description}}</em></li>
 		<li>Date due : <em>{{devoir.date_due | date:'fullDate'}}</em></li>

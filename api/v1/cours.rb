@@ -23,13 +23,14 @@ module CahierDeTextesAPI
       }
       get '/:id' do
         cours = Cours[ params[:id] ]
-        error!( 'Cours inconnu', 404 ) if cours.nil? || cours.deleted
+        error!( 'Cours inconnu', 404 ) if cours.nil? || ( cours.deleted && cours.date_modification < UNDELETE_TIME_WINDOW.minutes.ago )
 
         hcours = cours.to_deep_hash
         # BUG: to_deep_hash casse les hash des ressources
         hcours[:ressources] = cours.ressources.map do |ressource|
           ressource.to_hash
         end
+        hcours[:devoirs] = cours.devoirs.select { |devoir| !devoir.deleted || devoir.date_modification > UNDELETE_TIME_WINDOW.minutes.ago }
 
         hcours
       end
@@ -72,24 +73,22 @@ module CahierDeTextesAPI
       put '/:id' do
         cours = Cours[ params[:id] ]
 
-        unless cours.nil?
-          if cours.date_validation.nil?
-            cours.contenu = params[:contenu]
-            cours.date_modification = Time.now
+        unless cours.nil? || !cours.date_validation.nil?
+          cours.contenu = params[:contenu]
+          cours.date_modification = Time.now
 
-            if params[:ressources]
-              cours.remove_all_ressources
-              params[:ressources].each do
-                |ressource|
-                cours.add_ressource( Ressource.create(name: ressource['name'],
-                                                      hash: ressource['hash'] ) )
-              end
+          if params[:ressources]
+            cours.remove_all_ressources
+            params[:ressources].each do
+              |ressource|
+              cours.add_ressource( Ressource.create(name: ressource['name'],
+                                                    hash: ressource['hash'] ) )
             end
-
-            cours.save
-
-            cours.to_deep_hash
           end
+
+          cours.save
+
+          cours.to_deep_hash
         end
       end
 
@@ -146,7 +145,9 @@ module CahierDeTextesAPI
             hcours[:ressources] = cours.ressources.map do |ressource|
               ressource.to_hash
             end
+            hcours[:devoirs] = cours.devoirs.select { |devoir| !devoir.deleted || devoir.date_modification > UNDELETE_TIME_WINDOW.minutes.ago }
             hcours[:copie_id] = target_cours.id
+
             hcours
           end
         end
@@ -163,7 +164,19 @@ module CahierDeTextesAPI
           cours.update( deleted: !cours.deleted, date_modification: Time.now )
           cours.save
 
-          cours.to_deep_hash
+          cours.devoirs.each do |devoir|
+            if cours.deleted
+              devoir.update( deleted: cours.deleted, date_modification: Time.now )
+            elsif devoir.date_modification <= UNDELETE_TIME_WINDOW.minutes.ago
+              devoir.update( deleted: cours.deleted, date_modification: Time.now )
+            end
+            devoir.save
+          end
+
+          hcours = cours.to_deep_hash
+          hcours[:devoirs] = cours.devoirs.select { |devoir| !devoir.deleted || devoir.date_modification > UNDELETE_TIME_WINDOW.minutes.ago }
+
+          hcours
         end
       end
     end

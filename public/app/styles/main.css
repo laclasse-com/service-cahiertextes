@@ -290,6 +290,10 @@ h3, .h3 { text-transform: uppercase; }
 
 .panel-footer { background-color: #888; }
 
+.deleted { background: none repeat scroll 0 0 #ddd;
+	   color: #678;
+	   text-align: center; }
+
 /* next 2 rules copied from font-awesome css */
 .switch .switch-button{ font-family: FontAwesome;
 			font-style: normal;

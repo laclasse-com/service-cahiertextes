@@ -12,7 +12,6 @@ angular.module( 'cahierDeTexteApp' )
 
 		       $scope.erreurs = [];
 		       $scope.dirty = false;
-		       $scope.deleted = false;
 		       $scope.mode_duplication = false;
 
 		       // http://stackoverflow.com/questions/19408883/angularjs-select-not-2-way-binding-to-model
@@ -557,47 +556,26 @@ angular.module( 'cahierDeTexteApp' )
 			       };
 
 			       $scope.effacer_cours = function () {
+				   //var undeleting = $scope.cours.deleted;
 				   $scope.cours.$delete()
 				       .then( function () {
-					   _( $scope.devoirs ).each( function ( devoir ) {
-					       devoir.$delete();
-					   } );
-					   $scope.deleted = true;
-					   $scope.fermer();
+					   //if ( undeleting ) {
+					   init_cours_existant( $scope.cours );
+					       // FIXME: là on a perdu tous les devoirs
+					   //}
+					   //  else {
+					   //     _( $scope.devoirs ).each( function ( devoir ) {
+					   //	   devoir.$delete();
+					   //     } );
+					   // }
 				       } );
 			       };
 
-			       $scope.effacer_devoir_cours = function ( devoir ) {
+			       $scope.effacer_devoir = function ( devoir ) {
 				   if ( _(devoir).has('id') ) {
-				       devoir.$delete().then( function() {
-					   $scope.cours.devoirs = _( $scope.cours.devoirs )
-					       .reject( function( devoir ) {
-						   return devoir.deleted;
-					       });
-				       });
+				       devoir.$delete();
 				   } else {
 				       devoir.deleted = true;
-				       $scope.cours.devoirs = _( $scope.cours.devoirs )
-					   .reject( function( devoir ) {
-					       return devoir.deleted;
-					   });
-				   }
-			       };
-
-			       $scope.effacer_devoir_devoirs = function ( devoir ) {
-				   if ( _(devoir).has('id') ) {
-				       devoir.$delete().then( function() {
-					   $scope.devoirs = _( $scope.devoirs )
-					       .reject( function( devoir ) {
-						   return devoir.deleted;
-					       });
-				       });
-				   } else {
-				       devoir.deleted = true;
-				       $scope.devoirs = _( $scope.devoirs )
-					   .reject( function( devoir ) {
-					       return devoir.deleted;
-					   });
 				   }
 			       };
 
