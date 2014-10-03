@@ -238,8 +238,8 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 	}]);
 
 	textAngular.directive("textAngular", [
-		'$compile', '$timeout', 'taOptions', 'taSelection', 'taExecCommand', 'textAngularManager', '$window', '$document', '$animate', '$log',
-		function($compile, $timeout, taOptions, taSelection, taExecCommand, textAngularManager, $window, $document, $animate, $log){
+		'$compile', '$timeout', 'taOptions', 'taSelection', 'taExecCommand', 'textAngularManager', '$window', '$document', '$animate', '$log', '$q',
+		function($compile, $timeout, taOptions, taSelection, taExecCommand, textAngularManager, $window, $document, $animate, $log, $q){
 			return {
 				require: '?ngModel',
 				scope: {},
@@ -669,10 +669,13 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 							angular.forEach(dataTransfer.files, function(file){
 								// taking advantage of boolean execution, if the fileDropHandler returns true, nothing else after it is executed
 								// If it is false then execute the defaultFileDropHandler if the fileDropHandler is NOT the default one
+								// Once one of these has been executed wrap the result as a promise, if undefined or variable update the taBind, else we should wait for the promise
 								try{
-									return scope.fileDropHandler(file, scope.wrapSelection) ||
+									$q.when(scope.fileDropHandler(file, scope.wrapSelection) ||
 										(scope.fileDropHandler !== scope.defaultFileDropHandler &&
-										scope.defaultFileDropHandler(file, scope.wrapSelection));
+										scope.defaultFileDropHandler(file, scope.wrapSelection))).finally(function(){
+											scope['updateTaBindtaTextElement' + _serial]();
+										});
 								}catch(error){
 									$log.error(error);
 								}
@@ -943,6 +946,9 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 							taSelection.insertHtml('<a href="' + options + '">' + options + '</a>');
 							return;
 						}
+					}else if(command.toLowerCase() === 'inserthtml'){
+						taSelection.insertHtml(options);
+						return;
 					}
 				}
 				try{
@@ -1033,13 +1039,7 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 						e.preventDefault();
 						if(!_isReadonly){
 							text = taSanitize(text);
-							if ($document[0].selection){
-								var range = $document[0].selection.createRange();
-								range.pasteHTML(text);
-							}
-							else{
-								$document[0].execCommand('insertHtml', false, text);
-							}
+							taSelection.insertHtml(text);
 						}
 					});
 					element.on('paste cut', function(e){
@@ -1065,6 +1065,11 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 									if(!event.shiftKey){
 										// new paragraph, br should be caught correctly
 										var selection = taSelection.getSelectionElement();
+										var closestValidElement = selection;
+										var VALIDELEMENTS = /^(address|article|aside|audio|blockquote|canvas|dd|div|dl|fieldset|figcaption|figure|footer|form|h1|h2|h3|h4|h5|h6|header|hgroup|hr|noscript|ol|output|p|pre|section|table|tfoot|ul|video|li)$/ig;
+										while(!selection.tagName.match(VALIDELEMENTS) && selection !== element[0]){
+											selection = selection.parentNode;
+										}
 										if(selection.tagName.toLowerCase() !== attrs.taDefaultWrap && selection.tagName.toLowerCase() !== 'li' && (selection.innerHTML.trim() === '' || selection.innerHTML.trim() === '<br>')){
 											var _new = angular.element(_defaultVal);
 											angular.element(selection).replaceWith(_new);
@@ -1154,7 +1159,7 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 				};
 
 				//used for updating when inserting wrapped elements
-				scope['reApplyOnSelectorHandlers' + (attrs.id || '')] = function(){
+				var _reApplyOnSelectorHandlers = scope['reApplyOnSelectorHandlers' + (attrs.id || '')] = function(){
 					/* istanbul ignore else */
 					if(!_isReadonly) angular.forEach(taSelectableElements, function(selector){
 							// check we don't apply the handler twice
@@ -1193,9 +1198,7 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 							}
 							// if in WYSIWYG and readOnly we kill the use of links by clicking
 							if(!_isReadonly){
-								angular.forEach(taSelectableElements, function(selector){
-									element.find(selector).on('click', selectorClickHandler);
-								});
+								_reApplyOnSelectorHandlers();
 								element.on('drop', fileDropHandler);
 							}else{
 								element.off('drop', fileDropHandler);
@@ -1528,7 +1531,7 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 							// to set your own disabled logic set a function or boolean on the tool called 'disabled'
 							return ( // this bracket is important as without it it just returns the first bracket and ignores the rest
 								// when the button's disabled function/value evaluates to true
-								this.$eval('disabled') || this.$eval('disabled()') ||
+								(typeof this.$eval('disabled') !== 'function' && this.$eval('disabled')) || this.$eval('disabled()') ||
 								// all buttons except the HTML Switch button should be disabled in the showHtml (RAW html) mode
 								(this.name !== 'html' && this.$editor().showHtml) ||
 								// if the toolbar is disabled
@@ -1615,7 +1618,7 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 				}
 			};
 		}
-	]).service('taToolExecuteAction', ['$q', function($q){
+	]).service('taToolExecuteAction', ['$q', '$log', function($q, $log){
 		// this must be called on a toolScope or instance
 		return function(editor){
 			if(editor !== undefined) this.$editor = function(){ return editor; };
@@ -1629,7 +1632,9 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 			var result;
 			try{
 				result = this.action(deferred, _editor.startAction());
-			}catch(any){}
+			}catch(exc){
+				$log.error(exc);
+			}
 			if(result || result === undefined){
 				// if true or undefined is returned then the action has finished. Otherwise the deferred action will be resolved manually.
 				deferred.resolve();
