@@ -119,26 +119,19 @@ angular.module( 'cahierDeTexteApp' )
 				      [ 'bold', 'italics', 'underline', 'ul', 'ol', 'quote', 'justifyLeft', 'justifyCenter', 'justifyRight', 'insertLink', 'redo', 'undo' ]
 				  ];
 
-				  var colorpicker_html = function( type ) {
+				  var colorpicker_taTool = function( type ) {
 				      var style = ( type === 'backcolor' ) ? 'background-' : '';
-				      return '<span class="dropdown"><a class="dropdown-toggle"><i class="fa fa-font" style="' + style + 'color:red"></i> <i class="fa fa-caret-down"></i></a><ng-color-picker class="dropdown-menu" selected="selected"></ng-color-picker></span>';
-				  };
-				  var colorpicker_action = function( type ) {
-				      return function( ) {
-					  return ( this.selected === 'nil' ) ? false : this.$editor().wrapSelection( type, this.selected );
-				      };
+				      return { display: '<span class="dropdown"><a class="dropdown-toggle"><i class="fa fa-font" style="' + style + 'color:red"></i> <i class="fa fa-caret-down"></i></a><ng-color-picker class="dropdown-menu" selected="selected"></ng-color-picker></span>',
+					       action:function( ) {
+						   return ( this.selected === 'nil' ) ? false : this.$editor().wrapSelection( type, this.selected );
+					       }
+					     };
 				  };
 
-				  taRegisterTool( 'fontColor',
-						  { display: colorpicker_html( 'forecolor' ),
-						    action: colorpicker_action( 'forecolor' )
-						  } );
+				  taRegisterTool( 'fontColor', colorpicker_taTool( 'forecolor' ) );
 				  taOptions.toolbar[0].push( 'fontColor' );
 
-				  taRegisterTool( 'backgroundColor',
-						  { display: colorpicker_html( 'backcolor' ),
-						    action: colorpicker_action( 'backcolor' )
-						  } );
+				  taRegisterTool( 'backgroundColor', colorpicker_taTool( 'backcolor' ) );
 				  taOptions.toolbar[0].push( 'backgroundColor' );
 
 				  taOptions.classes = {
