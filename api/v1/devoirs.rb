@@ -44,10 +44,12 @@ module CahierDeTextesAPI
           devoirs = Devoir
                     .join(:creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :creneau_emploi_du_temps_id)
                     .where( regroupement_id: regroupements_ids )
+                    .where( deleted: false )
         else
           devoirs = Devoir
                     .join(:creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :creneau_emploi_du_temps_id)
                     .where( regroupement_id: regroupements_ids )
+                    .where( deleted: false )
                     .where( date_due: params[:debut] .. params[:fin] )
         end
 
