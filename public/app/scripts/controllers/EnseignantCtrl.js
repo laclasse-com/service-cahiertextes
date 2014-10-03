@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EnseignantCtrl',
-		[ '$scope', '$state', 'User',
-		  function ( $scope, $state, User ) {
+		[ '$scope', '$state', 'current_user',
+		  function ( $scope, $state, current_user ) {
 		      $scope.tabs = [ { heading: 'Emploi du temps',
 					uisref: 'enseignant.emploi_du_temps',
 					active: false },
@@ -17,7 +17,5 @@ angular.module('cahierDeTexteApp')
 			  tab.active = tab.uisref == $state.current.name;
 		      } );
 
-		      User.get_user().success( function( response ) {
-			  $scope.current_user = response;
-		      });
+		      $scope.current_user = current_user;
 		  } ] );

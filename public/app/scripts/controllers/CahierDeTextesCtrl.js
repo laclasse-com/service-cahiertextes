@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('CahierDeTextesCtrl',
-		[ '$scope', '$sce', '$q', 'APP_PATH', 'DOCS_URL', 'API', 'Annuaire', 'EmploisDuTemps', 'User', 'PopupsCreneau', 'CreneauEmploiDuTemps',
-		  function ( $scope, $sce, $q, APP_PATH, DOCS_URL, API, Annuaire, EmploisDuTemps, User, PopupsCreneau, CreneauEmploiDuTemps ) {
+		[ '$scope', '$sce', '$q', 'APP_PATH', 'DOCS_URL', 'API', 'Annuaire', 'EmploisDuTemps', 'current_user', 'PopupsCreneau', 'CreneauEmploiDuTemps',
+		  function ( $scope, $sce, $q, APP_PATH, DOCS_URL, API, Annuaire, EmploisDuTemps, current_user, PopupsCreneau, CreneauEmploiDuTemps ) {
 		      var matieres = [];
 		      var matieres_enseignees = [];
 		      var popup_ouverte = false;
@@ -92,37 +92,35 @@ angular.module('cahierDeTexteApp')
 		      };
 		      $scope.popup_callback = retrieve_data;
 
-		      User.get_user().then( function( response ) {
-			  $scope.current_user = response.data;
-			  var filter_creneaux_vides = function( raw_data ) {
-			      var filtered_data = _.chain(raw_data)
-				      .filter( function( creneau ) {
-					  return creneau.enseignant_id === $scope.current_user.uid;
-				      } )
-				      .filter( function( creneau ) {
-					  return _(creneau.cours).isEmpty();
-				      })
-				      .value();
+		      $scope.current_user = current_user;
+		      var filter_creneaux_vides = function( raw_data ) {
+			  var filtered_data = _.chain(raw_data)
+				  .filter( function( creneau ) {
+				      return creneau.enseignant_id === $scope.current_user.uid;
+				  } )
+				  .filter( function( creneau ) {
+				      return _(creneau.cours).isEmpty();
+				  })
+				  .value();
 
-			      return filtered_data;
-			  };
+			  return filtered_data;
+		      };
 
-			  $scope.edition_creneau = function ( event ) {
-			      CreneauEmploiDuTemps.get( { id: event.creneau_emploi_du_temps_id } )
-				  .$promise
-				  .then( function( creneau_selectionne ) {
-				      creneau_selectionne.dirty = false;
-				      creneau_selectionne.heure_debut = new Date( event.start );
-				      creneau_selectionne.heure_fin = new Date( event.end );
-				      creneau_selectionne.regroupement_id = event.regroupement_id;
+		      $scope.edition_creneau = function ( event ) {
+			  CreneauEmploiDuTemps.get( { id: event.creneau_emploi_du_temps_id } )
+			      .$promise
+			      .then( function( creneau_selectionne ) {
+				  creneau_selectionne.dirty = false;
+				  creneau_selectionne.heure_debut = new Date( event.start );
+				  creneau_selectionne.heure_fin = new Date( event.end );
+				  creneau_selectionne.regroupement_id = event.regroupement_id;
 
-				      PopupsCreneau.edition( $scope.raw_data,
-							     matieres_enseignees, $scope.classes,
-							     creneau_selectionne, event.cours, event.devoirs,
-							     $scope.popup_callback, popup_ouverte );
-				  } );
-			  };
-			  matieres_enseignees = $scope.current_user.profil_actif.matieres;
-			  $scope.classes = $scope.current_user.profil_actif.classes;
-		      } );
+				  PopupsCreneau.edition( $scope.raw_data,
+							 matieres_enseignees, $scope.classes,
+							 creneau_selectionne, event.cours, event.devoirs,
+							 $scope.popup_callback, popup_ouverte );
+			      } );
+		      };
+		      matieres_enseignees = $scope.current_user.profil_actif.matieres;
+		      $scope.classes = $scope.current_user.profil_actif.classes;
 		  } ] );

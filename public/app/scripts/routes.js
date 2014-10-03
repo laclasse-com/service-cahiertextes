@@ -17,13 +17,14 @@ angular.module( 'cahierDeTexteApp' )
 		       })
 		   // index ///////////////////////////////////////////////////////////////
 		       .state('index', {
-			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'DIR', 'ENS', 'ELV' ] ); } },
+			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR', 'ENS', 'ELV' ] ); } ] },
 			   url: '/',
 			   controller: 'IndexCtrl'
 		       })
 		   // Principal ///////////////////////////////////////////////////////////
 		       .state('principal', {
-			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } },
+			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } ],
+				      current_user: [ 'User', function( User ) { return User.get_user().then( function( response ) { return response.data; } ); } ] },
 			   abstract: true,
 			   url: '/principal',
 			   templateUrl: APP_PATH + '/app/views/common/tabs.html',
@@ -32,7 +33,7 @@ angular.module( 'cahierDeTexteApp' )
 		       .state('principal.import', {
 			   parent: 'principal',
 			   url: '/import',
-			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } },
+			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } ] },
 			   views: {
 			       'content': {
 				   controller: 'ImportCtrl',
@@ -43,7 +44,7 @@ angular.module( 'cahierDeTexteApp' )
 		       .state('principal.enseignants', {
 			   parent: 'principal',
 			   url: '/enseignants',
-			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } },
+			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } ] },
 			   views: {
 			       'content': {
 				   templateUrl: APP_PATH + '/app/views/principal/enseignants.html',
@@ -54,7 +55,7 @@ angular.module( 'cahierDeTexteApp' )
 		       .state('principal.enseignant', {
 			   parent: 'principal',
 			   url: '/enseignants/:enseignant_id',
-			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } },
+			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } ] },
 			   views: {
 			       'content': {
 				   templateUrl: APP_PATH + '/app/views/common/stats_enseignant.html',
@@ -65,7 +66,7 @@ angular.module( 'cahierDeTexteApp' )
 		       .state('principal.classes', {
 			   parent: 'principal',
 			   url: '/classes',
-			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } },
+			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } ] },
 			   views: {
 			       'content': {
 				   templateUrl: APP_PATH + '/app/views/principal/classes.html',
@@ -76,7 +77,7 @@ angular.module( 'cahierDeTexteApp' )
 		       .state('principal.emploi_du_temps', {
 			   parent: 'principal',
 			   url: '/emploi_du_temps',
-			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } },
+			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } ] },
 			   views: {
 			       'content': {
 				   templateUrl: APP_PATH + '/app/views/common/emploi_du_temps.html',
@@ -87,16 +88,17 @@ angular.module( 'cahierDeTexteApp' )
 
 		   // Vie Scolaire ///////////////////////////////////////////////////////////////
 		       .state('vie_scolaire', {
+			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'EVS' ] ); } ],
+				      current_user: [ 'User', function( User ) { return User.get_user().then( function( response ) { return response.data; } ); } ] },
 			   abstract: true,
 			   url: '/vie_scolaire',
-			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'EVS' ] ); } },
 			   controller: 'VieScolaireCtrl',
 			   templateUrl: APP_PATH + '/app/views/common/tabs.html'
 		       })
 		       .state('vie_scolaire.emploi_du_temps', {
+			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'EVS' ] ); } ] },
 			   parent: 'vie_scolaire',
 			   url: '/emploi_du_temps',
-			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'EVS' ] ); } },
 			   views: {
 			       'content': {
 				   templateUrl: APP_PATH + '/app/views/common/emploi_du_temps.html',
@@ -109,14 +111,15 @@ angular.module( 'cahierDeTexteApp' )
 		       .state('eleve', {
 			   abstract: true,
 			   url: '/eleve',
-			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ELV', 'TUT' ] ); } },
+			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ELV', 'TUT' ] ); } ],
+				      current_user: [ 'User', function( User ) { return User.get_user().then( function( response ) { return response.data; } ); } ] },
 			   controller: 'EleveCtrl',
 			   templateUrl: APP_PATH + '/app/views/common/tabs.html'
 		       })
 		       .state('eleve.emploi_du_temps', {
 			   parent: 'eleve',
 			   url: '/emploi_du_temps',
-			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ELV', 'TUT' ] ); } },
+			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ELV', 'TUT' ] ); } ] },
 			   views: {
 			       'content': {
 				   templateUrl: APP_PATH + '/app/views/common/emploi_du_temps.html',
@@ -127,7 +130,7 @@ angular.module( 'cahierDeTexteApp' )
 		       .state('eleve.devoirs', {
 			   parent: 'eleve',
 			   url: '/devoirs',
-			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ELV', 'TUT' ] ); } },
+			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ELV', 'TUT' ] ); } ] },
 			   views: {
 			       'content': {
 				   templateUrl: APP_PATH + '/app/views/eleve/devoirs.html',
@@ -140,14 +143,15 @@ angular.module( 'cahierDeTexteApp' )
 		       .state('enseignant', {
 			   abstract: true,
 			   url: '/enseignant',
-			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ENS' ] ); } },
+			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ENS' ] ); } ],
+				      current_user: [ 'User', function( User ) { return User.get_user().then( function( response ) { return response.data; } ); } ] },
 			   templateUrl: APP_PATH + '/app/views/common/tabs.html',
 			   controller: 'EnseignantCtrl'
 		       })
 		       .state('enseignant.emploi_du_temps', {
 			   parent: 'enseignant',
 			   url: '/emploi_du_temps',
-			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ENS' ] ); } },
+			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ENS' ] ); } ] },
 			   views: {
 			       'content': {
 				   templateUrl: APP_PATH + '/app/views/common/emploi_du_temps.html',
@@ -158,7 +162,7 @@ angular.module( 'cahierDeTexteApp' )
 		       .state('enseignant.cahier_de_textes', {
 			   parent: 'enseignant',
 			   url: '/cahier_de_textes',
-			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ENS' ] ); } },
+			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ENS' ] ); } ] },
 			   views: {
 			       'content': {
 				   templateUrl: APP_PATH + '/app/views/common/cahier_de_textes.html',
@@ -169,7 +173,7 @@ angular.module( 'cahierDeTexteApp' )
 		       .state('enseignant.stats', {
 			   parent: 'enseignant',
 			   url: '/stats',
-			   resolve: { auth: function( Redirection ) { Redirection.doorman( [ 'ENS' ] ); } },
+			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ENS' ] ); } ] },
 			   views: {
 			       'content': {
 				   templateUrl: APP_PATH + '/app/views/common/stats_enseignant.html',

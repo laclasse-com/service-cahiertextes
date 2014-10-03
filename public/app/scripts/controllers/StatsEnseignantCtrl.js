@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module( 'cahierDeTexteApp' )
-    .controller( 'StatsEnseignantCtrl', [ '$scope', '$stateParams', '$q', '$locale', 'API', 'Cours', 'Annuaire', 'User', 'PIECHART_DEFINITION', 'BARCHART_DEFINITION',
-					  function ( $scope, $stateParams, $q, $locale, API, Cours, Annuaire, User, PIECHART_DEFINITION, BARCHART_DEFINITION ) {
+    .controller( 'StatsEnseignantCtrl', [ '$scope', '$stateParams', '$q', '$locale', 'API', 'Cours', 'Annuaire', 'current_user', 'PIECHART_DEFINITION', 'BARCHART_DEFINITION',
+					  function ( $scope, $stateParams, $q, $locale, API, Cours, Annuaire, current_user, PIECHART_DEFINITION, BARCHART_DEFINITION ) {
 					      $scope.mois = _($locale.DATETIME_FORMATS.MONTH).toArray();
 
 					      $scope.classe = null;
@@ -151,67 +151,65 @@ angular.module( 'cahierDeTexteApp' )
 						  }
 					      };
 
-					      User.get_user().success( function ( response ) {
-						  $scope.current_user = response;
-						  $scope.enseignant_id = $stateParams.enseignant_id;
-						  if ( $scope.enseignant_id === undefined && $scope.enseignant_id != $scope.current_user.uid ) {
-						      $scope.enseignant_id = $scope.current_user.uid;
-						  }
+					      $scope.current_user = current_user;
+					      $scope.enseignant_id = $stateParams.enseignant_id;
+					      if ( $scope.enseignant_id === undefined && $scope.enseignant_id != $scope.current_user.uid ) {
+						  $scope.enseignant_id = $scope.current_user.uid;
+					      }
 
-						  // Récupération et consommation des données
-						  Annuaire.get_user( $scope.enseignant_id )
-						      .$promise.then(
-							  function ( response ) {
-							      $scope.enseignant = response;
-							      // filtrer les classes de l'enseignant sur l'établissement actif
-							      $scope.enseignant.liste_classes = _( $scope.enseignant.classes ).uniq( function ( classe ) {
-								  return classe.classe_libelle;
-							      } );
+					      // Récupération et consommation des données
+					      Annuaire.get_user( $scope.enseignant_id )
+						  .$promise.then(
+						      function ( response ) {
+							  $scope.enseignant = response;
+							  // filtrer les classes de l'enseignant sur l'établissement actif
+							  $scope.enseignant.liste_classes = _( $scope.enseignant.classes ).uniq( function ( classe ) {
+							      return classe.classe_libelle;
+							  } );
 
-							      $scope.enseignant.liste_matieres = _.chain( $scope.enseignant.classes ).pluck('matiere_libelle').uniq().value();
+							  $scope.enseignant.liste_matieres = _.chain( $scope.enseignant.classes ).pluck('matiere_libelle').uniq().value();
 
-							      $scope.enseignant.prof_principal = _.chain( $scope.enseignant.classes )
-								  .filter( function ( matiere ) {
-								      return matiere.prof_principal == 'O';
-								  } )
-								  .map( function ( matiere ) {
-								      return matiere.classe_libelle;
-								  } )
+							  $scope.enseignant.prof_principal = _.chain( $scope.enseignant.classes )
+							      .filter( function ( matiere ) {
+								  return matiere.prof_principal == 'O';
+							      } )
+							      .map( function ( matiere ) {
+								  return matiere.classe_libelle;
+							      } )
+							      .value();
+						      } );
+
+					      API.get_enseignant( {
+						  enseignant_id: $scope.enseignant_id,
+						  uai: $scope.current_user[ 'profil_actif' ][ 'uai' ]
+					      } )
+						  .$promise.then(
+						      function success( response ) {
+							  var extract = function( saisies, id_name, traitement ) {
+							      return _.chain( saisies )
+								  .flatten()
+								  .pluck( id_name )
+								  .uniq()
+								  .compact()
+								  .reject( function( item_id ) { return item_id === 'undefined'; } )
+								  .map( function( item_id ) { return traitement( item_id ); } )
+								  .object()
 								  .value();
+							  };
+
+							  $scope.raw_data = response.saisies;
+							  $scope.matieres = extract( $scope.raw_data, 'matiere_id',
+										     function( matiere_id ) {
+											 return [ matiere_id, Annuaire.get_matiere( matiere_id ) ];
+										     } );
+
+							  $scope.classes = extract( $scope.raw_data, 'regroupement_id',
+										    function( regroupement_id ) {
+											return [ regroupement_id, Annuaire.get_regroupement( regroupement_id ) ];
+										    } );
+							  $q.all( $scope.classes ).then( function() {
+							      $scope.process_data();
 							  } );
-
-						  API.get_enseignant( {
-						      enseignant_id: $scope.enseignant_id,
-						      uai: $scope.current_user[ 'profil_actif' ][ 'uai' ]
-						  } )
-						      .$promise.then(
-							  function success( response ) {
-							      var extract = function( saisies, id_name, traitement ) {
-								  return _.chain( saisies )
-								      .flatten()
-								      .pluck( id_name )
-								      .uniq()
-								      .compact()
-								      .reject( function( item_id ) { return item_id === 'undefined'; } )
-								      .map( function( item_id ) { return traitement( item_id ); } )
-								      .object()
-								      .value();
-							      };
-
-							      $scope.raw_data = response.saisies;
-							      $scope.matieres = extract( $scope.raw_data, 'matiere_id',
-											 function( matiere_id ) {
-											     return [ matiere_id, Annuaire.get_matiere( matiere_id ) ];
-											 } );
-
-							      $scope.classes = extract( $scope.raw_data, 'regroupement_id',
-											function( regroupement_id ) {
-											    return [ regroupement_id, Annuaire.get_regroupement( regroupement_id ) ];
-											} );
-							      $q.all( $scope.classes ).then( function() {
-								  $scope.process_data();
-							      } );
-							  } );
-					      } );
+						      } );
 					  }
 					] );
