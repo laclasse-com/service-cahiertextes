@@ -2,8 +2,10 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PopupDisplayCtrl',
-		[ '$scope', '$sce', '$modalInstance', 'APP_PATH', 'DOCS_URL', 'Cours', 'Devoirs', 'User', 'titre', 'cours', 'devoirs',
-		  function( $scope, $sce, $modalInstance, APP_PATH, DOCS_URL, Cours, Devoirs, User, titre, cours, devoirs ) {
+		[ '$scope', '$sce', '$modalInstance', 'APP_PATH', 'DOCS_URL', 'Cours', 'Devoirs', 'User',
+		  'titre', 'cours', 'devoirs',
+		  function( $scope, $sce, $modalInstance, APP_PATH, DOCS_URL, Cours, Devoirs, User,
+			    titre, cours, devoirs ) {
 		      $scope.app_path = APP_PATH;
 		      $scope.titre = titre;
 		      $scope.date = null;
