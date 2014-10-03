@@ -1,0 +1,13 @@
+{
+  "name": "ng-color-picker",
+  "homepage": "https://github.com/joujiahe/ng-color-picker",
+  "_release": "d36f064bcd",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "d36f064bcde6f170a026412ab1afddd11dd7ca13"
+  },
+  "_source": "https://github.com/joujiahe/ng-color-picker.git",
+  "_target": "*",
+  "_originalSource": "https://github.com/joujiahe/ng-color-picker.git"
+}

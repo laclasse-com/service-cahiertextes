@@ -119,28 +119,26 @@ angular.module( 'cahierDeTexteApp' )
 				      [ 'bold', 'italics', 'underline', 'ul', 'ol', 'quote', 'justifyLeft', 'justifyCenter', 'justifyRight', 'insertLink', 'redo', 'undo' ]
 				  ];
 
-				  taRegisterTool( 'fontColor', {
-				      display: "<span class='bar-btn-dropdown'><button type='button' colorpicker colorpicker-text-editor='true' colorpicker-parent='true' class='btn btn-default' ng-disabled='showHtml()' tooltip='couleur du texte'> <i class='fa fa-font' style='color:red'></i><i class='fa fa-caret-down'></i></button></span>",
-				      action: function( color ) {
-					  if ( color !== '' && !_(color).isObject() ) {
-					      return this.$editor().wrapSelection('forecolor', color);
-					  } else {
-					      return null;
-					  }
-				      }
-				  });
+				  var colorpicker_html = function( type ) {
+				      var style = ( type === 'backcolor' ) ? 'background-' : '';
+				      return '<span class="dropdown"><a class="dropdown-toggle"><i class="fa fa-font" style="' + style + 'color:red"></i> <i class="fa fa-caret-down"></i></a><ng-color-picker class="dropdown-menu" selected="selected"></ng-color-picker></span>';
+				  };
+				  var colorpicker_action = function( type ) {
+				      return function( ) {
+					  return ( this.selected === 'nil' ) ? false : this.$editor().wrapSelection( type, this.selected );
+				      };
+				  };
+
+				  taRegisterTool( 'fontColor',
+						  { display: colorpicker_html( 'forecolor' ),
+						    action: colorpicker_action( 'forecolor' )
+						  } );
 				  taOptions.toolbar[0].push( 'fontColor' );
 
-				  taRegisterTool( 'backgroundColor', {
-				      display: "<span class='bar-btn-dropdown'><button type='button' colorpicker colorpicker-text-editor='true' colorpicker-parent='true' class='btn btn-default' ng-disabled='showHtml()' tooltip='couleur du fond'> <i class='fa fa-font' style='background-color:red'></i><i class='fa fa-caret-down'></i></button></span>",
-				      action: function( color ) {
-					  if ( color !== '' && !_(color).isObject() ) {
-					      return this.$editor().wrapSelection('backcolor', color);
-					  } else {
-					      return null;
-					  }
-				      }
-				  });
+				  taRegisterTool( 'backgroundColor',
+						  { display: colorpicker_html( 'backcolor' ),
+						    action: colorpicker_action( 'backcolor' )
+						  } );
 				  taOptions.toolbar[0].push( 'backgroundColor' );
 
 				  taOptions.classes = {

@@ -28,7 +28,8 @@
     "textAngular": "https://github.com/fraywing/textAngular.git#master",
     "ng-switcher": "latest",
     "font-awesome": "latest",
-    "ng-file-upload": "latest"
+      "ng-file-upload": "latest",
+      "ng-color-picker": "https://github.com/joujiahe/ng-color-picker.git#latest"
   },
   "devDependencies": {
     "angular-mocks": "latest",

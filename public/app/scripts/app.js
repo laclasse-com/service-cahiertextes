@@ -15,8 +15,7 @@ angular.module( 'cahierDeTexteApp', [ 'ngResource',
 				      'theaquaNg',
 				      'textAngular',
 				      'angularFileUpload',
-				      'colorpicker.module',
-				      'ui.bootstrap.dropdownToggle' ] )
+				      'ngColorPicker' ] )
     .run( function( amMoment ) {
 	amMoment.changeLanguage( 'fr' );
     } );
