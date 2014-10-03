@@ -41,7 +41,7 @@
 	  <div class="pull-left date">{{devoir.date_due | date: 'EEEE d MMMM'}}</div>
 	  <span class="matiere"> {{devoir.matiere.libelle_long}}</span>
 	  <div class="pull-right detail">
-	    <button class="btn btn-default" data-ng-click="ouvre_popup_details( devoir.matiere.libelle_court, devoir.cours, [ devoir ], popup_callback, popup_ouverte )">Détail</button>
+	    <a class="btn btn-default" data-ui-sref="eleve.devoirs.popup({ titre: devoir.matiere.libelle_long, cours_id: devoir.cours.id, devoirs_ids: '[' + devoir.id + ']' })">Détail</a>
 	  </div>
 	</div>
 
