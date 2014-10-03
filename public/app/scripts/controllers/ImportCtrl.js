@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('ImportCtrl',
-		[ '$scope', '$http', '$upload', 'APP_PATH', 'Annuaire', 'User',
-		  function ( $scope, $http, $upload, APP_PATH, Annuaire, User ) {
+		[ '$scope', '$http', '$upload', 'APP_PATH', 'Annuaire', 'current_user',
+		  function ( $scope, $http, $upload, APP_PATH, Annuaire, current_user ) {
 		      $scope.in_progress = false;
 		      $scope.result = false;
 
@@ -50,24 +50,20 @@ angular.module('cahierDeTexteApp')
 					      } );
 				      }
 				      if ( !_($scope.result.rapport.enseignants.error).isEmpty() ) {
-					  User.get_user().success( function ( response ) {
-					      $scope.current_user = response;
-					      Annuaire.get_etablissement_enseignants( $scope.current_user.profil_actif.uai )
-						  .then( function( response ) {
-						      $scope.enseignants = response.data;
-						  } );
-					  } );
+					  $scope.current_user = current_user;
+					  Annuaire.get_etablissement_enseignants( $scope.current_user.profil_actif.uai )
+					      .then( function( response ) {
+						  $scope.enseignants = response.data;
+					      } );
 				      }
 				      if ( !_($scope.result.rapport.regroupements.Classe.error).isEmpty()
 					   || !_($scope.result.rapport.regroupements.Groupe.error).isEmpty()
 					   || !_($scope.result.rapport.regroupements.PartieDeClasse.error).isEmpty() ) {
-					  User.get_user().success( function ( response ) {
-					      $scope.current_user = response;
-					      Annuaire.get_etablissement_regroupements( $scope.current_user.profil_actif.uai )
-						  .then( function( response ) {
-						      $scope.regroupements = response.data;
-						  } );;
-					  } );
+					  $scope.current_user = current_user;
+					  Annuaire.get_etablissement_regroupements( $scope.current_user.profil_actif.uai )
+					      .then( function( response ) {
+						  $scope.regroupements = response.data;
+					      } );;
 				      }
 				  });
 			  }

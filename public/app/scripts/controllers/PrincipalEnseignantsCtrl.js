@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('PrincipalEnseignantsCtrl',
-		[ '$scope', '$locale', 'THEME', '$q', 'API', 'Annuaire', 'User', 'PIECHART_DEFINITION', 'BARCHART_DEFINITION',
-		  function( $scope, $locale, THEME, $q, API, Annuaire, User, PIECHART_DEFINITION, BARCHART_DEFINITION ) {
+		[ '$scope', '$locale', 'THEME', '$q', 'API', 'Annuaire', 'current_user', 'PIECHART_DEFINITION', 'BARCHART_DEFINITION',
+		  function( $scope, $locale, THEME, $q, API, Annuaire, current_user, PIECHART_DEFINITION, BARCHART_DEFINITION ) {
 		      $scope.scope = $scope;
 		      $scope.annee = _($locale.DATETIME_FORMATS.MONTH).toArray();
 		      $scope.selected_regroupement_id = null;
@@ -145,13 +145,11 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      // Récupération et consommation des données
-		      User.get_user().then( function( response ) {
-			  var current_user = response.data;
-			  API.query_enseignants( { uai: current_user['profil_actif']['uai'] } )
-			      .$promise.then( function success( response ) {
-				  $scope.raw_data = _(response).reject( function( enseignant ) {
-				      return enseignant.enseignant_id === '';
-				  });
+		      API.query_enseignants( { uai: current_user['profil_actif']['uai'] } )
+			  .$promise.then( function success( response ) {
+			      $scope.raw_data = _(response).reject( function( enseignant ) {
+				  return enseignant.enseignant_id === '';
+			      });
 
 			      $q.all( $scope.extract_details_enseignants_promises( $scope.raw_data ) )
 				  .then( function( enseignants ) {
@@ -173,6 +171,5 @@ angular.module('cahierDeTexteApp')
 					  });
 				  });
 			  } );
-		      } );
 
 		  } ] );
