@@ -164,7 +164,12 @@ module Annuaire
   # Service Utilisateur : init de la session et de son environnement
   def get_user( id )
     @search = false
-    send_request 'users/', CGI.escape( id ), 'true', 'User inconnu'
+    user = send_request 'users/', CGI.escape( id ), 'true', 'User inconnu'
+    user.each do |key, _value|
+      user[ key ] = URI.unescape( user[ key ] ) if user[ key ].is_a? String
+    end
+
+    user
   end
 
   def get_user_regroupements( id )
