@@ -2,8 +2,8 @@
 
 angular.module('cahierDeTexteApp')
     .controller('EleveCtrl',
-		[ '$scope', '$state', 'current_user',
-		  function ( $scope, $state, current_user ) {
+		[ '$scope', '$state', '$stateParams', 'current_user',
+		  function ( $scope, $state, $stateParams, current_user ) {
 		      $scope.tabs = [ { heading: 'Emploi du temps',
 					uisref: 'eleve.emploi_du_temps',
 					active: false },
@@ -17,6 +17,6 @@ angular.module('cahierDeTexteApp')
 		      $scope.current_user = current_user;
 
 		      $scope.reload = function() {
-			  $state.reload();
+			  $state.transitionTo( $state.current, $stateParams, { reload: true, inherit: true, notify: true } );
 		      };
 		  } ] );
