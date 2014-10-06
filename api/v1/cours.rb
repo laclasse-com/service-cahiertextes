@@ -102,7 +102,11 @@ module CahierDeTextesAPI
         cours = Cours[ params[:id] ]
 
         unless cours.nil?
-          cours.date_validation = Time.now if cours.date_validation.nil?
+          if cours.date_validation.nil?
+            cours.date_validation = Time.now
+          else
+            cours.date_validation = nil
+          end
 
           cours.save
 
