@@ -118,36 +118,45 @@ angular.module('cahierDeTexteApp')
 				 $scope.calendar.options.weekends = $scope.current_user.parametrage_cahier_de_textes.affichage_week_ends;
 
 				 // ############################## Profile-specific code ##############################################
-				 if ( $scope.current_user.profil_actif.type == 'ENS'
-				      || $scope.current_user.profil_actif.type == 'EVS'
+				 var filter_by_regroupement = function( raw_data, selected_regroupement_id ) {
+				     return ( _($scope.selected_regroupement_id).isUndefined() || _($scope.selected_regroupement_id).isNull() ) ? raw_data : _( raw_data ).filter( function( creneau ) {
+					 return creneau.regroupement_id == selected_regroupement_id;
+				     } );
+				 };
+				 var filter_by_enseignant_id = function( raw_data, uid, active ) {
+				     return !active ? raw_data : _( raw_data ).filter( function( creneau ) {
+					 return creneau.enseignant_id == uid;
+				     } );
+				 };
+
+				 if ( $scope.current_user.profil_actif.type == 'EVS'
 				      || $scope.current_user.profil_actif.type == 'DIR' ) {
 					  filter_data = function( raw_data ) {
 					      var filtered_data = raw_data;
 
 					      // Filtrage sur une seule classe
-					      if ( !_($scope.selected_regroupement_id).isUndefined() && !_($scope.selected_regroupement_id).isNull() ) {
-						  filtered_data = _( filtered_data ).filter( function( creneau ) {
-						      return creneau.regroupement_id == $scope.selected_regroupement_id;
-						  } );
-					      }
-
-					      if ( $scope.uniquement_mes_creneaux ) {
-						  filtered_data = _( filtered_data ).filter( function( creneau ) {
-						      return creneau.enseignant_id === $scope.current_user.uid;
-						  } );
-					      }
+					      filtered_data = filter_by_regroupement( filtered_data, $scope.selected_regroupement_id );
 
 					      return filtered_data;
 					  };
-				      }
-				 if ( $scope.current_user.profil_actif.type == 'EVS'
-				      || $scope.current_user.profil_actif.type == 'DIR' ) {
+
 					  $scope.selected_regroupement_id = $scope.current_user.profil_actif.classes[0].id;
 				      }
 				 if ( $scope.current_user.profil_actif.type == 'ENS' ) {
 				     $scope.uniquement_mes_creneaux = true;
 				     $scope.calendar.options.selectable = true;
 				     $scope.calendar.options.editable = true;
+
+				     filter_data = function( raw_data ) {
+					 var filtered_data = raw_data;
+
+					 // Filtrage sur une seule classe
+					 filtered_data = filter_by_regroupement( filtered_data, $scope.selected_regroupement_id );
+
+					 filtered_data = filter_by_enseignant_id( filtered_data, $scope.current_user.uid, $scope.uniquement_mes_creneaux );
+
+					 return filtered_data;
+				     };
 
 				     // édition d'un créneau existant
 				     $scope.calendar.options.eventClick = function ( event ) {
