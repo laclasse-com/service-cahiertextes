@@ -27,6 +27,18 @@ angular.module('cahierDeTexteApp')
 
 			  return filtered_data;
 		      };
+		      var filter_creneaux_vides = function( raw_data ) {
+			  var filtered_data = _.chain(raw_data)
+				  .filter( function( creneau ) {
+				      return creneau.enseignant_id === $scope.current_user.uid;
+				  } )
+				  .filter( function( creneau ) {
+				      return _(creneau.cours).isEmpty();
+				  })
+				  .value();
+
+			  return filtered_data;
+		      };
 
 		      var list_matieres = function(raw_data) {
 			  return _.chain(raw_data)
@@ -75,6 +87,8 @@ angular.module('cahierDeTexteApp')
 				      creneau.regroupement = Annuaire.get_regroupement( creneau.regroupement_id );
 				  });
 
+				  $scope.creneaux_vides = filter_creneaux_vides( $scope.raw_data );
+
 				  $scope.creneaux_saisies = filter_creneaux_avec_saisies( $scope.raw_data );
 				  _($scope.creneaux_saisies).each( function( creneau ) {
 				      _(creneau.cours.ressources).each( function( ressource ) {
@@ -93,18 +107,6 @@ angular.module('cahierDeTexteApp')
 		      $scope.popup_callback = retrieve_data;
 
 		      $scope.current_user = current_user;
-		      var filter_creneaux_vides = function( raw_data ) {
-			  var filtered_data = _.chain(raw_data)
-				  .filter( function( creneau ) {
-				      return creneau.enseignant_id === $scope.current_user.uid;
-				  } )
-				  .filter( function( creneau ) {
-				      return _(creneau.cours).isEmpty();
-				  })
-				  .value();
-
-			  return filtered_data;
-		      };
 
 		      $scope.edition_creneau = function ( event ) {
 			  CreneauEmploiDuTemps.get( { id: event.creneau_emploi_du_temps_id } )
