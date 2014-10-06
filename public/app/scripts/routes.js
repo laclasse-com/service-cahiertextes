@@ -17,7 +17,7 @@ angular.module( 'cahierDeTexteApp' )
 		       })
 		   // index ///////////////////////////////////////////////////////////////
 		       .state('index', {
-			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR', 'ENS', 'ELV' ] ); } ] },
+			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR', 'ENS', 'ELV', 'TUT', 'EVS' ] ); } ] },
 			   url: '/',
 			   controller: 'IndexCtrl'
 		       })
