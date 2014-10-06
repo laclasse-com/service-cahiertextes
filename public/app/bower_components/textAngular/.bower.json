@@ -33,11 +33,11 @@
   },
   "license": "MIT",
   "homepage": "https://github.com/fraywing/textAngular",
-  "_release": "fccf1fcb9e",
+  "_release": "efccc1911e",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "fccf1fcb9eeb64c29641a9547adfecd166c5e2e4"
+    "commit": "efccc1911ef0cdfd471be3184c0df379e37128bb"
   },
   "_source": "https://github.com/fraywing/textAngular.git",
   "_target": "master",

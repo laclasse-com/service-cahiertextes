@@ -75,14 +75,57 @@
   </div>
 </div>
 
-<div class="panel panel-default" data-ng-if="gridSaisies.length > 0">
+<div class="panel panel-default">
   <div class="panel-heading">
-    <input type="checkbox" data-ng-model="montre_valides" name="montre_valides" id="montre_valides" data-ng-change="process_data()" />
-    <label for="montre_valides">afficher les saisies visées</label>
-    <div class="btn-group btn-group-xs pull-right" data-ng-if="current_user.is ('DIR')">
-      <a class="btn btn-default" data-ng-click="grid.selectionneNonValides()">Sélectionne les non validés</a>
-      <a class="btn btn-default" data-ng-click="grid.valideSelection()">Valider la sélection</a>
-    </div>
+    <label>
+      <input type="checkbox"
+	     data-ng-model="scope.montre_valides"
+	     data-ng-change="process_data()" />
+      afficher les saisies visées
+    </label>
+    <button class="pull-right"
+	    data-ng-click="valide_all()"
+	    data-ng-if="current_user.profil_actif.type === 'DIR'">
+      <span class="glyphicon glyphicon-check"></span> Viser la totalité
+    </button>
+    <div class="clearfix"></div>
   </div>
-  <div class="panel-body principal-enseignant-grid" data-ng-grid="grid"></div>
+  <div class="panel-body">
+    <table class="table">
+      <thead>
+	<tr>
+	  <th>Classe</th>
+	  <th>Matière</th>
+	  <th>Cours</th>
+	  <th>Travail à faire</th>
+	  <th>Visée</th>
+	</tr>
+      </thead>
+      <tbody>
+	<tr data-ng-repeat="saisie in raw_data"
+	    data-ng-class="{'even': $even, 'odd': $odd}"
+	    data-ng-if="scope.montre_valides || !saisie.valide">
+	  <td data-ng-bind="classes[ saisie.regroupement_id ].libelle"></td>
+	  <td data-ng-bind="matieres[ saisie.matiere_id ].libelle_long"></td>
+	  <td data-ng-bind-html="saisie.cours.contenu"></td>
+	  <td>
+	    <div data-ng-repeat="devoir in saisie.devoirs" data-ng-bind-html="devoir.contenu"></div>
+	  </td>
+	  <td>
+	    <div data-ng-switcher
+		 data-ng-if="current_user.profil_actif.type === 'DIR'"
+		 data-ng-model="saisie.valide"
+		 data-ng-change="valide( saisie )" >
+	    </div>
+	    <div data-ng-if="current_user.profil_actif.type !== 'DIR'">
+	      <div class="switch disabled"
+		   ng-class="{'switch-left': !saisie.valide, 'switch-right': saisie.valide}">
+		<div class="switch-button"> </div>
+	      </div>
+	    </div>
+	  </td>
+	</tr>
+      </tbody>
+    </table>
+  </div>
 </div>

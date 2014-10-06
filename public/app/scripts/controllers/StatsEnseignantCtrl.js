@@ -4,11 +4,9 @@ angular.module( 'cahierDeTexteApp' )
     .controller( 'StatsEnseignantCtrl', [ '$scope', '$stateParams', '$q', '$locale', 'API', 'Cours', 'Annuaire', 'current_user', 'PIECHART_DEFINITION', 'BARCHART_DEFINITION',
 					  function ( $scope, $stateParams, $q, $locale, API, Cours, Annuaire, current_user, PIECHART_DEFINITION, BARCHART_DEFINITION ) {
 					      $scope.mois = _($locale.DATETIME_FORMATS.MONTH).toArray();
-
+					      $scope.scope = $scope;
 					      $scope.classe = null;
 					      $scope.moisCourant = null;
-					      $scope.gridSaisies = [];
-					      $scope.selectedSaisies = [];
 					      $scope.matieres = {};
 					      $scope.classes = {};
 					      $scope.montre_valides = false;
@@ -30,66 +28,19 @@ angular.module( 'cahierDeTexteApp' )
 						  return data;
 					      };
 
-					      // Tableau
-					      $scope.grid = {
-						  data: 'gridSaisies',
-						  selectedItems: $scope.selectedSaisies,
-						  enableCellEdit: false,
-						  plugins: [ new ngGridFlexibleHeightPlugin() ],
-						  rowHeight: 64,
-						  columnDefs: [ {
-						      field: 'classe',
-						      displayName: 'Classe',
-						      cellTemplate: '<span data-ng-bind="classes[row.entity.regroupement_id].libelle"></span>'
-						  }, {
-						      field: 'matiere',
-						      displayName: 'Matière',
-						      cellTemplate: '<span data-ng-bind="matieres[row.entity.matiere_id].libelle_long"></span>'
-						  }, {
-						      field: 'cours',
-						      displayName: 'Cours',
-						      cellTemplate: '<span class="scrollbar" data-ng-bind-html="row.entity.cours.contenu"></span>'
-						  }, {
-						      field: 'devoir',
-						      displayName: 'Travail à faire',
-						      cellTemplate: '<span class="scrollbar" data-ng-bind-html="row.entity.devoir.contenu"></span>'
-						  }, {
-						      field: 'validated',
-						      displayName: 'Visée',
-						      cellTemplate: '<div class="ngSelectionCell">' +
-							  '<i class="glyphicon glyphicon-ok-sign" data-ng-model="row.entity.valide" data-ng-show="row.entity.valide"></i>' +
-							  '<input tabindex="-1" class="ngSelectionCheckbox" type="checkbox" data-ng-model="row.entity.valide" data-ng-hide="row.entity.valide || current_user.is( \'ENS\' )" data-ng-click="grid.valide( row )" />' +
-							  '</div>'
-						  } ],
-						  valide: function ( row ) {
-						      row.entity.cours.$valide();
-						      row.entity.valide = true;
-						      $scope.raw_data[ row.entity.index ].valide = true;
-						      $scope.graphiques.populate( $scope.gridSaisies );
-						  },
-						  valideSelection: function () {
-						      _( $scope.selectedSaisies ).each( function ( saisie ) {
-							  saisie.cours.$valide();
+					      $scope.valide = function( saisie ) {
+						  saisie.cours.$valide();
+					      };
+
+					      $scope.valide_all = function() {
+						  _.chain($scope.raw_data)
+						      .reject( function( saisie ) {
+							  return saisie.valide;
+						      } )
+						      .each( function( saisie ) {
+							  $scope.valide( saisie );
 							  saisie.valide = true;
-							  $scope.raw_data[ saisie.index ].valide = true;
 						      } );
-						      $scope.graphiques.populate( $scope.gridSaisies );
-						  },
-						  selectionneNonValides: function () {
-						      _( $scope.gridSaisies ).each( function ( saisie, index ) {
-							  if ( saisie.valide === false ) {
-							      $scope.grid.selectItem( index, true );
-							  }
-						      } );
-						  },
-						  populate: function ( saisies ) {
-						      $scope.gridSaisies = filtre_saisies( saisies, $scope.moisCourant, $scope.classe );
-						      if ( !$scope.montre_valides ) {
-							  $scope.gridSaisies = _( $scope.gridSaisies ).where( {
-							      valide: false
-							  } );
-						      }
-						  }
 					      };
 
 					      // Graphiques
@@ -145,8 +96,7 @@ angular.module( 'cahierDeTexteApp' )
 							      return saisie;
 							  } );
 
-						      // consommation des données dans les graphiques et le grid
-						      $scope.grid.populate( $scope.raw_data );
+						      // consommation des données par les graphiques
 						      $scope.graphiques.populate( $scope.raw_data );
 						  }
 					      };
