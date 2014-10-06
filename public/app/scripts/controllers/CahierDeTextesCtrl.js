@@ -4,6 +4,8 @@ angular.module('cahierDeTexteApp')
     .controller('CahierDeTextesCtrl',
 		[ '$scope', '$sce', '$q', 'APP_PATH', 'DOCS_URL', 'API', 'Annuaire', 'EmploisDuTemps', 'current_user', 'PopupsCreneau', 'CreneauEmploiDuTemps',
 		  function ( $scope, $sce, $q, APP_PATH, DOCS_URL, API, Annuaire, EmploisDuTemps, current_user, PopupsCreneau, CreneauEmploiDuTemps ) {
+		      $scope.current_user = current_user;
+
 		      var matieres = [];
 		      var matieres_enseignees = [];
 		      var popup_ouverte = false;
@@ -53,7 +55,7 @@ angular.module('cahierDeTexteApp')
 			      .value();
 		      };
 
-		      $scope.period_offset = 0;
+		      $scope.period_offset = $scope.current_user.date ? moment( moment() - moment( $scope.current_user.date ) ).months() : 0;
 
 		      // retrieve_data() when the value of week_offset changes
 		      // n.b.: triggered when week_offset is initialized above
@@ -72,8 +74,11 @@ angular.module('cahierDeTexteApp')
 		      };
 
 		      var retrieve_data = function() {
-			  $scope.from_date = moment().subtract( $scope.period_offset, 'months' ).subtract( 2, 'weeks' ).toDate();
-			  $scope.to_date = moment().subtract( $scope.period_offset, 'months' ).add( 2, 'weeks' ).toDate();
+			  $scope.current_user.date = moment().subtract( $scope.period_offset, 'months' ).toDate();
+
+			  $scope.from_date = moment( $scope.current_user.date ).subtract( 2, 'weeks' ).startOf( 'week' ).toDate();
+			  $scope.to_date = moment( $scope.current_user.date ).add( 2, 'weeks' ).endOf( 'week' ).toDate();
+
 			  EmploisDuTemps.query( { debut: $scope.from_date,
 						  fin: $scope.to_date,
 						  uai: $scope.current_user.profil_actif.uai } )
@@ -105,8 +110,6 @@ angular.module('cahierDeTexteApp')
 			      });
 		      };
 		      $scope.popup_callback = retrieve_data;
-
-		      $scope.current_user = current_user;
 
 		      $scope.edition_creneau = function ( event ) {
 			  CreneauEmploiDuTemps.get( { id: event.creneau_emploi_du_temps_id } )

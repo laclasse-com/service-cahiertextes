@@ -99,6 +99,7 @@ angular.module('cahierDeTexteApp')
 						     events: [  ] };
 
 				 $scope.calendar.options.viewRender = function( view, element ) {
+				     $scope.current_user.date = view.visStart;
 				     retrieve_data( view.visStart, view.visEnd );
 				 };
 
@@ -117,7 +118,6 @@ angular.module('cahierDeTexteApp')
 
 				 $scope.calendar.options.weekends = $scope.current_user.parametrage_cahier_de_textes.affichage_week_ends;
 
-				 // ############################## Profile-specific code ##############################################
 				 var filter_by_regroupement = function( raw_data, selected_regroupement_id ) {
 				     return ( _($scope.selected_regroupement_id).isUndefined() || _($scope.selected_regroupement_id).isNull() ) ? raw_data : _( raw_data ).filter( function( creneau ) {
 					 return creneau.regroupement_id == selected_regroupement_id;
@@ -129,6 +129,7 @@ angular.module('cahierDeTexteApp')
 				     } );
 				 };
 
+				 // ############################## Profile-specific code ##############################################
 				 if ( $scope.current_user.profil_actif.type == 'EVS'
 				      || $scope.current_user.profil_actif.type == 'DIR' ) {
 					  filter_data = function( raw_data ) {
@@ -225,4 +226,11 @@ angular.module('cahierDeTexteApp')
 					      }
 					  };
 				      }
+
+				 if ( $scope.current_user.date ) {
+				     var mdate = moment( $scope.current_user.date );
+				     $scope.calendar.options.year = mdate.year();
+				     $scope.calendar.options.month = mdate.month();
+				     $scope.calendar.options.date = mdate.date();
+				 }
 			     } ] );
