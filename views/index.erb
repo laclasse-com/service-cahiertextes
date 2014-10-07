@@ -19,18 +19,21 @@
   <footer class="col-md-12"
 	  data-ng-controller="FooterCtrl" data-ng-cloak>
     <div class="pull-left">
-      <a class="dropdown-toggle btn btn-xs btn-default pull-left" role="button"
-	 data-toggle="dropdown"
-	 data-target="#" href="">
-	<span class="glyphicon glyphicon-cog"></span> Préférences
-      </a>
-      <ul class="dropdown-menu user-preferences" role="menu">
-	<li><label><input type="checkbox" data-ng-model="current_user.parametrage_cahier_de_textes.affichage_week_ends"
-			  data-ng-change="save_and_reload()" /> Afficher les week-ends</label></li>
-	<li><label><input type="checkbox" data-ng-model="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir"
-			  data-ng-change="save_and_reload()" /> Afficher les types de devoirs</label></li>
-      </ul>
-
+      <div class="btn-group" dropdown>
+	<button type="button" class="btn btn-xs btn-default dropdown-toggle">
+	  <span class="glyphicon glyphicon-cog"></span>
+	</button>
+	<button type="button" class="btn btn-xs btn-default dropdown-toggle">
+	  Préférences
+	</button>
+	<ul class="dropdown-menu user-preferences" role="menu">
+	  <li><label><checkbox data-ng-model="current_user.parametrage_cahier_de_textes.affichage_week_ends"
+			       data-ng-change="save_and_reload()"></checkbox> Afficher les week-ends</label></li>
+	  <li class="divider"></li>
+	  <li><label><checkbox data-ng-model="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir"
+			       data-ng-change="save_and_reload()"></checkbox> Afficher les types de devoirs</label></li
+	</ul>
+      </div>
     </div>
     <span class="pull-right">version {{version}}</span>
   </footer>
