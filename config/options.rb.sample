@@ -15,6 +15,9 @@ APP_ROOT = File.expand_path(File.join(File.dirname(__FILE__), '..'))
 # Mapping HAProxy de l'application, ex : '/v3/ct'
 APP_PATH = '/app'
 
+# Version de l'application
+APP_VERSION = '1.2.3'
+
 # Langage par défaut de l'application
 LANG = 'fr'
 
