@@ -44,4 +44,4 @@ config/constants.rb
 /config/*.after
 /config/*.orig
 /public/app/js/constants.js
-/public/app/js/templates/
+/public/app/js/templates/*.js
