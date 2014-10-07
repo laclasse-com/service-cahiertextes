@@ -182,6 +182,7 @@ DEPENDENCIES
   guard-rspec
   guard-shell
   jasmine
+  jsmin
   mysql2
   nokogiri
   omniauth-cas
