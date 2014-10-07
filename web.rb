@@ -14,6 +14,30 @@ require_relative './lib/AuthenticationHelpers'
 # Application Sinatra servant de base
 module CahierDeTextesAPI
   class Web < Sinatra::Base
+    set :root, File.dirname(__FILE__) # You must set app root
+
+    register Sinatra::AssetPack
+    assets {
+      serve "#{APP_PATH}/app/js",     from: 'public/app/js'
+      serve "#{APP_PATH}/app/css",     from: 'public/app/css'
+
+      # The second parameter defines where the compressed version will be served.
+      # (Note: that parameter is optional, AssetPack will figure it out.)
+      # The final parameter is an array of glob patterns defining the contents
+      # of the package (as matched on the public URIs, not the filesystem)
+      js :app, "#{APP_PATH}/app/js/cdt.js",
+         [
+           "#{APP_PATH}/app/js/**/*.js"
+         ]
+
+      css :app, "#{APP_PATH}/app/css/cdt.css",
+          [
+            "#{APP_PATH}/app/css/**/*.css"
+          ]
+
+      js_compression :uglify    # :jsmin | :yui | :closure | :uglify
+      css_compression :simple   # :simple | :sass | :yui | :sqwish
+    }
 
     configure :production, :development do
       set :protection, true
