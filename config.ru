@@ -13,6 +13,7 @@ Dir.glob( 'public/app/views/*.html' )
   template_name = fichier.gsub( %r{public/app/}, '' )
   template = File.read( fichier )
 
+  STDERR.puts "generating #{target} from #{fichier}"
   # un peu de travail d'escaping sur le contenu HTML
   # suppression des retour à la ligne
   template.tr!( "\n", '' )
