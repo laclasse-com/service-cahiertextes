@@ -33,14 +33,23 @@ angular.module( 'cahierDeTexteApp' )
 					      };
 
 					      $scope.valide_all = function() {
-						  _.chain($scope.raw_data)
-						      .reject( function( saisie ) {
-							  return saisie.valide;
-						      } )
-						      .each( function( saisie ) {
-							  $scope.valide( saisie );
-							  saisie.valide = true;
-						      } );
+						  swal({ title: 'Tout valider ?',
+							 text: 'Cette action va valider toutes les saisies actuellement affichées à l\'écran.',
+							 type: 'warning',
+							 showCancelButton: true,
+							 confirmButtonColor: '#ff6b55',
+							 confirmButtonText: 'Confirmer',
+							 cancelButtonText: 'Annuler' },
+						       function () {
+							   _.chain($scope.raw_data)
+							       .reject( function( saisie ) {
+								   return saisie.valide;
+							       } )
+							       .each( function( saisie ) {
+								   $scope.valide( saisie );
+								   saisie.valide = true;
+							       } );
+						       });
 					      };
 
 					      // Graphiques
