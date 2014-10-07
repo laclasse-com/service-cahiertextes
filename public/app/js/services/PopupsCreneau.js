@@ -2,11 +2,11 @@
 
 angular.module('cahierDeTexteApp')
     .service('PopupsCreneau',
-	     [ '$modal', 'APP_PATH',
-	       function( $modal, APP_PATH ) {
+	     [ '$modal',
+	       function( $modal ) {
 		   this.edition = function ( raw_data, matieres, classes, creneau, cours, devoirs, popup_callback, popup_ouverte ) {
 		       popup_ouverte = true;
-		       $modal.open( { templateUrl: APP_PATH + '/app/views/popup_edition.html',
+		       $modal.open( { templateUrl: 'views/popup_edition.html',
 				      controller: 'PopupEditionCtrl',
 				      resolve: { raw_data : function () { return raw_data; },
 						 matieres : function () { return matieres; },
@@ -25,7 +25,7 @@ angular.module('cahierDeTexteApp')
 
 		   this.display = function( titre, cours, devoirs, popup_callback, popup_ouverte ) {
 		       popup_ouverte = true;
-		       $modal.open( { templateUrl: APP_PATH + '/app/views/popup_display.html',
+		       $modal.open( { templateUrl: 'views/popup_display.html',
 				      controller: 'PopupDisplayCtrl',
 				      resolve: { titre   : function() { return titre; },
 						 cours   : function() { return cours; },

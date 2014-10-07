@@ -6,10 +6,37 @@ require ::File.expand_path( '../config/init', __FILE__ )
 require ::File.expand_path( '../api', __FILE__ )
 require ::File.expand_path( '../web', __FILE__ )
 
+# Compile à la volée les templates en fichiers javascripts
+Dir.glob( 'public/app/views/*.html' )
+   .each do |fichier|
+  target = "#{fichier.gsub( /views/, 'js/templates' )}.js"
+  template_name = fichier.gsub( %r{public/app/}, '' )
+  template = File.read( fichier )
+
+  # un peu de travail d'escaping sur le contenu HTML
+  # suppression des retour à la ligne
+  template.tr!( "\n", '' )
+  # escaping des apostrophes
+  template.gsub!(/'/){ %q(\') }
+
+  # élimination du précédent template JS si besoin
+  File.delete( target ) if File.exist?( target )
+
+  # génération du template JS
+  File.open( target, 'w' ) do |target_file|
+    target_file.write "'use strict';\n"
+    target_file.write "angular.module( 'cahierDeTexteApp' )\n"
+    target_file.write "  .run( [ '$templateCache',\n"
+    target_file.write "    function( $templateCache ) {\n"
+    target_file.write "      $templateCache.put( '#{template_name}',\n"
+    target_file.write "                          '#{template}' ); "
+    target_file.write '    } ] );'
+  end
+end
+
 use Rack::Rewrite do
   rewrite %r{^/logout/?$}, "#{APP_PATH}/logout"
   rewrite %r{^#{APP_PATH}(/app/vendor/.*(css|js|ttf|woff|html|png|jpg|jpeg|gif|svg)[?v=0-9a-zA-Z\-.]*$)}, '$1'
-  rewrite %r{^#{APP_PATH}(/.*html[?v=0-9a-zA-Z\-.]*$)}, '$1'
 end
 
 use Rack::Session::Cookie,
