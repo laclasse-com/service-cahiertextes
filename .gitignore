@@ -38,9 +38,9 @@ config/constants.rb
 /spec/fixtures/UDT/*.xml
 /clef_privee
 /clef_publique
-/public/app/scripts/constants.js
 /spec/fixtures/UDT.zip
 /spec/api/cookieCT.txt
 /config/*.before
 /config/*.after
 /config/*.orig
+/public/app/js/constants.js
