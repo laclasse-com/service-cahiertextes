@@ -35,7 +35,7 @@ module CahierDeTextesAPI
             "#{APP_PATH}/app/css/**/*.css"
           ]
 
-      js_compression :uglify    # :jsmin | :yui | :closure | :uglify
+      js_compression :jsmin    # :jsmin | :yui | :closure | :uglify
       css_compression :simple   # :simple | :sass | :yui | :sqwish
     }
 
