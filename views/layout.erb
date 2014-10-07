@@ -25,11 +25,8 @@
 
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
 
-    <!-- build:css({.tmp,app}) styles/main.css -->
-    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/css/bootstrap-theme.css" />
-    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/css/colorpicker-dropdown.css">
-    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/css/main.css">
-    <!-- endbuild -->
+    <%= css :app %>
+
   </head>
   <body data-ng-app="cahierDeTexteApp">
     <!--[if lt IE 7]>
@@ -79,43 +76,7 @@
     <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/textAngular/dist/textAngular.min.js"></script>
     <!-- endbuild -->
 
-    <script type="text/javascript" src="<%=APP_PATH%>/app/js/app.js?v=<%=APP_VERSION%>"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/js/defaults.js?v=<%=APP_VERSION%>"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/js/routes.js?v=<%=APP_VERSION%>"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/js/http_interceptors.js?v=<%=APP_VERSION%>"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/js/constants.js?v=<%=APP_VERSION%>"></script>
+    <%= js :app %>
 
-    <% if ENV['RACK_ENV'] == 'production' %>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/js/cdt.min.js?v=<%=APP_VERSION%>"></script>
-    <% else %>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/js/services/API/CahierDeTextes.js?v=<%=APP_VERSION%>"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/js/services/API/Annuaire.js?v=<%=APP_VERSION%>"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/js/services/API/Documents.js?v=<%=APP_VERSION%>"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/js/services/Redirection.js?v=<%=APP_VERSION%>"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/js/services/PopupsCreneau.js?v=<%=APP_VERSION%>"></script>
-
-      <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/IndexCtrl.js?v=<%=APP_VERSION%>"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/HeaderCtrl.js?v=<%=APP_VERSION%>"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/FooterCtrl.js?v=<%=APP_VERSION%>"></script>
-
-      <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/ImportCtrl.js?v=<%=APP_VERSION%>"></script>
-
-      <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/VieScolaireCtrl.js?v=<%=APP_VERSION%>"></script>
-
-      <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/PrincipalCtrl.js?v=<%=APP_VERSION%>"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/PrincipalEnseignantsCtrl.js?v=<%=APP_VERSION%>"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/PrincipalClassesCtrl.js?v=<%=APP_VERSION%>"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/StatsEnseignantCtrl.js?v=<%=APP_VERSION%>"></script>
-
-      <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/EmploiDuTempsCtrl.js?v=<%=APP_VERSION%>"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/PopupDisplayCtrl.js?v=<%=APP_VERSION%>"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/PopupEditionCtrl.js?v=<%=APP_VERSION%>"></script>
-
-      <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/EleveCtrl.js?v=<%=APP_VERSION%>"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/EleveDevoirsCtrl.js?v=<%=APP_VERSION%>"></script>
-
-      <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/EnseignantCtrl.js?v=<%=APP_VERSION%>"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/CahierDeTextesCtrl.js?v=<%=APP_VERSION%>"></script>
-    <% end %>
   </body>
 </html>
