@@ -21,7 +21,7 @@ module CahierDeTextesAPI
 
     format :txt
     get '/version' do
-      `git describe`
+      APP_VERSION
     end
 
     before do
