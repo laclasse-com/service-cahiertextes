@@ -277,3 +277,5 @@
     -webkit-box-shadow:0;
     box-shadow:0;
 }
+
+.alert-default { border-color: #bce8f1; }
