@@ -147,14 +147,25 @@ angular.module( 'cahierDeTexteApp' )
 			       $modalInstance.close( $scope );
 			   };
 
-			   $scope.effacer_creneau = function () {
-			       CreneauEmploiDuTemps.delete( {
-				   id: $scope.creneau.id,
-				   date_creneau: $scope.creneau.heure_debut
-			       } )
-				   .$promise.then( function () {
-				       $scope.fermer();
-				   } );
+			   $scope.effacer_creneau = function() {
+			       swal({
+				   title: 'Ceci supprimera le créneau à compter du ' + $filter( 'date' )( creneau.heure_debut, 'fullDate' ),
+				   text: 'Le créneau avec ses séquences pédagogiques et devoirs associés restera visible pour les dates antérieures.',
+				   type: 'warning',
+				   showCancelButton: true,
+				   confirmButtonColor: '#ff6b55',
+				   confirmButtonText: 'Confirmer',
+				   cancelButtonText: 'Annuler'
+			       },
+				    function () {
+					CreneauEmploiDuTemps.delete( {
+					    id: $scope.creneau.id,
+					    date_creneau: $scope.creneau.heure_debut
+					} )
+					    .$promise.then( function () {
+						$scope.fermer();
+					    } );
+				    });
 			   };
 
 			   $scope.annuler = function () {
@@ -556,18 +567,9 @@ angular.module( 'cahierDeTexteApp' )
 			       };
 
 			       $scope.effacer_cours = function () {
-				   //var undeleting = $scope.cours.deleted;
 				   $scope.cours.$delete()
 				       .then( function () {
-					   //if ( undeleting ) {
 					   init_cours_existant( $scope.cours );
-					       // FIXME: là on a perdu tous les devoirs
-					   //}
-					   //  else {
-					   //     _( $scope.devoirs ).each( function ( devoir ) {
-					   //	   devoir.$delete();
-					   //     } );
-					   // }
 				       } );
 			       };
 
@@ -589,6 +591,7 @@ angular.module( 'cahierDeTexteApp' )
 			       };
 
 			       $scope.switch_to_creneau_edition = function() {
+				   $scope.erreurs = [];
 				   $scope.creneau.en_creation = true;
 			       };
 			   }	// /fin gestion des Cours et Devoirs
