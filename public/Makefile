@@ -1,20 +1,11 @@
 all: clean minify
 
 clean:
-	-rm app/scripts/app.min.js app/scripts/constants.min.js app/scripts/cdt.min.js app/styles/main.min.css
+	-rm app/js/cdt.min.js
 
-minify: app/scripts/app.min.js app/scripts/constants.min.js app/scripts/cdt.min.js app/styles/main.min.css
+minify: app/js/cdt.min.js
 
-app/scripts/app.min.js: app/scripts/app.js
-	uglifyjs -p 5 -c -m -o $@ app/scripts/app.js
-
-app/scripts/constants.min.js: app/scripts/constants.js
-	uglifyjs -p 5 -c -m -o $@ app/scripts/constants.js
-
-app/scripts/cdt.min.js:
-	uglifyjs -p 5 -c -m -o $@ $$(find app/scripts/{services,controllers,directives}/ -name \*.js)
-
-app/styles/main.min.css: app/styles/main.css
-	uglifycss $^ > $@
+app/js/cdt.min.js:
+	uglifyjs -p 5 -c -m -o $@ $$(find app/js/{services,controllers,filters}/ -name \*.js)
 
 .PHONY: all clean minify
