@@ -10,18 +10,18 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/bower_components/jquery-ui/themes/smoothness/jquery-ui.min.css"/>
-    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/jquery-ui/themes/smoothness/jquery-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/bootstrap/dist/css/bootstrap.min.css" />
 
-    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/bower_components/fullcalendar/fullcalendar.css" />
-    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/bower_components/angular-loading-bar/build/loading-bar.min.css" />
-    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/bower_components/nvd3/nv.d3.min.css"/>
-    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/bower_components/angular-tree-control/css/tree-control.css"/>
-    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/bower_components/angular-tree-control/css/tree-control-attribute.css"/>
-    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/bower_components/font-awesome/css/font-awesome.min.css"/>
-    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/bower_components/ng-switcher/dist/ng-switcher.min.css"/>
-    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/bower_components/ng-color-picker/color-picker.css"/>
-    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/bower_components/sweetalert/lib/sweet-alert.css"/>
+    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/fullcalendar/fullcalendar.css" />
+    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/angular-loading-bar/build/loading-bar.min.css" />
+    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/nvd3/nv.d3.min.css"/>
+    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/angular-tree-control/css/tree-control.css"/>
+    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/angular-tree-control/css/tree-control-attribute.css"/>
+    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/ng-switcher/dist/ng-switcher.min.css"/>
+    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/ng-color-picker/color-picker.css"/>
+    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/sweetalert/lib/sweet-alert.css"/>
 
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
 
@@ -34,8 +34,8 @@
     <![endif]-->
 
     <!--[if lt IE 9]>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/es5-shim/es5-shim.js"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/json3/lib/json3.min.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/es5-shim/es5-shim.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/json3/lib/json3.min.js"></script>
     <![endif]-->
 
 
@@ -45,35 +45,35 @@
 
 
     <!-- build:js scripts/modules.js -->
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/jquery/dist/jquery.min.js"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/jquery-ui/ui/minified/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/underscore/underscore-min.js"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/moment/min/moment-with-locales.min.js"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/ng-file-upload/angular-file-upload-shim.min.js"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/sweetalert/lib/sweet-alert.min.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/underscore/underscore-min.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/moment/min/moment-with-locales.min.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/ng-file-upload/angular-file-upload-shim.min.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/sweetalert/lib/sweet-alert.min.js"></script>
 
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/angular/angular.min.js"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/angular-animate/angular-animate.min.js"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/angular-bootstrap-checkbox/angular-bootstrap-checkbox.js"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/angular-cookies/angular-cookies.min.js"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/angular-i18n/angular-locale_fr-fr.js"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/angular-loading-bar/build/loading-bar.min.js"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/angular-moment/angular-moment.min.js"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/angular-resource/angular-resource.min.js"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/angular-sanitize/angular-sanitize.min.js"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/angular-tree-control/angular-tree-control.js"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/angular-ui-calendar/src/calendar.js"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/angularjs-nvd3-directives/dist/angularjs-nvd3-directives.min.js"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/d3/d3.min.js"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/fullcalendar/fullcalendar.min.js"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/ng-color-picker/color-picker.js"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/ng-file-upload/angular-file-upload.min.js"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/ng-switcher/dist/ng-switcher.min.js"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/nvd3/nv.d3.min.js"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/textAngular/dist/textAngular-sanitize.min.js"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/bower_components/textAngular/dist/textAngular.min.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular/angular.min.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-animate/angular-animate.min.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-bootstrap-checkbox/angular-bootstrap-checkbox.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-cookies/angular-cookies.min.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-i18n/angular-locale_fr-fr.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-loading-bar/build/loading-bar.min.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-moment/angular-moment.min.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-resource/angular-resource.min.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-sanitize/angular-sanitize.min.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-tree-control/angular-tree-control.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-ui-calendar/src/calendar.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angularjs-nvd3-directives/dist/angularjs-nvd3-directives.min.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/d3/d3.min.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/fullcalendar/fullcalendar.min.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/ng-color-picker/color-picker.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/ng-file-upload/angular-file-upload.min.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/ng-switcher/dist/ng-switcher.min.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/nvd3/nv.d3.min.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/textAngular/dist/textAngular-sanitize.min.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/textAngular/dist/textAngular.min.js"></script>
     <!-- endbuild -->
 
     <%= js :app %>
