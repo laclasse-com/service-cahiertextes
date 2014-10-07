@@ -189,6 +189,9 @@ footer { color: #555;
 .devoir .title { border-bottom: 1px solid #ccc; }
 .devoir .devoir { border-left: 1px solid #ccc; }
 
+.todo-list .devoir .list-group-item { padding-top: 0; }
+.todo-list .devoir .title { text-align: center; }
+
 .creneau .date span { float: left;
 		      width: 100% }
 .creneau .date .horaire { text-align: center }

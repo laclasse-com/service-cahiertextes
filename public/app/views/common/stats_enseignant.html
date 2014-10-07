@@ -7,7 +7,6 @@
 	<option value="">Toutes les classes</option>
       </select>
 
-
       <select class="col-md-3 pull-right" data-ng-model="moisCourant" data-ng-change="process_data()" data-ng-options="mois.indexOf(m)+1 as m for m in mois">
 	<option value="">Toute l'année</option>
       </select>
@@ -83,7 +82,7 @@
 		data-ng-change="process_data()"></checkbox>
       afficher les saisies visées
     </label>
-    <button class="pull-right"
+    <button class="btn btn-primary pull-right"
 	    data-ng-click="valide_all()"
 	    data-ng-if="current_user.profil_actif.type === 'DIR'">
       <span class="glyphicon glyphicon-check"></span> Viser la totalité
@@ -94,8 +93,8 @@
     <table class="table">
       <thead>
 	<tr>
-	  <th>Classe</th>
-	  <th>Matière</th>
+	  <th style="width:12em;">Classe</th>
+	  <th style="width:12em;">Matière</th>
 	  <th>Cours</th>
 	  <th>Travail à faire</th>
 	  <th>Visée</th>
@@ -107,9 +106,11 @@
 	    data-ng-if="scope.montre_valides || !saisie.valide">
 	  <td data-ng-bind="classes[ saisie.regroupement_id ].libelle"></td>
 	  <td data-ng-bind="matieres[ saisie.matiere_id ].libelle_long"></td>
-	  <td data-ng-bind-html="saisie.cours.contenu"></td>
 	  <td>
-	    <div data-ng-repeat="devoir in saisie.devoirs" data-ng-bind-html="devoir.contenu"></div>
+	    <div class="alert alert-default" data-ng-bind-html="saisie.cours.contenu"></div>
+	  </td>
+	  <td>
+	    <div class="alert alert-default" data-ng-repeat="devoir in saisie.devoirs" data-ng-bind-html="devoir.contenu"></div>
 	  </td>
 	  <td>
 	    <div data-ng-switcher
