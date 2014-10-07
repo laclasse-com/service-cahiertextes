@@ -13,7 +13,7 @@ angular.module( 'cahierDeTexteApp' )
 		   // 404 /////////////////////////////////////////////////////////////////
 		       .state('404', {
 			   url: '/404',
-			   templateUrl: APP_PATH + '/app/views/common/404.html'
+			   templateUrl: APP_PATH + '/app/views/404.html'
 		       })
 		   // index ///////////////////////////////////////////////////////////////
 		       .state('index', {
@@ -37,7 +37,7 @@ angular.module( 'cahierDeTexteApp' )
 			   views: {
 			       'content': {
 				   controller: 'ImportCtrl',
-				   templateUrl: APP_PATH + '/app/views/principal/import.html'
+				   templateUrl: APP_PATH + '/app/views/import.html'
 			       }
 			   }
 		       })
@@ -47,7 +47,7 @@ angular.module( 'cahierDeTexteApp' )
 			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } ] },
 			   views: {
 			       'content': {
-				   templateUrl: APP_PATH + '/app/views/principal/enseignants.html',
+				   templateUrl: APP_PATH + '/app/views/enseignants.html',
 				   controller: 'PrincipalEnseignantsCtrl'
 			       }
 			   }
@@ -58,7 +58,7 @@ angular.module( 'cahierDeTexteApp' )
 			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } ] },
 			   views: {
 			       'content': {
-				   templateUrl: APP_PATH + '/app/views/common/stats_enseignant.html',
+				   templateUrl: APP_PATH + '/app/views/stats_enseignant.html',
 				   controller: 'StatsEnseignantCtrl'
 			       }
 			   }
@@ -69,7 +69,7 @@ angular.module( 'cahierDeTexteApp' )
 			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } ] },
 			   views: {
 			       'content': {
-				   templateUrl: APP_PATH + '/app/views/principal/classes.html',
+				   templateUrl: APP_PATH + '/app/views/classes.html',
 				   controller: 'PrincipalClassesCtrl'
 			       }
 			   }
@@ -80,7 +80,7 @@ angular.module( 'cahierDeTexteApp' )
 			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } ] },
 			   views: {
 			       'content': {
-				   templateUrl: APP_PATH + '/app/views/common/emploi_du_temps.html',
+				   templateUrl: APP_PATH + '/app/views/emploi_du_temps.html',
 				   controller: 'EmploiDuTempsCtrl'
 			       }
 			   }
@@ -101,7 +101,7 @@ angular.module( 'cahierDeTexteApp' )
 			   url: '/emploi_du_temps',
 			   views: {
 			       'content': {
-				   templateUrl: APP_PATH + '/app/views/common/emploi_du_temps.html',
+				   templateUrl: APP_PATH + '/app/views/emploi_du_temps.html',
 				   controller: 'EmploiDuTempsCtrl'
 			       }
 			   }
@@ -122,7 +122,7 @@ angular.module( 'cahierDeTexteApp' )
 			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ELV', 'TUT' ] ); } ] },
 			   views: {
 			       'content': {
-				   templateUrl: APP_PATH + '/app/views/common/emploi_du_temps.html',
+				   templateUrl: APP_PATH + '/app/views/emploi_du_temps.html',
 				   controller: 'EmploiDuTempsCtrl'
 			       }
 			   }
@@ -133,7 +133,7 @@ angular.module( 'cahierDeTexteApp' )
 			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ELV', 'TUT' ] ); } ] },
 			   views: {
 			       'content': {
-				   templateUrl: APP_PATH + '/app/views/eleve/devoirs.html',
+				   templateUrl: APP_PATH + '/app/views/devoirs.html',
 				   controller: 'EleveDevoirsCtrl'
 			       }
 			   }
@@ -167,7 +167,7 @@ angular.module( 'cahierDeTexteApp' )
 			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ENS' ] ); } ] },
 			   views: {
 			       'content': {
-				   templateUrl: APP_PATH + '/app/views/common/emploi_du_temps.html',
+				   templateUrl: APP_PATH + '/app/views/emploi_du_temps.html',
 				   controller: 'EmploiDuTempsCtrl'
 			       }
 			   }
@@ -178,7 +178,7 @@ angular.module( 'cahierDeTexteApp' )
 			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ENS' ] ); } ] },
 			   views: {
 			       'content': {
-				   templateUrl: APP_PATH + '/app/views/common/cahier_de_textes.html',
+				   templateUrl: APP_PATH + '/app/views/cahier_de_textes.html',
 				   controller: 'CahierDeTextesCtrl'
 			       }
 			   }
@@ -189,7 +189,7 @@ angular.module( 'cahierDeTexteApp' )
 			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ENS' ] ); } ] },
 			   views: {
 			       'content': {
-				   templateUrl: APP_PATH + '/app/views/common/stats_enseignant.html',
+				   templateUrl: APP_PATH + '/app/views/stats_enseignant.html',
 				   controller: 'StatsEnseignantCtrl'
 			       }
 			   }
