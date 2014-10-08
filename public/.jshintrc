@@ -22,7 +22,7 @@
     "globalstrict": true,
     "globals": {
 	"angular": true,
-	"ngGridFlexibleHeightPlugin": true,
+	"swal": true,
 	"jQuery": true,
 	"console": true,
 	"_": true
