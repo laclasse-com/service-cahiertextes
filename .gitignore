@@ -45,3 +45,6 @@ config/constants.rb
 /config/*.orig
 /public/app/js/constants.js
 /public/app/js/templates/*.js
+/public/app/js/*.min.js
+/public/app/js/*/*.min.js
+/public/app/js/*/*/*.min.js

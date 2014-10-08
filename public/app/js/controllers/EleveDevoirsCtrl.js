@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cahierDeTexteApp')
+cahierDeTexteApp
     .controller('EleveDevoirsCtrl',
 		[ '$scope', '$sce', 'APP_PATH', 'DOCS_URL', 'API', 'Annuaire', 'Devoirs', 'Cours', 'CreneauEmploiDuTemps', 'current_user',
 		  function( $scope, $sce, APP_PATH, DOCS_URL, API, Annuaire, Devoirs, Cours, CreneauEmploiDuTemps, current_user ) {

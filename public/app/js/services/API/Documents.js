@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cahierDeTexteApp')
+cahierDeTexteApp
     .service('Documents',
 	     [ '$http', 'DOCS_URL',
 	       function( $http, DOCS_URL ) {

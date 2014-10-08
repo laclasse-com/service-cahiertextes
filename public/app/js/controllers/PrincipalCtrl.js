@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cahierDeTexteApp')
+cahierDeTexteApp
     .controller('PrincipalCtrl',
 		[ '$scope', '$state',
 		  function ( $scope, $state ) {

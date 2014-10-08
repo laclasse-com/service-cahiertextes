@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cahierDeTexteApp')
+cahierDeTexteApp
     .controller('ImportCtrl',
 		[ '$scope', '$http', '$upload', 'APP_PATH', 'Annuaire', 'current_user',
 		  function ( $scope, $http, $upload, APP_PATH, Annuaire, current_user ) {

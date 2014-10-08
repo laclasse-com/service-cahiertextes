@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cahierDeTexteApp')
+cahierDeTexteApp
     .controller('PrincipalEnseignantsCtrl',
 		[ '$scope', '$locale', 'THEME', '$q', 'API', 'Annuaire', 'current_user', 'PIECHART_DEFINITION', 'BARCHART_DEFINITION',
 		  function( $scope, $locale, THEME, $q, API, Annuaire, current_user, PIECHART_DEFINITION, BARCHART_DEFINITION ) {

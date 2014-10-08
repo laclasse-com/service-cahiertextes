@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cahierDeTexteApp')
+cahierDeTexteApp
     .service( 'Redirection',
 	      [ '$state', 'User',
 		function( $state, User ) {

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cahierDeTexteApp')
+cahierDeTexteApp
     .factory('Matieres',
 	     [ '$resource', 'APP_PATH', 'API_VERSION',
 	       function( $resource, APP_PATH, API_VERSION ) {
@@ -8,7 +8,7 @@ angular.module('cahierDeTexteApp')
 				     { matiere_id: '@matiere_id' } );
 	       } ] );
 
-angular.module('cahierDeTexteApp')
+cahierDeTexteApp
     .factory('Regroupements',
 	     [ '$resource', 'APP_PATH', 'API_VERSION',
 	       function( $resource, APP_PATH, API_VERSION ) {
@@ -16,7 +16,7 @@ angular.module('cahierDeTexteApp')
 				     { regroupement_id: '@regroupement_id' } );
 	       } ] );
 
-angular.module('cahierDeTexteApp')
+cahierDeTexteApp
     .factory('Users',
 	     [ '$resource', 'APP_PATH', 'API_VERSION',
 	       function( $resource, APP_PATH, API_VERSION ) {
@@ -24,7 +24,7 @@ angular.module('cahierDeTexteApp')
 				     { user_id: '@user_id' } );
 	      } ] );
 
-angular.module('cahierDeTexteApp')
+cahierDeTexteApp
     .service('Annuaire',
 	     [ '$http', 'Matieres', 'Regroupements', 'Users', 'APP_PATH', 'API_VERSION',
 	       function( $http, Matieres, Regroupements, Users, APP_PATH, API_VERSION ) {

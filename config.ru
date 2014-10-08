@@ -35,9 +35,23 @@ Dir.glob( 'public/app/views/*.html' )
   end
 end
 
+# Minifie les JS
+bouteille = ''
+Dir.glob( 'public/app/js/**/*.js' )
+   .reject { |fichier| /min\.js$/.match fichier }
+   .sort
+   .each do |fichier|
+  STDERR.puts "reading #{fichier}"
+
+  bouteille << File.read( fichier )
+end
+File.open( './public/app/js/cdt.min.js', 'w' ) do |target_file|
+  target_file.write( Uglifier.compile( bouteille ) )
+end
+
 use Rack::Rewrite do
   rewrite %r{^/logout/?$}, "#{APP_PATH}/logout"
-  rewrite %r{^#{APP_PATH}(/app/vendor/.*(css|js|ttf|woff|html|png|jpg|jpeg|gif|svg)[?v=0-9a-zA-Z\-.]*$)}, '$1'
+  rewrite %r{^#{APP_PATH}(/app/(js|css|vendor)/.*(css|js|ttf|woff|html|png|jpg|jpeg|gif|svg)[?v=0-9a-zA-Z\-.]*$)}, '$1'
 end
 
 use Rack::Session::Cookie,

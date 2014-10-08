@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cahierDeTexteApp')
+cahierDeTexteApp
     .controller('EmploiDuTempsCtrl',
 		[ '$scope', '$q', '$filter',
 		  'CALENDAR_OPTIONS', 'CALENDAR_PARAMS', 'APP_PATH', 'API', 'Annuaire', 'EmploisDuTemps', 'PopupsCreneau', 'CreneauEmploiDuTemps',
