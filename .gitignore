@@ -48,3 +48,4 @@ config/constants.rb
 /public/app/js/*.min.js
 /public/app/js/*/*.min.js
 /public/app/js/*/*/*.min.js
+/public/app/vendor/*.min.js

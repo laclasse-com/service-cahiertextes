@@ -36,17 +36,56 @@ Dir.glob( 'public/app/views/*.html' )
 end
 
 # Minifie les JS
-bouteille = ''
+appjs = ''
 Dir.glob( 'public/app/js/**/*.js' )
    .reject { |fichier| /min\.js$/.match fichier }
    .sort
    .each do |fichier|
   STDERR.puts "reading #{fichier}"
 
-  bouteille << File.read( fichier )
+  appjs << File.read( fichier )
 end
+
+vendorjs = ''
+[ 'public/app/vendor/jquery/dist/jquery.js',
+  'public/app/vendor/jquery-ui/ui/jquery-ui.js',
+  'public/app/vendor/underscore/underscore.js',
+  'public/app/vendor/moment/min/moment-with-locales.js',
+  'public/app/vendor/ng-file-upload/angular-file-upload-shim.js',
+  'public/app/vendor/sweetalert/lib/sweet-alert.js',
+  'public/app/vendor/angular/angular.js',
+  'public/app/vendor/angular-animate/angular-animate.js',
+  'public/app/vendor/angular-bootstrap-checkbox/angular-bootstrap-checkbox.js',
+  'public/app/vendor/angular-bootstrap/ui-bootstrap-tpls.js',
+  'public/app/vendor/angular-cookies/angular-cookies.js',
+  'public/app/vendor/angular-i18n/angular-locale_fr-fr.js',
+  'public/app/vendor/angular-loading-bar/build/loading-bar.js',
+  'public/app/vendor/angular-moment/angular-moment.js',
+  'public/app/vendor/angular-resource/angular-resource.js',
+  'public/app/vendor/angular-sanitize/angular-sanitize.js',
+  'public/app/vendor/angular-tree-control/angular-tree-control.js',
+  'public/app/vendor/angular-ui-calendar/src/calendar.js',
+  'public/app/vendor/angular-ui-router/release/angular-ui-router.js',
+  'public/app/vendor/angularjs-nvd3-directives/dist/angularjs-nvd3-directives.js',
+  'public/app/vendor/d3/d3.js',
+  'public/app/vendor/fullcalendar/fullcalendar.js',
+  'public/app/vendor/ng-color-picker/color-picker.js',
+  'public/app/vendor/ng-file-upload/angular-file-upload.js',
+  'public/app/vendor/ng-switcher/dist/ng-switcher.js',
+  'public/app/vendor/nvd3/nv.d3.js',
+  'public/app/vendor/textAngular/src/textAngular-sanitize.js',
+  'public/app/vendor/textAngular/src/textAngularSetup.js',
+  'public/app/vendor/textAngular/src/textAngular.js' ]
+  .each do |fichier|
+  STDERR.puts "reading #{fichier}"
+
+  vendorjs << File.read( fichier )
+end
+# File.open( './public/app/vendor/vendor.min.js', 'w' ) do |target_file|
+#   target_file.write( Uglifier.compile( vendorjs ) )
+# end
 File.open( './public/app/js/cdt.min.js', 'w' ) do |target_file|
-  target_file.write( Uglifier.compile( bouteille ) )
+  target_file.write( Uglifier.compile( "#{vendorjs}#{appjs}" ) )
 end
 
 use Rack::Rewrite do
