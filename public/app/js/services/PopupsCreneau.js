@@ -1,6 +1,6 @@
 'use strict';
 
-cahierDeTexteApp
+angular.module( 'cahierDeTextesClientApp' )
     .service('PopupsCreneau',
 	     [ '$modal',
 	       function( $modal ) {

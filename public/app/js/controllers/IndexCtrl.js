@@ -1,6 +1,6 @@
 'use strict';
 
-cahierDeTexteApp
+angular.module( 'cahierDeTextesClientApp' )
     .controller('IndexCtrl',
 		[ 'Redirection',
 		  function ( Redirection ) {

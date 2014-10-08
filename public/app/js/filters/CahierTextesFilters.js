@@ -4,7 +4,7 @@
 'use strict';
 
 // Tenir compte de la timezone dans les dates
-cahierDeTexteApp
+angular.module( 'cahierDeTextesClientApp' )
     .filter( 'correctTimeZone',
 	     function() {
 		 return function( d ) {

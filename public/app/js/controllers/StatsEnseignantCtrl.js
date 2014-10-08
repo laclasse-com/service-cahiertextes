@@ -1,6 +1,6 @@
 'use strict';
 
-cahierDeTexteApp
+angular.module( 'cahierDeTextesClientApp' )
     .controller( 'StatsEnseignantCtrl', [ '$scope', '$stateParams', '$q', '$locale', 'API', 'Cours', 'Annuaire', 'current_user', 'PIECHART_DEFINITION', 'BARCHART_DEFINITION',
 					  function ( $scope, $stateParams, $q, $locale, API, Cours, Annuaire, current_user, PIECHART_DEFINITION, BARCHART_DEFINITION ) {
 					      $scope.mois = _($locale.DATETIME_FORMATS.MONTH).toArray();

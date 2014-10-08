@@ -1,6 +1,6 @@
 'use strict';
 
-cahierDeTexteApp
+angular.module( 'cahierDeTextesClientApp' )
     .controller('EleveCtrl',
 		[ '$scope', '$state', '$stateParams', 'current_user',
 		  function ( $scope, $state, $stateParams, current_user ) {
