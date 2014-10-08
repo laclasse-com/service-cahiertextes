@@ -26,7 +26,6 @@
 
     <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/css/bootstrap-theme.css" />
     <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/css/main.css">
-
   </head>
   <body>
     <!--[if lt IE 7]>
@@ -45,7 +44,7 @@
 
 
     <% if ENV['RACK_ENV'] == 'production' %>
-      <!-- <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/vendor.min.js?v=<%=APP_VERSION%>"></script> -->
+      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/vendor.min.js?v=<%=APP_VERSION%>"></script>
       <script type="text/javascript" src="<%=APP_PATH%>/app/js/cdt.min.js?v=<%=APP_VERSION%>"></script>
     <% else %>
       <!-- Vendor Javascript -->

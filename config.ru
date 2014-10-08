@@ -35,57 +35,95 @@ Dir.glob( 'public/app/views/*.html' )
   end
 end
 
-# Minifie les JS
-appjs = ''
-Dir.glob( 'public/app/js/**/*.js' )
-   .reject { |fichier| /min\.js$/.match fichier }
-   .sort
-   .each do |fichier|
-  STDERR.puts "reading #{fichier}"
+if ENV['RACK_ENV'] == 'production'
+  # Minifie les JS
+  STDERR.puts 'Uglification of application Javascript'
+  appjs = ''
+  Dir.glob( 'public/app/js/**/*.js' )
+     .reject { |fichier| /min\.js$/.match fichier }
+     .sort
+     .each do |fichier|
+    STDERR.puts "reading #{fichier}"
 
-  appjs << File.read( fichier )
-end
+    appjs << File.read( fichier )
+  end
+  File.open( './public/app/js/cdt.min.js', 'w' ) do |target_file|
+    target_file.write( Uglifier.compile( appjs ) )
+  end
 
-vendorjs = ''
-[ 'public/app/vendor/jquery/dist/jquery.js',
-  'public/app/vendor/jquery-ui/ui/jquery-ui.js',
-  'public/app/vendor/underscore/underscore.js',
-  'public/app/vendor/moment/min/moment-with-locales.js',
-  'public/app/vendor/ng-file-upload/angular-file-upload-shim.js',
-  'public/app/vendor/sweetalert/lib/sweet-alert.js',
-  'public/app/vendor/angular/angular.js',
-  'public/app/vendor/angular-animate/angular-animate.js',
-  'public/app/vendor/angular-bootstrap-checkbox/angular-bootstrap-checkbox.js',
-  'public/app/vendor/angular-bootstrap/ui-bootstrap-tpls.js',
-  'public/app/vendor/angular-cookies/angular-cookies.js',
-  'public/app/vendor/angular-i18n/angular-locale_fr-fr.js',
-  'public/app/vendor/angular-loading-bar/build/loading-bar.js',
-  'public/app/vendor/angular-moment/angular-moment.js',
-  'public/app/vendor/angular-resource/angular-resource.js',
-  'public/app/vendor/angular-sanitize/angular-sanitize.js',
-  'public/app/vendor/angular-tree-control/angular-tree-control.js',
-  'public/app/vendor/angular-ui-calendar/src/calendar.js',
-  'public/app/vendor/angular-ui-router/release/angular-ui-router.js',
-  'public/app/vendor/angularjs-nvd3-directives/dist/angularjs-nvd3-directives.js',
-  'public/app/vendor/d3/d3.js',
-  'public/app/vendor/fullcalendar/fullcalendar.js',
-  'public/app/vendor/ng-color-picker/color-picker.js',
-  'public/app/vendor/ng-file-upload/angular-file-upload.js',
-  'public/app/vendor/ng-switcher/dist/ng-switcher.js',
-  'public/app/vendor/nvd3/nv.d3.js',
-  'public/app/vendor/textAngular/src/textAngular-sanitize.js',
-  'public/app/vendor/textAngular/src/textAngularSetup.js',
-  'public/app/vendor/textAngular/src/textAngular.js' ]
-  .each do |fichier|
-  STDERR.puts "reading #{fichier}"
+  STDERR.puts 'Uglification of vendor Javascript'
+  vendorjs = ''
+  [ 'public/app/vendor/jquery/dist/jquery.js',
+    'public/app/vendor/jquery-ui/ui/jquery-ui.js',
+    'public/app/vendor/underscore/underscore.js',
+    'public/app/vendor/moment/min/moment-with-locales.js',
+    'public/app/vendor/ng-file-upload/angular-file-upload-shim.js',
+    'public/app/vendor/sweetalert/lib/sweet-alert.js',
+    'public/app/vendor/angular/angular.js',
+    'public/app/vendor/angular-animate/angular-animate.js',
+    'public/app/vendor/angular-bootstrap-checkbox/angular-bootstrap-checkbox.js',
+    'public/app/vendor/angular-bootstrap/ui-bootstrap-tpls.js',
+    'public/app/vendor/angular-cookies/angular-cookies.js',
+    'public/app/vendor/angular-i18n/angular-locale_fr-fr.js',
+    'public/app/vendor/angular-loading-bar/build/loading-bar.js',
+    'public/app/vendor/angular-moment/angular-moment.js',
+    'public/app/vendor/angular-resource/angular-resource.js',
+    'public/app/vendor/angular-sanitize/angular-sanitize.js',
+    'public/app/vendor/angular-tree-control/angular-tree-control.js',
+    'public/app/vendor/angular-ui-calendar/src/calendar.js',
+    'public/app/vendor/angular-ui-router/release/angular-ui-router.js',
+    'public/app/vendor/angularjs-nvd3-directives/dist/angularjs-nvd3-directives.js',
+    'public/app/vendor/d3/d3.js',
+    'public/app/vendor/fullcalendar/fullcalendar.js',
+    'public/app/vendor/ng-color-picker/color-picker.js',
+    'public/app/vendor/ng-file-upload/angular-file-upload.js',
+    'public/app/vendor/ng-switcher/dist/ng-switcher.js',
+    'public/app/vendor/nvd3/nv.d3.js',
+    'public/app/vendor/textAngular/src/textAngular-sanitize.js',
+    'public/app/vendor/textAngular/src/textAngularSetup.js',
+    'public/app/vendor/textAngular/src/textAngular.js' ]
+    .each do |fichier|
+    STDERR.puts "reading #{fichier}"
 
-  vendorjs << File.read( fichier )
-end
-# File.open( './public/app/vendor/vendor.min.js', 'w' ) do |target_file|
-#   target_file.write( Uglifier.compile( vendorjs ) )
-# end
-File.open( './public/app/js/cdt.min.js', 'w' ) do |target_file|
-  target_file.write( Uglifier.compile( "#{vendorjs}#{appjs}" ) )
+    vendorjs << File.read( fichier )
+  end
+  File.open( './public/app/vendor/vendor.min.js', 'w' ) do |target_file|
+    target_file.write( Uglifier.compile( vendorjs ) )
+  end
+
+  # # Minifie les CSS
+  # STDERR.puts 'Minification of application CSS'
+  # appcss = ''
+  # Dir.glob( 'public/app/css/**/*.css' ).reject { |fichier| /min\.css$/.match fichier }.sort.each do |fichier|    STDERR.puts "reading #{fichier}"    appjs << File.read( fichier )  end
+  # File.open( './public/app/css/cdt.min.css', 'w' ) do |target_file|
+  #   compressor = YUI::CssCompressor.new
+  #   target_file.write( compressor.compress( appcss ) )
+  # end
+
+  # STDERR.puts 'Minification of vendor CSS'
+  # vendorcss = ''
+  # [
+  #   'public/app/vendor/jquery-ui/themes/smoothness/jquery-ui.min.css',
+  #   'public/app/vendor/bootstrap/dist/css/bootstrap.min.css',
+  #   'public/app/vendor/fullcalendar/fullcalendar.css',
+  #   'public/app/vendor/angular-loading-bar/build/loading-bar.min.css',
+  #   'public/app/vendor/nvd3/nv.d3.min.css',
+  #   'public/app/vendor/angular-tree-control/css/tree-control.css',
+  #   'public/app/vendor/angular-tree-control/css/tree-control-attribute.css',
+  #   'public/app/vendor/font-awesome/css/font-awesome.min.css',
+  #   'public/app/vendor/ng-switcher/dist/ng-switcher.min.css',
+  #   'public/app/vendor/ng-color-picker/color-picker.css',
+  #   'public/app/vendor/sweetalert/lib/sweet-alert.css'
+  # ]
+  #   .each do |fichier|
+  #   STDERR.puts "reading #{fichier}"
+
+  #   vendorcss << File.read( fichier )
+  # end
+  # File.open( './public/app/vendor/vendor.min.css', 'w' ) do |target_file|
+  #   compressor = YUI::CssCompressor.new
+  #   target_file.write( compressor.compress( vendorcss ) )
+  # end
 end
 
 use Rack::Rewrite do
