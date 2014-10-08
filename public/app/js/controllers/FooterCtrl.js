@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('cahierDeTexteApp')
+cahierDeTexteApp
     .controller('FooterCtrl',
 		[ '$scope', '$state', '$stateParams', 'VERSION', 'User',
 		  function ( $scope, $state, $stateParams, VERSION, User ) {

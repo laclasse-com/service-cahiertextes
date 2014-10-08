@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module( 'cahierDeTexteApp' )
+cahierDeTexteApp
     .controller( 'PopupEditionCtrl',
 		 [ '$scope', '$filter', '$q', '$sce', '$modalInstance', 'APP_PATH', 'DOCS_URL', 'SEMAINES_VACANCES', 'ZONE', 'Documents', 'API', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs', 'User', 'cours', 'devoirs', 'creneau', 'raw_data', 'classes', 'matieres',
 		   function ( $scope, $filter, $q, $sce, $modalInstance, APP_PATH, DOCS_URL, SEMAINES_VACANCES, ZONE, Documents, API, CreneauEmploiDuTemps, Cours, Devoirs, User, cours, devoirs, creneau, raw_data, classes, matieres ) {

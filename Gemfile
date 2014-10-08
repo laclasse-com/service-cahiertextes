@@ -16,8 +16,7 @@ gem 'sequel'
 gem 'sinatra'
 gem 'thin'
 gem 'rubyzip'
-gem 'sinatra-assetpack', require: 'sinatra/assetpack'
-gem 'jsmin'
+gem 'uglifier'
 
 gem 'annuaire', git: 'https://github.com/laclasse-com/gem_annuaire.git'
 
