@@ -26,7 +26,7 @@ Dir.glob( 'public/app/views/*.html' )
   # génération du template JS
   File.open( target, 'w' ) do |target_file|
     target_file.write "'use strict';\n"
-    target_file.write "angular.module( 'cahierDeTexteApp' )\n"
+    target_file.write "angular.module( 'cahierDeTextesClientApp' )\n"
     target_file.write "  .run( [ '$templateCache',\n"
     target_file.write "    function( $templateCache ) {\n"
     target_file.write "      $templateCache.put( '#{template_name}',\n"

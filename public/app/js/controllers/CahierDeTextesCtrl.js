@@ -1,6 +1,6 @@
 'use strict';
 
-cahierDeTexteApp
+angular.module( 'cahierDeTextesClientApp' )
     .controller('CahierDeTextesCtrl',
 		[ '$scope', '$sce', '$q', 'APP_PATH', 'DOCS_URL', 'API', 'Annuaire', 'EmploisDuTemps', 'current_user', 'PopupsCreneau', 'CreneauEmploiDuTemps',
 		  function ( $scope, $sce, $q, APP_PATH, DOCS_URL, API, Annuaire, EmploisDuTemps, current_user, PopupsCreneau, CreneauEmploiDuTemps ) {

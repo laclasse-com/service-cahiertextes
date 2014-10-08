@@ -1,6 +1,6 @@
 'use strict';
 
-cahierDeTexteApp
+angular.module( 'cahierDeTextesClientApp' )
     .controller('PopupDisplayCtrl',
 		[ '$scope', '$sce', '$modalInstance', 'APP_PATH', 'DOCS_URL', 'Cours', 'Devoirs', 'User',
 		  'titre', 'cours', 'devoirs',

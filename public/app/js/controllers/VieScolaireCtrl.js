@@ -1,6 +1,6 @@
 'use strict';
 
-cahierDeTexteApp
+angular.module( 'cahierDeTextesClientApp' )
     .controller('VieScolaireCtrl',
 		[ '$scope', '$state',
 		  function ( $scope, $state ) {

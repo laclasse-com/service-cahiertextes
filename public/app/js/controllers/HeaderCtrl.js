@@ -1,6 +1,6 @@
 'use strict';
 
-cahierDeTexteApp
+angular.module( 'cahierDeTextesClientApp' )
     .controller('HeaderCtrl',
 		[ '$scope', '$state', 'User', 'Redirection',
 		  function ( $scope, $state, User, Redirection ) {

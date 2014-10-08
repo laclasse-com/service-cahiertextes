@@ -1,6 +1,6 @@
 'use strict';
 
-cahierDeTexteApp
+angular.module( 'cahierDeTextesClientApp' )
     .service('User',
 	     [ '$http', 'APP_PATH', 'API_VERSION',
 	       function( $http, APP_PATH, API_VERSION ) {
@@ -52,7 +52,7 @@ cahierDeTexteApp
 		   };
 	       } ] );
 
-cahierDeTexteApp
+angular.module( 'cahierDeTextesClientApp' )
     .factory('Classes', [ '$resource', 'APP_PATH', 'API_VERSION',
 			  function( $resource, APP_PATH, API_VERSION ) {
 			      return $resource( APP_PATH + '/api/' + API_VERSION + '/etablissements/:uai/statistiques/classes/:id',
@@ -60,7 +60,7 @@ cahierDeTexteApp
 						  id: '@id' } );
 			  } ] );
 
-cahierDeTexteApp
+angular.module( 'cahierDeTextesClientApp' )
     .factory('Cours',
 	     [ '$resource', 'APP_PATH', 'API_VERSION',
 	       function( $resource, APP_PATH, API_VERSION ) {
@@ -77,7 +77,7 @@ cahierDeTexteApp
 							  date: '@date' } } } );
 	       } ] );
 
-cahierDeTexteApp
+angular.module( 'cahierDeTextesClientApp' )
     .factory('CreneauEmploiDuTemps',
 	     [ '$resource', 'APP_PATH', 'API_VERSION',
 	       function( $resource, APP_PATH, API_VERSION ) {
@@ -98,7 +98,7 @@ cahierDeTexteApp
 							   date_creneau: '@date_creneau' } } } );
 	       } ] );
 
-cahierDeTexteApp
+angular.module( 'cahierDeTextesClientApp' )
     .factory('Devoirs',
 	     [ '$resource', 'APP_PATH', 'API_VERSION',
 	       function( $resource, APP_PATH, API_VERSION ) {
@@ -116,7 +116,7 @@ cahierDeTexteApp
 							  date_due: '@date_due' } } } );
 	       } ] );
 
-cahierDeTexteApp
+angular.module( 'cahierDeTextesClientApp' )
     .factory('EmploisDuTemps',
 	     [ '$resource', 'APP_PATH', 'API_VERSION',
 	       function( $resource, APP_PATH, API_VERSION ) {
@@ -127,7 +127,7 @@ cahierDeTexteApp
 				       uid: '@uid' } );
 	       } ] );
 
-cahierDeTexteApp
+angular.module( 'cahierDeTextesClientApp' )
     .factory('Enseignants',
 	     [ '$resource', 'APP_PATH', 'API_VERSION',
 	       function( $resource, APP_PATH, API_VERSION ) {
@@ -136,7 +136,7 @@ cahierDeTexteApp
 				       enseignant_id: '@enseignant_id' } );
 	       } ] );
 
-cahierDeTexteApp
+angular.module( 'cahierDeTextesClientApp' )
     .factory('TypesDeDevoir',
 	     [ '$resource', 'APP_PATH', 'API_VERSION',
 	       function( $resource, APP_PATH, API_VERSION ) {
@@ -144,7 +144,7 @@ cahierDeTexteApp
 				     { id: '@id' });
 	       } ] );
 
-cahierDeTexteApp
+angular.module( 'cahierDeTextesClientApp' )
     .factory('PlagesHoraires',
 	     [ '$resource', 'APP_PATH', 'API_VERSION',
 	       function( $resource, APP_PATH, API_VERSION ) {
@@ -152,7 +152,7 @@ cahierDeTexteApp
 				     { id: '@id' });
 	       } ] );
 
-cahierDeTexteApp
+angular.module( 'cahierDeTextesClientApp' )
     .factory('CahierDeTextes',
 	     [ '$resource', 'APP_PATH', 'API_VERSION',
 	       function( $resource, APP_PATH, API_VERSION ) {
@@ -162,7 +162,7 @@ cahierDeTexteApp
 
 
 
-cahierDeTexteApp
+angular.module( 'cahierDeTextesClientApp' )
     .service('API',
 	     [ '$http', 'APP_PATH', 'API_VERSION', 'Classes', 'Cours', 'CreneauEmploiDuTemps', 'Devoirs', 'EmploisDuTemps', 'Enseignants', 'TypesDeDevoir', 'PlagesHoraires', 'CahierDeTextes',
 	       function( $http, APP_PATH, API_VERSION, Classes, Cours, CreneauEmploiDuTemps, Devoirs, EmploisDuTemps, Enseignants, TypesDeDevoir, PlagesHoraires, CahierDeTextes ) {

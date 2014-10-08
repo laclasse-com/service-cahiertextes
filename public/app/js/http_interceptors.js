@@ -1,6 +1,6 @@
 'use strict';
 
-cahierDeTexteApp
+angular.module( 'cahierDeTextesClientApp' )
     .config( [ '$httpProvider',
 	       function( $httpProvider ) {
 		   $httpProvider.interceptors.push( [ '$q',

@@ -1,6 +1,6 @@
 'use strict';
 
-cahierDeTexteApp
+angular.module( 'cahierDeTextesClientApp' )
     .config( [ '$stateProvider', '$urlRouterProvider',
 	       function ( $stateProvider, $urlRouterProvider ) {
 		   $urlRouterProvider.otherwise('/');
