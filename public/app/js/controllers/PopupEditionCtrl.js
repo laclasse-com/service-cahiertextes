@@ -148,33 +148,42 @@ angular.module( 'cahierDeTextesClientApp' )
 			   };
 
 			   $scope.effacer_creneau = function() {
-			       swal({
-				   title: 'Ceci supprimera le créneau à compter du ' + $filter( 'date' )( creneau.heure_debut, 'fullDate' ),
-				   text: 'Le créneau avec ses séquences pédagogiques et devoirs associés restera visible pour les dates antérieures.',
-				   type: 'warning',
-				   showCancelButton: true,
-				   confirmButtonColor: '#ff6b55',
-				   confirmButtonText: 'Confirmer',
-				   cancelButtonText: 'Annuler'
-			       },
-				    function () {
-					CreneauEmploiDuTemps.delete( {
-					    id: $scope.creneau.id,
-					    date_creneau: $scope.creneau.heure_debut
-					} )
-					    .$promise.then( function () {
-						$scope.fermer();
-					    } );
-				    });
+			       swal( { title: 'Ceci supprimera le créneau à compter du ' + $filter( 'date' )( creneau.heure_debut, 'fullDate' ),
+				       text: 'Le créneau avec ses séquences pédagogiques et devoirs associés restera visible pour les dates antérieures.',
+				       type: 'warning',
+				       showCancelButton: true,
+				       confirmButtonColor: '#ff6b55',
+				       confirmButtonText: 'Confirmer',
+				       cancelButtonText: 'Annuler'
+				     },
+				     function () {
+					 CreneauEmploiDuTemps.delete( {
+					     id: $scope.creneau.id,
+					     date_creneau: $scope.creneau.heure_debut
+					 } )
+					     .$promise.then( function () {
+						 $scope.fermer();
+					     } );
+				     });
 			   };
 
 			   $scope.annuler = function () {
-			       if ( $scope.creneau.en_creation && _($scope.creneau.matiere_id).isEmpty() && $scope.creneau.regroupement_id === 'undefined' ) {
-				   $scope.effacer_creneau();
-			       } else {
-				   $scope.dirty = false;
-				   $scope.fermer();
-			       }
+			       swal( { title: 'Êtes-vous sur ?',
+				       text: 'Les modifications que vous avez faites dans cette fenêtre seront perdues.',
+				       type: 'warning',
+				       showCancelButton: true,
+				       confirmButtonColor: '#ff6b55',
+				       confirmButtonText: 'Confirmer',
+				       cancelButtonText: 'Annuler'
+				     },
+				     function () {
+					 if ( $scope.creneau.en_creation && _($scope.creneau.matiere_id).isEmpty() && $scope.creneau.regroupement_id === 'undefined' ) {
+					     $scope.effacer_creneau();
+					 } else {
+					     $scope.dirty = false;
+					     $scope.fermer();
+					 }
+				     });
 			   };
 
 			   $scope.valider = function () {
@@ -598,4 +607,4 @@ angular.module( 'cahierDeTextesClientApp' )
 			   // }}}
 		       } );
 		   }
-			       ] );
+				   ] );
