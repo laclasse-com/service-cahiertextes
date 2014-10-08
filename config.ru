@@ -53,6 +53,8 @@ use OmniAuth::Builder do
   provider :cas, CASAUTH::CONFIG
 end
 
+STDERR.puts "#{ENV['RACK_ENV']} environment"
+
 map "#{APP_PATH}/api" do
   run CahierDeTextesAPI::API
 end
