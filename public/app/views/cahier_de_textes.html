@@ -1,7 +1,8 @@
 <div class="panel panel-default">
   <div class="panel-heading">
     <div class="row col-md-12" data-ng-if="current_user.profil_actif.type === 'ENS'">
-      <select class="col-md-3 pull-left" data-ng-model="scope.selected_regroupement_id"
+      <select class="col-md-3 pull-left"
+	      data-ng-model="scope.selected_regroupement_id"
 	      data-ng-options="classe.id as classe.libelle for classe in classes">
 	<option value="" selected>Toutes les classes</option>
       </select>
