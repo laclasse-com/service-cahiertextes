@@ -1,4 +1,4 @@
-textAngular v1.3.0-pre3
+textAngular v1.2.2
 ===========
 
 [![Build Status](https://travis-ci.org/fraywing/textAngular.png?branch=master)](https://travis-ci.org/fraywing/textAngular) [![Coverage Status](https://coveralls.io/repos/fraywing/textAngular/badge.png)](https://coveralls.io/r/fraywing/textAngular)
@@ -27,7 +27,6 @@ Demo is available at: http://www.textangular.com (Or editable [Plunkr Demo](http
 Run `bower install textAngular` from the command line.
 Include script tags similar to the following:
 ```html
-<link rel='stylesheet' href='/bower_components/textAngular/dist/textAngular.min.css'>
 <script src='/bower_components/textAngular/dist/textAngular-sanitize.min.js'></script>
 <script src='/bower_components/textAngular/dist/textAngular.min.js'></script>
 ```
@@ -36,7 +35,7 @@ Include script tags similar to the following:
 
 Include script tags similar to the following:
 ```html
-<script src='http://cdnjs.cloudflare.com/ajax/libs/textAngular/1.2.2/textAngular-sanitize.min.js'></script>
+	<script src='http://cdnjs.cloudflare.com/ajax/libs/textAngular/1.2.2/textAngular-sanitize.min.js'></script>
 <script src='http://cdnjs.cloudflare.com/ajax/libs/textAngular/1.2.2/textAngular.min.js'></script>
 ```
 
@@ -51,7 +50,6 @@ Include script tag similar to the following: (For details on how this works see:
 
 Download the code from [https://github.com/fraywing/textAngular/releases/latest](https://github.com/fraywing/textAngular/releases/latest), unzip the files then add script tags similar to the following:
 ```html
-<link rel='stylesheet' href='/path/to/unzipped/files/textAngular.min.css'>
 <script src='/path/to/unzipped/files/textAngular-sanitize.min.js'></script>
 <script src='/path/to/unzipped/files/textAngular.min.js'></script>
 ```
