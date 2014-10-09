@@ -14,7 +14,7 @@
 	  <ul>
 	    <li><span ><i class="picto" data-ng-style="{'background-image':'url(' + app_path + '/app/vendor/charte-graphique-laclasse-com/images/picto_matiere.svg)'}"></i> Matière : <em>{{titre}}</em></span></li>
 	    <li><span ><i class="picto" data-ng-style="{'background-image':'url(' + app_path + '/app/vendor/charte-graphique-laclasse-com/images/picto_devoir.svg)'}"></i> Type de devoir : <em>{{devoir.type_devoir.description}}</em></span></li>
-	    <li data-ng-if="devoir.temps_estime > 0"><span><i class="picto" data-ng-style="{'background-image':'url(' + app_path + '/app/vendor/charte-graphique-laclasse-com/images/picto_temps.svg)'}"></i> Temps estimé : <em>{{devoir.temps_estime * 5}} minutes</em></span></li>
+	    <!-- <li data-ng-if="devoir.temps_estime > 0"><span><i class="picto" data-ng-style="{'background-image':'url(' + app_path + '/app/vendor/charte-graphique-laclasse-com/images/picto_temps.svg)'}"></i> Temps estimé : <em>{{devoir.temps_estime * 5}} minutes</em></span></li> -->
 	    <li class="clickable"
 		tooltip-trigger="click"
 		tooltip-html-unsafe="{{devoir.cours.contenu}}">
