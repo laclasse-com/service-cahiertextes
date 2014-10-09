@@ -116,7 +116,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
 				  var colorpicker_taTool = function( type ) {
 				      var style = ( type === 'backcolor' ) ? 'background-' : '';
-				      return { display: '<span class="dropdown"><a class="dropdown-toggle"><i class="fa fa-font" style="' + style + 'color:red"></i> <i class="fa fa-caret-down"></i></a><ng-color-picker class="dropdown-menu" selected="selected"></ng-color-picker></span>',
+				      return { display: '<span class="dropdown"><a class="dropdown-toggle"><i class="fa fa-font" data-ng-style="{\'' + style + 'color\': selected }"></i> <i class="fa fa-caret-down"></i></a><ng-color-picker class="dropdown-menu" selected="selected"></ng-color-picker></span>',
 					       action:function( ) {
 						   return ( this.selected === 'nil' ) ? false : this.$editor().wrapSelection( type, this.selected );
 					       }
