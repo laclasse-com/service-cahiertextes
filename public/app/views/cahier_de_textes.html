@@ -11,7 +11,7 @@
 	<label>Séquences pédagogiques non renseignées : </label>
 	<select class="pull-right"
 		data-ng-model="selected_creneau_vide"
-		data-ng-options="creneau as ( creneau | formateCreneau ) group by creneau.regroupement.libelle for creneau in creneaux_vides | orderBy:['creneau.regroupement.libelle', 'start']" >
+		data-ng-options="creneau as ( creneau | formateCreneau ) group by creneau.regroupement.libelle for creneau in creneaux_vides | orderBy:['creneau.regroupement.libelle', 'start'] | filter:selected_regroupement_id" >
 	  <option value="" selected>Sélectionnez un créneau pour le saisir</option>
 	</select>
 	<button class="btn btn-sm btn-primary pull-right"
