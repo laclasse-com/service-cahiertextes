@@ -9,13 +9,13 @@ require ::File.expand_path( '../web', __FILE__ )
 require ::File.expand_path( '../lib/uglify', __FILE__ )
 
 # Compile à la volée les templates en fichiers javascripts
+STDERR.puts "Compilation of angular templates into javascript files"
 Dir.glob( 'public/app/views/*.html' )
    .each do |fichier|
   target = "#{fichier.gsub( /views/, 'js/templates' )}.js"
   template_name = fichier.gsub( %r{public/app/}, '' )
   template = File.read( fichier )
 
-  STDERR.puts "generating #{target} from #{fichier}"
   # un peu de travail d'escaping sur le contenu HTML
   # suppression des retour à la ligne
   template.tr!( "\n", '' )
@@ -38,24 +38,28 @@ Dir.glob( 'public/app/views/*.html' )
 end
 
 if ENV['RACK_ENV'] == 'production'
-  # Concatène les CSS
-  STDERR.puts 'Uglification of CSS'
-  uglified = [ 'public/app/vendor/fullcalendar/fullcalendar.css',
-               'public/app/vendor/angular-loading-bar/build/loading-bar.min.css',
-               'public/app/vendor/nvd3/nv.d3.min.css',
-               'public/app/vendor/angular-tree-control/css/tree-control.css',
-               'public/app/vendor/angular-tree-control/css/tree-control-attribute.css',
-               'public/app/vendor/ng-switcher/dist/ng-switcher.min.css',
-               'public/app/vendor/ng-color-picker/color-picker.css',
-               'public/app/vendor/sweetalert/lib/sweet-alert.css' ]
-             .map { |fichier| File.read( fichier ) }.join
+  # Minifie les CSS
+  STDERR.puts 'Sassification of vendor CSS'
+  uglified = Sass.compile( [ 'public/app/vendor/fullcalendar/fullcalendar.css',
+                             'public/app/vendor/angular-loading-bar/build/loading-bar.min.css',
+                             'public/app/vendor/nvd3/nv.d3.min.css',
+                             'public/app/vendor/angular-tree-control/css/tree-control.css',
+                             'public/app/vendor/angular-tree-control/css/tree-control-attribute.css',
+                             'public/app/vendor/ng-switcher/dist/ng-switcher.min.css',
+                             'public/app/vendor/ng-color-picker/color-picker.css',
+                             'public/app/vendor/sweetalert/lib/sweet-alert.css' ]
+                           .map { |fichier| File.read( fichier ) }.join,
+                           syntax: :scss,
+                           style: :compressed )
   File.open( './public/app/vendor/vendor.min.css', 'w' )
       .write( uglified )
 
-  STDERR.puts 'Uglification of Application CSS'
-  uglified = [ 'public/app/css/bootstrap-theme.css',
-               'public/app/css/main.css' ]
-             .map { |fichier| File.read( fichier ) }.join
+  STDERR.puts 'Sassification of application CSS'
+  uglified = Sass.compile( [ 'public/app/css/bootstrap-theme.css',
+                             'public/app/css/main.css' ]
+                           .map { |fichier| File.read( fichier ) }.join,
+                           syntax: :scss,
+                           style: :compressed )
   File.open( './public/app/css/cdt.min.css', 'w' )
       .write( uglified )
 

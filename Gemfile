@@ -17,6 +17,7 @@ gem 'sinatra'
 gem 'thin'
 gem 'rubyzip'
 gem 'uglifier'
+gem 'sass'
 
 gem 'annuaire', git: 'https://github.com/laclasse-com/gem_annuaire.git'
 
