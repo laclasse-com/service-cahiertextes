@@ -38,6 +38,27 @@ Dir.glob( 'public/app/views/*.html' )
 end
 
 if ENV['RACK_ENV'] == 'production'
+  # Concatène les CSS
+  STDERR.puts 'Uglification of CSS'
+  uglified = [ 'public/app/vendor/fullcalendar/fullcalendar.css',
+               'public/app/vendor/angular-loading-bar/build/loading-bar.min.css',
+               'public/app/vendor/nvd3/nv.d3.min.css',
+               'public/app/vendor/angular-tree-control/css/tree-control.css',
+               'public/app/vendor/angular-tree-control/css/tree-control-attribute.css',
+               'public/app/vendor/ng-switcher/dist/ng-switcher.min.css',
+               'public/app/vendor/ng-color-picker/color-picker.css',
+               'public/app/vendor/sweetalert/lib/sweet-alert.css' ]
+             .map { |fichier| File.read( fichier ) }.join
+  File.open( './public/app/vendor/vendor.min.css', 'w' )
+      .write( uglified )
+
+  STDERR.puts 'Uglification of Application CSS'
+  uglified = [ 'public/app/css/bootstrap-theme.css',
+               'public/app/css/main.css' ]
+             .map { |fichier| File.read( fichier ) }.join
+  File.open( './public/app/css/cdt.min.css', 'w' )
+      .write( uglified )
+
   # Minifie les JS
   STDERR.puts 'Uglification of application Javascript'
   uglified, source_map = Uglify.those_files_with_map( Dir.glob( 'public/app/js/**/*.js' )
