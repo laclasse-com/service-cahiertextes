@@ -24,7 +24,7 @@
     "angularjs-nvd3-directives": "latest",
     "angular-tree-control": "latest",
     "angular-moment": "latest",
-    "textAngular": "https://github.com/fraywing/textAngular.git#master",
+      "textAngular": "https://github.com/fraywing/textAngular.git#b915a13",
     "ng-switcher": "latest",
     "font-awesome": "latest",
     "ng-file-upload": "latest",
