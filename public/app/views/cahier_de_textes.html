@@ -8,16 +8,17 @@
       </select>
 
       <div class="col-md-7 pull-right">
-	<label>Séquences pédagogiques non renseignées : </label>
-	<select class="pull-right"
-		data-ng-model="selected_creneau_vide"
-		data-ng-options="creneau as ( creneau | formateCreneau ) group by creneau.regroupement.libelle for creneau in creneaux_vides | orderBy:['creneau.regroupement.libelle', 'start'] | filter:selected_regroupement_id" >
-	  <option value="" selected>Sélectionnez un créneau pour le saisir</option>
-	</select>
+	<label>Nouvelle séquence pédagogique ou devoir pour le :
+	  <select class="pull-right"
+		  data-ng-model="selected_creneau_vide"
+		  data-ng-options="creneau as ( creneau | formateCreneau ) group by creneau.regroupement.libelle for creneau in creneaux_vides | orderBy:['creneau.regroupement.libelle', 'start'] | filter:selected_regroupement_id" >
+	    <option value="" selected>Sélectionnez un créneau...</option>
+	  </select>
+	</label>
 	<button class="btn btn-sm btn-primary pull-right"
 		data-ng-if="selected_creneau_vide"
 		data-ng-click="edition_creneau( selected_creneau_vide )" >
-	  <span class="glyphicon glyphicon-pencil"></span> Saisir une nouvelle séquence pédagogique
+	  <span class="glyphicon glyphicon-pencil"></span> Saisir
 	</button>
       </div>
     </div>
