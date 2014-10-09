@@ -30,7 +30,16 @@ angular.module( 'cahierDeTextesClientApp' )
 					 this.title = '';
 					 this.regroupement = _($scope.current_user.profil_actif.classes).findWhere({ id: parseInt( this.details.regroupement_id ) });
 					 this.has_resources = _(event.cours).has( 'ressources' ) && event.cours.ressources.length > 0;
-					 _(event.devoirs).each( function( devoir ) { _this.has_ressources = _this.has_ressources && _(devoir).has( 'ressources' ) && devoir.ressources.length > 0; } );
+					 this.temps_estime = 0;
+					 _(event.devoirs).each( function( devoir ) {
+					     _this.has_ressources = _this.has_ressources && _(devoir).has( 'ressources' ) && devoir.ressources.length > 0;
+					     if ( !_(devoir.temps_estime).isNull() ) {
+						 _this.temps_estime += devoir.temps_estime;
+						 if ( _this.temps_estime > 15 ) {
+						     _this.temps_estime = 15;
+						 }
+					     }
+					 } );
 					 this.start = new Date( event.start );
 					 this.end = new Date( event.end );
 					 this.className = 'saisie-vide';
@@ -105,14 +114,27 @@ angular.module( 'cahierDeTextesClientApp' )
 
 				 $scope.calendar.options.eventRender = function ( event, element ) {
 				     // FIXME: manipulation du DOM dans le contrôleur, sale, mais obligé pour l'interprétation du HTML ?
-				     var html_element = element.find( '.fc-event-title' );
+				     var title_element = element.find( '.fc-event-title' );
 
 				     if ( $scope.current_user.profil_actif.classes.length > 0 ) {
 					 var regroupement = event.regroupement !== 'undefined' ? event.regroupement.libelle : '';
-					 html_element.prepend( regroupement + ' - ' );
+					 title_element.prepend( regroupement + ' - ' );
 				     }
-				     if ( event.has_resources ) {
-					 html_element.prepend( '<i class="glyphicon glyphicon-paperclip"></i>' );
+				     if ( $scope.current_user.profil_actif.type !== 'ELV' ) {
+					 var inner_element = element.find( '.fc-event-inner' );
+					 if ( event.temps_estime > 0 ) {
+					     var class_couleur = '';
+					     if (event.temps_estime  < 4 ) {
+						 class_couleur = ' label-success';
+					     } else if (event.temps_estime  < 8 ) {
+						 class_couleur = ' label-info';
+					     } else if (event.temps_estime  < 12 ) {
+						 class_couleur = ' label-warning';
+					     } else if (event.temps_estime  <= 15 ) {
+						 class_couleur = ' label-danger';
+					     }
+					     inner_element.prepend( '<div class="est-time est-time-' + event.temps_estime + class_couleur + '"></div>' );
+					 }
 				     }
 				 };
 
