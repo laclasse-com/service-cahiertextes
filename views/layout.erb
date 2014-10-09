@@ -13,24 +13,24 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
 
     <!-- Ces deux là référencent de manière relative des ressources -->
-    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/font-awesome/css/font-awesome.min.css" />
-    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/font-awesome/css/font-awesome.min.css?v=<%=APP_VERSION%>" />
+    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/bootstrap/dist/css/bootstrap.min.css?v=<%=APP_VERSION%>" />
 
     <% if ENV['RACK_ENV'] == 'production' %>
-      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/vendor.min.css" />
-      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/css/cdt.min.css" />
+      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/vendor.min.css?v=<%=APP_VERSION%>" />
+      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/css/cdt.min.css?v=<%=APP_VERSION%>" />
     <% else %>
-      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/fullcalendar/fullcalendar.css" />
-      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/angular-loading-bar/build/loading-bar.min.css" />
-      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/nvd3/nv.d3.min.css" />
-      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/angular-tree-control/css/tree-control.css" />
-      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/angular-tree-control/css/tree-control-attribute.css" />
-      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/ng-switcher/dist/ng-switcher.min.css" />
-      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/ng-color-picker/color-picker.css" />
-      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/sweetalert/lib/sweet-alert.css" />
+      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/fullcalendar/fullcalendar.css?v=<%=APP_VERSION%>" />
+      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/angular-loading-bar/build/loading-bar.min.css?v=<%=APP_VERSION%>" />
+      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/nvd3/nv.d3.min.css?v=<%=APP_VERSION%>" />
+      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/angular-tree-control/css/tree-control.css?v=<%=APP_VERSION%>" />
+      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/angular-tree-control/css/tree-control-attribute.css?v=<%=APP_VERSION%>" />
+      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/ng-switcher/dist/ng-switcher.min.css?v=<%=APP_VERSION%>" />
+      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/ng-color-picker/color-picker.css?v=<%=APP_VERSION%>" />
+      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/sweetalert/lib/sweet-alert.css?v=<%=APP_VERSION%>" />
 
-      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/css/bootstrap-theme.css" />
-      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/css/main.css">
+      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/css/bootstrap-theme.css?v=<%=APP_VERSION%>" />
+      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/css/main.css?v=<%=APP_VERSION%>" />
     <% end %>
   </head>
   <body>
@@ -39,8 +39,8 @@
     <![endif]-->
 
     <!--[if lt IE 9]>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/es5-shim/es5-shim.js"></script>
-    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/json3/lib/json3.min.js"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/es5-shim/es5-shim.js?v=<%=APP_VERSION%>"></script>
+    <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/json3/lib/json3.min.js?v=<%=APP_VERSION%>"></script>
     <![endif]-->
 
 
@@ -54,35 +54,35 @@
       <script type="text/javascript" src="<%=APP_PATH%>/app/js/cdt.min.js?v=<%=APP_VERSION%>"></script>
     <% else %>
       <!-- Vendor Javascript -->
-      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/jquery/dist/jquery.min.js"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/jquery-ui/ui/minified/jquery-ui.min.js"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/underscore/underscore-min.js"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/moment/min/moment-with-locales.min.js"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/ng-file-upload/angular-file-upload-shim.min.js"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/sweetalert/lib/sweet-alert.min.js"></script>
+      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/jquery/dist/jquery.min.js?v=<%=APP_VERSION%>"></script>
+      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/jquery-ui/ui/minified/jquery-ui.min.js?v=<%=APP_VERSION%>"></script>
+      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/underscore/underscore-min.js?v=<%=APP_VERSION%>"></script>
+      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/moment/min/moment-with-locales.min.js?v=<%=APP_VERSION%>"></script>
+      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/ng-file-upload/angular-file-upload-shim.min.js?v=<%=APP_VERSION%>"></script>
+      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/sweetalert/lib/sweet-alert.min.js?v=<%=APP_VERSION%>"></script>
 
-      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular/angular.js"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-animate/angular-animate.min.js"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-bootstrap-checkbox/angular-bootstrap-checkbox.js"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-cookies/angular-cookies.min.js"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-i18n/angular-locale_fr-fr.js"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-loading-bar/build/loading-bar.min.js"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-moment/angular-moment.min.js"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-resource/angular-resource.min.js"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-sanitize/angular-sanitize.min.js"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-tree-control/angular-tree-control.js"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-ui-calendar/src/calendar.js"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-ui-router/release/angular-ui-router.min.js"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angularjs-nvd3-directives/dist/angularjs-nvd3-directives.min.js"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/d3/d3.min.js"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/fullcalendar/fullcalendar.min.js"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/ng-color-picker/color-picker.js"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/ng-file-upload/angular-file-upload.min.js"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/ng-switcher/dist/ng-switcher.min.js"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/nvd3/nv.d3.min.js"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/textAngular/dist/textAngular-sanitize.min.js"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/textAngular/dist/textAngular.min.js"></script>
+      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular/angular.js?v=<%=APP_VERSION%>"></script>
+      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-animate/angular-animate.min.js?v=<%=APP_VERSION%>"></script>
+      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-bootstrap-checkbox/angular-bootstrap-checkbox.js?v=<%=APP_VERSION%>"></script>
+      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-bootstrap/ui-bootstrap-tpls.min.js?v=<%=APP_VERSION%>"></script>
+      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-cookies/angular-cookies.min.js?v=<%=APP_VERSION%>"></script>
+      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-i18n/angular-locale_fr-fr.js?v=<%=APP_VERSION%>"></script>
+      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-loading-bar/build/loading-bar.min.js?v=<%=APP_VERSION%>"></script>
+      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-moment/angular-moment.min.js?v=<%=APP_VERSION%>"></script>
+      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-resource/angular-resource.min.js?v=<%=APP_VERSION%>"></script>
+      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-sanitize/angular-sanitize.min.js?v=<%=APP_VERSION%>"></script>
+      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-tree-control/angular-tree-control.js?v=<%=APP_VERSION%>"></script>
+      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-ui-calendar/src/calendar.js?v=<%=APP_VERSION%>"></script>
+      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-ui-router/release/angular-ui-router.min.js?v=<%=APP_VERSION%>"></script>
+      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angularjs-nvd3-directives/dist/angularjs-nvd3-directives.min.js?v=<%=APP_VERSION%>"></script>
+      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/d3/d3.min.js?v=<%=APP_VERSION%>"></script>
+      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/fullcalendar/fullcalendar.min.js?v=<%=APP_VERSION%>"></script>
+      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/ng-color-picker/color-picker.js?v=<%=APP_VERSION%>"></script>
+      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/ng-file-upload/angular-file-upload.min.js?v=<%=APP_VERSION%>"></script>
+      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/ng-switcher/dist/ng-switcher.min.js?v=<%=APP_VERSION%>"></script>
+      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/nvd3/nv.d3.min.js?v=<%=APP_VERSION%>"></script>
+      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/textAngular/dist/textAngular-sanitize.min.js?v=<%=APP_VERSION%>"></script>
+      <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/textAngular/dist/textAngular.min.js?v=<%=APP_VERSION%>"></script>
 
       <!-- Application Javascript -->
       <script type="text/javascript" src="<%=APP_PATH%>/app/js/app.js?v=<%=APP_VERSION%>"></script>
