@@ -311,7 +311,5 @@ h3, .h3 { text-transform: uppercase; }
 
 /* textAngular */
 .ta-root { padding: 0; }
-.ta-root .form-control { height: auto;
-			 min-height: 10em; }
 .ta-toolbar { background-color: #eee; }
 .ta-toolbar button.btn { padding: 6px 7px; }
