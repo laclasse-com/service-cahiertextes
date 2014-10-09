@@ -441,7 +441,7 @@
 
 <div class="modal-footer">
   <button type="button" class="btn btn-sm btn-warning pull-left"
-	  data-ng-if="!creneau.etranger && creneau.en_creation"
+	  data-ng-if="!creneau.etranger && creneau.en_creation && dirty"
 	  data-ng-click="effacer_creneau()">
     <span class="glyphicon glyphicon-trash"></span> Supprimer le créneau
   </button>
