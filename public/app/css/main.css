@@ -63,6 +63,24 @@ body {
 		 width: 100%; }
 .clickable-event{ cursor:pointer }
 .un-clickable-event{ cursor:default }
+.est-time { height: 4px;
+	    top: 0;
+	    position: absolute; }
+.est-time-1 { width: 6.666666666666667%; }
+.est-time-2 { width: 13.333333333333334%; }
+.est-time-3 { width: 20.0%; }
+.est-time-4 { width: 26.666666666666668%; }
+.est-time-5 { width: 33.333333333333336%; }
+.est-time-6 { width: 40.0%; }
+.est-time-7 { width: 46.66666666666667%; }
+.est-time-8 { width: 53.333333333333336%; }
+.est-time-9 { width: 60.0%; }
+.est-time-10 { width: 66.66666666666667%; }
+.est-time-11 { width: 73.33333333333334%; }
+.est-time-12 { width: 80.0%; }
+.est-time-13 { width: 86.66666666666667%; }
+.est-time-14 { width: 93.33333333333334%; }
+.est-time-15 { width: 100.0%; }
 
 .edt-cours { background-color: #929292 }
 .edt-cours-saisie, .edt-cours-saisie-valide { background-color: #707070 }
