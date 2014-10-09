@@ -245,8 +245,8 @@ footer { color: #555;
 .temps-est-on, .temps-est-off { display: inline-block;
 				border: 1px solid #666;
 				border-radius: 1em;
-				height: 10px;
-				width: 10px;
+				height: 8px;
+				width: 8px;
 				margin: 0 0 0 1px; }
 .temps-est-on { background-color: #eecd6c }
 
