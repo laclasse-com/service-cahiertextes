@@ -42,24 +42,22 @@ angular.module( 'cahierDeTextesClientApp' )
 			   $scope.matieres = matieres;
 
 			   $scope.creneau = creneau;
+			   $scope.creneau.regroupement_id = parseInt( $scope.creneau.regroupement_id );
 			   $scope.creneau.en_creation = _($scope.creneau.matiere_id).isEmpty() || $scope.creneau.regroupement_id === 'undefined';
 			   $scope.creneau.etranger = !$scope.creneau.en_creation && !_.chain( $scope.creneau.enseignants ).pluck( 'enseignant_id' ).include( $scope.current_user.uid ).value();
 			   $scope.creneau.previous_regroupement_id = $scope.creneau.regroupement_id;
-			   if ( _(creneau.vierge).isUndefined() ) {
-			       creneau.vierge = true;
-			   }
+			   $scope.creneau.vierge = _(creneau.vierge).isUndefined();
+			   $scope.creneau.n_week = moment($scope.creneau.tmp_heure_debut).week();
+			   $scope.selected_regroupement = _($scope.creneau.regroupement_id).isUndefined() ? _( $scope.classes ).first() : _( $scope.classes ).findWhere( { id: parseInt( $scope.creneau.regroupement_id ) } );
+			   $scope.selected_matiere = _($scope.creneau.matiere_id).isEmpty() ? _( $scope.matieres ).first() : _($scope.matieres).findWhere( { id: $scope.creneau.matiere_id } );
+
 			   if ( $scope.creneau.en_creation ) {
 			       $scope.creneau.tmp_heure_debut = $filter( 'correctTimeZoneToGMT' )( $scope.creneau.heure_debut );
 			       $scope.creneau.tmp_heure_fin = $filter( 'correctTimeZoneToGMT' )( $scope.creneau.heure_fin );
-			       $scope.classe = _( $scope.classes ).first();
-			       $scope.matiere = _( $scope.matieres ).first();
 			   } else {
 			       $scope.creneau.tmp_heure_debut = angular.copy( $scope.creneau.heure_debut );
 			       $scope.creneau.tmp_heure_fin = angular.copy( $scope.creneau.heure_fin );
-			       $scope.classe = _( $scope.classes ).findWhere( { id: parseInt( $scope.creneau.regroupement_id ) } );
-			       $scope.matiere = _($scope.matieres).findWhere( { id: $scope.creneau.matiere_id } );
 			   }
-			   $scope.creneau.n_week = moment($scope.creneau.tmp_heure_debut).week();
 
 			   // Gestion des semaines actives
 			   var fixnum_to_bitfield = function( fixnum ) {
@@ -202,8 +200,8 @@ angular.module( 'cahierDeTextesClientApp' )
 			       var promesses = [];
 
 			       if ( $scope.creneau.en_creation ) {
-				   $scope.creneau.matiere_id = $scope.matiere.id;
-				   $scope.creneau.regroupement_id = $scope.classe.id;
+				   $scope.creneau.matiere_id = $scope.selected_matiere.id;
+				   $scope.creneau.regroupement_id = $scope.selected_regroupement.id;
 				   $scope.creneau.heure_debut = $filter('correctTimeZone')( $scope.creneau.tmp_heure_debut );
 				   $scope.creneau.heure_fin = $filter('correctTimeZone')( $scope.creneau.tmp_heure_fin );
 				   $scope.creneau.semaines_de_presence_regroupement = bitfield_to_fixnum( $scope.semaines_actives.regroupement );
@@ -217,7 +215,7 @@ angular.module( 'cahierDeTextesClientApp' )
 					       // FIXME: on $save() ou $update() tous les devoirs qu'ils aient été modifiés ou non
 					       var prom = $q.defer();
 					       if ( devoir.create ) {
-						   devoir.regroupement_id = $scope.classe.id;
+						   devoir.regroupement_id = $scope.selected_regroupement.id;
 						   if ( ! _(cours).isNull() ) {
 						       devoir.cours_id = cours.id;
 						   }
@@ -257,7 +255,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				       });
 
 				       if ( $scope.cours.create ) {
-					   $scope.cours.regroupement_id = $scope.classe.id;
+					   $scope.cours.regroupement_id = $scope.selected_regroupement.id;
 					   $scope.cours.creneau_emploi_du_temps_id = $scope.creneau.id;
 					   promesse = $scope.cours.$save();
 				       } else {
@@ -471,7 +469,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				       item.ressources = [];
 				   }
 				   if ( _( item.ressources ).findWhere( { hash: hash } ) === undefined ) {
-				       Documents.ajout_au_cahier_de_textes( $scope.classe, hash )
+				       Documents.ajout_au_cahier_de_textes( $scope.selected_regroupement, hash )
 					   .success( consume_Documents_response_callback( item ) )
 					   .error( function ( response ) {
 					       console.debug( response.error );
@@ -483,7 +481,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				   if ( item.ressources === undefined ) {
 				       item.ressources = [];
 				   }
-				   var responses = Documents.upload_dans_cahier_de_textes( $scope.classe, fichiers );
+				   var responses = Documents.upload_dans_cahier_de_textes( $scope.selected_regroupement, fichiers );
 				   for ( var i = 0; i < responses.length; i++ ) {
 				       responses[ i ]
 					   .success( consume_Documents_response_callback( item ) )
