@@ -316,6 +316,7 @@ h3, .h3 { text-transform: uppercase; }
 	   text-align: center; }
 
 .vacances { background-color: #eeeefa; }
+.not-yours { background-color: #f0ad4e; } /* comme label-warning */
 
 /* next 2 rules copied from font-awesome css */
 .switch .switch-button{ font-family: FontAwesome;

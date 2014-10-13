@@ -1,4 +1,5 @@
-<div class="modal-header">
+<div class="modal-header"
+     data-ng-class="{'not-yours': !creneau.mine}">
   <button type="button" class="close pull-right" aria-hidden="true" data-ng-click="annuler()"><i class="picto" data-ng-style="{'background-image':'url(' + app_path + '/app/vendor/charte-graphique-laclasse-com/images/picto_cross.svg)'}"></i></button>
 
   <h3>{{creneau.heure_debut | date : 'fullDate' }}, semaine {{creneau.n_week}}</h3>
