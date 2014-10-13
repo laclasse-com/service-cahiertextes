@@ -55,7 +55,7 @@ angular.module( 'cahierDeTextesClientApp' )
 			      .value();
 		      };
 
-		      $scope.period_offset = $scope.current_user.date ? moment( moment() - moment( $scope.current_user.date ) ).months() : 0;
+		      $scope.period_offset = $scope.current_user.date ? moment.duration( moment() - moment( $scope.current_user.date ) ).months() : 0;
 
 		      // retrieve_data() when the value of week_offset changes
 		      // n.b.: triggered when week_offset is initialized above
