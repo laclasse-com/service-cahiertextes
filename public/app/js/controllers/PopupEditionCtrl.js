@@ -56,6 +56,10 @@ angular.module( 'cahierDeTextesClientApp' )
 			   } else {
 			       $scope.creneau.tmp_heure_debut = angular.copy( $scope.creneau.heure_debut );
 			       $scope.creneau.tmp_heure_fin = angular.copy( $scope.creneau.heure_fin );
+
+			       _($scope.creneau.regroupements).each( function( regroupement ) {
+				   regroupement.regroupement_id = parseInt( regroupement.regroupement_id );
+			       } );
 			   }
 
 			   // Gestion des semaines actives
@@ -171,7 +175,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
 			   $scope.annuler = function () {
 			       var do_it = function () {
-				   if ( $scope.creneau.en_creation && _($scope.creneau.matiere_id).isEmpty() && $scope.creneau.regroupement_id === 'undefined' ) {
+				   if ( $scope.creneau.en_creation ) {
 				       $scope.effacer_creneau();
 				   } else {
 				       $scope.dirty = false;
