@@ -42,6 +42,7 @@ angular.module( 'cahierDeTextesClientApp' )
 			   $scope.matieres = matieres;
 
 			   $scope.creneau = creneau;
+			   $scope.mode_edition_creneau = $scope.creneau.en_creation;
 			   $scope.creneau.regroupement_id = parseInt( $scope.creneau.regroupement_id );
 			   $scope.creneau.etranger = !$scope.creneau.en_creation && !_.chain( $scope.creneau.enseignants ).pluck( 'enseignant_id' ).include( $scope.current_user.uid ).value();
 			   $scope.creneau.previous_regroupement_id = $scope.creneau.regroupement_id;
@@ -606,14 +607,14 @@ angular.module( 'cahierDeTextesClientApp' )
 			       };
 
 			       $scope.switch_to_modification_mode = function() {
-				   $scope.creneau.en_creation = false;
+				   $scope.mode_edition_creneau = false;
 				   $scope.mode_duplication = false;
 			       };
 
 			       $scope.switch_to_creneau_edition = function() {
 				   $scope.dirty = true;
 				   $scope.erreurs = [];
-				   $scope.creneau.en_creation = true;
+				   $scope.mode_edition_creneau = true;
 			       };
 			   }	// /fin gestion des Cours et Devoirs
 			   // }}}

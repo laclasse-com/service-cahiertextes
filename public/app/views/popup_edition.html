@@ -4,14 +4,14 @@
   <h3>{{creneau.heure_debut | date : 'fullDate' }}, semaine {{creneau.n_week}}</h3>
   <!-- {{{ Lecture seule -->
   <h3>
-    <span data-ng-if="!creneau.en_creation || !creneau.vierge">
-      {{classe.libelle}} - {{matiere.libelle_long}} ({{creneau.heure_debut | date: 'shortTime'}} - {{creneau.heure_fin | date: 'shortTime'}})
+    <span data-ng-if="!mode_edition_creneau || !creneau.vierge">
+      {{selected_regroupement.libelle}} - {{selected_matiere.libelle_long}} ({{creneau.heure_debut | date: 'shortTime'}} - {{creneau.heure_fin | date: 'shortTime'}})
     </span>
   </h3>
   <!-- }}} -->
 
   <!-- {{{ Édition -->
-  <div class="edition-creneau" data-ng-if="creneau.en_creation">
+  <div class="edition-creneau" data-ng-if="mode_edition_creneau">
     <div class="row" data-ng-if="creneau.vierge">
       <div class="col-md-6">
 	<label>Choisir la classe :</label>
@@ -97,7 +97,7 @@
   </div>
 </div>
 
-<div class="modal-body" data-ng-if="!creneau.en_creation && !mode_duplication">
+<div class="modal-body" data-ng-if="!mode_edition_creneau && !mode_duplication">
   <tabset>
 
     <!-- ####################### Séquence Pédagogique du jour ####################### -->
@@ -441,35 +441,35 @@
 
 <div class="modal-footer">
   <button type="button" class="btn btn-sm btn-warning pull-left"
-	  data-ng-if="!creneau.etranger && creneau.en_creation && dirty"
+	  data-ng-if="!creneau.etranger && mode_edition_creneau && dirty"
 	  data-ng-click="effacer_creneau()">
     <span class="glyphicon glyphicon-trash"></span> Supprimer le créneau
   </button>
 
   <button type="button" class="btn btn-sm btn-default pull-left"
 	  data-ng-click="switch_to_creneau_edition()"
-	  data-ng-if="!creneau.etranger && !creneau.en_creation" >
+	  data-ng-if="!creneau.etranger && !mode_edition_creneau" >
     <span class="glyphicon glyphicon-edit"> Modifier le créneau</span>
   </button>
 
   <button type="button" class="btn btn-sm btn-default"
 	  data-ng-click="switch_to_duplication_mode()"
-	  data-ng-if="!creneau.etranger && cours.contenu && !creneau.en_creation && !mode_duplication && creneaux_similaires.length > 0 && !dirty" >
+	  data-ng-if="!creneau.etranger && cours.contenu && !mode_edition_creneau && !mode_duplication && creneaux_similaires.length > 0 && !dirty" >
     <span class="glyphicon glyphicon-transfer"> Copier à d'autres créneaux</span>
   </button>
 
   <button type="button" class="btn btn-sm btn-default"
 	  data-ng-click="switch_to_modification_mode()"
-	  data-ng-if="mode_duplication || creneau.en_creation" >
+	  data-ng-if="mode_duplication || mode_edition_creneau && !creneau.en_creation" >
     <span class="glyphicon glyphicon-transfer"> Revenir en modification</span>
   </button>
 
-  <button type="button" class="btn btn-sm btn-success pull-right" data-ng-click="valider()" data-ng-if="!creneau.etranger && dirty || creneau.en_creation">
+  <button type="button" class="btn btn-sm btn-success pull-right" data-ng-click="valider()" data-ng-if="!creneau.etranger && dirty || mode_edition_creneau">
     <span class="glyphicon glyphicon-ok-sign"></span> Valider
   </button>
   <button type="button" class="btn btn-sm btn-default pull-right" data-ng-click="annuler()">
-    <span class="glyphicon glyphicon-remove-sign"></span> <span data-ng-if="dirty || creneau.en_creation">Annuler</span>
-    <span data-ng-if="!dirty && !creneau.en_creation">Fermer</span>
+    <span class="glyphicon glyphicon-remove-sign"></span> <span data-ng-if="dirty || mode_edition_creneau">Annuler</span>
+    <span data-ng-if="!dirty && !mode_edition_creneau">Fermer</span>
   </button>
 </div>
 
