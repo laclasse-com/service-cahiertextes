@@ -3,12 +3,13 @@
 angular.module( 'cahierDeTextesClientApp' )
     .controller('EmploiDuTempsCtrl',
 		[ '$scope', '$q', '$filter',
-		  'CALENDAR_OPTIONS', 'CALENDAR_PARAMS', 'APP_PATH', 'API', 'Annuaire', 'EmploisDuTemps', 'PopupsCreneau', 'CreneauEmploiDuTemps',
+		  'CALENDAR_OPTIONS', 'CALENDAR_PARAMS', 'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'API', 'Annuaire', 'EmploisDuTemps', 'PopupsCreneau', 'CreneauEmploiDuTemps',
 		  'current_user',
 		  function ( $scope, $q, $filter,
-			     CALENDAR_OPTIONS, CALENDAR_PARAMS, APP_PATH, API, Annuaire, EmploisDuTemps, PopupsCreneau, CreneauEmploiDuTemps,
+			     CALENDAR_OPTIONS, CALENDAR_PARAMS, APP_PATH, SEMAINES_VACANCES, ZONE, API, Annuaire, EmploisDuTemps, PopupsCreneau, CreneauEmploiDuTemps,
 			     current_user ) {
 				 $scope.current_user = current_user;
+				 $scope.zone = ZONE;
 
 				 var popup_ouverte = false;
 				 var filter_data = angular.identity;
@@ -103,12 +104,18 @@ angular.module( 'cahierDeTextesClientApp' )
 					 });
 				 };
 
+				 $scope.sont_ce_les_vacances = function( i_semaine, zone ) {
+				     return SEMAINES_VACANCES[ zone ].indexOf( i_semaine ) != -1;
+				 };
+
 				 // configuration du composant calendrier
 				 $scope.calendar = { options: CALENDAR_OPTIONS,
 						     events: [  ] };
 
 				 $scope.calendar.options.viewRender = function( view, element ) {
 				     $scope.current_user.date = view.visStart;
+				     $scope.n_week = moment(view.visStart).week();
+				     $scope.c_est_les_vacances = $scope.sont_ce_les_vacances( $scope.n_week, $scope.zone );
 				     retrieve_data( view.visStart, view.visEnd );
 				 };
 
