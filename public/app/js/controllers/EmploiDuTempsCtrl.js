@@ -172,7 +172,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
 					  $scope.selected_regroupement_id = $scope.current_user.profil_actif.classes[0].id;
 				      }
-				 if ( $scope.current_user.profil_actif.type == 'ENS' ) {
+				 if ( $scope.current_user.profil_actif.type == 'ENS' || $scope.current_user.profil_actif.admin ) {
 				     $scope.uniquement_mes_creneaux = true;
 				     $scope.calendar.options.selectable = true;
 				     $scope.calendar.options.editable = true;
