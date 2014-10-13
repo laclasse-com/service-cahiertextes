@@ -188,6 +188,7 @@ angular.module( 'cahierDeTextesClientApp' )
 						 .$promise
 						 .then( function( creneau_selectionne ) {
 						     creneau_selectionne.dirty = false;
+						     creneau_selectionne.en_creation = false;
 						     creneau_selectionne.heure_debut = event.start;
 						     creneau_selectionne.heure_fin = event.end;
 						     creneau_selectionne.regroupement_id = event.details.regroupement_id;
@@ -220,6 +221,7 @@ angular.module( 'cahierDeTextesClientApp' )
 					     new_creneau.$save()
 						 .then( function () {
 						     new_creneau.dirty = true;
+						     new_creneau.en_creation = true;
 						     new_creneau.heure_debut = start;
 						     new_creneau.heure_fin = end;
 						     new_creneau.regroupement_id = regroupement_id;
