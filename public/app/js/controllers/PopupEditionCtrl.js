@@ -43,7 +43,6 @@ angular.module( 'cahierDeTextesClientApp' )
 
 			   $scope.creneau = creneau;
 			   $scope.creneau.regroupement_id = parseInt( $scope.creneau.regroupement_id );
-			   $scope.creneau.en_creation = _($scope.creneau.matiere_id).isEmpty() || $scope.creneau.regroupement_id === 'undefined';
 			   $scope.creneau.etranger = !$scope.creneau.en_creation && !_.chain( $scope.creneau.enseignants ).pluck( 'enseignant_id' ).include( $scope.current_user.uid ).value();
 			   $scope.creneau.previous_regroupement_id = $scope.creneau.regroupement_id;
 			   $scope.creneau.vierge = _(creneau.vierge).isUndefined();
