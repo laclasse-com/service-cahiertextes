@@ -122,7 +122,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
 				  PopupsCreneau.edition( $scope.raw_data,
 							 matieres_enseignees, $scope.classes,
-							 creneau_selectionne, event.cours, event.devoirs,
+							 creneau_selectionne, _(event.cours).isNull() ? { id: _(event.devoirs).first().cours_id } : event.cours, event.devoirs,
 							 $scope.popup_callback, popup_ouverte );
 			      } );
 		      };
