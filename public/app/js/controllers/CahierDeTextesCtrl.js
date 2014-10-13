@@ -19,7 +19,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				      return creneau.enseignant_id === $scope.current_user.uid;
 				  } )
 				  .reject( function( creneau ) {
-				      return _(creneau.cours).isEmpty();
+				      return _(creneau.cours).isEmpty() && _(creneau.devoirs).isEmpty();
 				  })
 				  .map( function( creneau ) {
 				      creneau.devoirs.ouvert = true;

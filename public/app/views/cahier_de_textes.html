@@ -40,7 +40,7 @@
   <div class="panel-body">
     <ul class="list-group todo-list">
       <li data-ng-repeat="creneau in creneaux_saisies | orderBy:'start':true" style="list-style:none" class="creneau list-group-item"
-	  data-ng-class="{'vise': creneau.cours.date_validation !== null}"
+	  data-ng-class="{'vise': creneau.cours !== null && creneau.cours.date_validation !== null}"
 	  data-ng-if="scope.selected_regroupement_id === null || creneau.regroupement_id == scope.selected_regroupement_id">
 
 	<div class="pull-left date">
@@ -69,7 +69,8 @@
 	  <accordion close-others="false">
 	    <accordion-group data-is-open="creneau.devoirs.ouvert">
 	      <accordion-heading>
-		<span class="glyphicon" ng-class="{'glyphicon-chevron-down': creneau.devoirs.ouvert, 'glyphicon-chevron-right': !creneau.devoirs.ouvert}"> Devoirs associés <span class="compteur" data-ng-bind="creneau.devoirs.length"></span></span>
+		<span class="glyphicon"
+		      data-ng-class="{'glyphicon-chevron-down': creneau.devoirs.ouvert, 'glyphicon-chevron-right': !creneau.devoirs.ouvert}"> Devoirs associés <span class="compteur" data-ng-bind="creneau.devoirs.length"></span></span>
 	      </accordion-heading>
 	      <ul>
 		<li data-ng-repeat="devoir in creneau.devoirs | orderBy:'date_due':true"
