@@ -116,13 +116,23 @@ angular.module( 'cahierDeTextesClientApp' )
 			      .$promise
 			      .then( function( creneau_selectionne ) {
 				  creneau_selectionne.dirty = false;
+				  creneau_selectionne.en_creation = false;
 				  creneau_selectionne.heure_debut = new Date( event.start );
 				  creneau_selectionne.heure_fin = new Date( event.end );
 				  creneau_selectionne.regroupement_id = event.regroupement_id;
 
+				  var cours = null;
+				  if ( _(event.cours).isNull() ) {
+				      if ( !_(event.devoirs).isEmpty() ) {
+					  cours = { id: _(event.devoirs).first().cours_id };
+				      }
+				  } else {
+				      cours = event.cours;
+				  }
+
 				  PopupsCreneau.edition( $scope.raw_data,
 							 matieres_enseignees, $scope.classes,
-							 creneau_selectionne, _(event.cours).isNull() ? { id: _(event.devoirs).first().cours_id } : event.cours, event.devoirs,
+							 creneau_selectionne, cours, event.devoirs,
 							 $scope.popup_callback, popup_ouverte );
 			      } );
 		      };
