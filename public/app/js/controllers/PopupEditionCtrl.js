@@ -382,13 +382,13 @@ angular.module( 'cahierDeTextesClientApp' )
 				   $scope.is_dirty();
 			       };
 
-			       var liste_créneaux_similaires = function( creneau, n_semaines_futures ) {
+			       var liste_créneaux_similaires = function( creneau, n_semaines_before, n_semaines_after ) {
 				   return API.get_creneaux_emploi_du_temps_similaires({ id: creneau.id,
-											debut: creneau.heure_debut,
-											fin: moment( creneau.heure_debut.toISOString() ).add( n_semaines_futures, 'weeks' ).toDate() } );
+											debut: moment( creneau.heure_debut.toISOString() ).subtract( n_semaines_before, 'weeks' ).toDate(),
+											fin: moment( creneau.heure_debut.toISOString() ).add( n_semaines_after, 'weeks' ).toDate() } );
 			       };
 
-			       liste_créneaux_similaires( $scope.creneau, 12 )
+			       liste_créneaux_similaires( $scope.creneau, 2, 8 )
 				   .then( function( response ) {
 				       $scope.creneaux_devoirs_possibles_duplication = [];
 				       $scope.creneaux_similaires = _.chain(response.data)
@@ -544,7 +544,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
 			       $scope.creneau_cible_duplication_SP_updated = function() {
 				   // Calcul des créneaux cibles pour les devoirs
-				   liste_créneaux_similaires( $scope.creneaux_similaires.selected, 4 )
+				   liste_créneaux_similaires( $scope.creneaux_similaires.selected, 2, 4 )
 				       .then( function( response ) {
 					   $scope.creneaux_devoirs_possibles_duplication = _.chain(response.data)
 					       .select( function( creneau ) { return creneau.regroupement_id == $scope.creneaux_similaires.selected.regroupement_id; } )
