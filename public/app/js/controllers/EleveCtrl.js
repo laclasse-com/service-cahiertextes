@@ -2,8 +2,9 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller('EleveCtrl',
-		[ '$scope', '$state', '$stateParams', 'current_user',
-		  function ( $scope, $state, $stateParams, current_user ) {
+		[ '$scope', '$state', '$stateParams', 'current_user', '$sce', 'DOCS_URL',
+		  function ( $scope, $state, $stateParams, current_user, $sce, DOCS_URL ) {
+		      $scope.DOCS_URL_login = $sce.trustAsResourceUrl( DOCS_URL + '/login' );
 		      $scope.tabs = [ { heading: 'Emploi du temps',
 					uisref: 'eleve.emploi_du_temps',
 					active: false },

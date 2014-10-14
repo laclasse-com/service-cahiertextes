@@ -2,8 +2,9 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller('PrincipalCtrl',
-		[ '$scope', '$state',
-		  function ( $scope, $state ) {
+		[ '$scope', '$state', '$sce', 'DOCS_URL',
+		  function ( $scope, $state, $sce, DOCS_URL ) {
+		      $scope.DOCS_URL_login = $sce.trustAsResourceUrl( DOCS_URL + '/login' );
 		      $scope.tabs = [ { heading: 'Validation des saisies par enseignant',
 					uisref: 'principal.enseignants',
 					active: false },
