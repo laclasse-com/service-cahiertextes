@@ -403,10 +403,15 @@
 	  <ul>
 	    <li data-ng-bind-html="cours.contenu"></li>
 	  </ul>
+	  <select class="col-md-3 pull-left"
+		  data-ng-model="scope.selected_regroupement_id_duplication"
+		  data-ng-options="classe.id as classe.libelle for classe in classes">
+	    <option value="" selected>Toutes les classes</option>
+	  </select>
 	  <select data-ng-required
 		  data-ng-change="creneau_cible_duplication_SP_updated()"
 		  data-ng-model="creneaux_similaires.selected"
-		  data-ng-options="creneau as ( creneau | formateCreneau ) group by creneau.classe.libelle for creneau in creneaux_similaires | orderBy:['+classe.libelle', '+date_due']" >
+		  data-ng-options="creneau as ( creneau | formateCreneau ) group by creneau.classe.libelle for creneau in creneaux_similaires | orderBy:['+classe.libelle', '+date_due'] | filter:selected_regroupement_id_duplication" >
 	  </select>
 	</li>
 	<li data-ng-if="cours.devoirs.length > 0">
