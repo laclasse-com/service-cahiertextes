@@ -2,9 +2,8 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller('EnseignantCtrl',
-		[ '$scope', '$state', 'current_user', '$sce', 'DOCS_URL',
-		  function ( $scope, $state, current_user, $sce, DOCS_URL ) {
-		      $scope.DOCS_URL_login = $sce.trustAsResourceUrl( DOCS_URL + '/login' );
+		[ '$scope', '$state', 'current_user',
+		  function ( $scope, $state, current_user ) {
 		      $scope.tabs = [ { heading: 'Emploi du temps',
 					uisref: 'enseignant.emploi_du_temps',
 					active: false },
