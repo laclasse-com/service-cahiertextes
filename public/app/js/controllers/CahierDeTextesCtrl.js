@@ -96,9 +96,11 @@ angular.module( 'cahierDeTextesClientApp' )
 
 				  $scope.creneaux_saisies = filter_creneaux_avec_saisies( $scope.raw_data );
 				  _($scope.creneaux_saisies).each( function( creneau ) {
-				      _(creneau.cours.ressources).each( function( ressource ) {
-					  ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
-				      } );
+				      if ( !_(creneau.cours).isNull() ) {
+					  _(creneau.cours.ressources).each( function( ressource ) {
+					      ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+					  } );
+				      }
 				      _(creneau.devoirs).each( function( devoir ) {
 					  _(devoir.ressources).each( function( ressource ) {
 					      ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
