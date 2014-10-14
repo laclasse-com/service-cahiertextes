@@ -409,7 +409,7 @@ angular.module( 'cahierDeTextesClientApp' )
 					   .map( function ( creneau ) {
 					       creneau.classe = _( $scope.classes ).findWhere( { id: parseInt( creneau.regroupement_id ) } );
 					       creneau.date_due = $filter( 'date' )( creneau.start, 'y-MM-dd' );
-					       creneau.semaine = moment( creneau.start).from( moment( $scope.creneau.heure_debut ), true ) + ' plus tard';
+					       creneau.semaine = moment( creneau.start).from( moment( $scope.creneau.heure_debut ) );
 					       creneau.heure_debut = new Date( creneau.heure_debut );
 					       creneau.heure_fin = new Date( creneau.heure_fin );
 
