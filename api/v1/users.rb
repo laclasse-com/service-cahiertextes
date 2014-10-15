@@ -25,11 +25,15 @@ module CahierDeTextesAPI
 
       desc 'efface toute trace de l\'utilisateur identifié'
       delete '/:uid' do
-        DataManagement::User.delete params[:uid]
+        error!( '401 Unauthorized', 401 ) unless user.admin?
+
+        DataManagement::User.delete( params[:uid] )
       end
 
       desc 'Merge les données de l\'utilisateur source_id vers l\'utilisateur target_id'
       put '/:target_uid/merge/:source_uid' do
+        error!( '401 Unauthorized', 401 ) unless user.admin?
+
         DataManagement::User.merge( params[:target_uid], params[:source_uid] )
       end
     end
