@@ -39,9 +39,9 @@ module DataManagement
       CreneauEmploiDuTempsEnseignant.where( enseignant_id: uid )
                                     .all
                                     .each do |ce|
-        cid = ce.creneau_emploi_du_temps_id
+        cours = Cours[ce.creneau_emploi_du_temps_id]
         ce.destroy
-        cid.destroy if cid.enseignants.empty?
+        cours.destroy if cours.enseignants.empty?
       end
     end
 
