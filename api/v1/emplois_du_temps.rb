@@ -27,7 +27,7 @@ module CahierDeTextesAPI
             error!( '401 Unauthorized', 401 )
           end
         elsif %w( EVS DIR ).include?( user_annuaire['profil_actif']['profil_id'] )
-          Annuaire.get_etablissement_regroupements( user_annuaire['profil_actif']['etablissement_code_uai'] )
+          regroupements_annuaire = Annuaire.get_etablissement_regroupements( user_annuaire['profil_actif']['etablissement_code_uai'] )
         else
           regroupements_annuaire = Annuaire.get_user_regroupements( user.uid )
         end
