@@ -123,18 +123,9 @@ angular.module( 'cahierDeTextesClientApp' )
 				  creneau_selectionne.heure_fin = new Date( event.end );
 				  creneau_selectionne.regroupement_id = event.regroupement_id;
 
-				  var cours = null;
-				  if ( _(event.cours).isNull() ) {
-				      if ( !_(event.devoirs).isEmpty() ) {
-					  cours = { id: _(event.devoirs).first().cours_id };
-				      }
-				  } else {
-				      cours = event.cours;
-				  }
-
 				  PopupsCreneau.edition( $scope.raw_data,
 							 matieres_enseignees, $scope.classes,
-							 creneau_selectionne, cours, event.devoirs,
+							 creneau_selectionne, event.cours, event.devoirs,
 							 $scope.popup_callback, popup_ouverte );
 			      } );
 		      };
