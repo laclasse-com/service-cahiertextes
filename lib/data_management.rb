@@ -46,7 +46,24 @@ module DataManagement
     end
 
     def merge( target_uid, source_uid )
-      STDERR.puts "#{source_uid} --> #{target_uid}"
+      # UserParameters.where( uid: uid ).destroy
+
+      # DevoirTodoItem.where( eleve_id: uid ).destroy
+
+      # Cours.where( enseignant_id: uid ).each do |cours|
+      #   cours.devoirs.each do |devoir|
+      #     devoir.destroy
+      #   end
+      #   cours.destroy
+      # end
+
+      # CreneauEmploiDuTempsEnseignant.where( enseignant_id: uid )
+      #                               .all
+      #                               .each do |ce|
+      #   cid = ce.creneau_emploi_du_temps_id
+      #   ce.destroy
+      #   cid.destroy if cid.enseignants.empty?
+      # end
     end
   end
 end
