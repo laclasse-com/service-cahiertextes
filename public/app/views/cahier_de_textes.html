@@ -70,7 +70,7 @@
 	    <accordion-group data-is-open="creneau.devoirs.ouvert">
 	      <accordion-heading>
 		<span class="glyphicon"
-		      data-ng-class="{'glyphicon-chevron-down': creneau.devoirs.ouvert, 'glyphicon-chevron-right': !creneau.devoirs.ouvert}"> Devoirs associés <span class="compteur" data-ng-bind="creneau.devoirs.length"></span></span>
+		      data-ng-class="{'glyphicon-chevron-down': creneau.devoirs.ouvert, 'glyphicon-chevron-right': !creneau.devoirs.ouvert}"> Devoirs du jour <span class="compteur" data-ng-bind="creneau.devoirs.length"></span></span>
 	      </accordion-heading>
 	      <ul>
 		<li data-ng-repeat="devoir in creneau.devoirs | orderBy:'date_due':true"
