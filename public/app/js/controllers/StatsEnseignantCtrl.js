@@ -20,7 +20,7 @@ angular.module( 'cahierDeTextesClientApp' )
 						      } );
 						  }
 						  if ( mois != null ) {
-						      data = _( data ).where( { mois: mois } );
+						      data = _( data ).where( { month: mois } );
 						  }
 						  if ( classe != null ) {
 						      data = _( data ).where( { regroupement_id: classe.id } );
@@ -101,6 +101,8 @@ angular.module( 'cahierDeTextesClientApp' )
 							      // on référence l'index d'origine dans chaque élément pour propager la validation
 							      saisie.index = index;
 							      saisie.cours = new Cours( saisie.cours );
+							      saisie.regroupement_id = parseInt( saisie.regroupement_id );
+							      saisie.month = moment( saisie.cours.date_cours ).month();
 							      // saisie.devoir = new Devoirs( saisie.devoir );
 							      return saisie;
 							  } );
