@@ -41,6 +41,8 @@ module CahierDeTextesAPI
             regroupement['classe_id']
           elsif regroupement.key? 'groupe_id'
             regroupement['groupe_id']
+          elsif regroupement.key? 'id'
+            regroupement['id']
           end
         }
                             .uniq
