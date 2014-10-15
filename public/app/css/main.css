@@ -159,6 +159,7 @@ body {
     line-height: 1.4em;
     padding: 0 5px;
 }
+.tree-leaf { text-align: left; }
 .tree-leaf.odd {background-color:#ded}
 .tree-leaf.even {background-color:#fff}
 
