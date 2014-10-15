@@ -206,6 +206,11 @@ angular.module( 'cahierDeTextesClientApp' )
 			       if ( $scope.mode_edition_creneau ) {
 				   $scope.creneau.matiere_id = $scope.selected_matiere.id;
 				   $scope.creneau.regroupement_id = $scope.selected_regroupement.id;
+				   if ( $scope.creneau.tmp_heure_debut > $scope.creneau.tmp_heure_fin ) {
+				       var tmp = $scope.creneau.tmp_heure_debut;
+				       $scope.creneau.tmp_heure_debut = $scope.creneau.tmp_heure_fin;
+				       $scope.creneau.tmp_heure_fin = tmp;
+				   }
 				   $scope.creneau.heure_debut = $filter('correctTimeZone')( $scope.creneau.tmp_heure_debut );
 				   $scope.creneau.heure_fin = $filter('correctTimeZone')( $scope.creneau.tmp_heure_fin );
 				   $scope.creneau.semaines_de_presence_regroupement = bitfield_to_fixnum( $scope.semaines_actives.regroupement );
