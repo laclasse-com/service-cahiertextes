@@ -6,12 +6,17 @@ ENV['RACK_ENV'] ||= 'test'
 require 'rack/test'
 require 'sequel'
 require 'tsort'
+require 'capybara/rspec'
 
 require_relative '../config/constants'
 require_relative '../config/options'
 require_relative '../config/database'
 
 require_relative '../api'
+require_relative '../web'
+
+Capybara.default_driver = :selenium
+Capybara.app = CahierDeTextesAPI::Web
 
 module AuthenticationHelpers
   def is_logged?
@@ -72,6 +77,8 @@ RSpec.configure do |config|
 
   # Use the specified formatter
   config.formatter = :documentation # :progress, :html, :textmate
+
+  config.include ShowMeTheCookies, type: :feature
 end
 
 # # Example usage.
