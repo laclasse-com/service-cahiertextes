@@ -20,6 +20,13 @@ module UserHelpers
       @ENTPersonProfils.include? "#{profil}:#{profils[0]['uai']}"
     end
 
+    def admin?
+      # FIXME
+      u_a = Annuaire.get_user( @uid )
+      profil_actif = u_a['profils'].select { |p| p['actif'] }.first
+      u_a['roles'].select { |r| r['etablissement_code_uai'] == profil_actif['etablissement_code_uai'] && ( r['role_id'] == 'TECH' || r['role_id'].match('ADM.*') ) }.length > 0
+    end
+
     def full( env )
       utilisateur = env['rack.session'][:current_user]
 
