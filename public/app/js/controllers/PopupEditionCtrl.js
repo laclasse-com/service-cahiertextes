@@ -203,7 +203,7 @@ angular.module( 'cahierDeTextesClientApp' )
 			       $scope.erreurs = [];
 			       var promesses = [];
 
-			       if ( $scope.creneau.en_creation ) {
+			       if ( $scope.mode_edition_creneau ) {
 				   $scope.creneau.matiere_id = $scope.selected_matiere.id;
 				   $scope.creneau.regroupement_id = $scope.selected_regroupement.id;
 				   $scope.creneau.heure_debut = $filter('correctTimeZone')( $scope.creneau.tmp_heure_debut );
