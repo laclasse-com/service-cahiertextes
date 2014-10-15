@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+require_relative '../../lib/data_management'
+
 module CahierDeTextesAPI
   module V1
     class UsersAPI < Grape::API
@@ -22,15 +24,13 @@ module CahierDeTextesAPI
       end
 
       desc 'efface toute trace de l\'utilisateur identifié'
-      delete '/:id' do
-        # TODO
-        STDERR.puts "Deleteing all traces of #{params[:id]}"
+      delete '/:uid' do
+        DataManagement::User.delete params[:uid]
       end
 
       desc 'Merge les données de l\'utilisateur source_id vers l\'utilisateur target_id'
-      put '/:target_id/merge/:source_id' do
-        # TODO
-        STDERR.puts "Merging all data of #{params[:source_id]} into #{params[:target_id]}"
+      put '/:target_uid/merge/:source_uid' do
+        DataManagement::User.merge( params[:target_uid], params[:source_uid] )
       end
     end
   end
