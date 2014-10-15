@@ -32,4 +32,7 @@ group :development do
   gem 'rack-test'
   gem 'rspec'
   gem 'simplecov'
+  gem 'selenium-webdriver'
+  gem 'capybara'
+  gem 'show_me_the_cookies'
 end
