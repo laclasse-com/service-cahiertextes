@@ -58,7 +58,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				  Devoirs.fait({ id: id });
 			      };
 			  }
-		      } );
 
-				angular.element('#ui-view-content').after( current_user.marqueur_xiti );
+			  angular.element('#ui-view-content').after( $scope.current_user.marqueur_xiti );
+		      } );
 			    } ] );

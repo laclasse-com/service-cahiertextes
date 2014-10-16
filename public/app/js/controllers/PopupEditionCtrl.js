@@ -623,7 +623,7 @@ angular.module( 'cahierDeTextesClientApp' )
 			       };
 			   }	// /fin gestion des Cours et Devoirs
 			   // }}}
-		       } );
 
-		       angular.element('#ui-view-content').after( current_user.marqueur_xiti );
-		   } ] );
+			   angular.element('#ui-view-content').after( $scope.current_user.marqueur_xiti );
+		       } );
+			      } ] );
