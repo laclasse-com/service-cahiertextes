@@ -57,6 +57,10 @@ module CahierDeTextesAPI
       login! "#{APP_PATH}/"
     end
 
+    get "#{APP_PATH}/quiet_login/?" do
+      login! "#{APP_PATH}/", true
+    end
+
     # POST pour le login en mode REST, pour les applications souhaitant utiliser les API du Cahier de Textes.
     # Dans ce cas le paramètre restmod et requis.
     # Exemple avec curl :
