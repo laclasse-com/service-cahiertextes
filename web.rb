@@ -31,6 +31,10 @@ module CahierDeTextesAPI
       erb :app
     end
 
+    get "#{APP_PATH}/rien/?" do
+      erb :rien
+    end
+
     # routes pour la gestion de l'authentification
     get "#{APP_PATH}/auth/:provider/callback" do
       init_session( request.env )
@@ -58,7 +62,7 @@ module CahierDeTextesAPI
     end
 
     get "#{APP_PATH}/quiet_login/?" do
-      login! "#{APP_PATH}/", true
+      login! "#{APP_PATH}/rien/"
     end
 
     # POST pour le login en mode REST, pour les applications souhaitant utiliser les API du Cahier de Textes.
