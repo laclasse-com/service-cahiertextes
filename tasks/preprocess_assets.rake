@@ -52,7 +52,6 @@ namespace :preprocess_assets do
                                'public/app/vendor/angular-loading-bar/build/loading-bar.min.css',
                                'public/app/vendor/nvd3/nv.d3.min.css',
                                'public/app/vendor/angular-tree-control/css/tree-control.css',
-                               'public/app/vendor/angular-tree-control/css/tree-control-attribute.css',
                                'public/app/vendor/ng-switcher/dist/ng-switcher.min.css',
                                'public/app/vendor/ng-color-picker/color-picker.css',
                                'public/app/vendor/sweetalert/lib/sweet-alert.css' ]
