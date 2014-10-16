@@ -17,7 +17,7 @@ module AuthenticationHelpers
   #   d'initialiser la session et de rediriger vers l'url passée en paramètre
   #
   # En mode REST, pas de redirection vers cas/auth, création d'une session avec init_session
-  def login!( route )
+  def login!( route, quiet = false )
     unless route.empty?
       route += "?#{env['QUERY_STRING']}" unless env['QUERY_STRING'].empty?
       route = CGI.escape( "#{env['rack.url_scheme']}://#{env['HTTP_HOST']}#{route}" )
@@ -37,10 +37,14 @@ module AuthenticationHelpers
       status 200
 
     else
-      # Mode narmol : navigateur classique
-      redirect "#{APP_PATH}/auth/cas" if route.empty?
+      if quiet
+        status 200
+      else
+        # Mode normal : navigateur classique
+        redirect "#{APP_PATH}/auth/cas" if route.empty?
 
-      redirect "#{APP_PATH}/auth/cas?url=#{route}"
+        redirect "#{APP_PATH}/auth/cas?url=#{route}"
+      end
     end
   end
 
