@@ -2,15 +2,27 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller('EleveDevoirsCtrl',
-		[ '$scope', '$sce', 'APP_PATH', 'DOCS_URL', 'API', 'Annuaire', 'Devoirs', 'Cours', 'CreneauEmploiDuTemps', 'current_user',
-		  function( $scope, $sce, APP_PATH, DOCS_URL, API, Annuaire, Devoirs, Cours, CreneauEmploiDuTemps, current_user ) {
+		[ '$scope', '$sce', '$timeout',
+		  'APP_PATH', 'DOCS_URL', 'API', 'Annuaire', 'Devoirs', 'Cours', 'CreneauEmploiDuTemps',
+		  'current_user',
+		  function( $scope, $sce, $timeout,
+			    APP_PATH, DOCS_URL, API, Annuaire, Devoirs, Cours, CreneauEmploiDuTemps,
+			    current_user ) {
 		      // popup d'affichage des détails
 		      var types_de_devoir = [];
 		      $scope.affiche_faits = false;
 		      $scope.tri_ascendant = true;
 		      $scope.popup_ouverte = false;
-		      $scope.fait = function( id ) {
-			  Devoirs.fait({ id: id });
+		      $scope.fait = function( devoir ) {
+			  devoir.$fait()
+			      .then( function( response ) {
+				  if ( !$scope.affiche_faits && !_(response.date_fait).isNull() ) {
+				      var date_fait_holder = response.date_fait;
+				      response.date_fait = null;
+
+				      $timeout( function() { response.date_fait = date_fait_holder; }, 3000 );
+				  }
+			      } );
 		      };
 
 		      $scope.current_user = current_user;
