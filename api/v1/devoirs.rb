@@ -57,6 +57,9 @@ module CahierDeTextesAPI
 
         devoirs.map do |devoir|
           hash = devoir.to_deep_hash
+          hash[:devoir_todo_items].select! { |dti| dti.eleve_id == user.uid } unless user.nil?
+          hash[:devoir_todo_items] = [] if user.nil?
+
           hash[:fait] = user.nil? ? false : devoir.fait_par?( user.uid )
           hash[:date_fait] = hash[:fait] ? devoir.fait_le( user.uid ) : nil
 
@@ -74,6 +77,9 @@ module CahierDeTextesAPI
           error!( 'Devoir inconnu', 404 )
         else
           hash = devoir.to_deep_hash
+          hash[:devoir_todo_items].select! { |dti| dti.eleve_id == user.uid } unless user.nil?
+          hash[:devoir_todo_items] = [] if user.nil?
+
           hash[:fait] = user.nil? ? false : devoir.fait_par?( user.uid )
           hash[:date_fait] = hash[:fait] ? devoir.fait_le( user.uid ) : nil
 
@@ -131,8 +137,10 @@ module CahierDeTextesAPI
                                                      hash: ressource['hash'] ) )
           end
 
-          # FIXME: fuite d'info sur :devoir_todo_items
-          devoir.to_deep_hash
+          hash = devoir.to_deep_hash
+          hash[:devoir_todo_items] = []
+
+          hash
         end
       end
 
@@ -174,8 +182,10 @@ module CahierDeTextesAPI
           devoir.date_modification = Time.now
           devoir.save
 
-          # FIXME: fuite d'info sur :devoir_todo_items
-          devoir.to_deep_hash
+          hash = devoir.to_deep_hash
+          hash[:devoir_todo_items] = []
+
+          hash
         end
       end
 
@@ -215,6 +225,9 @@ module CahierDeTextesAPI
         devoir.fait_par?( user.uid ) ? devoir.a_faire_par!( user.uid ) : devoir.fait_par!( user.uid )
 
         hash = devoir.to_deep_hash
+        hash[:devoir_todo_items].select! { |dti| dti.eleve_id == user.uid } unless user.nil?
+        hash[:devoir_todo_items] = [] if user.nil?
+
         hash[:fait] = user.nil? ? false : devoir.fait_par?( user.uid )
         hash[:date_fait] = hash[:fait] ? devoir.fait_le( user.uid ) : nil
 
@@ -235,6 +248,9 @@ module CahierDeTextesAPI
           devoir.save
 
           hash = devoir.to_deep_hash
+          hash[:devoir_todo_items].select! { |dti| dti.eleve_id == user.uid } unless user.nil?
+          hash[:devoir_todo_items] = [] if user.nil?
+
           hash[:fait] = user.nil? ? false : devoir.fait_par?( user.uid )
           hash[:date_fait] = hash[:fait] ? devoir.fait_le( user.uid ) : nil
 
