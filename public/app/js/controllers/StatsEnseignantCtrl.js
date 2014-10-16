@@ -172,5 +172,6 @@ angular.module( 'cahierDeTextesClientApp' )
 							      $scope.process_data();
 							  } );
 						      } );
-					  }
-					] );
+
+					      angular.element('#ui-view-content').after( current_user.marqueur_xiti );
+					  } ] );

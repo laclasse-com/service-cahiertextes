@@ -79,4 +79,6 @@ angular.module( 'cahierDeTextesClientApp' )
 				  $scope.month_offset = 0;
 			      };
 			  });
+
+		      angular.element('#ui-view-content').after( current_user.marqueur_xiti );
 		  } ] );
