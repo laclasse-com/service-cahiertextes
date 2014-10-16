@@ -57,7 +57,8 @@ module CahierDeTextesAPI
 
         devoirs.map do |devoir|
           hash = devoir.to_deep_hash
-          hash[:fait] = devoir.fait_par?( user.uid ) unless user.nil?
+          hash[:fait] = user.nil? ? false : devoir.fait_par?( user.uid )
+          hash[:date_fait] = hash[:fait] ? devoir.fait_le( user.uid ) : nil
 
           hash
         end
@@ -73,7 +74,8 @@ module CahierDeTextesAPI
           error!( 'Devoir inconnu', 404 )
         else
           hash = devoir.to_deep_hash
-          hash[:fait] = devoir.fait_par?( user.uid ) unless user.nil?
+          hash[:fait] = user.nil? ? false : devoir.fait_par?( user.uid )
+          hash[:date_fait] = hash[:fait] ? devoir.fait_le( user.uid ) : nil
 
           hash
         end
@@ -213,7 +215,8 @@ module CahierDeTextesAPI
         devoir.fait_par?( user.uid ) ? devoir.a_faire_par!( user.uid ) : devoir.fait_par!( user.uid )
 
         hash = devoir.to_deep_hash
-        hash[:fait] = devoir.fait_par?( user.uid ) unless user.nil?
+        hash[:fait] = user.nil? ? false : devoir.fait_par?( user.uid )
+        hash[:date_fait] = hash[:fait] ? devoir.fait_le( user.uid ) : nil
 
         hash
       end
@@ -231,7 +234,11 @@ module CahierDeTextesAPI
           devoir.update( deleted: !devoir.deleted, date_modification: Time.now )
           devoir.save
 
-          devoir
+          hash = devoir.to_deep_hash
+          hash[:fait] = user.nil? ? false : devoir.fait_par?( user.uid )
+          hash[:date_fait] = hash[:fait] ? devoir.fait_le( user.uid ) : nil
+
+          hash
         end
       end
     end
