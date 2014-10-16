@@ -20,6 +20,11 @@ class Devoir < Sequel::Model( :devoirs )
     devoir_todo_items_dataset.where(eleve_id: eleve_id).count > 0
   end
 
+  def fait_le( eleve_id )
+    # FIXME: peut sûrement mieux faire
+    devoir_todo_items_dataset.where(eleve_id: eleve_id).first[:date_fait]
+  end
+
   def a_faire_par!( eleve_id )
     # FIXME: peut sûrement mieux faire
     devoir_todo_items_dataset.where(eleve_id: eleve_id).destroy
