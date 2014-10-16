@@ -442,7 +442,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
 			       Documents.list_files()
 				   .success( function ( response ) {
-				       if ( _(response.error).isEmpty() ) {
+				       if ( _(response.error).isEmpty() && _(response).has( 'files' ) ) {
 					   $scope.cartable = response;
 					   $scope.cartable.files = _.chain( response.files )
 					       .rest()
