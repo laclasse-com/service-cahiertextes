@@ -18,20 +18,8 @@
     <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/angular-tree-control/css/tree-control-attribute.css?v=<%=APP_VERSION%>" />
     <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/angular-tree-control/css/tree-control.css?v=<%=APP_VERSION%>" />
 
-    <% if ENV['RACK_ENV'] == 'production' %>
-      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/vendor.min.css?v=<%=APP_VERSION%>" />
-      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/css/cdt.min.css?v=<%=APP_VERSION%>" />
-    <% else %>
-      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/fullcalendar/fullcalendar.css?v=<%=APP_VERSION%>" />
-      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/angular-loading-bar/build/loading-bar.min.css?v=<%=APP_VERSION%>" />
-      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/nvd3/nv.d3.min.css?v=<%=APP_VERSION%>" />
-      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/ng-switcher/dist/ng-switcher.min.css?v=<%=APP_VERSION%>" />
-      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/ng-color-picker/color-picker.css?v=<%=APP_VERSION%>" />
-      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/sweetalert/lib/sweet-alert.css?v=<%=APP_VERSION%>" />
-
-      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/css/bootstrap-theme.css?v=<%=APP_VERSION%>" />
-      <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/css/main.css?v=<%=APP_VERSION%>" />
-    <% end %>
+    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/vendor.min.css?v=<%=APP_VERSION%>" />
+    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/css/cdt.min.css?v=<%=APP_VERSION%>" />
   </head>
   <body>
     <!--[if lt IE 7]>
