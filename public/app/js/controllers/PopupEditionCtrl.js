@@ -522,8 +522,8 @@ angular.module( 'cahierDeTextesClientApp' )
 						   elt.children = [];
 						   noeud.children.push( elt );
 					       } );
-					   // $scope.cartable.expandedNodes = [];
-					   // $scope.cartable.expandedNodes.push( _($scope.cartable.files).findWhere( noeud ) );
+					   $scope.cartable.expandedNodes = [];
+					   $scope.cartable.expandedNodes.push( _($scope.cartable.files).findWhere( noeud ) );
 				       } );
 				   }
 			       };
