@@ -103,7 +103,7 @@
       <tbody>
 	<tr data-ng-repeat="saisie in raw_data"
 	    data-ng-class="{'even': $even, 'odd': $odd}"
-	    data-ng-if="(scope.montre_valides || !saisie.valide) && (scope.classe == null || saisie.regroupement_id === scope.classe.id) && (scope.moisCourant == null || saisie.month == scope.moisCourant)">
+	    data-ng-if="(scope.montre_valides || saisie.cours.date_validation == null) && (scope.classe == null || saisie.regroupement_id === scope.classe.id) && (scope.moisCourant == null || saisie.month == scope.moisCourant)">
 	  <td data-ng-bind="classes[ saisie.regroupement_id ].libelle"></td>
 	  <td data-ng-bind="matieres[ saisie.matiere_id ].libelle_long"></td>
 	  <td>
