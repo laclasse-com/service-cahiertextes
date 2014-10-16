@@ -32,7 +32,7 @@
   <div class="panel-body">
     <ul class="list-group todo-list" data-ng-if="devoirs">
       <li data-ng-repeat="devoir in devoirs | orderBy:'date_due':tri_ascendant"
-	  data-ng-if="!devoir.fait || affiche_faits"
+	  data-ng-if="devoir.date_fait == null || affiche_faits"
 	  style="list-style:none"
 	  class="devoir list-group-item"
 	  data-ng-class="{ 'type1': devoir.type_devoir_id == 1, 'type2': devoir.type_devoir_id == 2, 'type3': devoir.type_devoir_id == 3, 'type4': devoir.type_devoir_id == 4, 'type5': devoir.type_devoir_id == 5, 'type6': devoir.type_devoir_id == 6, 'fait': devoir.fait, 'a-faire': !devoir.fait }" >
@@ -49,7 +49,7 @@
 	    <div data-ng-switcher
 		 data-ng-if="!(devoir.type_devoir_id == 1) && current_user.profil_actif.type === 'ELV'"
 		 data-ng-model="devoir.fait"
-		 data-ng-change="fait( devoir.id )" ></div>
+		 data-ng-change="fait( devoir )" ></div>
 	  </div>
 	</div>
 
