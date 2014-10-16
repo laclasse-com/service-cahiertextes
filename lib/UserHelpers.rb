@@ -66,7 +66,10 @@ module UserHelpers
       parametres.update( date_connexion: Time.now )
       parametres.save
 
-      utilisateur['parametrage_cahier_de_textes'] = JSON.parse( parametres[:parameters] )
+      utilisateur[ 'parametrage_cahier_de_textes' ] = JSON.parse( parametres[:parameters] )
+
+      utilisateur[ 'marqueur_xiti' ] = ''
+      utilisateur[ 'marqueur_xiti' ] = '<script>' + RestClient.get( "https://www.laclasse.com/pls/public/xiti_men.get_marqueur_ctv3?plogin=#{utilisateur['user']}" ) + '</script>' if ANNUAIRE[:api_mode] == 'v2'
 
       utilisateur
     end

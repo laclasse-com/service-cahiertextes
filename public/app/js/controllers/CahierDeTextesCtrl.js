@@ -131,4 +131,6 @@ angular.module( 'cahierDeTextesClientApp' )
 		      };
 		      matieres_enseignees = $scope.current_user.profil_actif.matieres;
 		      $scope.classes = $scope.current_user.profil_actif.classes;
+
+		      angular.element('#ui-view-content').after( current_user.marqueur_xiti );
 		  } ] );

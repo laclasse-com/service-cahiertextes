@@ -72,4 +72,6 @@ angular.module( 'cahierDeTextesClientApp' )
 		      $scope.onFileSelect = function( $files ) {
 			  $scope.fichiers = $files;
 		      };
+
+		      angular.element('#ui-view-content').after( current_user.marqueur_xiti );
 		  } ] );
