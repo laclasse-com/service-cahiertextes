@@ -73,7 +73,7 @@
 	</div>
 	<div class="btn-group">
 	  <button type="button" class="btn btn-xs"
-		  data-ng-class="{'btn-default': !semaine, 'btn-warning': semaine, 'btn-info': sont_ce_les_vacances( $index + 1, ZONE )}"
+		  data-ng-class="{'btn-default': !semaine, 'btn-warning': semaine, 'btn-info': sont_ce_les_vacances( $index + 1, ZONE ), 'btn-primary this-week': $index + 1 === creneau.n_week}"
 		  data-ng-model="semaines_actives.regroupement[ $index ]"
 		  btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0"
 		  data-ng-repeat="semaine in semaines_actives.regroupement track by $index" >

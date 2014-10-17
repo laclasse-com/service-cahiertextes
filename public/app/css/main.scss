@@ -678,10 +678,11 @@ h3, .h3 {
   background-color: #f0ad4e;
 }
 
-/* comme label-warning */
+button.this-week {
+    font-weight: bold;
+}
 
 /* next 2 rules copied from font-awesome css */
-
 .switch {
   .switch-button {
     font-family: FontAwesome;
@@ -702,7 +703,6 @@ h3, .h3 {
 }
 
 /* textAngular */
-
 .ta-root {
   padding: 0;
 }
@@ -713,7 +713,6 @@ h3, .h3 {
     padding: 6px 7px;
   }
 }
-
 
 /* directive cartable */
 .cartable { padding-left: 0; }
