@@ -33,6 +33,11 @@ URL_ENT = 'http://www.dev.laclasse.com'
 # nom du serveur d'annuaire ENT (xml-aaf académiques)
 SERVICE_ANNUAIRE_ENT = 'http://www.dev.laclasse/com/annuaire/'
 
+# SSL verification mode
+## OpenSSL::SSL::VERIFY_PEER => check SSL server cert
+## OpenSSL::SSL::VERIFY_NONE => do not check SSL server cert
+SSL_VERIFY = OpenSSL::SSL::VERIFY_PEER
+
 #
 # Configuration du Serveur d'Authentification Central CAS
 #
