@@ -4,8 +4,8 @@
   "dependencies": {
     "angular": "latest",
     "angular-bootstrap": "latest",
-      "angular-cookies": "latest",
-      "angular-i18n": "latest",
+    "angular-cookies": "latest",
+    "angular-i18n": "latest",
     "angular-mocks": "latest",
     "angular-resource": "latest",
     "angular-sanitize": "latest",
@@ -18,13 +18,12 @@
     "sizzle": "latest",
     "swagger-ui": "latest",
     "underscore": "latest",
-      "angular-animate": "latest",
-      "angular-loading-bar": "latest",
+    "angular-animate": "latest",
+    "angular-loading-bar": "latest",
     "charte-graphique-laclasse-com": "git@gitlab.erasme.org:laclasse/charte-graphique-laclasse-com.git#latest",
     "angularjs-nvd3-directives": "latest",
-    "angular-tree-control": "latest",
     "angular-moment": "latest",
-      "textAngular": "https://github.com/fraywing/textAngular.git#b915a13",
+    "textAngular": "https://github.com/fraywing/textAngular.git#b915a13",
     "ng-switcher": "latest",
     "font-awesome": "latest",
     "ng-file-upload": "latest",
@@ -40,12 +39,12 @@
     "**/.*",
     "node_modules",
     "components",
-      "vendor",
+    "vendor",
     "test",
     "tests"
   ],
   "resolutions": {
     "jquery": "~2.x",
-      "d3": "~3.4.1"
+    "d3": "~3.4.1"
   }
 }

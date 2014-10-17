@@ -439,20 +439,14 @@ angular.module( 'cahierDeTextesClientApp' )
 				   dirSelectable: false
 			       };
 
-			       $scope.treeClicked = function ( noeud ) {
-				   if ( noeud.mime === 'directory' ) {
-				       Documents.list_files( noeud.hash ).then( function ( response ) {
-					   _.chain( response.data.files )
-					       .rest()
-					       .each( function ( elt ) {
-						   elt.children = [];
-						   noeud.children.push( elt );
-					       } );
-					   // $scope.cartable.expandedNodes = [];
-					   $scope.cartable.expandedNodes.push( _($scope.cartable.files).findWhere( noeud ) );
-				       } );
-				   }
-			       };
+			       // $scope.treeClicked = function ( noeud ) {
+			       // 	   console.log('treeClicked appelée')
+			       // 	   if ( noeud.mime === 'directory' ) {
+			       // 	       Documents.list_files( noeud.hash ).then( function ( response ) {
+			       // 		   noeud.children = _( response.data.files ).rest();
+			       // 	       } );
+			       // 	   }
+			       // };
 
 			       var dead_Documents = function() {
 				   $scope.erreurs.push( { message: "Application Documents non disponible" } );
@@ -463,13 +457,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				   .success( function ( response ) {
 				       if ( _(response.error).isEmpty() && _(response).has( 'files' ) ) {
 					   $scope.cartable = response;
-					   $scope.cartable.files = _.chain( response.files )
-					       .rest()
-					       .value()
-					       .map( function ( elt ) {
-						   elt.children = [];
-						   return elt;
-					       } );
+					   $scope.cartable.files = _( response.files ).rest();
 					   $scope.cartable.expandedNodes = [];
 				       } else {
 					   dead_Documents();
@@ -481,7 +469,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				   return !_( hash.toString().match( /_+/ ) ).isNull();
 			       };
 
-			       var consume_Documents_response_callback = function( item ) {
+			       $scope.consume_Documents_response_callback = function( item ) {
 				   return function( response ) {
 				       $scope.erreurs = [];
 				       if ( !_(response.error).isEmpty() ) {
@@ -499,18 +487,18 @@ angular.module( 'cahierDeTextesClientApp' )
 				   };
 			       };
 
-			       $scope.add_ressource = function ( item, name, hash ) {
-				   if ( item.ressources === undefined ) {
-				       item.ressources = [];
-				   }
-				   if ( _( item.ressources ).findWhere( { hash: hash } ) === undefined ) {
-				       Documents.ajout_au_cahier_de_textes( $scope.selected_regroupement, hash )
-					   .success( consume_Documents_response_callback( item ) )
-					   .error( function ( response ) {
-					       console.debug( response.error );
-					   } );
-				   }
-			       };
+			       // $scope.add_ressource = function ( item, name, hash ) {
+			       // 	   if ( item.ressources === undefined ) {
+			       // 	       item.ressources = [];
+			       // 	   }
+			       // 	   if ( _( item.ressources ).findWhere( { hash: hash } ) === undefined ) {
+			       // 	       Documents.ajout_au_cahier_de_textes( $scope.selected_regroupement, hash )
+			       // 		   .success( consume_Documents_response_callback( item ) )
+			       // 		   .error( function ( response ) {
+			       // 		       console.debug( response.error );
+			       // 		   } );
+			       // 	   }
+			       // };
 
 			       $scope.upload_and_add_ressource = function ( item, fichiers ) {
 				   if ( item.ressources === undefined ) {
@@ -519,7 +507,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				   var responses = Documents.upload_dans_cahier_de_textes( $scope.selected_regroupement, fichiers );
 				   for ( var i = 0; i < responses.length; i++ ) {
 				       responses[ i ]
-					   .success( consume_Documents_response_callback( item ) )
+					   .success( $scope.consume_Documents_response_callback( item ) )
 					   .error( function ( response ) {
 					       console.debug( response.error );
 					   } );
