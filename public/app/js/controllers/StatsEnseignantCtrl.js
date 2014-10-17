@@ -132,12 +132,12 @@ angular.module( 'cahierDeTextesClientApp' )
 				   $scope.enseignant = response;
 				   // filtrer les classes de l'enseignant sur l'établissement actif
 				   $scope.enseignant.liste_classes = _.chain( $scope.enseignant.classes )
-				       .uniq( function ( classe ) {
-					   return classe.classe_libelle;
-				       } )
 				       .reject( function( classe ) {
-					   return classe.etablissement_code == $scope.current_user.profil_actif.etablissement_code_uai;
-				       })
+					   return classe.etablissement_code != $scope.current_user.profil_actif.etablissement_code_uai;
+				       } )
+				       .uniq( function ( classe ) {
+					   return classe.classe_id;
+				       } )
 				       .value();
 
 				   $scope.enseignant.liste_matieres = _.chain( $scope.enseignant.classes ).pluck('matiere_libelle').uniq().value();
