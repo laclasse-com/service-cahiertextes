@@ -439,15 +439,6 @@ angular.module( 'cahierDeTextesClientApp' )
 				   dirSelectable: false
 			       };
 
-			       // $scope.treeClicked = function ( noeud ) {
-			       // 	   console.log('treeClicked appelée')
-			       // 	   if ( noeud.mime === 'directory' ) {
-			       // 	       Documents.list_files( noeud.hash ).then( function ( response ) {
-			       // 		   noeud.children = _( response.data.files ).rest();
-			       // 	       } );
-			       // 	   }
-			       // };
-
 			       var dead_Documents = function() {
 				   $scope.erreurs.push( { message: "Application Documents non disponible" } );
 				   $scope.faulty_docs_app = true;
@@ -486,19 +477,6 @@ angular.module( 'cahierDeTextesClientApp' )
 				       }
 				   };
 			       };
-
-			       // $scope.add_ressource = function ( item, name, hash ) {
-			       // 	   if ( item.ressources === undefined ) {
-			       // 	       item.ressources = [];
-			       // 	   }
-			       // 	   if ( _( item.ressources ).findWhere( { hash: hash } ) === undefined ) {
-			       // 	       Documents.ajout_au_cahier_de_textes( $scope.selected_regroupement, hash )
-			       // 		   .success( consume_Documents_response_callback( item ) )
-			       // 		   .error( function ( response ) {
-			       // 		       console.debug( response.error );
-			       // 		   } );
-			       // 	   }
-			       // };
 
 			       $scope.upload_and_add_ressource = function ( item, fichiers ) {
 				   if ( item.ressources === undefined ) {
