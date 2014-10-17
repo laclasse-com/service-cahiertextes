@@ -154,6 +154,35 @@ describe Annuaire do
     expect( Annuaire.compat_service('regroupement') ).to eq 'regroupement'
   end
 
+  it " Rejects SSL server certificates by default" do
+    ANNUAIRE[:api_mode] = 'v2'
+    ANNUAIRE[:url] = @url_annuaire_v2.gsub('http:','https:')
+
+    # Remove SSL_VERIFY constant
+    # Since it might not ve defined, we must try/catch
+    begin 
+      Object.send(:remove_const,:SSL_VERIFY)
+    rescue
+      nil
+    end
+    expect{ Annuaire.get_user 'VPG60307' }.to raise_error(RestClient::SSLCertificateNotVerified)
+  end
+
+  it " Accepts SSL server certificates with VERIFY_NONE" do
+    ANNUAIRE[:api_mode] = 'v2'
+    ANNUAIRE[:url] = @url_annuaire_v2.gsub('http:','https:')
+    SSL_VERIFY = OpenSSL::SSL::VERIFY_NONE
+    expect{ Annuaire.get_user 'VPG60307' }.to_not raise_error
+  end
+
+  it " Rejects SSL server certificates with VERIFY_PEER" do
+    ANNUAIRE[:api_mode] = 'v2'
+    ANNUAIRE[:url] = @url_annuaire_v2.gsub('http:','https:')
+    Object.send(:remove_const,:SSL_VERIFY)
+    SSL_VERIFY = OpenSSL::SSL::VERIFY_PEER
+    expect{ Annuaire.get_user 'VPG60307' }.to raise_error(RestClient::SSLCertificateNotVerified)
+  end
+
   it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour get_user" do
     ANNUAIRE[:api_mode] = 'v2'
     ANNUAIRE[:url] = @url_annuaire_v2
@@ -305,3 +334,4 @@ describe Annuaire do
   #   r3.each { |k, v| puts "r2.key?('"+k.to_s+"').should be r3.key?('"+k.to_s+"')" }
 
 end
+
