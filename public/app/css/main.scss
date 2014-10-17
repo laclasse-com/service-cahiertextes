@@ -90,11 +90,18 @@ body {
   background-color: #66cc66;
 }
 
-.fc-event-title {
-  position: absolute;
-  text-align: center;
-  top: calc(50% - 0.75em);
-  width: 100%;
+.fc-event-inner {
+    display: table;
+    .glyphicon-paperclip {
+	position: absolute;
+    }
+    .fc-event-title {
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+	width: 100%;
+	line-height: 1em;
+    }
 }
 
 .clickable-event {
