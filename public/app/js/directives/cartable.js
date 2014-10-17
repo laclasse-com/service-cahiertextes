@@ -94,7 +94,9 @@ angular.module( 'cahierDeTextesClientApp' )
     <button class="btn btn-sm btn-success pull-right" \
 	    style="padding-top: 0; padding-bottom: 0" \
 	    data-ng-if="node.mime !=  \'directory\'" \
-	    data-ng-click="add_ressource_to_target( target, node, regroupement )">+</button> \
+			  data-ng-click="add_ressource_to_target( target, node, regroupement )"> \
+			      <span class="glyphicon glyphicon-plus"></span> \
+			  </button> \
     <div cartable \
 	 data-ng-if="node.mime ==  \'directory\'" \
 	 data-racine="node.children" \
