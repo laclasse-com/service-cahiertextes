@@ -716,3 +716,5 @@ h3, .h3 {
 .cartable { padding-left: 0; }
 .cartable .cartable li { padding-left: 1.5em; }
 .cartable .glyphicon-folder-close { cursor: pointer; }
+.cartable .disabled .glyphicon-folder-close { cursor: default; }
+.cartable-item.disabled { color: #aaa; }
