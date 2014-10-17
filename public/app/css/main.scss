@@ -723,4 +723,6 @@ button.this-week {
 .cartable .cartable li { padding-left: 1.5em; }
 .cartable .glyphicon-folder-close { cursor: pointer; }
 .cartable .disabled { color: #aaa; }
-.cartable .disabled button { display: none; }
+.cartable .disabled button.from-docs { display: none; }
+.cartable button.from-CT { display: inline; }
+.cartable .disabled button.from-CT { display: inline; }
