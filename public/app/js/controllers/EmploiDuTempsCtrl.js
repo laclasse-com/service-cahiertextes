@@ -127,6 +127,9 @@ angular.module( 'cahierDeTextesClientApp' )
 					 var regroupement = event.regroupement !== 'undefined' ? event.regroupement.libelle : '';
 					 title_element.prepend( regroupement + ' - ' );
 				     }
+				     if ( event.has_resources ) {
+					 title_element.prepend( '<i class="glyphicon glyphicon-paperclip"></i>' );
+				     }
 				     if ( $scope.current_user.profil_actif.type !== 'ELV' ) {
 					 var inner_element = element.find( '.fc-event-inner' );
 					 if ( event.temps_estime > 0 ) {
