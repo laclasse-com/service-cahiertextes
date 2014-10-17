@@ -131,17 +131,13 @@
 		  <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
 		</button>
 		<div class="dropdown-menu" role="menu" ng-click="$event.stopPropagation()">
-		  <div class="treecontrol-container">
-		    <treecontrol class="tree-classic"
-				 tree-model="cartable.files"
-				 options="treeOptions"
-				 expanded-nodes="cartable.expandedNodes"
-				 on-selection="treeClicked( node )"
-				 data-ng-class="{'even': $even, 'odd': $odd}">
-		      {{node.name}} ({{node.mime}}) <button class="btn btn-sm btn-success" data-ng-click="add_ressource( cours, node.name, node.hash )">+</button>
-		    </treecontrol>
+		  <div cartable
+		       class="treecontrol-container"
+		       data-racine="cartable.files"
+		       data-target="cours"
+		       data-regroupement="selected_regroupement"
+		       data-add-callback="consume_Documents_response_callback">
 		  </div>
-
 		  <input type="file"
 			 class="upload"
 			 name="upload[]"
@@ -241,15 +237,12 @@
 		    <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
 		  </button>
 		  <div class="dropdown-menu" role="menu" ng-click="$event.stopPropagation()">
-		    <div class="treecontrol-container">
-		      <treecontrol class="tree-classic"
-				   tree-model="cartable.files"
-				   options="treeOptions"
-				   expanded-nodes="cartable.expandedNodes"
-				   on-selection="treeClicked( node )"
-				   data-ng-class="{'even': $even, 'odd': $odd}">
-			{{node.name}} ({{node.mime}}) <button class="btn btn-sm btn-success" data-ng-click="add_ressource( devoir, node.name, node.hash )">+</button>
-		      </treecontrol>
+		    <div cartable
+			 class="treecontrol-container"
+			 data-racine="cartable.files"
+			 data-target="devoir"
+			 data-regroupement="selected_regroupement"
+			 data-add-callback="consume_Documents_response_callback">
 		    </div>
 
 		    <input type="file"
@@ -339,15 +332,12 @@
 		<span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
 	      </button>
 	      <div class="dropdown-menu" role="menu" ng-click="$event.stopPropagation()">
-		<div class="treecontrol-container">
-		  <treecontrol class="tree-classic"
-			       tree-model="cartable.files"
-			       options="treeOptions"
-			       expanded-nodes="cartable.expandedNodes"
-			       on-selection="treeClicked( node )"
-			       data-ng-class="{'even': $even, 'odd': $odd}">
-		    {{node.name}} ({{node.mime}}) <button class="btn btn-sm btn-success" data-ng-click="add_ressource( devoir, node.name, node.hash )">+</button>
-		  </treecontrol>
+		<div cartable
+		     class="treecontrol-container"
+		     data-racine="cartable.files"
+		     data-target="devoir"
+		     data-regroupement="selected_regroupement"
+		     data-add-callback="consume_Documents_response_callback">
 		</div>
 
 		<input type="file"

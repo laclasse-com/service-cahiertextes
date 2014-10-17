@@ -710,3 +710,9 @@ h3, .h3 {
     padding: 6px 7px;
   }
 }
+
+
+/* directive cartable */
+.cartable { padding-left: 0; }
+.cartable .cartable li { padding-left: 1.5em; }
+.cartable .glyphicon-folder-close { cursor: pointer; }

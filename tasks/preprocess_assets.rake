@@ -104,7 +104,6 @@ namespace :preprocess_assets do
                                                           'public/app/vendor/angular-moment/angular-moment.js',
                                                           'public/app/vendor/angular-resource/angular-resource.js',
                                                           'public/app/vendor/angular-sanitize/angular-sanitize.js',
-                                                          'public/app/vendor/angular-tree-control/angular-tree-control.js',
                                                           'public/app/vendor/angular-ui-calendar/src/calendar.js',
                                                           'public/app/vendor/angular-ui-router/release/angular-ui-router.js',
                                                           'public/app/vendor/angularjs-nvd3-directives/dist/angularjs-nvd3-directives.js',
