@@ -137,7 +137,8 @@ angular.module( 'cahierDeTextesClientApp' )
 				       } )
 				       .reject( function( classe ) {
 					   return classe.etablissement_code == $scope.current_user.profil_actif.etablissement_code_uai;
-				       });
+				       })
+				       .value();
 
 				   $scope.enseignant.liste_matieres = _.chain( $scope.enseignant.classes ).pluck('matiere_libelle').uniq().value();
 
