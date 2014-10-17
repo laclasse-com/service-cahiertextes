@@ -18,7 +18,7 @@ namespace :preprocess_assets do
   task development: [ :templates, :css ]
 
   desc 'For production deployement'
-  task development: [ :templates, :js, :css ]
+  task production: [ :templates, :js, :css ]
 
   desc 'Javascriptify templates'
   task templates: :load_config do
