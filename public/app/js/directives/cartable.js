@@ -1,6 +1,7 @@
 'use strict';
 
 angular.module( 'cahierDeTextesClientApp' )
+// https://stackoverflow.com/a/18609594/144263
     .factory( 'RecursionHelper',
 	      [ '$compile',
 		function($compile){
@@ -48,7 +49,6 @@ angular.module( 'cahierDeTextesClientApp' )
 		[ 'RecursionHelper',
 		  function( RecursionHelper ) {
 		      return {
-			  //restrict: 'E',
 			  scope: {
 			      racine: '=racine',
 			      target: '=target',
@@ -59,7 +59,6 @@ angular.module( 'cahierDeTextesClientApp' )
 			  controller: [ '$scope', 'Documents',
 					function( $scope, Documents ) {
 					    $scope.getChildren = function( noeud ) {
-						console.log('inner getChildren appelée')
 						Documents.list_files( noeud.hash ).then( function ( response ) {
 						    noeud.children = _( response.data.files ).rest();
 						} );
@@ -83,27 +82,28 @@ angular.module( 'cahierDeTextesClientApp' )
 			  template: ' \
 <ul class="cartable"> \
   <li data-ng-repeat="node in racine" \
-      class="cartable-item" \
+			  data-ng-class="{\'disabled\': node.name !== \'Cahier de textes.ct\'}" \
       style="list-style-type: none"> \
     <span class="glyphicon" \
-          data-ng-class="{\'glyphicon-folder-open\': node.children, \'glyphicon-folder-close\': !node.children}" \
-          data-ng-if="node.mime ==  \'directory\'" \
-          data-ng-click="getChildren( node )"></span> \
-    <span class="glyphicon glyphicon-file" data-ng-if="node.mime !=  \'directory\'"></span> \
-    {{node.name}} <span data-ng-if="node.mime !=  \'directory\'">({{node.mime}})</span> \
+	  data-ng-class="{\'glyphicon-folder-open\': node.children, \'glyphicon-folder-close\': !node.children}" \
+	  data-ng-if="node.mime ==  \'directory\'" \
+	  data-ng-click="getChildren( node )"></span> \
+			      <span class="glyphicon glyphicon-file" data-ng-if="node.mime != \'directory\'"></span> \
+			      <span class="glyphicon glyphicon-folder-close" data-ng-if="node.name == \'Cahier de textes.ct\'"></span> \
+			  {{node.name}} <span data-ng-if="node.mime !=  \'directory\'">({{node.mime}})</span> \
     <button class="btn btn-sm btn-success pull-right" \
-            style="padding-top: 0; padding-bottom: 0" \
-            data-ng-if="node.mime !=  \'directory\'" \
-            data-ng-click="add_ressource_to_target( target, node, regroupement )">+</button> \
+	    style="padding-top: 0; padding-bottom: 0" \
+	    data-ng-if="node.mime !=  \'directory\'" \
+	    data-ng-click="add_ressource_to_target( target, node, regroupement )">+</button> \
     <div cartable \
-         data-ng-if="node.mime ==  \'directory\'" \
-         data-racine="node.children" \
-         data-target="target" \
-         data-regroupement="regroupement" \
-         data-add-callback="addCallback"> \
+	 data-ng-if="node.mime ==  \'directory\'" \
+	 data-racine="node.children" \
+	 data-target="target" \
+	 data-regroupement="regroupement" \
+	 data-add-callback="addCallback"> \
     </div> \
   </li> \
 </ul>',
 			  compile: RecursionHelper.compile
-		      }
+		      };
 		  } ] );
