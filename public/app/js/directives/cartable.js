@@ -82,7 +82,7 @@ angular.module( 'cahierDeTextesClientApp' )
 			  template: ' \
 <ul class="cartable"> \
   <li data-ng-repeat="node in racine" \
-			  data-ng-class="{\'disabled\': node.name !== \'Cahier de textes.ct\'}" \
+			  data-ng-class="{\'disabled\': node.name == \'Cahier de textes.ct\'}" \
       style="list-style-type: none"> \
     <span class="glyphicon" \
 	  data-ng-class="{\'glyphicon-folder-open\': node.children, \'glyphicon-folder-close\': !node.children}" \
