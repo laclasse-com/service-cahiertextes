@@ -723,4 +723,4 @@ button.this-week {
 .cartable .cartable li { padding-left: 1.5em; }
 .cartable .glyphicon-folder-close { cursor: pointer; }
 .cartable .disabled { color: #aaa; }
-.cartable .disabled .glyphicon-folder-close { cursor: default; }
+.cartable .disabled button { display: none; }
