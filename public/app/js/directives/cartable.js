@@ -56,8 +56,8 @@ angular.module( 'cahierDeTextesClientApp' )
 			      addCallback: '=addCallback'
 			  },
 			  replace: true,
-			  controller: [ '$scope', 'Documents',
-					function( $scope, Documents ) {
+			  controller: [ '$scope', '$sce', 'DOCS_URL', 'Documents',
+					function( $scope, $sce, DOCS_URL, Documents ) {
 					    $scope.getChildren = function( noeud ) {
 						Documents.list_files( noeud.hash ).then( function ( response ) {
 						    noeud.children = _( response.data.files ).rest();
@@ -77,6 +77,13 @@ angular.module( 'cahierDeTextesClientApp' )
 						}
 					    };
 
+					    $scope.add_ressource_already_in_CT_to_target = function( target, node ) {
+						target.ressources.push( {
+						    name: node.name,
+						    hash: node.hash,
+						    url: $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + node.hash )
+						} );
+					    };
 					}
 				      ],
 			  template: ' \
@@ -90,10 +97,16 @@ angular.module( 'cahierDeTextesClientApp' )
 	  data-ng-click="getChildren( node )"></span> \
     <span class="glyphicon glyphicon-file" data-ng-if="node.mime != \'directory\'"></span> \
     {{node.name}} <span data-ng-if="node.mime !=  \'directory\'">({{node.mime}})</span> \
-    <button class="btn btn-sm btn-success pull-right" \
+    <button class="btn btn-sm btn-success pull-right from-docs" \
 	    style="padding-top: 0; padding-bottom: 0" \
 	    data-ng-if="node.mime !=  \'directory\'" \
 	    data-ng-click="add_ressource_to_target( target, node, regroupement )"> \
+      <span class="glyphicon glyphicon-plus"></span> \
+    </button> \
+    <button class="btn btn-sm btn-success pull-right from-ct" \
+	    style="padding-top: 0; padding-bottom: 0" \
+	    data-ng-if="node.mime !=  \'directory\'" \
+	    data-ng-click="add_ressource_already_in_CT_to_target( target, node )"> \
       <span class="glyphicon glyphicon-plus"></span> \
     </button> \
     <div cartable \
