@@ -88,7 +88,7 @@ angular.module( 'cahierDeTextesClientApp' )
 	  data-ng-class="{\'glyphicon-folder-open\': node.children, \'glyphicon-folder-close\': !node.children}" \
 	  data-ng-if="node.mime ==  \'directory\'" \
 	  data-ng-click="getChildren( node )"></span> \
-    <span class="glyphicon glyphicon-folder-close" data-ng-if="node.name == \'Cahier de textes.ct\'"></span> \
+    <span class="glyphicon glyphicon-file" data-ng-if="node.mime != \'directory\'"></span> \
     {{node.name}} <span data-ng-if="node.mime !=  \'directory\'">({{node.mime}})</span> \
     <button class="btn btn-sm btn-success pull-right" \
 	    style="padding-top: 0; padding-bottom: 0" \
