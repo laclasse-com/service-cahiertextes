@@ -122,16 +122,16 @@ angular.module( 'cahierDeTextesClientApp' )
 				 $scope.calendar.options.eventRender = function ( event, element ) {
 				     // FIXME: manipulation du DOM dans le contrôleur, sale, mais obligé pour l'interprétation du HTML ?
 				     var title_element = element.find( '.fc-event-title' );
+				     var inner_element = element.find( '.fc-event-inner' );
 
 				     if ( $scope.current_user.profil_actif.classes.length > 0 ) {
 					 var regroupement = event.regroupement !== 'undefined' ? event.regroupement.libelle : '';
 					 title_element.prepend( regroupement + ' - ' );
 				     }
 				     if ( event.has_resources ) {
-					 title_element.prepend( '<i class="glyphicon glyphicon-paperclip"></i>' );
+					 inner_element.prepend( '<i class="glyphicon glyphicon-paperclip"></i>' );
 				     }
 				     if ( $scope.current_user.profil_actif.type !== 'ELV' ) {
-					 var inner_element = element.find( '.fc-event-inner' );
 					 if ( event.temps_estime > 0 ) {
 					     var class_couleur = '';
 					     if (event.temps_estime  < 4 ) {
