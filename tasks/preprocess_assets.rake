@@ -14,6 +14,12 @@ namespace :preprocess_assets do
   desc 'Everything'
   task all: [ :templates, :js, :css ]
 
+  desc 'For development deployement'
+  task development: [ :templates, :css ]
+
+  desc 'For production deployement'
+  task development: [ :templates, :js, :css ]
+
   desc 'Javascriptify templates'
   task templates: :load_config do
     STDERR.puts 'Compilation of angular templates into javascript files'
