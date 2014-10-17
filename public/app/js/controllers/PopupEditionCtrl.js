@@ -435,6 +435,25 @@ angular.module( 'cahierDeTextesClientApp' )
 			       // {{{ Gestion des documents attachés
 			       $scope.cartable = {};
 			       $scope.cartable.expandedNodes = [];
+			       $scope.treeOptions = {
+				   dirSelectable: false
+			       };
+
+			       $scope.treeClicked = function ( noeud ) {
+				   if ( noeud.mime === 'directory' ) {
+				       Documents.list_files( noeud.hash ).then( function ( response ) {
+					   _.chain( response.data.files )
+					       .rest()
+					       .each( function ( elt ) {
+						   elt.children = [];
+						   noeud.children.push( elt );
+					       } );
+					   // $scope.cartable.expandedNodes = [];
+					   $scope.cartable.expandedNodes.push( _($scope.cartable.files).findWhere( noeud ) );
+				       } );
+				   }
+			       };
+
 			       var dead_Documents = function() {
 				   $scope.erreurs.push( { message: "Application Documents non disponible" } );
 				   $scope.faulty_docs_app = true;
@@ -451,6 +470,7 @@ angular.module( 'cahierDeTextesClientApp' )
 						   elt.children = [];
 						   return elt;
 					       } );
+					   $scope.cartable.expandedNodes = [];
 				       } else {
 					   dead_Documents();
 				       }
@@ -511,24 +531,6 @@ angular.module( 'cahierDeTextesClientApp' )
 				       return ressource.hash == hash;
 				   } );
 				   $scope.is_dirty();
-			       };
-
-			       $scope.treeClicked = function ( noeud ) {
-				   if ( noeud.mime === 'directory' ) {
-				       Documents.list_files( noeud.hash ).then( function ( response ) {
-					   _.chain( response.data.files )
-					       .rest()
-					       .each( function ( elt ) {
-						   elt.children = [];
-						   noeud.children.push( elt );
-					       } );
-					   // $scope.cartable.expandedNodes = [];
-					   $scope.cartable.expandedNodes.push( _($scope.cartable.files).findWhere( noeud ) );
-				       } );
-				   }
-			       };
-			       $scope.treeOptions = {
-				   dirSelectable: false
 			       };
 			       // }}}
 
