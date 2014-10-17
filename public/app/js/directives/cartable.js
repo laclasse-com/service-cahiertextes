@@ -4,7 +4,7 @@ angular.module( 'cahierDeTextesClientApp' )
 // https://stackoverflow.com/a/18609594/144263
     .factory( 'RecursionHelper',
 	      [ '$compile',
-		function($compile){
+		function( $compile ){
 		    return {
 			/**
 			 * Manually compiles the element, fixing the recursion loop.
@@ -82,21 +82,20 @@ angular.module( 'cahierDeTextesClientApp' )
 			  template: ' \
 <ul class="cartable"> \
   <li data-ng-repeat="node in racine" \
-			  data-ng-class="{\'disabled\': node.name == \'Cahier de textes.ct\'}" \
+      data-ng-class="{\'disabled\': node.name == \'Cahier de textes.ct\'}" \
       style="list-style-type: none"> \
     <span class="glyphicon" \
 	  data-ng-class="{\'glyphicon-folder-open\': node.children, \'glyphicon-folder-close\': !node.children}" \
-			  data-ng-if="node.mime ==  \'directory\' && node.name != \'Cahier de textes.ct\'" \
+	  data-ng-if="node.mime ==  \'directory\'" \
 	  data-ng-click="getChildren( node )"></span> \
-			      <span class="glyphicon glyphicon-file" data-ng-if="node.mime != \'directory\'"></span> \
-			      <span class="glyphicon glyphicon-folder-close" data-ng-if="node.name == \'Cahier de textes.ct\'"></span> \
-			  {{node.name}} <span data-ng-if="node.mime !=  \'directory\'">({{node.mime}})</span> \
+    <span class="glyphicon glyphicon-folder-close" data-ng-if="node.name == \'Cahier de textes.ct\'"></span> \
+    {{node.name}} <span data-ng-if="node.mime !=  \'directory\'">({{node.mime}})</span> \
     <button class="btn btn-sm btn-success pull-right" \
 	    style="padding-top: 0; padding-bottom: 0" \
 	    data-ng-if="node.mime !=  \'directory\'" \
-			  data-ng-click="add_ressource_to_target( target, node, regroupement )"> \
-			      <span class="glyphicon glyphicon-plus"></span> \
-			  </button> \
+	    data-ng-click="add_ressource_to_target( target, node, regroupement )"> \
+      <span class="glyphicon glyphicon-plus"></span> \
+    </button> \
     <div cartable \
 	 data-ng-if="node.mime ==  \'directory\'" \
 	 data-racine="node.children" \
