@@ -3,7 +3,8 @@
     <div class="navbar col-md-12">
       <div class="pull-right">
 	{{current_user['LaclassePrenom']}} {{current_user['LaclasseNom']}}
-	<select data-ng-model="current_user['profil_actif']"
+	<select id="profils"
+		data-ng-model="current_user['profil_actif']"
 		data-ng-options="profil.etablissement + ' : ' + profil.nom group by profil.etablissement for profil in current_user.profils" data-ng-change="reload()">
 	</select>
 	<a class="btn btn-danger" href="logout" tooltip="Déconnexion" tooltip-placement="bottom"><i class="glyphicon glyphicon-log-out"></i></a>
