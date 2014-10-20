@@ -57,7 +57,7 @@ module CahierDeTextesAPI
 
         devoirs.map do |devoir|
           hash = devoir.to_deep_hash
-          hash[:devoir_todo_items].select! { |dti| dti.eleve_id == user.uid } unless user.nil?
+          hash[:devoir_todo_items].select! { |dti| dti[:eleve_id] == user.uid } unless user.nil?
           hash[:devoir_todo_items] = [] if user.nil?
 
           hash[:fait] = user.nil? ? false : devoir.fait_par?( user.uid )
@@ -77,7 +77,7 @@ module CahierDeTextesAPI
           error!( 'Devoir inconnu', 404 )
         else
           hash = devoir.to_deep_hash
-          hash[:devoir_todo_items].select! { |dti| dti.eleve_id == user.uid } unless user.nil?
+          hash[:devoir_todo_items].select! { |dti| dti[:eleve_id] == user.uid } unless user.nil?
           hash[:devoir_todo_items] = [] if user.nil?
 
           hash[:fait] = user.nil? ? false : devoir.fait_par?( user.uid )
@@ -225,8 +225,8 @@ module CahierDeTextesAPI
         devoir.fait_par?( user.uid ) ? devoir.a_faire_par!( user.uid ) : devoir.fait_par!( user.uid )
 
         hash = devoir.to_deep_hash
-        hash[:devoir_todo_items].select! { |dti| dti.eleve_id == user.uid } unless user.nil?
         hash[:devoir_todo_items] = [] if user.nil?
+        hash[:devoir_todo_items].select! { |dti| dti[:eleve_id] == user.uid } unless user.nil?
 
         hash[:fait] = user.nil? ? false : devoir.fait_par?( user.uid )
         hash[:date_fait] = hash[:fait] ? devoir.fait_le( user.uid ) : nil
@@ -248,7 +248,7 @@ module CahierDeTextesAPI
           devoir.save
 
           hash = devoir.to_deep_hash
-          hash[:devoir_todo_items].select! { |dti| dti.eleve_id == user.uid } unless user.nil?
+          hash[:devoir_todo_items].select! { |dti| dti[:eleve_id] == user.uid } unless user.nil?
           hash[:devoir_todo_items] = [] if user.nil?
 
           hash[:fait] = user.nil? ? false : devoir.fait_par?( user.uid )
