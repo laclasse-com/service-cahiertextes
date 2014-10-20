@@ -41,6 +41,6 @@ module UserHelpers
   end
 end
 
-def eleve
+def init_eleve
 
 end
