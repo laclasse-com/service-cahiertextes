@@ -5,7 +5,7 @@ require 'spec_helper'
 describe CahierDeTextesAPI::API do
   include Rack::Test::Methods
 
-  before :all do
+  before :each do
     TableCleaner.new( DB, [] ).clean
 
     load_test_data
