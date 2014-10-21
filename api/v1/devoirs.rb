@@ -100,7 +100,7 @@ module CahierDeTextesAPI
         optional :temps_estime
       }
       post  do
-        error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS' )
+        error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS' ) || user.admin?
 
         if CreneauEmploiDuTemps[ params[:creneau_emploi_du_temps_id] ].nil?
           error!( 'Paramètres invalides', 404 )
@@ -157,7 +157,7 @@ module CahierDeTextesAPI
         optional :temps_estime
       }
       put '/:id' do
-        error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS' )
+        error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS' ) || user.admin?
 
         devoir = Devoir[ params[:id] ]
         if devoir.nil?
@@ -197,6 +197,8 @@ module CahierDeTextesAPI
         requires :date_due
       }
       put '/:id/copie/cours/:cours_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date_due/:date_due' do
+        error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS' ) || user.admin?
+
         devoir = Devoir[ params[:id] ]
 
         nouveau_devoir = Devoir.create( cours_id: params[:cours_id],
@@ -239,7 +241,7 @@ module CahierDeTextesAPI
         requires :id
       }
       delete '/:id' do
-        error!( '401 Unauthorized', 401 ) unless user.is? 'ENS'
+        error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS' ) || user.admin?
 
         devoir = Devoir[ params[:id] ]
 
