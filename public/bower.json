@@ -29,7 +29,9 @@
     "ng-file-upload": "latest",
     "ng-color-picker": "https://github.com/joujiahe/ng-color-picker.git#latest",
     "sweetalert": "latest",
-    "angular-bootstrap-checkbox": "~0.3.1"
+      "angular-bootstrap-checkbox": "latest",
+      "webfont-opensans": "latest",
+      "webfont-opensans-condensed": "latest"
   },
   "devDependencies": {
     "angular-mocks": "latest",
