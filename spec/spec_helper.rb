@@ -15,10 +15,12 @@ require_relative '../config/database'
 require_relative '../api'
 require_relative '../web'
 
+require_relative '../lib/HashedUser'
+
 require_relative './helper_lib/table_cleaner'
 require_relative './helper_lib/test_data'
 require_relative './helper_mocks/AuthenticationHelpers'
-require_relative './helper_mocks/UserHelpers'
+require_relative './helper_mocks/mocked_data'
 
 Capybara.default_driver = :selenium
 Capybara.app = CahierDeTextesAPI::Web
