@@ -31,8 +31,8 @@ angular.module( 'cahierDeTextesClientApp' )
 
 				      $scope.identifie_objet = function( mrpni ) {
 					  if ( !_(mrpni.id_annuaire).isNull()
-					       && !_(mrpni.id_annuaire).isUndefined()
-					       && !_(mrpni.id_annuaire).isEmpty() ) {
+					       || !_(mrpni.id_annuaire).isUndefined()
+					       || !_(mrpni.id_annuaire).isEmpty() ) {
 					      $http.put( APP_PATH + '/api/v1/import/mrpni/' + mrpni.sha256 + '/est/' + mrpni.id_annuaire )
 						  .success( function() {
 						      mrpni.identified = true;
@@ -66,6 +66,7 @@ angular.module( 'cahierDeTextesClientApp' )
 					      .then( function( response ) {
 						  $scope.regroupements = response.data;
 						  _($scope.regroupements).each( function( classe ) {
+						      console.log(classe)
 						      if ( _(classe.libelle).isNull() ) {
 							  classe.libelle = classe.libelle_aaf;
 						      }
