@@ -89,6 +89,8 @@ module CahierDeTextesAPI
         optional :semaines_de_presence_salle, type: Fixnum
       }
       post  do
+        error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS' ) || user.admin?
+
         plage_horaire_debut = PlageHoraire.where(debut: params[:heure_debut] ).first
         if plage_horaire_debut.nil?
           plage_horaire_debut = PlageHoraire.create(label: '',
@@ -145,7 +147,7 @@ module CahierDeTextesAPI
         optional :semaines_de_presence_salle, type: Fixnum
       }
       put '/:id'  do
-        error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS' ) || user.is?( 'DIR' )
+        error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS' ) || user.admin?
 
         creneau = CreneauEmploiDuTemps[ params[:id] ]
         unless creneau.nil?
@@ -222,7 +224,7 @@ module CahierDeTextesAPI
         requires :date_creneau, type: Date
       }
       delete '/:id' do
-        error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS' ) || user.is?( 'DIR' )
+        error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS' ) || user.admin?
 
         creneau = CreneauEmploiDuTemps[ params[:id] ]
         unless creneau.nil?

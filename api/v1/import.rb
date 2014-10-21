@@ -41,6 +41,8 @@ module CahierDeTextesAPI
         requires :id_annuaire
       }
       put '/mrpni/:sha256/est/:id_annuaire' do
+        error!( '401 Unauthorized', 401 ) unless user.is?( 'DIR' ) || user.admin?
+
         fi = FailedIdentification.where( sha256: params[:sha256] ).first
         unless fi.nil?
           fi.update( id_annuaire: params[:id_annuaire] )

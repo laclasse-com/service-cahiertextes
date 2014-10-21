@@ -45,6 +45,8 @@ module CahierDeTextesAPI
         optional :ressources
       }
       post do
+        error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS' ) || user.admin?
+
         cahier_de_textes = CahierDeTextes.where( regroupement_id: params[:regroupement_id] ).first
         cahier_de_textes = CahierDeTextes.create( regroupement_id: params[:regroupement_id] ) if cahier_de_textes.nil?
         cours = Cours.create( enseignant_id: user.uid,
@@ -71,6 +73,8 @@ module CahierDeTextesAPI
         optional :ressources, type: Array
       }
       put '/:id' do
+        error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS' ) || user.admin?
+
         cours = Cours[ params[:id] ]
 
         unless cours.nil? || !cours.date_validation.nil?
@@ -118,6 +122,8 @@ module CahierDeTextesAPI
         requires :date, type: Date
       }
       put '/:id/copie/regroupement/:regroupement_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date/:date' do
+        error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS' ) || user.admin?
+
         cours = Cours[ params[:id] ]
 
         unless cours.nil?
@@ -158,6 +164,8 @@ module CahierDeTextesAPI
         requires :id
       }
       delete '/:id' do
+        error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS' ) || user.admin?
+
         cours = Cours[ params[:id] ]
 
         unless cours.nil? || !cours.date_validation.nil?
