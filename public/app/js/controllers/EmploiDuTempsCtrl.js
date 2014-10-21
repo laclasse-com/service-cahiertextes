@@ -162,6 +162,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				 };
 
 				 // ############################## Profile-specific code ##############################################
+				 // Les EVS et DIR on une classe sélectionnée par défaut
 				 if ( $scope.current_user.profil_actif.type == 'EVS'
 				      || $scope.current_user.profil_actif.type == 'DIR' ) {
 					  filter_data = function( raw_data ) {
@@ -175,8 +176,23 @@ angular.module( 'cahierDeTextesClientApp' )
 
 					  $scope.selected_regroupement_id = $scope.current_user.profil_actif.classes[0].id;
 				      }
-				 if ( $scope.current_user.profil_actif.type == 'ENS' || $scope.current_user.profil_actif.admin ) {
-				     $scope.uniquement_mes_creneaux = true;
+				 // Les TUT peuvent choisir parmi leurs enfants
+				 if ( $scope.current_user.profil_actif.type == 'TUT' ) {
+				     $scope.uid_enfant_actif = $scope.current_user.enfants[0].enfant.id_ent;
+				     $scope.reload_data = popup_callback;
+				 }
+				 // Les non-ENS ne sont qu'en lecture seule
+				 if ( $scope.current_user.profil_actif.type != 'ENS' ) {
+				     $scope.calendar.options.eventClick = function( event ) {
+					      if ( !popup_ouverte && ( ( event.details.devoirs.length > 0 ) || ( ! _(event.details.cours).isNull() && _(event.details.cours).has( 'contenu' ) ) ) ) {
+						  PopupsCreneau.display( event.title, event.details.cours, event.details.devoirs, popup_callback, popup_ouverte );
+					      }
+					  };
+				      }
+
+				 if ( $scope.current_user.profil_actif.type == 'ENS'
+				      || ( $scope.current_user.profil_actif.admin && $scope.current_user.profil_actif.type != 'TUT' && $scope.current_user.profil_actif.type != 'ELV' ) ) {
+					  $scope.uniquement_mes_creneaux = true;
 				     $scope.calendar.options.selectable = true;
 				     $scope.calendar.options.editable = true;
 
@@ -246,21 +262,8 @@ angular.module( 'cahierDeTextesClientApp' )
 					 }
 				     };
 				 }
-				 if ( $scope.current_user.profil_actif.type === 'TUT' ) {
-				     $scope.uid_enfant_actif = $scope.current_user.enfants[0].enfant.id_ent;
-				     $scope.reload_data = popup_callback;
-				 }
-				 if ( $scope.current_user.profil_actif.type == 'ELV'
-				      || $scope.current_user.profil_actif.type == 'TUT'
-				      || $scope.current_user.profil_actif.type == 'EVS'
-				      || $scope.current_user.profil_actif.type == 'DIR' ) {
-					  $scope.calendar.options.eventClick = function( event ) {
-					      if ( !popup_ouverte && ( ( event.details.devoirs.length > 0 ) || ( ! _(event.details.cours).isNull() && _(event.details.cours).has( 'contenu' ) ) ) ) {
-						  PopupsCreneau.display( event.title, event.details.cours, event.details.devoirs, popup_callback, popup_ouverte );
-					      }
-					  };
-				      }
 
+				 // Récupération d'une date prédéfinie s'il y a lieu
 				 if ( $scope.current_user.date ) {
 				     var mdate = moment( $scope.current_user.date );
 				     $scope.calendar.options.year = mdate.year();
