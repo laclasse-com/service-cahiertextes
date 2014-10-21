@@ -504,6 +504,13 @@ angular.module( 'cahierDeTextesClientApp' )
 			       $scope.ajout_devoir = function( where, creneau_cible ) {
 				   if ( _(creneau_cible).isNull() ) {
 				       creneau_cible = $scope.creneau;
+				   } else if ( creneau_cible == 'next' ) {
+				       creneau_cible = _.chain($scope.creneaux_devoirs_possibles)
+					   .select( function( creneau ) {
+					       return creneau.heure_debut > $scope.creneau.heure_debut;
+					   } )
+					   .head()
+					   .value();
 				   }
 				   var devoir = new Devoirs( {
 				       cours_id: $scope.cours.id,
