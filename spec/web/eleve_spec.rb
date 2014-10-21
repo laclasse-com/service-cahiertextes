@@ -6,7 +6,6 @@ feature CahierDeTextesAPI::Web do
   include Rack::Test::Methods
 
   before :each do
-    # visit 'http://www.dev.laclasse.com/sso-mysql/login?service=http%3A%2F%2Flocalhost%3A9292%2Fct%2Fauth%2Fcas%2Fcallback%3Furl%3Dhttp%253A%252F%252Flocalhost%253A9292%252Fct%252F'
     visit 'http://localhost:9292/ct'
 
     fill_in 'Identifiant:', with: TEST_USER[ :username ]
