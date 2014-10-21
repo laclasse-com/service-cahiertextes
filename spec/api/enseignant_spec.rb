@@ -5,6 +5,35 @@ require 'spec_helper'
 describe CahierDeTextesAPI::API do
   include Rack::Test::Methods
 
+  before :all do
+    module Annuaire
+      module_function
+
+      def get_user( _uid )
+        MOCKED_DATA[:users][:enseignant][:annuaire]
+      end
+
+      def get_user_regroupements( uid )
+        u = get_user( uid )
+        { 'classes' => u['classes'],
+          'groupes_eleves' => u['groupes_eleves'],
+          'groupes_libres' => u['groupes_libres']
+        }
+      end
+
+      def get_etablissement_regroupements( _uai )
+        MOCKED_DATA[:etablissement][:regroupements]
+      end
+    end
+
+    # Mock d'une session Élève
+    module UserHelpers
+      def user
+        HashedUser.new( MOCKED_DATA[:users][:enseignant][:rack_session] )
+      end
+    end
+  end
+
   before :each do
     TableCleaner.new( DB, [] ).clean
 
