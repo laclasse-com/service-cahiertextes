@@ -30,16 +30,18 @@ angular.module( 'cahierDeTextesClientApp' )
 				      $scope.result = data;
 
 				      $scope.identifie_objet = function( mrpni ) {
-					  $http.put( APP_PATH + '/api/v1/import/mrpni/' + mrpni.sha256 + '/est/' + mrpni.id_annuaire )
-					      .success( function() {
-						  mrpni.identified = true;
-					      });
+					  if ( !_(mrpni.id_annuaire).isNull()
+					       && !_(mrpni.id_annuaire).isUndefined()
+					       && !_(mrpni.id_annuaire).isEmpty() ) {
+					      $http.put( APP_PATH + '/api/v1/import/mrpni/' + mrpni.sha256 + '/est/' + mrpni.id_annuaire )
+						  .success( function() {
+						      mrpni.identified = true;
+						  });
+					  }
 				      };
 				      $scope.identifie_massivement_objets = function( mrpnis ) {
 					  _(mrpnis).each( function( mrpni ) {
-					      if ( !_(mrpni.id_annuaire).isNull() ) {
-						  $scope.identifie_objet( mrpni );
-					      }
+					      $scope.identifie_objet( mrpni );
 					  } );
 				      };
 
