@@ -28,4 +28,9 @@ namespace :db do
     Sequel::Migrator.run( DB, 'migrations' )
   end
 
+  desc 'Check migrations'
+  task check: :load_config do
+    Sequel::Migrator.check_current(DB, 'migrations')
+  end
+
 end
