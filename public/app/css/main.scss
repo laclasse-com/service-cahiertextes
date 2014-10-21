@@ -38,14 +38,14 @@ body {
   background-color: #fff;
   color: #000;
   border: 1px solid #000;
+  border-radius: 0;
   font-weight: normal;
 }
 
-.infos .tooltip-inner {
-  background-color: #111;
-  color: #fff;
-  border: 1px solid #fff;
-  font-weight: normal;
+.infos .tooltip-inner hr {
+  border-color: #333;
+  color: #333;
+  margin: 0;
 }
 
 /* Cahier de Textes */
@@ -117,6 +117,7 @@ h2 {
 }
 
 .est-time {
+  box-shadow: 0 0 0 1px #333;
   height: 4px;
   top: 0;
   position: absolute;
@@ -495,6 +496,7 @@ footer {
   .infos ul {
     padding-left: 0;
     li {
+      text-align: center;
       list-style: none;
       line-height: 2em;
       em {
