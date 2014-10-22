@@ -66,14 +66,6 @@ angular.module( 'cahierDeTextesClientApp' )
 					  Annuaire.get_etablissement_regroupements( $scope.current_user.profil_actif.uai )
 					      .then( function( response ) {
 						  $scope.regroupements = response.data;
-
-						  _($scope.regroupements).each( function( type ) {
-						      _(type).each( function( classe ) {
-							  if ( _(classe.libelle).isNull() ) {
-							      classe.libelle = classe.libelle_aaf;
-							  }
-						      } );
-						  } );
 					      } );
 				      }
 				  });
