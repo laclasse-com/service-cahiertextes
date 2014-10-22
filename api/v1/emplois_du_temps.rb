@@ -20,23 +20,23 @@ module CahierDeTextesAPI
 
         user_annuaire = Annuaire.get_user( user.uid )
         user_annuaire['profil_actif'] = user_annuaire['profils'].select { |p| p['actif'] }.first
-        if params[:uid]
-          if %w( TUT ).include?( user_annuaire['profil_actif']['profil_id'] ) && !( user_annuaire['enfants'].select { |e| e['enfant']['id_ent'] == params[:uid] }.first.nil? )
-            regroupements_annuaire = Annuaire.get_user_regroupements( params[:uid] )
-          else
-            error!( '401 Unauthorized', 401 )
-          end
-        elsif %w( EVS DIR ).include?( user_annuaire['profil_actif']['profil_id'] )
+
+        if %w( EVS DIR ).include?( user_annuaire['profil_actif']['profil_id'] )
           regroupements_annuaire = Annuaire.get_etablissement_regroupements( user_annuaire['profil_actif']['etablissement_code_uai'] )
         else
-          regroupements_annuaire = Annuaire.get_user_regroupements( user.uid )
+          error!( '401 Unauthorized', 401 ) if params[:uid] && %w( TUT ).include?( user_annuaire['profil_actif']['profil_id'] ) && !( user_annuaire['enfants'].select { |e| e['enfant']['id_ent'] == params[:uid] }.first.nil? )
+          uid = params[:uid] ? params[:uid] : user.uid
+          regroupements_annuaire = Annuaire.get_user_regroupements( uid )
         end
 
         regroupements_ids = regroupements_annuaire['classes']
                             .concat( regroupements_annuaire['groupes_eleves'] )
                             .concat( regroupements_annuaire['groupes_libres'] )
-                            .reject { |regroupement| regroupement['etablissement_code'] != params[:uai] if params[:uai] }
-                            .map    { |regroupement|
+
+        regroupements_ids = regroupements_ids.reject { |regroupement| regroupement['etablissement_code'] != params[:uai] if params[:uai] } unless %w( EVS DIR ).include?( user_annuaire['profil_actif']['profil_id'] )
+
+        regroupements_ids = regroupements_ids
+                            .map do |regroupement|
           if regroupement.key? 'classe_id'
             regroupement['classe_id']
           elsif regroupement.key? 'groupe_id'
@@ -44,7 +44,7 @@ module CahierDeTextesAPI
           elsif regroupement.key? 'id'
             regroupement['id']
           end
-        }
+        end
                             .uniq
 
         # Nota Bene: creneau[:semaines_de_presence][ 1 ] == première semaine de janvier
