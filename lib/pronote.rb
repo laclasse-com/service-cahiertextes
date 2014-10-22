@@ -321,7 +321,7 @@ module ProNote
       end
       unless matiere_id.nil?
         creneau = CreneauEmploiDuTemps.create( date_creation: Time.now,
-                                               jour_de_la_semaine: node['Jour'].to_i + etablissement.date_premier_jour_premiere_semaine.wday, # 1: 'lundi' .. 7: 'dimanche', norme ISO-8601
+                                               jour_de_la_semaine: node['Jour'].to_i, # 1: 'lundi' .. 7: 'dimanche', norme ISO-8601
                                                debut: debut,
                                                fin: fin,
                                                matiere_id: matiere_id )
