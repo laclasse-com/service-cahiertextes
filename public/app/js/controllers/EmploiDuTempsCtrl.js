@@ -161,11 +161,13 @@ angular.module( 'cahierDeTextesClientApp' )
 				     } );
 				 };
 
+				 $scope.uniquement_mes_creneaux = false;
 				 // ############################## Profile-specific code ##############################################
 				 // Les EVS et DIR on une classe sélectionnée par défaut
 				 if ( $scope.current_user.profil_actif.type == 'EVS'
 				      || $scope.current_user.profil_actif.type == 'DIR' ) {
 					  $scope.uniquement_mes_creneaux = false;
+
 					  filter_data = function( raw_data ) {
 					      var filtered_data = raw_data;
 
@@ -193,7 +195,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
 				 if ( $scope.current_user.profil_actif.type == 'ENS'
 				      || ( $scope.current_user.profil_actif.admin && $scope.current_user.profil_actif.type != 'TUT' && $scope.current_user.profil_actif.type != 'ELV' ) ) {
-					  $scope.uniquement_mes_creneaux = true;
+					  $scope.uniquement_mes_creneaux = false;
 				     $scope.calendar.options.selectable = true;
 				     $scope.calendar.options.editable = true;
 
@@ -263,7 +265,9 @@ angular.module( 'cahierDeTextesClientApp' )
 					 }
 				     };
 				 }
-
+				 if ( $scope.current_user.profil_actif.type == 'ENS' ) {
+				     $scope.uniquement_mes_creneaux = true;
+				 }
 				 // Récupération d'une date prédéfinie s'il y a lieu
 				 if ( $scope.current_user.date ) {
 				     var mdate = moment( $scope.current_user.date );
