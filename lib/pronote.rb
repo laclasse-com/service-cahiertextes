@@ -93,9 +93,9 @@ module ProNote
 
     rapport[:salles] =  { success: [], error: [] }
     edt_clair.search('Salles').children.reject { |child| child.name == 'text' }.each do |node|
-      salle = Salle.create(etablissement_id: etablissement.id,
-                           identifiant: node['Ident'],
-                           nom: node['Nom'])
+      salle = Salle.create( etablissement_id: etablissement.id,
+                            identifiant: node['Ident'],
+                            nom: node['Nom'] )
 
       if salle.nil?
         rapport[:salles][:error] << { etablissement_id: etablissement.id,
@@ -119,7 +119,8 @@ module ProNote
 
         manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
         if manually_linked_id.nil? || manually_linked_id.id_annuaire.nil?
-          FailedIdentification.create( sha256: sha256 ) if manually_linked_id.nil?
+          FailedIdentification.create( date_creation: Time.now,
+                                       sha256: sha256 ) if manually_linked_id.nil?
           rapport[:matieres][:error] << { sha256: sha256,
                                           objet: objet }
         else
@@ -145,7 +146,8 @@ module ProNote
 
         manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
         if manually_linked_id.nil? || manually_linked_id.id_annuaire.nil?
-          FailedIdentification.create( sha256: sha256 ) if manually_linked_id.nil?
+          FailedIdentification.create( date_creation: Time.now,
+                                       sha256: sha256 ) if manually_linked_id.nil?
           rapport[:enseignants][:error] << { sha256: sha256,
                                              objet: objet }
         else
@@ -176,7 +178,8 @@ module ProNote
 
         manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
         if manually_linked_id.nil? || manually_linked_id.id_annuaire.nil?
-          FailedIdentification.create( sha256: sha256 ) if manually_linked_id.nil?
+          FailedIdentification.create( date_creation: Time.now,
+                                       sha256: sha256 ) if manually_linked_id.nil?
           rapport[:regroupements][node.name.to_sym][:error] << { sha256: sha256,
                                                                  objet: objet }
         else
@@ -202,7 +205,8 @@ module ProNote
 
               manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
               if manually_linked_id.nil? || manually_linked_id.id_annuaire.nil?
-                FailedIdentification.create( sha256: sha256 ) if manually_linked_id.nil?
+                FailedIdentification.create( date_creation: Time.now,
+                                             sha256: sha256 ) if manually_linked_id.nil?
                 rapport[:regroupements][subnode.name.to_sym][:error] << { sha256: sha256,
                                                                           objet: objet }
               else
@@ -227,7 +231,8 @@ module ProNote
 
         manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
         if manually_linked_id.nil? || manually_linked_id.id_annuaire.nil?
-          FailedIdentification.create( sha256: sha256 ) if manually_linked_id.nil?
+          FailedIdentification.create( date_creation: Time.now,
+                                       sha256: sha256 ) if manually_linked_id.nil?
           rapport[:regroupements][node.name.to_sym][:error] << { sha256: sha256,
                                                                  objet: objet }
         else
@@ -255,7 +260,8 @@ module ProNote
 
                 manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
                 if manually_linked_id.nil? || manually_linked_id.id_annuaire.nil?
-                  FailedIdentification.create( sha256: sha256 ) if manually_linked_id.nil?
+                  FailedIdentification.create( date_creation: Time.now,
+                                               sha256: sha256 ) if manually_linked_id.nil?
                   rapport[:regroupements][subnode.name.to_sym][:error] << { sha256: sha256,
                                                                             objet: objet }
                 else
@@ -277,7 +283,8 @@ module ProNote
 
                 manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
                 if manually_linked_id.nil? || manually_linked_id.id_annuaire.nil?
-                  FailedIdentification.create( sha256: sha256 ) if manually_linked_id.nil?
+                  FailedIdentification.create( date_creation: Time.now,
+                                               sha256: sha256 ) if manually_linked_id.nil?
                   rapport[:regroupements][subnode.name.to_sym][:error] << { sha256: sha256,
                                                                             objet: objet }
                 else
@@ -312,10 +319,11 @@ module ProNote
         end
       end
       unless matiere_id.nil?
-        creneau = CreneauEmploiDuTemps.create(jour_de_la_semaine: node['Jour'].to_i + etablissement.date_premier_jour_premiere_semaine.wday, # 1: 'lundi' .. 7: 'dimanche', norme ISO-8601
-                                              debut: debut,
-                                              fin: fin,
-                                              matiere_id: matiere_id)
+        creneau = CreneauEmploiDuTemps.create( date_creation: Time.now,
+                                               jour_de_la_semaine: node['Jour'].to_i + etablissement.date_premier_jour_premiere_semaine.wday, # 1: 'lundi' .. 7: 'dimanche', norme ISO-8601
+                                               debut: debut,
+                                               fin: fin,
+                                               matiere_id: matiere_id )
         node.children.each do |subnode|
           case subnode.name
           when 'Professeur'
@@ -353,7 +361,8 @@ module ProNote
       .map { |r| r.regroupement_id }
       .uniq
       .each do |regroupement_id|
-      CahierDeTextes.create( regroupement_id: regroupement_id ) unless CahierDeTextes.where( regroupement_id: regroupement_id ).count > 0
+      CahierDeTextes.create( date_creation: Time.now,
+                             regroupement_id: regroupement_id ) unless CahierDeTextes.where( regroupement_id: regroupement_id ).count > 0
     end
 
     rapport

@@ -110,7 +110,7 @@ module CahierDeTextesAPI
                                   contenu: params[:contenu],
                                   date_due: params[:date_due],
                                   temps_estime: params[:temps_estime],
-                                  date_creation: Time.now)
+                                  date_creation: Time.now )
 
           if params[ :cours_id ] && !params[ :cours_id ].nil?
             devoir.update( cours_id: params[:cours_id] )
@@ -118,7 +118,8 @@ module CahierDeTextesAPI
             cours = Cours.where( creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id] ).where( date_cours: params[:date_due] ).first
             if cours.nil?
               cahier_de_textes = CahierDeTextes.where( regroupement_id: params[:regroupement_id] ).first
-              cahier_de_textes = CahierDeTextes.create( regroupement_id: params[:regroupement_id] ) if cahier_de_textes.nil?
+              cahier_de_textes = CahierDeTextes.create( date_creation: Time.now,
+                                                        regroupement_id: params[:regroupement_id] ) if cahier_de_textes.nil?
 
               cours = Cours.create( enseignant_id: user.uid,
                                     cahier_de_textes_id: cahier_de_textes.id,
@@ -133,8 +134,8 @@ module CahierDeTextesAPI
           # 3. traitement des ressources
           params[:ressources] && params[:ressources].each do
             |ressource|
-            devoir.add_ressource( Ressource.create(  name: ressource['name'],
-                                                     hash: ressource['hash'] ) )
+            devoir.add_ressource( Ressource.create( name: ressource['name'],
+                                                    hash: ressource['hash'] ) )
           end
 
           hash = devoir.to_deep_hash
@@ -175,8 +176,8 @@ module CahierDeTextesAPI
 
           devoir.remove_all_ressources if params[:ressources]
           params[:ressources].each do |ressource|
-            devoir.add_ressource( Ressource.create(  name: ressource['name'],
-                                                     hash: ressource['hash'] ) )
+            devoir.add_ressource( Ressource.create( name: ressource['name'],
+                                                    hash: ressource['hash'] ) )
           end if params[:ressources]
 
           devoir.date_modification = Time.now
