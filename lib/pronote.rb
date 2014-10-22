@@ -355,8 +355,8 @@ module ProNote
             creneau.add_salle( Salle[ identifiant: subnode['Ident'] ] )
             cs = CreneauEmploiDuTempsSalle.where( salle_id: Salle[ identifiant: subnode['Ident'] ][:id] )
                                           .where( creneau_emploi_du_temps_id: creneau.id )
-            cs.semaines_de_presence = corrige_semainiers( subnode['Semaines'], offset_semainiers )
-            cs.save
+            cs.update(semaines_de_presence: corrige_semainiers( subnode['Semaines'], offset_semainiers ) )
+            # cs.save
           end
         end
       end
