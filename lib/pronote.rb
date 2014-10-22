@@ -348,10 +348,15 @@ module ProNote
               CreneauEmploiDuTempsRegroupement.restrict_primary_key
             end
           when 'Salle'
-            CreneauEmploiDuTempsSalle.unrestrict_primary_key
-            creneau.add_salle(salle_id: Salle[ identifiant: subnode['Ident'] ][:id],
-                              semaines_de_presence: corrige_semainiers( subnode['Semaines'], offset_semainiers ) )
-            CreneauEmploiDuTempsSalle.restrict_primary_key
+            # CreneauEmploiDuTempsSalle.unrestrict_primary_key
+            # creneau.add_salle(salle_id: Salle[ identifiant: subnode['Ident'] ][:id],
+            #                   semaines_de_presence: corrige_semainiers( subnode['Semaines'], offset_semainiers ) )
+            # CreneauEmploiDuTempsSalle.restrict_primary_key
+            creneau.add_salle( Salle[ identifiant: subnode['Ident'] ] )
+            cs = CreneauEmploiDuTempsSalle.where( salle_id: Salle[ identifiant: subnode['Ident'] ][:id] )
+                                          .where( creneau_emploi_du_temps_id: creneau.id )
+            cs.semaines_de_presence = corrige_semainiers( subnode['Semaines'], offset_semainiers )
+            cs.save
           end
         end
       end
