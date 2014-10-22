@@ -66,7 +66,8 @@ module ProNote
     rapport = {}
     edt_clair = Nokogiri::XML( decrypt_xml( xml ) )
 
-    etablissement = Etablissement.create(UAI: edt_clair.child['UAI'])
+    etablissement = Etablissement.where( UAI: edt_clair.child['UAI'] ).first
+    etablissement = Etablissement.create(UAI: edt_clair.child['UAI']) if etablissement.nil?
 
     edt_clair.search('AnneeScolaire').reject { |child| child.name == 'text' }.each do |node|
       etablissement.debut_annee_scolaire = node['DateDebut']
