@@ -90,11 +90,10 @@ module Annuaire
   end
 
   def send_request( service, param, expand, error_msg )
-    RestClient::Request.execute(
-      :method     => :get,
-      :url        => sign( ANNUAIRE[:url], "#{service}#{CGI.escape( param )}", expand: expand ),
-      :headers    => {},
-      :verify_ssl => @ssl_verify) do |response, _request, _result|
+    RestClient::Request.execute( method: :get,
+                                 url: sign( ANNUAIRE[:url], "#{service}#{CGI.escape( param )}", expand: expand ),
+                                 headers: {},
+                                 verify_ssl: @ssl_verify ) do |response, _request, _result|
       if response.code == 200
         return JSON.parse( response )
       else
@@ -106,11 +105,10 @@ module Annuaire
   def search_matiere( label )
     label = URI.escape( label )
     @search = true
-    RestClient::Request.execute(
-      :method     => :get,
-      :url        => sign( ANNUAIRE[:url], "matieres/libelle/#{label}", {} ),
-      :headers    => {},
-      :verify_ssl => @ssl_verify) do |response, _request, _result|
+    RestClient::Request.execute( method: :get,
+                                 url: sign( ANNUAIRE[:url], "matieres/libelle/#{label}", {} ),
+                                 headers: {},
+                                 verify_ssl: @ssl_verify ) do |response, _request, _result|
       if response.code == 200
         return JSON.parse( response )
       else
@@ -126,11 +124,10 @@ module Annuaire
     nom = URI.escape( nom )
     @search = true
 
-    RestClient::Request.execute(
-      :method     => :get,
-      :url        => sign( ANNUAIRE[:url], 'regroupement', etablissement: code_uai, nom: nom, expand: 'false' ),
-      :headers    => {},
-      :verify_ssl => @ssl_verify) do |response, _request, _result|
+    RestClient::Request.execute( method: :get,
+                                 url: sign( ANNUAIRE[:url], 'regroupement', etablissement: code_uai, nom: nom, expand: 'false' ),
+                                 headers: {},
+                                 verify_ssl: @ssl_verify ) do |response, _request, _result|
       if response.code == 200
         return JSON.parse( response )[0]
       else
@@ -146,11 +143,10 @@ module Annuaire
     prenom = URI.escape( prenom )
     @search = true
 
-    RestClient::Request.execute(
-      :method     => :get,
-      :url        => sign( ANNUAIRE[:url], 'users', nom: nom, prenom: prenom, etablissement: code_uai ),
-      :headers    => {},
-      :verify_ssl => @ssl_verify) do |response, _request, _result|
+    RestClient::Request.execute( method: :get,
+                                 url: sign( ANNUAIRE[:url], 'users', nom: nom, prenom: prenom, etablissement: code_uai ),
+                                 headers: {},
+                                 verify_ssl: @ssl_verify ) do |response, _request, _result|
       if response.code == 200
         return JSON.parse( response )[0]
       else
@@ -174,6 +170,7 @@ module Annuaire
   # Service classes et groupes d'élèves
   def get_regroupement( id )
     @search = false
+
     regroupement = send_request 'regroupements/', CGI.escape( id ), 'false', 'Regroupement inconnu'
     regroupement['libelle'] = regroupement['libelle_aaf'] if regroupement['libelle'].nil?
 
@@ -193,11 +190,10 @@ module Annuaire
 
   def get_user_regroupements( id )
     @search = false
-    RestClient::Request.execute(
-      :method     => :get,
-      :url        => sign( ANNUAIRE[:url], "users/#{CGI.escape( id )}/regroupements", {} ),
-      :headers    => {},
-      :verify_ssl => @ssl_verify) do |response, _request, _result|
+    RestClient::Request.execute( method: :get,
+                                 url: sign( ANNUAIRE[:url], "users/#{CGI.escape( id )}/regroupements", {} ),
+                                 headers: {},
+                                 verify_ssl: @ssl_verify ) do |response, _request, _result|
       if response.code == 200
         return JSON.parse( response )
       else
@@ -211,11 +207,10 @@ module Annuaire
     profil_id = URI.escape( profil_id )
     code_uai = URI.escape( code_uai )
 
-    RestClient::Request.execute(
-      :method     => :put,
-      :url        => sign( ANNUAIRE[:url], "users/#{id}/profil_actif", uai: code_uai, profil_id: profil_id ),
-      :headers    => {},
-      :verify_ssl => @ssl_verify) do |response, _request, _result|
+    RestClient::Request.execute( method: :put,
+                                 url: sign( ANNUAIRE[:url], "users/#{id}/profil_actif", uai: code_uai, profil_id: profil_id ),
+                                 headers: {},
+                                 verify_ssl: @ssl_verify ) do |response, _request, _result|
       if response.code == 200
         return JSON.parse( response )[0]
       else
@@ -233,11 +228,10 @@ module Annuaire
 
   def get_etablissement_regroupements( uai )
     @search = false
-    RestClient::Request.execute(
-      :method     => :get,
-      :url        => sign( ANNUAIRE[:url], "etablissements/#{CGI.escape( uai )}/regroupements", {} ),
-      :headers    => {},
-      :verify_ssl => @ssl_verify) do |response, _request, _result|
+    RestClient::Request.execute( method: :get,
+                                 url: sign( ANNUAIRE[:url], "etablissements/#{CGI.escape( uai )}/regroupements", {} ),
+                                 headers: {},
+                                 verify_ssl: @ssl_verify ) do |response, _request, _result|
       if response.code == 200
         return JSON.parse( response )
       else
@@ -248,11 +242,10 @@ module Annuaire
 
   def get_etablissement_enseignants( uai )
     @search = false
-    RestClient::Request.execute(
-      :method     => :get,
-      :url        => sign( ANNUAIRE[:url], "etablissements/#{CGI.escape( uai )}/enseignants", {} ),
-      :headers    => {},
-      :verify_ssl => @ssl_verify) do |response, _request, _result|
+    RestClient::Request.execute( method: :get,
+                                 url: sign( ANNUAIRE[:url], "etablissements/#{CGI.escape( uai )}/enseignants", {} ),
+                                 headers: {},
+                                 verify_ssl: @ssl_verify ) do |response, _request, _result|
       if response.code == 200
         regroupements = JSON.parse( response )
 
