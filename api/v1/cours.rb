@@ -48,7 +48,8 @@ module CahierDeTextesAPI
         error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS' ) || user.admin?
 
         cahier_de_textes = CahierDeTextes.where( regroupement_id: params[:regroupement_id] ).first
-        cahier_de_textes = CahierDeTextes.create( regroupement_id: params[:regroupement_id] ) if cahier_de_textes.nil?
+        cahier_de_textes = CahierDeTextes.create( date_creation: Time.now,
+                                                  regroupement_id: params[:regroupement_id] ) if cahier_de_textes.nil?
         cours = Cours.create( enseignant_id: user.uid,
                               cahier_de_textes_id: cahier_de_textes.id,
                               creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
@@ -58,8 +59,8 @@ module CahierDeTextesAPI
 
         params[:ressources] && params[:ressources].each do
           |ressource|
-          cours.add_ressource( Ressource.create(  name: ressource['name'],
-                                                  hash: ressource['hash'] ) )
+          cours.add_ressource( Ressource.create( name: ressource['name'],
+                                                 hash: ressource['hash'] ) )
         end
 
         cours.to_deep_hash
@@ -85,8 +86,8 @@ module CahierDeTextesAPI
             cours.remove_all_ressources
             params[:ressources].each do
               |ressource|
-              cours.add_ressource( Ressource.create(name: ressource['name'],
-                                                    hash: ressource['hash'] ) )
+              cours.add_ressource( Ressource.create( name: ressource['name'],
+                                                     hash: ressource['hash'] ) )
             end
           end
 
@@ -128,7 +129,8 @@ module CahierDeTextesAPI
 
         unless cours.nil?
           cahier_de_textes = CahierDeTextes.where( regroupement_id: params[:regroupement_id] ).first
-          cahier_de_textes = CahierDeTextes.create( regroupement_id: params[:regroupement_id] ) if cahier_de_textes.nil?
+          cahier_de_textes = CahierDeTextes.create( date_creation: Time.now,
+                                                    regroupement_id: params[:regroupement_id] ) if cahier_de_textes.nil?
 
           target_cours = Cours.where( cahier_de_textes_id: cahier_de_textes.id,
                                       creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],

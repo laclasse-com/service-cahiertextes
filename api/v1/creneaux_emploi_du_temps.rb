@@ -93,22 +93,23 @@ module CahierDeTextesAPI
 
         plage_horaire_debut = PlageHoraire.where(debut: params[:heure_debut] ).first
         if plage_horaire_debut.nil?
-          plage_horaire_debut = PlageHoraire.create(label: '',
-                                                    debut: params[:heure_debut],
-                                                    fin: params[:heure_debut] + 1800 )
+          plage_horaire_debut = PlageHoraire.create( label: '',
+                                                     debut: params[:heure_debut],
+                                                     fin: params[:heure_debut] + 1800 )
         end
 
         plage_horaire_fin = PlageHoraire.where(fin: params[:heure_fin] ).first
         if plage_horaire_fin.nil?
-          plage_horaire_fin = PlageHoraire.create(label: '',
-                                                  debut: params[:heure_fin] - 1800,
-                                                  fin: params[:heure_fin] )
+          plage_horaire_fin = PlageHoraire.create( label: '',
+                                                   debut: params[:heure_fin] - 1800,
+                                                   fin: params[:heure_fin] )
         end
 
-        creneau = CreneauEmploiDuTemps.create(debut: plage_horaire_debut.id,
-                                              fin: plage_horaire_fin.id,
-                                              jour_de_la_semaine: params[:jour_de_la_semaine] - 1, # FIXME: pas forcément toujours lundi
-                                              matiere_id: params[:matiere_id] )
+        creneau = CreneauEmploiDuTemps.create( date_creation: Time.now,
+                                               debut: plage_horaire_debut.id,
+                                               fin: plage_horaire_fin.id,
+                                               jour_de_la_semaine: params[:jour_de_la_semaine] - 1, # FIXME: pas forcément toujours lundi
+                                               matiere_id: params[:matiere_id] )
 
         CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
         ce = creneau.add_enseignant enseignant_id: user.uid
@@ -155,9 +156,9 @@ module CahierDeTextesAPI
           if params[:heure_debut]
             plage_horaire_debut = PlageHoraire.where(debut: params[:heure_debut] ).first
             if plage_horaire_debut.nil?
-              plage_horaire_debut = PlageHoraire.create(label: '',
-                                                        debut: params[:heure_debut],
-                                                        fin: params[:heure_debut] + 1800 )
+              plage_horaire_debut = PlageHoraire.create( label: '',
+                                                         debut: params[:heure_debut],
+                                                         fin: params[:heure_debut] + 1800 )
             end
             creneau.debut = plage_horaire_debut.id
           end
@@ -165,9 +166,9 @@ module CahierDeTextesAPI
           if params[:heure_fin]
             plage_horaire_fin = PlageHoraire.where(fin: params[:heure_fin] ).first
             if plage_horaire_fin.nil?
-              plage_horaire_fin = PlageHoraire.create(label: '',
-                                                      debut: params[:heure_fin] - 1800,
-                                                      fin: params[:heure_fin] )
+              plage_horaire_fin = PlageHoraire.create( label: '',
+                                                       debut: params[:heure_fin] - 1800,
+                                                       fin: params[:heure_fin] )
             end
             creneau.fin = plage_horaire_fin.id
           end

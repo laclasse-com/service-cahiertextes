@@ -6,7 +6,8 @@ class Etablissement < Sequel::Model( :etablissements )
       .get_etablissement( values[:UAI] )['classes']
       .map do |classe|
       cdt = CahierDeTextes.where( regroupement_id: classe['id'] ).first
-      cdt = CahierDeTextes.create( regroupement_id: classe[ 'id' ] ) if cdt.nil?
+      cdt = CahierDeTextes.create( date_creation: Time.now,
+                                   regroupement_id: classe[ 'id' ] ) if cdt.nil?
       cdt.statistiques
     end
   end

@@ -63,7 +63,8 @@ module CahierDeTextesAPI
 
               if creneau[:semaines_de_presence][ jour.cweek ] == 1
                 cahier_de_textes = CahierDeTextes.where( regroupement_id: creneau[:regroupement_id] ).first
-                cahier_de_textes = CahierDeTextes.create( regroupement_id: creneau[:regroupement_id] ) if cahier_de_textes.nil?
+                cahier_de_textes = CahierDeTextes.create( date_creation: Time.now,
+                                                          regroupement_id: creneau[:regroupement_id] ) if cahier_de_textes.nil?
 
                 # STDERR.puts "Séquences pédagogiques multiples associées au créneau #{creneau.id}" if creneau.cours.length > 1
 

@@ -98,7 +98,8 @@ module AuthenticationHelpers
           .each {
           |regroupement|
           cdt = CahierDeTextes.where( regroupement_id: regroupement['id'] ).first
-          CahierDeTextes.create( regroupement_id: regroupement['id'] ) if cdt.nil?
+          CahierDeTextes.create( date_creation: Time.now,
+                                 regroupement_id: regroupement['id'] ) if cdt.nil?
         }
       end
     }
