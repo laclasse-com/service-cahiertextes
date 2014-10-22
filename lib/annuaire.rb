@@ -254,7 +254,13 @@ module Annuaire
       :headers    => {},
       :verify_ssl => @ssl_verify) do |response, _request, _result|
       if response.code == 200
-        return JSON.parse( response )
+        regroupements = JSON.parse( response )
+
+        regroupements['classes'].each do |regroupement|
+          regroupement['libelle'] = regroupement['libelle_aaf'] if regroupement['libelle'].nil?
+        end
+
+        regroupements
       else
         STDERR.puts "erreur getting etablissement's enseignants : #{CGI.escape( uai )}"
       end
