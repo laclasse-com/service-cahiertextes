@@ -165,6 +165,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				 // Les EVS et DIR on une classe sélectionnée par défaut
 				 if ( $scope.current_user.profil_actif.type == 'EVS'
 				      || $scope.current_user.profil_actif.type == 'DIR' ) {
+					  $scope.uniquement_mes_creneaux = false;
 					  filter_data = function( raw_data ) {
 					      var filtered_data = raw_data;
 
