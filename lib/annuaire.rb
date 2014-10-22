@@ -174,7 +174,10 @@ module Annuaire
   # Service classes et groupes d'élèves
   def get_regroupement( id )
     @search = false
-    send_request 'regroupements/', CGI.escape( id ), 'false', 'Regroupement inconnu'
+    regroupement = send_request 'regroupements/', CGI.escape( id ), 'false', 'Regroupement inconnu'
+    regroupement['libelle'] = regroupement['libelle_aaf'] if regroupement['libelle'].nil?
+
+    regroupement
   end
 
   # Service Utilisateur : init de la session et de son environnement
