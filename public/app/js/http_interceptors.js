@@ -12,7 +12,14 @@ angular.module( 'cahierDeTextesClientApp' )
 							      },
 							      'responseError': function( rejection ) {
 								  if ( rejection.status === 401 ) {
-								      location.reload();
+								      swal( { title: 'Erreur',
+									      text: 'Action non autorisée',
+									      type: 'error',
+									      showCancelButton: false,
+									      confirmButtonColor: '#ff6b55',
+									      confirmButtonText: 'Fermer',
+									      timer: 3000
+									    } );
 								  }
 								  return $q.reject( rejection );
 							      }
