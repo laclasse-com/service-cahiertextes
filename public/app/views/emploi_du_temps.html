@@ -5,7 +5,8 @@
 	      data-ng-model="scope.selected_regroupement_id"
 	      data-ng-change="refresh_calendar()"
 	      data-ng-options="classe.id as classe.libelle for classe in current_user.profil_actif.classes | orderBy:'libelle'">
-	<option value="" selected>Toutes les classes</option>
+	<option value="" selected
+		data-ng-if="current_user.profil_actif.type === 'EVS' || current_user.profil_actif.type === 'DIR'">Toutes mes classes</option>
       </select>
       <div class="pull-right" data-ng-if="current_user.profil_actif.type === 'ENS'">
 	<label><checkbox class="btn-info" data-ng-model="scope.uniquement_mes_creneaux"
