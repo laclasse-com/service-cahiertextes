@@ -720,7 +720,7 @@ button.this-week {
   }
 }
 
-.ta-scroll-window.ta-text.ta-editor, .ta-bind {
+.ta-scroll-window.ta-text.ta-editor, .ta-scroll-window > .ta-bind {
     min-height: 150px;
 }
 
