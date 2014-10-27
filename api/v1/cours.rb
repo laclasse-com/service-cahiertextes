@@ -59,6 +59,9 @@ module CahierDeTextesAPI
 
         params[:ressources] && params[:ressources].each do
           |ressource|
+
+          STDERR.puts "Cette ressource est pourrie : #{ressource}" unless ressource['hash'].include? '_'
+
           cours.add_ressource( Ressource.create( name: ressource['name'],
                                                  hash: ressource['hash'] ) )
         end
@@ -86,6 +89,9 @@ module CahierDeTextesAPI
             cours.remove_all_ressources
             params[:ressources].each do
               |ressource|
+
+              STDERR.puts "Cette ressource est pourrie : #{ressource}" unless ressource['hash'].include? '_'
+
               cours.add_ressource( Ressource.create( name: ressource['name'],
                                                      hash: ressource['hash'] ) )
             end
@@ -145,6 +151,9 @@ module CahierDeTextesAPI
                                          enseignant_id: cours.enseignant_id )
 
             cours.ressources.each do |ressource|
+
+              STDERR.puts "Cette ressource est pourrie : #{ressource}" unless ressource['hash'].include? '_'
+
               target_cours.add_ressource( ressource )
             end
 
