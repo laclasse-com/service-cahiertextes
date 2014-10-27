@@ -66,7 +66,13 @@ module CahierDeTextesAPI
                                                  hash: ressource['hash'] ) )
         end
 
-        cours.to_deep_hash
+        hcours = cours.to_deep_hash
+        # BUG: to_deep_hash casse les hash des ressources
+        hcours[:ressources] = cours.ressources.map do |ressource|
+          ressource.to_hash
+        end
+
+        hcours
       end
 
       desc 'modifie une séquence pédagogique'
@@ -99,7 +105,13 @@ module CahierDeTextesAPI
 
           cours.save
 
-          cours.to_deep_hash
+          hcours = cours.to_deep_hash
+          # BUG: to_deep_hash casse les hash des ressources
+          hcours[:ressources] = cours.ressources.map do |ressource|
+            ressource.to_hash
+          end
+
+          hcours
         end
       end
 
@@ -117,7 +129,13 @@ module CahierDeTextesAPI
 
           cours.save
 
-          cours.to_deep_hash
+          hcours = cours.to_deep_hash
+          # BUG: to_deep_hash casse les hash des ressources
+          hcours[:ressources] = cours.ressources.map do |ressource|
+            ressource.to_hash
+          end
+
+          hcours
         end
       end
 
@@ -194,6 +212,11 @@ module CahierDeTextesAPI
 
           hcours = cours.to_deep_hash
           hcours[:devoirs] = cours.devoirs.select { |devoir| !devoir.deleted || devoir.date_modification > UNDELETE_TIME_WINDOW.minutes.ago }
+
+          # BUG: to_deep_hash casse les hash des ressources
+          hcours[:ressources] = cours.ressources.map do |ressource|
+            ressource.to_hash
+          end
 
           hcours
         end
