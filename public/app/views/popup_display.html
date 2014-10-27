@@ -6,7 +6,7 @@
 
   <tabset>
     <!-- ####################### Devoirs ####################### -->
-    <tab data-ng-if="devoirs.length > 0" heading="Travail à faire">
+    <tab data-ng-if="devoirs.length > 0" heading="Travail à faire" data-active="!tab_SP_active">
       <div data-ng-repeat="devoir in devoirs"
 	   class="devoir col-md-12"
 	   data-ng-class="{ 'type1': devoir.type_devoir_id == 1, 'type2': devoir.type_devoir_id == 2, 'type3': devoir.type_devoir_id == 3, 'type4': devoir.type_devoir_id == 4, 'type5': devoir.type_devoir_id == 5, 'type6': devoir.type_devoir_id == 6, 'fait': devoir.fait }" >
@@ -43,27 +43,27 @@
     </tab>
 
     <tab heading="Séquence pédagogique" data-active="tab_SP_active">
-	<div class="col-md-5 infos">
-	  <ul>
-	    <li><span ><i class="picto" data-ng-style="{'background-image':'url(' + app_path + '/app/vendor/charte-graphique-laclasse-com/images/picto_matiere.svg)'}"></i> Matière : <em>{{titre}}</em></span></li>
-	    <li class="clickable" data-ng-repeat="devoir in cours.devoirs"
-		tooltip-trigger="click"
-		tooltip-html-unsafe="{{devoir.tooltip}}"
-		data-ng-class="{ 'type1': devoir.type_devoir_id == 1, 'type2': devoir.type_devoir_id == 2, 'type3': devoir.type_devoir_id == 3, 'type4': devoir.type_devoir_id == 4, 'type5': devoir.type_devoir_id == 5, 'type6': devoir.type_devoir_id == 6, 'fait': devoir.fait }" >
-	      <span><i class="picto" data-ng-style="{'background-image':'url(' + app_path + '/app/vendor/charte-graphique-laclasse-com/images/picto_devoir.svg)'}"></i> Devoir associé : <em>{{devoir.date_due | date : 'dd/MM'}}</em></span>
-	    </li>
-	  </ul>
-	</div>
-	<div class="col-md-6 contenu">
-	  <span data-ng-bind-html="cours.contenu"></span>
+      <div class="col-md-5 infos">
+	<ul>
+	  <li><span ><i class="picto" data-ng-style="{'background-image':'url(' + app_path + '/app/vendor/charte-graphique-laclasse-com/images/picto_matiere.svg)'}"></i> Matière : <em>{{titre}}</em></span></li>
+	  <li class="clickable" data-ng-repeat="devoir in cours.devoirs"
+	      tooltip-trigger="click"
+	      tooltip-html-unsafe="{{devoir.tooltip}}"
+	      data-ng-class="{ 'type1': devoir.type_devoir_id == 1, 'type2': devoir.type_devoir_id == 2, 'type3': devoir.type_devoir_id == 3, 'type4': devoir.type_devoir_id == 4, 'type5': devoir.type_devoir_id == 5, 'type6': devoir.type_devoir_id == 6, 'fait': devoir.fait }" >
+	    <span><i class="picto" data-ng-style="{'background-image':'url(' + app_path + '/app/vendor/charte-graphique-laclasse-com/images/picto_devoir.svg)'}"></i> Devoir associé : <em>{{devoir.date_due | date : 'dd/MM'}}</em></span>
+	  </li>
+	</ul>
+      </div>
+      <div class="col-md-6 contenu">
+	<span data-ng-bind-html="cours.contenu"></span>
 
-	  <ul data-ng-if="cours.ressources.length > 0">
-	    <li data-ng-repeat="ressource in cours.ressources">
-	      <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
-	    </li>
-	  </ul>
-	</div>
-	<div class="clearfix"></div>
+	<ul data-ng-if="cours.ressources.length > 0">
+	  <li data-ng-repeat="ressource in cours.ressources">
+	    <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
+	  </li>
+	</ul>
+      </div>
+      <div class="clearfix"></div>
     </tab>
   </tabset>
 </div>
