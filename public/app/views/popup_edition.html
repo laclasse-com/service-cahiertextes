@@ -402,7 +402,7 @@
 	  <select data-ng-required
 		  data-ng-change="creneau_cible_duplication_SP_updated()"
 		  data-ng-model="creneaux_similaires.selected"
-		  data-ng-options="creneau as ( creneau | formateCreneau ) group by creneau.classe.libelle for creneau in creneaux_similaires | orderBy:['+classe.libelle', '+date_due'] | filter:selected_regroupement_id_duplication" >
+		  data-ng-options="creneau as ( creneau | formateCreneau ) group by creneau.classe.libelle for creneau in creneaux_similaires | orderBy:['+date_due', '+classe.libelle'] | filter:selected_regroupement_id_duplication" >
 	  </select>
 	</li>
 	<li data-ng-if="cours.devoirs.length > 0">
