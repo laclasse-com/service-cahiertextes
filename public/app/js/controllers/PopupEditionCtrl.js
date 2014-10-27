@@ -414,7 +414,10 @@ angular.module( 'cahierDeTextesClientApp' )
 					   } )
 					   .value();
 				       $scope.creneaux_similaires.selected = [];
+				   } );
 
+			       liste_créneaux_similaires( $scope.creneau, 0, 8 )
+				   .then( function( response ) {
 				       $scope.creneaux_devoirs_possibles = _.chain(response.data)
 					   .select( function( creneau ) { return creneau.regroupement_id == $scope.creneau.regroupement_id; } )
 					   .map( function ( creneau ) {
@@ -524,7 +527,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
 			       $scope.creneau_cible_duplication_SP_updated = function() {
 				   // Calcul des créneaux cibles pour les devoirs
-				   liste_créneaux_similaires( $scope.creneaux_similaires.selected, 2, 4 )
+				   liste_créneaux_similaires( $scope.creneaux_similaires.selected, 0, 4 )
 				       .then( function( response ) {
 					   $scope.creneaux_devoirs_possibles_duplication = _.chain(response.data)
 					       .select( function( creneau ) { return creneau.regroupement_id == $scope.creneaux_similaires.selected.regroupement_id; } )
