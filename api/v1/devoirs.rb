@@ -125,7 +125,10 @@ module CahierDeTextesAPI
           if params[ :cours_id ] && !params[ :cours_id ].nil?
             devoir.update( cours_id: params[:cours_id] )
           else
-            cours = Cours.where( creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id] ).where( date_cours: params[:date_due] ).first
+            cours = Cours.where( creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id] )
+                         .where( date_cours: params[:date_due] )
+                         .where( deleted: false )
+                         .first
             if cours.nil?
               cahier_de_textes = CahierDeTextes.where( regroupement_id: params[:regroupement_id] ).first
               cahier_de_textes = CahierDeTextes.create( date_creation: Time.now,
