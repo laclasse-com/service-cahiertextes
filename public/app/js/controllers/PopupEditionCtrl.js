@@ -456,24 +456,18 @@ angular.module( 'cahierDeTextesClientApp' )
 				   } )
 				   .error( dead_Documents );
 
-			       var is_ressource_hash_valid = function( hash ) {
-				   return !_( hash.toString().match( /_+/ ) ).isNull();
-			       };
-
 			       $scope.consume_Documents_response_callback = function( item ) {
 				   return function( response ) {
 				       $scope.erreurs = [];
 				       if ( !_(response.error).isEmpty() ) {
 					   $scope.erreurs.push( { message: response.error } );
-				       } else if ( is_ressource_hash_valid( _( response.added ).first().hash ) ) {
+				       } else {
 					   item.ressources.push( {
 					       name: _( response.added ).first().name,
 					       hash: _( response.added ).first().hash,
 					       url: $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + _( response.added ).first().hash )
 					   } );
 					   $scope.is_dirty();
-				       } else {
-					   $scope.erreurs.push( { message: 'L\'identifiant retourné par l\'application Documents n\'est pas valide.' } );
 				       }
 				   };
 			       };
