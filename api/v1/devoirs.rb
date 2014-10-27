@@ -63,6 +63,11 @@ module CahierDeTextesAPI
           hash[:fait] = user.nil? ? false : devoir.fait_par?( user.uid )
           hash[:date_fait] = hash[:fait] ? devoir.fait_le( user.uid ) : nil
 
+          # BUG: to_deep_hash casse les hash des ressources
+          hash[:ressources] = devoir.ressources.map do |ressource|
+            ressource.to_hash
+          end
+
           hash
         end
       end
@@ -82,6 +87,11 @@ module CahierDeTextesAPI
 
           hash[:fait] = user.nil? ? false : devoir.fait_par?( user.uid )
           hash[:date_fait] = hash[:fait] ? devoir.fait_le( user.uid ) : nil
+
+          # BUG: to_deep_hash casse les hash des ressources
+          hash[:ressources] = devoir.ressources.map do |ressource|
+            ressource.to_hash
+          end
 
           hash
         end
@@ -144,6 +154,11 @@ module CahierDeTextesAPI
           hash = devoir.to_deep_hash
           hash[:devoir_todo_items] = []
 
+          # BUG: to_deep_hash casse les hash des ressources
+          hash[:ressources] = devoir.ressources.map do |ressource|
+            ressource.to_hash
+          end
+
           hash
         end
       end
@@ -191,6 +206,11 @@ module CahierDeTextesAPI
 
           hash = devoir.to_deep_hash
           hash[:devoir_todo_items] = []
+
+          # BUG: to_deep_hash casse les hash des ressources
+          hash[:ressources] = devoir.ressources.map do |ressource|
+            ressource.to_hash
+          end
 
           hash
         end
@@ -243,6 +263,11 @@ module CahierDeTextesAPI
         hash[:fait] = user.nil? ? false : devoir.fait_par?( user.uid )
         hash[:date_fait] = hash[:fait] ? devoir.fait_le( user.uid ) : nil
 
+        # BUG: to_deep_hash casse les hash des ressources
+        hash[:ressources] = devoir.ressources.map do |ressource|
+          ressource.to_hash
+        end
+
         hash
       end
 
@@ -265,6 +290,11 @@ module CahierDeTextesAPI
 
           hash[:fait] = user.nil? ? false : devoir.fait_par?( user.uid )
           hash[:date_fait] = hash[:fait] ? devoir.fait_le( user.uid ) : nil
+
+          # BUG: to_deep_hash casse les hash des ressources
+          hash[:ressources] = devoir.ressources.map do |ressource|
+            ressource.to_hash
+          end
 
           hash
         end
