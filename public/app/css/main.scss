@@ -720,6 +720,13 @@ button.this-week {
   }
 }
 
+.ta-scroll-window {
+    min-height: 150px;
+    .ta-bind {
+	min-height: 150px;
+    }
+}
+
 /* directive cartable */
 .cartable { padding-left: 0; }
 .cartable .cartable li { padding-left: 1.5em; }
