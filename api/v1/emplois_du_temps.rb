@@ -24,7 +24,9 @@ module CahierDeTextesAPI
         if %w( EVS DIR ).include?( user_annuaire['profil_actif']['profil_id'] )
           regroupements_annuaire = Annuaire.get_etablissement_regroupements( user_annuaire['profil_actif']['etablissement_code_uai'] )
         else
-          error!( '401 Unauthorized', 401 ) if params[:uid] && %w( TUT ).include?( user_annuaire['profil_actif']['profil_id'] ) && !( user_annuaire['enfants'].select { |e| e['enfant']['id_ent'] == params[:uid] }.first.nil? )
+          error!( '401 Unauthorized', 401 ) if params[:uid] &&
+                                               %w( TUT ).include?( user_annuaire['profil_actif']['profil_id'] ) &&
+                                                user_annuaire['enfants'].select { |e| e['enfant']['id_ent'] == params[:uid] }.length == 1
           uid = params[:uid] ? params[:uid] : user.uid
           regroupements_annuaire = Annuaire.get_user_regroupements( uid )
         end
