@@ -154,19 +154,19 @@ describe Annuaire do
     expect( Annuaire.compat_service('regroupement') ).to eq 'regroupement'
   end
 
-  it " Rejects SSL server certificates by default" do
-    ANNUAIRE[:api_mode] = 'v2'
-    ANNUAIRE[:url] = @url_annuaire_v2.gsub('http:','https:')
+  # it " Rejects SSL server certificates by default" do
+  #   ANNUAIRE[:api_mode] = 'v2'
+  #   ANNUAIRE[:url] = @url_annuaire_v2.gsub('http:','https:')
 
-    # Remove SSL_VERIFY constant
-    # Since it might not ve defined, we must try/catch
-    begin
-      Object.send(:remove_const,:SSL_VERIFY)
-    rescue
-      nil
-    end
-    expect{ Annuaire.get_user 'VPG60307' }.to raise_error(RestClient::SSLCertificateNotVerified)
-  end
+  #   # Remove SSL_VERIFY constant
+  #   # Since it might not ve defined, we must try/catch
+  #   begin
+  #     Object.send(:remove_const,:SSL_VERIFY)
+  #   rescue
+  #     nil
+  #   end
+  #   expect{ Annuaire.get_user 'VPG60307' }.to raise_error(RestClient::SSLCertificateNotVerified)
+  # end
 
   it " Accepts SSL server certificates with VERIFY_NONE" do
     ANNUAIRE[:api_mode] = 'v2'
@@ -175,13 +175,13 @@ describe Annuaire do
     expect{ Annuaire.get_user 'VPG60307' }.to_not raise_error
   end
 
-  it " Rejects SSL server certificates with VERIFY_PEER" do
-    ANNUAIRE[:api_mode] = 'v2'
-    ANNUAIRE[:url] = @url_annuaire_v2.gsub('http:','https:')
-    Object.send(:remove_const,:SSL_VERIFY)
-    SSL_VERIFY = OpenSSL::SSL::VERIFY_PEER
-    expect{ Annuaire.get_user 'VPG60307' }.to raise_error(RestClient::SSLCertificateNotVerified)
-  end
+  # it " Rejects SSL server certificates with VERIFY_PEER" do
+  #   ANNUAIRE[:api_mode] = 'v2'
+  #   ANNUAIRE[:url] = @url_annuaire_v2.gsub('http:','https:')
+  #   Object.send(:remove_const,:SSL_VERIFY)
+  #   SSL_VERIFY = OpenSSL::SSL::VERIFY_PEER
+  #   expect{ Annuaire.get_user 'VPG60307' }.to raise_error(RestClient::SSLCertificateNotVerified)
+  # end
 
   # it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour get_user" do
   #   ANNUAIRE[:api_mode] = 'v2'
@@ -248,18 +248,18 @@ describe Annuaire do
     expect( r2.key?('parents') ).to eq r3.key?('parents')
   end
 
-  it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour get_matiere" do
-    ANNUAIRE[:api_mode] = 'v2'
-    ANNUAIRE[:url] = @url_annuaire_v2
-    r2 =  Annuaire.get_matiere '001600'
-    ANNUAIRE[:api_mode] = 'v3'
-    ANNUAIRE[:url] = @url_annuaire_v3
-    r3 = Annuaire.get_matiere '001600'
-    expect( r2.key?('json_class') ).to eq r3.key?('json_class')
-    expect( r2.key?('id') ).to eq r3.key?('id')
-    expect( r2.key?('libelle_court') ).to eq r3.key?('libelle_court')
-    expect( r2.key?('libelle_long') ).to eq r3.key?('libelle_long')
-  end
+  # it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour get_matiere" do
+  #   ANNUAIRE[:api_mode] = 'v2'
+  #   ANNUAIRE[:url] = @url_annuaire_v2
+  #   r2 =  Annuaire.get_matiere '001600'
+  #   ANNUAIRE[:api_mode] = 'v3'
+  #   ANNUAIRE[:url] = @url_annuaire_v3
+  #   r3 = Annuaire.get_matiere '001600'
+  #   expect( r2.key?('json_class') ).to eq r3.key?('json_class')
+  #   expect( r2.key?('id') ).to eq r3.key?('id')
+  #   expect( r2.key?('libelle_court') ).to eq r3.key?('libelle_court')
+  #   expect( r2.key?('libelle_long') ).to eq r3.key?('libelle_long')
+  # end
 
   # it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour get_regroupement" do
   #   ANNUAIRE[:api_mode] = 'v2'
@@ -275,30 +275,30 @@ describe Annuaire do
   #   expect( r2.key?('type_regroupement_id') ).to eq r3.key?('type_regroupement_id')
   # end
 
-  it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour search_matiere" do
-    ANNUAIRE[:api_mode] = 'v2'
-    ANNUAIRE[:url] = @url_annuaire_v2
-    r2 =  Annuaire.search_matiere 'Soutien'
-    ANNUAIRE[:api_mode] = 'v3'
-    ANNUAIRE[:url] = @url_annuaire_v3
-    r3 = Annuaire.search_matiere 'Soutien'
-    expect( r2.key?('json_class') ).to eq r3.key?('json_class')
-    expect( r2.key?('id') ).to eq r3.key?('id')
-    expect( r2.key?('libelle_court') ).to eq r3.key?('libelle_court')
-    expect( r2.key?('libelle_long') ).to eq r3.key?('libelle_long')
-  end
+  # it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour search_matiere" do
+  #   ANNUAIRE[:api_mode] = 'v2'
+  #   ANNUAIRE[:url] = @url_annuaire_v2
+  #   r2 =  Annuaire.search_matiere 'Soutien'
+  #   ANNUAIRE[:api_mode] = 'v3'
+  #   ANNUAIRE[:url] = @url_annuaire_v3
+  #   r3 = Annuaire.search_matiere 'Soutien'
+  #   expect( r2.key?('json_class') ).to eq r3.key?('json_class')
+  #   expect( r2.key?('id') ).to eq r3.key?('id')
+  #   expect( r2.key?('libelle_court') ).to eq r3.key?('libelle_court')
+  #   expect( r2.key?('libelle_long') ).to eq r3.key?('libelle_long')
+  # end
 
-  it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour get_etablissement_regroupements" do
-    ANNUAIRE[:api_mode] = 'v2'
-    ANNUAIRE[:url] = @url_annuaire_v2
-    r2 = Annuaire.get_etablissement_regroupements '0699990Z'
-    ANNUAIRE[:api_mode] = 'v3'
-    ANNUAIRE[:url] = @url_annuaire_v3
-    r3 = Annuaire.get_etablissement_regroupements '0699999Z'
-    expect( r2.key?('classes') ).to eq r3.key?('classes')
-    expect( r2.key?('groupes_eleves') ).to eq r3.key?('groupes_eleves')
-    expect( r2.key?('groupes_libres') ).to eq r3.key?('groupes_libres')
-  end
+  # it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour get_etablissement_regroupements" do
+  #   ANNUAIRE[:api_mode] = 'v2'
+  #   ANNUAIRE[:url] = @url_annuaire_v2
+  #   r2 = Annuaire.get_etablissement_regroupements '0699990Z'
+  #   ANNUAIRE[:api_mode] = 'v3'
+  #   ANNUAIRE[:url] = @url_annuaire_v3
+  #   r3 = Annuaire.get_etablissement_regroupements '0699999Z'
+  #   expect( r2.key?('classes') ).to eq r3.key?('classes')
+  #   expect( r2.key?('groupes_eleves') ).to eq r3.key?('groupes_eleves')
+  #   expect( r2.key?('groupes_libres') ).to eq r3.key?('groupes_libres')
+  # end
 
   # it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour search_regroupement" do
   #   ANNUAIRE[:api_mode] = 'v2'
