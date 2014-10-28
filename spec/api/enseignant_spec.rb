@@ -26,7 +26,7 @@ describe CahierDeTextesAPI::API do
       end
     end
 
-    # Mock d'une session Élève
+    # Mock d'une session Enseignant
     module UserHelpers
       def user
         HashedUser.new( MOCKED_DATA[:users][:enseignant][:rack_session] )
@@ -164,6 +164,23 @@ describe CahierDeTextesAPI::API do
 
   ############ GET ############
   it 'récupère le détail d\'une séquence pédagogique' do
+    regroupement_id = 1
+    creneau_emploi_du_temps_id = CreneauEmploiDuTemps.all.sample.id
+    date_cours = '2013-08-29'
+    contenu = 'Exemple de séquence pédagogique.'
+    ressources = [ { name: 'test1', hash: 'https://localhost/docs/test1' },
+                   { name: 'test2', hash: 'https://localhost/docs/test2' } ]
+
+    post( '/v1/cours',
+          { regroupement_id: regroupement_id,
+            creneau_emploi_du_temps_id: creneau_emploi_du_temps_id,
+            date_cours: date_cours,
+            contenu: contenu,
+            ressources: ressources }.to_json,
+          'CONTENT_TYPE' => 'application/json' )
+
+    expect( last_response.status ).to eq 201
+
     cours = Cours.last
 
     get "/v1/cours/#{cours.id}"
@@ -185,16 +202,32 @@ describe CahierDeTextesAPI::API do
 
   ############ DELETE ############
   it 'efface une séquence pédagogique' do
+    regroupement_id = 1
+    creneau_emploi_du_temps_id = CreneauEmploiDuTemps.all.sample.id
+    date_cours = '2013-08-29'
+    contenu = 'Exemple de séquence pédagogique.'
+    ressources = [ { name: 'test1', hash: 'https://localhost/docs/test1' },
+                   { name: 'test2', hash: 'https://localhost/docs/test2' } ]
+
+    post( '/v1/cours',
+          { regroupement_id: regroupement_id,
+            creneau_emploi_du_temps_id: creneau_emploi_du_temps_id,
+            date_cours: date_cours,
+            contenu: contenu,
+            ressources: ressources }.to_json,
+          'CONTENT_TYPE' => 'application/json' )
+
+    expect( last_response.status ).to eq 201
+
     cours = Cours.last
-    cours.deleted.should be false
+    expect( cours.deleted ).to eq false
+    expect( cours.date_modification ).to eq nil
 
     delete "/v1/cours/#{cours.id}"
 
     cours2 = Cours[ cours.id ]
     expect( cours2.deleted ).to eq true
-
-    get "/v1/cours/#{cours.id}"
-    expect( last_response.status ).to eq 404
+    expect( cours2.date_modification ).to_not eq nil
   end
   # }}}
 

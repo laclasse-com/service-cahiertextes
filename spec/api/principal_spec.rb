@@ -26,7 +26,7 @@ describe CahierDeTextesAPI::API do
       end
     end
 
-    # Mock d'une session Élève
+    # Mock d'une session Principal
     module UserHelpers
       def user
         HashedUser.new( MOCKED_DATA[:users][:principal][:rack_session] )
@@ -59,7 +59,7 @@ describe CahierDeTextesAPI::API do
   it 'récupère les statistiques par enseignants et par mois' do
     uai = '0699999Z'
 
-    get "/v1/etablissements/#{uai}/enseignants"
+    get "/v1/etablissements/#{uai}/statistiques/enseignants"
     expect( last_response.status ).to eq 200
 
     response_body = JSON.parse( last_response.body )
@@ -77,7 +77,7 @@ describe CahierDeTextesAPI::API do
     uai = '0699999Z'
     enseignant_id = Cours.select(:enseignant_id).first[:enseignant_id].to_s
 
-    get "/v1/etablissements/#{uai}/enseignants/#{enseignant_id}"
+    get "/v1/etablissements/#{uai}/statistiques/enseignants/#{enseignant_id}"
     expect( last_response.status ).to eq 200
 
     response_body = JSON.parse( last_response.body )
@@ -90,7 +90,7 @@ describe CahierDeTextesAPI::API do
   it 'récupère les statistiques des classes d\'un établissement' do
     uai = '0699999Z'
 
-    get "/v1/etablissements/#{uai}/classes"
+    get "/v1/etablissements/#{uai}/statistiques/classes"
     expect( last_response.status ).to eq 200
 
     response_body = JSON.parse( last_response.body )
@@ -108,7 +108,7 @@ describe CahierDeTextesAPI::API do
     uai = '0699999Z'
     classe_id = CreneauEmploiDuTempsRegroupement.select(:regroupement_id).map { |r| r.regroupement_id }.uniq.sample
 
-    get "/v1/etablissements/#{uai}/classes/#{classe_id}"
+    get "/v1/etablissements/#{uai}/statistiques/classes/#{classe_id}"
     expect( last_response.status ).to eq 200
 
     response_body = JSON.parse( last_response.body )
