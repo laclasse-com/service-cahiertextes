@@ -51,7 +51,7 @@ describe CahierDeTextesAPI::API do
     put "/v1/cours/#{cours_id}/valide", {}
     expect( last_response.status ).to eq 200
 
-    Cours[ cours_id ].date_validation.nil?.should eq false
+    expect( Cours[ cours_id ].date_validation ).to_not eq nil
   end
   # }}}
 

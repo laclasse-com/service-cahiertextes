@@ -87,11 +87,11 @@ describe CahierDeTextesAPI::API do
     expect( last_response.status ).to eq 201
 
     response_body = JSON.parse(last_response.body)
-    # CreneauEmploiDuTemps[response_body['id']].jour_de_la_semaine.should == jour
-    # CreneauEmploiDuTemps[response_body['id']].heure_debut.should == heure_debut
-    # CreneauEmploiDuTemps[response_body['id']].heure_fin.should == heure_fin
-    # CreneauEmploiDuTemps[response_body['id']].matiere_id.should == matiere_id
-    # CreneauEmploiDuTemps[response_body['id']].regroupement_id.should == regroupement_id
+    expect( CreneauEmploiDuTemps[response_body['id']].jour_de_la_semaine ).to eq jour - 1
+    # expect( CreneauEmploiDuTemps[response_body['id']].heure_debut ).to eq heure_debut
+    # expect( CreneauEmploiDuTemps[response_body['id']].heure_fin ).to eq heure_fin
+    expect( CreneauEmploiDuTemps[response_body['id']].matiere_id ).to eq matiere_id
+    # expect( CreneauEmploiDuTemps[response_body['id']].regroupement_id ).to eq regroupement_id
   end
   # }}}
 
