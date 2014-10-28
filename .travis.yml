@@ -31,6 +31,6 @@ notifications:
   email:
     recepients:
       - glemoine@erasme.org
-  slack:
-    rooms:
-      - erasme:IWf0zN63Kuw5HgeJVwhnhxAC#laclassebeta
+  # slack:
+  #   rooms:
+  #     - erasme:IWf0zN63Kuw5HgeJVwhnhxAC#laclassebeta
