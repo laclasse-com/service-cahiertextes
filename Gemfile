@@ -27,7 +27,7 @@ group :development do
   # gem 'guard-rspec'
   # gem 'guard-bundler'
   # gem 'guard-shell'
-  # gem 'jasmine'
+  gem 'jasmine'
   gem 'pry'
   gem 'rack-test'
   gem 'rspec'

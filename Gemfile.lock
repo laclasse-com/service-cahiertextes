@@ -51,6 +51,12 @@ GEM
     hashie (3.3.1)
     i18n (0.6.11)
     ice_nine (0.11.0)
+    jasmine (2.0.3)
+      jasmine-core (~> 2.0.0)
+      phantomjs
+      rack (>= 1.2.1)
+      rake
+    jasmine-core (2.0.2)
     json (1.8.1)
     method_source (0.8.2)
     mime-types (2.4.3)
@@ -69,6 +75,7 @@ GEM
       addressable (~> 2.3)
       nokogiri (~> 1.5)
       omniauth (~> 1.2.0)
+    phantomjs (1.9.7.1)
     pry (0.10.1)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -141,6 +148,7 @@ DEPENDENCIES
   capybara
   grape
   grape-swagger
+  jasmine
   mysql2
   nokogiri
   omniauth-cas
