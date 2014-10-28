@@ -1,7 +1,7 @@
 # -*- coding: utf-8; mode: ruby -*-
 
 source 'https://rubygems.org'
-source 'http://gems.erasme.org'
+#source 'http://gems.erasme.org'
 
 gem 'grape'
 gem 'grape-swagger'
@@ -19,7 +19,7 @@ gem 'rubyzip'
 gem 'uglifier'
 gem 'sass'
 
-gem 'annuaire', git: 'https://github.com/laclasse-com/gem_annuaire.git'
+#gem 'annuaire', git: 'https://github.com/laclasse-com/gem_annuaire.git'
 
 group :development do
   gem 'guard'
