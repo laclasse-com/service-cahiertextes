@@ -2,7 +2,7 @@
 
 def load_test_data( dbdump = 'spec/fixtures/db_dump3.sql' )
   p "mysql -u #{DB_CONFIG[:user]} -p#{DB_CONFIG[:password]} #{DB_CONFIG[:name]} < #{dbdump}"
-  system "mysql -u #{DB_CONFIG[:user]} -p#{DB_CONFIG[:password]} #{DB_CONFIG[:name]} < #{dbdump}"
+  system "mysql -u #{DB_CONFIG[:user]} #{DB_CONFIG[:password].empty? ? '' : '-p' + DB_CONFIG[:password]} #{DB_CONFIG[:name]} < #{dbdump}"
 end
 
 def generate_test_data
