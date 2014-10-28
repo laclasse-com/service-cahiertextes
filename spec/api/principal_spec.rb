@@ -21,8 +21,12 @@ describe CahierDeTextesAPI::API do
         }
       end
 
-      def get_etablissement_regroupements( _uai )
-        MOCKED_DATA[:etablissement][:regroupements]
+      # def get_etablissement_regroupements( _uai )
+      #   MOCKED_DATA[:etablissement][:regroupements]
+      # end
+
+      def get_etablissement( _uai )
+        MOCKED_DATA[:etablissement]
       end
     end
 
