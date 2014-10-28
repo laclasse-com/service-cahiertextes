@@ -2,8 +2,9 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller('CahierDeTextesCtrl',
-		[ '$scope', '$sce', '$q', 'APP_PATH', 'DOCS_URL', 'API', 'Annuaire', 'EmploisDuTemps', 'current_user', 'PopupsCreneau', 'CreneauEmploiDuTemps',
-		  function ( $scope, $sce, $q, APP_PATH, DOCS_URL, API, Annuaire, EmploisDuTemps, current_user, PopupsCreneau, CreneauEmploiDuTemps ) {
+		[ '$scope', '$sce', '$q', '$stateParams', 'APP_PATH', 'DOCS_URL', 'API', 'Annuaire', 'EmploisDuTemps', 'current_user', 'PopupsCreneau', 'CreneauEmploiDuTemps',
+		  function ( $scope, $sce, $q, $stateParams, APP_PATH, DOCS_URL, API, Annuaire, EmploisDuTemps, current_user, PopupsCreneau, CreneauEmploiDuTemps ) {
+		      $scope.complet = !_($stateParams.complet).isUndefined();
 		      $scope.current_user = current_user;
 
 		      var matieres = [];
@@ -74,10 +75,30 @@ angular.module( 'cahierDeTextesClientApp' )
 		      };
 
 		      var retrieve_data = function() {
-			  $scope.current_user.date = moment().subtract( $scope.period_offset, 'months' ).toDate();
+			  if ( $scope.complet ) {
+			      var now = moment();
+			      $scope.from_date = moment();
+			      $scope.to_date = moment();
+			      if ( now.month() + 1 > 8 ) {
+				  $scope.from_date.set( 'year', now.year() );
+				  $scope.to_date.set( 'year', now.year() + 1 );
+			      } else {
+				  $scope.from_date.set( 'year', now.year() - 1);
+				  $scope.to_date.set( 'year', now.year() );
+			      }
+			      $scope.from_date.set( 'month', 8 );
+			      $scope.from_date.set( 'date', 1 );
+			      $scope.to_date.set( 'month', 7 );
+			      $scope.to_date.set( 'date', 1 );
 
-			  $scope.from_date = moment( $scope.current_user.date ).subtract( 2, 'weeks' ).startOf( 'week' ).toDate();
-			  $scope.to_date = moment( $scope.current_user.date ).add( 2, 'weeks' ).endOf( 'week' ).toDate();
+			      $scope.from_date = $scope.from_date.toDate();
+			      $scope.to_date = $scope.to_date.toDate();
+			  } else {
+			      $scope.current_user.date = moment().subtract( $scope.period_offset, 'months' ).toDate();
+
+			      $scope.from_date = moment( $scope.current_user.date ).subtract( 2, 'weeks' ).startOf( 'week' ).toDate();
+			      $scope.to_date = moment( $scope.current_user.date ).add( 2, 'weeks' ).endOf( 'week' ).toDate();
+			  }
 
 			  EmploisDuTemps.query( { debut: $scope.from_date,
 						  fin: $scope.to_date,
