@@ -1,22 +1,11 @@
 # encoding: utf-8
 
-def load_test_data
-  system 'mysql -u ' + DB_CONFIG[:user] + ' -p' + DB_CONFIG[:password] + ' ' + DB_CONFIG[:name] + ' < spec/fixtures/db_dump3.sql'
+def load_test_data( dbdump = 'spec/fixtures/db_dump3.sql' )
+  p "mysql -u #{DB_CONFIG[:user]} -p#{DB_CONFIG[:password]} #{DB_CONFIG[:name]} < #{dbdump}"
+  system "mysql -u #{DB_CONFIG[:user]} -p#{DB_CONFIG[:password]} #{DB_CONFIG[:name]} < #{dbdump}"
 end
 
 def generate_test_data
-  # STDERR.puts 'Remplissage des Cahiers de textes'
-  # [ [ 'DS', 'Devoir surveillé' ],
-  #   [ 'DM', 'Devoir à la maison' ],
-  #   [ 'Leçon', 'Leçon à apprendre' ],
-  #   [ 'Exposé', 'Exposé à préparer' ],
-  #   [ 'Recherche', 'Recherche à faire' ],
-  #   [ 'Exercice', 'Exercice à faire' ] ].each { |type|
-  #   TypeDevoir.create(label: type[0],
-  #                     description: type[1] )
-  #   STDERR.putc '.'
-  # }
-
   CahierDeTextes.all.each do |cahier_de_textes|
     12.times do
       |month|
