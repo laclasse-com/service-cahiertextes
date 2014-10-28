@@ -35,4 +35,6 @@ group :development do
   gem 'selenium-webdriver'
   gem 'capybara'
   gem 'show_me_the_cookies'
+  gem 'rubocop'
+  gem 'rubocop-rspec'
 end
