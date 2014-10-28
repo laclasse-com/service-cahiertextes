@@ -1,0 +1,36 @@
+language: ruby
+rvm:
+  - "2.1.4"
+
+before_install:
+  - gem update --system
+  - gem --version
+  - gem install rspec
+
+before_script:
+  - sudo apt-get update
+  - sudo apt-get install imagemagick
+  - bundle exec rake install
+  - mysql -e 'create database DOCS;'
+  - bundle exec rake db:migrations
+
+script: "bundle exec rspec spec/"
+
+gemfile:
+  - Gemfile
+
+services:
+  - mysql
+
+branches:
+  only:
+    - master
+    - develop
+
+notifications:
+  email:
+    recepients:
+      - glemoine@erasme.org
+  slack:
+    rooms:
+      - erasme:IWf0zN63Kuw5HgeJVwhnhxAC#laclassebeta
