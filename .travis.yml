@@ -8,13 +8,11 @@ before_install:
   - gem install rspec
 
 before_script:
-  - sudo apt-get update
-  - sudo apt-get install imagemagick
-  - bundle exec rake install
-  - mysql -e 'create database DOCS;'
+  - mysql -e 'create database CahierDeTextes;'
   - bundle exec rake db:migrations
+  - for sample in config/*.sample; do cp $i ${i%.sample}; done
 
-script: "bundle exec rspec spec/"
+script: "bundle exec rspec spec/api/ spec/lib/"
 
 gemfile:
   - Gemfile
@@ -24,7 +22,7 @@ services:
 
 branches:
   only:
-    - master
+    # - master
     - develop
 
 notifications:
