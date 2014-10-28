@@ -174,7 +174,7 @@ angular.module( 'cahierDeTextesClientApp' )
 		       })
 		       .state('enseignant.cahier_de_textes', {
 			   parent: 'enseignant',
-			   url: '/cahier_de_textes',
+			   url: '/cahier_de_textes?complet',
 			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ENS' ] ); } ] },
 			   views: {
 			       'content': {
