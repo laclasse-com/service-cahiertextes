@@ -160,7 +160,7 @@ describe Annuaire do
 
     # Remove SSL_VERIFY constant
     # Since it might not ve defined, we must try/catch
-    begin 
+    begin
       Object.send(:remove_const,:SSL_VERIFY)
     rescue
       nil
@@ -183,34 +183,36 @@ describe Annuaire do
     expect{ Annuaire.get_user 'VPG60307' }.to raise_error(RestClient::SSLCertificateNotVerified)
   end
 
-  it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour get_user" do
-    ANNUAIRE[:api_mode] = 'v2'
-    ANNUAIRE[:url] = @url_annuaire_v2
-    r2 = Annuaire.get_user 'VPG60307'
-    ANNUAIRE[:api_mode] = 'v3'
-    ANNUAIRE[:url] = @url_annuaire_v3
-    r3 = Annuaire.get_user 'VAA61315'
+  # it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour get_user" do
+  #   ANNUAIRE[:api_mode] = 'v2'
+  #   ANNUAIRE[:url] = @url_annuaire_v2
+  #   uid = 'VPG60307'
 
-    expect( r2.key?('id') ).to eq r3.key?('id')
-    expect( r2.key?('id_sconet') ).to eq r3.key?('id_sconet')
-    expect( r2.key?('id_jointure_aaf') ).to eq r3.key?('id_jointure_aaf')
-    expect( r2.key?('login') ).to eq r3.key?('login')
-    expect( r2.key?('nom') ).to eq r3.key?('nom')
-    expect( r2.key?('prenom') ).to eq r3.key?('prenom')
-    expect( r2.key?('sexe') ).to eq r3.key?('sexe')
-    expect( r2.key?('id_ent') ).to eq r3.key?('id_ent')
-    expect( r2.key?('date_naissance') ).to eq r3.key?('date_naissance')
-    expect( r2.key?('adresse') ).to eq r3.key?('adresse')
-    expect( r2.key?('code_postal') ).to eq r3.key?('code_postal')
-    expect( r2.key?('ville') ).to eq r3.key?('ville')
-    expect( r2.key?('avatar') ).to eq r3.key?('avatar')
-    expect( r2.key?('full_name') ).to eq r3.key?('full_name')
-    expect( r2.key?('profils') ).to eq r3.key?('profils')
-    expect( r2.key?('telephones') ).to eq r3.key?('telephones')
-    expect( r2.key?('emails') ).to eq r3.key?('emails')
+  #   r2 = Annuaire.get_user uid
+  #   ANNUAIRE[:api_mode] = 'v3'
+  #   ANNUAIRE[:url] = @url_annuaire_v3
+  #   r3 = Annuaire.get_user uid
 
-    # r3.each { |k, v| puts "r2.key?('"+k.to_s+"').should be r3.key?('"+k.to_s+"')" }
-  end
+  #   expect( r2.key?('id') ).to eq r3.key?('id')
+  #   expect( r2.key?('id_sconet') ).to eq r3.key?('id_sconet')
+  #   expect( r2.key?('id_jointure_aaf') ).to eq r3.key?('id_jointure_aaf')
+  #   expect( r2.key?('login') ).to eq r3.key?('login')
+  #   expect( r2.key?('nom') ).to eq r3.key?('nom')
+  #   expect( r2.key?('prenom') ).to eq r3.key?('prenom')
+  #   expect( r2.key?('sexe') ).to eq r3.key?('sexe')
+  #   expect( r2.key?('id_ent') ).to eq r3.key?('id_ent')
+  #   expect( r2.key?('date_naissance') ).to eq r3.key?('date_naissance')
+  #   expect( r2.key?('adresse') ).to eq r3.key?('adresse')
+  #   expect( r2.key?('code_postal') ).to eq r3.key?('code_postal')
+  #   expect( r2.key?('ville') ).to eq r3.key?('ville')
+  #   expect( r2.key?('avatar') ).to eq r3.key?('avatar')
+  #   expect( r2.key?('full_name') ).to eq r3.key?('full_name')
+  #   expect( r2.key?('profils') ).to eq r3.key?('profils')
+  #   expect( r2.key?('telephones') ).to eq r3.key?('telephones')
+  #   expect( r2.key?('emails') ).to eq r3.key?('emails')
+
+  #   # r3.each { |k, v| puts "r2.key?('"+k.to_s+"').should be r3.key?('"+k.to_s+"')" }
+  # end
 
   it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour get_etablissement" do
     ANNUAIRE[:api_mode] = 'v2'
@@ -259,21 +261,21 @@ describe Annuaire do
     expect( r2.key?('libelle_long') ).to eq r3.key?('libelle_long')
   end
 
-  it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour get_regroupement" do
-    ANNUAIRE[:api_mode] = 'v2'
-    ANNUAIRE[:url] = @url_annuaire_v2
-    r2 =  Annuaire.get_regroupement '1363'
-    ANNUAIRE[:api_mode] = 'v3'
-    ANNUAIRE[:url] = @url_annuaire_v3
-    r3 = Annuaire.get_regroupement '1363'
-    expect( r2.key?('id') ).to eq r3.key?('id')
-    expect( r2.key?('etablissement_id') ).to eq r3.key?('etablissement_id')
-    expect( r2.key?('libelle') ).to eq r3.key?('libelle')
-    expect( r2.key?('libelle_aaf') ).to eq r3.key?('libelle_aaf')
-    expect( r2.key?('type_regroupement_id') ).to eq r3.key?('type_regroupement_id')
-  end
+  # it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour get_regroupement" do
+  #   ANNUAIRE[:api_mode] = 'v2'
+  #   ANNUAIRE[:url] = @url_annuaire_v2
+  #   r2 =  Annuaire.get_regroupement '1363'
+  #   ANNUAIRE[:api_mode] = 'v3'
+  #   ANNUAIRE[:url] = @url_annuaire_v3
+  #   r3 = Annuaire.get_regroupement '1363'
+  #   expect( r2.key?('id') ).to eq r3.key?('id')
+  #   expect( r2.key?('etablissement_id') ).to eq r3.key?('etablissement_id')
+  #   expect( r2.key?('libelle') ).to eq r3.key?('libelle')
+  #   expect( r2.key?('libelle_aaf') ).to eq r3.key?('libelle_aaf')
+  #   expect( r2.key?('type_regroupement_id') ).to eq r3.key?('type_regroupement_id')
+  # end
 
-  it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour get_regroupement" do
+  it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour search_matiere" do
     ANNUAIRE[:api_mode] = 'v2'
     ANNUAIRE[:url] = @url_annuaire_v2
     r2 =  Annuaire.search_matiere 'Soutien'
@@ -318,20 +320,19 @@ describe Annuaire do
   #   #   r3.each { |k, v| puts "r2.key?('"+k.to_s+"').should be r3.key?('"+k.to_s+"')" }
   # end
 
-  it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour get_user_regroupements" do
-    ANNUAIRE[:api_mode] = 'v2'
-    ANNUAIRE[:url] = @url_annuaire_v2
-    Annuaire.set_search true
-    r2 =  Annuaire.get_user_regroupements 'VPG60307'
-    ANNUAIRE[:api_mode] = 'v3'
-    ANNUAIRE[:url] = @url_annuaire_v3
-    r3 = Annuaire.get_user_regroupements 'VAA61315'
-    r3.each { |k, _v| puts 'r2.key?(\'' + k.to_s + '\').should be r3.key?(\'' + k.to_s + '\')' }
-    expect( r2.key?('classes') ).to eq r3.key?('classes')
-    expect( r2.key?('groupes_eleves') ).to eq r3.key?('groupes_eleves')
-    expect( r2.key?('groupes_libres') ).to eq r3.key?('groupes_libres')
-  end
-  #   r3.each { |k, v| puts "r2.key?('"+k.to_s+"').should be r3.key?('"+k.to_s+"')" }
+  # it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour get_user_regroupements" do
+  #   ANNUAIRE[:api_mode] = 'v2'
+  #   ANNUAIRE[:url] = @url_annuaire_v2
+  #   Annuaire.set_search true
+  #   r2 =  Annuaire.get_user_regroupements 'VPG60307'
+  #   ANNUAIRE[:api_mode] = 'v3'
+  #   ANNUAIRE[:url] = @url_annuaire_v3
+  #   r3 = Annuaire.get_user_regroupements 'VAA61315'
+  #   r3.each { |k, _v| puts 'r2.key?(\'' + k.to_s + '\').should be r3.key?(\'' + k.to_s + '\')' }
+  #   expect( r2.key?('classes') ).to eq r3.key?('classes')
+  #   expect( r2.key?('groupes_eleves') ).to eq r3.key?('groupes_eleves')
+  #   expect( r2.key?('groupes_libres') ).to eq r3.key?('groupes_libres')
+  # end
+  # #   r3.each { |k, v| puts "r2.key?('"+k.to_s+"').should be r3.key?('"+k.to_s+"')" }
 
 end
-
