@@ -8,7 +8,10 @@ before_install:
   - gem install rspec
 
 before_script:
-  - for sample in config/*.sample; do cp $i ${i%.sample}; done
+  - cp constants.rb.sample constants.rb
+  - cp database.rb.sample database.rb
+  - cp options.rb.sample options.rb
+  - cp thin.yml.sample thin.yml
   - mysql -e 'create database CahierDeTextes;'
   - bundle exec rake db:migrations
 
