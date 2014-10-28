@@ -53,10 +53,10 @@ describe CahierDeTextesAPI::API do
       expect( CahierDeTextes.count ).to eq 0
       expect( Cours.count ).to eq 0
       expect( CoursRessource.count ).to eq 0
-      expect( CreneauEmploiDuTemps.count ).to eq 512
+      expect( CreneauEmploiDuTemps.count ).to eq 285
       expect( CreneauEmploiDuTempsEnseignant.count ).to eq 0
       expect( CreneauEmploiDuTempsRegroupement.count ).to eq 0
-      expect( CreneauEmploiDuTempsSalle.count ).to eq 410
+      expect( CreneauEmploiDuTempsSalle.count ).to eq 382
       expect( DevoirTodoItem.count ).to eq 0
       expect( Devoir.count ).to eq 0
       expect( DevoirRessource .count ).to eq 0
