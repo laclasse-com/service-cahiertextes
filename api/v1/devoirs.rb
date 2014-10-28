@@ -147,9 +147,6 @@ module CahierDeTextesAPI
           # 3. traitement des ressources
           params[:ressources] && params[:ressources].each do
             |ressource|
-
-            STDERR.puts "Cette ressource est pourrie : #{ressource}" unless ressource['hash'].include? '_'
-
             devoir.add_ressource( Ressource.create( name: ressource['name'],
                                                     hash: ressource['hash'] ) )
           end
@@ -197,9 +194,6 @@ module CahierDeTextesAPI
 
           devoir.remove_all_ressources if params[:ressources]
           params[:ressources].each do |ressource|
-
-            STDERR.puts "Cette ressource est pourrie : #{ressource}" unless ressource['hash'].include? '_'
-
             devoir.add_ressource( Ressource.create( name: ressource['name'],
                                                     hash: ressource['hash'] ) )
           end if params[:ressources]
@@ -240,9 +234,6 @@ module CahierDeTextesAPI
                                         date_creation: Time.now )
 
         devoir.ressources.each do |ressource|
-
-          STDERR.puts "Cette ressource est pourrie : #{ressource}" unless ressource['hash'].include? '_'
-
           nouveau_devoir.add_ressource ressource
         end
 
