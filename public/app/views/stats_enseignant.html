@@ -76,17 +76,20 @@
 
 <div class="panel panel-default">
   <div class="panel-heading">
-    <label>
-      <checkbox class="btn-success"
-		data-ng-model="scope.montre_valides"
-		data-ng-change="process_data()"></checkbox>
-      afficher les saisies visées
-    </label>
     <button class="btn btn-primary pull-right"
 	    data-ng-click="valide_all()"
 	    data-ng-if="current_user.profil_actif.type === 'DIR'">
       <span class="glyphicon glyphicon-check"></span> Viser la totalité
     </button>
+
+
+    <label class="pull-right">
+      <checkbox class="btn-success"
+		data-ng-model="scope.montre_valides"
+		data-ng-change="process_data()"></checkbox>
+      afficher les saisies visées
+    </label>
+
     <div class="clearfix"></div>
   </div>
   <div class="panel-body">
