@@ -26,17 +26,22 @@
       <h2>
 	Du {{from_date | date:'longDate'}} au {{to_date | date:'longDate'}}
 
-	<div class="pull-right" data-ng-if="!complet">
-	  <button class="btn btn-default" data-ng-click="reset_offset()" data-ng-class="{'disabled': period_offset == 0}">Aujourd'hui</button>
+	<div class="pull-right">
+	  <button class="btn btn-default"
+		  data-ng-click="reset_offset()"
+		  data-ng-class="{'disabled': complet || period_offset == 0}">Aujourd'hui</button>
 	  <div class="btn-group">
-	    <button class="btn btn-default" data-ng-click="incr_offset()"><span class="glyphicon glyphicon-chevron-left"></span></button>
-	    <button class="btn btn-default" data-ng-click="decr_offset()"><span class="glyphicon glyphicon-chevron-right"></span></button>
+	    <button class="btn btn-default" data-ng-class="{'disabled': complet}" data-ng-click="incr_offset()"><span class="glyphicon glyphicon-chevron-left"></span></button>
+	    <button class="btn btn-default" data-ng-class="{'disabled': complet}" data-ng-click="decr_offset()"><span class="glyphicon glyphicon-chevron-right"></span></button>
 	  </div>
-	  <a class="btn btn-default"
-	     data-ui-sref="enseignant.cahier_de_textes({ complet: true })"
-	     data-tooltip="Cahier de textes complet sur l'année scolaire">
-	    <span class="glyphicon glyphicon-print"></span>
-	  </a>
+
+	  <button class="btn btn-default"
+		  data-btn-checkbox
+		  data-ng-model="complet"
+		  data-ng-click="retrieve_data()">
+	    <checkbox class="btn-warning"
+		      data-ng-model="complet"></checkbox> Année complète
+	  </button>
 	</div>
       </h2>
     </div>
