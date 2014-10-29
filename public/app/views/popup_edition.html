@@ -2,11 +2,11 @@
      data-ng-class="{'not-yours': !creneau.mine}">
   <button type="button" class="close pull-right" aria-hidden="true" data-ng-click="annuler()"><i class="picto" data-ng-style="{'background-image':'url(' + app_path + '/app/vendor/charte-graphique-laclasse-com/images/picto_cross.svg)'}"></i></button>
 
-  <h3>{{creneau.heure_debut | date : 'fullDate' }}, semaine {{creneau.n_week}}</h3>
+  <h3>{{creneau.heure_debut | amDateFormat : 'dddd D MMMM YYYY' }}, semaine {{creneau.n_week}}</h3>
   <!-- {{{ Lecture seule -->
   <h3>
     <span data-ng-if="!mode_edition_creneau || !creneau.vierge">
-      {{selected_regroupement.libelle}} - {{selected_matiere.libelle_long}} ({{creneau.heure_debut | date: 'shortTime'}} - {{creneau.heure_fin | date: 'shortTime'}})
+      {{selected_regroupement.libelle}} - {{selected_matiere.libelle_long}} ({{creneau.heure_debut | amDateFormat: 'HH:mm'}} - {{creneau.heure_fin | amDateFormat: 'HH:mm'}})
     </span>
   </h3>
   <!-- }}} -->
@@ -36,7 +36,7 @@
 	<label>Choisir l'horaire :</label>
 	de
 	<div class="dropdown horaire">
-	  <a class="dropdown-toggle" role="button" data-toggle="dropdown" data-target="#" href="">{{creneau.tmp_heure_debut | date: 'shortTime'}}</a>
+	  <a class="dropdown-toggle" role="button" data-toggle="dropdown" data-target="#" href="">{{creneau.tmp_heure_debut | amDateFormat: 'HH:mm'}}</a>
 	  <div class="dropdown-menu" role="menu" ng-click="$event.stopPropagation()">
 	    <timepicker class="timepicker"
 			data-ng-model="creneau.tmp_heure_debut"
@@ -47,7 +47,7 @@
 	</div>
 	à
 	<div class="dropdown horaire">
-	  <a class="dropdown-toggle" role="button" data-toggle="dropdown" data-target="#" href="">{{creneau.tmp_heure_fin | date: 'shortTime'}}</a>
+	  <a class="dropdown-toggle" role="button" data-toggle="dropdown" data-target="#" href="">{{creneau.tmp_heure_fin | amDateFormat: 'HH:mm'}}</a>
 	  <div class="dropdown-menu" role="menu" ng-click="$event.stopPropagation()">
 	    <timepicker class="timepicker"
 			data-ng-model="creneau.tmp_heure_fin"
@@ -358,7 +358,7 @@
 		data-ng-if="devoir.cours.contenu"
 		data-tooltip-trigger="click"
 		data-tooltip-placement="bottom"
-		data-tooltip-html-unsafe="<em>{{devoir.cours.date_cours | date:'fullDate'}}</em><hr />{{devoir.cours.contenu}}">
+		data-tooltip-html-unsafe="<em>{{devoir.cours.date_cours | amDateFormat : 'dddd D MMMM YYYY'}}</em><hr />{{devoir.cours.contenu}}">
 	      <span class="glyphicon glyphicon-briefcase"></span> Séquence Pédagogique
 	    </li>
 	  </ul>
@@ -412,7 +412,7 @@
 		data-ng-if="!devoir.deleted">
 	      <ul>
 		<li data-ng-if="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir"><i class="picto" data-ng-style="{'background-image':'url(' + app_path + '/app/vendor/charte-graphique-laclasse-com/images/picto_devoir.svg)'}"></i> Type de devoir : <em>{{devoir.type_devoir.description}}</em></li>
-		<li>Date due : <em>{{devoir.date_due | date:'fullDate'}}</em></li>
+		<li>Date due : <em>{{devoir.date_due | amDateFormat : 'dddd D MMMM YYYY'}}</em></li>
 		<li data-ng-bind-html="devoir.contenu"></li>
 	      </ul>
 	      <select data-ng-change="are_we_go_for_duplication()"

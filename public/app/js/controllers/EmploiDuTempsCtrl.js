@@ -243,8 +243,8 @@ angular.module( 'cahierDeTextesClientApp' )
 					     var regroupement_id = _($scope.selected_regroupement_id).isNull() ? null : '' + $scope.selected_regroupement_id;
 					     var new_creneau = new CreneauEmploiDuTemps( { regroupement_id: regroupement_id,
 											   jour_de_la_semaine: start.getDay() + 1,
-											   heure_debut: new Date(new Date(start)).toISOString(),
-											   heure_fin: new Date(new Date(end)).toISOString(),
+											   heure_debut: moment(start).toISOString(),
+											   heure_fin: moment(end).toISOString(),
 											   matiere_id: '' } );
 
 					     new_creneau.$save()
@@ -264,7 +264,7 @@ angular.module( 'cahierDeTextesClientApp' )
 						 } );
 					 }
 				     };
-				 }
+				      }
 				 if ( $scope.current_user.profil_actif.type == 'ENS' ) {
 				     $scope.uniquement_mes_creneaux = true;
 				 }
