@@ -23,15 +23,16 @@
     "charte-graphique-laclasse-com": "git@gitlab.erasme.org:laclasse/charte-graphique-laclasse-com.git#latest",
     "angularjs-nvd3-directives": "latest",
     "angular-moment": "latest",
-    "textAngular": "https://github.com/fraywing/textAngular.git#b915a13",
-    "ng-switcher": "latest",
-    "font-awesome": "latest",
-    "ng-file-upload": "latest",
-    "ng-color-picker": "https://github.com/joujiahe/ng-color-picker.git#latest",
-    "sweetalert": "latest",
+      "textAngular": "latest",
+      "ng-switcher": "latest",
+      "font-awesome": "latest",
+      "ng-file-upload": "latest",
+      "ng-color-picker": "https://github.com/joujiahe/ng-color-picker.git#latest",
+      "sweetalert": "latest",
       "angular-bootstrap-checkbox": "latest",
       "webfont-opensans": "latest",
-      "webfont-opensans-condensed": "latest"
+      "webfont-opensans-condensed": "latest",
+      "rangy": "latest"
   },
   "devDependencies": {
     "angular-mocks": "latest",
@@ -47,6 +48,7 @@
   ],
   "resolutions": {
     "jquery": "~2.x",
-    "d3": "~3.4.1"
+    "d3": "~3.4.1",
+      "angular": "*"
   }
 }

@@ -1,8 +1,8 @@
 {
-  "name": "angular-i18n",
+  "name": "angular-sanitize",
   "version": "1.3.0",
-  "description": "AngularJS module for internationalization",
-  "main": "angular-i18n.js",
+  "description": "AngularJS module for sanitizing HTML",
+  "main": "angular-sanitize.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,8 +14,7 @@
     "angular",
     "framework",
     "browser",
-    "internationalization",
-    "i18n",
+    "html",
     "client-side"
   ],
   "author": "Angular Core Team <angular-core+npm@google.com>",

@@ -34,7 +34,6 @@
     "commit": "f8279841f4df2a224f738b50ae4382966eb162c6"
   },
   "_source": "git://github.com/sebastianha/angular-bootstrap-checkbox.git",
-  "_target": "~0.3.1",
-  "_originalSource": "angular-bootstrap-checkbox",
-  "_direct": true
+  "_target": "*",
+  "_originalSource": "angular-bootstrap-checkbox"
 }

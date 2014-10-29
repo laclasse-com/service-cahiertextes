@@ -1,8 +1,8 @@
 /*
-textAngular
+@license textAngular
 Author : Austin Anderson
 License : 2013 MIT
-Version 1.2.2
+Version 1.3.0-pre9
 
 See README.md or https://github.com/fraywing/textAngular/wiki for requirements and use.
 */
@@ -12,9 +12,9 @@ angular.module('textAngularSetup', [])
 .value('taOptions',  {
 	toolbar: [
 		['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'pre', 'quote'],
-		['bold', 'italics', 'underline', 'ul', 'ol', 'redo', 'undo', 'clear'],
+		['bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol', 'redo', 'undo', 'clear'],
 		['justifyLeft','justifyCenter','justifyRight','indent','outdent'],
-		['html', 'insertImage', 'insertLink', 'insertVideo']
+		['html', 'insertImage', 'insertLink', 'insertVideo', 'wordcount', 'charcount']
 	],
 	classes: {
 		focussed: "focussed",
@@ -42,6 +42,7 @@ angular.module('textAngularSetup', [])
 				};
 
 				reader.readAsDataURL(file);
+				// NOTE: For async procedures return a promise and resolve it when the editor should update the model.
 				return true;
 			}
 			return false;
@@ -77,7 +78,7 @@ angular.module('textAngularSetup', [])
 	}
 ])
 
-.constant('taTranslations', {
+.value('taTranslations', {
 	// moved to sub-elements
 	//toggleHTML: "Toggle HTML",
 	//insertImage: "Please enter a image URL to insert",
@@ -121,6 +122,9 @@ angular.module('textAngularSetup', [])
 	underline: {
 		tooltip: 'Underline'
 	},
+	strikeThrough:{
+		tooltip: 'Strikethrough'
+	},
 	justifyLeft: {
 		tooltip: 'Align text left'
 	},
@@ -151,6 +155,12 @@ angular.module('textAngularSetup', [])
 	insertLink: {
 		tooltip: 'Insert / edit link',
 		dialogPrompt: "Please enter a URL to insert"
+	},
+	wordcount: {
+		tooltip: 'Display words Count'
+	},
+		charcount: {
+		tooltip: 'Display characters Count'
 	}
 })
 .run(['taRegisterTool', '$window', 'taTranslations', 'taSelection', function(taRegisterTool, $window, taTranslations, taSelection){
@@ -254,8 +264,16 @@ angular.module('textAngularSetup', [])
 		},
 		activeState: function(commonElement){
 			var result = false;
-			if(commonElement) result = commonElement.css('text-align') === 'left' || commonElement.attr('align') === 'left' ||
-				(commonElement.css('text-align') !== 'right' && commonElement.css('text-align') !== 'center' && !this.$editor().queryCommandState('justifyRight') && !this.$editor().queryCommandState('justifyCenter'));
+			if(commonElement) result =
+				commonElement.css('text-align') === 'left' ||
+				commonElement.attr('align') === 'left' ||
+				(
+					commonElement.css('text-align') !== 'right' &&
+					commonElement.css('text-align') !== 'center' &&
+					commonElement.css('text-align') !== 'justify' &&
+					!this.$editor().queryCommandState('justifyRight') &&
+					!this.$editor().queryCommandState('justifyCenter')
+				) && !this.$editor().queryCommandState('justifyFull');
 			result = result || this.$editor().queryCommandState('justifyLeft');
 			return result;
 		}
@@ -328,10 +346,20 @@ angular.module('textAngularSetup', [])
 		},
 		commandKeyCode: 117
 	});
+	taRegisterTool('strikeThrough', {
+		iconclass: 'fa fa-strikethrough',
+		action: function(){
+			return this.$editor().wrapSelection("strikeThrough", null);
+		},
+		activeState: function(){
+			return document.queryCommandState('strikeThrough');
+		}
+	});
 	taRegisterTool('clear', {
 		iconclass: 'fa fa-ban',
 		tooltiptext: taTranslations.clear.tooltip,
 		action: function(deferred, restoreSelection){
+			var i;
 			this.$editor().wrapSelection("removeFormat", null);
 			var possibleNodes = angular.element(taSelection.getSelectionElement());
 			// remove lists
@@ -348,6 +376,36 @@ angular.module('textAngularSetup', [])
 			};
 			angular.forEach(possibleNodes.find("ul"), removeListElements);
 			angular.forEach(possibleNodes.find("ol"), removeListElements);
+			if(possibleNodes[0].tagName.toLowerCase() === 'li'){
+				var _list = possibleNodes[0].parentNode.childNodes;
+				var _preLis = [], _postLis = [], _found = false;
+				for(i = 0; i < _list.length; i++){
+					if(_list[i] === possibleNodes[0]){
+						_found = true;
+					}else if(!_found) _preLis.push(_list[i]);
+					else _postLis.push(_list[i]);
+				}
+				var _parent = angular.element(possibleNodes[0].parentNode);
+				var newElem = angular.element('<p></p>');
+				newElem.html(angular.element(possibleNodes[0]).html());
+				if(_preLis.length === 0 || _postLis.length === 0){
+					if(_postLis.length === 0) _parent.after(newElem);
+					else _parent[0].parentNode.insertBefore(newElem[0], _parent[0]);
+					
+					if(_preLis.length === 0 && _postLis.length === 0) _parent.remove();
+					else angular.element(possibleNodes[0]).remove();
+				}else{
+					var _firstList = angular.element('<'+_parent[0].tagName+'></'+_parent[0].tagName+'>');
+					var _secondList = angular.element('<'+_parent[0].tagName+'></'+_parent[0].tagName+'>');
+					for(i = 0; i < _preLis.length; i++) _firstList.append(angular.element(_preLis[i]));
+					for(i = 0; i < _postLis.length; i++) _secondList.append(angular.element(_postLis[i]));
+					_parent.after(_secondList);
+					_parent.after(newElem);
+					_parent.after(_firstList);
+					_parent.remove();
+				}
+				taSelection.setSelectionToElementEnd(newElem[0]);
+			}
 			// clear out all class attributes. These do not seem to be cleared via removeFormat
 			var $editor = this.$editor();
 			var recursiveRemoveClass = function(node){
@@ -422,19 +480,34 @@ angular.module('textAngularSetup', [])
 		var floatLeft = angular.element('<button type="button" class="btn btn-default btn-sm btn-small" unselectable="on" tabindex="-1"><i class="fa fa-align-left"></i></button>');
 		floatLeft.on('click', function(event){
 			event.preventDefault();
+			// webkit
 			$element.css('float', 'left');
+			// firefox
+			$element.css('cssFloat', 'left');
+			// IE < 8
+			$element.css('styleFloat', 'left');
 			finishEdit();
 		});
 		var floatRight = angular.element('<button type="button" class="btn btn-default btn-sm btn-small" unselectable="on" tabindex="-1"><i class="fa fa-align-right"></i></button>');
 		floatRight.on('click', function(event){
 			event.preventDefault();
+			// webkit
 			$element.css('float', 'right');
+			// firefox
+			$element.css('cssFloat', 'right');
+			// IE < 8
+			$element.css('styleFloat', 'right');
 			finishEdit();
 		});
 		var floatNone = angular.element('<button type="button" class="btn btn-default btn-sm btn-small" unselectable="on" tabindex="-1"><i class="fa fa-align-justify"></i></button>');
 		floatNone.on('click', function(event){
 			event.preventDefault();
+			// webkit
 			$element.css('float', '');
+			// firefox
+			$element.css('cssFloat', '');
+			// IE < 8
+			$element.css('styleFloat', '');
 			finishEdit();
 		});
 		buttonGroup.append(floatLeft);
@@ -476,16 +549,18 @@ angular.module('textAngularSetup', [])
 		tooltiptext: taTranslations.insertVideo.tooltip,
 		action: function(){
 			var urlPrompt;
-			urlPrompt = $window.prompt(taTranslations.insertVideo.dialogPrompt, 'http://');
-			if (urlPrompt && urlPrompt !== '' && urlPrompt !== 'http://') {
+			urlPrompt = $window.prompt(taTranslations.insertVideo.dialogPrompt, 'https://');
+			if (urlPrompt && urlPrompt !== '' && urlPrompt !== 'https://') {
 				// get the video ID
 				var ids = urlPrompt.match(/(\?|&)v=[^&]*/);
 				/* istanbul ignore else: if it's invalid don't worry - though probably should show some kind of error message */
 				if(ids.length > 0){
 					// create the embed link
-					var urlLink = "http://www.youtube.com/embed/" + ids[0].substring(3);
+					var urlLink = "https://www.youtube.com/embed/" + ids[0].substring(3);
 					// create the HTML
-					var embed = '<img class="ta-insert-video" ta-insert-video="' + urlLink + '" contenteditable="false" src="" allowfullscreen="true" width="300" frameborder="0" height="250"/>';
+					// for all options see: http://stackoverflow.com/questions/2068344/how-do-i-get-a-youtube-video-thumbnail-from-the-youtube-api
+					// maxresdefault.jpg seems to be undefined on some.
+					var embed = '<img class="ta-insert-video" src="https://img.youtube.com/vi/' + ids[0].substring(3) + '/hqdefault.jpg" ta-insert-video="' + urlLink + '" contenteditable="false" src="" allowfullscreen="true" frameborder="0" />';
 					// insert
 					return this.$editor().wrapSelection('insertHTML', embed, true);
 				}
@@ -566,6 +641,43 @@ angular.module('textAngularSetup', [])
 				container.append(buttonGroup);
 				editorScope.showPopover($element);
 			}
+		}
+	});
+	taRegisterTool('wordcount', {
+		display: '<div id="toolbarWC" style="display:block; width:100px;">Words:{{wordcount}}</div>',
+		disabled: true,
+		wordcount: 0,
+		activeState: function(){ // this fires on keyup
+			var textElement = this.$editor().displayElements.text;
+			var workingHTML = textElement[0].innerHTML;
+			var sourceText = workingHTML.replace(/(<[^>]*?>)/ig, ' '); // replace all html tags with spaces
+			
+			// Caculate number of words
+			var sourceTextMatches = sourceText.match(/\S+/g);
+			var noOfWords = sourceTextMatches && sourceTextMatches.length || 0;
+			
+			//Set current scope
+			this.wordcount = noOfWords;
+			//Set editor scope
+			this.$editor().wordcount = noOfWords;
+			return false;
+		}
+	});
+	taRegisterTool('charcount', {
+		display: '<div id="toolbarCC" style="display:block; width:120px;">Characters:{{charcount}}</div>',
+		disabled: true,
+		charcount: 0,
+		activeState: function(){ // this fires on keyup
+			var textElement = this.$editor().displayElements.text;
+			var sourceText = textElement[0].innerText || textElement[0].textContent; // to cover the non-jquery use case.
+			
+			// Caculate number of chars
+			var noOfChars = sourceText.replace(/(\r\n|\n|\r)/gm,"").replace(/^\s+/g,' ').replace(/\s+$/g, ' ').length;
+			//Set current scope
+			this.charcount = noOfChars;
+			//Set editor scope
+			this.$editor().charcount = noOfChars;
+			return false;
 		}
 	});
 }]);

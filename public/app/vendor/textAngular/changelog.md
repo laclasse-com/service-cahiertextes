@@ -1,4 +1,86 @@
-###Changelog
+<a name="1.3.0-pre9"></a>
+### 1.3.0-pre9 (2014-10-24)
+
+
+#### Bug Fixes
+
+* **compile:** Keep copyright notices in minified files ([9fe51ab6](http://github.com/fraywing/textAngular/commit/9fe51ab68a1b2d31528abc0fbee186c9e70b0698))
+* **styling:** Support other CSS frameworks. ([280522a3](http://github.com/fraywing/textAngular/commit/280522a3daa4ec4a62710a98ce6ef5e2a662878a))
+* **taBind:** Fixes paste lists, more lenient stripping of spans. ([5ff572f6](http://github.com/fraywing/textAngular/commit/5ff572f6c50d2bf68df0c2b729a0f224b2be78a1))
+* **taExecCommand:** Attempt to wrap unwrapped content in list breaks. ([7b873df8](http://github.com/fraywing/textAngular/commit/7b873df8e4c58d4b62962b136eb598984d17d1e9))
+
+
+<a name="1.3.0-pre8"></a>
+### 1.3.0-pre8 (2014-10-23)
+
+
+#### Bug Fixes
+
+* **taBind:** Fix some paste from word issues. ([ca8af8b1](http://github.com/fraywing/textAngular/commit/ca8af8b17a363a9b70d63b1ebf5115ecb53b55c1))
+
+
+<a name="1.3.0-pre7"></a>
+### 1.3.0-pre7 (2014-10-22)
+
+
+#### Bug Fixes
+
+* **Setup:** Make the rangy loaded check more forgiving. ([ec778431](http://github.com/fraywing/textAngular/commit/ec7784311bc7256b0d216cd2b8a0321c897dd43b))
+
+
+<a name="1.3.0-pre6"></a>
+### 1.3.0-pre6 (2014-10-21)
+
+
+#### Bug Fixes
+
+* **taBind:** Fix the drop handler not re-applying on select handler ([af233b9f](http://github.com/fraywing/textAngular/commit/af233b9f2443c386afe9f83c5b1b2cd69d62e39d))
+* **taExecCommand:** Fix lists for FF specifically. ([0924a8ca](http://github.com/fraywing/textAngular/commit/0924a8ca22493f018b679cc6a0805f8f1152f832), closes [#290](http://github.com/fraywing/textAngular/issues/290))
+* **taSanitize:** Allow id attribute. ([7afc96c0](http://github.com/fraywing/textAngular/commit/7afc96c0896a60cec4d95099d172f7bfa37ed7a1), closes [#355](http://github.com/fraywing/textAngular/issues/355))
+* **taTranslations:** Change Constant to Value ([58781ee9](http://github.com/fraywing/textAngular/commit/58781ee907a690c3f1e980c76ac71d67fb2187a6))
+
+
+#### Features
+
+* **taBind.undoManager:** Add undoManager to taBind. ([bd2bb0ae](http://github.com/fraywing/textAngular/commit/bd2bb0aee69953f5caa043571b854219a28145d0))
+
+
+<a name="1.3.0-pre5"></a>
+### 1.3.0-pre5 (2014-10-20)
+
+
+#### Bug Fixes
+
+* **bower:** Fixes angular bower dependancy to support 1.3.0 ([491c8daf](http://github.com/fraywing/textAngular/commit/491c8daf31078ccb38e02f2058bf2e5acbe7c4c9), closes [#358](http://github.com/fraywing/textAngular/issues/358))
+
+
+#### Features
+
+* **taBind:** Add paste from word converting. ([e9edbdfe](http://github.com/fraywing/textAngular/commit/e9edbdfe7376f28bc27a376ce15a61a6e14b2b81))
+
+
+<a name="1.3.0-pre4"></a>
+### 1.3.0-pre4 (2014-10-06)
+
+
+#### Bug Fixes
+
+* **taTools:** Fixes the wordcount to count correctly. ([fb208874](http://github.com/fraywing/textAngular/commit/fb208874a53abd2bea7c4f7fedd260dcee489141))
+
+
+<a name="1.3.0-pre3"></a>
+### 1.3.0-pre3 (2014-10-06)
+
+
+<a name="1.3.0-pre2"></a>
+### 1.3.0-pre2 (2014-10-06)
+
+
+<a name="1.3.0-pre1"></a>
+### 1.3.0-pre1 (2014-10-06)
+
+
+###OLD Changelog - PRE v1.3.0-pre1
 
 2014-07-26 v1.2.2
 
