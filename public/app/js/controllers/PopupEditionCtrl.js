@@ -53,10 +53,8 @@ angular.module( 'cahierDeTextesClientApp' )
 			   $scope.creneau.etranger = !$scope.current_user.profil_actif.admin && !$scope.creneau.en_creation && !$scope.creneau.mine;
 			   $scope.creneau.previous_regroupement_id = $scope.creneau.regroupement_id;
 			   $scope.creneau.vierge = _(creneau.vierge).isUndefined();
-			   $scope.creneau.n_week = moment($scope.creneau.tmp_heure_debut).week();
 			   $scope.selected_regroupement = _($scope.creneau.regroupement_id).isUndefined() ? _( $scope.classes ).first() : _( $scope.classes ).findWhere( { id: parseInt( $scope.creneau.regroupement_id ) } );
 			   $scope.selected_matiere = _($scope.creneau.matiere_id).isEmpty() ? _( $scope.matieres ).first() : _($scope.matieres).findWhere( { id: $scope.creneau.matiere_id } );
-
 			   if ( $scope.creneau.en_creation ) {
 			       $scope.creneau.tmp_heure_debut = $filter( 'correctTimeZoneToGMT' )( $scope.creneau.heure_debut );
 			       $scope.creneau.tmp_heure_fin = $filter( 'correctTimeZoneToGMT' )( $scope.creneau.heure_fin );
@@ -68,6 +66,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				   regroupement.regroupement_id = parseInt( regroupement.regroupement_id );
 			       } );
 			   }
+			   $scope.creneau.n_week = moment($scope.creneau.tmp_heure_debut).week();
 
 			   // Gestion des semaines actives
 			   var fixnum_to_bitfield = function( fixnum ) {
