@@ -19,7 +19,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
 				 var popup_callback = function( scope_popup ) {
 				     var view = $scope.emploi_du_temps.fullCalendar( 'getView' );
-				     retrieve_data( view.visStart, view.visEnd );
+				     retrieve_data( view.start.toDate(), view.end.toDate() );
 				 };
 
 				 // consommation des données
@@ -41,8 +41,8 @@ angular.module( 'cahierDeTextesClientApp' )
 						 }
 					     }
 					 } );
-					 this.start = new Date( event.start );
-					 this.end = new Date( event.end );
+					 this.start = moment( event.start );
+					 this.end = moment( event.end );
 					 this.className = 'saisie-vide';
 
 					 Annuaire.get_matiere( event.matiere_id ).$promise.then( function success( response ) {
@@ -116,7 +116,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				     $scope.current_user.date = view.visStart;
 				     $scope.n_week = moment(view.visStart).week();
 				     $scope.c_est_les_vacances = $scope.sont_ce_les_vacances( $scope.n_week, $scope.zone );
-				     retrieve_data( view.visStart, view.visEnd );
+				     retrieve_data( view.start.toDate(), view.end.toDate() );
 				 };
 
 				 $scope.calendar.options.eventRender = function ( event, element ) {
