@@ -24,7 +24,10 @@
 </div>
 
 <tabset>
-  <tab data-ng-repeat="tab in tabs" heading="{{tab.heading}}" data-ui-sref="{{tab.uisref}}" active="tab.active">
+  <tab data-ng-repeat="tab in tabs"
+       data-ui-sref="{{tab.uisref}}"
+       active="tab.active">
+    <tab-heading><span class="{{tab.css_class}}"></span> {{tab.heading}}</tab-heading>
   </tab>
 </tabset>
 
