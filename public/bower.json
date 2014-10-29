@@ -23,7 +23,7 @@
     "charte-graphique-laclasse-com": "git@gitlab.erasme.org:laclasse/charte-graphique-laclasse-com.git#latest",
     "angularjs-nvd3-directives": "latest",
     "angular-moment": "latest",
-      "textAngular": "latest",
+      "textAngular": "1.3.0-pre9",
       "ng-switcher": "latest",
       "font-awesome": "latest",
       "ng-file-upload": "latest",
@@ -49,6 +49,6 @@
   "resolutions": {
     "jquery": "~2.x",
     "d3": "~3.4.1",
-      "angular": "*"
+    "angular": "1.3.0"
   }
 }
