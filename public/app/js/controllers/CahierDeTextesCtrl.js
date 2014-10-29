@@ -4,7 +4,6 @@ angular.module( 'cahierDeTextesClientApp' )
     .controller('CahierDeTextesCtrl',
 		[ '$scope', '$sce', '$q', '$stateParams', 'APP_PATH', 'DOCS_URL', 'API', 'Annuaire', 'EmploisDuTemps', 'current_user', 'PopupsCreneau', 'CreneauEmploiDuTemps',
 		  function ( $scope, $sce, $q, $stateParams, APP_PATH, DOCS_URL, API, Annuaire, EmploisDuTemps, current_user, PopupsCreneau, CreneauEmploiDuTemps ) {
-		      $scope.complet = !_($stateParams.complet).isUndefined();
 		      $scope.current_user = current_user;
 
 		      var matieres = [];
@@ -13,6 +12,8 @@ angular.module( 'cahierDeTextesClientApp' )
 		      $scope.scope = $scope;
 		      $scope.selected_regroupement_id = null;
 		      $scope.selected_creneau_vide = null;
+
+		      $scope.complet = false;
 
 		      var filter_creneaux_avec_saisies = function( raw_data ) {
 			  var filtered_data = _.chain(raw_data)
@@ -58,10 +59,10 @@ angular.module( 'cahierDeTextesClientApp' )
 
 		      $scope.period_offset = $scope.current_user.date ? moment.duration( moment() - moment( $scope.current_user.date ) ).months() : 0;
 
-		      // retrieve_data() when the value of week_offset changes
+		      // $scope.retrieve_data() when the value of week_offset changes
 		      // n.b.: triggered when week_offset is initialized above
 		      $scope.$watch( 'period_offset', function() {
-			  retrieve_data();
+			  $scope.retrieve_data();
 		      } );
 
 		      $scope.incr_offset = function() {
@@ -74,7 +75,7 @@ angular.module( 'cahierDeTextesClientApp' )
 			  $scope.period_offset = 0;
 		      };
 
-		      var retrieve_data = function() {
+		      $scope.retrieve_data = function() {
 			  if ( $scope.complet ) {
 			      var now = moment();
 			      $scope.from_date = moment();
@@ -132,7 +133,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				  $scope.selected_creneau_vide = null;
 			      });
 		      };
-		      $scope.popup_callback = retrieve_data;
+		      $scope.popup_callback = $scope.retrieve_data;
 
 		      $scope.edition_creneau = function ( event ) {
 			  CreneauEmploiDuTemps.get( { id: event.creneau_emploi_du_temps_id } )
