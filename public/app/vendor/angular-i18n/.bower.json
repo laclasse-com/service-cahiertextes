@@ -14,6 +14,6 @@
     "commit": "06f56ea912032155e226288953cd85aaa792eaf4"
   },
   "_source": "git://github.com/angular/bower-angular-i18n.git",
-  "_target": "*",
+  "_target": "~1.3",
   "_originalSource": "angular-i18n"
 }

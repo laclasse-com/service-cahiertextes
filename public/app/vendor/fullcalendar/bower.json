@@ -34,5 +34,12 @@
   "main": [
     "fullcalendar.js",
     "fullcalendar.css"
+  ],
+  "ignore": [
+    "*",
+    "**/.*",
+    "!/*.js",
+    "!/*.css",
+    "!/bower.json"
   ]
 }
