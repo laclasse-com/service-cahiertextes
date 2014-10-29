@@ -54,7 +54,7 @@ namespace :preprocess_assets do
   desc 'Minify CSS using Sass'
   task css: :load_config do
     STDERR.puts 'Sassification of vendor CSS'
-    uglified = Sass.compile( [ 'public/app/vendor/fullcalendar/fullcalendar.css',
+    uglified = Sass.compile( [ 'public/app/vendor/fullcalendar/dist/fullcalendar.css',
                                'public/app/vendor/angular-loading-bar/build/loading-bar.min.css',
                                'public/app/vendor/nvd3/nv.d3.min.css',
                                'public/app/vendor/ng-switcher/dist/ng-switcher.min.css',
