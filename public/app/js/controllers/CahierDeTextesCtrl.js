@@ -14,6 +14,9 @@ angular.module( 'cahierDeTextesClientApp' )
 		      $scope.selected_creneau_vide = null;
 
 		      $scope.complet = false;
+		      $scope.$watch( 'complet', function() {
+			  $scope.retrieve_data();
+		      } );
 
 		      var filter_creneaux_avec_saisies = function( raw_data ) {
 			  var filtered_data = _.chain(raw_data)
