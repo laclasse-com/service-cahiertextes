@@ -432,6 +432,12 @@ angular.module( 'cahierDeTextesClientApp' )
 					       return creneau.start;
 					   } )
 					   .value();
+				       if ( $scope.creneaux_devoirs_possibles.length > 1 ) {
+					   $scope.creneaux_devoirs_possibles = _($scope.creneaux_devoirs_possibles)
+					       .select( function ( creneau ) {
+						   return creneau.heure_debut.toISOString() != $scope.creneau.heure_debut.toISOString();
+					       } );
+				       }
 				   } );
 
 			       // {{{ Gestion des documents attachés
@@ -501,12 +507,16 @@ angular.module( 'cahierDeTextesClientApp' )
 				   if ( _(creneau_cible).isNull() ) {
 				       creneau_cible = $scope.creneau;
 				   } else if ( creneau_cible == 'next' ) {
-				       creneau_cible = _.chain($scope.creneaux_devoirs_possibles)
-					   .select( function( creneau ) {
-					       return creneau.heure_debut > $scope.creneau.heure_debut;
-					   } )
-					   .head()
-					   .value();
+				       if ( $scope.creneaux_devoirs_possibles.length > 1 ) {
+					   creneau_cible = _.chain($scope.creneaux_devoirs_possibles)
+					       .select( function( creneau ) {
+						   return creneau.heure_debut > $scope.creneau.heure_debut;
+					       } )
+					       .head()
+					       .value();
+				       } else {
+					   creneau_cible = _($scope.creneaux_devoirs_possibles).first();
+				       }
 				   }
 				   var devoir = new Devoirs( {
 				       cours_id: $scope.cours.id,
