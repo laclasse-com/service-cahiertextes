@@ -7,6 +7,7 @@ Bundler.require( :default, ENV['RACK_ENV'].to_sym )     # require tout les gems 
 
 require_relative './lib/AuthenticationHelpers'
 require_relative './lib/UserHelpers'
+require_relative './lib/MiscHelpers'
 
 require_relative './models/models'
 require_relative './lib/pronote'
@@ -18,6 +19,7 @@ module CahierDeTextesAPI
 
     helpers AuthenticationHelpers
     helpers UserHelpers
+    helpers MiscHelpers
 
     format :txt
     get '/version' do

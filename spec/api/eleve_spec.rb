@@ -58,8 +58,6 @@ describe CahierDeTextesAPI::API do
 
     get "/v1/emplois_du_temps/du/#{debut}/au/#{fin}"
 
-    pp last_response unless last_response.status == 200
-
     expect( last_response.status ).to eq 200
   end
   # }}}

@@ -65,8 +65,6 @@ module ProNote
   def create_or_get( classe, params )
     objet = classe.where( params ).first
 
-    # STDERR.puts "#{objet.nil? ? 'create' : 'get'} #{classe}, #{params}"
-
     objet = classe.create( params ) if objet.nil?
     objet.update( date_creation: Time.now ) if classe.method_defined? :date_creation
 
