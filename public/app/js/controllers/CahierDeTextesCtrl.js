@@ -20,32 +20,28 @@ angular.module( 'cahierDeTextesClientApp' )
 		      } );
 
 		      var filter_creneaux_avec_saisies = function( raw_data ) {
-			  var filtered_data = _.chain(raw_data)
-				  .filter( function( creneau ) {
-				      return creneau.enseignant_id === $scope.current_user.uid;
-				  } )
-				  .reject( function( creneau ) {
-				      return _(creneau.cours).isEmpty() && _(creneau.devoirs).isEmpty();
-				  })
-				  .map( function( creneau ) {
-				      creneau.devoirs.ouvert = true;
-				      return creneau;
-				  })
-				  .value();
-
-			  return filtered_data;
+			  return _.chain(raw_data)
+			      .filter( function( creneau ) {
+				  return creneau.enseignant_id === $scope.current_user.uid;
+			      } )
+			      .reject( function( creneau ) {
+				  return _(creneau.cours).isEmpty() && _(creneau.devoirs).isEmpty();
+			      })
+			      .map( function( creneau ) {
+				  creneau.devoirs.ouvert = true;
+				  return creneau;
+			      })
+			      .value();
 		      };
 		      var filter_creneaux_vides = function( raw_data ) {
-			  var filtered_data = _.chain(raw_data)
-				  .filter( function( creneau ) {
-				      return creneau.enseignant_id === $scope.current_user.uid;
-				  } )
-				  .filter( function( creneau ) {
-				      return _(creneau.cours).isEmpty();
-				  })
-				  .value();
-
-			  return filtered_data;
+			  return _.chain(raw_data)
+			      .filter( function( creneau ) {
+				  return creneau.enseignant_id === $scope.current_user.uid;
+			      } )
+			      .filter( function( creneau ) {
+				  return _(creneau.cours).isEmpty();
+			      })
+			      .value();
 		      };
 
 		      var list_matieres = function(raw_data) {
