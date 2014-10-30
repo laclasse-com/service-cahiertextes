@@ -28,10 +28,15 @@ angular.module( 'cahierDeTextesClientApp' )
 					 var _this = this; //pour pouvoir le référencé dans les .then()
 					 this.details = event;
 					 this.allDay = false;
-					 this.title = '';
 					 this.regroupement = _($scope.current_user.profil_actif.classes).findWhere({ id: parseInt( this.details.regroupement_id ) });
+					 this.title = this.regroupement.libelle;
+					 this.matiere = Annuaire.get_matiere( this.details.matiere_id );
 					 this.has_resources = _(event.cours).has( 'ressources' ) && event.cours.ressources.length > 0;
 					 this.temps_estime = 0;
+					 this.start = moment( event.start );
+					 this.end = moment( event.end );
+					 this.className = 'saisie-vide';
+
 					 _(event.devoirs).each( function( devoir ) {
 					     _this.has_ressources = _this.has_ressources && _(devoir).has( 'ressources' ) && devoir.ressources.length > 0;
 					     if ( !_(devoir.temps_estime).isNull() ) {
@@ -39,17 +44,6 @@ angular.module( 'cahierDeTextesClientApp' )
 						 if ( _this.temps_estime > 15 ) {
 						     _this.temps_estime = 15;
 						 }
-					     }
-					 } );
-					 this.start = moment( event.start );
-					 this.end = moment( event.end );
-					 this.className = 'saisie-vide';
-
-					 Annuaire.get_matiere( event.matiere_id ).$promise.then( function success( response ) {
-					     if ( _(response.libelle_long).isUndefined() ) {
-						 _this.title += event.matiere_id;
-					     } else {
-						 _this.title += response.libelle_long;
 					     }
 					 } );
 
@@ -111,27 +105,31 @@ angular.module( 'cahierDeTextesClientApp' )
 				 };
 
 				 // configuration du composant calendrier
+				 $scope.extraEventSignature = function(event) {
+				     return "" + event.matiere;
+				 };
+
 				 $scope.calendar = { options: CALENDAR_OPTIONS,
 						     events: [  ] };
 
 				 $scope.calendar.options.viewRender = function( view, element ) {
-				     $scope.current_user.date = view.visStart;
-				     $scope.n_week = moment(view.visStart).week();
+				     $scope.current_user.date = view.start;
+				     $scope.n_week = view.start.week();
 				     $scope.c_est_les_vacances = $scope.sont_ce_les_vacances( $scope.n_week, $scope.zone );
 				     retrieve_data( view.start.toDate(), view.end.toDate() );
 				 };
 
 				 $scope.calendar.options.eventRender = function ( event, element ) {
 				     // FIXME: manipulation du DOM dans le contrôleur, sale, mais obligé pour l'interprétation du HTML ?
-				     var title_element = element.find( '.fc-event-title' );
-				     var inner_element = element.find( '.fc-event-inner' );
+				     var elt_fc_content_title = element.find( '.fc-title' );
+				     var elt_fc_content = element.find( '.fc-content' );
 
-				     if ( $scope.current_user.profil_actif.classes.length > 0 ) {
-					 var regroupement = event.regroupement !== 'undefined' ? event.regroupement.libelle : '';
-					 title_element.prepend( regroupement + ' - ' );
-				     }
+				     event.matiere.$promise.then( function() {
+					 elt_fc_content_title.append( ' - ' + event.matiere.libelle_long );
+				     } );
+
 				     if ( event.has_resources ) {
-					 inner_element.prepend( '<i class="glyphicon glyphicon-paperclip"></i>' );
+					 elt_fc_content.prepend( '<i class="glyphicon glyphicon-paperclip"></i>' );
 				     }
 				     if ( $scope.current_user.profil_actif.type !== 'ELV' ) {
 					 if ( event.temps_estime > 0 ) {
@@ -145,7 +143,7 @@ angular.module( 'cahierDeTextesClientApp' )
 					     } else if (event.temps_estime  <= 15 ) {
 						 class_couleur = ' label-danger';
 					     }
-					     inner_element.prepend( '<div class="est-time est-time-' + event.temps_estime + class_couleur + '"></div>' );
+					     elt_fc_content.prepend( '<div class="est-time est-time-' + event.temps_estime + class_couleur + '"></div>' );
 					 }
 				     }
 				 };
