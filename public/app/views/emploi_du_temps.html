@@ -17,7 +17,11 @@
   </div>
   <div class="panel-body"
        data-ng-class="{'vacances': c_est_les_vacances}">
-    <div data-calendar="emploi_du_temps" data-ui-calendar="calendar.options" class="calendar" data-ng-model="calendar.events"></div>
+    <div data-calendar="emploi_du_temps"
+	 data-ui-calendar="calendar.options"
+	 class="calendar"
+	 data-ng-model="calendar.events"
+	 calendar-watch-event="extraEventSignature"></div>
     <div class="col-md-12">
       <div class="pull-right">
 	<label>Légende :</label>
