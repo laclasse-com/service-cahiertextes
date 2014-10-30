@@ -4,6 +4,7 @@ require 'base64'
 require 'openssl'
 require 'zlib'
 
+require_relative './data_management'
 require_relative './annuaire'
 require_relative '../models/models'
 
@@ -62,20 +63,11 @@ module ProNote
     edt_clair.child['UAI']
   end
 
-  def create_or_get( classe, params )
-    objet = classe.where( params ).first
-
-    objet = classe.create( params ) if objet.nil?
-    objet.update( date_creation: Time.now ) if classe.method_defined? :date_creation
-
-    objet
-  end
-
   def load_xml( xml, xsd = nil )
     rapport = {}
     edt_clair = Nokogiri::XML( decrypt_xml( xml ) )
 
-    etablissement = create_or_get( Etablissement, { UAI: edt_clair.child['UAI'] } )
+    etablissement = DataManagement::Accessors.create_or_get( Etablissement, { UAI: edt_clair.child['UAI'] } )
 
     edt_clair.search('AnneeScolaire').reject { |child| child.name == 'text' }.each do |node|
       etablissement.debut_annee_scolaire = node['DateDebut']
@@ -87,9 +79,9 @@ module ProNote
 
     rapport[:plages_horaires] = { success: [], error: [] }
     edt_clair.search('PlacesParJour').children.reject { |child| child.name == 'text' }.each do |node|
-      plage = create_or_get( PlageHoraire, { label: node['Numero'],
-                                             debut: node['LibelleHeureDebut'],
-                                             fin: node['LibelleHeureFin'] } )
+      plage = DataManagement::Accessors.create_or_get( PlageHoraire, { label: node['Numero'],
+                                                                       debut: node['LibelleHeureDebut'],
+                                                                       fin: node['LibelleHeureFin'] } )
 
       if plage.nil?
         rapport[:plages_horaires][:error] << { label: node['Numero'],
@@ -102,9 +94,9 @@ module ProNote
 
     rapport[:salles] =  { success: [], error: [] }
     edt_clair.search('Salles').children.reject { |child| child.name == 'text' }.each do |node|
-      salle = create_or_get( Salle, { etablissement_id: etablissement.id,
-                                      identifiant: node['Ident'],
-                                      nom: node['Nom'] } )
+      salle = DataManagement::Accessors.create_or_get( Salle, { etablissement_id: etablissement.id,
+                                                                identifiant: node['Ident'],
+                                                                nom: node['Nom'] } )
 
       if salle.nil?
         rapport[:salles][:error] << { etablissement_id: etablissement.id,
@@ -337,10 +329,10 @@ module ProNote
         end
       end
       unless matiere_id.nil?
-        creneau = create_or_get( CreneauEmploiDuTemps, { jour_de_la_semaine: node['Jour'], # 1: 'lundi' .. 7: 'dimanche', norme ISO-8601
-                                                         debut: debut,
-                                                         fin: fin,
-                                                         matiere_id: matiere_id } )
+        creneau = DataManagement::Accessors.create_or_get( CreneauEmploiDuTemps, { jour_de_la_semaine: node['Jour'], # 1: 'lundi' .. 7: 'dimanche', norme ISO-8601
+                                                                                   debut: debut,
+                                                                                   fin: fin,
+                                                                                   matiere_id: matiere_id } )
 
         node.children.each do |subnode|
           case subnode.name
@@ -385,7 +377,7 @@ module ProNote
       .uniq
       .reject { |id| id == 'undefined' }
       .each do |regroupement_id|
-      create_or_get( CahierDeTextes, { regroupement_id: regroupement_id } )
+      DataManagement::Accessors.create_or_get( CahierDeTextes, { regroupement_id: regroupement_id } )
     end
 
     rapport

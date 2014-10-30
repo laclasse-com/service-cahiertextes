@@ -147,8 +147,8 @@ module CahierDeTextesAPI
           # 3. traitement des ressources
           params[:ressources] && params[:ressources].each do
             |ressource|
-            devoir.add_ressource( create_or_get( Ressource, { name: ressource['name'],
-                                                              hash: ressource['hash'] } ) )
+            devoir.add_ressource( DataManagement::Accessors.create_or_get( Ressource, { name: ressource['name'],
+                                                                                        hash: ressource['hash'] } ) )
           end
 
           hash = devoir.to_deep_hash
@@ -194,8 +194,8 @@ module CahierDeTextesAPI
 
           devoir.remove_all_ressources if params[:ressources]
           params[:ressources].each do |ressource|
-            devoir.add_ressource( create_or_get( Ressource, { name: ressource['name'],
-                                                              hash: ressource['hash'] } ) )
+            devoir.add_ressource( DataManagement::Accessors.create_or_get( Ressource, { name: ressource['name'],
+                                                                                        hash: ressource['hash'] } ) )
           end if params[:ressources]
 
           devoir.date_modification = Time.now

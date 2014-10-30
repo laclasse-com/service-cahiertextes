@@ -54,6 +54,16 @@ describe CahierDeTextesAPI::API do
 
     expect( last_response.status ).to eq 200
   end
+
+  it 'récupère l\'emploi du temps de l\'enseignant' do
+    debut = Date.today
+    fin = debut + 7
+
+    get '/v1/emplois_du_temps', { start: debut,
+                                  end: fin }
+
+    expect( last_response.status ).to eq 200
+  end
   # }}}
 
   # {{{ Créneaux Emploi du Temps

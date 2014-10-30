@@ -60,8 +60,8 @@ module CahierDeTextesAPI
         params[:ressources] && params[:ressources].each do
           |ressource|
 
-          cours.add_ressource( create_or_get( Ressource, { name: ressource['name'],
-                                                           hash: ressource['hash'] } ) )
+          cours.add_ressource( DataManagement::Accessors.create_or_get( Ressource, { name: ressource['name'],
+                                                                                     hash: ressource['hash'] } ) )
         end
 
         hcours = cours.to_deep_hash
@@ -94,8 +94,8 @@ module CahierDeTextesAPI
             params[:ressources].each do
               |ressource|
 
-              cours.add_ressource( create_or_get( Ressource, { name: ressource['name'],
-                                                               hash: ressource['hash'] } ) )
+              cours.add_ressource( DataManagement::Accessors.create_or_get( Ressource, { name: ressource['name'],
+                                                                                         hash: ressource['hash'] } ) )
             end
           end
 

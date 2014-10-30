@@ -3,6 +3,20 @@
 require_relative '../models/models'
 
 module DataManagement
+  # Layer over models
+  module Accessors
+    module_function
+
+    def create_or_get( classe, params )
+      objet = classe.where( params ).first
+
+      objet = classe.create( params ) if objet.nil?
+      objet.update( date_creation: Time.now ) if classe.method_defined? :date_creation
+
+      objet
+    end
+  end
+
   # Fonctions de nettoyage des données
   module Cleansing
     module_function
@@ -16,6 +30,15 @@ module DataManagement
           ce.destroy
         end
         c.destroy
+      end
+    end
+
+    def orphan_ressources
+      Ressource
+        .all
+        .select { |r| r.cours.empty? && r.devoirs.empty? }
+        .each do |r|
+        r.destroy
       end
     end
   end
