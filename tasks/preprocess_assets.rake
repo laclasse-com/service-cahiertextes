@@ -89,7 +89,6 @@ namespace :preprocess_assets do
 
     STDERR.puts 'Uglification of vendor Javascript'
     uglified, source_map = Uglify.those_files_with_map( [ 'public/app/vendor/jquery/dist/jquery.js',
-                                                          'public/app/vendor/jquery-ui/ui/jquery-ui.js',
                                                           'public/app/vendor/underscore/underscore.js',
                                                           'public/app/vendor/moment/min/moment-with-locales.js',
                                                           'public/app/vendor/moment-timezone/moment-timezone.js',
