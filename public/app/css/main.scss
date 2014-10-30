@@ -62,16 +62,8 @@ h2 {
   text-shadow: 0;
 }
 
-.fc-event-vert {
-  &.fc-event-end, &.fc-event-start {
+.fc-event {
     border-radius: 0;
-  }
-}
-
-.fc-state-default {
-  &.fc-corner-left, &.fc-corner-right {
-    border-radius: 0;
-  }
 }
 
 .cdt-agendaDay-container {
@@ -94,12 +86,13 @@ h2 {
   background-color: #66cc66;
 }
 
-.fc-event-inner {
+.fc-content {
     display: table;
+    height: 100%;
     .glyphicon-paperclip {
 	position: absolute;
     }
-    .fc-event-title {
+    .fc-title {
 	display: table-cell;
 	vertical-align: middle;
 	text-align: center;
