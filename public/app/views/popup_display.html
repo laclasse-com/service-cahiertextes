@@ -6,7 +6,7 @@
 
   <tabset>
     <!-- ####################### Devoirs ####################### -->
-    <tab data-ng-if="devoirs.length > 0" heading="Travail à faire" data-active="!tab_SP_active">
+    <tab data-ng-if="devoirs.length > 0" heading="Travail à faire">
       <div data-ng-repeat="devoir in devoirs"
 	   class="devoir col-md-12"
 	   data-ng-class="{ 'type1': devoir.type_devoir_id == 1, 'type2': devoir.type_devoir_id == 2, 'type3': devoir.type_devoir_id == 3, 'type4': devoir.type_devoir_id == 4, 'type5': devoir.type_devoir_id == 5, 'type6': devoir.type_devoir_id == 6, 'fait': devoir.fait }" >
