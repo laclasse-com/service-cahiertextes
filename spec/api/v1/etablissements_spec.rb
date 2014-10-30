@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe CahierDeTextesAPI::API do
+describe CahierDeTextesAPI::V1::EtablissementsAPI do
   include Rack::Test::Methods
 
   before :all do
@@ -47,17 +47,6 @@ describe CahierDeTextesAPI::API do
   def app
     CahierDeTextesAPI::API
   end
-
-  # {{{ Cours
-  it 'valide un cours' do
-    cours_id = Cours.where( 'date_validation IS NULL' ).first.id
-
-    put "/v1/cours/#{cours_id}/valide", {}
-    expect( last_response.status ).to eq 200
-
-    expect( Cours[ cours_id ].date_validation ).to_not eq nil
-  end
-  # }}}
 
   # {{{ Enseignants
   it 'récupère les statistiques par enseignants et par mois' do

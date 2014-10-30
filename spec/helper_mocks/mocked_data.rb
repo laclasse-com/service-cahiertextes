@@ -119,7 +119,7 @@ mocked_annuaire_user = { 'id' => 7359,
                          'groupes_eleves' => [  ],
                          'groupes_libres' => [  ],
                          'parents' => [  ],
-                         'enfants' => [  ],
+                         'enfants' => [ { 'enfant' => { 'id_ent' => 'VAA00000' } } ],
                          'relations_eleves' => [  ],
                          'relations_adultes' => [  ] }
 
