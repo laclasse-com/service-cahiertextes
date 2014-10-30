@@ -3,19 +3,19 @@
 // Note: pour des raisons pratiques certaines constantes sémantiquement parlant sont en fait des factory ou des services
 
 angular.module( 'cahierDeTextesClientApp' )
-    .run( [ 'amMoment',
-	    function( amMoment ) {
-		amMoment.changeLocale( 'fr' );
-	    } ] )
     .constant( 'API_VERSION', 'v1' )
     .constant( 'SEMAINES_VACANCES', { A: [ 1, 7, 8, 16, 17, 28, 29, 30, 31, 32, 33, 34, 43, 44 ],
 				      B: [ 1, 7, 8, 16, 17, 28, 29, 30, 31, 32, 33, 34, 43, 44 ],
 				      C: [ 1, 7, 8, 16, 17, 28, 29, 30, 31, 32, 33, 34, 43, 44 ] } )
     .constant( 'ZONE', 'A' )
 // Configuration d'angular-moment
-    // .constant('angularMomentConfig', {
-    //	timezone: 'Europe/Paris'
-    // })
+    .run( [ 'amMoment',
+	    function( amMoment ) {
+		amMoment.changeLocale( 'fr' );
+	    } ] )
+// .constant('angularMomentConfig', {
+//	timezone: 'Europe/Paris'
+// })
 // définition des couleurs
     .constant( 'THEME', { filled: { base: '#aaffaa',
 				    stroke: '#88aa88' },
@@ -48,21 +48,21 @@ angular.module( 'cahierDeTextesClientApp' )
 								 week: 'ddd D/M',
 								 day: 'DDDD D MMMM' },
 						 titleFormat: { month: 'MMMM YYYY',
-								week: "[Semaine] w [du] D MMMM YYYY",
+								week: '[Semaine] w [du] D MMMM YYYY',
 								day: 'DDDD D MMMM YYYY' },
 						 monthNames: $locale.DATETIME_FORMATS.MONTH,
 						 monthNamesShort: $locale.DATETIME_FORMATS.SHORTMONTH,
 						 dayNames: $locale.DATETIME_FORMATS.DAY,
 						 dayNamesShort: $locale.DATETIME_FORMATS.SHORTDAY,
 						 theme: false,
-						 buttonIcons: { prev: 'left-single-arrow',
-								next: 'right-single-arrow',
+						 buttonIcons: { prev:     'left-single-arrow',
+								next:     'right-single-arrow',
 								prevYear: 'left-double-arrow',
 								nextYear: 'right-double-arrow' },
-						 buttonText: { today:    'aujourd\'hui',
-							       month:    'mois',
-							       week:     'semaine',
-							       day:      'jour' },
+						 buttonText: { today: 'aujourd\'hui',
+							       month: 'mois',
+							       week:  'semaine',
+							       day:   'jour' },
 						 defaultView: 'agendaWeek',
 						 editable: false,
 						 eventDurationEditable: false,
