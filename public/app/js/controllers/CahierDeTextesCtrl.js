@@ -14,6 +14,7 @@ angular.module( 'cahierDeTextesClientApp' )
 		      $scope.selected_creneau_vide = null;
 
 		      $scope.complet = false;
+		      // FIXME: double appel à l'API
 		      $scope.$watch( 'complet', function() {
 			  $scope.retrieve_data();
 		      } );
