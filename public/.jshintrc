@@ -25,6 +25,7 @@
 	"swal": true,
 	"jQuery": true,
 	"console": true,
-	"_": true
+	"_": true,
+	"moment": true
     }
 }
