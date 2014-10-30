@@ -31,6 +31,11 @@ module CahierDeTextesAPI
           ressource.to_hash
         end
         hcours[:devoirs] = cours.devoirs.select { |devoir| !devoir.deleted || devoir.date_modification > UNDELETE_TIME_WINDOW.minutes.ago }
+        hcours[:devoirs].each do |devoir|
+          devoir[:ressources] = devoir.ressources.map do |ressource|
+            ressource.to_hash
+          end
+        end
 
         hcours
       end
