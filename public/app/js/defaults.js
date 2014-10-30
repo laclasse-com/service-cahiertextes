@@ -13,9 +13,9 @@ angular.module( 'cahierDeTextesClientApp' )
 				      C: [ 1, 7, 8, 16, 17, 28, 29, 30, 31, 32, 33, 34, 43, 44 ] } )
     .constant( 'ZONE', 'A' )
 // Configuration d'angular-moment
-    .constant('angularMomentConfig', {
-	timezone: 'Europe/Paris'
-    })
+    // .constant('angularMomentConfig', {
+    //	timezone: 'Europe/Paris'
+    // })
 // définition des couleurs
     .constant( 'THEME', { filled: { base: '#aaffaa',
 				    stroke: '#88aa88' },
@@ -36,8 +36,8 @@ angular.module( 'cahierDeTextesClientApp' )
 							   center: 'title',
 							   right: 'today prev,next' },
 						 firstDay: 1,
-						 minTime: 7,
-						 maxTime: 19,
+						 minTime: '07:00:00',
+						 maxTime: '19:00:00',
 						 ignoreTimezone: true,
 						 timeFormat: { month: $locale.DATETIME_FORMATS.shortTime + '{ - ' + $locale.DATETIME_FORMATS.shortTime + '}',
 							       week: '',
@@ -45,20 +45,20 @@ angular.module( 'cahierDeTextesClientApp' )
 						 axisFormat: $locale.DATETIME_FORMATS.shortTime,
 						 allDaySlot: false,
 						 columnFormat: { month: 'ddd',
-								 week: 'ddd d/M',
-								 day: 'dddd d MMMM' },
-						 titleFormat: { month: 'MMMM yyyy',
-								week: "'Semaine du' d[ MMMM][ yyyy]{ 'au' d MMMM yyyy}",
-								day: 'dddd d MMMM yyyy' },
+								 week: 'ddd D/M',
+								 day: 'DDDD D MMMM' },
+						 titleFormat: { month: 'MMMM YYYY',
+								week: "[Semaine du] D MMMM YYYY",
+								day: 'DDDD D MMMM YYYY' },
 						 monthNames: $locale.DATETIME_FORMATS.MONTH,
 						 monthNamesShort: $locale.DATETIME_FORMATS.SHORTMONTH,
 						 dayNames: $locale.DATETIME_FORMATS.DAY,
 						 dayNamesShort: $locale.DATETIME_FORMATS.SHORTDAY,
-						 buttonText: { prev:     '&lsaquo;',
-							       next:     '&rsaquo;',
-							       prevYear: '&laquo;',
-							       nextYear: '&raquo;',
-							       today:    'aujourd\'hui',
+						 buttonText: { // prev:     '&lsaquo;',
+							       // next:     '&rsaquo;',
+							       // prevYear: '&laquo;',
+							       // nextYear: '&raquo;',
+						     today:    'aujourd\'hui',
 							       month:    'mois',
 							       week:     'semaine',
 							       day:      'jour' },

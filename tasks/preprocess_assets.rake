@@ -54,7 +54,7 @@ namespace :preprocess_assets do
   desc 'Minify CSS using Sass'
   task css: :load_config do
     STDERR.puts 'Sassification of vendor CSS'
-    uglified = Sass.compile( [ 'public/app/vendor/fullcalendar/fullcalendar.css',
+    uglified = Sass.compile( [ 'public/app/vendor/fullcalendar/dist/fullcalendar.css',
                                'public/app/vendor/angular-loading-bar/build/loading-bar.min.css',
                                'public/app/vendor/nvd3/nv.d3.min.css',
                                'public/app/vendor/ng-switcher/dist/ng-switcher.min.css',
@@ -92,6 +92,7 @@ namespace :preprocess_assets do
                                                           'public/app/vendor/jquery-ui/ui/jquery-ui.js',
                                                           'public/app/vendor/underscore/underscore.js',
                                                           'public/app/vendor/moment/min/moment-with-locales.js',
+                                                          'public/app/vendor/moment-timezone/moment-timezone.js',
                                                           'public/app/vendor/ng-file-upload/angular-file-upload-shim.js',
                                                           'public/app/vendor/sweetalert/lib/sweet-alert.js',
                                                           'public/app/vendor/rangy/rangy-core.js',
