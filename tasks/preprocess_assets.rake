@@ -92,6 +92,7 @@ namespace :preprocess_assets do
                                                           'public/app/vendor/jquery-ui/ui/jquery-ui.js',
                                                           'public/app/vendor/underscore/underscore.js',
                                                           'public/app/vendor/moment/min/moment-with-locales.js',
+                                                          'public/app/vendor/moment-timezone/moment-timezone.js',
                                                           'public/app/vendor/ng-file-upload/angular-file-upload-shim.js',
                                                           'public/app/vendor/sweetalert/lib/sweet-alert.js',
                                                           'public/app/vendor/rangy/rangy-core.js',

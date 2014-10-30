@@ -11,9 +11,9 @@ angular.module( 'cahierDeTextesClientApp' )
 		   // ex : "Jeu 19 juin 15:00 - 16:00"
 		   return function( creneau ) {
 		       if ( _(creneau).has( 'start' ) ) {
-			   return $filter( 'date' )( creneau.start, 'EEE dd MMM HH:mm' ) + ' - ' + $filter( 'date' )( creneau.end, 'shortTime' );
+			   return $filter( 'amDateFormat' )( creneau.start, 'ddd DD MMM HH:mm' ) + ' - ' + $filter( 'amDateFormat' )( creneau.end, 'HH:mm' );
 		       } else {
-			   return $filter( 'date' )( creneau.heure_debut, 'EEE dd MMM HH:mm' ) + ' - ' + $filter( 'date' )( creneau.heure_fin, 'shortTime' );
+			   return $filter( 'amDateFormat' )( creneau.heure_debut, 'ddd DD MMM HH:mm' ) + ' - ' + $filter( 'amDateFormat' )( creneau.heure_fin, 'HH:mm' );
 		       }
 		   };
 	       }

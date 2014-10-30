@@ -13,9 +13,9 @@ angular.module( 'cahierDeTextesClientApp' )
 				      C: [ 1, 7, 8, 16, 17, 28, 29, 30, 31, 32, 33, 34, 43, 44 ] } )
     .constant( 'ZONE', 'A' )
 // Configuration d'angular-moment
-    .constant('angularMomentConfig', {
-	timezone: 'Europe/Paris'
-    })
+    // .constant('angularMomentConfig', {
+    //	timezone: 'Europe/Paris'
+    // })
 // définition des couleurs
     .constant( 'THEME', { filled: { base: '#aaffaa',
 				    stroke: '#88aa88' },

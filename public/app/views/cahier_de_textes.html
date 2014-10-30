@@ -24,7 +24,7 @@
     </div>
     <div class="row col-md-12">
       <h2>
-	Du {{from_date | date:'longDate'}} au {{to_date | date:'longDate'}}
+	Du {{from_date | amDateFormat:'Do MMMM YYYY'}} au {{to_date | amDateFormat:'Do MMMM YYYY'}}
 
 	<div class="pull-right">
 	  <button class="btn btn-default"
@@ -53,8 +53,8 @@
 	  data-ng-if="scope.selected_regroupement_id === null || creneau.regroupement_id == scope.selected_regroupement_id">
 
 	<div class="pull-left date">
-	  <span class="jour">{{creneau.start | date: 'dd/MM'}}</span>
-	  <span class="horaire">{{creneau.start | date: 'shortTime'}} - {{creneau.end | date: 'shortTime'}}</span>
+	  <span class="jour">{{creneau.start | amDateFormat: 'DD/MM'}}</span>
+	  <span class="horaire">{{creneau.start | amDateFormat: 'HH:mm'}} - {{creneau.end | amDateFormat: 'HH:mm'}}</span>
 	</div>
 	<div class="pull-left info">
 	  <span class="matiere">{{creneau.matiere.libelle_court}}</span><br>
