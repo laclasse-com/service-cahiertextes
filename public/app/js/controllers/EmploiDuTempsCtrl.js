@@ -32,8 +32,13 @@ angular.module( 'cahierDeTextesClientApp' )
 					 this.regroupement = _($scope.current_user.profil_actif.classes).findWhere({ id: parseInt( this.details.regroupement_id ) });
 					 this.has_resources = _(event.cours).has( 'ressources' ) && event.cours.ressources.length > 0;
 					 this.temps_estime = 0;
+
+					 _(event.cours.devoirs).each( function( devoir ) {
+					     _this.has_ressources = _this.has_ressources || _(devoir).has( 'ressources' ) && devoir.ressources.length > 0;
+					 } );
+
 					 _(event.devoirs).each( function( devoir ) {
-					     _this.has_ressources = _this.has_ressources && _(devoir).has( 'ressources' ) && devoir.ressources.length > 0;
+					     _this.has_ressources = _this.has_ressources || _(devoir).has( 'ressources' ) && devoir.ressources.length > 0;
 					     if ( !_(devoir.temps_estime).isNull() ) {
 						 _this.temps_estime += devoir.temps_estime;
 						 if ( _this.temps_estime > 15 ) {
