@@ -37,8 +37,11 @@ angular.module( 'cahierDeTextesClientApp' )
 					 this.end = moment( event.end );
 					 this.className = 'saisie-vide';
 
+					 _(event.cours.devoirs).each( function( devoir ) {
+					     _this.has_ressources = _this.has_ressources || _(devoir).has( 'ressources' ) && devoir.ressources.length > 0;
+					 } );
 					 _(event.devoirs).each( function( devoir ) {
-					     _this.has_ressources = _this.has_ressources && _(devoir).has( 'ressources' ) && devoir.ressources.length > 0;
+					     _this.has_ressources = _this.has_ressources || _(devoir).has( 'ressources' ) && devoir.ressources.length > 0;
 					     if ( !_(devoir.temps_estime).isNull() ) {
 						 _this.temps_estime += devoir.temps_estime;
 						 if ( _this.temps_estime > 15 ) {
