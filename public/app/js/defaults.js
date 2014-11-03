@@ -112,7 +112,7 @@ angular.module( 'cahierDeTextesClientApp' )
 			    [ '$delegate', 'taRegisterTool',
 			      function( taOptions, taRegisterTool ){
 				  taOptions.toolbar = [
-				      [ 'bold', 'italics', 'underline', 'ul', 'ol', 'quote', 'justifyLeft', 'justifyCenter', 'justifyRight', 'insertLink', 'redo', 'undo' ]
+				      [ 'bold', 'italics', 'underline', 'ul', 'ol', 'quote', 'justifyLeft', 'justifyCenter', 'justifyRight', 'insertLink', 'redo', 'undo', 'html' ]
 				  ];
 
 				  var colorpicker_taTool = function( type ) {
@@ -141,5 +141,11 @@ angular.module( 'cahierDeTextesClientApp' )
 				      htmlEditor: 'form-control'
 				  };
 				  return taOptions; // whatever you return will be the taOptions
-			      }]);
+			      } ] );
+
+	$provide.decorator('taTools', ['$delegate', function(taTools){
+	    taTools.html.buttontext = 'HTML';
+
+	    return taTools;
+	}]);
     } ] );
