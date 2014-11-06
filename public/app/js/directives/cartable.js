@@ -97,9 +97,6 @@ angular.module( 'cahierDeTextesClientApp' )
 			  data-ng-click="getChildren( node )"> \
 			  {{node.name}} <span data-ng-if="node.mime !=  \'directory\'">({{node.mime}})</span> \
 			  </span> \
-			      <span class="glyphicon glyphicon-file" data-ng-if="node.mime != \'directory\'"> \
-			  {{node.name}} <span data-ng-if="node.mime !=  \'directory\'">({{node.mime}})</span> \
-			  </span> \
     <button class="btn btn-sm btn-success pull-right from-docs" \
 	    style="padding-top: 0; padding-bottom: 0" \
 	    data-ng-if="node.mime !=  \'directory\'" \
@@ -112,7 +109,10 @@ angular.module( 'cahierDeTextesClientApp' )
 	    data-ng-click="add_ressource_already_in_CT_to_target( target, node )"> \
       <span class="glyphicon glyphicon-plus"></span> \
     </button> \
-    <div cartable \
+			      <span class="glyphicon glyphicon-file" data-ng-if="node.mime != \'directory\'"> \
+			  {{node.name}} <span data-ng-if="node.mime !=  \'directory\'">({{node.mime}})</span> \
+			  </span> \
+			      <div cartable \
 	 data-ng-if="node.mime ==  \'directory\'" \
 	 data-racine="node.children" \
 	 data-target="target" \
