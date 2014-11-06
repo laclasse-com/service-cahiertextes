@@ -48,7 +48,7 @@ angular.module( 'cahierDeTextesClientApp' )
 								 week: 'ddd D/M',
 								 day: 'DDDD D MMMM' },
 						 titleFormat: { month: 'MMMM YYYY',
-								week: '[Semaine] w [du] D MMMM YYYY',
+								week: '[Semaine du] D MMMM YYYY',
 								day: 'DDDD D MMMM YYYY' },
 						 monthNames: $locale.DATETIME_FORMATS.MONTH,
 						 monthNamesShort: $locale.DATETIME_FORMATS.SHORTMONTH,
