@@ -681,24 +681,23 @@ button.this-week {
     font-weight: bold;
 }
 
-/* next 2 rules copied from font-awesome css */
 .switch {
-  .switch-button {
-    font-family: FontAwesome;
-    font-style: normal;
-    font-weight: normal;
-    line-height: 1;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-size: 1.5em;
-    padding: 3px;
-  }
-  &.switch-right .switch-button::before {
-    content: " \f00c";
-  }
-  &.disabled {
-    cursor: default;
-  }
+    .switch-button {
+	font-family: FontAwesome;
+	font-style: normal;
+	font-weight: normal;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	font-size: 1.5em;
+	padding: 3px;
+    }
+    &.switch-right .switch-button::before {
+	content: " \f00c";
+    }
+    &.disabled {
+	cursor: default;
+    }
 }
 
 /* textAngular */
