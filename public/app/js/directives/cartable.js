@@ -97,16 +97,16 @@ angular.module( 'cahierDeTextesClientApp' )
 			  data-ng-click="getChildren( node )"> \
 			  {{node.name}} <span data-ng-if="node.mime !=  \'directory\'">({{node.mime}})</span> \
 			  </span> \
-    <button class="btn btn-sm btn-success pull-right from-docs" \
-	    style="padding-top: 0; padding-bottom: 0" \
-	    data-ng-if="node.mime !=  \'directory\'" \
-	    data-ng-click="add_ressource_to_target( target, node, regroupement )"> \
+			      <button class="btn btn-sm btn-success from-docs" \
+			  style="padding-top: 0; padding-bottom: 0" \
+			  data-ng-if="node.mime != \'directory\'" \
+			  data-ng-click="add_ressource_to_target( target, node, regroupement )"> \
       <span class="glyphicon glyphicon-plus"></span> \
     </button> \
-    <button class="btn btn-sm btn-success pull-right from-ct" \
-	    style="padding-top: 0; padding-bottom: 0" \
-	    data-ng-if="node.mime !=  \'directory\'" \
-	    data-ng-click="add_ressource_already_in_CT_to_target( target, node )"> \
+    <button class="btn btn-sm btn-success from-ct" \
+			  style="padding-top: 0; padding-bottom: 0" \
+			  data-ng-if="node.mime != \'directory\'" \
+			  data-ng-click="add_ressource_already_in_CT_to_target( target, node )"> \
       <span class="glyphicon glyphicon-plus"></span> \
     </button> \
 			      <span class="glyphicon glyphicon-file" data-ng-if="node.mime != \'directory\'"> \
