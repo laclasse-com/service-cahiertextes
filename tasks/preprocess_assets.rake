@@ -99,6 +99,7 @@ namespace :preprocess_assets do
                                                           'public/app/vendor/rangy/rangy-selectionsaverestore.js',
                                                           'public/app/vendor/rangy/rangy-serializer.js',
                                                           'public/app/vendor/angular/angular.js',
+                                                          'public/app/vendor/angular-touch/angular-touch.js',
                                                           'public/app/vendor/angular-animate/angular-animate.js',
                                                           'public/app/vendor/angular-bootstrap-checkbox/angular-bootstrap-checkbox.js',
                                                           'public/app/vendor/angular-bootstrap/ui-bootstrap-tpls.js',
