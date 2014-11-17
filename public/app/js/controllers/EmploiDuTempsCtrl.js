@@ -17,6 +17,12 @@ angular.module( 'cahierDeTextesClientApp' )
 
 				 $scope.selected_regroupement_id = undefined;
 
+				 $scope.prev = function() {
+				     $scope.emploi_du_temps.fullCalendar('prev');
+				 };
+				 $scope.next = function() {
+				     $scope.emploi_du_temps.fullCalendar('next');
+				 };
 				 var popup_callback = function( scope_popup ) {
 				     var view = $scope.emploi_du_temps.fullCalendar( 'getView' );
 				     retrieve_data( view.start.toDate(), view.end.toDate() );
