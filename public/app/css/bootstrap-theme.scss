@@ -1,3 +1,8 @@
+.container {
+    width: 100%;
+    padding: 15px 0;
+}
+
 .btn-default, .btn-primary, .btn-success, .btn-info, .btn-warning, .btn-danger {
   text-shadow: 0;
   -webkit-box-shadow: 0;
@@ -219,4 +224,11 @@
 
 .alert-default {
   border-color: #bce8f1;
+}
+
+.panel {
+    box-shadow: 0;
+}
+.panel-default, .panel-heading {
+    border: 0;
 }

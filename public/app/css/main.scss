@@ -20,8 +20,11 @@ body {
   }
 }
 
-/* Tabs */
+#ui-view-content {
+    padding: 0 15px;
+}
 
+/* Tabs */
 .onglets {
     text-align: center;
     a {
@@ -30,19 +33,18 @@ body {
 }
 
 /* Modal */
-
 .modal-dialog {
-  width: 640px;
+    width: 90%;
+    max-width: 797px;
 }
 
 /* Tooltip */
-
 .tooltip-inner {
-  background-color: #fff;
-  color: #000;
-  border: 1px solid #000;
-  border-radius: 0;
-  font-weight: normal;
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #000;
+    border-radius: 0;
+    font-weight: normal;
 }
 
 .infos .tooltip-inner hr {
@@ -475,9 +477,16 @@ footer {
 }
 
 .modal-header h3 {
-  font-weight: bold;
-  color: #aaa;
-  text-align: center;
+    font-size: 18px;
+    font-weight: bolder;
+    color: #aaa;
+    text-align: center;
+}
+.modal-header h4 {
+    font-size: 16px;
+    font-weight: bolder;
+    color: #aaa;
+    text-align: center;
 }
 
 .modal-body {
@@ -486,19 +495,18 @@ footer {
     max-height: 34em;
     overflow-x: hidden;
     overflow-y: auto;
-    border: 1px solid #aaa;
-    border-top: 0;
+    border: 0;
   }
   .infos ul {
     padding-left: 0;
     li {
-      text-align: center;
-      list-style: none;
-      line-height: 2em;
-      em {
-	font-weight: bold;
-	font-style: normal;
-      }
+	text-align: left;
+	list-style: none;
+	line-height: 2em;
+	em {
+	    font-weight: bold;
+	    font-style: normal;
+	}
     }
   }
   .toggle-fait {
