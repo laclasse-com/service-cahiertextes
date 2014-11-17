@@ -1,82 +1,84 @@
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <div class="row col-md-12" data-ng-if="current_user.profil_actif.type === 'ENS'">
-      <select class="col-md-3 pull-left"
-	      data-ng-model="scope.selected_regroupement_id"
-	      data-ng-options="classe.id as classe.libelle for classe in classes">
-	<option value="" selected>Toutes les classes</option>
-      </select>
+<div class="panel panel-default"
+     data-ng-swipe-left="decr_offset()"
+     data-ng-swipe-right="incr_offset()">
+    <div class="panel-heading">
+	<div class="row col-md-12" data-ng-if="current_user.profil_actif.type === 'ENS'">
+	    <select class="col-md-3 pull-left"
+		    data-ng-model="scope.selected_regroupement_id"
+		    data-ng-options="classe.id as classe.libelle for classe in classes">
+		<option value="" selected>Toutes les classes</option>
+	    </select>
 
-      <div class="col-md-7 pull-right" data-ng-if="!complet">
-	<label>Nouvelle séquence pédagogique ou devoir pour le :
-	  <select class="pull-right"
-		  data-ng-model="selected_creneau_vide"
-		  data-ng-options="creneau as ( creneau | formateCreneau ) group by creneau.regroupement.libelle for creneau in creneaux_vides | orderBy:['creneau.regroupement.libelle', 'start'] | filter:selected_regroupement_id" >
-	    <option value="" selected>Sélectionnez un créneau...</option>
-	  </select>
-	</label>
-	<button class="btn btn-sm btn-primary pull-right"
-		data-ng-if="selected_creneau_vide"
-		data-ng-click="edition_creneau( selected_creneau_vide )" >
-	  <span class="glyphicon glyphicon-pencil"></span> Saisir
-	</button>
-      </div>
+	    <div class="col-md-7 pull-right" data-ng-if="!complet">
+		<label>Nouvelle séquence pédagogique ou devoir pour le :
+		    <select class="pull-right"
+			    data-ng-model="selected_creneau_vide"
+			    data-ng-options="creneau as ( creneau | formateCreneau ) group by creneau.regroupement.libelle for creneau in creneaux_vides | orderBy:['creneau.regroupement.libelle', 'start'] | filter:selected_regroupement_id" >
+			<option value="" selected>Sélectionnez un créneau...</option>
+		    </select>
+		</label>
+		<button class="btn btn-sm btn-primary pull-right"
+			data-ng-if="selected_creneau_vide"
+			data-ng-click="edition_creneau( selected_creneau_vide )" >
+		    <span class="glyphicon glyphicon-pencil"></span> Saisir
+		</button>
+	    </div>
+	</div>
+	<div class="row col-md-12">
+	    <h2>
+		Du {{from_date | amDateFormat:'Do MMMM YYYY'}} au {{to_date | amDateFormat:'Do MMMM YYYY'}}
+
+		<div class="pull-right">
+		    <button class="btn btn-default"
+			    data-ng-click="reset_offset()"
+			    data-ng-class="{'disabled': complet || period_offset == 0}">Aujourd'hui</button>
+		    <div class="btn-group">
+			<button class="btn btn-default" data-ng-class="{'disabled': complet}" data-ng-click="incr_offset()"><span class="glyphicon glyphicon-chevron-left"></span></button>
+			<button class="btn btn-default" data-ng-class="{'disabled': complet}" data-ng-click="decr_offset()"><span class="glyphicon glyphicon-chevron-right"></span></button>
+		    </div>
+
+		    <button class="btn btn-default"
+			    data-btn-checkbox
+			    data-ng-model="complet">
+			Année complète
+		    </button>
+		</div>
+	    </h2>
+	</div>
+	<div class="clearfix"></div>
     </div>
-    <div class="row col-md-12">
-      <h2>
-	Du {{from_date | amDateFormat:'Do MMMM YYYY'}} au {{to_date | amDateFormat:'Do MMMM YYYY'}}
+    <div class="panel-body">
+	<ul class="list-group todo-list">
+	    <li data-ng-repeat="creneau in creneaux_saisies | orderBy:'start':true" style="list-style:none" class="creneau list-group-item"
+		data-ng-class="{'vise': creneau.cours !== null && creneau.cours.date_validation !== null}"
+		data-ng-if="scope.selected_regroupement_id === null || creneau.regroupement_id == scope.selected_regroupement_id">
 
-	<div class="pull-right">
-	  <button class="btn btn-default"
-		  data-ng-click="reset_offset()"
-		  data-ng-class="{'disabled': complet || period_offset == 0}">Aujourd'hui</button>
-	  <div class="btn-group">
-	    <button class="btn btn-default" data-ng-class="{'disabled': complet}" data-ng-click="incr_offset()"><span class="glyphicon glyphicon-chevron-left"></span></button>
-	    <button class="btn btn-default" data-ng-class="{'disabled': complet}" data-ng-click="decr_offset()"><span class="glyphicon glyphicon-chevron-right"></span></button>
-	  </div>
+		<div class="pull-left date">
+		    <span class="jour">{{creneau.start | amDateFormat: 'DD/MM'}}</span>
+		    <span class="horaire">{{creneau.start | amDateFormat: 'HH:mm'}} - {{creneau.end | amDateFormat: 'HH:mm'}}</span>
+		</div>
+		<div class="pull-left info">
+		    <span class="matiere">{{creneau.matiere.libelle_court}}</span><br>
+		    <span class="regroupement">{{creneau.regroupement.libelle}}</span>
+		</div>
 
-	  <button class="btn btn-default"
-		  data-btn-checkbox
-		  data-ng-model="complet">
-	    Année complète
-	  </button>
-	</div>
-      </h2>
-    </div>
-    <div class="clearfix"></div>
-  </div>
-  <div class="panel-body">
-    <ul class="list-group todo-list">
-      <li data-ng-repeat="creneau in creneaux_saisies | orderBy:'start':true" style="list-style:none" class="creneau list-group-item"
-	  data-ng-class="{'vise': creneau.cours !== null && creneau.cours.date_validation !== null}"
-	  data-ng-if="scope.selected_regroupement_id === null || creneau.regroupement_id == scope.selected_regroupement_id">
+		<div class="pull-left contenu" data-ng-bind-html="creneau.cours.contenu"></div>
 
-	<div class="pull-left date">
-	  <span class="jour">{{creneau.start | amDateFormat: 'DD/MM'}}</span>
-	  <span class="horaire">{{creneau.start | amDateFormat: 'HH:mm'}} - {{creneau.end | amDateFormat: 'HH:mm'}}</span>
-	</div>
-	<div class="pull-left info">
-	  <span class="matiere">{{creneau.matiere.libelle_court}}</span><br>
-	  <span class="regroupement">{{creneau.regroupement.libelle}}</span>
-	</div>
+		<div class="pull-right detail">
+		    <button class="btn btn-default"
+			    data-ng-click="edition_creneau( creneau )" >Accéder</button>
+		</div>
+		<div class="row col-md-12 ressources">
+		    <div class="attached-document" data-ng-repeat="ressource in creneau.cours.ressources">
+			<a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
+		    </div>
+		</div>
 
-	<div class="pull-left contenu" data-ng-bind-html="creneau.cours.contenu"></div>
+		<div class="devoirs" data-ng-if="creneau.devoirs.length > 0">
 
-	<div class="pull-right detail">
-	  <button class="btn btn-default"
-		  data-ng-click="edition_creneau( creneau )" >Accéder</button>
-	</div>
-	<div class="row col-md-12 ressources">
-	  <div class="attached-document" data-ng-repeat="ressource in creneau.cours.ressources">
-	    <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
-	  </div>
-	</div>
-
-	<div class="devoirs" data-ng-if="creneau.devoirs.length > 0">
-
-	  <accordion close-others="false">
-	    <accordion-group data-is-open="creneau.devoirs.ouvert">
-	      <accordion-heading>
+		    <accordion close-others="false">
+			<accordion-group data-is-open="creneau.devoirs.ouvert">
+			    <accordion-heading>
 		<span class="glyphicon"
 		      data-ng-class="{'glyphicon-chevron-down': creneau.devoirs.ouvert, 'glyphicon-chevron-right': !creneau.devoirs.ouvert}"> Devoirs du jour <span class="compteur" data-ng-bind="creneau.devoirs.length"></span></span>
 	      </accordion-heading>
