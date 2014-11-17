@@ -7,7 +7,7 @@ angular.module( 'cahierDeTextesClientApp' )
 		      $scope.tabs = [ { heading: 'Validation des saisies par enseignant',
 					uisref: 'principal.enseignants',
 					css_class: 'glyphicon glyphicon-user',
-					active: false },
+					active: true },
 				      { heading: 'Tableaux de bord par classe',
 					uisref: 'principal.classes',
 					css_class: 'glyphicon glyphicon-briefcase',
@@ -20,7 +20,14 @@ angular.module( 'cahierDeTextesClientApp' )
 					uisref: 'principal.import',
 					css_class: 'glyphicon glyphicon-import',
 					active: false } ];
+
 		      _($scope.tabs).each( function( tab ) {
 			  tab.active = tab.uisref == $state.current.name;
 		      } );
+
+		      $scope.set_active_tab = function( uisref ) {
+			  _($scope.tabs).each( function( tab ) {
+			      tab.active = tab.uisref == uisref;
+			  } );
+		      };
 		  } ] );

@@ -7,8 +7,15 @@ angular.module( 'cahierDeTextesClientApp' )
 		      $scope.tabs = [ { heading: 'Emplois du Temps',
 					uisref: 'principal.emploi_du_temps',
 					css_class: 'glyphicon glyphicon-calendar',
-					active: false } ];
+					active: true } ];
+
 		      _($scope.tabs).each( function( tab ) {
 			  tab.active = tab.uisref == $state.current.name;
 		      } );
+
+		      $scope.set_active_tab = function( uisref ) {
+			  _($scope.tabs).each( function( tab ) {
+			      tab.active = tab.uisref == uisref;
+			  } );
+		      };
 		  } ] );

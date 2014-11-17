@@ -7,7 +7,7 @@ angular.module( 'cahierDeTextesClientApp' )
 		      $scope.tabs = [ { heading: 'Emploi du temps',
 					uisref: 'enseignant.emploi_du_temps',
 					css_class: 'glyphicon glyphicon-calendar',
-					active: false },
+					active: true },
 				      { heading: 'Cahier de textes',
 					uisref: 'enseignant.cahier_de_textes',
 					css_class: 'glyphicon glyphicon-list',
@@ -16,9 +16,16 @@ angular.module( 'cahierDeTextesClientApp' )
 					uisref: 'enseignant.stats',
 					css_class: 'glyphicon glyphicon-stats',
 					active: false } ];
+
 		      _($scope.tabs).each( function( tab ) {
 			  tab.active = tab.uisref == $state.current.name;
 		      } );
+
+		      $scope.set_active_tab = function( uisref ) {
+			  _($scope.tabs).each( function( tab ) {
+			      tab.active = tab.uisref == uisref;
+			  } );
+		      };
 
 		      $scope.current_user = current_user;
 		  } ] );

@@ -22,8 +22,11 @@ body {
 
 /* Tabs */
 
-.nav-tabs > li {
-  cursor: pointer;
+.onglets {
+    text-align: center;
+    a {
+	margin: 0.5em;
+    }
 }
 
 /* Modal */
