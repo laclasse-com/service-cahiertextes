@@ -22,11 +22,16 @@ body {
 
 #ui-view-content {
     padding: 0 15px;
+    max-width: 1170px;
+    width: 100%;
+    margin: 0 auto;
 }
 
 /* Tabs */
 .onglets {
     text-align: center;
+    box-shadow: 0 4px 4px -2px #aaa;
+    margin-bottom: 5px;
     a {
 	margin: 0.5em;
     }
