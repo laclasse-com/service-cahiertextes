@@ -503,16 +503,18 @@ footer {
     border: 0;
   }
   .infos ul {
-    padding-left: 0;
-    li {
-	text-align: left;
-	list-style: none;
-	line-height: 2em;
-	em {
-	    font-weight: bold;
-	    font-style: normal;
-	}
-    }
+      padding-left: 0;
+      width: 100%;
+      li {
+	  width: 100%;
+	  text-align: left;
+	  list-style: none;
+	  line-height: 2em;
+	  em {
+	      font-weight: bold;
+	      font-style: normal;
+	  }
+      }
   }
   .toggle-fait {
     margin-bottom: 5px;
@@ -662,6 +664,11 @@ h3, .h3 {
   &.switch-right .switch-button {
     left: 21px;
   }
+}
+
+.btn.supprimer {
+    width: 100%;
+    font-size: 80%;
 }
 
 .supprimer ul {
