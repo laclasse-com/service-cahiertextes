@@ -125,7 +125,7 @@
 	      </div>
 
 	      <div class="dropdown row" data-ng-if="!creneau.etranger">
-		<button class="btn btn-sm btn-primary dropdown-toggle pull-right" role="button" data-toggle="dropdown" data-target="#" href=""
+		<button class="btn btn-sm btn-default dropdown-toggle pull-right" role="button" data-toggle="dropdown" data-target="#" href=""
 			data-ng-class="{'disabled': faulty_docs_app}">
 		  <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
 		</button>
@@ -232,7 +232,7 @@
 		</div>
 
 		<div class="dropdown row" data-ng-if="!creneau.etranger">
-		  <button class="btn btn-sm btn-primary dropdown-toggle pull-right" role="button" data-toggle="dropdown" data-target="#" href=""
+		  <button class="btn btn-sm btn-default dropdown-toggle pull-right" role="button" data-toggle="dropdown" data-target="#" href=""
 			  data-ng-class="{'disabled': faulty_docs_app}">
 		    <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
 		  </button>
@@ -276,106 +276,108 @@
     </tab>
 
     <!-- ####################### Devoirs dûs ce jour ####################### -->
-    <tab heading="Travail à faire pour ce jour">
-      <button class="btn btn-default ajout-devoir" data-ng-click="ajout_devoir( devoirs, creneau )" data-ng-if="!creneau.etranger">
-	<span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
-      </button>
-      <div class="clearfix"></div>
+    <tab>
+	<tab-heading data-ng-class="{'has': devoirs.length > 0}">Travail à faire pour ce jour</tab-heading>
 
-      <div class="panel panel-default" data-ng-repeat="devoir in devoirs">
+	<button class="btn btn-default ajout-devoir" data-ng-click="ajout_devoir( devoirs, creneau )" data-ng-if="!creneau.etranger">
+	    <span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
+	</button>
+	<div class="clearfix"></div>
 
-	<div class="col-md-9"
-	     data-ng-if="!devoir.deleted">
+	<div class="panel panel-default" data-ng-repeat="devoir in devoirs">
 
-	  <div class="panel-heading enseignant-saisie" data-ng-if="!creneau.etranger">
-	    <label class="col-md-12" data-ng-if="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir">Type de travail :
-	      <select data-ng-required="true"
-		      data-ng-change="is_dirty( null )"
-		      data-ng-model="devoir.type_devoir_id"
-		      data-ng-options="type_de_devoir.id as type_de_devoir.description for type_de_devoir in types_de_devoir">
-	      </select>
-	    </label>
+	    <div class="col-md-9"
+		 data-ng-if="!devoir.deleted">
+
+		<div class="panel-heading enseignant-saisie" data-ng-if="!creneau.etranger">
+		    <label class="col-md-12" data-ng-if="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir">Type de travail :
+			<select data-ng-required="true"
+				data-ng-change="is_dirty( null )"
+				data-ng-model="devoir.type_devoir_id"
+				data-ng-options="type_de_devoir.id as type_de_devoir.description for type_de_devoir in types_de_devoir">
+			</select>
+		    </label>
+
+		    <div class="col-md-12">
+			<label>Temps de travail estimé : </label>
+			<rating data-ng-model="devoir.temps_estime"
+				max="15"
+				readonly="false"
+				ng-click="is_dirty( null )"
+				on-hover="estimation_over(devoir, value)"
+				on-leave="estimation_leave(devoir)"
+				state-on="'temps-est-on'"
+				state-off="'temps-est-off'"></rating>
+			<span class="label pull-right" data-ng-class="{'label-success': devoir.overValue<4, 'label-info': devoir.overValue>=4 && devoir.overValue<8 , 'label-warning': devoir.overValue>=8 && devoir.overValue<12, 'label-danger': devoir.overValue>=12}" data-ng-if="devoir.overValue > 0 || devoir.temps_estime > 0">{{devoir.minutes || devoir.temps_estime * 5}} min</span>
+		    </div>
+		    <div class="clearfix"></div>
+		</div>
+		<text-angular class="panel-body" data-ng-model="devoir.contenu" data-ng-change="is_dirty( devoir )" data-ng-if="!creneau.etranger"></text-angular>
+
+		<div class="panel-heading enseignant-saisie" data-ng-if="creneau.etranger">
+		    <label>Type de travail : <em>{{devoir.type_devoir.description}}</em></label>
+		    <label data-ng-if="devoir.temps_estime">Temps de travail estimé : <em>{{devoir.temps_estime * 5}} min</em></label>
+		</div>
+		<div class="panel-body" data-ng-bind-html="devoir.contenu" data-ng-if="creneau.etranger"></div>
+
+		<div class="panel-footer ressources">
+		    <div class="row">
+			<div class="attached-document" data-ng-repeat="ressource in devoir.ressources">
+			    <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
+			    <button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( devoir, ressource.hash )">✕</button>
+			</div>
+		    </div>
+
+		    <div class="dropdown row" data-ng-if="!creneau.etranger">
+			<button class="btn btn-sm btn-default dropdown-toggle pull-right" role="button" data-toggle="dropdown" data-target="#" href=""
+				data-ng-class="{'disabled': faulty_docs_app}">
+			    <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
+			</button>
+			<div class="dropdown-menu" role="menu" ng-click="$event.stopPropagation()">
+			    <div cartable
+				 class="treecontrol-container"
+				 data-racine="cartable.files"
+				 data-target="devoir"
+				 data-regroupement="selected_regroupement"
+				 data-add-callback="consume_Documents_response_callback">
+			    </div>
+
+			    <input type="file"
+				   class="upload"
+				   name="upload[]"
+				   multiple
+				   onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files)" />
+			</div>
+		    </div>
+		</div>
+	    </div>
+
+	    <div class="col-md-3 infos"
+		 data-ng-if="!devoir.deleted">
+		<ul class="pull-left">
+		    <li class="clickable"
+			data-ng-if="devoir.cours.contenu"
+			data-tooltip-trigger="click"
+			data-tooltip-placement="bottom"
+			data-tooltip-html-unsafe="<em>{{devoir.cours.date_cours | amDateFormat : 'dddd D MMMM YYYY'}}</em><hr />{{devoir.cours.contenu}}">
+			<span class="glyphicon glyphicon-briefcase"></span> Séquence Pédagogique
+		    </li>
+		</ul>
+	    </div>
+
+	    <div class="col-md-9 deleted"
+		 data-ng-if="devoir.deleted" >(Devoir supprimé)</div>
 
 	    <div class="col-md-12">
-	      <label>Temps de travail estimé : </label>
-	      <rating data-ng-model="devoir.temps_estime"
-		      max="15"
-		      readonly="false"
-		      ng-click="is_dirty( null )"
-		      on-hover="estimation_over(devoir, value)"
-		      on-leave="estimation_leave(devoir)"
-		      state-on="'temps-est-on'"
-		      state-off="'temps-est-off'"></rating>
-	      <span class="label pull-right" data-ng-class="{'label-success': devoir.overValue<4, 'label-info': devoir.overValue>=4 && devoir.overValue<8 , 'label-warning': devoir.overValue>=8 && devoir.overValue<12, 'label-danger': devoir.overValue>=12}" data-ng-if="devoir.overValue > 0 || devoir.temps_estime > 0">{{devoir.minutes || devoir.temps_estime * 5}} min</span>
+		<button type="button" class="btn btn-sm btn-danger pull-right supprimer"
+			data-ng-click="effacer_devoir( devoir )" data-ng-if="!creneau.etranger && !devoir.cours.deleted">
+		    <span class="glyphicon glyphicon-trash" data-ng-if="!devoir.deleted"> Supprimer le devoir</span>
+		    <span class="glyphicon glyphicon-trash" data-ng-if="devoir.deleted"> Annuler la suppression</span>
+		</button>
 	    </div>
+
 	    <div class="clearfix"></div>
-	  </div>
-	  <text-angular class="panel-body" data-ng-model="devoir.contenu" data-ng-change="is_dirty( devoir )" data-ng-if="!creneau.etranger"></text-angular>
-
-	  <div class="panel-heading enseignant-saisie" data-ng-if="creneau.etranger">
-	    <label>Type de travail : <em>{{devoir.type_devoir.description}}</em></label>
-	    <label data-ng-if="devoir.temps_estime">Temps de travail estimé : <em>{{devoir.temps_estime * 5}} min</em></label>
-	  </div>
-	  <div class="panel-body" data-ng-bind-html="devoir.contenu" data-ng-if="creneau.etranger"></div>
-
-	  <div class="panel-footer ressources">
-	    <div class="row">
-	      <div class="attached-document" data-ng-repeat="ressource in devoir.ressources">
-		<a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
-		<button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( devoir, ressource.hash )">✕</button>
-	      </div>
-	    </div>
-
-	    <div class="dropdown row" data-ng-if="!creneau.etranger">
-	      <button class="btn btn-sm btn-primary dropdown-toggle pull-right" role="button" data-toggle="dropdown" data-target="#" href=""
-		      data-ng-class="{'disabled': faulty_docs_app}">
-		<span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
-	      </button>
-	      <div class="dropdown-menu" role="menu" ng-click="$event.stopPropagation()">
-		<div cartable
-		     class="treecontrol-container"
-		     data-racine="cartable.files"
-		     data-target="devoir"
-		     data-regroupement="selected_regroupement"
-		     data-add-callback="consume_Documents_response_callback">
-		</div>
-
-		<input type="file"
-		       class="upload"
-		       name="upload[]"
-		       multiple
-		       onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files)" />
-	      </div>
-	    </div>
-	  </div>
 	</div>
-
-	<div class="col-md-3 infos"
-	     data-ng-if="!devoir.deleted">
-	  <ul class="pull-left">
-	    <li class="clickable"
-		data-ng-if="devoir.cours.contenu"
-		data-tooltip-trigger="click"
-		data-tooltip-placement="bottom"
-		data-tooltip-html-unsafe="<em>{{devoir.cours.date_cours | amDateFormat : 'dddd D MMMM YYYY'}}</em><hr />{{devoir.cours.contenu}}">
-	      <span class="glyphicon glyphicon-briefcase"></span> Séquence Pédagogique
-	    </li>
-	  </ul>
-	</div>
-
-	<div class="col-md-9 deleted"
-	     data-ng-if="devoir.deleted" >(Devoir supprimé)</div>
-
-	<div class="col-md-12">
-	  <button type="button" class="btn btn-sm btn-danger pull-right supprimer"
-		  data-ng-click="effacer_devoir( devoir )" data-ng-if="!creneau.etranger && !devoir.cours.deleted">
-	    <span class="glyphicon glyphicon-trash" data-ng-if="!devoir.deleted"> Supprimer le devoir</span>
-	    <span class="glyphicon glyphicon-trash" data-ng-if="devoir.deleted"> Annuler la suppression</span>
-	  </button>
-	</div>
-
-	<div class="clearfix"></div>
-      </div>
     </tab>
 
   </tabset>

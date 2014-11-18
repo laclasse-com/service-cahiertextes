@@ -23,6 +23,7 @@
   }
   &:disabled, &[disabled] {
     background-color: #e0e0e0;
+    border-color: #ececec;
     background-image: none;
   }
 }
@@ -231,4 +232,11 @@
 }
 .panel-default, .panel-heading {
     border: 0;
+}
+
+.nav-tabs > li > a {
+    font-size: 12px;
+    border-left: 1px solid #efefef;
+    border-top: 1px solid #efefef;
+    border-right: 1px solid #efefef;
 }
