@@ -25,8 +25,8 @@ class HashedUser < HashIt
   def full( env )
     utilisateur = env['rack.session'][:current_user]
 
-    extra = Annuaire.get_user( utilisateur[ 'uid' ] )
-    utilisateur[ 'profils' ] = extra['profils'].map do |profil|
+    user_annuaire = Annuaire.get_user( utilisateur[ 'uid' ] )
+    utilisateur[ 'profils' ] = user_annuaire['profils'].map do |profil|
       # renommage de champs
       profil['type'] = profil['profil_id']
       profil['uai'] = profil['etablissement_code_uai']
@@ -34,12 +34,12 @@ class HashedUser < HashIt
       profil['nom'] = profil['profil_nom']
 
       # calcule du droit d'admin, true pour les TECH et les ADM
-      profil['admin'] = extra['roles'].select { |r| r['etablissement_code_uai'] == profil['etablissement_code_uai'] && ( r['role_id'] == 'TECH' || r['role_id'].match('ADM.*') ) }.length > 0
+      profil['admin'] = user_annuaire['roles'].select { |r| r['etablissement_code_uai'] == profil['etablissement_code_uai'] && ( r['role_id'] == 'TECH' || r['role_id'].match('ADM.*') ) }.length > 0
 
       profil['classes'] = Annuaire.get_etablissement_regroupements( profil['uai'] ) if profil['type'] == 'EVS'
       profil
     end
-    utilisateur[ 'enfants' ] = extra [ 'enfants' ]
+    utilisateur[ 'enfants' ] = user_annuaire [ 'enfants' ]
 
     regroupements_annuaire = Annuaire.get_user_regroupements( utilisateur[ 'uid' ] )
     utilisateur[ 'classes' ] = regroupements_annuaire[ 'classes' ]
