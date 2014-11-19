@@ -723,6 +723,22 @@ button.this-week {
     }
 }
 
+fieldset {
+    float: left;
+    margin: 0 3px;
+    max-width: 4em;
+    legend {
+	font-size: 0.65em;
+	margin: 0;
+	border: 0;
+    }
+    .btn.btn-xs {
+	font-size: 0.65em;
+	width: 2em;
+	margin: 2px;
+    }
+}
+
 /* textAngular */
 .ta-root {
   padding: 0;

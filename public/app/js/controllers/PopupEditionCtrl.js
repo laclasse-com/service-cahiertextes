@@ -2,14 +2,16 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller( 'PopupEditionCtrl',
-		 [ '$scope', '$filter', '$q', '$sce', '$modalInstance',
+		 [ '$scope', '$filter', '$q', '$sce', '$modalInstance', '$locale',
 		   'APP_PATH', 'DOCS_URL', 'SEMAINES_VACANCES', 'ZONE',
 		   'Documents', 'API', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs', 'User',
 		   'cours', 'devoirs', 'creneau', 'raw_data', 'classes', 'matieres',
-		   function ( $scope, $filter, $q, $sce, $modalInstance,
+		   function ( $scope, $filter, $q, $sce, $modalInstance, $locale,
 			      APP_PATH, DOCS_URL, SEMAINES_VACANCES, ZONE,
 			      Documents, API, CreneauEmploiDuTemps, Cours, Devoirs, User,
-			      cours, devoirs, creneau, raw_data, classes, matieres ) {
+			      cours, devoirs, creneau, raw_data, classes, matieres )
+		   {
+		       $scope.annee = _($locale.DATETIME_FORMATS.MONTH).toArray();
 		       $scope.app_path = APP_PATH;
 		       $scope.ZONE = ZONE;
 
@@ -69,6 +71,32 @@ angular.module( 'cahierDeTextesClientApp' )
 			   $scope.creneau.n_week = moment($scope.creneau.tmp_heure_debut).week();
 
 			   // Gestion des semaines actives
+			   var what_month = function( n_week ) {
+			       var now = moment();
+			       var year = moment().year();
+			       if ( n_week < 36 ) {
+				   if ( now.month() > 7 ) {
+				       year++;
+				   }
+			       } else {
+				   if ( now.month() < 7 ) {
+				       year--;
+				   }
+			       }
+			       return moment( new Date( year ) ).isoWeek( n_week ).month();
+			   };
+
+			   var tmp_overlay_semainier = _.range(1, 53).map( function( s ) { return { semaine: s,
+												    mois: what_month( s ) }; } );
+
+			   // $scope.overlay_semainier = _(tmp_overlay_semainier).where( function( s ) { return s.mois > 7; } );
+			   // $scope.overlay_semainier.concat( _(tmp_overlay_semainier).where( function( s ) { return s.mois < 8; } ) );
+			   $scope.overlay_semainier = tmp_overlay_semainier;
+			   $scope.overlay_semainier = _.chain($scope.overlay_semainier)
+			       .groupBy( function( s ) { return s.mois; } )
+			       .toArray()
+			       .value();
+
 			   var fixnum_to_bitfield = function( fixnum ) {
 			       var string = fixnum.toString(2);
 			       var padding = '';
@@ -613,4 +641,4 @@ angular.module( 'cahierDeTextesClientApp' )
 
 			   angular.element('#ui-view-content').after( $scope.current_user.marqueur_xiti );
 		       } );
-			      } ] );
+		   } ] );
