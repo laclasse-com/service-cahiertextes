@@ -700,10 +700,6 @@ h3, .h3 {
   background-color: #f0ad4e;
 }
 
-button.this-week {
-    font-weight: bold;
-}
-
 .switch {
     .switch-button {
 	font-family: FontAwesome;
@@ -738,7 +734,31 @@ fieldset {
 	margin: 2px;
     }
 }
-
+.semainier {
+    .active {
+	background-color: #e8c254;
+	border-color: transparent;
+	box-shadow: 0;
+    }
+    .vacances {
+	background-color: #b2b2b2;
+	border-color: transparent;
+	box-shadow: 0;
+    }
+    .this-week {
+	font-weight: bold;
+	border-color: #323232;
+    }
+}
+.legende {
+    font-size: 0.75em;
+    span {
+	cursor: inherit;
+	display: inline-block;
+	height: 1em;
+	width: 1em;
+    }
+}
 /* textAngular */
 .ta-root {
   padding: 0;
