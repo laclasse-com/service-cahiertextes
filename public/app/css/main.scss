@@ -437,13 +437,13 @@ footer {
 
 .devoir {
   .todo, .detail {
-    line-height: 4em;
+      margin: 6px;
   }
   .todo {
-    margin-left: 1em;
-    button {
-      border: 0;
-    }
+      margin-top: 8px;
+      button {
+	  border: 0;
+      }
   }
   .title {
     border-bottom: 1px solid #ccc;
@@ -709,6 +709,10 @@ h3, .h3 {
   background-color: #f0ad4e;
 }
 
+.alert-default {
+    border-color: transparent;
+}
+
 .switch {
     .switch-button {
 	font-family: FontAwesome;
@@ -764,8 +768,9 @@ fieldset {
     span {
 	cursor: inherit;
 	display: inline-block;
-	height: 1em;
+	height: 1.5em;
 	width: 1em;
+	margin-left: 1em;
     }
 }
 /* textAngular */
