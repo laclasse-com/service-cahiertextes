@@ -8,9 +8,9 @@
       <option value="" selected
 	      data-ng-if="current_user.profil_actif.type != 'EVS' && current_user.profil_actif.type != 'DIR'">Toutes mes classes</option>
     </select>
-    <div class="pull-left" data-ng-if="current_user.profil_actif.type === 'ENS'">
-	<label class="only-me"><checkbox class="btn-info" data-ng-model="scope.uniquement_mes_creneaux"
-			     data-ng-change="refresh_calendar()"></checkbox> Ne montrer que ce qui me concerne directement</label>
+    <div class="pull-left options" data-ng-if="current_user.profil_actif.type === 'ENS'">
+	<label><checkbox class="btn-info" data-ng-model="scope.uniquement_mes_creneaux"
+			 data-ng-change="refresh_calendar()"></checkbox> Ne montrer que ce qui me concerne directement</label>
     </div>
 
     <div class="clearfix"></div>
