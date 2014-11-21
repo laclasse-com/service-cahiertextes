@@ -5,7 +5,7 @@ angular.module( 'cahierDeTextesClientApp' )
 		[ '$scope', '$state',
 		  function ( $scope, $state ) {
 		      $scope.tabs = [ { heading: 'Emplois du Temps',
-					uisref: 'principal.emploi_du_temps',
+					uisref: 'vie_scolaire.emploi_du_temps',
 					css_class: 'glyphicon glyphicon-calendar',
 					active: true } ];
 
