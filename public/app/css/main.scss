@@ -527,7 +527,7 @@ footer {
       border: 1px solid #666;
       cursor: pointer;
       font-size: 0.9em;
-      padding: 0 o.15em;
+      padding: 0 0.15em;
     }
     .type1, .type2, .type3, .type4, .type5, .type6, .a-faire, .fait {
       border-left: 0.5em solid #fff;
@@ -623,20 +623,29 @@ h3, .h3 {
 }
 
 .edition-creneau {
-  .row-fluid {
-    min-height: 4em;
-  }
-  .horaire {
-    display: inline-block;
-    font-weight: bold;
-    font-size: 1.2em;
-    a {
-      color: #000;
-      &:hover {
-	text-decoration: none;
-      }
+    line-height: 4;
+    .horaire {
+	label {
+	    margin-right: 2em;
+	}
+	.dropdown.horaire {
+	    line-height: 0;
+	    margin: 0 1em 0 0.5em;
+	    display: inline-block;
+	    font-weight: bold;
+	    font-size: 1.2em;
+	    .dropdown-menu {
+		text-align: center;
+		min-width: 115px;
+	    }
+	    a {
+		color: #000;
+		&:hover {
+		    text-decoration: none;
+		}
+	    }
+	}
     }
-  }
 }
 
 /* Pour ngSwitcher */
