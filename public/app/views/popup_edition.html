@@ -61,9 +61,8 @@
 	<div class="row">
 	    <div class="col-md-12">
 		<label>Choisir les semaines actives :</label>
-		<div class="btn-group">
+		<div class="btn-group templates-semainier">
 		    <button class="btn btn-xs" data-ng-click="apply_template( 'tout' )">Tout</button>
-		    <button class="btn btn-xs" data-ng-click="apply_template( 'rien' )">Rien</button>
 		    <button class="btn btn-xs" data-ng-click="apply_template( 'paires' )">Paires</button>
 		    <button class="btn btn-xs" data-ng-click="apply_template( 'impaires' )">Impaires</button>
 		    <button class="btn btn-xs" data-ng-click="apply_template( 'unique' )">Unique</button>
@@ -170,8 +169,8 @@
 		    <button type="button" class="btn btn-xs btn-default pull-right supprimer"
 			    data-ng-click="effacer_cours(  )"
 			    data-ng-if="cours.deleted || ( !creneau.etranger && cours.editable )" >
-			<span class="glyphicon glyphicon-trash" data-ng-if="!cours.deleted"> Supprimer</span>
-			<span class="glyphicon glyphicon-trash" data-ng-if="cours.deleted"> Annuler la suppression</span>
+			<span data-ng-if="!cours.deleted"><span class="glyphicon glyphicon-trash"></span> Supprimer</span>
+			<span data-ng-if="cours.deleted"><span class="glyphicon glyphicon-trash"></span> Annuler la suppression</span>
 		    </button>
 		</div>
 	    </div>
@@ -271,8 +270,8 @@
 				<button type="button" class="btn btn-xs btn-default pull-right supprimer"
 					data-ng-click="effacer_devoir( devoir )"
 					data-ng-if="!creneau.etranger && !devoir.cours.deleted">
-				    <span class="glyphicon glyphicon-trash" data-ng-if="!devoir.deleted"> Supprimer</span>
-				    <span class="glyphicon glyphicon-trash" data-ng-if="devoir.deleted"> Annuler la suppression</span>
+				    <span data-ng-if="!devoir.deleted"><span class="glyphicon glyphicon-trash"></span> Supprimer</span>
+				    <span data-ng-if="devoir.deleted"><span class="glyphicon glyphicon-trash"></span> Annuler la suppression</span>
 				</button>
 			    </div>
 
@@ -381,8 +380,8 @@
 		    <div class="col-md-3">
 			<button type="button" class="btn btn-xs btn-default pull-right supprimer"
 				data-ng-click="effacer_devoir( devoir )" data-ng-if="!creneau.etranger && !devoir.cours.deleted">
-			    <span class="glyphicon glyphicon-trash" data-ng-if="!devoir.deleted"> Supprimer</span>
-			    <span class="glyphicon glyphicon-trash" data-ng-if="devoir.deleted"> Annuler la suppression</span>
+			    <span data-ng-if="!devoir.deleted"><span class="glyphicon glyphicon-trash"></span> Supprimer</span>
+			    <span data-ng-if="devoir.deleted"><span class="glyphicon glyphicon-trash"></span> Annuler la suppression</span>
 			</button>
 		    </div>
 
@@ -439,7 +438,7 @@
 	    <button type="button" class="btn btn-sm btn-success pull-right"
 		    data-ng-click="dupliquer()"
 		    data-ng-class="{ 'disabled': !ok_go_for_duplication }">
-		<span class="glyphicon glyphicon-share"> Dupliquer</span>
+		<span><span class="glyphicon glyphicon-share"></span> Dupliquer</span>
 	    </button>
 	</div>
     </div>
@@ -457,26 +456,27 @@
     <button type="button" class="btn btn-sm btn-default pull-left"
 	    data-ng-click="switch_to_creneau_edition()"
 	    data-ng-if="!creneau.etranger && !mode_edition_creneau" >
-	<span class="glyphicon glyphicon-edit"> Modifier le créneau</span>
+	<span><span class="glyphicon glyphicon-edit"></span> Modifier le créneau</span>
     </button>
 
     <button type="button" class="btn btn-sm btn-default"
 	    data-ng-click="switch_to_duplication_mode()"
 	    data-ng-if="!creneau.etranger && cours.contenu && !mode_edition_creneau && !mode_duplication && creneaux_similaires.length > 0 && !dirty" >
-	<span class="glyphicon glyphicon-transfer"> Copier à d'autres créneaux</span>
+	<span><span class="glyphicon glyphicon-transfer"></span> Copier à d'autres créneaux</span>
     </button>
 
     <button type="button" class="btn btn-sm btn-default"
 	    data-ng-click="switch_to_modification_mode()"
 	    data-ng-if="mode_duplication || mode_edition_creneau && !creneau.en_creation" >
-	<span class="glyphicon glyphicon-transfer"> Revenir en modification</span>
+	<span><span class="glyphicon glyphicon-transfer"></span> Revenir en modification</span>
     </button>
 
     <button type="button" class="btn btn-sm btn-success pull-right" data-ng-click="valider()" data-ng-if="!creneau.etranger && dirty || mode_edition_creneau">
 	<span class="glyphicon glyphicon-ok-sign"></span> Valider
     </button>
     <button type="button" class="btn btn-sm btn-default pull-right" data-ng-click="annuler()">
-	<span class="glyphicon glyphicon-remove-sign"></span> <span data-ng-if="dirty || mode_edition_creneau">Annuler</span>
-	<span data-ng-if="!dirty && !mode_edition_creneau">Fermer</span>
+	<span class="glyphicon glyphicon-remove-sign"></span>
+	<span data-ng-if="dirty || mode_edition_creneau"> Annuler</span>
+	<span data-ng-if="!dirty && !mode_edition_creneau"> Fermer</span>
     </button>
 </div>
