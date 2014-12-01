@@ -66,6 +66,11 @@ h2 {
     font-size: 1.3em;
 }
 
+.fc-toolber {
+    .fc-corner-left, .fc-corner-right {
+	border-radius: 0;
+    }
+}
 .fc-state-default {
     background-image: none;
     box-shadow: 0;
