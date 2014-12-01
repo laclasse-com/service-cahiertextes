@@ -305,3 +305,6 @@
 .panel-body {
     padding: 15px 0;
 }
+.form-control {
+    border-radius: 0;
+}
