@@ -743,10 +743,14 @@ fieldset {
 	margin: 0;
 	border: 0;
     }
-    .btn.btn-xs {
-	font-size: 0.65em;
-	width: 2em;
-	margin: 2px;
+    .btn-group {
+	float: left;
+	height: 100%;
+	.btn.btn-xs {
+	    font-size: 0.65em;
+	    width: 2em;
+	    margin: 2px;
+	}
     }
 }
 .legende, .semainier {
