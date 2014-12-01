@@ -37,10 +37,10 @@
 	data-ng-controller="FooterCtrl" data-ng-cloak>
     <div class="pull-left">
 	<div class="btn-group" dropdown>
-	    <button type="button" class="btn btn-xs btn-default dropdown-toggle">
+	    <button dropdown-toggle type="button" class="btn btn-xs btn-default dropdown-toggle">
 		<span class="glyphicon glyphicon-cog"></span> Préférences
 	    </button>
-	    <ul class="dropdown-menu user-preferences" role="menu">
+	    <ul dropdown-menu class="dropdown-menu user-preferences" role="menu">
 		<li><label><checkbox data-ng-model="current_user.parametrage_cahier_de_textes.affichage_week_ends"
 				     data-ng-change="save_and_reload()"></checkbox> Afficher les week-ends</label></li>
 		<li class="divider"></li>
