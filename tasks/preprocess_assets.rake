@@ -59,8 +59,8 @@ namespace :preprocess_assets do
                                'public/app/vendor/nvd3/nv.d3.min.css',
                                'public/app/vendor/ng-switcher/dist/ng-switcher.min.css',
                                'public/app/vendor/ng-color-picker/color-picker.css',
-                               'public/app/vendor/charte-graphique-laclasse-com/css/bootstrap-theme.css',
-                               'public/app/vendor/sweetalert/lib/sweet-alert.css' ]
+                               'public/app/vendor/sweetalert/lib/sweet-alert.css',
+                               'public/app/vendor/charte-graphique-laclasse-com/css/bootstrap-theme.css' ]
                              .map { |fichier| File.read( fichier ) }.join,
                              syntax: :scss,
                              style: :compressed )
