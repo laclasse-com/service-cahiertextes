@@ -235,6 +235,7 @@
 .btn:active,
 .btn.active {
     background-image: none;
+    box-shadow: 0;
 }
 
 .navbar-inverse,
