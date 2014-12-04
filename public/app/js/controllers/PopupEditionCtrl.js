@@ -604,7 +604,16 @@ angular.module( 'cahierDeTextesClientApp' )
 				       } );
 				       $scope.creneaux_similaires.selected = [];
 				       init_cours_existant( $scope.cours );
-				   });
+
+                                       swal( { title: 'Créneau copié !',
+					   type: 'success',
+                                           timer: 2000,
+					   showCancelButton: false,
+					   confirmButtonColor: '#ff6b55',
+					   confirmButtonText: 'Fermer'
+				       } );
+
+				   } );
 			       };
 
 			       $scope.effacer_cours = function () {
