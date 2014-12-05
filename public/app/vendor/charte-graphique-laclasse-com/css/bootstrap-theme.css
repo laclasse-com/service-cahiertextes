@@ -196,6 +196,10 @@
     background-image: none;
     border-color: #3278b3;
 }
+.list-group-item:first-child,
+.list-group-item:last-child {
+    border-radius: 0;
+}
 
 .well {
     background-image: none;
