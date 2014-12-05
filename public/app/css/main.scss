@@ -457,6 +457,10 @@ footer {
 	    border: 0;
 	}
     }
+    .date {
+	margin-left: 0.7em;
+	text-transform: uppercase;
+    }
     .title {
 	border-bottom: 1px solid #ccc;
     }
@@ -468,9 +472,14 @@ footer {
 .todo-list .devoir {
     .list-group-item {
 	padding-top: 0;
+	padding-bottom: 0;
     }
     .title {
 	text-align: center;
+	margin-bottom: 0;
+    }
+    h5 {
+	font-weight: bold;
     }
 }
 
@@ -767,6 +776,9 @@ fieldset {
 	    font-size: 0.65em;
 	    width: 2em;
 	    margin: 2px;
+	}
+	.btn:active, .btn.active {
+	    box-shadow: 0;
 	}
     }
 }
