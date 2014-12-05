@@ -479,6 +479,24 @@ footer {
     h5 {
 	font-weight: bold;
     }
+    .todo, .detail {
+	text-align: center;
+	margin: auto;
+	margin-top: 5em;
+    }
+    .todo {
+	.switch {
+	    margin: 0 auto;
+	}
+    }
+    .detail {
+	a.btn {
+	    display: inline-block;
+	}
+    }
+    .contenu {
+	margin-left: -15px;
+    }
 }
 
 .creneau {

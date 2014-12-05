@@ -42,7 +42,7 @@
 	    <div class="pull-left date">{{devoir.date_due | amDateFormat: 'dddd D MMMM'}}</div>
 	</div>
 
-	<div class="row"
+	<div class="row contenu"
 	     data-ng-class="{ 'type1': devoir.type_devoir_id == 1, 'type2': devoir.type_devoir_id == 2, 'type3': devoir.type_devoir_id == 3, 'type4': devoir.type_devoir_id == 4, 'type5': devoir.type_devoir_id == 5, 'type6': devoir.type_devoir_id == 6, 'fait': devoir.fait, 'a-faire': !devoir.fait }">
 
 	    <div class="col-md-5 alert alert-default">
@@ -57,7 +57,7 @@
 		</div>
 	    </div>
 
-	    <div class="col-md-5 alert alert-default">
+	    <div class="col-md-4 alert alert-default">
 		<h5>Séquence pédagogique du {{devoir.cours.date_cours | amDateFormat:'dddd D MMMM'}}</h5>
 		<div class="alert alert-default" data-ng-bind-html="devoir.cours.contenu"></div>
 	    </div>
@@ -66,7 +66,7 @@
 		<a class="btn btn-default" data-ui-sref="eleve.devoirs.popup({ titre: devoir.matiere.libelle_long, cours_id: devoir.cours.id, devoirs_ids: '[' + devoir.id + ']' })">Détail</a>
 	    </div>
 
-	    <div class="col-md-1 todo">
+	    <div class="col-md-2 todo">
 		<div data-ng-switcher
 		     data-ng-if="!(devoir.type_devoir_id == 1) && current_user.profil_actif.type === 'ELV'"
 		     data-ng-model="devoir.fait"
