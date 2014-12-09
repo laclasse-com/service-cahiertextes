@@ -521,19 +521,21 @@ footer {
     }
 }
 
-.modal-header h3 {
-    font-size: 18px;
-    font-weight: bolder;
-    color: #aaa;
-    text-align: center;
+.modal-header {
+    padding: 0;
+    h3 {
+	font-size: 18px;
+	font-weight: bolder;
+	color: #aaa;
+	text-align: center;
+    }
+    h4 {
+	font-size: 16px;
+	font-weight: bolder;
+	color: #aaa;
+	text-align: center;
+    }
 }
-.modal-header h4 {
-    font-size: 16px;
-    font-weight: bolder;
-    color: #aaa;
-    text-align: center;
-}
-
 .modal-body {
     .tab-content {
 	min-height: 20em;
