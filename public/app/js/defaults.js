@@ -117,8 +117,25 @@ angular.module( 'cahierDeTextesClientApp' )
 
 				  var colorpicker_taTool = function( type ) {
 				      var style = ( type === 'backcolor' ) ? 'background-' : '';
-				      return { display: '<span class="dropdown"><a class="dropdown-toggle"><i class="fa fa-font" data-ng-style="{\'' + style + 'color\': selected }"></i> <i class="fa fa-caret-down"></i></a><ng-color-picker class="dropdown-menu" selected="selected"></ng-color-picker></span>',
-					       action:function( ) {
+				      var couleurs = [ '#7bd148',
+						       '#5484ed',
+						       '#a4bdfc',
+						       '#46d6db',
+						       '#7ae7bf',
+						       '#51b749',
+						       '#fbd75b',
+						       '#ffb878',
+						       '#ff887c',
+						       '#dc2127',
+						       '#dbadff',
+						       '#e1e1e1' ];
+				      if ( type === 'backcolor' ) {
+					  couleurs.push( 'transparent' );
+				      }
+
+				      return { couleurs: couleurs,
+					       display: '<span dropdown class="dropdown"><a dropdown-toggle class="dropdown-toggle"><i class="fa fa-font" data-ng-style="{\'' + style + 'color\': selected }"></i> <i class="fa fa-caret-down"></i></a><ng-color-picker dropdown-menu class="dropdown-menu" selected="selected" colors="couleurs"></ng-color-picker></span>',
+					       action: function( ) {
 						   return ( this.selected === 'nil' ) ? false : this.$editor().wrapSelection( type, this.selected );
 					       }
 					     };
