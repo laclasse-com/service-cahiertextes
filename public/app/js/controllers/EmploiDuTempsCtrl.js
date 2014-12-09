@@ -33,9 +33,11 @@ angular.module( 'cahierDeTextesClientApp' )
 					 this.has_resources = _(event.cours).has( 'ressources' ) && event.cours.ressources.length > 0;
 					 this.temps_estime = 0;
 
-					 _(event.cours.devoirs).each( function( devoir ) {
-					     _this.has_ressources = _this.has_ressources || _(devoir).has( 'ressources' ) && devoir.ressources.length > 0;
-					 } );
+					 if ( _(event).has( 'cours' ) ) {
+					     _(event.cours.devoirs).each( function( devoir ) {
+						 _this.has_ressources = _this.has_ressources || _(devoir).has( 'ressources' ) && devoir.ressources.length > 0;
+					     } );
+					 }
 
 					 _(event.devoirs).each( function( devoir ) {
 					     _this.has_ressources = _this.has_ressources || _(devoir).has( 'ressources' ) && devoir.ressources.length > 0;
