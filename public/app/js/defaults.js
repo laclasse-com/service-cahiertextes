@@ -132,7 +132,7 @@ angular.module( 'cahierDeTextesClientApp' )
 					  couleurs.push( 'transparent' );
 				      }
 				      return { couleurs: couleurs,
-					       display: '<span dropdown class="dropdown"><a dropdown-toggle class="dropdown-toggle"><i class="fa fa-font" data-ng-style="{\'' + style + 'color\': selected }"></i> <i class="fa fa-caret-down"></i></a><ng-color-picker dropdown-menu class="dropdown-menu" selected="selected" colors="couleurs"></ng-color-picker></span>',
+					       display: '<span dropdown><a dropdown-toggle><i class="fa fa-font" data-ng-style="{\'' + style + 'color\': selected }"></i> <i class="fa fa-caret-down"></i></a><ng-color-picker dropdown-menu selected="selected" colors="couleurs"></ng-color-picker></span>',
 					       action: function( ) {
 						   return ( this.selected === 'nil' ) ? false : this.$editor().wrapSelection( type, this.selected );
 					       }
