@@ -20,12 +20,13 @@ angular.module( 'cahierDeTextesClientApp' )
 				   return moment( saisie.cours.date_cours ).isBefore( _2_semaines_avant );
 			       } );
 			   }
-			   if ( mois != null ) {
-			       data = _( data ).where( { month: mois + 1 } );
+			   if ( mois !== null ) {
+			       data = _( data ).where( { mois: mois } );
 			   }
-			   if ( classe != null ) {
+			   if ( classe !== null ) {
 			       data = _( data ).where( { regroupement_id: classe.id } );
 			   }
+
 			   return data;
 		       };
 
@@ -41,23 +42,23 @@ angular.module( 'cahierDeTextesClientApp' )
 		       };
 
 		       $scope.valide_all = function() {
-			   swal({ title: 'Tout valider ?',
-				  text: 'Cette action va valider toutes les saisies actuellement affichées à l\'écran.',
-				  type: 'warning',
-				  showCancelButton: true,
-				  confirmButtonColor: '#ff6b55',
-				  confirmButtonText: 'Confirmer',
-				  cancelButtonText: 'Annuler' },
-				function () {
-				    var _2_semaines_avant = moment().subtract( 2, 'weeks' );
-				    _.chain($scope.raw_data)
-					.reject( function( saisie ) {
-					    return saisie.valide || moment( saisie.cours.date_cours ).isAfter( _2_semaines_avant );
-					} )
-					.each( function( saisie ) {
-					    $scope.valide( saisie );
-					} );
-				});
+			   swal( { title: 'Tout valider ?',
+				   text: 'Cette action va valider toutes les saisies actuellement affichées à l\'écran.',
+				   type: 'warning',
+				   showCancelButton: true,
+				   confirmButtonColor: '#ff6b55',
+				   confirmButtonText: 'Confirmer',
+				   cancelButtonText: 'Annuler' },
+				 function () {
+				     var _2_semaines_avant = moment().subtract( 2, 'weeks' );
+				     _.chain($scope.raw_data)
+					 .reject( function( saisie ) {
+					     return saisie.valide || moment( saisie.cours.date_cours ).isAfter( _2_semaines_avant );
+					 } )
+					 .each( function( saisie ) {
+					     $scope.valide( saisie );
+					 } );
+				 } );
 		       };
 
 		       // Graphiques
