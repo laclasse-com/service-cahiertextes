@@ -95,6 +95,13 @@ angular.module( 'cahierDeTextesClientApp' )
 			  if ( $scope.raw_data.length > 0 ) {
 			      $scope.displayed_data = $scope.raw_data;
 
+			      // Filtrage sur un regroupement
+			      if ( $scope.selected_regroupement_id != null ) {
+				  $scope.displayed_data = _($scope.displayed_data).select( function( regroupement ) {
+				      return regroupement.regroupement_id == $scope.selected_regroupement_id;
+				  } );
+			      }
+
 			      // Filtrage sur une matière
 			      if ( $scope.selected_matiere != null ) {
 				  $scope.displayed_data = $scope.displayed_data.map( function( regroupement ) {
