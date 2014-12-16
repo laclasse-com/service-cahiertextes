@@ -136,31 +136,25 @@ angular.module( 'cahierDeTextesClientApp' )
 				  taRegisterTool( 'backgroundColor', colorpicker_taTool( 'backcolor' ) );
 				  taOptions.toolbar[0].push( 'backgroundColor' );
 
-				  var table_taTool = { columns: 1,
-						       rows: 1,
-						       h_columns: 1,
-						       h_rows: 1,
-						       hover_columns: function( value ) {
-							   this.h_columns = value;
+				  var table_taTool = { columns: { value: 1,
+								  hovered: 1 },
+						       rows: { value: 1,
+							       hovered: 1 },
+						       hover: function( objet, value ) {
+							   objet.hovered = value;
 						       },
-						       hover_rows: function( value ) {
-							   this.h_rows = value;
-						       },
-						       leave_columns: function() {
-							   this.h_columns = this.columns;
-						       },
-						       leave_rows: function() {
-							   this.h_rows = this.rows;
+						       leave: function( objet ) {
+							   objet.hovered = objet.value;
 						       },
 						       tooltiptext: 'insérer un tableau',
-						       display: '<span dropdown class="dropdown"><a dropdown-toggle class="dropdown-toggle"><i class="fa fa-table"></i> <i class="fa fa-caret-down"></i></a><div dropdown-menu class="dropdown-menu" data-ng-click="$event.stopPropagation()"><label><rating on-hover="hover_columns( value )" on-leave="leave_columns()" ng-model="columns" max="15" state-on="\'glyphicon-stop\'" state-off="\'glyphicon-unchecked\'"></rating><br>{{h_columns}} colonnes</label><br><label><rating on-hover="hover_rows( value )" on-leave="leave_rows()" ng-model="rows" max="15" state-on="\'glyphicon-stop\'" state-off="\'glyphicon-unchecked\'"></rating><br>{{h_rows}} lignes</label><br><button class="btn btn-success" data-ng-click="insert_table()">Insérer</button></div></span>',
+						       display: '<span dropdown class="dropdown"><a dropdown-toggle class="dropdown-toggle"><i class="fa fa-table"></i> <i class="fa fa-caret-down"></i></a><div dropdown-menu class="dropdown-menu" data-ng-click="$event.stopPropagation()"><label><rating on-hover="hover( columns, value )" on-leave="leave( columns )" ng-model="columns.value" max="15" state-on="\'glyphicon-stop\'" state-off="\'glyphicon-unchecked\'"></rating><br>{{columns.hovered}} colonnes</label><br><label><rating on-hover="hover( rows, value )" on-leave="leave( rows )" ng-model="rows.value" max="15" state-on="\'glyphicon-stop\'" state-off="\'glyphicon-unchecked\'"></rating><br>{{rows.hovered}} lignes</label><br><button class="btn btn-success" data-ng-click="insert_table()">Insérer</button></div></span>',
 						       insert_table: function(  ) {
 							   var tds = '';
-							   for ( var idxCol = 0; idxCol < this.columns; idxCol++ ) {
+							   for ( var idxCol = 0; idxCol < this.columns.value; idxCol++ ) {
 							       tds = tds + '<td>&nbsp;</td>';
 							   }
 							   var trs = '';
-							   for ( var idxRow = 0; idxRow < this.rows; idxRow++ ) {
+							   for ( var idxRow = 0; idxRow < this.rows.value; idxRow++ ) {
 							       trs = trs + '<tr>'+ tds + '</tr>';
 							   }
 
