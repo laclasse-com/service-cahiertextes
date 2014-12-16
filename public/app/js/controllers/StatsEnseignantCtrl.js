@@ -21,7 +21,7 @@ angular.module( 'cahierDeTextesClientApp' )
 			       } );
 			   }
 			   if ( mois != null ) {
-			       data = _( data ).where( { month: mois } );
+			       data = _( data ).where( { month: mois + 1 } );
 			   }
 			   if ( classe != null ) {
 			       data = _( data ).where( { regroupement_id: classe.id } );
