@@ -96,38 +96,40 @@
     <table class="table">
       <thead>
 	<tr>
-	  <th style="width:12em;">Classe</th>
-	  <th style="width:12em;">Matière</th>
-	  <th>Cours</th>
-	  <th>Travail à faire</th>
-	  <th>Visée</th>
+	    <th style="width:12em;">Date</th>
+	    <th style="width:12em;">Classe</th>
+	    <th style="width:12em;">Matière</th>
+	    <th>Cours</th>
+	    <th>Travail à faire</th>
+	    <th>Visée</th>
 	</tr>
       </thead>
       <tbody>
 	<tr data-ng-repeat="saisie in raw_data"
 	    data-ng-class="{'even': $even, 'odd': $odd}"
 	    data-ng-if="(scope.montre_valides || saisie.cours.date_validation == null) && (scope.classe == null || saisie.regroupement_id === scope.classe.id) && (scope.moisCourant == null || saisie.month == scope.moisCourant)">
-	  <td data-ng-bind="classes[ saisie.regroupement_id ].libelle"></td>
-	  <td data-ng-bind="matieres[ saisie.matiere_id ].libelle_long"></td>
-	  <td>
-	    <div class="alert alert-default" data-ng-bind-html="saisie.cours.contenu"></div>
-	  </td>
-	  <td>
-	    <div class="alert alert-default" data-ng-repeat="devoir in saisie.devoirs" data-ng-bind-html="devoir.contenu"></div>
-	  </td>
-	  <td>
-	    <div data-ng-switcher
-		 data-ng-if="current_user.profil_actif.type === 'DIR'"
-		 data-ng-model="saisie.valide"
-		 data-ng-change="valide( saisie )" >
-	    </div>
-	    <div data-ng-if="current_user.profil_actif.type !== 'DIR'">
-	      <div class="switch disabled"
-		   ng-class="{'switch-left': !saisie.valide, 'switch-right': saisie.valide}">
-		<div class="switch-button"> </div>
-	      </div>
-	    </div>
-	  </td>
+	    <td>{{saisie.cours.date_cours | date:'longDate'}}</td>
+	    <td data-ng-bind="classes[ saisie.regroupement_id ].libelle"></td>
+	    <td data-ng-bind="matieres[ saisie.matiere_id ].libelle_long"></td>
+	    <td>
+		<div class="alert alert-default" data-ng-bind-html="saisie.cours.contenu"></div>
+	    </td>
+	    <td>
+		<div class="alert alert-default" data-ng-repeat="devoir in saisie.devoirs" data-ng-bind-html="devoir.contenu"></div>
+	    </td>
+	    <td>
+		<div data-ng-switcher
+		     data-ng-if="current_user.profil_actif.type === 'DIR'"
+		     data-ng-model="saisie.valide"
+		     data-ng-change="valide( saisie )" >
+		</div>
+		<div data-ng-if="current_user.profil_actif.type !== 'DIR'">
+		    <div class="switch disabled"
+			 ng-class="{'switch-left': !saisie.valide, 'switch-right': saisie.valide}">
+			<div class="switch-button"> </div>
+		    </div>
+		</div>
+	    </td>
 	</tr>
       </tbody>
     </table>
