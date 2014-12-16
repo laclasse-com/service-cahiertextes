@@ -107,7 +107,7 @@ angular.module( 'cahierDeTextesClientApp' )
 					   };
 				       } ] )
     .config(['$provide', function($provide){
-	// this demonstrates how to register a new tool and add it to the default toolbar
+	// configuration de textAngular
 	$provide.decorator( 'taOptions',
 			    [ '$delegate', 'taRegisterTool',
 			      function( taOptions, taRegisterTool ){
@@ -136,37 +136,36 @@ angular.module( 'cahierDeTextesClientApp' )
 				  taRegisterTool( 'backgroundColor', colorpicker_taTool( 'backcolor' ) );
 				  taOptions.toolbar[0].push( 'backgroundColor' );
 
-				  var table_taTool = { columns: { value: 1,
-								  hovered: 1 },
-						       rows: { value: 1,
-							       hovered: 1 },
-						       hover: function( objet, value ) {
-							   objet.hovered = value;
-						       },
-						       leave: function( objet ) {
-							   objet.hovered = objet.value;
-						       },
-						       tooltiptext: 'insérer un tableau',
-						       display: '<span dropdown class="dropdown"><a dropdown-toggle class="dropdown-toggle"><i class="fa fa-table"></i> <i class="fa fa-caret-down"></i></a><div dropdown-menu class="dropdown-menu" data-ng-click="$event.stopPropagation()"><label><rating on-hover="hover( columns, value )" on-leave="leave( columns )" ng-model="columns.value" max="15" state-on="\'glyphicon-stop\'" state-off="\'glyphicon-unchecked\'"></rating><br>{{columns.hovered}} colonnes</label><br><label><rating on-hover="hover( rows, value )" on-leave="leave( rows )" ng-model="rows.value" max="15" state-on="\'glyphicon-stop\'" state-off="\'glyphicon-unchecked\'"></rating><br>{{rows.hovered}} lignes</label><br><button class="btn btn-success" data-ng-click="insert_table()">Insérer</button></div></span>',
-						       insert_table: function(  ) {
-							   var tds = '';
-							   for ( var idxCol = 0; idxCol < this.columns.value; idxCol++ ) {
-							       tds = tds + '<td>&nbsp;</td>';
-							   }
-							   var trs = '';
-							   for ( var idxRow = 0; idxRow < this.rows.value; idxRow++ ) {
-							       trs = trs + '<tr>'+ tds + '</tr>';
-							   }
+				  taRegisterTool( 'table', { columns: { value: 1,
+									hovered: 1 },
+							     rows: { value: 1,
+								     hovered: 1 },
+							     hover: function( objet, value ) {
+								 objet.hovered = value;
+							     },
+							     leave: function( objet ) {
+								 objet.hovered = objet.value;
+							     },
+							     tooltiptext: 'insérer un tableau',
+							     display: '<span dropdown class="dropdown"><a dropdown-toggle class="dropdown-toggle"><i class="fa fa-table"></i> <i class="fa fa-caret-down"></i></a><div dropdown-menu class="dropdown-menu" data-ng-click="$event.stopPropagation()"><label><rating on-hover="hover( columns, value )" on-leave="leave( columns )" ng-model="columns.value" max="15" state-on="\'glyphicon-stop\'" state-off="\'glyphicon-unchecked\'"></rating><br>{{columns.hovered}} colonnes</label><br><label><rating on-hover="hover( rows, value )" on-leave="leave( rows )" ng-model="rows.value" max="15" state-on="\'glyphicon-stop\'" state-off="\'glyphicon-unchecked\'"></rating><br>{{rows.hovered}} lignes</label><br><button class="btn btn-success" data-ng-click="insert_table()">Insérer</button></div></span>',
+							     insert_table: function(  ) {
+								 var tds = '';
+								 for ( var idxCol = 0; idxCol < this.columns.value; idxCol++ ) {
+								     tds = tds + '<td>&nbsp;</td>';
+								 }
+								 var trs = '';
+								 for ( var idxRow = 0; idxRow < this.rows.value; idxRow++ ) {
+								     trs = trs + '<tr>'+ tds + '</tr>';
+								 }
 
-							   this.$editor().wrapSelection( 'insertHTML', '<table class="table table-bordered">' + trs + '</table>' );
+								 this.$editor().wrapSelection( 'insertHTML', '<table class="table table-bordered">' + trs + '</table>' );
 
-							   this.deferration.resolve();
-						       },
-						       action: function( deferred  ) {
-							   this.deferration = deferred;
-							   return false;
-						       } };
-				  taRegisterTool( 'table', table_taTool );
+								 this.deferration.resolve();
+							     },
+							     action: function( deferred  ) {
+								 this.deferration = deferred;
+								 return false;
+							     } } );
 				  taOptions.toolbar[0].push( 'table' );
 
 				  taOptions.classes = {
@@ -179,7 +178,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				      textEditor: 'form-control',
 				      htmlEditor: 'form-control'
 				  };
-				  return taOptions; // whatever you return will be the taOptions
+				  return taOptions;
 			      } ] );
 
 	$provide.decorator( 'taTools',
