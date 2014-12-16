@@ -779,6 +779,7 @@ h3, .h3 {
     }
     &.disabled {
 	cursor: default;
+	opacity: 0.5;
     }
 }
 
@@ -834,6 +835,10 @@ fieldset {
 	width: 1em;
 	margin-left: 1em;
     }
+}
+
+.recent {
+    opacity: 0.55;
 }
 /* textAngular */
 .ta-root {
