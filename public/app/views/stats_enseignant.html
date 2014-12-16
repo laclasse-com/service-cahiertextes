@@ -105,7 +105,7 @@
       </thead>
       <tbody>
 	<tr data-ng-repeat="saisie in raw_data"
-	    data-ng-class="{'even': $even, 'odd': $odd}"
+	    data-ng-class="{'even': $even, 'odd': $odd, 'recent': saisie.recent && current_user.profil_actif.type === 'DIR' }"
 	    data-ng-if="(scope.montre_valides || saisie.cours.date_validation == null) && (scope.classe == null || saisie.regroupement_id === scope.classe.id) && (scope.moisCourant == null || saisie.mois == scope.moisCourant)">
 	    <td>{{saisie.cours.date_cours | amDateFormat:'Do MMMM YYYY'}}</td>
 	    <td data-ng-bind="classes[ saisie.regroupement_id ].libelle"></td>
@@ -118,11 +118,11 @@
 	    </td>
 	    <td>
 		<div data-ng-switcher
-		     data-ng-if="current_user.profil_actif.type === 'DIR'"
+		     data-ng-if="current_user.profil_actif.type === 'DIR' && !saisie.recent"
 		     data-ng-model="saisie.valide"
 		     data-ng-change="valide( saisie )" >
 		</div>
-		<div data-ng-if="current_user.profil_actif.type !== 'DIR'">
+		<div data-ng-if="current_user.profil_actif.type !== 'DIR' || saisie.recent">
 		    <div class="switch disabled"
 			 ng-class="{'switch-left': !saisie.valide, 'switch-right': saisie.valide}">
 			<div class="switch-button"> </div>
