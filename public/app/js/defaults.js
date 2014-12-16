@@ -117,18 +117,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
 				  var colorpicker_taTool = function( type ) {
 				      var style = ( type === 'backcolor' ) ? 'background-' : '';
-				      var couleurs = [ '#7bd148',
-						       '#5484ed',
-						       '#a4bdfc',
-						       '#46d6db',
-						       '#7ae7bf',
-						       '#51b749',
-						       '#fbd75b',
-						       '#ffb878',
-						       '#ff887c',
-						       '#dc2127',
-						       '#dbadff',
-						       '#e1e1e1' ];
+				      var couleurs = [ '#7bd148', '#5484ed', '#a4bdfc', '#46d6db', '#7ae7bf', '#51b749', '#fbd75b', '#ffb878', '#ff887c', '#dc2127', '#dbadff', '#e1e1e1' ];
 				      if ( type === 'backcolor' ) {
 					  couleurs.push( 'transparent' );
 				      }
@@ -146,6 +135,31 @@ angular.module( 'cahierDeTextesClientApp' )
 
 				  taRegisterTool( 'backgroundColor', colorpicker_taTool( 'backcolor' ) );
 				  taOptions.toolbar[0].push( 'backgroundColor' );
+
+				  var table_taTool = { columns: 1,
+						       rows: 1,
+						       tooltiptext: 'insérer un tableau',
+						       display: '<span dropdown class="dropdown"><a dropdown-toggle class="dropdown-toggle"><i class="fa fa-table"></i> <i class="fa fa-caret-down"></i></a><div dropdown-menu class="dropdown-menu" data-ng-click="$event.stopPropagation()"><label><rating ng-model="columns" max="15" state-on="\'glyphicon-stop\'" state-off="\'glyphicon-unchecked\'"></rating><br>{{columns}} colonnes</label><br><label><rating ng-model="rows" max="15" state-on="\'glyphicon-stop\'" state-off="\'glyphicon-unchecked\'"></rating><br>{{rows}} lignes</label><br><button class="btn btn-success" data-ng-click="insert_table()">Insérer</button></div></span>',
+						       insert_table: function(  ) {
+							   var tds = '';
+							   for ( var idxCol = 0; idxCol < this.columns; idxCol++ ) {
+							       tds = tds + '<td>&nbsp;</td>';
+							   }
+							   var trs = '';
+							   for ( var idxRow = 0; idxRow < this.rows; idxRow++ ) {
+							       trs = trs + '<tr>'+ tds + '</tr>';
+							   }
+
+							   this.$editor().wrapSelection( 'insertHTML', '<table class="table table-bordered">' + trs + '</table>' );
+
+							   this.deferration.resolve();
+						       },
+						       action: function( deferred  ) {
+							   this.deferration = deferred;
+							   return false;
+						       } };
+				  taRegisterTool( 'table', table_taTool );
+				  taOptions.toolbar[0].push( 'table' );
 
 				  taOptions.classes = {
 				      focussed: 'focussed',
