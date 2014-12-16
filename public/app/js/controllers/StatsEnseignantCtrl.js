@@ -14,12 +14,6 @@ angular.module( 'cahierDeTextesClientApp' )
 
 		       var filtre_saisies = function ( saisies, mois, classe ) {
 			   var data = saisies;
-			   if ( $scope.current_user[ 'profil_actif' ][ 'profil_id' ] === 'DIR' ) {
-			       var _2_semaines_avant = moment().subtract( 2, 'weeks' );
-			       data = _( data ).select( function( saisie ) {
-				   return moment( saisie.cours.date_cours ).isBefore( _2_semaines_avant );
-			       } );
-			   }
 			   if ( mois !== null ) {
 			       data = _( data ).where( { mois: mois } );
 			   }
@@ -32,6 +26,8 @@ angular.module( 'cahierDeTextesClientApp' )
 
 		       $scope.valide = function( saisie ) {
 			   saisie.cours.$valide().then( function( response ) {
+			       saisie.valide = !_(response.date_validation).isNull();
+
 			       if ( !$scope.montre_valides && !_(response.date_validation).isNull() ) {
 				   var date_validation_holder = response.date_validation;
 				   response.date_validation = null;
@@ -50,10 +46,9 @@ angular.module( 'cahierDeTextesClientApp' )
 				   confirmButtonText: 'Confirmer',
 				   cancelButtonText: 'Annuler' },
 				 function () {
-				     var _2_semaines_avant = moment().subtract( 2, 'weeks' );
 				     _.chain($scope.raw_data)
 					 .reject( function( saisie ) {
-					     return saisie.valide || moment( saisie.cours.date_cours ).isAfter( _2_semaines_avant );
+					     return saisie.valide || saisie.recent;
 					 } )
 					 .each( function( saisie ) {
 					     $scope.valide( saisie );
@@ -105,6 +100,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
 		       $scope.process_data = function () {
 			   if ( $scope.raw_data !== undefined ) {
+			       var _2_semaines_avant = moment().subtract( 2, 'weeks' );
 			       $scope.raw_data = _( $scope.raw_data )
 				   .map( function ( saisie, index ) {
 				       // on référence l'index d'origine dans chaque élément pour propager la validation
@@ -112,10 +108,11 @@ angular.module( 'cahierDeTextesClientApp' )
 				       saisie.cours = new Cours( saisie.cours );
 				       saisie.regroupement_id = parseInt( saisie.regroupement_id );
 				       saisie.month = moment( saisie.cours.date_cours ).month();
+				       saisie.recent = moment( saisie.cours.date_cours ).isAfter( _2_semaines_avant );
 				       // saisie.devoir = new Devoirs( saisie.devoir );
 				       return saisie;
 				   } );
-
+			       //$scope.displayed_data = filtre_saisies( $scope.raw_data, $scope.moisCourant, $scope.classe );
 			       // consommation des données par les graphiques
 			       $scope.graphiques.populate( $scope.raw_data );
 			   }
