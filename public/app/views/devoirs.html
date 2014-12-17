@@ -5,14 +5,6 @@
 	<div class="row col-md-12">
 	    <h2>
 		Du {{from_date | amDateFormat:'Do MMMM YYYY'}} au {{to_date | amDateFormat:'Do MMMM YYYY'}}
-
-		<div class="pull-right">
-		    <button class="btn btn-default" data-ng-click="reset_offset()">Aujourd'hui</button>
-		    <div class="btn-group">
-			<button class="btn btn-default" data-ng-click="incr_offset()"><span class="glyphicon glyphicon-chevron-left"></span></button>
-			<button class="btn btn-default" data-ng-click="decr_offset()"><span class="glyphicon glyphicon-chevron-right"></span></button>
-		    </div>
-		</div>
 	    </h2>
 	</div>
 
@@ -22,6 +14,11 @@
 		    data-ng-model="id_matiere_selected"
 		    data-ng-change="filter_data( id_matiere_selected )">
 		<option value="" selected>Toutes les matières</option>
+	    </select>
+
+	    <select class="pull-left"
+		    data-ng-model="period_offset"
+		    data-ng-options="period.offset as period.label for period in period_offsets_list">
 	    </select>
 
 	    <div class="pull-left options">

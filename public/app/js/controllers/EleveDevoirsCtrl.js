@@ -32,8 +32,8 @@ angular.module( 'cahierDeTextesClientApp' )
 			      types_de_devoir = response;
 
 			      var retrieve_data = function() {
-				  $scope.from_date = moment().subtract( $scope.month_offset, 'months' ).subtract( 15, 'days' ).toDate();
-				  $scope.to_date = moment().subtract( $scope.month_offset, 'months' ).add( 15, 'days' ).toDate();
+				  $scope.from_date = moment().subtract( $scope.period_offset, 'months' ).subtract( 2, 'weeks' ).toDate();
+				  $scope.to_date = moment().subtract( $scope.period_offset, 'months' ).add( 2, 'weeks' ).toDate();
 
 				  API.query_devoirs({ debut: $scope.from_date,
 						      fin: $scope.to_date,
@@ -73,22 +73,32 @@ angular.module( 'cahierDeTextesClientApp' )
 				  }
 			      };
 
-			      $scope.month_offset = 0;
+			      $scope.period_offset = 0;
 
 			      // retrieve_data() when the value of week_offset changes
-			      // n.b.: triggered when month_offset is initialized above
-			      $scope.$watch( 'month_offset', function() {
+			      // n.b.: triggered when period_offset is initialized above
+			      var nb_mois_depuis_septembre = Math.abs( 9 - ( moment().month() + 1 ) );
+			      $scope.period_offsets_list = _.range( nb_mois_depuis_septembre,
+								    ( 10 - nb_mois_depuis_septembre ) * -1,
+								    -1 )
+				  .map( function( offset ) {
+				      return { offset: offset,
+					       label: offset == 0 ? 'ce mois' : moment().add( offset * -1, 'months' ).fromNow() };
+				  } );
+			      // $scope.period_offsets_list.push( { offset: 9999,
+			      //					 label: 'année complète'} );
+			      $scope.$watch( 'period_offset', function() {
 				  retrieve_data();
 			      } );
 
 			      $scope.incr_offset = function() {
-				  $scope.month_offset++;
+				  $scope.period_offset++;
 			      };
 			      $scope.decr_offset = function() {
-				  $scope.month_offset--;
+				  $scope.period_offset--;
 			      };
 			      $scope.reset_offset = function() {
-				  $scope.month_offset = 0;
+				  $scope.period_offset = 0;
 			      };
 			  });
 
