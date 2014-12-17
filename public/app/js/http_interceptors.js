@@ -13,7 +13,7 @@ angular.module( 'cahierDeTextesClientApp' )
 							      'responseError': function( rejection ) {
 								  if ( rejection.status === 401 ) {
 								      swal( { title: 'Erreur',
-									      text: 'Action non autorisée',
+									      text: 'Votre session a expirée.',
 									      type: 'error',
 									      showCancelButton: false,
 									      confirmButtonColor: '#ff6b55',
