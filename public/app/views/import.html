@@ -9,8 +9,8 @@
     <button class="btn pull-right"
 	    data-ng-class="{'disabled btn-default': !fichiers || in_progress, 'btn-primary': fichiers}"
 	    data-ng-click="launch_import( fichiers )" >
-      <span class="glyphicon glyphicon-log-in" data-ng-if="!result.rapport"> Importer</span>
-      <span class="glyphicon glyphicon-log-in" data-ng-if="result.rapport"> Ré-Importer</span>
+	<span data-ng-if="!result.rapport"><span class="glyphicon glyphicon-log-in"></span> Importer</span>
+	<span data-ng-if="result.rapport"><span class="glyphicon glyphicon-log-in"></span> Ré-Importer</span>
     </button>
     <div class="clearfix"></div>
   </div>
