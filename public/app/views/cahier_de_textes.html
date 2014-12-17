@@ -2,14 +2,14 @@
      data-ng-swipe-left="decr_offset()"
      data-ng-swipe-right="incr_offset()">
     <div class="panel-heading">
-	<div class="row col-md-12" data-ng-if="current_user.profil_actif.type === 'ENS'">
+	<div class="col-md-12" data-ng-if="current_user.profil_actif.type === 'ENS'">
 	    <select class="col-md-3 pull-left"
 		    data-ng-model="scope.selected_regroupement_id"
 		    data-ng-options="classe.id as classe.libelle for classe in classes">
 		<option value="" selected>Toutes les classes</option>
 	    </select>
 
-	    <div class="col-md-7 pull-right" data-ng-if="!complet">
+	    <div class="pull-right" data-ng-if="!complet">
 		<label>Nouvelle séquence pédagogique ou devoir pour le :
 		    <select class="pull-right"
 			    data-ng-model="selected_creneau_vide"
@@ -24,25 +24,26 @@
 		</button>
 	    </div>
 	</div>
-	<div class="row col-md-12">
+	<div class="col-md-12">
+	    <div class="pull-right">
+		<button class="btn btn-default"
+			data-ng-click="reset_offset()"
+			data-ng-class="{'disabled': complet || period_offset == 0}">Aujourd'hui</button>
+		<div class="btn-group">
+		    <button class="btn btn-default" data-ng-class="{'disabled': complet}" data-ng-click="incr_offset()"><span class="glyphicon glyphicon-chevron-left"></span></button>
+		    <button class="btn btn-default" data-ng-class="{'disabled': complet}" data-ng-click="decr_offset()"><span class="glyphicon glyphicon-chevron-right"></span></button>
+		</div>
+
+		<button class="btn btn-default"
+			data-btn-checkbox
+			data-ng-model="complet">
+		    Année complète
+		</button>
+	    </div>
+	</div>
+	<div class="col-md-12">
 	    <h2>
 		Du {{from_date | amDateFormat:'Do MMMM YYYY'}} au {{to_date | amDateFormat:'Do MMMM YYYY'}}
-
-		<div class="pull-right">
-		    <button class="btn btn-default"
-			    data-ng-click="reset_offset()"
-			    data-ng-class="{'disabled': complet || period_offset == 0}">Aujourd'hui</button>
-		    <div class="btn-group">
-			<button class="btn btn-default" data-ng-class="{'disabled': complet}" data-ng-click="incr_offset()"><span class="glyphicon glyphicon-chevron-left"></span></button>
-			<button class="btn btn-default" data-ng-class="{'disabled': complet}" data-ng-click="decr_offset()"><span class="glyphicon glyphicon-chevron-right"></span></button>
-		    </div>
-
-		    <button class="btn btn-default"
-			    data-btn-checkbox
-			    data-ng-model="complet">
-			Année complète
-		    </button>
-		</div>
 	    </h2>
 	</div>
 	<div class="clearfix"></div>

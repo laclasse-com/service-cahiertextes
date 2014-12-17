@@ -508,11 +508,14 @@ footer {
 
 .cahier-de-textes {
     h2 { text-align: center;
+	 text-transform: uppercase;
+	 color: #b2b2b2;
 	 font-family: "Open Sans";
 	 font-size: 21px;
 	 font-weight: bolder; }
     .creneau {
 	list-style-type: none;
+	padding-bottom: 0;
 	.date {
 	    border-bottom: 1px solid #ddd;
 	    h3 {
@@ -527,6 +530,7 @@ footer {
 	.detail {
 	    border-left: 1em solid transparent;
 	    padding-top: 1em;
+	    padding-bottom: 1em;
 	    &.vise {
 		border-color: #0f0;
 	    }
