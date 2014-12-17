@@ -2,16 +2,14 @@
 	data-ng-class="{'embedded': embedded}">
     <iframe data-ng-src="{{DOCS_URL_login}}" style="display:none;"></iframe>
 
-    <div class="row" data-ng-if="!embedded" data-ng-cloak>
-	<div class="navbar col-md-12">
-	    <div class="pull-right">
-		{{current_user['LaclassePrenom']}} {{current_user['LaclasseNom']}}
-		<select id="profils"
-			data-ng-model="current_user['profil_actif']"
-			data-ng-options="profil.etablissement + ' : ' + profil.nom group by profil.etablissement for profil in current_user.profils" data-ng-change="reload()">
-		</select>
-		<a class="btn btn-danger" href="logout" tooltip="Déconnexion" tooltip-placement="bottom"><i class="glyphicon glyphicon-log-out"></i></a>
-	    </div>
+    <div class="col-md-12 user" data-ng-if="!embedded" data-ng-cloak>
+	<div class="pull-right">
+	    {{current_user['LaclassePrenom']}} {{current_user['LaclasseNom']}}
+	    <select id="profils"
+		    data-ng-model="current_user['profil_actif']"
+		    data-ng-options="profil.etablissement + ' : ' + profil.nom group by profil.etablissement for profil in current_user.profils" data-ng-change="reload()">
+	    </select>
+	    <a class="btn btn-danger" href="logout" tooltip="Déconnexion" tooltip-placement="bottom"><i class="glyphicon glyphicon-log-out"></i></a>
 	</div>
     </div>
 

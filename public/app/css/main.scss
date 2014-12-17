@@ -30,7 +30,10 @@ header {
     position: fixed;
     width: 100%;
     z-index: 1;
-    height: 123px;
+    height: 112px;
+    .user {
+	padding: 1em;
+    }
 }
 header.embedded {
     padding-top: 15px;
@@ -39,7 +42,7 @@ header.embedded {
 
 #ui-view-content {
     padding: 0 15px;
-    padding-top: 123px;
+    padding-top: 112px;
     max-width: 1170px;
     width: 100%;
     margin: 0 auto;
