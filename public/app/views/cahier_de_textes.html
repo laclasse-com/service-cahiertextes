@@ -9,8 +9,12 @@
 		<option value="" selected>Toutes les classes</option>
 	    </select>
 
+	    <select data-ng-model="period_offset"
+		    data-ng-options="period.offset as period.label for period in period_offsets_list">
+	    </select>
+
 	    <div class="pull-right" data-ng-if="!complet">
-		<label>Nouvelle séquence pédagogique ou devoir pour le :
+		<label style="line-height: 34px;">Nouvelle séquence pédagogique ou devoir pour le :
 		    <select class="pull-right"
 			    data-ng-model="selected_creneau_vide"
 			    data-ng-options="creneau as ( creneau | formateCreneau ) group by creneau.regroupement.libelle for creneau in creneaux_vides | orderBy:['creneau.regroupement.libelle', 'start'] | filter:selected_regroupement_id" >
@@ -21,23 +25,6 @@
 			data-ng-if="selected_creneau_vide"
 			data-ng-click="edition_creneau( selected_creneau_vide )" >
 		    <span class="glyphicon glyphicon-pencil"></span>
-		</button>
-	    </div>
-	</div>
-	<div class="col-md-12">
-	    <div class="pull-right">
-		<button class="btn btn-default"
-			data-ng-click="reset_offset()"
-			data-ng-class="{'disabled': complet || period_offset == 0}">Aujourd'hui</button>
-		<div class="btn-group">
-		    <button class="btn btn-default" data-ng-class="{'disabled': complet}" data-ng-click="incr_offset()"><span class="glyphicon glyphicon-chevron-left"></span></button>
-		    <button class="btn btn-default" data-ng-class="{'disabled': complet}" data-ng-click="decr_offset()"><span class="glyphicon glyphicon-chevron-right"></span></button>
-		</div>
-
-		<button class="btn btn-default"
-			data-btn-checkbox
-			data-ng-model="complet">
-		    Année complète
 		</button>
 	    </div>
 	</div>

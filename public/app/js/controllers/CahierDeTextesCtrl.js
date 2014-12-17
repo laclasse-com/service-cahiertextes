@@ -61,7 +61,19 @@ angular.module( 'cahierDeTextesClientApp' )
 
 		      // $scope.retrieve_data() when the value of week_offset changes
 		      // n.b.: triggered when week_offset is initialized above
+		      var nb_mois_depuis_septembre = Math.abs( 9 - ( moment().month() + 1 ) );
+		      $scope.period_offsets_list = _.range( nb_mois_depuis_septembre,
+							    ( 10 - nb_mois_depuis_septembre ) * -1,
+							    -1 )
+			  .map( function( offset ) {
+			      return { offset: offset,
+				       label: offset == 0 ? 'ce mois' : moment().add( offset * -1, 'months' ).fromNow() };
+			  } );
+		      $scope.period_offsets_list.push( { offset: 9999,
+							 label: 'année complète'} );
+
 		      $scope.$watch( 'period_offset', function() {
+			  $scope.complet = $scope.period_offset == 9999;
 			  $scope.retrieve_data();
 		      } );
 
