@@ -421,33 +421,19 @@ footer {
     text-align: right;
 }
 
-.creneau .jour, .devoir .date {
+.devoir .date {
     color: #aba;
     font-size: 2em;
     font-weight: bold;
 }
 
-.creneau {
-    .info, .contenu {
-	margin-left: 3em;
-    }
-}
-
 .devoir {
     .info, .contenu {
 	margin-left: 3em;
     }
-}
-
-.devoir .info .matiere {
-    font-weight: bold;
-}
-
-.creneau .detail {
-    line-height: 4em;
-}
-
-.devoir {
+    .info .matiere {
+	font-weight: bold;
+    }
     .todo, .detail {
 	margin: 6px;
     }
@@ -499,25 +485,63 @@ footer {
     }
 }
 
-.creneau {
-    .date {
-	.matiere, .regroupement {
-	    font-weight: bold;
+.cahier-de-textes {
+    h2 { text-align: center;
+	 font-family: "Open Sans";
+	 font-size: 21px;
+	 font-weight: bolder; }
+    .creneau {
+	list-style-type: none;
+	.date {
+	    border-bottom: 1px solid #ddd;
+	    h3 {
+		margin: 0;
+		padding: 0.5em 1.7em 1em;
+		font-family: "Open Sans";
+		font-size: 18px;
+		font-weight: bolder;
+		color: #b2b2b2;
+	    }
 	}
-	span {
-	    float: left;
-	    width: 100%;
+	.detail {
+	    border-left: 1em solid transparent;
+	    padding-top: 1em;
+	    &.vise {
+		border-color: #0f0;
+	    }
+	    .infos {
+		span {
+		    float: left;
+		    width: 100%;
+		}
+		.regroupement, .matiere {
+		    font-weight: bold;
+		}
+		.matiere {
+		    color: #8e8e8e;
+		}
+	    }
+	    .devoir {
+		list-style: none;
+		span {
+		    float: left;
+		    width: 100%;
+		}
+		.type {
+		    font-weight: bold;
+		}
+		.temps-estime {
+		    color: #b2b2b2;
+		}
+		.contenu {
+		    margin: 0;
+		}
+	    }
+	    .actions {
+		text-align: center;
+		padding-top: 2em;
+	    }
 	}
-	.horaire {
-	    text-align: center;
-	}
-    }
-    .devoirs {
-	float: left;
-	width: 100%;
-    }
-    &.vise {
-	border-left: 1em solid #0f0;
     }
 }
 
