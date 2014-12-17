@@ -1,4 +1,7 @@
-<header data-ng-controller="HeaderCtrl">
+<header data-ng-controller="HeaderCtrl"
+	data-ng-class="{'embedded': embedded}">
+    <iframe data-ng-src="{{DOCS_URL_login}}" style="display:none;"></iframe>
+
     <div class="row" data-ng-if="!embedded" data-ng-cloak>
 	<div class="navbar col-md-12">
 	    <div class="pull-right">
@@ -12,26 +15,27 @@
 	</div>
     </div>
 
-    <iframe data-ng-src="{{DOCS_URL_login}}" style="display:none;"></iframe>
+    <div class="onglets">
+	<a class="btn"
+	   data-ng-repeat="tab in tabs"
+	   data-ui-sref="{{tab.uisref}}"
+	   data-ng-class="{'btn-warning': tab.active, 'btn-default': !tab.active}"
+	   data-ng-click="set_active_tab( tab.uisref )">
+	    <span class="{{tab.css_class}}"></span> {{tab.heading}}
+	</a>
+
+	<select class="pull-right choix-enfant"
+		data-ng-if="current_user && current_user.profil_actif.type === 'TUT'"
+		data-ng-options="enfant as enfant.enfant.prenom+' '+enfant.enfant.nom for enfant in current_user.enfants track by enfant.enfant.id"
+		data-ng-model="current_user.enfant_actif"
+		data-ng-change="reload()"></select>
+    </div>
 </header>
 
-<div class="onglets">
-    <a class="btn"
-       data-ng-repeat="tab in tabs"
-       data-ui-sref="{{tab.uisref}}"
-       data-ng-class="{'btn-warning': tab.active, 'btn-default': !tab.active}"
-       data-ng-click="set_active_tab( tab.uisref )">
-	<span class="{{tab.css_class}}"></span> {{tab.heading}}
-    </a>
 
-    <select class="pull-right choix-enfant"
-	    data-ng-if="current_user && current_user.profil_actif.type === 'TUT'"
-	    data-ng-options="enfant as enfant.enfant.prenom+' '+enfant.enfant.nom for enfant in current_user.enfants track by enfant.enfant.id"
-	    data-ng-model="current_user.enfant_actif"
-	    data-ng-change="reload()"></select>
-</div>
-
-<div id="ui-view-content" ui-view="content"></div>
+<div id="ui-view-content"
+     ui-view="content"
+     data-ng-class="{'embedded': embedded}"></div>
 
 <footer class="col-md-12"
 	data-ng-controller="FooterCtrl" data-ng-cloak>
