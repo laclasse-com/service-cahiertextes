@@ -28,11 +28,6 @@ namespace :db do
     Sequel::Migrator.run( DB, 'migrations' )
   end
 
-  desc 'Check migrations'
-  task migrate_check: :load_config do
-    Sequel::Migrator.check_current(DB, 'migrations')
-  end
-
   desc "Checks if a migration is needed"
   task check_migrate: :load_config do
     Sequel.extension :migration
