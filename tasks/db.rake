@@ -33,4 +33,9 @@ namespace :db do
     Sequel::Migrator.check_current(DB, 'migrations')
   end
 
+  desc "Checks if a migration is needed"
+  task check_migrate: :load_config do
+    Sequel.extension :migration
+    exit Sequel::Migrator.is_current?( Sequel::Model.db, 'migrations' ) ? 0 : 1
+  end
 end
