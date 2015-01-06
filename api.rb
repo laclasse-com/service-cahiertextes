@@ -5,9 +5,9 @@ require 'bundler'
 
 Bundler.require( :default, ENV['RACK_ENV'].to_sym )     # require tout les gems définis dans Gemfile
 
-require_relative './lib/AuthenticationHelpers'
-require_relative './lib/UserHelpers'
-require_relative './lib/DataExtractionHelpers'
+require_relative './helpers/Authentication'
+require_relative './helpers/User'
+require_relative './helpers/DataExtraction'
 
 require_relative './models/models'
 require_relative './lib/data_management'

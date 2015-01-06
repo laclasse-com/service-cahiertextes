@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-require_relative './HashedUser'
+require_relative '../lib/HashedUser'
 
 module UserHelpers
   def user

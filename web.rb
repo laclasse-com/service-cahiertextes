@@ -9,7 +9,7 @@ require_relative './config/init'
 
 Bundler.require( :default, ENV['RACK_ENV'].to_sym )     # require tout les gems définis dans Gemfile
 
-require_relative './lib/AuthenticationHelpers'
+require_relative './helpers/Authentication'
 
 # Application Sinatra servant de base
 module CahierDeTextesAPI
