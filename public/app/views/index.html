@@ -4,7 +4,7 @@
 
     <div class="col-md-12 user" data-ng-if="!embedded" data-ng-cloak>
 	<div class="pull-right">
-	    {{current_user['LaclassePrenom']}} {{current_user['LaclasseNom']}}
+	    {{current_user['prenom']}} {{current_user['nom']}}
 	    <select id="profils"
 		    data-ng-model="current_user['profil_actif']"
 		    data-ng-options="profil.etablissement + ' : ' + profil.nom group by profil.etablissement for profil in current_user.profils" data-ng-change="reload()">

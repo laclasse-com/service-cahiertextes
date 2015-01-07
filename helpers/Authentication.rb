@@ -126,8 +126,8 @@ module AuthenticationHelpers
 
       env['rack.session'][:current_user] = { 'user' => username,
                                              'uid' => uid,
-                                             'LaclasseNom' => user_annuaire['nom'],
-                                             'LaclassePrenom' => user_annuaire['prenom'],
+                                             'nom' => user_annuaire['nom'],
+                                             'prenom' => user_annuaire['prenom'],
                                              'ENTPersonProfils' => user_annuaire['profils'].map { |p| "#{p['profil_id']}:#{p['etablissement_code_uai']}" }.join( ',' ) }
 
       uais = user_annuaire['profils'].map {
