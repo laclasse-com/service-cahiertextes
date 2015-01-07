@@ -27,9 +27,13 @@ describe CahierDeTextesAPI::V1::ImportAPI do
     end
 
     # Mock d'une session Principal
-    module UserHelpers
-      def user
-        HashedUser.new( MOCKED_DATA[:users][:principal][:rack_session] )
+    module CahierDeTextesApp
+      module Helpers
+        module User
+          def user
+            HashedUser.new( MOCKED_DATA[:users][:principal][:rack_session] )
+          end
+        end
       end
     end
   end

@@ -17,10 +17,9 @@ require_relative './api/v1/api'
 
 module CahierDeTextesAPI
   class API < Grape::API
-
-    helpers AuthenticationHelpers
-    helpers UserHelpers
-    helpers DataExtractionHelpers
+    helpers CahierDeTextesApp::Helpers::Authentication
+    helpers CahierDeTextesApp::Helpers::User
+    helpers CahierDeTextesApp::Helpers::DataExtraction
 
     format :txt
     get '/version' do

@@ -44,9 +44,13 @@ describe CahierDeTextesAPI::V1::EmploisDuTempsAPI do
     end
 
     # Mock d'une session Enseignant
-    module UserHelpers
-      def user
-        HashedUser.new( MOCKED_DATA[:users][:enseignant][:rack_session] )
+    module CahierDeTextesApp
+      module Helpers
+        module User
+          def user
+            HashedUser.new( MOCKED_DATA[:users][:enseignant][:rack_session] )
+          end
+        end
       end
     end
   end
@@ -107,9 +111,13 @@ describe CahierDeTextesAPI::V1::EmploisDuTempsAPI do
     end
 
     # Mock d'une session Eleve
-    module UserHelpers
-      def user
-        HashedUser.new( MOCKED_DATA[:users][:eleve][:rack_session] )
+    module CahierDeTextesApp
+      module Helpers
+        module User
+          def user
+            HashedUser.new( MOCKED_DATA[:users][:eleve][:rack_session] )
+          end
+        end
       end
     end
   end
@@ -170,9 +178,13 @@ describe CahierDeTextesAPI::V1::EmploisDuTempsAPI do
     end
 
     # Mock d'une session Principal
-    module UserHelpers
-      def user
-        HashedUser.new( MOCKED_DATA[:users][:principal][:rack_session] )
+    module CahierDeTextesApp
+      module Helpers
+        module User
+          def user
+            HashedUser.new( MOCKED_DATA[:users][:principal][:rack_session] )
+          end
+        end
       end
     end
   end
@@ -233,9 +245,13 @@ describe CahierDeTextesAPI::V1::EmploisDuTempsAPI do
     end
 
     # Mock d'une session Vie_Scolaire
-    module UserHelpers
-      def user
-        HashedUser.new( MOCKED_DATA[:users][:vie_scolaire][:rack_session] )
+    module CahierDeTextesApp
+      module Helpers
+        module User
+          def user
+            HashedUser.new( MOCKED_DATA[:users][:vie_scolaire][:rack_session] )
+          end
+        end
       end
     end
   end
@@ -296,9 +312,13 @@ describe CahierDeTextesAPI::V1::EmploisDuTempsAPI do
     end
 
     # Mock d'une session Parent
-    module UserHelpers
-      def user
-        HashedUser.new( MOCKED_DATA[:users][:parent][:rack_session] )
+    module CahierDeTextesApp
+      module Helpers
+        module User
+          def user
+            HashedUser.new( MOCKED_DATA[:users][:parent][:rack_session] )
+          end
+        end
       end
     end
   end

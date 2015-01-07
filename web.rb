@@ -14,13 +14,12 @@ require_relative './helpers/Authentication'
 # Application Sinatra servant de base
 module CahierDeTextesAPI
   class Web < Sinatra::Base
+    helpers CahierDeTextesApp::Helpers::Authentication
 
     configure :production, :development do
       set :protection, true
       set :protection, except: :frame_options
     end
-
-    helpers AuthenticationHelpers
 
     before  do
       pass if %r{#{APP_PATH}/(auth|login)/}.match(request.path)
