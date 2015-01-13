@@ -49,9 +49,10 @@ angular.module( 'cahierDeTextesClientApp' )
 				  confirmButtonText: 'Confirmer',
 				  cancelButtonText: 'Annuler' },
 				function () {
+				    var _2_semaines_avant = moment().subtract( 2, 'weeks' );
 				    _.chain($scope.raw_data)
 					.reject( function( saisie ) {
-					    return saisie.valide;
+					    return saisie.valide || moment( saisie.cours.date_cours ).isAfter( _2_semaines_avant );
 					} )
 					.each( function( saisie ) {
 					    $scope.valide( saisie );
