@@ -484,7 +484,9 @@ angular.module( 'cahierDeTextesClientApp' )
 				   .success( function ( response ) {
 				       if ( _(response.error).isEmpty() && _(response).has( 'files' ) ) {
 					   $scope.cartable = response;
-					   $scope.cartable.files = _( response.files ).rest();
+					   $scope.cartable.files = _( response.files ).reject( function( file ) {
+					       return _(file).has( 'phash' );
+					   } ); //.rest();
 					   $scope.cartable.expandedNodes = [];
 				       } else {
 					   dead_Documents();
@@ -605,9 +607,9 @@ angular.module( 'cahierDeTextesClientApp' )
 				       $scope.creneaux_similaires.selected = [];
 				       init_cours_existant( $scope.cours );
 
-                                       swal( { title: 'Créneau copié !',
+				       swal( { title: 'Créneau copié !',
 					   type: 'success',
-                                           timer: 2000,
+					   timer: 2000,
 					   showCancelButton: false,
 					   confirmButtonColor: '#ff6b55',
 					   confirmButtonText: 'Fermer'
