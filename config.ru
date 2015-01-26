@@ -1,21 +1,19 @@
 #!/usr/bin/env rackup
 # -*- coding: utf-8; mode: ruby -*-
 
+require 'lib/helpers/rack'
+
 require ::File.expand_path( '../config/init', __FILE__ )
 
 require ::File.expand_path( '../api', __FILE__ )
 require ::File.expand_path( '../web', __FILE__ )
 
+Laclasse::Helpers::Rack.configure_rake self
+
 use Rack::Rewrite do
   rewrite %r{^/logout/?$}, "#{APP_PATH}/logout"
   rewrite %r{^#{APP_PATH}(/app/(js|css|vendor)/.*(map|css|js|ttf|woff|html|png|jpg|jpeg|gif|svg)[?v=0-9a-zA-Z\-.]*$)}, '$1'
 end
-
-use Rack::Session::Cookie,
-    key: 'rack.session',
-    path: APP_PATH,
-    expire_after: 3600, # 1 heure en secondes
-    secret: SESSION_KEY
 
 use OmniAuth::Builder do
   configure do |config|
