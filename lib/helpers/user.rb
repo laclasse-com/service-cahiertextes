@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-require_relative '../lib/HashedUser'
+require_relative '../hashed_user'
 
 module CahierDeTextesApp
   module Helpers

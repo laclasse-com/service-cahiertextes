@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require_relative './HashIt'
+require_relative './hash_it'
 
 class HashedUser < HashIt
   def is?( profil )
