@@ -5,7 +5,7 @@ require 'openssl'
 require 'zlib'
 
 require_relative './data_management'
-require_relative './annuaire'
+require_relative './annuaire_wrapper'
 require_relative '../models/models'
 
 # Consomme le fichier Emploi du temps exporté par Pronote

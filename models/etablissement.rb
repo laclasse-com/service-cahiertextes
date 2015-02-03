@@ -2,7 +2,7 @@
 
 class Etablissement < Sequel::Model( :etablissements )
   def statistiques_classes
-    Annuaire
+    AnnuaireWrapper
       .get_etablissement( values[:UAI] )['classes']
       .map do |classe|
       cdt = CahierDeTextes.where( regroupement_id: classe['id'] ).first
@@ -13,7 +13,7 @@ class Etablissement < Sequel::Model( :etablissements )
   end
 
   def statistiques_enseignants
-    Annuaire
+    AnnuaireWrapper
       .get_etablissement( values[:UAI] )['enseignants']
       .map do |enseignant|
 
