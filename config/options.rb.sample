@@ -104,11 +104,11 @@ ANNUAIRE = {
 #
 # Configuration du service REDIS
 #
-# REDIS = {
-#      Host: 'http://www.laclasse.com',
-#      port: 6379,
-#      redis_root: 'com.laclasse.dev.'
-# }
+REDIS = {
+  host: 'redis.dev.laclasse.lan',
+  port: 6379,
+  redis_root: 'com.laclasse.v3localhost'
+}
 
 #
 # Configuration du service de mail

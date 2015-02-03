@@ -5,6 +5,8 @@ require 'base64'
 require 'cgi'
 require 'openssl'
 
+require 'laclasse/common/cross_app/sender'
+
 require_relative '../config/options'
 
 # Module d'interfaçage avec l'annuaire
@@ -89,18 +91,18 @@ module Annuaire
     "#{uri}#{@liaison}#{service}#{@coordination}#{query};#{signature}"
   end
 
-  def send_request( service, param, expand, error_msg )
-    RestClient::Request.execute( method: :get,
-                                 url: sign( ANNUAIRE[:url], "#{service}#{CGI.escape( param )}", expand: expand ),
-                                 headers: {},
-                                 verify_ssl: @ssl_verify ) do |response, _request, _result|
-      if response.code == 200
-        return JSON.parse( response )
-      else
-        STDERR.puts "#{error_msg} : #{CGI.escape( param )}"
-      end
-    end
-  end
+  # def send_request( service, param, expand, error_msg )
+  #   RestClient::Request.execute( method: :get,
+  #                                url: sign( ANNUAIRE[:url], "#{service}#{CGI.escape( param )}", expand: expand ),
+  #                                headers: {},
+  #                                verify_ssl: @ssl_verify ) do |response, _request, _result|
+  #     if response.code == 200
+  #       return JSON.parse( response )
+  #     else
+  #       STDERR.puts "#{error_msg} : #{CGI.escape( param )}"
+  #     end
+  #   end
+  # end
 
   def search_matiere( label )
     label = URI.escape( label )
@@ -159,28 +161,32 @@ module Annuaire
   # API d'interfaçage avec l'annuaire à destination du client
   def get_matieres
     @search = false
-    send_request 'matieres', '', 'true', ''
+    # send_request 'matieres', '', 'true', ''
+    Laclasse::CrossAppSender.send_request_signed( :service_annuaire_matiere, '', 'expand' => 'true' )
   end
 
   def get_matiere( id )
     @search = false
-    send_request 'matieres/', CGI.escape( id ), 'false', 'Matière inconnue'
+    # send_request 'matieres/', CGI.escape( id ), 'false', 'Matière inconnue'
+    Laclasse::CrossAppSender.send_request_signed( :service_annuaire_matiere, "#{CGI.escape( id )}", 'expand' => 'false' )
   end
 
   # Service classes et groupes d'élèves
   def get_regroupement( id )
     @search = false
 
-    regroupement = send_request 'regroupements/', CGI.escape( id ), 'false', 'Regroupement inconnu'
+    # regroupement = send_request 'regroupements/', CGI.escape( id ), 'false', 'Regroupement inconnu'
+    regroupement = Laclasse::CrossAppSender.send_request_signed( :service_annuaire_regroupement, "#{CGI.escape( id )}", 'expand' => 'false' )
     regroupement['libelle'] = regroupement['libelle_aaf'] if regroupement['libelle'].nil?
 
     regroupement
   end
 
   # Service Utilisateur : init de la session et de son environnement
-  def get_user( id )
+  def get_user( uid )
     @search = false
-    user = send_request 'users/', CGI.escape( id ), 'true', 'User inconnu'
+    # user = send_request 'users/', CGI.escape( uid ), 'true', 'User inconnu'
+    user = Laclasse::CrossAppSender.send_request_signed( :service_annuaire_user, "#{CGI.escape( uid )}", 'expand' => 'true' )
     user.each do |key, _value|
       user[ key ] = URI.unescape( user[ key ] ) if user[ key ].is_a? String
     end
@@ -188,34 +194,34 @@ module Annuaire
     user
   end
 
-  def get_user_regroupements( id )
+  def get_user_regroupements( uid )
     @search = false
     RestClient::Request.execute( method: :get,
-                                 url: sign( ANNUAIRE[:url], "users/#{CGI.escape( id )}/regroupements", {} ),
+                                 url: sign( ANNUAIRE[:url], "users/#{CGI.escape( uid )}/regroupements", {} ),
                                  headers: {},
                                  verify_ssl: @ssl_verify ) do |response, _request, _result|
       if response.code == 200
         return JSON.parse( response )
       else
-        STDERR.puts "erreur getting user's regroupements : #{CGI.escape( id )}"
+        STDERR.puts "erreur getting user's regroupements : #{CGI.escape( uid )}"
       end
     end
   end
 
-  def put_user_profil_actif( id, profil_id, code_uai )
-    id = URI.escape( id )
+  def put_user_profil_actif( uid, profil_id, code_uai )
+    uid = URI.escape( uid )
     profil_id = URI.escape( profil_id )
     code_uai = URI.escape( code_uai )
 
     RestClient::Request.execute( method: :put,
-                                 url: sign( ANNUAIRE[:url], "users/#{id}/profil_actif", uai: code_uai, profil_id: profil_id ),
+                                 url: sign( ANNUAIRE[:url], "users/#{uid}/profil_actif", uai: code_uai, profil_id: profil_id ),
                                  headers: {},
                                  verify_ssl: @ssl_verify ) do |response, _request, _result|
       if response.code == 200
         return JSON.parse( response )[0]
       else
-        STDERR.puts "Error seeting profil_actif to #{profil_id} for user #{id} and etablissement #{code_uai}"
-        return { 'id' => nil }
+        STDERR.puts "Error seeting profil_actif to #{profil_id} for user #{uid} and etablissement #{code_uai}"
+        return { 'uid' => nil }
       end
     end
   end
@@ -223,7 +229,8 @@ module Annuaire
   # Service etablissement
   def get_etablissement( uai )
     @search = false
-    send_request 'etablissements/', CGI.escape( uai ), 'true', 'Etablissement inconnu'
+    # send_request 'etablissements/', CGI.escape( uai ), 'true', 'Etablissement inconnu'
+    Laclasse::CrossAppSender.send_request_signed( :service_annuaire_etablissement, "#{CGI.escape( uai )}", 'expand' => 'true' )
   end
 
   def get_etablissement_regroupements( uai )

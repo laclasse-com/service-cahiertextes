@@ -1,12 +1,16 @@
 #!/usr/bin/env rackup
 # -*- coding: utf-8; mode: ruby -*-
 
-require 'lib/helpers/rack'
+require 'laclasse/common/helpers/rack'
+require 'laclasse/common/laclasse_logger'
 
 require ::File.expand_path( '../config/init', __FILE__ )
 
 require ::File.expand_path( '../api', __FILE__ )
 require ::File.expand_path( '../web', __FILE__ )
+
+LOGGER = Laclasse::LoggerFactory.getLogger
+LOGGER.info("Démarrage du Cahier de  avec #{LOGGER.loggers_count} logger#{LOGGER.loggers_count > 1 ? 's' : ''}")
 
 Laclasse::Helpers::Rack.configure_rake self
 

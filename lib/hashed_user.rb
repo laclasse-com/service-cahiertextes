@@ -5,15 +5,17 @@ require_relative './hash_it'
 class HashedUser < HashIt
   def is?( profil )
     # FIXME
-    profils = Annuaire.get_user( @uid )['profils']
-    @ENTPersonProfils.include? "#{profil}:#{profils[0]['uai']}"
+    # profils = env['rack.session'][:current_user]['profils']
+    LOGGER.debug @info
+
+    profils = @profils
+    @info['ENTPersonProfils'].include? "#{profil}:#{profils[0]['uai']}"
   end
 
   def admin?
     # FIXME
-    u_a = Annuaire.get_user( @uid )
-    profil_actif = u_a['profils'].select { |p| p['actif'] }.first
-    u_a['roles']
+    profil_actif = @info['profils'].select { |p| p['actif'] }.first
+    @info['roles']
       .select { |r|
       r['etablissement_code_uai'] == profil_actif['etablissement_code_uai'] &&
         ( r['role_id'] == 'TECH' ||
@@ -25,7 +27,8 @@ class HashedUser < HashIt
   def full( env )
     utilisateur = env['rack.session'][:current_user]
 
-    user_annuaire = Annuaire.get_user( utilisateur[ 'uid' ] )
+    user_annuaire = @user_detailed # env['rack.session'][:current_user][:user_detailed]
+
     utilisateur[ 'profils' ] = user_annuaire['profils'].map do |profil|
       # renommage de champs
       profil['type'] = profil['profil_id']
@@ -41,10 +44,9 @@ class HashedUser < HashIt
     end
     utilisateur[ 'enfants' ] = user_annuaire [ 'enfants' ]
 
-    regroupements_annuaire = Annuaire.get_user_regroupements( utilisateur[ 'uid' ] )
-    utilisateur[ 'classes' ] = regroupements_annuaire[ 'classes' ]
-                               .concat( regroupements_annuaire['groupes_eleves'] )
-                               .concat( regroupements_annuaire['groupes_libres'] )
+    utilisateur[ 'classes' ] = user_annuaire[ 'classes' ]
+                               .concat( user_annuaire['groupes_eleves'] )
+                               .concat( user_annuaire['groupes_libres'] )
                                .map do |regroupement|
       if regroupement.key? 'groupe_id'
         regroupement['type'] = 'groupe'
@@ -56,8 +58,8 @@ class HashedUser < HashIt
       regroupement
     end
 
-    parametres = UserParameters.where( uid: utilisateur[ 'uid' ] ).first
-    parametres = UserParameters.create( uid: utilisateur[ 'uid' ] ) if parametres.nil?
+    parametres = UserParameters.where( uid: utilisateur[ :uid ] ).first
+    parametres = UserParameters.create( uid: utilisateur[ :uid ] ) if parametres.nil?
     parametres.update( date_connexion: Time.now )
     parametres.save
 

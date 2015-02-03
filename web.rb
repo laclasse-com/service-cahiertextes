@@ -9,12 +9,12 @@ require_relative './config/init'
 
 Bundler.require( :default, ENV['RACK_ENV'].to_sym )     # require tout les gems définis dans Gemfile
 
-require_relative './helpers/Authentication'
+require 'laclasse/common/helpers/authentication'
 
 # Application Sinatra servant de base
 module CahierDeTextesAPI
   class Web < Sinatra::Base
-    helpers CahierDeTextesApp::Helpers::Authentication
+    helpers Laclasse::Helpers::Authentication
 
     configure :production, :development do
       set :protection, true
@@ -23,7 +23,7 @@ module CahierDeTextesAPI
 
     before  do
       pass if %r{#{APP_PATH}/(auth|login)/}.match(request.path)
-      login! request.path_info unless is_logged?
+      login! request.path_info unless logged?
     end
 
     get "#{APP_PATH}/?" do
@@ -73,6 +73,5 @@ module CahierDeTextesAPI
     post "#{APP_PATH}/login/?" do
       login! "#{APP_PATH}/"
     end
-
   end
 end
