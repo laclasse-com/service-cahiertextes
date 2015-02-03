@@ -6,16 +6,16 @@ module CahierDeTextesApp
   module Helpers
     module DataExtraction
       def emploi_du_temps( user, debut, fin, uai, uid )
-        user_annuaire = Annuaire.get_user( user.uid )
+        user_annuaire = AnnuaireWrapper.get_user( user.uid )
         user_annuaire['profil_actif'] = user_annuaire['profils'].select { |p| p['actif'] }.first
 
         if %w( EVS DIR ).include?( user_annuaire['profil_actif']['profil_id'] )
-          regroupements_annuaire = Annuaire.get_etablissement_regroupements( user_annuaire['profil_actif']['etablissement_code_uai'] )
+          regroupements_annuaire = AnnuaireWrapper.get_etablissement_regroupements( user_annuaire['profil_actif']['etablissement_code_uai'] )
         else
           error!( '401 Unauthorized', 401 ) unless !uid || %w( TUT ).include?( user_annuaire['profil_actif']['profil_id'] ) && user_annuaire['enfants'].select { |e| e['enfant']['id_ent'] == uid }.length == 1
 
           uid = uid ? uid : user.uid
-          regroupements_annuaire = Annuaire.get_user_regroupements( uid )
+          regroupements_annuaire = AnnuaireWrapper.get_user_regroupements( uid )
         end
 
         regroupements_ids = regroupements_annuaire['classes']

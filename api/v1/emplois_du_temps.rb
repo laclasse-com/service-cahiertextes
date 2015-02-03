@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-require_relative '../../lib/annuaire'
+require_relative '../../lib/annuaire_wrapper'
 
 module CahierDeTextesAPI
   module V1

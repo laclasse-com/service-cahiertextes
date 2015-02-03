@@ -10,7 +10,7 @@ require 'laclasse/common/cross_app/sender'
 require_relative '../config/options'
 
 # Module d'interfaçage avec l'annuaire
-module Annuaire
+module AnnuaireWrapper
   module_function
 
   @coordination = nil

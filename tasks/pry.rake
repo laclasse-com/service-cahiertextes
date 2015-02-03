@@ -15,7 +15,7 @@ namespace :pry do
 
     require_relative '../config/constants'
     require_relative '../helpers/Authentication'
-    require_relative '../lib/annuaire'
+    require_relative '../lib/annuaire_wrapper'
     require_relative '../lib/pronote'
     require_relative '../config/database'
     require_relative '../models/models'

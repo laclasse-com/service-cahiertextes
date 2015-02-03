@@ -3,7 +3,7 @@
 # To change this template file, choose Tools | Templates
 # and open the template in the editor.
 
-require_relative '../../lib/annuaire'
+require_relative '../../lib/annuaire_wrapper'
 require 'rest-client'
 
 describe Annuaire do
@@ -18,65 +18,65 @@ describe Annuaire do
   it 'should build a canonical string mode api V3' do
     ANNUAIRE[:api_mode] = 'v3'
     a = { p2: 'v2', p1: 'v1' }
-    expect( Annuaire.build_canonical_string(a) ).to eq '?p1=v1&p2=v2;'
+    expect( AnnuaireWrapper.build_canonical_string(a) ).to eq '?p1=v1&p2=v2;'
   end
 
   it 'should build an empty canonical string mode api V3' do
     ANNUAIRE[:api_mode] = 'v3'
     a = {}
-    expect( Annuaire.build_canonical_string(a) ).to eq '?;'
+    expect( AnnuaireWrapper.build_canonical_string(a) ).to eq '?;'
   end
 
   it 'should build a canonical string mode api V2' do
     ANNUAIRE[:api_mode] = 'v2'
     a = { p2: 'v2', p1: 'v1' }
-    expect( Annuaire.build_canonical_string(a) ).to eq '&p1=v1&p2=v2;'
+    expect( AnnuaireWrapper.build_canonical_string(a) ).to eq '&p1=v1&p2=v2;'
   end
 
   it 'should build an empty canonical string mode api V2' do
     ANNUAIRE[:api_mode] = 'v2'
     a = {}
-    expect( Annuaire.build_canonical_string(a) ).to eq '&;'
+    expect( AnnuaireWrapper.build_canonical_string(a) ).to eq '&;'
   end
 
   it 'should sign the request in api V3 mode' do
     ANNUAIRE[:api_mode] = 'v3'
-    signed_url = Annuaire.sign( @uri, @srv, @args )
+    signed_url = AnnuaireWrapper.sign( @uri, @srv, @args )
 
     ts = CGI.unescape(signed_url.slice(/timestamp\=.*\;/)).sub('timestamp=', '').sub(';', '')
 
     canonical_string = "#{@uri}/#{@srv}"
-    canonical_string += Annuaire.build_canonical_string( @args )
+    canonical_string += AnnuaireWrapper.build_canonical_string( @args )
 
     canonical_string_to_sign = "#{canonical_string}#{ts};#{ANNUAIRE[:app_id]}"
 
-    signature = Annuaire.build_signature( canonical_string_to_sign, ts )
+    signature = AnnuaireWrapper.build_signature( canonical_string_to_sign, ts )
     expect( signed_url ).to eq "#{canonical_string}#{signature}"
   end
 
   it 'should sign the request in api V2 mode' do
     ANNUAIRE[:api_mode] = 'v2'
     @uri = 'http://www.dev.laclasse.com/pls/public/!ajax_server.service=ServiceApiUser&p_rendertype=none&uid='
-    signed_url = Annuaire.sign(@uri, @srv, @args)
+    signed_url = AnnuaireWrapper.sign(@uri, @srv, @args)
     ts = CGI.unescape(signed_url.slice(/timestamp\=.*\;/)).sub('timestamp=', '').sub(';', '')
-    canonical_string = Annuaire.build_canonical_string(@args)
-    signature = Annuaire.build_signature(canonical_string, ts)
+    canonical_string = AnnuaireWrapper.build_canonical_string(@args)
+    signature = AnnuaireWrapper.build_signature(canonical_string, ts)
     expect( signed_url ).to eq "#{@uri}#{@srv}#{canonical_string}#{signature}"
   end
 
   it 'should sign the request in api V3 mode without args' do
     ANNUAIRE[:api_mode] = 'v3'
     @args = {}
-    signed_url = Annuaire.sign( @uri, @srv, @args )
+    signed_url = AnnuaireWrapper.sign( @uri, @srv, @args )
 
     ts = CGI.unescape(signed_url.slice(/timestamp\=.*\;/)).sub('timestamp=', '').sub(';', '')
 
     canonical_string = "#{@uri}/#{@srv}"
-    canonical_string += Annuaire.build_canonical_string( @args )
+    canonical_string += AnnuaireWrapper.build_canonical_string( @args )
 
     canonical_string_to_sign = "#{canonical_string}#{ts};#{ANNUAIRE[:app_id]}"
 
-    signature = Annuaire.build_signature( canonical_string_to_sign, ts )
+    signature = AnnuaireWrapper.build_signature( canonical_string_to_sign, ts )
     expect( signed_url ).to eq "#{canonical_string}#{signature}"
   end
 
@@ -84,74 +84,74 @@ describe Annuaire do
     ANNUAIRE[:api_mode] = 'v2'
     @args = {}
     @uri = 'http://www.dev.laclasse.com/pls/public/!ajax_server.service=ServiceApiUser&p_rendertype=none&uid='
-    signed_url = Annuaire.sign(@uri, @srv, @args)
+    signed_url = AnnuaireWrapper.sign(@uri, @srv, @args)
     ts = CGI.unescape(signed_url.slice(/timestamp\=.*\;/)).sub('timestamp=', '').sub(';', '')
-    canonical_string = Annuaire.build_canonical_string(@args)
-    signature = Annuaire.build_signature(canonical_string, ts)
+    canonical_string = AnnuaireWrapper.build_canonical_string(@args)
+    signature = AnnuaireWrapper.build_signature(canonical_string, ts)
     expect( signed_url ).to eq "#{@uri}#{@srv}#{canonical_string}#{signature}"
   end
 
   it ': function compat_service should return users/VAA60001 for users/VAA60001 service (mode V3)' do
     ANNUAIRE[:api_mode] = 'v3'
-    expect( Annuaire.compat_service(@srv) ).to eq @srv
+    expect( AnnuaireWrapper.compat_service(@srv) ).to eq @srv
   end
 
   it ': function compat_service should return Users&uid=VAA60001 for users/VAA60001 service (mode V2)' do
     ANNUAIRE[:api_mode] = 'v2'
-    expect( Annuaire.compat_service(@srv) ).to eq 'Users&uid=VAA60001'
+    expect( AnnuaireWrapper.compat_service(@srv) ).to eq 'Users&uid=VAA60001'
   end
 
   it ': function compat_service should return etablissements/0699999Z for etablissements/0699999Z service (mode V3)' do
     ANNUAIRE[:api_mode] = 'v3'
-    expect( Annuaire.compat_service('etablissements/0699999Z') ).to eq 'etablissements/0699999Z'
+    expect( AnnuaireWrapper.compat_service('etablissements/0699999Z') ).to eq 'etablissements/0699999Z'
   end
 
   it ': function compat_service should return Etablissements&uai=0699999Z for etablissements/0699999Z service (mode V2)' do
     ANNUAIRE[:api_mode] = 'v2'
-    expect( Annuaire.compat_service('etablissements/0699999Z') ).to eq 'Etablissements&uai=0699999Z'
+    expect( AnnuaireWrapper.compat_service('etablissements/0699999Z') ).to eq 'Etablissements&uai=0699999Z'
   end
 
   it ': function compat_service should return matieres/1234 for matieres/1234 service (mode V3)' do
     ANNUAIRE[:api_mode] = 'v3'
-    expect( Annuaire.compat_service('matieres/1234') ).to eq 'matieres/1234'
+    expect( AnnuaireWrapper.compat_service('matieres/1234') ).to eq 'matieres/1234'
   end
 
   it ': function compat_service should return Matieres&code=1234 for matieres/1234 service (mode V2)' do
     ANNUAIRE[:api_mode] = 'v2'
-    expect( Annuaire.compat_service('matieres/1234') ).to eq 'Matieres&code=1234'
+    expect( AnnuaireWrapper.compat_service('matieres/1234') ).to eq 'Matieres&code=1234'
   end
 
   it ': function compat_service should return matieres/libelle/MATH for matieres/libelle/MATH (mode V3)' do
     ANNUAIRE[:api_mode] = 'v3'
-    expect( Annuaire.compat_service('matieres/libelle/MATH') ).to eq 'matieres/libelle/MATH'
+    expect( AnnuaireWrapper.compat_service('matieres/libelle/MATH') ).to eq 'matieres/libelle/MATH'
   end
 
   it ': function compat_service should return Matieres&lib=MATH for matieres/libelle/MATH (mode V2)' do
     ANNUAIRE[:api_mode] = 'v2'
-    Annuaire.set_search true
-    expect( Annuaire.compat_service('matieres/libelle/MATH') ).to eq 'Matieres&lib=MATH'
+    AnnuaireWrapper.set_search true
+    expect( AnnuaireWrapper.compat_service('matieres/libelle/MATH') ).to eq 'Matieres&lib=MATH'
   end
 
   it ': function compat_service should return regroupements/123 for regroupements/123 service (mode V3)' do
     ANNUAIRE[:api_mode] = 'v3'
-    expect( Annuaire.compat_service('regroupements/123') ).to eq 'regroupements/123'
+    expect( AnnuaireWrapper.compat_service('regroupements/123') ).to eq 'regroupements/123'
   end
 
   it ': function compat_service should return Regroupements&grp_id=123 for regroupements/123 service (mode V2)' do
     ANNUAIRE[:api_mode] = 'v2'
-    Annuaire.set_search false
-    expect( Annuaire.compat_service('regroupements') ).to eq 'Regroupements&grp_id='
+    AnnuaireWrapper.set_search false
+    expect( AnnuaireWrapper.compat_service('regroupements') ).to eq 'Regroupements&grp_id='
   end
 
   it ': function compat_service should return regroupement/groupe1 for regroupement/groupe1 service (mode V3)' do
     ANNUAIRE[:api_mode] = 'v3'
-    expect( Annuaire.compat_service('regroupement/groupe1') ).to eq 'regroupement/groupe1'
+    expect( AnnuaireWrapper.compat_service('regroupement/groupe1') ).to eq 'regroupement/groupe1'
   end
 
   it ': function compat_service should return regroupement&etablissement=0699990Z&nom=groupe1 for regroupement/groupe1 service (mode V2)' do
     ANNUAIRE[:api_mode] = 'v2'
-    Annuaire.set_search true
-    expect( Annuaire.compat_service('regroupement') ).to eq 'regroupement'
+    AnnuaireWrapper.set_search true
+    expect( AnnuaireWrapper.compat_service('regroupement') ).to eq 'regroupement'
   end
 
   # it " Rejects SSL server certificates by default" do
@@ -165,14 +165,14 @@ describe Annuaire do
   #   rescue
   #     nil
   #   end
-  #   expect{ Annuaire.get_user 'VPG60307' }.to raise_error(RestClient::SSLCertificateNotVerified)
+  #   expect{ AnnuaireWrapper.get_user 'VPG60307' }.to raise_error(RestClient::SSLCertificateNotVerified)
   # end
 
   it " Accepts SSL server certificates with VERIFY_NONE" do
     ANNUAIRE[:api_mode] = 'v2'
     ANNUAIRE[:url] = @url_annuaire_v2.gsub('http:','https:')
     SSL_VERIFY = OpenSSL::SSL::VERIFY_NONE
-    expect{ Annuaire.get_user 'VPG60307' }.to_not raise_error
+    expect{ AnnuaireWrapper.get_user 'VPG60307' }.to_not raise_error
   end
 
   # it " Rejects SSL server certificates with VERIFY_PEER" do
@@ -180,7 +180,7 @@ describe Annuaire do
   #   ANNUAIRE[:url] = @url_annuaire_v2.gsub('http:','https:')
   #   Object.send(:remove_const,:SSL_VERIFY)
   #   SSL_VERIFY = OpenSSL::SSL::VERIFY_PEER
-  #   expect{ Annuaire.get_user 'VPG60307' }.to raise_error(RestClient::SSLCertificateNotVerified)
+  #   expect{ AnnuaireWrapper.get_user 'VPG60307' }.to raise_error(RestClient::SSLCertificateNotVerified)
   # end
 
   # it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour get_user" do
@@ -188,10 +188,10 @@ describe Annuaire do
   #   ANNUAIRE[:url] = @url_annuaire_v2
   #   uid = 'VPG60307'
 
-  #   r2 = Annuaire.get_user uid
+  #   r2 = AnnuaireWrapper.get_user uid
   #   ANNUAIRE[:api_mode] = 'v3'
   #   ANNUAIRE[:url] = @url_annuaire_v3
-  #   r3 = Annuaire.get_user uid
+  #   r3 = AnnuaireWrapper.get_user uid
 
   #   expect( r2.key?('id') ).to eq r3.key?('id')
   #   expect( r2.key?('id_sconet') ).to eq r3.key?('id_sconet')
@@ -217,10 +217,10 @@ describe Annuaire do
   it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour get_etablissement" do
     ANNUAIRE[:api_mode] = 'v2'
     ANNUAIRE[:url] = @url_annuaire_v2
-    r2 = Annuaire.get_etablissement '0699990Z'
+    r2 = AnnuaireWrapper.get_etablissement '0699990Z'
     ANNUAIRE[:api_mode] = 'v3'
     ANNUAIRE[:url] = @url_annuaire_v3
-    r3 = Annuaire.get_etablissement '0699999Z'
+    r3 = AnnuaireWrapper.get_etablissement '0699999Z'
     expect( r2.key?('id') ).to eq r3.key?('id')
     expect( r2.key?('code_uai') ).to eq r3.key?('code_uai')
     expect( r2.key?('nom') ).to eq r3.key?('nom')
@@ -251,10 +251,10 @@ describe Annuaire do
   # it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour get_matiere" do
   #   ANNUAIRE[:api_mode] = 'v2'
   #   ANNUAIRE[:url] = @url_annuaire_v2
-  #   r2 =  Annuaire.get_matiere '001600'
+  #   r2 =  AnnuaireWrapper.get_matiere '001600'
   #   ANNUAIRE[:api_mode] = 'v3'
   #   ANNUAIRE[:url] = @url_annuaire_v3
-  #   r3 = Annuaire.get_matiere '001600'
+  #   r3 = AnnuaireWrapper.get_matiere '001600'
   #   expect( r2.key?('json_class') ).to eq r3.key?('json_class')
   #   expect( r2.key?('id') ).to eq r3.key?('id')
   #   expect( r2.key?('libelle_court') ).to eq r3.key?('libelle_court')
@@ -264,10 +264,10 @@ describe Annuaire do
   # it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour get_regroupement" do
   #   ANNUAIRE[:api_mode] = 'v2'
   #   ANNUAIRE[:url] = @url_annuaire_v2
-  #   r2 =  Annuaire.get_regroupement '1363'
+  #   r2 =  AnnuaireWrapper.get_regroupement '1363'
   #   ANNUAIRE[:api_mode] = 'v3'
   #   ANNUAIRE[:url] = @url_annuaire_v3
-  #   r3 = Annuaire.get_regroupement '1363'
+  #   r3 = AnnuaireWrapper.get_regroupement '1363'
   #   expect( r2.key?('id') ).to eq r3.key?('id')
   #   expect( r2.key?('etablissement_id') ).to eq r3.key?('etablissement_id')
   #   expect( r2.key?('libelle') ).to eq r3.key?('libelle')
@@ -278,10 +278,10 @@ describe Annuaire do
   # it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour search_matiere" do
   #   ANNUAIRE[:api_mode] = 'v2'
   #   ANNUAIRE[:url] = @url_annuaire_v2
-  #   r2 =  Annuaire.search_matiere 'Soutien'
+  #   r2 =  AnnuaireWrapper.search_matiere 'Soutien'
   #   ANNUAIRE[:api_mode] = 'v3'
   #   ANNUAIRE[:url] = @url_annuaire_v3
-  #   r3 = Annuaire.search_matiere 'Soutien'
+  #   r3 = AnnuaireWrapper.search_matiere 'Soutien'
   #   expect( r2.key?('json_class') ).to eq r3.key?('json_class')
   #   expect( r2.key?('id') ).to eq r3.key?('id')
   #   expect( r2.key?('libelle_court') ).to eq r3.key?('libelle_court')
@@ -291,10 +291,10 @@ describe Annuaire do
   # it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour get_etablissement_regroupements" do
   #   ANNUAIRE[:api_mode] = 'v2'
   #   ANNUAIRE[:url] = @url_annuaire_v2
-  #   r2 = Annuaire.get_etablissement_regroupements '0699990Z'
+  #   r2 = AnnuaireWrapper.get_etablissement_regroupements '0699990Z'
   #   ANNUAIRE[:api_mode] = 'v3'
   #   ANNUAIRE[:url] = @url_annuaire_v3
-  #   r3 = Annuaire.get_etablissement_regroupements '0699999Z'
+  #   r3 = AnnuaireWrapper.get_etablissement_regroupements '0699999Z'
   #   expect( r2.key?('classes') ).to eq r3.key?('classes')
   #   expect( r2.key?('groupes_eleves') ).to eq r3.key?('groupes_eleves')
   #   expect( r2.key?('groupes_libres') ).to eq r3.key?('groupes_libres')
@@ -303,31 +303,31 @@ describe Annuaire do
   # it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour search_regroupement" do
   #   ANNUAIRE[:api_mode] = 'v2'
   #   ANNUAIRE[:url] = @url_annuaire_v2
-  #   r2 = Annuaire.search_regroupement '0699990Z', 'test_aaf24'
+  #   r2 = AnnuaireWrapper.search_regroupement '0699990Z', 'test_aaf24'
   #   ANNUAIRE[:api_mode] = 'v3'
   #   ANNUAIRE[:url] = @url_annuaire_v3
-  #   r3 = Annuaire.search_regroupement '0699999Z', 'test'
+  #   r3 = AnnuaireWrapper.search_regroupement '0699999Z', 'test'
   # end
 
   # it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour search_utilisateur" do
   #   ANNUAIRE[:api_mode] = 'v2'
   #   ANNUAIRE[:url] = @url_annuaire_v2
-  #   Annuaire.set_search true
-  #   r2 = Annuaire.search_utilisateur '0699990Z', 'Levallois', 'Pierre-Gilles'
+  #   AnnuaireWrapper.set_search true
+  #   r2 = AnnuaireWrapper.search_utilisateur '0699990Z', 'Levallois', 'Pierre-Gilles'
   #   ANNUAIRE[:api_mode] = 'v3'
   #   ANNUAIRE[:url] = @url_annuaire_v3
-  #   r3 = Annuaire.search_utilisateur '0699999Z', 'Levallois', 'Pierre-Gilles'
+  #   r3 = AnnuaireWrapper.search_utilisateur '0699999Z', 'Levallois', 'Pierre-Gilles'
   #   #   r3.each { |k, v| puts "r2.key?('"+k.to_s+"').should be r3.key?('"+k.to_s+"')" }
   # end
 
   # it " Compare les résultats des appels a l'annuaire en mode v2 et v3 pour get_user_regroupements" do
   #   ANNUAIRE[:api_mode] = 'v2'
   #   ANNUAIRE[:url] = @url_annuaire_v2
-  #   Annuaire.set_search true
-  #   r2 =  Annuaire.get_user_regroupements 'VPG60307'
+  #   AnnuaireWrapper.set_search true
+  #   r2 =  AnnuaireWrapper.get_user_regroupements 'VPG60307'
   #   ANNUAIRE[:api_mode] = 'v3'
   #   ANNUAIRE[:url] = @url_annuaire_v3
-  #   r3 = Annuaire.get_user_regroupements 'VAA61315'
+  #   r3 = AnnuaireWrapper.get_user_regroupements 'VAA61315'
   #   r3.each { |k, _v| puts 'r2.key?(\'' + k.to_s + '\').should be r3.key?(\'' + k.to_s + '\')' }
   #   expect( r2.key?('classes') ).to eq r3.key?('classes')
   #   expect( r2.key?('groupes_eleves') ).to eq r3.key?('groupes_eleves')

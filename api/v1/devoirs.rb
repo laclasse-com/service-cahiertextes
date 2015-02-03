@@ -8,7 +8,6 @@ module CahierDeTextesAPI
     #   - enseignants pour consultation et édition
     #   - principaux pour consultation
     class DevoirsAPI < Grape::API
-
       desc 'renvoi tous les devoirs concernant l\'utilisateur durant la période donnée'
       params {
         optional :debut, type: Date
@@ -17,14 +16,14 @@ module CahierDeTextesAPI
       }
       get '/' do
         if params[:uid]
-          user_annuaire = Annuaire.get_user( user.uid )
+          user_annuaire = AnnuaireWrapper.get_user( user.uid )
           if user_annuaire['profils'].select { |p| p['actif'] }.first['profil_id'] == 'TUT' && !( user_annuaire['enfants'].select { |e| e['enfant']['id_ent'] == params[:uid] }.first.nil? )
-            regroupements_annuaire = Annuaire.get_user_regroupements( params[:uid] )
+            regroupements_annuaire = AnnuaireWrapper.get_user_regroupements( params[:uid] )
           else
             error!( '401 Unauthorized', 401 )
           end
         else
-          regroupements_annuaire = Annuaire.get_user_regroupements( user.uid )
+          regroupements_annuaire = AnnuaireWrapper.get_user_regroupements( user.uid )
         end
 
         regroupements_ids = regroupements_annuaire['classes']
