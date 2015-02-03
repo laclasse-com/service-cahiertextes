@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
 require_relative '../../models/models'
-require_relative '../../lib/pronote'
-require_relative '../../lib/udt'
 
 module CahierDeTextesAPI
   module V1
