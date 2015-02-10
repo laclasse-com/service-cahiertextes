@@ -18,9 +18,14 @@ class HashedUser < HashIt
   end
 
   def regroupements_ids( enfant_id = nil )
+    LOGGER.debug 'Collecting regroupements IDs'
+
     case
     when %w( EVS DIR ).include?( @user_detailed['profil_actif']['profil_id'] )
-      etablissement = AnnuaireWrapper.get_etablissement( @user_detailed['profil_actif']['uai'] )
+      LOGGER.debug "from the Etablissement #{@user_detailed['profil_actif']['etablissement_code_uai']}"
+
+      etablissement = AnnuaireWrapper.get_etablissement( @user_detailed['profil_actif']['etablissement_code_uai'] )
+      LOGGER.debug "#{etablissement}"
 
       etablissement['classes']
         .concat( etablissement['groupes_eleves'] )
@@ -28,9 +33,12 @@ class HashedUser < HashIt
         .map { |regroupement| regroupement['id'] }
         .compact
     when %w( TUT ).include?( @user_detailed['profil_actif']['profil_id'] )
+      LOGGER.debug "from children #{enfant_id}"
       [] if enfant_id.nil?
 
       enfant = AnnuaireWrapper.get_user( enfant_id ) # FIXME: enfant_actif ?
+      LOGGER.debug "#{enfant}"
+
       enfant['classes']
         .concat( enfant['groupes_eleves'] )
         .concat( enfant['groupes_libres'] )
@@ -41,6 +49,7 @@ class HashedUser < HashIt
       }
         .compact
     else
+      LOGGER.debug 'from user profile'
       @user_detailed['classes']
         .concat( @user_detailed['groupes_eleves'] )
         .concat( @user_detailed['groupes_libres'] )

@@ -120,10 +120,9 @@ angular.module( 'cahierDeTextesClientApp' )
     .factory('EmploisDuTemps',
 	     [ '$resource', 'APP_PATH', 'API_VERSION',
 	       function( $resource, APP_PATH, API_VERSION ) {
-		   return $resource( APP_PATH + '/api/' + API_VERSION + '/emplois_du_temps/du/:debut/au/:fin',
+		   return $resource( APP_PATH + '/api/' + API_VERSION + '/emplois_du_temps',
 				     { debut: '@debut',
 				       fin: '@fin',
-				       uai: '@uai',
 				       uid: '@uid' } );
 	       } ] );
 

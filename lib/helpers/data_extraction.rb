@@ -5,8 +5,10 @@ require_relative '../../models/models'
 module CahierDeTextesApp
   module Helpers
     module DataExtraction
-      def emploi_du_temps( debut, fin, regroupements_ids, uid )
+      def emploi_du_temps( debut, fin, regroupements_ids, eleve_id )
         # Nota Bene: creneau[:semaines_de_presence][ 1 ] == première semaine de janvier
+        LOGGER.debug "Starting EdT collection from #{debut} to #{fin} for #{regroupements_ids}"
+
         CreneauEmploiDuTemps
           .association_join( :enseignants )
           .association_join( :regroupements )
@@ -15,12 +17,13 @@ module CahierDeTextesApp
           .where( regroupement_id: regroupements_ids )
           .all
           .map do |creneau|
-
+          # LOGGER.debug "Treating Creneau #{creneau}"
           ( debut .. fin )
             .select { |day| day.wday == creneau.jour_de_la_semaine } # only the same weekday as the creneau
             .map do |jour|
-
               if creneau[:semaines_de_presence][ jour.cweek ] == 1
+                # LOGGER.debug "Day #{jour}"
+
                 cahier_de_textes = CahierDeTextes.where( regroupement_id: creneau[:regroupement_id] ).first
                 cahier_de_textes = CahierDeTextes.create( date_creation: Time.now,
                                                           regroupement_id: creneau[:regroupement_id] ) if cahier_de_textes.nil?
@@ -45,7 +48,8 @@ module CahierDeTextesApp
                     hdevoir = devoir.to_hash
                     hdevoir[:ressources] = devoir.ressources.map { |rsrc| rsrc.to_hash }
                     hdevoir[:type_devoir_description] = devoir.type_devoir.description
-                    hdevoir[:fait] = devoir.fait_par?( uid ) unless uid.nil?
+
+                    hdevoir[:fait] = devoir.fait_par?( eleve_id ) unless eleve_id.nil?
 
                     hdevoir
                   end
