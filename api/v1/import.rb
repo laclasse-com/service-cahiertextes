@@ -9,7 +9,7 @@ module CahierDeTextesAPI
       format :json
 
       before do
-        error!( '401 Unauthorized', 401 ) unless user.is?( 'DIR' )
+        error!( '401 Unauthorized', 401 ) unless user_is_a?( 'DIR' )
       end
 
       desc 'Receive a Pronote XML file and load it in DB.'
@@ -28,7 +28,7 @@ module CahierDeTextesAPI
         requires :id_annuaire
       }
       put '/mrpni/:sha256/est/:id_annuaire' do
-        error!( '401 Unauthorized', 401 ) unless user.is?( 'DIR' ) || user.admin?
+        error!( '401 Unauthorized', 401 ) unless user_is_a?( 'DIR' ) || user_is_admin?
 
         fi = FailedIdentification.where( sha256: params[:sha256] ).first
         unless fi.nil?

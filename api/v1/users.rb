@@ -7,7 +7,7 @@ module CahierDeTextesAPI
     class UsersAPI < Grape::API
       desc 'renvoi les infos de l\'utilisateur identifié'
       get '/current' do
-        user.full( env )
+        user_verbose
       end
 
       desc 'met à jour les paramètres utilisateurs'
@@ -20,19 +20,19 @@ module CahierDeTextesAPI
         parametres.update( parameters: params[:parametres] )
         parametres.save
 
-        user.full( env )
+        user_verbose
       end
 
       desc 'efface toute trace de l\'utilisateur identifié'
       delete '/:uid' do
-        error!( '401 Unauthorized', 401 ) unless user.admin?
+        error!( '401 Unauthorized', 401 ) unless user_is_admin?
 
         DataManagement::User.delete( params[:uid] )
       end
 
       desc 'Merge les données de l\'utilisateur source_id vers l\'utilisateur target_id'
       put '/:target_uid/merge/:source_uid' do
-        error!( '401 Unauthorized', 401 ) unless user.admin?
+        error!( '401 Unauthorized', 401 ) unless user_is_admin?
 
         DataManagement::User.merge( params[:target_uid], params[:source_uid] )
       end
