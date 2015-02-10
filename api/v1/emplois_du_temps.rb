@@ -14,7 +14,10 @@ module CahierDeTextesAPI
         optional :uid
       }
       get '/du/:debut/au/:fin' do
-        emploi_du_temps( user, Date.parse( params[:debut].iso8601 ), Date.parse( params[:fin].iso8601 ), params[:uai], params[:uid] )
+        emploi_du_temps( Date.parse( params[:debut].iso8601 ),
+                         Date.parse( params[:fin].iso8601 ),
+                         user.regroupements_ids( params[:uid] ),
+                         params[:uid] )
       end
 
       desc 'emploi du temps de l\'utilisateur durant l\'intervalle de dates donné'
@@ -26,7 +29,10 @@ module CahierDeTextesAPI
         optional :uid
       }
       get  do
-        emploi_du_temps( user, Date.parse( params[:start].iso8601 ), Date.parse( params[:end].iso8601 ), params[:uai], params[:uid] )
+        emploi_du_temps( Date.parse( params[:debut].iso8601 ),
+                         Date.parse( params[:fin].iso8601 ),
+                         user.regroupements_ids( params[:uid] ),
+                         params[:uid] )
       end
     end
   end

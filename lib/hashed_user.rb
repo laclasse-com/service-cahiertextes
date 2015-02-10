@@ -4,24 +4,53 @@ require_relative './hash_it'
 
 class HashedUser < HashIt
   def is?( profil )
-    # FIXME
-    # profils = env['rack.session'][:current_user]['profils']
-    LOGGER.debug @info
-
-    profils = @profils
-    @info['ENTPersonProfils'].include? "#{profil}:#{profils[0]['uai']}"
+    @info['ENTPersonProfils'].include? "#{profil}:#{@user_detailed['profils'][0]['uai']}"
   end
 
   def admin?
-    # FIXME
-    profil_actif = @info['profils'].select { |p| p['actif'] }.first
-    @info['roles']
-      .select { |r|
-      r['etablissement_code_uai'] == profil_actif['etablissement_code_uai'] &&
-        ( r['role_id'] == 'TECH' ||
-          r['role_id'].match('ADM.*') )
+    @user_detailed['roles']
+      .select { |role|
+      role['etablissement_code_uai'] == @user_detailed['profil_actif']['etablissement_code_uai'] &&
+        ( role['role_id'] == 'TECH' ||
+          role['role_id'].match('ADM.*') )
     }
       .length > 0
+  end
+
+  def regroupements_ids( enfant_id = nil )
+    case
+    when %w( EVS DIR ).include?( @user_detailed['profil_actif']['profil_id'] )
+      etablissement = AnnuaireWrapper.get_etablissement( @user_detailed['profil_actif']['uai'] )
+
+      etablissement['classes']
+        .concat( etablissement['groupes_eleves'] )
+        .concat( etablissement['groupes_libres'] )
+        .map { |regroupement| regroupement['id'] }
+        .compact
+    when %w( TUT ).include?( @user_detailed['profil_actif']['profil_id'] )
+      [] if enfant_id.nil?
+
+      enfant = AnnuaireWrapper.get_user( enfant_id ) # FIXME: enfant_actif ?
+      enfant['classes']
+        .concat( enfant['groupes_eleves'] )
+        .concat( enfant['groupes_libres'] )
+        .select { |regroupement| regroupement['etablissement_code'] == enfant['profil_actif']['uai'] }
+        .map { |regroupement|
+        regroupement['classe_id'] if regroupement.key? 'classe_id'
+        regroupement['groupe_id'] if regroupement.key? 'groupe_id'
+      }
+        .compact
+    else
+      @user_detailed['classes']
+        .concat( @user_detailed['groupes_eleves'] )
+        .concat( @user_detailed['groupes_libres'] )
+        .select { |regroupement| regroupement['etablissement_code'] == @user_detailed['profil_actif']['uai'] }
+        .map { |regroupement|
+        regroupement['classe_id'] if regroupement.key? 'classe_id'
+        regroupement['groupe_id'] if regroupement.key? 'groupe_id'
+      }
+        .compact
+    end
   end
 
   def full( env )
