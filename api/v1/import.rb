@@ -14,7 +14,7 @@ module CahierDeTextesAPI
 
       desc 'Receive a Pronote XML file and load it in DB.'
       post '/pronote' do
-        error!( '401 Unauthorized', 401 ) unless user.ENTPersonProfils.include? "DIR:#{ProNote.extract_uai_from_xml( File.open( params[:file][:tempfile] ) )}"
+        error!( '401 Unauthorized', 401 ) unless env['rack.session'][:current_user][:info]['ENTPersonProfils'].include? "DIR:#{ProNote.extract_uai_from_xml( File.open( params[:file][:tempfile] ) )}"
 
         # on retourne un log succint des infos chargées
         { filename: params[:file][:filename],
