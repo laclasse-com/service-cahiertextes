@@ -77,7 +77,7 @@ module CahierDeTextesApp
                     hdevoir = devoir.to_hash
                     hdevoir[:ressources] = devoir.ressources.map { |rsrc| rsrc.to_hash }
                     hdevoir[:type_devoir_description] = devoir.type_devoir.description
-                    hdevoir[:fait] = devoir.fait_par?( user.uid )
+                    hdevoir[:fait] = devoir.fait_par?( uid )
 
                     hdevoir
                   end
