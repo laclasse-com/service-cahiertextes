@@ -3,12 +3,12 @@
 module CahierDeTextesApp
   module Helpers
     module User
-      def rack_session_current_user
+      def user
         env['rack.session'][:current_user]
       end
 
       def user_is_admin_in_etablissement?( uai )
-        rack_session_current_user[:user_detailed]['roles']
+        user[:user_detailed]['roles']
           .select { |role|
           role['etablissement_code_uai'] == uai &&
             ( role['role_id'] == 'TECH' ||
@@ -18,47 +18,56 @@ module CahierDeTextesApp
       end
 
       def user_is_a?( profils_ids )
-        profils_ids.reduce( true ) { |memo, profil_id|
-          memo || rack_session_current_user[:user_detailed]['profil_actif']['profil_type'] == profil_id
+        profils_ids.reduce( false ) { |memo, profil_id|
+          memo || user[:user_detailed]['profil_actif']['profil_id'] == profil_id
         }
       end
 
       def user_is_admin?
-        user_is_admin_in_etablissement?( rack_session_current_user[:user_detailed]['profil_actif']['etablissement_code_uai'] )
+        user_is_admin_in_etablissement?( user[:user_detailed]['profil_actif']['etablissement_code_uai'] )
+      end
+
+      def user_belongs_to_profils_or_is_admin?( profils_ids, admin )
+        ( profils_ids.empty? && admin && user_is_admin? ) ||
+          ( user_is_a?( profils_ids ) || ( admin && user_is_admin? ) )
       end
 
       def user_needs_to_be( profils_ids, admin )
-        error!( '401 Unauthorized', 401 ) unless ( profils_ids.empty? || user_is_a?( profils_ids ) ) || ( admin && user_is_admin? )
+        error!( '401 Unauthorized', 401 ) unless user_belongs_to_profils_or_is_admin?( profils_ids, admin )
       end
 
       def user_verbose
-        utilisateur = rack_session_current_user
+        utilisateur = user
 
-        utilisateur[ 'profils' ] = rack_session_current_user[:user_detailed]['profils'].map do |profil|
-          # renommage de champs
-          profil['type'] = profil['profil_id']
-          profil['uai'] = profil['etablissement_code_uai']
-          profil['etablissement'] = profil['etablissement_nom']
-          profil['nom'] = profil['profil_nom']
+        LOGGER.debug '1er map'
+        LOGGER.debug utilisateur[:user_detailed]['profils']
 
+        utilisateur[ 'profils' ] = utilisateur[:user_detailed]['profils'].map do |profil|
           # calcule du droit d'admin, true pour les TECH et les ADM
           profil['admin'] = user_is_admin_in_etablissement?( profil['etablissement_code_uai'] )
 
           profil['classes'] = AnnuaireWrapper.get_etablissement_regroupements( profil['uai'] ) if profil['type'] == 'EVS'
           profil
         end
-        utilisateur[ 'enfants' ] = rack_session_current_user[:user_detailed] [ 'enfants' ]
 
-        utilisateur[ 'classes' ] = rack_session_current_user[:user_detailed][ 'classes' ]
-                                   .concat( rack_session_current_user[:user_detailed]['groupes_eleves'] )
-                                   .concat( rack_session_current_user[:user_detailed]['groupes_libres'] )
+        utilisateur[ 'profil_actif' ] = user[:user_detailed][ 'profil_actif' ]
+
+        utilisateur[ 'enfants' ] = user[:user_detailed][ 'enfants' ]
+
+        LOGGER.debug '2eme map'
+
+        utilisateur[ 'classes' ] = user[:user_detailed][ 'classes' ]
+                                   .concat( user[:user_detailed]['groupes_eleves'] )
+                                   .concat( user[:user_detailed]['groupes_libres'] )
                                    .map do |regroupement|
           if regroupement.key? 'groupe_id'
             regroupement['type'] = 'groupe'
-            regroupement['classe_id'] = regroupement['groupe_id']
-            regroupement['classe_libelle'] = regroupement['groupe_libelle']
+            regroupement['id'] = regroupement['groupe_id']
+            regroupement['libelle'] = regroupement['groupe_libelle']
           else
             regroupement['type'] = 'classe'
+            regroupement['id'] = regroupement['classe_id']
+            regroupement['libelle'] = regroupement['classe_libelle']
           end
           regroupement
         end
@@ -73,30 +82,35 @@ module CahierDeTextesApp
         utilisateur[ 'marqueur_xiti' ] = ''
         utilisateur[ 'marqueur_xiti' ] = '<script>' + RestClient.get( "https://www.laclasse.com/pls/public/xiti_men.get_marqueur_ctv3?plogin=#{utilisateur['user']}" ) + '</script>' if ANNUAIRE[:api_mode] == 'v2'
 
+        # shaving useless infos
+        utilisateur[:user_detailed].delete( 'etablissements' )
+        utilisateur[:user_detailed].delete( 'applications' )
+        utilisateur[:user_detailed].delete( 'ressources_numeriques' )
+        utilisateur[:user_detailed].delete( 'profils' )
+        utilisateur[:user_detailed].delete( 'profil_actif' )
+        utilisateur[:user_detailed].delete( 'enfants' )
+        utilisateur[:user_detailed].delete( 'classes' )
+        utilisateur[:user_detailed].delete( 'groupes_eleves' )
+        utilisateur[:user_detailed].delete( 'groupes_libres' )
+        utilisateur[:user_detailed].delete( 'roles' )
+
         utilisateur
       end
 
       def user_regroupements_ids( enfant_id = nil )
-        LOGGER.debug 'Collecting regroupements IDs'
-
         case
-        when %w( EVS DIR ).include?( rack_session_current_user[:user_detailed]['profil_actif']['profil_id'] )
-          LOGGER.debug "from the Etablissement #{rack_session_current_user[:user_detailed]['profil_actif']['etablissement_code_uai']}"
-
-          etablissement = AnnuaireWrapper.get_etablissement( rack_session_current_user[:user_detailed]['profil_actif']['etablissement_code_uai'] )
-          LOGGER.debug "#{etablissement}"
+        when %w( EVS DIR ).include?( user[:user_detailed]['profil_actif']['profil_id'] )
+          etablissement = AnnuaireWrapper.get_etablissement( user[:user_detailed]['profil_actif']['etablissement_code_uai'] )
 
           etablissement['classes']
             .concat( etablissement['groupes_eleves'] )
             .concat( etablissement['groupes_libres'] )
             .map { |regroupement| regroupement['id'] }
             .compact
-        when %w( TUT ).include?( rack_session_current_user[:user_detailed]['profil_actif']['profil_id'] )
-          LOGGER.debug "from children #{enfant_id}"
+        when %w( TUT ).include?( user[:user_detailed]['profil_actif']['profil_id'] )
           [] if enfant_id.nil?
 
           enfant = AnnuaireWrapper.get_user( enfant_id ) # FIXME: enfant_actif ?
-          LOGGER.debug "#{enfant}"
 
           enfant['classes']
             .concat( enfant['groupes_eleves'] )
@@ -108,14 +122,12 @@ module CahierDeTextesApp
           }
             .compact
         else
-          LOGGER.debug 'from user profile'
-          rack_session_current_user[:user_detailed]['classes']
-            .concat( rack_session_current_user[:user_detailed]['groupes_eleves'] )
-            .concat( rack_session_current_user[:user_detailed]['groupes_libres'] )
-            .select { |regroupement| regroupement['etablissement_code'] == rack_session_current_user[:user_detailed]['profil_actif']['etablissement_code_uai'] }
+          user[:user_detailed]['classes']
+            .concat( user[:user_detailed]['groupes_eleves'] )
+            .concat( user[:user_detailed]['groupes_libres'] )
+            .select { |regroupement| regroupement['etablissement_code'] == user[:user_detailed]['profil_actif']['etablissement_code_uai'] }
             .map { |regroupement|
-            regroupement['classe_id'] if regroupement.key? 'classe_id'
-            regroupement['groupe_id'] if regroupement.key? 'groupe_id'
+            regroupement.key?( 'classe_id' ) ? regroupement['classe_id'] : regroupement['groupe_id']
           }
             .compact
         end

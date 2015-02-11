@@ -12,8 +12,8 @@ angular.module( 'cahierDeTextesClientApp' )
 				   profil.classes = _.chain(response.classes)
 				       .filter( function( classe ) { return classe.etablissement_code == profil.uai; } )
 				       .map( function( classe ) {
-					   return { id: classe.classe_id,
-						    libelle: classe.classe_libelle,
+					   return { id: classe.id,
+						    libelle: classe.libelle,
 						    type: classe.type };
 				       } )
 				       .uniq( function( item ) { return item.id; } )
@@ -31,7 +31,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				       .reject( function( item ) { return _.isUndefined( item.id ); } )
 				       .value();
 			       } );
-			       response.profil_actif = _(response.profils).findWhere( { actif: true } );
+			       // response.profil_actif = _(response.profils).findWhere( { actif: true } );
 
 			       if ( response.enfants.length > 0 ) {
 				   response.enfant_actif = response.enfants[ 0 ];
