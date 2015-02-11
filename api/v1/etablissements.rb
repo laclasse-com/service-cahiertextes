@@ -6,7 +6,7 @@ module CahierDeTextesAPI
       format :json
 
       before  do
-        error!( '401 Unauthorized', 401 ) unless user_is_a?( 'DIR' ) || user_is_a?( 'ENS' )
+        user_needs_to_be( %w( DIR ENS ), false )
       end
 
       desc 'statistiques des cahiers de textes par classes/mois/matières'

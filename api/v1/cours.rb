@@ -14,7 +14,7 @@ module CahierDeTextesAPI
         # pas de gestion restriction d'accès sur les get
         next if request.get?
 
-        error!( '401 Unauthorized', 401 ) unless user_is_a?( 'ENS' ) || user_is_a?( 'DIR' )
+        user_needs_to_be( %w( ENS DIR ), false )
       end
 
       desc 'renvoi le détail d\'une séquence pédagogique'
@@ -51,7 +51,7 @@ module CahierDeTextesAPI
         optional :ressources
       }
       post do
-        error!( '401 Unauthorized', 401 ) unless user_is_a?( 'ENS' ) || user_is_admin?
+        user_needs_to_be( %w( ENS ), true )
 
         cahier_de_textes = CahierDeTextes.where( regroupement_id: params[:regroupement_id] ).first
         cahier_de_textes = CahierDeTextes.create( date_creation: Time.now,
@@ -87,7 +87,7 @@ module CahierDeTextesAPI
         optional :ressources, type: Array
       }
       put '/:id' do
-        error!( '401 Unauthorized', 401 ) unless user_is_a?( 'ENS' ) || user_is_admin?
+        user_needs_to_be( %w( ENS ), true )
 
         cours = Cours[ params[:id] ]
 
@@ -122,7 +122,7 @@ module CahierDeTextesAPI
         requires :id
       }
       put '/:id/valide' do
-        error!( '401 Unauthorized', 401 ) unless user_is_a?( 'DIR' )
+        user_needs_to_be( %w( DIR ), false )
 
         cours = Cours[ params[:id] ]
 
@@ -149,7 +149,7 @@ module CahierDeTextesAPI
         requires :date, type: Date
       }
       put '/:id/copie/regroupement/:regroupement_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date/:date' do
-        error!( '401 Unauthorized', 401 ) unless user_is_a?( 'ENS' ) || user_is_admin?
+        user_needs_to_be( %w( ENS ), true )
 
         cours = Cours[ params[:id] ]
 
@@ -192,7 +192,7 @@ module CahierDeTextesAPI
         requires :id
       }
       delete '/:id' do
-        error!( '401 Unauthorized', 401 ) unless user_is_a?( 'ENS' ) || user_is_admin?
+        user_needs_to_be( %w( ENS ), true )
 
         cours = Cours[ params[:id] ]
 

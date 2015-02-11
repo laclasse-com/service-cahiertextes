@@ -17,11 +17,9 @@ module CahierDeTextesAPI
       get '/' do
         if params[:uid]
           user_annuaire = AnnuaireWrapper.get_user( env['rack.session'][:current_user][:uid] )
-          if user_annuaire['profils'].select { |p| p['actif'] }.first['profil_id'] == 'TUT' && !( user_annuaire['enfants'].select { |e| e['enfant']['id_ent'] == params[:uid] }.first.nil? )
-            regroupements_annuaire = AnnuaireWrapper.get_user_regroupements( params[:uid] )
-          else
-            error!( '401 Unauthorized', 401 )
-          end
+          error!( '401 Unauthorized', 401 ) unless user_annuaire['profils'].select { |p| p['actif'] }.first['profil_id'] == 'TUT' && !( user_annuaire['enfants'].select { |e| e['enfant']['id_ent'] == params[:uid] }.first.nil? )
+
+          regroupements_annuaire = AnnuaireWrapper.get_user_regroupements( params[:uid] )
         else
           regroupements_annuaire = AnnuaireWrapper.get_user_regroupements( env['rack.session'][:current_user][:uid] )
         end
@@ -109,7 +107,7 @@ module CahierDeTextesAPI
         optional :temps_estime
       }
       post  do
-        error!( '401 Unauthorized', 401 ) unless user_is_a?( 'ENS' ) || user_is_admin?
+        user_needs_to_be( %w( ENS ), true )
 
         if CreneauEmploiDuTemps[ params[:creneau_emploi_du_temps_id] ].nil?
           error!( 'Paramètres invalides', 404 )
@@ -175,7 +173,7 @@ module CahierDeTextesAPI
         optional :temps_estime
       }
       put '/:id' do
-        error!( '401 Unauthorized', 401 ) unless user_is_a?( 'ENS' ) || user_is_admin?
+        user_needs_to_be( %w( ENS ), true )
 
         devoir = Devoir[ params[:id] ]
         if devoir.nil?
@@ -220,7 +218,7 @@ module CahierDeTextesAPI
         requires :date_due
       }
       put '/:id/copie/cours/:cours_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date_due/:date_due' do
-        error!( '401 Unauthorized', 401 ) unless user_is_a?( 'ENS' ) || user_is_admin?
+        user_needs_to_be( %w( ENS ), true )
 
         devoir = Devoir[ params[:id] ]
 
@@ -244,7 +242,7 @@ module CahierDeTextesAPI
         requires :id
       }
       put '/:id/fait' do
-        error!( '401 Unauthorized', 401 ) unless user_is_a? 'ELV'
+        user_needs_to_be( %w( ELV ), false )
 
         devoir = Devoir[ params[:id] ]
         devoir.fait_par?( env['rack.session'][:current_user][:uid] ) ? devoir.a_faire_par!( env['rack.session'][:current_user][:uid] ) : devoir.fait_par!( env['rack.session'][:current_user][:uid] )
@@ -269,7 +267,7 @@ module CahierDeTextesAPI
         requires :id
       }
       delete '/:id' do
-        error!( '401 Unauthorized', 401 ) unless user_is_a?( 'ENS' ) || user_is_admin?
+        user_needs_to_be( %w( ENS ), true )
 
         devoir = Devoir[ params[:id] ]
 

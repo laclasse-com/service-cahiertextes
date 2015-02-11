@@ -91,7 +91,7 @@ module CahierDeTextesAPI
       post  do
         LOGGER.debug env['rack.session'][:current_user][:uid]
 
-        error!( '401 Unauthorized', 401 ) unless user_is_a?( 'ENS' ) || user_is_admin?
+        user_needs_to_be( %w( ENS ), true )
 
         plage_horaire_debut = PlageHoraire.where(debut: params[:heure_debut] ).first
         if plage_horaire_debut.nil?
@@ -150,7 +150,7 @@ module CahierDeTextesAPI
         optional :semaines_de_presence_salle, type: Fixnum
       }
       put '/:id'  do
-        error!( '401 Unauthorized', 401 ) unless user_is_a?( 'ENS' ) || user_is_admin?
+        user_needs_to_be( %w( ENS ), true )
 
         creneau = CreneauEmploiDuTemps[ params[:id] ]
         unless creneau.nil?
@@ -227,7 +227,7 @@ module CahierDeTextesAPI
         requires :date_creneau, type: Date
       }
       delete '/:id' do
-        error!( '401 Unauthorized', 401 ) unless user_is_a?( 'ENS' ) || user_is_admin?
+        user_needs_to_be( %w( ENS ), true )
 
         creneau = CreneauEmploiDuTemps[ params[:id] ]
         unless creneau.nil?

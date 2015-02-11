@@ -9,12 +9,13 @@ module CahierDeTextesAPI
       format :json
 
       before do
-        error!( '401 Unauthorized', 401 ) unless user_is_a?( 'DIR' )
+        user_needs_to_be( %w( DIR ), false )
       end
 
       desc 'Receive a Pronote XML file and load it in DB.'
       post '/pronote' do
-        error!( '401 Unauthorized', 401 ) unless env['rack.session'][:current_user][:info]['ENTPersonProfils'].include? "DIR:#{ProNote.extract_uai_from_xml( File.open( params[:file][:tempfile] ) )}"
+        uai = ProNote.extract_uai_from_xml( File.open( params[:file][:tempfile] ) )
+        error!( '401 Unauthorized', 401 ) unless env['rack.session'][:current_user][:user_detailed]['profils'].select { |profil| profil['profil_type'] == 'DIR' && profil['etablissement_code_uai'] == uai }.length > 0
 
         # on retourne un log succint des infos chargées
         { filename: params[:file][:filename],
@@ -28,7 +29,7 @@ module CahierDeTextesAPI
         requires :id_annuaire
       }
       put '/mrpni/:sha256/est/:id_annuaire' do
-        error!( '401 Unauthorized', 401 ) unless user_is_a?( 'DIR' ) || user_is_admin?
+        user_needs_to_be( %w( DIR ), true )
 
         fi = FailedIdentification.where( sha256: params[:sha256] ).first
         unless fi.nil?

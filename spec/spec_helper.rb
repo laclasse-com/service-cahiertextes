@@ -15,7 +15,7 @@ require_relative '../config/database'
 require_relative '../api'
 require_relative '../web'
 
-require_relative '../lib/HashedUser'
+require_relative '../lib/helpers/user'
 
 require_relative './helper_lib/table_cleaner'
 require_relative './helper_lib/test_data'
