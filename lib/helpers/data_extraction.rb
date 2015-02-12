@@ -17,13 +17,10 @@ module CahierDeTextesApp
           .where( regroupement_id: regroupements_ids )
           .all
           .map do |creneau|
-          # LOGGER.debug "Treating Creneau #{creneau}"
           ( debut .. fin )
             .select { |day| day.wday == creneau.jour_de_la_semaine } # only the same weekday as the creneau
             .map do |jour|
               if creneau[:semaines_de_presence][ jour.cweek ] == 1
-                # LOGGER.debug "Day #{jour}"
-
                 cahier_de_textes = CahierDeTextes.where( regroupement_id: creneau[:regroupement_id] ).first
                 cahier_de_textes = CahierDeTextes.create( date_creation: Time.now,
                                                           regroupement_id: creneau[:regroupement_id] ) if cahier_de_textes.nil?
