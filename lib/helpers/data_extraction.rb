@@ -7,7 +7,7 @@ module CahierDeTextesApp
     module DataExtraction
       def emploi_du_temps( debut, fin, regroupements_ids, eleve_id )
         # Nota Bene: creneau[:semaines_de_presence][ 1 ] == première semaine de janvier
-        LOGGER.debug "Starting EdT collection from #{debut} to #{fin} for #{regroupements_ids}"
+        LOGGER.info "Starting EdT collection from #{debut} to #{fin} for #{regroupements_ids}"
 
         CreneauEmploiDuTemps
           .association_join( :enseignants )
