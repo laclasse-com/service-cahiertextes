@@ -7,6 +7,10 @@ describe CahierDeTextesApp::Helpers::User do
     Class.new { include CahierDeTextesApp::Helpers::User }
   end
 
+  before :each do
+    TableCleaner.new( DB, [] ).clean
+  end
+
   it 'Checks that the user is admin in a given etablissement when he have a TECH role' do
     module CahierDeTextesApp
       module Helpers
