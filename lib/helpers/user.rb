@@ -39,9 +39,6 @@ module CahierDeTextesApp
       def user_verbose
         utilisateur = user
 
-        LOGGER.debug '1er map'
-        LOGGER.debug utilisateur[:user_detailed]['profils']
-
         utilisateur[ 'profils' ] = utilisateur[:user_detailed]['profils'].map do |profil|
           # calcule du droit d'admin, true pour les TECH et les ADM
           profil['admin'] = user_is_admin_in_etablissement?( profil['etablissement_code_uai'] )
@@ -53,8 +50,6 @@ module CahierDeTextesApp
         utilisateur[ 'profil_actif' ] = user[:user_detailed][ 'profil_actif' ]
 
         utilisateur[ 'enfants' ] = user[:user_detailed][ 'enfants' ]
-
-        LOGGER.debug '2eme map'
 
         utilisateur[ 'classes' ] = user[:user_detailed][ 'classes' ]
                                    .concat( user[:user_detailed]['groupes_eleves'] )
