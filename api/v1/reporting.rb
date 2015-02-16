@@ -11,7 +11,7 @@ module CahierDeTextesAPI
       get '/' do
         { nb_etablissements: Etablissement.count,
           nb_cahiers_de_textes: CahierDeTextes.count,
-          nb_sequence_pedagogiques: Cours.count,
+          nb_sequences_pedagogiques: Cours.count,
           nb_devoirs: Devoir.count,
           nb_devoirs_faits: DevoirTodoItem.count,
           nb_ressources: Ressource.count,
