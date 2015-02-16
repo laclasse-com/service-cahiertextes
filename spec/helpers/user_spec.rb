@@ -196,6 +196,8 @@ describe CahierDeTextesApp::Helpers::User do
   end
 
   it 'Process the user profile as the CT needs it to be' do
+    expect( UserParameters.count ).to eq 0
+
     module CahierDeTextesApp
       module Helpers
         module User
@@ -238,6 +240,8 @@ describe CahierDeTextesApp::Helpers::User do
     end
 
     result = subject.new.user_verbose
+
+    expect( UserParameters.count ).to eq 1
 
     expect( result['profil_actif'] ).to_not be_nil
     expect( result['profil_actif']['etablissement_code_uai'] ).to eq 'Test'
