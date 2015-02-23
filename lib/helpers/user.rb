@@ -17,6 +17,20 @@ module CahierDeTextesApp
           .length > 0
       end
 
+      def user_is_profils_in_etablissement?( profils_ids, uai )
+        etablissement = user[:user_detailed]['etablissements'].select { |e|
+          e['code_uai'] == uai
+        }.first
+
+        false if etablissement.nil?
+
+        actual_profils_ids = etablissement['profils'].map { |p| p['profil_id'] }
+
+        profils_ids.reduce( false ) { |memo, profil_id|
+          memo || actual_profils_ids.include?( profil_id )
+        }
+      end
+
       def user_is_a?( profils_ids )
         profils_ids.reduce( false ) { |memo, profil_id|
           memo || user[:user_detailed]['profil_actif']['profil_id'] == profil_id
@@ -78,7 +92,7 @@ module CahierDeTextesApp
         utilisateur[ 'marqueur_xiti' ] = '<script>' + RestClient.get( "https://www.laclasse.com/pls/public/xiti_men.get_marqueur_ctv3?plogin=#{utilisateur['user']}" ) + '</script>' if ANNUAIRE[:api_mode] == 'v2'
 
         # shaving useless infos
-        utilisateur[:user_detailed].delete( 'etablissements' )
+        #utilisateur[:user_detailed].delete( 'etablissements' )
         utilisateur[:user_detailed].delete( 'applications' )
         utilisateur[:user_detailed].delete( 'ressources_numeriques' )
         utilisateur[:user_detailed].delete( 'profils' )

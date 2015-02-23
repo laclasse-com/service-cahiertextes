@@ -11,6 +11,43 @@ describe CahierDeTextesApp::Helpers::User do
     TableCleaner.new( DB, [] ).clean
   end
 
+  it 'Checks that the user is a given profil in a given etablissement' do
+    module CahierDeTextesApp
+      module Helpers
+        module User
+          def user
+            { user_detailed: { 'etablissements' => [ { "id" => 1,
+                                                       "nom" => "Test",
+                                                       "code_uai" => "Test",
+                                                       "profils" =>  [ { "profil_id" => "DIR",
+                                                                         "user_id" => 1349,
+                                                                         "etablissement_id" => 1,
+                                                                         "bloque" => nil,
+                                                                         "actif" => false },
+                                                                       { "profil_id" => "ENS",
+                                                                         "user_id" => 1349,
+                                                                         "etablissement_id" => 1,
+                                                                         "bloque" => nil,
+                                                                         "actif" => false },
+                                                                       { "profil_id" => "EVS",
+                                                                         "user_id" => 1349,
+                                                                         "etablissement_id" => 1,
+                                                                         "bloque" => nil,
+                                                                         "actif" => false }
+                                                                     ]
+                                                     }
+                                                   ] }
+            }
+          end
+        end
+      end
+    end
+
+    expect( subject.new.user_is_profils_in_etablissement?( %w( DIR ), 'Test' ) ).to be true
+    expect( subject.new.user_is_profils_in_etablissement?( %w( ELV ), 'Test' ) ).to be false
+    expect( subject.new.user_is_profils_in_etablissement?( %w( DIR ELV ), 'Test' ) ).to be true
+  end
+
   it 'Checks that the user is admin in a given etablissement when he have a TECH role' do
     module CahierDeTextesApp
       module Helpers
@@ -265,7 +302,6 @@ describe CahierDeTextesApp::Helpers::User do
     expect( result['marqueur_xiti'] ).to eq ''
 
     expect( result[:user_detailed]['profil_actif'] ).to be_nil
-    expect( result[:user_detailed]['etablissements'] ).to be_nil
     expect( result[:user_detailed]['applications'] ).to be_nil
     expect( result[:user_detailed]['ressources_numeriques'] ).to be_nil
     expect( result[:user_detailed]['profils'] ).to be_nil
