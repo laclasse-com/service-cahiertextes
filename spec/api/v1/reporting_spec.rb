@@ -26,7 +26,6 @@ describe CahierDeTextesAPI::V1::ReportingAPI do
   before :each do
     TableCleaner.new( DB, [] ).clean
 
-
     [ [ 'DS', 'Devoir surveillé' ],
       [ 'DM', 'Devoir à la maison' ],
       [ 'Leçon', 'Leçon à apprendre' ],
