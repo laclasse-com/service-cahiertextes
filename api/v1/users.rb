@@ -15,7 +15,7 @@ module CahierDeTextesAPI
         requires :parametres, type: String
       }
       put '/current/parametres' do
-        parametres = UserParameters.where( uid: env['rack.session'][:current_user][:uid] ).first
+        parametres = UserParameters.where( uid: user[:uid] ).first
 
         parametres.update( parameters: params[:parametres] )
         parametres.save

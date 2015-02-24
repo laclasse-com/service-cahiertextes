@@ -16,12 +16,12 @@ module CahierDeTextesAPI
       }
       get '/' do
         if params[:uid]
-          user_annuaire = AnnuaireWrapper.get_user( env['rack.session'][:current_user][:uid] )
+          user_annuaire = AnnuaireWrapper.get_user( user[:uid] )
           error!( '401 Unauthorized', 401 ) unless user_annuaire['profils'].select { |p| p['actif'] }.first['profil_id'] == 'TUT' && !( user_annuaire['enfants'].select { |e| e['enfant']['id_ent'] == params[:uid] }.first.nil? )
 
           regroupements_annuaire = AnnuaireWrapper.get_user_regroupements( params[:uid] )
         else
-          regroupements_annuaire = AnnuaireWrapper.get_user_regroupements( env['rack.session'][:current_user][:uid] )
+          regroupements_annuaire = AnnuaireWrapper.get_user_regroupements( user[:uid] )
         end
 
         regroupements_ids = regroupements_annuaire['classes']
@@ -54,11 +54,11 @@ module CahierDeTextesAPI
 
         devoirs.map do |devoir|
           hash = devoir.to_deep_hash
-          hash[:devoir_todo_items].select! { |dti| dti[:eleve_id] == env['rack.session'][:current_user][:uid] } unless env['rack.session'][:current_user].nil?
-          hash[:devoir_todo_items] = [] if env['rack.session'][:current_user].nil?
+          hash[:devoir_todo_items].select! { |dti| dti[:eleve_id] == user[:uid] } unless user.nil?
+          hash[:devoir_todo_items] = [] if user.nil?
 
-          hash[:fait] = env['rack.session'][:current_user].nil? ? false : devoir.fait_par?( env['rack.session'][:current_user][:uid] )
-          hash[:date_fait] = hash[:fait] ? devoir.fait_le( env['rack.session'][:current_user][:uid] ) : nil
+          hash[:fait] = user.nil? ? false : devoir.fait_par?( user[:uid] )
+          hash[:date_fait] = hash[:fait] ? devoir.fait_le( user[:uid] ) : nil
 
           # BUG: to_deep_hash casse les hash des ressources
           hash[:ressources] = devoir.ressources.map do |ressource|
@@ -79,11 +79,11 @@ module CahierDeTextesAPI
           error!( 'Devoir inconnu', 404 )
         else
           hash = devoir.to_deep_hash
-          hash[:devoir_todo_items].select! { |dti| dti[:eleve_id] == env['rack.session'][:current_user][:uid] } unless env['rack.session'][:current_user].nil?
-          hash[:devoir_todo_items] = [] if env['rack.session'][:current_user].nil?
+          hash[:devoir_todo_items].select! { |dti| dti[:eleve_id] == user[:uid] } unless user.nil?
+          hash[:devoir_todo_items] = [] if user.nil?
 
-          hash[:fait] = env['rack.session'][:current_user].nil? ? false : devoir.fait_par?( env['rack.session'][:current_user][:uid] )
-          hash[:date_fait] = hash[:fait] ? devoir.fait_le( env['rack.session'][:current_user][:uid] ) : nil
+          hash[:fait] = user.nil? ? false : devoir.fait_par?( user[:uid] )
+          hash[:date_fait] = hash[:fait] ? devoir.fait_le( user[:uid] ) : nil
 
           # BUG: to_deep_hash casse les hash des ressources
           hash[:ressources] = devoir.ressources.map do |ressource|
@@ -131,7 +131,7 @@ module CahierDeTextesAPI
               cahier_de_textes = CahierDeTextes.create( date_creation: Time.now,
                                                         regroupement_id: params[:regroupement_id] ) if cahier_de_textes.nil?
 
-              cours = Cours.create( enseignant_id: env['rack.session'][:current_user][:uid],
+              cours = Cours.create( enseignant_id: user[:uid],
                                     cahier_de_textes_id: cahier_de_textes.id,
                                     creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
                                     date_cours: params[:date_due],
@@ -245,14 +245,14 @@ module CahierDeTextesAPI
         user_needs_to_be( %w( ELV ), false )
 
         devoir = Devoir[ params[:id] ]
-        devoir.fait_par?( env['rack.session'][:current_user][:uid] ) ? devoir.a_faire_par!( env['rack.session'][:current_user][:uid] ) : devoir.fait_par!( env['rack.session'][:current_user][:uid] )
+        devoir.fait_par?( user[:uid] ) ? devoir.a_faire_par!( user[:uid] ) : devoir.fait_par!( user[:uid] )
 
         hash = devoir.to_deep_hash
-        hash[:devoir_todo_items] = [] if env['rack.session'][:current_user].nil?
-        hash[:devoir_todo_items].select! { |dti| dti[:eleve_id] == env['rack.session'][:current_user][:uid] } unless env['rack.session'][:current_user].nil?
+        hash[:devoir_todo_items] = [] if user.nil?
+        hash[:devoir_todo_items].select! { |dti| dti[:eleve_id] == user[:uid] } unless user.nil?
 
-        hash[:fait] = env['rack.session'][:current_user].nil? ? false : devoir.fait_par?( env['rack.session'][:current_user][:uid] )
-        hash[:date_fait] = hash[:fait] ? devoir.fait_le( env['rack.session'][:current_user][:uid] ) : nil
+        hash[:fait] = user.nil? ? false : devoir.fait_par?( user[:uid] )
+        hash[:date_fait] = hash[:fait] ? devoir.fait_le( user[:uid] ) : nil
 
         # BUG: to_deep_hash casse les hash des ressources
         hash[:ressources] = devoir.ressources.map do |ressource|
@@ -276,11 +276,11 @@ module CahierDeTextesAPI
           devoir.save
 
           hash = devoir.to_deep_hash
-          hash[:devoir_todo_items].select! { |dti| dti[:eleve_id] == env['rack.session'][:current_user][:uid] } unless env['rack.session'][:current_user].nil?
-          hash[:devoir_todo_items] = [] if env['rack.session'][:current_user].nil?
+          hash[:devoir_todo_items].select! { |dti| dti[:eleve_id] == user[:uid] } unless user.nil?
+          hash[:devoir_todo_items] = [] if user.nil?
 
-          hash[:fait] = env['rack.session'][:current_user].nil? ? false : devoir.fait_par?( env['rack.session'][:current_user][:uid] )
-          hash[:date_fait] = hash[:fait] ? devoir.fait_le( env['rack.session'][:current_user][:uid] ) : nil
+          hash[:fait] = user.nil? ? false : devoir.fait_par?( user[:uid] )
+          hash[:date_fait] = hash[:fait] ? devoir.fait_le( user[:uid] ) : nil
 
           # BUG: to_deep_hash casse les hash des ressources
           hash[:ressources] = devoir.ressources.map do |ressource|

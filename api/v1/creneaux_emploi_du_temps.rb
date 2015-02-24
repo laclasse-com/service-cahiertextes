@@ -42,7 +42,7 @@ module CahierDeTextesAPI
         creneau = CreneauEmploiDuTemps[ params[:id] ]
         CreneauEmploiDuTemps
           .association_join( :enseignants )
-          .where( enseignant_id: env['rack.session'][:current_user][:uid] )
+          .where( enseignant_id: user[:uid] )
           .where( matiere_id: creneau.matiere_id )
           .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{1.year.ago}'" )
           .where( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{params[:fin]}')" )
@@ -89,8 +89,6 @@ module CahierDeTextesAPI
         optional :semaines_de_presence_salle, type: Fixnum
       }
       post  do
-        LOGGER.debug env['rack.session'][:current_user][:uid]
-
         user_needs_to_be( %w( ENS ), true )
 
         plage_horaire_debut = PlageHoraire.where(debut: params[:heure_debut] ).first
@@ -114,7 +112,7 @@ module CahierDeTextesAPI
                                                matiere_id: params[:matiere_id] )
 
         CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
-        ce = creneau.add_enseignant enseignant_id: env['rack.session'][:current_user][:uid]
+        ce = creneau.add_enseignant enseignant_id: user[:uid]
         ce.update semaines_de_presence: params[:semaines_de_presence_enseignant] if params[:semaines_de_presence_enseignant]
         CreneauEmploiDuTempsEnseignant.restrict_primary_key
 
@@ -180,7 +178,7 @@ module CahierDeTextesAPI
 
           if params[:semaines_de_presence_enseignant]
             ce = CreneauEmploiDuTempsEnseignant
-                 .where( enseignant_id: env['rack.session'][:current_user][:uid] )
+                 .where( enseignant_id: user[:uid] )
                  .where( creneau_emploi_du_temps_id: params[:id] )
             ce.update semaines_de_presence: params[:semaines_de_presence_enseignant]
           end
