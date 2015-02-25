@@ -153,7 +153,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
 		       API.get_enseignant( {
 			   enseignant_id: $scope.enseignant_id,
-			   uai: $scope.current_user[ 'profil_actif' ][ 'uai' ]
+			   uai: $scope.current_user[ 'profil_actif' ][ 'etablissement_code_uai' ]
 		       } )
 			   .$promise.then(
 			       function success( response ) {

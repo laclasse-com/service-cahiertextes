@@ -163,7 +163,7 @@ angular.module( 'cahierDeTextesClientApp' )
 			  }
 		      };
 
-		      API.query_classes( { uai: current_user['profil_actif']['uai'] } )
+		      API.query_classes( { uai: current_user['profil_actif']['etablissement_code_uai'] } )
 			  .$promise.then( function( response ) {
 			      $scope.raw_data = response;
 
