@@ -53,7 +53,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				      }
 				      if ( !_($scope.result.rapport.enseignants.error).isEmpty() ) {
 					  $scope.current_user = current_user;
-					  Annuaire.get_etablissement_enseignants( $scope.current_user.profil_actif.uai )
+					  Annuaire.get_etablissement_enseignants( $scope.current_user.profil_actif.etablissement_code_uai )
 					      .then( function( response ) {
 						  $scope.enseignants = response.data;
 					      } );
@@ -62,7 +62,7 @@ angular.module( 'cahierDeTextesClientApp' )
 					   || !_($scope.result.rapport.regroupements.Groupe.error).isEmpty()
 					   || !_($scope.result.rapport.regroupements.PartieDeClasse.error).isEmpty() ) {
 					  $scope.current_user = current_user;
-					  Annuaire.get_etablissement_regroupements( $scope.current_user.profil_actif.uai )
+					  Annuaire.get_etablissement_regroupements( $scope.current_user.profil_actif.etablissement_code_uai )
 					      .then( function( response ) {
 						  $scope.regroupements = response.data;
 					      } );

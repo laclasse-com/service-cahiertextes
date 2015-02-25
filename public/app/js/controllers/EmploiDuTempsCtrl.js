@@ -73,13 +73,13 @@ angular.module( 'cahierDeTextesClientApp' )
 					     this.className = 'edt-cours';
 					     if ( !_(event.cours).isNull() ) {
 						 this.className += '-saisie';
-						 if ( !_(event.cours.date_validation).isNull() && $scope.current_user.profil_actif.type === 'ENS' ) {
+						 if ( !_(event.cours.date_validation).isNull() && $scope.current_user.profil_actif.profil_id === 'ENS' ) {
 						     this.className += '-valide';
 						 }
 					     }
 					 }
 
-					 if ( ( ( _.contains( [ 'ELV', 'TUT', 'EVS', 'DIR'], $scope.current_user.profil_actif.type ) ) && _(event.cours).isNull() && _(event.devoirs).isEmpty() ) ) {
+					 if ( ( ( _.contains( [ 'ELV', 'TUT', 'EVS', 'DIR'], $scope.current_user.profil_actif.profil_id ) ) && _(event.cours).isNull() && _(event.devoirs).isEmpty() ) ) {
 					     this.className += ' unclickable-event';
 					 } else {
 					     this.className += ' clickable-event';
@@ -99,11 +99,11 @@ angular.module( 'cahierDeTextesClientApp' )
 				 };
 
 				 var retrieve_data = function( from_date, to_date ) {
-				     if ( $scope.current_user.profil_actif.type != 'TUT' || $scope.current_user.enfant_actif ) {
+				     if ( $scope.current_user.profil_actif.profil_id != 'TUT' || $scope.current_user.enfant_actif ) {
 					 EmploisDuTemps.query( { debut: from_date,
 								 fin: to_date,
-								 uai: $scope.current_user.profil_actif.uai,
-								 uid: $scope.current_user.profil_actif.type == 'TUT' ? $scope.current_user.enfant_actif.enfant.id_ent : null } )
+								 uai: $scope.current_user.profil_actif.etablissement_code_uai,
+								 uid: $scope.current_user.profil_actif.profil_id == 'TUT' ? $scope.current_user.enfant_actif.enfant.id_ent : null } )
 					     .$promise
 					     .then( function success( response ) {
 						 $scope.raw_data = response;
@@ -143,7 +143,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				     if ( event.has_resources ) {
 					 elt_fc_content.prepend( '<i class="glyphicon glyphicon-paperclip"></i>' );
 				     }
-				     if ( $scope.current_user.profil_actif.type !== 'ELV' ) {
+				     if ( $scope.current_user.profil_actif.profil_id !== 'ELV' ) {
 					 if ( event.temps_estime > 0 ) {
 					     var class_couleur = '';
 					     if (event.temps_estime  < 4 ) {
@@ -176,22 +176,22 @@ angular.module( 'cahierDeTextesClientApp' )
 				 $scope.uniquement_mes_creneaux = false;
 				 // ############################## Profile-specific code ##############################################
 				 // Les EVS et DIR on une classe sélectionnée par défaut
-				 if ( _.contains( [ 'EVS', 'DIR'], $scope.current_user.profil_actif.type ) ) {
-					  $scope.uniquement_mes_creneaux = false;
+				 if ( _.contains( [ 'EVS', 'DIR'], $scope.current_user.profil_actif.profil_id ) ) {
+				     $scope.uniquement_mes_creneaux = false;
 
-					  filter_data = function( raw_data ) {
-					      var filtered_data = raw_data;
+				     filter_data = function( raw_data ) {
+					 var filtered_data = raw_data;
 
-					      // Filtrage sur une seule classe
-					      filtered_data = filter_by_regroupement( filtered_data, $scope.selected_regroupement_id );
+					 // Filtrage sur une seule classe
+					 filtered_data = filter_by_regroupement( filtered_data, $scope.selected_regroupement_id );
 
-					      return filtered_data;
-					  };
+					 return filtered_data;
+				     };
 
-					  $scope.selected_regroupement_id = $scope.current_user.profil_actif.classes[0].id;
-				      }
+				     $scope.selected_regroupement_id = $scope.current_user.profil_actif.classes[0].id;
+				 }
 				 // Les TUT peuvent choisir parmi leurs enfants
-				 if ( $scope.current_user.profil_actif.type == 'TUT' ) {
+				 if ( $scope.current_user.profil_actif.profil_id == 'TUT' ) {
 				     if ( $scope.current_user.enfants.length == 0 ) {
 					 swal( { title: 'Erreur',
 						 text: 'Aucun enfant configuré pour ce profil.',
@@ -206,7 +206,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				     }
 				 }
 				 // Les non-ENS ne sont qu'en lecture seule
-				 if ( $scope.current_user.profil_actif.type != 'ENS' ) {
+				 if ( $scope.current_user.profil_actif.profil_id != 'ENS' ) {
 				     $scope.calendar.options.eventClick = function( event ) {
 					 if ( !popup_ouverte && ( ( event.details.devoirs.length > 0 ) || ( ! _(event.details.cours).isNull() && _(event.details.cours).has( 'contenu' ) ) ) ) {
 					     PopupsCreneau.display( event.title, event.details.cours, event.details.devoirs, popup_callback, popup_ouverte );
@@ -214,8 +214,8 @@ angular.module( 'cahierDeTextesClientApp' )
 				     };
 				 }
 
-				 if ( $scope.current_user.profil_actif.type == 'ENS'
-				      || ( $scope.current_user.profil_actif.admin && !_.contains( [ 'ELV', 'TUT'], $scope.current_user.profil_actif.type ) ) ) {
+				 if ( $scope.current_user.profil_actif.profil_id == 'ENS'
+				      || ( $scope.current_user.profil_actif.admin && !_.contains( [ 'ELV', 'TUT'], $scope.current_user.profil_actif.profil_id ) ) ) {
 					  $scope.uniquement_mes_creneaux = false;
 					  $scope.calendar.options.selectable = true;
 					  $scope.calendar.options.editable = true;
@@ -286,7 +286,7 @@ angular.module( 'cahierDeTextesClientApp' )
 					      }
 					  };
 				      }
-				 if ( $scope.current_user.profil_actif.type == 'ENS' ) {
+				 if ( $scope.current_user.profil_actif.profil_id == 'ENS' ) {
 				     $scope.uniquement_mes_creneaux = true;
 				 }
 

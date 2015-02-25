@@ -115,7 +115,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
 			  EmploisDuTemps.query( { debut: $scope.from_date,
 						  fin: $scope.to_date,
-						  uai: $scope.current_user.profil_actif.uai } )
+						  uai: $scope.current_user.profil_actif.etablissement_code_uai } )
 			      .$promise
 			      .then( function success( response ) {
 				  $scope.raw_data = response;

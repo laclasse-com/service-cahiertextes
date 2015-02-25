@@ -10,7 +10,7 @@ angular.module( 'cahierDeTextesClientApp' )
 			       _(response.profils).each( function( profil ) {
 				   // Liste des classes liées au profil
 				   profil.classes = _.chain(response.classes)
-				       .filter( function( classe ) { return classe.etablissement_code == profil.uai; } )
+				       .filter( function( classe ) { return classe.etablissement_code == profil.etablissement_code_uai; } )
 				       .map( function( classe ) {
 					   return { id: classe.id,
 						    libelle: classe.libelle,
@@ -22,7 +22,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
 				   // Liste des matières liées au profil
 				   profil.matieres = _.chain(response.classes)
-				       .filter( function( classe ) { return classe.etablissement_code == profil.uai; } )
+				       .filter( function( classe ) { return classe.etablissement_code == profil.etablissement_code_uai; } )
 				       .map( function( classe ) {
 					   return { id: _(classe.matiere_enseignee_id).isNull() ? classe.matiere_libelle : classe.matiere_enseignee_id,
 						    libelle_long: classe.matiere_libelle };
@@ -39,7 +39,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
 			       // Voir quel est le profil
 			       response.is = function( profil_id ) {
-				   return this.profil_actif['type'] == profil_id;
+				   return this.profil_actif['profil_id'] == profil_id;
 			       };
 
 			       return response;

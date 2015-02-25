@@ -10,7 +10,7 @@ angular.module( 'cahierDeTextesClientApp' )
 		       $scope.moisCourant = null;
 		       $scope.matieres = {};
 		       $scope.classes = {};
-		       $scope.montre_valides = current_user.profil_actif.type !== 'DIR';
+		       $scope.montre_valides = current_user.profil_actif.profil_id !== 'DIR';
 
 		       var filtre_saisies = function ( saisies, mois, classe ) {
 			   var data = saisies;
