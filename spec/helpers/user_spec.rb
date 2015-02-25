@@ -301,14 +301,6 @@ describe CahierDeTextesApp::Helpers::User do
 
     expect( result['marqueur_xiti'] ).to eq ''
 
-    expect( result[:user_detailed]['profil_actif'] ).to be_nil
-    expect( result[:user_detailed]['applications'] ).to be_nil
-    expect( result[:user_detailed]['ressources_numeriques'] ).to be_nil
-    expect( result[:user_detailed]['profils'] ).to be_nil
-    expect( result[:user_detailed]['enfants'] ).to be_nil
-    expect( result[:user_detailed]['classes'] ).to be_nil
-    expect( result[:user_detailed]['groupes_eleves'] ).to be_nil
-    expect( result[:user_detailed]['groupes_libres'] ).to be_nil
-    expect( result[:user_detailed]['roles'] ).to be_nil
+    expect( result[:user_detailed] ).to be_nil
   end
 end

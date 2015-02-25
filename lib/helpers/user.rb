@@ -51,7 +51,7 @@ module CahierDeTextesApp
       end
 
       def user_verbose
-        utilisateur = Utils.deep_dup( user ) # WTF Ruby⸘
+        utilisateur = Utils.deep_dup( user )
 
         utilisateur[ 'profils' ] = utilisateur[:user_detailed]['profils'].map do |profil|
           # calcule du droit d'admin, true pour les TECH et les ADM
@@ -60,9 +60,6 @@ module CahierDeTextesApp
           profil['classes'] = AnnuaireWrapper::Etablissement.get_regroupements( profil['uai'] ) if profil['type'] == 'EVS'
           profil
         end
-
-
-        utilisateur[ 'profil_actif' ] = utilisateur[:user_detailed][ 'profil_actif' ]
 
         utilisateur[ 'enfants' ] = utilisateur[:user_detailed][ 'enfants' ]
 
@@ -93,16 +90,7 @@ module CahierDeTextesApp
         utilisateur[ 'marqueur_xiti' ] = '<script>' + RestClient.get( "https://www.laclasse.com/pls/public/xiti_men.get_marqueur_ctv3?plogin=#{utilisateur['user']}" ) + '</script>' if ANNUAIRE[:api_mode] == 'v2'
 
         # shaving useless infos
-        #utilisateur[:user_detailed].delete( 'etablissements' )
-        utilisateur[:user_detailed].delete( 'applications' )
-        utilisateur[:user_detailed].delete( 'ressources_numeriques' )
-        utilisateur[:user_detailed].delete( 'profils' )
-        utilisateur[:user_detailed].delete( 'profil_actif' )
-        utilisateur[:user_detailed].delete( 'enfants' )
-        utilisateur[:user_detailed].delete( 'classes' )
-        utilisateur[:user_detailed].delete( 'groupes_eleves' )
-        utilisateur[:user_detailed].delete( 'groupes_libres' )
-        utilisateur[:user_detailed].delete( 'roles' )
+        utilisateur.delete( :user_detailed )
 
         utilisateur
       end
