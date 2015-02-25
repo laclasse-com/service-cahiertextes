@@ -16,12 +16,12 @@ module CahierDeTextesAPI
       }
       get '/' do
         if params[:uid]
-          user_annuaire = AnnuaireWrapper.get_user( user[:uid] )
+          user_annuaire = AnnuaireWrapper::User.get( user[:uid] )
           error!( '401 Unauthorized', 401 ) unless user_annuaire['profils'].select { |p| p['actif'] }.first['profil_id'] == 'TUT' && !( user_annuaire['enfants'].select { |e| e['enfant']['id_ent'] == params[:uid] }.first.nil? )
 
-          regroupements_annuaire = AnnuaireWrapper.get_user_regroupements( params[:uid] )
+          regroupements_annuaire = AnnuaireWrapper::User.get_regroupements( params[:uid] )
         else
-          regroupements_annuaire = AnnuaireWrapper.get_user_regroupements( user[:uid] )
+          regroupements_annuaire = AnnuaireWrapper::User.get_regroupements( user[:uid] )
         end
 
         regroupements_ids = regroupements_annuaire['classes']

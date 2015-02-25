@@ -57,7 +57,7 @@ module CahierDeTextesApp
           # calcule du droit d'admin, true pour les TECH et les ADM
           profil['admin'] = user_is_admin_in_etablissement?( profil['etablissement_code_uai'] )
 
-          profil['classes'] = AnnuaireWrapper.get_etablissement_regroupements( profil['uai'] ) if profil['type'] == 'EVS'
+          profil['classes'] = AnnuaireWrapper::Etablissement.get_regroupements( profil['uai'] ) if profil['type'] == 'EVS'
           profil
         end
 
@@ -109,8 +109,7 @@ module CahierDeTextesApp
       def user_regroupements_ids( enfant_id = nil )
         case
         when %w( EVS DIR ).include?( user[:user_detailed]['profil_actif']['profil_id'] )
-          etablissement = AnnuaireWrapper.get_etablissement( user[:user_detailed]['profil_actif']['etablissement_code_uai'] )
-
+          etablissement = AnnuaireWrapper::Etablissement.get( user[:user_detailed]['profil_actif']['etablissement_code_uai'] )
           etablissement['classes']
             .concat( etablissement['groupes_eleves'] )
             .concat( etablissement['groupes_libres'] )
@@ -119,7 +118,7 @@ module CahierDeTextesApp
         when %w( TUT ).include?( user[:user_detailed]['profil_actif']['profil_id'] )
           [] if enfant_id.nil?
 
-          enfant = AnnuaireWrapper.get_user( enfant_id ) # FIXME: enfant_actif ?
+          enfant = AnnuaireWrapper::User.get( enfant_id ) # FIXME: enfant_actif ?
 
           enfant['classes']
             .concat( enfant['groupes_eleves'] )

@@ -116,7 +116,7 @@ module ProNote
              .children
              .reject { |child| child.name == 'text' }
              .each do |node|
-      matieres[ node['Ident'] ] = AnnuaireWrapper.search_matiere( node['Libelle'] )['id']
+      matieres[ node['Ident'] ] = AnnuaireWrapper::Matiere.search( node['Libelle'] )['id']
       if matieres[ node['Ident'] ].nil?
         objet = { Libelle: node['Libelle'] }
         sha256 = Digest::SHA256.hexdigest( objet.to_json )
@@ -145,7 +145,7 @@ module ProNote
              .children
              .reject { |child| child.name == 'text' }
              .each do |node|
-      user_annuaire = AnnuaireWrapper.search_utilisateur( etablissement.UAI, node['Nom'], node['Prenom'] )
+      user_annuaire = AnnuaireWrapper::Etablissement::User.search( etablissement.UAI, node['Nom'], node['Prenom'] )
       enseignants[ node['Ident'] ] = user_annuaire.nil? ? nil : user_annuaire['id_ent']
       if enseignants[ node['Ident'] ].nil?
         objet = { UAI: etablissement.UAI, Nom: node['Nom'], Prenom: node['Prenom'] }
@@ -179,7 +179,7 @@ module ProNote
              .children
              .reject { |child| child.name == 'text' }
              .each do |node|
-      reponse_annuaire = AnnuaireWrapper.search_regroupement( etablissement.UAI, node['Nom'] )
+      reponse_annuaire = AnnuaireWrapper::Etablissement::Regroupement.search( etablissement.UAI, node['Nom'] )
       code_annuaire = reponse_annuaire.nil? ? nil : reponse_annuaire['id']
       regroupements[ node.name ][ node['Ident'] ] = code_annuaire
       if regroupements[ node.name ][ node['Ident'] ].nil?
@@ -206,7 +206,7 @@ module ProNote
           if subnode['Nom'].nil?
             regroupements[ 'PartieDeClasse' ][ subnode['Ident'] ] = regroupements[ 'Classe' ][ node['Ident'] ]
           else
-            reponse_annuaire = AnnuaireWrapper.search_regroupement( etablissement.UAI, subnode['Nom'] )
+            reponse_annuaire = AnnuaireWrapper::Etablissement::Regroupement.search( etablissement.UAI, subnode['Nom'] )
             code_annuaire = reponse_annuaire.nil? ? nil : reponse_annuaire['id']
             regroupements[ subnode.name ][ subnode['Ident'] ] = code_annuaire
             if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
@@ -232,7 +232,7 @@ module ProNote
       end
     end
     edt_clair.search('Groupes').children.reject { |child| child.name == 'text' }.each do |node|
-      reponse_annuaire = AnnuaireWrapper.search_regroupement( etablissement.UAI, node['Nom'] )
+      reponse_annuaire = AnnuaireWrapper::Etablissement::Regroupement.search( etablissement.UAI, node['Nom'] )
       code_annuaire = reponse_annuaire.nil? ? nil : reponse_annuaire['id']
       regroupements[ node.name ][ node['Ident'] ] = code_annuaire
       if regroupements[ node.name ][ node['Ident'] ].nil?
@@ -261,7 +261,7 @@ module ProNote
             if subnode['Nom'].nil?
               regroupements[ 'PartieDeClasse' ][ subnode['Ident'] ] = regroupements[ 'Classe' ][ node['Ident'] ]
             else
-              reponse_annuaire = AnnuaireWrapper.search_regroupement( etablissement.UAI, subnode['Nom'] )
+              reponse_annuaire = AnnuaireWrapper::Etablissement::Regroupement.search( etablissement.UAI, subnode['Nom'] )
               code_annuaire = reponse_annuaire.nil? ? nil : reponse_annuaire['id']
               regroupements[ subnode.name ][ subnode['Ident'] ] = code_annuaire
               if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
@@ -284,7 +284,7 @@ module ProNote
             end
           when 'Classe'
             unless subnode.name == 'text'
-              reponse_annuaire = AnnuaireWrapper.search_regroupement( etablissement.UAI, subnode['Nom'] )
+              reponse_annuaire = AnnuaireWrapper::Etablissement::Regroupement.search( etablissement.UAI, subnode['Nom'] )
               code_annuaire = reponse_annuaire.nil? ? nil : reponse_annuaire['id']
               regroupements[ subnode.name ][ subnode['Ident'] ] = code_annuaire
               if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
