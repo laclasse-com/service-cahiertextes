@@ -1,7 +1,5 @@
 # -*- encoding: utf-8 -*-
 
-require_relative '../deep_dup'
-
 module CahierDeTextesApp
   module Helpers
     module User

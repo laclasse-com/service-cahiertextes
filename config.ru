@@ -4,6 +4,8 @@
 require 'laclasse/common/helpers/rack'
 require 'laclasse/common/laclasse_logger'
 
+require_relative './lib/utils/deep_dup'
+
 require ::File.expand_path( '../config/init', __FILE__ )
 
 require ::File.expand_path( '../api', __FILE__ )
