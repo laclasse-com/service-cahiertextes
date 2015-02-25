@@ -1,5 +1,7 @@
 # -*- encoding: utf-8 -*-
 
+require_relative '../deep_dup'
+
 module CahierDeTextesApp
   module Helpers
     module User
@@ -51,7 +53,7 @@ module CahierDeTextesApp
       end
 
       def user_verbose
-        utilisateur = user
+        utilisateur = Utils.deep_dup( user ) # WTF Ruby⸘
 
         utilisateur[ 'profils' ] = utilisateur[:user_detailed]['profils'].map do |profil|
           # calcule du droit d'admin, true pour les TECH et les ADM
@@ -61,13 +63,14 @@ module CahierDeTextesApp
           profil
         end
 
-        utilisateur[ 'profil_actif' ] = user[:user_detailed][ 'profil_actif' ]
 
-        utilisateur[ 'enfants' ] = user[:user_detailed][ 'enfants' ]
+        utilisateur[ 'profil_actif' ] = utilisateur[:user_detailed][ 'profil_actif' ]
 
-        utilisateur[ 'classes' ] = user[:user_detailed][ 'classes' ]
-                                   .concat( user[:user_detailed]['groupes_eleves'] )
-                                   .concat( user[:user_detailed]['groupes_libres'] )
+        utilisateur[ 'enfants' ] = utilisateur[:user_detailed][ 'enfants' ]
+
+        utilisateur[ 'classes' ] = utilisateur[:user_detailed][ 'classes' ]
+                                   .concat( utilisateur[:user_detailed]['groupes_eleves'] )
+                                   .concat( utilisateur[:user_detailed]['groupes_libres'] )
                                    .map do |regroupement|
           if regroupement.key? 'groupe_id'
             regroupement['type'] = 'groupe'
