@@ -2,8 +2,6 @@
 
 require 'spec_helper'
 
-require_relative '../../helper_mocks/mocked_user'
-
 describe CahierDeTextesAPI::V1::ReportingAPI do
   include Rack::Test::Methods
 
