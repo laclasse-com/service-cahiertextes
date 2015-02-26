@@ -136,9 +136,11 @@ angular.module( 'cahierDeTextesClientApp' )
 				     var elt_fc_content_title = element.find( '.fc-title' );
 				     var elt_fc_content = element.find( '.fc-content' );
 
-				     event.matiere.$promise.then( function() {
-					 elt_fc_content_title.append( ' - ' + event.matiere.libelle_long );
-				     } );
+				     if ( !_(event.matiere).isUndefined() ) {
+					 event.matiere.$promise.then( function() {
+					     elt_fc_content_title.append( ' - ' + event.matiere.libelle_long );
+					 } );
+				     }
 
 				     if ( event.has_resources ) {
 					 elt_fc_content.prepend( '<i class="glyphicon glyphicon-paperclip"></i>' );
