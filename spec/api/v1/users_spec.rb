@@ -88,8 +88,6 @@ describe CahierDeTextesAPI::V1::UsersAPI do
     expect( response['classes'].select { |r| r['type'] == 'classe' }.count ).to eq 3
     expect( response['classes'].select { |r| r['type'] == 'groupe' }.count ).to eq 6
     expect( response['profils'].count ).to eq 2
-    expect( response['profil_actif']['profil_id'] ).to eq 'ENS'
-    expect( response['profil_actif']['etablissement_code_uai'] ).to eq 'Test'
     expect( response['enfants'] ).to eq 'dummy'
     expect( response['parametrage_cahier_de_textes'].count ).to eq 2
     expect( response['parametrage_cahier_de_textes']['affichage_types_de_devoir'] ).to be true

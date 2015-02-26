@@ -280,10 +280,6 @@ describe CahierDeTextesApp::Helpers::User do
 
     expect( UserParameters.count ).to eq 1
 
-    expect( result['profil_actif'] ).to_not be_nil
-    expect( result['profil_actif']['etablissement_code_uai'] ).to eq 'Test'
-    expect( result['profil_actif']['profil_id'] ).to eq 'ENS'
-
     expect( result['profils'] ).to_not be_nil
     expect( result['profils'][0]['admin'] ).to be true
     expect( result['profils'][1]['admin'] ).to be false
