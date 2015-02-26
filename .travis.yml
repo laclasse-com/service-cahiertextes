@@ -1,6 +1,6 @@
 language: ruby
 rvm:
-  - "2.1.3"
+  - "2.2.0"
 
 before_install:
   - gem update --system
@@ -15,7 +15,7 @@ before_script:
   - mysql -e 'create database CahierDeTextes;'
   - bundle exec rake db:migrations
 
-script: "bundle exec rspec spec/api/ spec/helpers/"
+script: "bundle exec rspec spec/api/ spec/lib/"
 
 gemfile:
   - Gemfile
