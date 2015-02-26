@@ -1,8 +1,0 @@
-* client
-** principal/enseignant
-*** NEXT bug dans le bargraph quand il n'y a qu'une classe
-    bug de Charts.js
-
-* API
-** emplois_du_temps
-*** ne renvoyer que les ID des cours et devoirs ?
