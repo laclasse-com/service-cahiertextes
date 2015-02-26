@@ -14,7 +14,6 @@ describe CahierDeTextesAPI::V1::UsersAPI do
       module Helpers
         module Authentication
           def logged?
-            LOGGER.info 'Yeah yeah you are logged *wink*'
             true
           end
         end
@@ -33,7 +32,7 @@ describe CahierDeTextesAPI::V1::UsersAPI do
   end
 
   # Tests proprement dit
-  it 'links a failed identification to an Annuaire\'s ID' do
+  it 'returns the current user\'s profile as the CT needs it' do
 
     module CahierDeTextesApp
       module Helpers
