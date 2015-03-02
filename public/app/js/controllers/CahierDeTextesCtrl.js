@@ -113,7 +113,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				  matieres = list_matieres( $scope.raw_data );
 
 				  _($scope.raw_data).each( function( creneau ) {
-				      creneau.matiere = _($scope.current_user.profil_actif.matieres).findWhere({ id: parseInt( creneau.matiere_id ) });
+				      creneau.matiere = Annuaire.get_matiere( creneau.matiere_id ); // _($scope.current_user.profil_actif.matieres).findWhere({ id: parseInt( creneau.matiere_id ) });
 				      creneau.regroupement = _($scope.current_user.profil_actif.classes).findWhere({ id: parseInt( creneau.regroupement_id ) });
 				  });
 
