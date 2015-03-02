@@ -114,7 +114,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
 				  _($scope.raw_data).each( function( creneau ) {
 				      creneau.matiere = _($scope.current_user.profil_actif.matieres).findWhere({ id: parseInt( creneau.matiere_id ) });
-				      creneau.regroupement = _($scope.current_user.profil_actif.classes).findWhere({ id: parseInt( this.details.regroupement_id ) });
+				      creneau.regroupement = _($scope.current_user.profil_actif.classes).findWhere({ id: parseInt( creneau.regroupement_id ) });
 				  });
 
 				  $scope.creneaux_vides = filter_creneaux_vides( $scope.raw_data );
