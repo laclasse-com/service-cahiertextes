@@ -42,16 +42,7 @@ module CahierDeTextesAPI
         requires :id, desc: 'id du regroupement'
       }
       get '/regroupements/:id' do
-        regroupement = AnnuaireWrapper::Regroupement.get( params[:id] )
-        cahier_de_textes = CahierDeTextes.where( regroupement_id: params[:id] ).first
-
-        # création du cahier de textes au cas où il n'existe pas déjà
-        cahier_de_textes = CahierDeTextes.create( date_creation: Time.now,
-                                                  regroupement_id: params[:id] ) if cahier_de_textes.nil?
-
-        regroupement[:cahier_de_textes_id] = cahier_de_textes[:id]
-
-        regroupement
+        AnnuaireWrapper::Regroupement.get( params[:id] )
       end
 
       desc 'Renvoi le détail d\'un utilisateur'
