@@ -54,7 +54,7 @@ module CahierDeTextesApp
 
       def user_verbose
         utilisateur = Utils.deep_dup( user )
-        LOGGER.warning utilisateur
+
         utilisateur[ 'profils' ] = utilisateur[:user_detailed]['profils'].map do |profil|
           # calcule du droit d'admin, true pour les TECH et les ADM
           profil['admin'] = user_is_admin_in_etablissement?( profil['etablissement_code_uai'] )
