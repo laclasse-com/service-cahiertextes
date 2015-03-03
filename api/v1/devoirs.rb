@@ -53,19 +53,7 @@ module CahierDeTextesAPI
         end
 
         devoirs.map do |devoir|
-          hash = devoir.to_deep_hash
-          hash[:devoir_todo_items].select! { |dti| dti[:eleve_id] == user[:uid] } unless user.nil?
-          hash[:devoir_todo_items] = [] if user.nil?
-
-          hash[:fait] = user.nil? ? false : devoir.fait_par?( user[:uid] )
-          hash[:date_fait] = hash[:fait] ? devoir.fait_le( user[:uid] ) : nil
-
-          # BUG: to_deep_hash casse les hash des ressources
-          hash[:ressources] = devoir.ressources.map do |ressource|
-            ressource.to_hash
-          end
-
-          hash
+          devoir.to_deep_hash( { uid: params[:uid] ? params[:uid] : user[:uid] } )
         end
       end
 
@@ -75,23 +63,10 @@ module CahierDeTextesAPI
       }
       get '/:id' do
         devoir = Devoir[ params[:id] ]
-        if devoir.nil? || ( devoir.deleted && devoir.date_modification < UNDELETE_TIME_WINDOW.minutes.ago )
-          error!( 'Devoir inconnu', 404 )
-        else
-          hash = devoir.to_deep_hash
-          hash[:devoir_todo_items].select! { |dti| dti[:eleve_id] == user[:uid] } unless user.nil?
-          hash[:devoir_todo_items] = [] if user.nil?
 
-          hash[:fait] = user.nil? ? false : devoir.fait_par?( user[:uid] )
-          hash[:date_fait] = hash[:fait] ? devoir.fait_le( user[:uid] ) : nil
+        error!( 'Devoir inconnu', 404 ) if devoir.nil? || ( devoir.deleted && devoir.date_modification < UNDELETE_TIME_WINDOW.minutes.ago )
 
-          # BUG: to_deep_hash casse les hash des ressources
-          hash[:ressources] = devoir.ressources.map do |ressource|
-            ressource.to_hash
-          end
-
-          hash
-        end
+        devoir.to_deep_hash( user )
       end
 
       desc 'renseigne un devoir'
@@ -109,55 +84,40 @@ module CahierDeTextesAPI
       post  do
         user_needs_to_be( %w( ENS ), true )
 
-        if CreneauEmploiDuTemps[ params[:creneau_emploi_du_temps_id] ].nil?
-          error!( 'Paramètres invalides', 404 )
+        error!( 'Créneau invalide', 409 ) if CreneauEmploiDuTemps[ params[:creneau_emploi_du_temps_id] ].nil?
+
+        devoir = Devoir.create( type_devoir_id: params[:type_devoir_id],
+                                creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
+                                contenu: params[:contenu],
+                                date_due: params[:date_due],
+                                temps_estime: params[:temps_estime],
+                                date_creation: Time.now )
+
+        if params[ :cours_id ] && !params[ :cours_id ].nil?
+          devoir.update( cours_id: params[:cours_id] )
         else
-          devoir = Devoir.create( type_devoir_id: params[:type_devoir_id],
+          cours = Cours.where( creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id] )
+                       .where( date_cours: params[:date_due] )
+                       .where( deleted: false )
+                       .first
+          if cours.nil?
+            cahier_de_textes = CahierDeTextes.where( regroupement_id: params[:regroupement_id] ).first
+            cahier_de_textes = CahierDeTextes.create( date_creation: Time.now,
+                                                      regroupement_id: params[:regroupement_id] ) if cahier_de_textes.nil?
+
+            cours = Cours.create( enseignant_id: user[:uid],
+                                  cahier_de_textes_id: cahier_de_textes.id,
                                   creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
-                                  contenu: params[:contenu],
-                                  date_due: params[:date_due],
-                                  temps_estime: params[:temps_estime],
-                                  date_creation: Time.now )
-
-          if params[ :cours_id ] && !params[ :cours_id ].nil?
-            devoir.update( cours_id: params[:cours_id] )
-          else
-            cours = Cours.where( creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id] )
-                         .where( date_cours: params[:date_due] )
-                         .where( deleted: false )
-                         .first
-            if cours.nil?
-              cahier_de_textes = CahierDeTextes.where( regroupement_id: params[:regroupement_id] ).first
-              cahier_de_textes = CahierDeTextes.create( date_creation: Time.now,
-                                                        regroupement_id: params[:regroupement_id] ) if cahier_de_textes.nil?
-
-              cours = Cours.create( enseignant_id: user[:uid],
-                                    cahier_de_textes_id: cahier_de_textes.id,
-                                    creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
-                                    date_cours: params[:date_due],
-                                    date_creation: Time.now,
-                                    contenu: '' )
-            end
-            devoir.update( cours_id: cours.id )
+                                  date_cours: params[:date_due],
+                                  date_creation: Time.now,
+                                  contenu: '' )
           end
-
-          # 3. traitement des ressources
-          params[:ressources] && params[:ressources].each do
-            |ressource|
-            devoir.add_ressource( DataManagement::Accessors.create_or_get( Ressource, { name: ressource['name'],
-                                                                                        hash: ressource['hash'] } ) )
-          end
-
-          hash = devoir.to_deep_hash
-          hash[:devoir_todo_items] = []
-
-          # BUG: to_deep_hash casse les hash des ressources
-          hash[:ressources] = devoir.ressources.map do |ressource|
-            ressource.to_hash
-          end
-
-          hash
+          devoir.update( cours_id: cours.id )
         end
+
+        devoir.modifie( params )
+
+        devoir.to_deep_hash
       end
 
       desc 'modifie un devoir'
@@ -176,38 +136,11 @@ module CahierDeTextesAPI
         user_needs_to_be( %w( ENS ), true )
 
         devoir = Devoir[ params[:id] ]
-        if devoir.nil?
-          error!( 'Devoir inconnu', 404 )
-        else
+        error!( 'Devoir inconnu', 404 ) if devoir.nil?
 
-          devoir.date_due = params[:date_due] if devoir.date_due != params[:date_due]
-          devoir.creneau_emploi_du_temps_id = params[:creneau_emploi_du_temps_id] if devoir.creneau_emploi_du_temps_id != params[:creneau_emploi_du_temps_id]
+        devoir.modifie( params )
 
-          devoir.type_devoir_id = params[:type_devoir_id] if devoir.type_devoir_id != params[:type_devoir_id]
-          devoir.contenu = params[:contenu] if devoir.contenu != params[:contenu]
-          devoir.temps_estime = params[:temps_estime] if devoir.temps_estime != params[:temps_estime]
-
-          devoir.update( cours_id: params[:cours_id] ) if params[ :cours_id ]
-
-          devoir.remove_all_ressources if params[:ressources]
-          params[:ressources].each do |ressource|
-            devoir.add_ressource( DataManagement::Accessors.create_or_get( Ressource, { name: ressource['name'],
-                                                                                        hash: ressource['hash'] } ) )
-          end if params[:ressources]
-
-          devoir.date_modification = Time.now
-          devoir.save
-
-          hash = devoir.to_deep_hash
-          hash[:devoir_todo_items] = []
-
-          # BUG: to_deep_hash casse les hash des ressources
-          hash[:ressources] = devoir.ressources.map do |ressource|
-            ressource.to_hash
-          end
-
-          hash
-        end
+        devoir.to_deep_hash
       end
 
       desc 'copie un devoir pour le rattacher à une autre SP et un créneau et une date_due différente'
@@ -221,20 +154,11 @@ module CahierDeTextesAPI
         user_needs_to_be( %w( ENS ), true )
 
         devoir = Devoir[ params[:id] ]
+        error!( 'Devoir inconnu', 404 ) if devoir.nil?
 
-        nouveau_devoir = Devoir.create( cours_id: params[:cours_id],
-                                        type_devoir_id: devoir[:type_devoir_id],
-                                        creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
-                                        contenu: devoir[:contenu],
-                                        date_due: params[:date_due],
-                                        temps_estime: devoir[:temps_estime],
-                                        date_creation: Time.now )
+        devoir.copie( params[:cours_id], params[:creneau_emploi_du_temps_id], params[:date_due] )
 
-        devoir.ressources.each do |ressource|
-          nouveau_devoir.add_ressource ressource
-        end
-
-        nouveau_devoir
+        devoir
       end
 
       desc 'marque un devoir comme fait'
@@ -245,21 +169,11 @@ module CahierDeTextesAPI
         user_needs_to_be( %w( ELV ), false )
 
         devoir = Devoir[ params[:id] ]
-        devoir.fait_par?( user[:uid] ) ? devoir.a_faire_par!( user[:uid] ) : devoir.fait_par!( user[:uid] )
+        error!( 'Devoir inconnu', 404 ) if devoir.nil?
 
-        hash = devoir.to_deep_hash
-        hash[:devoir_todo_items] = [] if user.nil?
-        hash[:devoir_todo_items].select! { |dti| dti[:eleve_id] == user[:uid] } unless user.nil?
+        devoir.toggle_fait( user )
 
-        hash[:fait] = user.nil? ? false : devoir.fait_par?( user[:uid] )
-        hash[:date_fait] = hash[:fait] ? devoir.fait_le( user[:uid] ) : nil
-
-        # BUG: to_deep_hash casse les hash des ressources
-        hash[:ressources] = devoir.ressources.map do |ressource|
-          ressource.to_hash
-        end
-
-        hash
+        devoir.to_deep_hash( user )
       end
 
       desc 'marque un devoir comme éffacé et inversement'
@@ -270,25 +184,11 @@ module CahierDeTextesAPI
         user_needs_to_be( %w( ENS ), true )
 
         devoir = Devoir[ params[:id] ]
+        error!( 'Devoir inconnu', 404 ) if devoir.nil?
 
-        unless devoir.nil?
-          devoir.update( deleted: !devoir.deleted, date_modification: Time.now )
-          devoir.save
+        devoir.toggle_deleted
 
-          hash = devoir.to_deep_hash
-          hash[:devoir_todo_items].select! { |dti| dti[:eleve_id] == user[:uid] } unless user.nil?
-          hash[:devoir_todo_items] = [] if user.nil?
-
-          hash[:fait] = user.nil? ? false : devoir.fait_par?( user[:uid] )
-          hash[:date_fait] = hash[:fait] ? devoir.fait_le( user[:uid] ) : nil
-
-          # BUG: to_deep_hash casse les hash des ressources
-          hash[:ressources] = devoir.ressources.map do |ressource|
-            ressource.to_hash
-          end
-
-          hash
-        end
+        devoir.to_deep_hash( user )
       end
     end
   end

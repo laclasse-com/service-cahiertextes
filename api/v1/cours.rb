@@ -25,20 +25,7 @@ module CahierDeTextesAPI
         cours = Cours[ params[:id] ]
         error!( 'Cours inconnu', 404 ) if cours.nil? || ( cours.deleted && cours.date_modification < UNDELETE_TIME_WINDOW.minutes.ago )
 
-        hcours = cours.to_deep_hash
-        # BUG: to_deep_hash casse les hash des ressources
-        hcours[:ressources] = cours.ressources.map do |ressource|
-          ressource.to_hash
-        end
-        hcours[:devoirs] = cours.devoirs.select { |devoir| !devoir.deleted || devoir.date_modification > UNDELETE_TIME_WINDOW.minutes.ago }
-        hcours[:devoirs].each do |devoir|
-          devoir[:ressources] = devoir.ressources.map do |ressource|
-            ressource.to_hash
-          end
-
-        end
-
-        hcours
+        cours.to_deep_hash
       end
 
       desc 'renseigne une séquence pédagogique'
@@ -53,6 +40,9 @@ module CahierDeTextesAPI
       post do
         user_needs_to_be( %w( ENS ), true )
 
+        error!( 'Créneau invalide', 409 ) if CreneauEmploiDuTemps[ params[:creneau_emploi_du_temps_id] ].nil?
+
+        # FIXME: do away with this, pass :regroupement_id to Cours and let it deal with it
         cahier_de_textes = CahierDeTextes.where( regroupement_id: params[:regroupement_id] ).first
         cahier_de_textes = CahierDeTextes.create( date_creation: Time.now,
                                                   regroupement_id: params[:regroupement_id] ) if cahier_de_textes.nil?
@@ -61,22 +51,11 @@ module CahierDeTextesAPI
                               creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
                               date_cours: params[:date_cours].to_s,
                               date_creation: Time.now,
-                              contenu: params[:contenu] )
+                              contenu: '' )
 
-        params[:ressources] && params[:ressources].each do
-          |ressource|
+        cours.modifie( params )
 
-          cours.add_ressource( DataManagement::Accessors.create_or_get( Ressource, { name: ressource['name'],
-                                                                                     hash: ressource['hash'] } ) )
-        end
-
-        hcours = cours.to_deep_hash
-        # BUG: to_deep_hash casse les hash des ressources
-        hcours[:ressources] = cours.ressources.map do |ressource|
-          ressource.to_hash
-        end
-
-        hcours
+        cours.to_deep_hash
       end
 
       desc 'modifie une séquence pédagogique'
@@ -91,30 +70,12 @@ module CahierDeTextesAPI
 
         cours = Cours[ params[:id] ]
 
-        unless cours.nil? || !cours.date_validation.nil?
-          cours.contenu = params[:contenu]
-          cours.date_modification = Time.now
+        error!( 'Cours inconnu', 404 ) if cours.nil?
+        error!( 'Cours visé non modifiable', 401 ) unless cours.date_validation.nil?
 
-          if params[:ressources]
-            cours.remove_all_ressources
-            params[:ressources].each do
-              |ressource|
+        cours.modifie( params )
 
-              cours.add_ressource( DataManagement::Accessors.create_or_get( Ressource, { name: ressource['name'],
-                                                                                         hash: ressource['hash'] } ) )
-            end
-          end
-
-          cours.save
-
-          hcours = cours.to_deep_hash
-          # BUG: to_deep_hash casse les hash des ressources
-          hcours[:ressources] = cours.ressources.map do |ressource|
-            ressource.to_hash
-          end
-
-          hcours
-        end
+        cours.to_deep_hash
       end
 
       desc 'valide une séquence pédagogique'
@@ -125,20 +86,11 @@ module CahierDeTextesAPI
         user_needs_to_be( %w( DIR ), false )
 
         cours = Cours[ params[:id] ]
+        error!( 'Cours inconnu', 404 ) if cours.nil?
 
-        unless cours.nil?
-          cours.date_validation = cours.date_validation.nil? ? Time.now : nil
+        cours.toggle_validated
 
-          cours.save
-
-          hcours = cours.to_deep_hash
-          # BUG: to_deep_hash casse les hash des ressources
-          hcours[:ressources] = cours.ressources.map do |ressource|
-            ressource.to_hash
-          end
-
-          hcours
-        end
+        cours.to_deep_hash
       end
 
       desc 'copie une séquence pédagogique'
@@ -153,38 +105,14 @@ module CahierDeTextesAPI
 
         cours = Cours[ params[:id] ]
 
-        unless cours.nil?
-          cahier_de_textes = CahierDeTextes.where( regroupement_id: params[:regroupement_id] ).first
-          cahier_de_textes = CahierDeTextes.create( date_creation: Time.now,
-                                                    regroupement_id: params[:regroupement_id] ) if cahier_de_textes.nil?
+        error!( 'Cours inconnu', 404 ) if cours.nil?
 
-          target_cours = Cours.where( cahier_de_textes_id: cahier_de_textes.id,
-                                      creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
-                                      date_cours: params[:date] ).first
+        nouveau_cours = cours.copie( params[:regroupement_id], params[:creneau_emploi_du_temps_id], params[:date] )
 
-          if target_cours.nil?
-            target_cours = Cours.create( cahier_de_textes_id: cahier_de_textes.id,
-                                         creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
-                                         date_cours: params[:date],
-                                         date_creation: Time.now,
-                                         contenu: cours.contenu,
-                                         enseignant_id: cours.enseignant_id )
+        hash = cours.to_deep_hash
+        hash[:copie_id] = nouveau_cours[:id]
 
-            cours.ressources.each do |ressource|
-              target_cours.add_ressource( ressource )
-            end
-
-            hcours = cours.to_deep_hash
-            # BUG: to_deep_hash casse les hash des ressources
-            hcours[:ressources] = cours.ressources.map do |ressource|
-              ressource.to_hash
-            end
-            hcours[:devoirs] = cours.devoirs.select { |devoir| !devoir.deleted || devoir.date_modification > UNDELETE_TIME_WINDOW.minutes.ago }
-            hcours[:copie_id] = target_cours.id
-
-            hcours
-          end
-        end
+        hash
       end
 
       desc 'marque une séquence pédagogique comme éffacée et inversement'
@@ -194,31 +122,14 @@ module CahierDeTextesAPI
       delete '/:id' do
         user_needs_to_be( %w( ENS ), true )
 
-        cours = Cours[ params[:id] ]
+        cours = Cours[ params[:id].to_i ]
 
-        unless cours.nil? || !cours.date_validation.nil?
-          cours.update( deleted: !cours.deleted, date_modification: Time.now )
-          cours.save
+        error!( 'Cours inconnu', 404 ) if cours.nil?
+        error!( 'Cours visé non modifiable', 401 ) unless cours.date_validation.nil?
 
-          cours.devoirs.each do |devoir|
-            if cours.deleted
-              devoir.update( deleted: cours.deleted, date_modification: Time.now )
-            elsif devoir.date_modification <= UNDELETE_TIME_WINDOW.minutes.ago
-              devoir.update( deleted: cours.deleted, date_modification: Time.now )
-            end
-            devoir.save
-          end
+        cours.toggle_deleted
 
-          hcours = cours.to_deep_hash
-          hcours[:devoirs] = cours.devoirs.select { |devoir| !devoir.deleted || devoir.date_modification > UNDELETE_TIME_WINDOW.minutes.ago }
-
-          # BUG: to_deep_hash casse les hash des ressources
-          hcours[:ressources] = cours.ressources.map do |ressource|
-            ressource.to_hash
-          end
-
-          hcours
-        end
+        cours.to_deep_hash
       end
     end
   end
