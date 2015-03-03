@@ -152,19 +152,9 @@ angular.module( 'cahierDeTextesClientApp' )
 	       } ] );
 
 angular.module( 'cahierDeTextesClientApp' )
-    .factory('CahierDeTextes',
-	     [ '$resource', 'APP_PATH', 'API_VERSION',
-	       function( $resource, APP_PATH, API_VERSION ) {
-		   return $resource( APP_PATH + '/api/' + API_VERSION + '/cahiers_de_textes/regroupement/:regroupement_id',
-				     { regroupement_id: '@regroupement_id' });
-	       } ] );
-
-
-
-angular.module( 'cahierDeTextesClientApp' )
     .service('API',
-	     [ '$http', 'APP_PATH', 'API_VERSION', 'Classes', 'Cours', 'CreneauEmploiDuTemps', 'Devoirs', 'EmploisDuTemps', 'Enseignants', 'TypesDeDevoir', 'PlagesHoraires', 'CahierDeTextes',
-	       function( $http, APP_PATH, API_VERSION, Classes, Cours, CreneauEmploiDuTemps, Devoirs, EmploisDuTemps, Enseignants, TypesDeDevoir, PlagesHoraires, CahierDeTextes ) {
+	     [ '$http', 'APP_PATH', 'API_VERSION', 'Classes', 'Cours', 'CreneauEmploiDuTemps', 'Devoirs', 'EmploisDuTemps', 'Enseignants', 'TypesDeDevoir', 'PlagesHoraires',
+	       function( $http, APP_PATH, API_VERSION, Classes, Cours, CreneauEmploiDuTemps, Devoirs, EmploisDuTemps, Enseignants, TypesDeDevoir, PlagesHoraires ) {
 		   this.query_classes = function( params ) {
 		       return Classes.query( params );
 		   };
@@ -211,9 +201,5 @@ angular.module( 'cahierDeTextesClientApp' )
 		   this.get_plage_horaire = function( params ) {
 		       return PlagesHoraires.get( params );
 		   };
-
-		   this.get_cahier_de_textes = _.memoize( function( params ) {
-		       return CahierDeTextes.get( params );
-		   } );
 	       }
 	     ] );
