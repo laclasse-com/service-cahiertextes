@@ -83,7 +83,7 @@ module CahierDeTextesAPI
         requires :id
       }
       put '/:id/valide' do
-        user_needs_to_be( %w( DIR ), false )
+        user_needs_to_be( %w( DIR ), true )
 
         cours = Cours[ params[:id] ]
         error!( 'Cours inconnu', 404 ) if cours.nil?
