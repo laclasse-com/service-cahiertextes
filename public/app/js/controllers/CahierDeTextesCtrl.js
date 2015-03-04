@@ -2,8 +2,8 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller('CahierDeTextesCtrl',
-		[ '$scope', '$sce', '$q', '$stateParams', 'APP_PATH', 'DOCS_URL', 'API', 'Annuaire', 'EmploisDuTemps', 'current_user', 'PopupsCreneau', 'CreneauEmploiDuTemps',
-		  function ( $scope, $sce, $q, $stateParams, APP_PATH, DOCS_URL, API, Annuaire, EmploisDuTemps, current_user, PopupsCreneau, CreneauEmploiDuTemps ) {
+		[ '$scope', '$sce', '$q', '$stateParams', 'APP_PATH', 'DOCS_URL', 'API', 'EmploisDuTemps', 'current_user', 'PopupsCreneau', 'CreneauEmploiDuTemps',
+		  function ( $scope, $sce, $q, $stateParams, APP_PATH, DOCS_URL, API, EmploisDuTemps, current_user, PopupsCreneau, CreneauEmploiDuTemps ) {
 		      $scope.current_user = current_user;
 
 		      var matieres = [];
@@ -51,7 +51,7 @@ angular.module( 'cahierDeTextesClientApp' )
 			      .compact()
 			      .reject( function( id ) { return id === 'undefined'; } )
 			      .map(function(matiere_id) {
-				  return [ matiere_id, Annuaire.get_matiere( matiere_id ) ];
+				  return [ matiere_id, _($scope.current_user.profil_actif.matieres).findWhere({ id: matiere_id }) ];
 			      })
 			      .object()
 			      .value();

@@ -71,13 +71,7 @@ angular.module( 'cahierDeTextesClientApp' )
 			      .uniq()
 			      .compact()
 			      .map( function( matiere_id ) {
-				  var matiere = { id: matiere_id,
-						  libelle: 'Matière inconnue !' };
-				  Annuaire.get_matiere( matiere_id ).$promise.then(
-				      function success( response ) {
-					  matiere.libelle = response.libelle_long;
-				      });
-				  return matiere;
+				  return _($scope.current_user.profil_actif.matieres).findWhere({ id: matiere_id });
 			      })
 			      .value();
 		      };
@@ -86,7 +80,7 @@ angular.module( 'cahierDeTextesClientApp' )
 			  return _.chain( data )
 			      .pluck( 'regroupement_id' )
 			      .map( function( regroupement_id ) {
-				  return Annuaire.get_regroupement( regroupement_id ).$promise;
+				  return _($scope.current_user.profil_actif.classes).findWhere({ id: regroupement_id });
 			      })
 			      .value();
 		      };

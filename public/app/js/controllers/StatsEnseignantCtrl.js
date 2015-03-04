@@ -172,12 +172,22 @@ angular.module( 'cahierDeTextesClientApp' )
 				   $scope.raw_data = response.saisies;
 				   $scope.matieres = extract( $scope.raw_data, 'matiere_id',
 							      function( matiere_id ) {
-								  return [ matiere_id, Annuaire.get_matiere( matiere_id ) ];
+								  var matiere = _($scope.current_user.profil_actif.matieres).findWhere({ id: matiere_id });
+								  if ( _(matiere).isUndefined() ) {
+								      matiere = Annuaire.get_matiere( matiere_id );
+								  }
+
+								  return [ matiere_id, matiere ];
 							      } );
 
 				   $scope.classes = extract( $scope.raw_data, 'regroupement_id',
 							     function( regroupement_id ) {
-								 return [ regroupement_id, Annuaire.get_regroupement( regroupement_id ) ];
+								 regroupement_id = parseInt( regroupement_id );
+								 var regroupement = _($scope.current_user.profil_actif.classes).findWhere({ id: regroupement_id });
+								 if ( _(regroupement).isUndefined() ) {
+								     regroupement = Annuaire.get_regroupement( regroupement_id );
+								 }
+								 return [ regroupement_id, regroupement ];
 							     } );
 				   $q.all( $scope.classes ).then( function() {
 				       $scope.process_data();

@@ -47,7 +47,7 @@ angular.module( 'cahierDeTextesClientApp' )
 					      CreneauEmploiDuTemps.get({ id: devoir.creneau_emploi_du_temps_id })
 						  .$promise.then( function success( response ) {
 						      devoir.creneau_emploi_du_temps = response;
-						      $scope.matieres[ devoir.creneau_emploi_du_temps.matiere_id ] = Annuaire.get_matiere( devoir.creneau_emploi_du_temps.matiere_id );
+						      $scope.matieres[ devoir.creneau_emploi_du_temps.matiere_id ] = _($scope.current_user.profil_actif.matieres).findWhere({ id: devoir.creneau_emploi_du_temps.matiere_id });
 						      devoir.matiere = $scope.matieres[ devoir.creneau_emploi_du_temps.matiere_id ];
 						  });
 

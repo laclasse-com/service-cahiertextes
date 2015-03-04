@@ -56,7 +56,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				  });
 			  } };
 
-		      $scope.extract_classes_promises = function( details_enseignants ) {
+		      $scope.extract_classes = function( details_enseignants ) {
 			  return _.chain(details_enseignants)
 			      .toArray()
 			      .pluck('classes')
@@ -64,7 +64,13 @@ angular.module( 'cahierDeTextesClientApp' )
 			      .pluck('classe_id')
 			      .uniq()
 			      .map(function( regroupement_id ) {
-				  return Annuaire.get_regroupement( regroupement_id ).$promise;
+				  regroupement_id = parseInt( regroupement_id );
+				  var regroupement = _(current_user.profil_actif.classes).findWhere({ id: regroupement_id });
+				  if ( _(regroupement).isUndefined() ) {
+				      regroupement = Annuaire.get_regroupement( regroupement_id );
+				  }
+
+				  return regroupement;
 			      })
 			      .value();
 		      };
@@ -161,7 +167,7 @@ angular.module( 'cahierDeTextesClientApp' )
 					  $scope.details_enseignants[enseignant.id_ent] = enseignant;
 				      });
 
-				      $q.all( $scope.extract_classes_promises( $scope.details_enseignants ) )
+				      $q.all( $scope.extract_classes( $scope.details_enseignants ) )
 					  .then( function( classes ) {
 					      $scope.classes = _(classes).map(function( classe ) {
 						  return { id: classe.id,

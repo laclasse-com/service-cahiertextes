@@ -36,7 +36,7 @@ angular.module( 'cahierDeTextesClientApp' )
 					 this.allDay = false;
 					 this.regroupement = _($scope.current_user.profil_actif.classes).findWhere({ id: parseInt( this.details.regroupement_id ) });
 					 this.title = this.regroupement.libelle;
-					 this.matiere = Annuaire.get_matiere( this.details.matiere_id );
+					 this.matiere = _($scope.current_user.profil_actif.matieres).findWhere({ id: this.details.matiere_id });
 					 this.has_resources = _(event.cours).has( 'ressources' ) && event.cours.ressources.length > 0;
 					 this.temps_estime = 0;
 					 this.start = moment( event.start );
@@ -137,9 +137,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				     var elt_fc_content = element.find( '.fc-content' );
 
 				     if ( !_(event.matiere).isUndefined() ) {
-					 event.matiere.$promise.then( function() {
-					     elt_fc_content_title.append( ' - ' + event.matiere.libelle_long );
-					 } );
+					 elt_fc_content_title.append( ' - ' + event.matiere.libelle_long );
 				     }
 
 				     if ( event.has_resources ) {
