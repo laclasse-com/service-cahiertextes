@@ -26,13 +26,4 @@ class CahierDeTextes < Sequel::Model( :cahiers_de_textes )
               filled: tmp_cours.count,
               validated: tmp_cours.where( :date_validation ).count } } } } }
   end
-
-  # Valide tout un cahier de texte
-  def valide!
-    Cours
-      .where( cahier_de_textes_id: id )
-      .where( 'date_validation IS NULL' )
-      .where( deleted: false )
-      .update( date_validation: Time.now )
-  end
 end
