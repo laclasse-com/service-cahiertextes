@@ -53,3 +53,7 @@ config/constants.rb
 /public/app/vendor/vendor.min.css
 /public/app/js/cdt.min.js.map
 /public/app/vendor/vendor.min.js.map
+/cahierdetextes*.sql
+/config/options.rb.legacy-master
+/config/options.rb.prod_v2
+/config/options.rb.v3
