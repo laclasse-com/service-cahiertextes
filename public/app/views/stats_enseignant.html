@@ -3,7 +3,7 @@
     <div class="row">
       <h4 class="col-md-6 pull-left">{{enseignant.prenom}} {{enseignant.nom}}</h4>
 
-      <select class="col-md-3 pull-right" data-ng-model="classe" data-ng-change="process_data()" data-ng-options="class as class.libelle for (id, class) in classes | orderBy:'libelle'">
+      <select class="col-md-3 pull-right" data-ng-model="classe" data-ng-change="process_data()" data-ng-options="classe as classe.libelle group by classe.type for (id, classe) in classes | orderBy:'libelle'">
 	<option value="">Toutes les classes</option>
       </select>
 
