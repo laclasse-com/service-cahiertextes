@@ -58,20 +58,16 @@ angular.module( 'cahierDeTextesClientApp' )
 
 		      $scope.extract_classes = function( details_enseignants ) {
 			  return _.chain(details_enseignants)
-			      .toArray()
-			      .pluck('classes')
+			      .map( function( enseignant ) {
+				  return [ _(enseignant.classes).map( function( regroupement ) { return { id: regroupement.classe_id,
+													  libelle: regroupement.classe_libelle,
+													  type: 'classe' }; } ),
+					   _(enseignant.groupes_eleves).map( function( regroupement ) { return { id: regroupement.groupe_id,
+														 libelle: regroupement.groupe_libelle,
+														 type: 'groupe' }; } ) ];
+			      } )
 			      .flatten()
-			      .pluck('classe_id')
-			      .uniq()
-			      .map(function( regroupement_id ) {
-				  regroupement_id = parseInt( regroupement_id );
-				  var regroupement = _(current_user.profil_actif.classes).findWhere({ id: regroupement_id });
-				  if ( _(regroupement).isUndefined() ) {
-				      regroupement = Annuaire.get_regroupement( regroupement_id );
-				  }
-
-				  return regroupement;
-			      })
+			      .uniq( function( regroupement ) { return regroupement.id; } )
 			      .value();
 		      };
 
@@ -167,14 +163,8 @@ angular.module( 'cahierDeTextesClientApp' )
 					  $scope.details_enseignants[enseignant.id_ent] = enseignant;
 				      });
 
-				      $q.all( $scope.extract_classes( $scope.details_enseignants ) )
-					  .then( function( classes ) {
-					      $scope.classes = _(classes).map(function( classe ) {
-						  return { id: classe.id,
-							   libelle : classe.libelle !== null ? classe.libelle : classe.libelle_aaf };
-					      });
-					      $scope.process_data();
-					  });
+				      $scope.classes = $scope.extract_classes( $scope.details_enseignants );
+				      $scope.process_data();
 				  });
 			  } );
 
