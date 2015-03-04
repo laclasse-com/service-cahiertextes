@@ -16,9 +16,9 @@ module CahierDeTextesAPI
       get '/:uai/statistiques/classes' do
         etablissement = Etablissement.where(uai: params[:uai]).first
 
-        etablissement.statistiques_classes unless etablissement.nil?
-
         error!( "Établissement #{params[:uai]} inconnu", 404 ) if etablissement.nil?
+
+        etablissement.statistiques_classes
       end
 
       desc 'statistiques du cahier de textes d\'une classe'
@@ -31,7 +31,7 @@ module CahierDeTextesAPI
 
         error!( "Classe #{params[:regroupement_id]} inconnue dans l'établissement #{params[:uai]}", 404 ) if cahier_de_textes.nil?
 
-        cahier_de_textes.statistiques unless cahier_de_textes.nil?
+        cahier_de_textes.statistiques
       end
 
       desc 'statistiques des cahiers de textes par enseignants/mois'
@@ -43,7 +43,7 @@ module CahierDeTextesAPI
 
         error!( "Établissement #{params[:uai]} inconnu", 404 ) if etablissement.nil?
 
-        etablissement.statistiques_enseignants unless etablissement.nil?
+        etablissement.statistiques_enseignants
       end
 
       desc 'saisies détaillées d\'un enseignant dans les cahiers de textes par mois/classes'
@@ -56,7 +56,7 @@ module CahierDeTextesAPI
 
         error!( "Établissement #{params[:uai]} inconnu", 404 ) if etablissement.nil?
 
-        etablissement.saisies_enseignant( params[:enseignant_id] ) unless etablissement.nil?
+        etablissement.saisies_enseignant( params[:enseignant_id] )
       end
     end
   end
