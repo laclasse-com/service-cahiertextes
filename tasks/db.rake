@@ -33,4 +33,10 @@ namespace :db do
     Sequel.extension :migration
     exit Sequel::Migrator.is_current?( Sequel::Model.db, 'migrations' ) ? 0 : 1
   end
+
+  desc 'Dumps database'
+  task dump: :load_config do
+    STDERR.puts "Dumping database #{DB_CONFIG[:name]} into #{DB_CONFIG[:name]}_#{Time.now.strftime('%F')}.sql"
+    `mysqldump -u #{DB_CONFIG[:user]} -p#{DB_CONFIG[:password]} #{DB_CONFIG[:name]} > #{DB_CONFIG[:name]}_#{Time.now.strftime('%F')}.sql`
+  end
 end
