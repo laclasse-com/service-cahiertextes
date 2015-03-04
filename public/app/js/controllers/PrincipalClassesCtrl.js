@@ -71,7 +71,12 @@ angular.module( 'cahierDeTextesClientApp' )
 			      .uniq()
 			      .compact()
 			      .map( function( matiere_id ) {
-				  return _($scope.current_user.profil_actif.matieres).findWhere({ id: matiere_id });
+				  var matiere = _(current_user.profil_actif.matieres).findWhere({ id: matiere_id });
+				  if ( _(matiere).isUndefined() ) {
+				      matiere = Annuaire.get_matiere( matiere_id );
+				  }
+
+				  return matiere;
 			      })
 			      .value();
 		      };
@@ -79,8 +84,14 @@ angular.module( 'cahierDeTextesClientApp' )
 		      $scope.extract_classes = function( data ) {
 			  return _.chain( data )
 			      .pluck( 'regroupement_id' )
-			      .map( function( regroupement_id ) {
-				  return _($scope.current_user.profil_actif.classes).findWhere({ id: regroupement_id });
+			      .map(function( regroupement_id ) {
+				  regroupement_id = parseInt( regroupement_id );
+				  var regroupement = _(current_user.profil_actif.classes).findWhere({ id: regroupement_id });
+				  if ( _(regroupement).isUndefined() ) {
+				      regroupement = Annuaire.get_regroupement( regroupement_id );
+				  }
+
+				  return regroupement;
 			      })
 			      .value();
 		      };
@@ -165,18 +176,12 @@ angular.module( 'cahierDeTextesClientApp' )
 
 			      if ( ! $scope.empty ) {
 				  // Extraction des matières
-				  $q.all( $scope.extract_matieres( $scope.raw_data ) )
-				      .then( function( response ) {
-					  $scope.matieres = response;
+				  $scope.matieres = $scope.extract_matieres( $scope.raw_data );
 
-					  // Extraction des classes
-					  $q.all( $scope.extract_classes( $scope.raw_data ) )
-					      .then( function( response ) {
-						  $scope.classes = response;
+				  // Extraction des classes
+				  $scope.classes = $scope.extract_classes( $scope.raw_data );
 
-						  $scope.process_data();
-					      });
-				      });
+				  $scope.process_data();
 			      }
 			  });
 
