@@ -13,17 +13,20 @@ class CahierDeTextes < Sequel::Model( :cahiers_de_textes )
         .association_join( :creneau_emploi_du_temps )
         .select( :matiere_id )
         .group_by( :matiere_id )
-        .map { |record|
+        .map do |record|
         { matiere_id: record.values[:matiere_id],
-          mois: (1..12).map {
-            |month|
+          mois: (1..12).map do |month|
             tmp_cours = cours
-              .association_join( :creneau_emploi_du_temps )
-              .where( matiere_id: record.values[:matiere_id] )
-              .where( 'extract( month from date_cours ) = ' + month.to_s )
+                        .association_join( :creneau_emploi_du_temps )
+                        .where( matiere_id: record.values[:matiere_id] )
+                        .where( 'extract( month from date_cours ) = ' + month.to_s )
 
             { mois: month,
               filled: tmp_cours.count,
-              validated: tmp_cours.where( :date_validation ).count } } } } }
+              validated: tmp_cours.where( :date_validation ).count }
+          end
+        }
+      end
+    }
   end
 end
