@@ -166,7 +166,7 @@ module CahierDeTextesAPI
         requires :id
       }
       put '/:id/fait' do
-        user_needs_to_be( %w( ELV ), false )
+        user_needs_to_be( %w( ELV ), true )
 
         devoir = Devoir[ params[:id] ]
         error!( 'Devoir inconnu', 404 ) if devoir.nil?

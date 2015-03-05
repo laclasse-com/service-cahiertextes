@@ -2,12 +2,12 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller( 'PopupEditionCtrl',
-		 [ '$scope', '$filter', '$q', '$sce', '$modalInstance', '$locale',
-		   'APP_PATH', 'DOCS_URL', 'SEMAINES_VACANCES', 'ZONE',
+		 [ '$scope', '$filter', '$q', '$sce', '$modalInstance', '$locale', 'toastr',
+		   'APP_PATH', 'DOCS_URL', 'SEMAINES_VACANCES', 'ZONE', 'POPUP_ACTIONS',
 		   'Documents', 'API', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs', 'User',
 		   'cours', 'devoirs', 'creneau', 'raw_data', 'classes', 'matieres',
-		   function ( $scope, $filter, $q, $sce, $modalInstance, $locale,
-			      APP_PATH, DOCS_URL, SEMAINES_VACANCES, ZONE,
+		   function ( $scope, $filter, $q, $sce, $modalInstance, $locale, toastr,
+			      APP_PATH, DOCS_URL, SEMAINES_VACANCES, ZONE, POPUP_ACTIONS,
 			      Documents, API, CreneauEmploiDuTemps, Cours, Devoirs, User,
 			      cours, devoirs, creneau, raw_data, classes, matieres )
 		   {
@@ -20,6 +20,7 @@ angular.module( 'cahierDeTextesClientApp' )
 		       $scope.erreurs = [];
 		       $scope.dirty = false;
 		       $scope.mode_duplication = false;
+		       $scope.actions_done = [];
 
 		       // http://stackoverflow.com/questions/19408883/angularjs-select-not-2-way-binding-to-model
 		       $scope.scope = $scope;
@@ -89,8 +90,6 @@ angular.module( 'cahierDeTextesClientApp' )
 			   var tmp_overlay_semainier = _.range(1, 53).map( function( s ) { return { semaine: s,
 												    mois: what_month( s ) }; } );
 
-			   // $scope.overlay_semainier = _(tmp_overlay_semainier).where( function( s ) { return s.mois > 7; } );
-			   // $scope.overlay_semainier.concat( _(tmp_overlay_semainier).where( function( s ) { return s.mois < 8; } ) );
 			   $scope.overlay_semainier = tmp_overlay_semainier;
 			   $scope.overlay_semainier = _.chain($scope.overlay_semainier)
 			       .groupBy( function( s ) { return s.mois; } )
@@ -189,6 +188,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				       date_creneau: $scope.creneau.heure_debut
 				   } )
 				       .$promise.then( function () {
+					   $scope.actions_done.push( POPUP_ACTIONS.CRENEAU_DELETED );
 					   $scope.fermer();
 				       } );
 			       };
@@ -213,6 +213,9 @@ angular.module( 'cahierDeTextesClientApp' )
 				       $scope.effacer_creneau();
 				   } else {
 				       $scope.dirty = false;
+				       if ( $scope.actions_done.length == 0 ) {
+					   $scope.actions_done.push( POPUP_ACTIONS.CANCELLED );
+				       }
 				       $scope.fermer();
 				   }
 			       };
@@ -249,6 +252,8 @@ angular.module( 'cahierDeTextesClientApp' )
 				   $scope.creneau.semaines_de_presence_regroupement = bitfield_to_fixnum( $scope.semaines_actives.regroupement );
 
 				   $scope.creneau.$update();
+
+				   $scope.actions_done.push( POPUP_ACTIONS.CRENEAU_MODIFIED );
 			       } else {
 				   // Gestion des Cours et Devoirs
 				   var valider_devoirs = function( devoirs, cours ) {
@@ -264,6 +269,7 @@ angular.module( 'cahierDeTextesClientApp' )
 						   devoir.$save().then( function success( result ) {
 						       devoir.id = result.id;
 						       prom.resolve( result );
+						       $scope.actions_done.push( POPUP_ACTIONS.DEVOIR_CREATED );
 						   }, function ( response ) {
 						       $scope.erreurs.unshift( {
 							   status: response.status,
@@ -275,6 +281,7 @@ angular.module( 'cahierDeTextesClientApp' )
 						   devoir.$update().then( function success( result ) {
 						       devoir.id = result.id;
 						       prom.resolve( result );
+						       $scope.actions_done.push( POPUP_ACTIONS.DEVOIR_MODIFIED );
 						   }, function ( response ) {
 						       $scope.erreurs.unshift( {
 							   status: response.status,
@@ -300,8 +307,10 @@ angular.module( 'cahierDeTextesClientApp' )
 					   $scope.cours.regroupement_id = $scope.selected_regroupement.id;
 					   $scope.cours.creneau_emploi_du_temps_id = $scope.creneau.id;
 					   promesse = $scope.cours.$save();
+					   $scope.actions_done.push( POPUP_ACTIONS.SEQUENCE_PEDAGOGIQUE_CREATED );
 				       } else {
 					   promesse = $scope.cours.$update();
+					   $scope.actions_done.push( POPUP_ACTIONS.SEQUENCE_PEDAGOGIQUE_MODIFIED );
 				       }
 
 				       // Devoirs liés au cours
@@ -591,6 +600,9 @@ angular.module( 'cahierDeTextesClientApp' )
 				       creneau_emploi_du_temps_id: $scope.creneaux_similaires.selected.creneau_emploi_du_temps_id,
 				       date: $scope.creneaux_similaires.selected.start
 				   } ).then( function() {
+				       $scope.actions_done.push( POPUP_ACTIONS.SEQUENCE_PEDAGOGIQUE_DUPLICATED );
+				       toastr.success( '', 'Séquence pédagogique copiée.');
+
 				       _(devoirs).each( function( devoir ) {
 					   devoir.$copie( {
 					       cours_id: $scope.cours.copie_id,
@@ -598,6 +610,8 @@ angular.module( 'cahierDeTextesClientApp' )
 					       date_due: devoir.creneau_cible.date_due
 					   } )
 					       .then( function() {
+						   $scope.actions_done.push( POPUP_ACTIONS.DEVOIR_DUPLICATED );
+						   toastr.success( '', 'Devoir copié.');
 						   devoir.creneau_cible = [];
 					       } );
 				       } );
@@ -608,26 +622,28 @@ angular.module( 'cahierDeTextesClientApp' )
 				       init_cours_existant( $scope.cours );
 
 				       swal( { title: 'Créneau copié !',
-					   type: 'success',
-					   timer: 2000,
-					   showCancelButton: false,
-					   confirmButtonColor: '#ff6b55',
-					   confirmButtonText: 'Fermer'
-				       } );
-
+					       type: 'success',
+					       timer: 2000,
+					       showCancelButton: false,
+					       confirmButtonColor: '#ff6b55',
+					       confirmButtonText: 'Fermer'
+					     } );
 				   } );
 			       };
 
 			       $scope.effacer_cours = function () {
 				   $scope.cours.$delete()
 				       .then( function () {
+					   $scope.actions_done.push( POPUP_ACTIONS.SEQUENCE_PEDAGOGIQUE_DELETED );
 					   init_cours_existant( $scope.cours );
 				       } );
 			       };
 
 			       $scope.effacer_devoir = function ( devoir ) {
 				   if ( _(devoir).has('id') ) {
-				       devoir.$delete();
+				       devoir.$delete().then( function() {
+					   $scope.actions_done.push( POPUP_ACTIONS.DEVOIR_DELETED );
+				       } );
 				   } else {
 				       devoir.deleted = true;
 				   }

@@ -60,6 +60,7 @@ namespace :preprocess_assets do
                                'public/app/vendor/ng-switcher/dist/ng-switcher.min.css',
                                'public/app/vendor/ng-color-picker/color-picker.css',
                                'public/app/vendor/sweetalert/lib/sweet-alert.css',
+                               'public/app/vendor/angular-toastr/dist/angular-toastr.css',
                                'public/app/vendor/charte-graphique-laclasse-com/css/bootstrap-theme.css' ]
                              .map { |fichier| File.read( fichier ) }.join,
                              syntax: :scss,
@@ -121,7 +122,8 @@ namespace :preprocess_assets do
                                                           'public/app/vendor/nvd3/nv.d3.js',
                                                           'public/app/vendor/textAngular/src/textAngular-sanitize.js',
                                                           'public/app/vendor/textAngular/src/textAngularSetup.js',
-                                                          'public/app/vendor/textAngular/src/textAngular.js' ] )
+                                                          'public/app/vendor/textAngular/src/textAngular.js',
+                                                          'public/app/vendor/angular-toastr/dist/angular-toastr.tpls.js' ] )
     File.open( './public/app/vendor/vendor.min.js', 'w' )
         .write( uglified )
     File.open( './public/app/vendor/vendor.min.js.map', 'w' )

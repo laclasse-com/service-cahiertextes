@@ -2,9 +2,9 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller('PopupDisplayCtrl',
-		[ '$scope', '$sce', '$modalInstance', 'APP_PATH', 'DOCS_URL', 'Cours', 'Devoirs', 'User',
+		[ '$scope', '$sce', '$modalInstance', 'toastr', 'APP_PATH', 'DOCS_URL', 'Cours', 'Devoirs', 'User',
 		  'titre', 'cours', 'devoirs',
-		  function( $scope, $sce, $modalInstance, APP_PATH, DOCS_URL, Cours, Devoirs, User,
+		  function( $scope, $sce, $modalInstance, toastr, APP_PATH, DOCS_URL, Cours, Devoirs, User,
 			    titre, cours, devoirs ) {
 		      $scope.app_path = APP_PATH;
 		      $scope.titre = titre;
@@ -54,8 +54,17 @@ angular.module( 'cahierDeTextesClientApp' )
 			  $scope.current_user = response.data;
 
 			  if ( $scope.current_user.profil_actif.profil_id === 'ELV' ) {
-			      $scope.fait = function( id ) {
-				  Devoirs.fait({ id: id });
+			      $scope.fait = function( devoir ) {
+				  devoir.$fait()
+				      .then( function( response ) {
+					  if ( response.fait ) {
+					      toastr.success( 'Devoir fait.',
+							      'Bravo !' );
+					  } else {
+					      toastr.info( 'Devoir à faire',
+							   'Encore un petit effort.' );
+					  }
+				      } );
 			      };
 			  }
 

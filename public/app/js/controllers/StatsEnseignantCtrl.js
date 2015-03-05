@@ -2,8 +2,8 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller( 'StatsEnseignantCtrl',
-		 [ '$scope', '$stateParams', '$q', '$locale', '$timeout', 'API', 'Cours', 'Annuaire', 'current_user', 'PIECHART_DEFINITION', 'BARCHART_DEFINITION',
-		   function ( $scope, $stateParams, $q, $locale, $timeout, API, Cours, Annuaire, current_user, PIECHART_DEFINITION, BARCHART_DEFINITION ) {
+		 [ '$scope', '$stateParams', '$q', '$locale', '$timeout', 'toastr', 'API', 'Cours', 'Annuaire', 'current_user', 'PIECHART_DEFINITION', 'BARCHART_DEFINITION',
+		   function ( $scope, $stateParams, $q, $locale, $timeout, toastr, API, Cours, Annuaire, current_user, PIECHART_DEFINITION, BARCHART_DEFINITION ) {
 		       $scope.mois = _($locale.DATETIME_FORMATS.MONTH).toArray();
 		       $scope.scope = $scope;
 		       $scope.classe = null;
@@ -25,6 +25,7 @@ angular.module( 'cahierDeTextesClientApp' )
 		       };
 
 		       $scope.valide = function( saisie ) {
+			   var disable_toastr = _(saisie).has( 'disable_toastr' );
 			   saisie.cours.$valide().then( function( response ) {
 			       saisie.valide = !_(response.date_validation).isNull();
 
@@ -34,25 +35,46 @@ angular.module( 'cahierDeTextesClientApp' )
 
 				   $timeout( function() { response.date_validation = date_validation_holder; }, 3000 );
 			       }
+
+			       calc_nb_saisies_visables( $scope.raw_data );
+			       if ( !disable_toastr ) {
+				   if ( saisie.valide ) {
+				       toastr.success( 'Séquence pédagogique visée.',
+						       'Opération réussie' );
+				   } else {
+				       toastr.info( 'Séquence pédagogique dé-visée.',
+						   'Opération réussie' );
+				   }
+			       }
 			   } );
 		       };
 
 		       $scope.valide_all = function() {
-			   swal( { title: 'Tout valider ?',
-				   text: 'Cette action va valider toutes les saisies actuellement affichées à l\'écran.',
+			   swal( { title: 'Tout viser ?',
+				   text: 'Cette action va viser toutes les saisies actuellement affichées à l\'écran.',
 				   type: 'warning',
 				   showCancelButton: true,
 				   confirmButtonColor: '#ff6b55',
 				   confirmButtonText: 'Confirmer',
 				   cancelButtonText: 'Annuler' },
 				 function () {
+				     var counter = 0;
 				     _.chain($scope.raw_data)
 					 .reject( function( saisie ) {
 					     return saisie.valide || saisie.recent;
 					 } )
 					 .each( function( saisie ) {
+					     saisie.disable_toastr = true;
 					     $scope.valide( saisie );
+					     counter++;
 					 } );
+
+				     if ( counter > 0 ) {
+					 var pluriel = counter > 1 ? 's' : '';
+					 var message = counter + ' séquence' + pluriel + ' pédagogique' + pluriel + ' visée' + pluriel + '.';
+					 toastr.success( message,
+							 'Opération réussie' );
+				     }
 				 } );
 		       };
 
@@ -112,10 +134,16 @@ angular.module( 'cahierDeTextesClientApp' )
 				       // saisie.devoir = new Devoirs( saisie.devoir );
 				       return saisie;
 				   } );
-			       //$scope.displayed_data = filtre_saisies( $scope.raw_data, $scope.moisCourant, $scope.classe );
 			       // consommation des données par les graphiques
 			       $scope.graphiques.populate( $scope.raw_data );
 			   }
+		       };
+
+		       var calc_nb_saisies_visables = function( raw_data ) {
+			   $scope.nb_saisies_visables = _(raw_data)
+			       .reject( function( saisie ) {
+				   return saisie.valide || saisie.recent;
+			       } ).length;
 		       };
 
 		       $scope.current_user = current_user;
@@ -170,6 +198,9 @@ angular.module( 'cahierDeTextesClientApp' )
 				   };
 
 				   $scope.raw_data = response.saisies;
+
+				   calc_nb_saisies_visables( $scope.raw_data );
+
 				   $scope.matieres = extract( $scope.raw_data, 'matiere_id',
 							      function( matiere_id ) {
 								  var matiere = _($scope.current_user.profil_actif.matieres).findWhere({ id: matiere_id });

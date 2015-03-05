@@ -16,4 +16,5 @@ angular.module( 'cahierDeTextesClientApp', [ 'ngResource',
 					     'textAngular',
 					     'angularFileUpload',
 					     'ngColorPicker',
-					     'ui.checkbox' ] );
+					     'ui.checkbox',
+					     'toastr' ] );

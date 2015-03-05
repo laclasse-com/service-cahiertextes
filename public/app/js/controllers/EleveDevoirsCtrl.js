@@ -2,10 +2,10 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller('EleveDevoirsCtrl',
-		[ '$scope', '$sce', '$timeout',
+		[ '$scope', '$sce', '$timeout', 'toastr',
 		  'APP_PATH', 'DOCS_URL', 'API', 'Annuaire', 'Devoirs', 'Cours', 'CreneauEmploiDuTemps',
 		  'current_user',
-		  function( $scope, $sce, $timeout,
+		  function( $scope, $sce, $timeout, toastr,
 			    APP_PATH, DOCS_URL, API, Annuaire, Devoirs, Cours, CreneauEmploiDuTemps,
 			    current_user ) {
 		      // popup d'affichage des détails
@@ -16,6 +16,13 @@ angular.module( 'cahierDeTextesClientApp' )
 		      $scope.fait = function( devoir ) {
 			  devoir.$fait()
 			      .then( function( response ) {
+				  if ( response.fait ) {
+				      toastr.success( 'Devoir fait.',
+						      'Bravo !' );
+				  } else {
+				      toastr.info( 'Devoir à faire',
+						   'Encore un petit effort.' );
+				  }
 				  if ( !$scope.affiche_faits && !_(response.date_fait).isNull() ) {
 				      var date_fait_holder = response.date_fait;
 				      response.date_fait = null;
