@@ -2,15 +2,15 @@
 
 ##[Angular.js](http://angularjs.org/) Directives for [nvd3.js](http://www.nvd3.org), [d3.js](http://www.d3js.org) charts
 
-[![Build Status](https://travis-ci.org/cmaurer/angularjs-nvd3-directives.png?branch=master)](https://travis-ci.org/cmaurer/angularjs-nvd3-directives)
-[![Dependencies Status](https://david-dm.org/cmaurer/angularjs-nvd3-directives.png)](https://david-dm.org/cmaurer/angularjs-nvd3-directives#info=dependencies)
-[![devDependency Status](https://david-dm.org/cmaurer/angularjs-nvd3-directives/dev-status.png)](https://david-dm.org/cmaurer/angularjs-nvd3-directives#info=devDependencies)
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/cmaurer/angularjs-nvd3-directives/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-[![Stories in Ready](https://badge.waffle.io/cmaurer/angularjs-nvd3-directives.png?label=ready)](https://waffle.io/cmaurer/angularjs-nvd3-directives)
-[![Gitter chat](https://badges.gitter.im/cmaurer/angularjs-nvd3-directives.png)](https://gitter.im/cmaurer/angularjs-nvd3-directives)
+[![Build Status](https://travis-ci.org/angularjs-nvd3-directives/angularjs-nvd3-directives.png?branch=master)](https://travis-ci.org/angularjs-nvd3-directives/angularjs-nvd3-directives)
+[![Dependencies Status](https://david-dm.org/angularjs-nvd3-directives/angularjs-nvd3-directives.png)](https://david-dm.org/angularjs-nvd3-directives/angularjs-nvd3-directives#info=dependencies)
+[![devDependency Status](https://david-dm.org/angularjs-nvd3-directives/angularjs-nvd3-directives/dev-status.png)](https://david-dm.org/angularjs-nvd3-directives/angularjs-nvd3-directives#info=devDependencies)
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/angularjs-nvd3-directives/angularjs-nvd3-directives/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+[![Stories in Ready](https://badge.waffle.io/angularjs-nvd3-directives/angularjs-nvd3-directives.png?label=ready)](https://waffle.io/angularjs-nvd3-directives/angularjs-nvd3-directives)
+[![Gitter chat](https://badges.gitter.im/angularjs-nvd3-directives/angularjs-nvd3-directives.png)](https://gitter.im/angularjs-nvd3-directives/angularjs-nvd3-directives)
 
 
-![Line Charts](http://cmaurer.github.io/img/line.chart.png "Line Charts")
+![Line Charts](http://angularjs-nvd3-directives.github.io/img/line.chart.png "Line Charts")
 
 ```html
 <nvd3-line-chart
@@ -24,7 +24,7 @@
 </nvd3-line-chart>
 ```
 
-![Stacked Area Charts](http://cmaurer.github.io/img/stacked.area.png "Stacked Area Charts")
+![Stacked Area Charts](http://angularjs-nvd3-directives.github.io/img/stacked.area.png "Stacked Area Charts")
 
 ```html
 <nvd3-stacked-area-chart
@@ -37,14 +37,14 @@
 </nvd3-stacked-area-chart>
 ```
 
-[More Examples](http://cmaurer.github.io/angularjs-nvd3-directives)
+[More Examples](http://angularjs-nvd3-directives.github.io/angularjs-nvd3-directives)
 
 
 ## Basic Quick Start 
 
-### 1. Install Dependencies with [bower](http://bower.io/)
+### 1. Install dependencies in your application with [bower](http://bower.io/)
 
-### Install [these](http://bower.io/#installing-bower) if you don't already have it.
+Install [these](http://bower.io/#installing-bower) if you don't already have it.
 
 #### [Angular.js](http://angularjs.org/)
     
@@ -58,19 +58,19 @@
 
     bower install nvd3 --save
 
-#### [Angularjs-nvd3-Directives.js](http://cmaurer.github.io/angularjs-nvd3-directives)
+#### [Angularjs-nvd3-Directives.js](http://angularjs-nvd3-directives.github.io/angularjs-nvd3-directives)
 
     bower install angularjs-nvd3-directives --save
     
 ### 2. Create basic [Angular.js](http://angularjs.org/) application
 
-Create a html page and start with the following code.  For [d3.js](http://www.d3js.org) it is important the the page include ```<meta charset="utf-8">```, otherwise you will get error messages about special characters.
+Create a html page and start with the following code.  For [d3.js](http://www.d3js.org) it is important that the page include ```<meta charset="utf-8">```, otherwise you will get error messages about special characters.
 
 ```html
 <!DOCTYPE html>
-<meta charset="utf-8">
 <html>
 <head>
+  <meta charset="utf-8">
 ```
 
 Include the downloaded dependencies in the ```<head>``` section of the html.
@@ -146,5 +146,17 @@ Close out the ```body``` and ```html``` elements.
 If everything is setup correctly, you should be able to open the page and see a basic line chart.
 
 
+## Developers
 
+For those of you wanting to debug, fix, enhance angularjs-nvd3-directives, follow the steps below after cloning this repository:
 
+    npm install
+    grunt bower-install
+
+You can now run the unit tests simply by typing:
+
+    grunt test
+
+If you wish to issue a pull request, please add a unit test for the change you are making, ensure that it is shown to fail without your fix and pass with your fix.
+
+>  NOTE: we are just starting to add the foundations for unit testing here, so please chip in to help enhance the stability of this framework and be patient with us as we work towards that goal.

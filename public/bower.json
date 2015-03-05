@@ -33,9 +33,9 @@
     "webfont-opensans": "latest",
     "webfont-opensans-condensed": "latest",
     "rangy": "latest",
-    "moment-timezone": "~0.2.4",
-    "angular-touch": "~1.3.2",
-    "angular-toastr": "~1.0.2"
+    "moment-timezone": "latest",
+    "angular-touch": "~1.3",
+    "angular-toastr": "latest"
   },
   "devDependencies": {
     "angular-mocks": "latest",
@@ -50,7 +50,6 @@
     "tests"
   ],
   "resolutions": {
-    "angular": "~1.3",
-    "d3": "~3.4.1"
+    "angular": "1.3.14"
   }
 }

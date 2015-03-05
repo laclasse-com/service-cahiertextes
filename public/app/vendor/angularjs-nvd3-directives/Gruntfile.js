@@ -12,6 +12,11 @@ module.exports = function (grunt) {
 			' Licensed <%= pkg.license %> */\n',
 		// Task configuration.
 		clean: ['dist/', 'generated/'],
+        karma: {
+            unit: {
+                configFile: 'test/karma.config.js'
+            }
+        },
 		ngmin: {
 			directives: {
 				expand: true,
@@ -82,16 +87,21 @@ module.exports = function (grunt) {
 				]
 			}
 		},
-		bower: {
-			install: {
-				options: {
-					targetDir: './build/components',
-					layout: 'byComponent',
-					cleanTargetDir: true,
-					cleanBowerDir: false,
-					verbose: true
-				}
-			}
+		'bower-install-simple': {
+			options: {
+                color: true,
+				directory: './build/components',
+			},
+            'prod': {
+                options: {
+                    production: true
+                }
+            },
+            'dev': {
+                options: {
+                    production: false
+                }
+            }
 		},
 		release:{
 			options: {
@@ -103,7 +113,7 @@ module.exports = function (grunt) {
 				npm: false,
 				npmtag: true,
 				github: {
-					repo: 'cmaurer/angularjs-nvd3-directives', //put your user/repo here
+					repo: 'angularjs-nvd3-directives/angularjs-nvd3-directives', //put your user/repo here
 					usernameVar: 'GITHUB_USERNAME', //ENVIRONMENT VARIABLE that contains Github username
 					passwordVar: 'GITHUB_PASSWORD' //ENVIRONMENT VARIABLE that contains Github password
 				}
@@ -112,7 +122,7 @@ module.exports = function (grunt) {
 		changelog: {
 			release: {
 				options: {
-					version: 'v0.0.7'
+					version: '<%= pkg.version %>'
 				}
 			}
 		}
@@ -123,18 +133,21 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-contrib-clean');
-	grunt.loadNpmTasks('grunt-bower-task');
+	grunt.loadNpmTasks('grunt-bower-install-simple');
 	grunt.loadNpmTasks('grunt-contrib-copy');
-	grunt.loadNpmTasks('grunt-karma-coveralls');
+	grunt.loadNpmTasks('grunt-karma');
 	grunt.loadNpmTasks('grunt-jsbeautifier');
 	grunt.loadNpmTasks('grunt-ngmin');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-release');
 	grunt.loadNpmTasks('grunt-templated-changelog');
 
-	grunt.registerTask('bower', ['bower:install']);
+    // Alias to make bower-install a little simpler, pun intended
+    grunt.registerTask('bower-install', ['bower-install-simple']);
+
+    // Simple alias to run unit tests from scratch
+	grunt.registerTask('test', ['clean', 'karma']);
 
 	// Default task.
-	grunt.registerTask('default', ['clean', 'ngmin', 'concat', 'jsbeautifier', 'jshint', 'uglify']);
-
+	grunt.registerTask('default', ['clean', 'karma', 'ngmin', 'concat', 'jsbeautifier', 'jshint', 'uglify']);
 };

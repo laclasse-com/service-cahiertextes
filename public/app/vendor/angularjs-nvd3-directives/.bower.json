@@ -5,7 +5,7 @@
     "Christian Maurer"
   ],
   "license": "Apache License, v2.0",
-  "homepage": "http://cmaurer.github.io/angularjs-nvd3-directives/",
+  "homepage": "http://angularjs-nvd3-directives.github.io/angularjs-nvd3-directives/",
   "main": "./dist/angularjs-nvd3-directives.js",
   "keywords": [
     "d3",
@@ -20,26 +20,23 @@
     "**/.*",
     "node_modules",
     "bower_components",
-    "test",
-    "tests"
+    "test"
   ],
   "dependencies": {
-    "angular": "~1.2.4",
-    "d3": "~3.4.1",
+    "angular": "~1.2.13",
+    "d3": "~3.3.13",
     "nvd3": "~v1.1.15-beta"
   },
   "devDependencies": {
     "moment": "~2.5.0",
-    "angular-route": "~1.2.13"
+    "angular-route": "~1.2.13",
+    "angular-mocks": "~1.2.13"
   },
-  "resolutions": {
-    "d3": "~3.4.1"
-  },
-  "_release": "649f8c76a1",
+  "_release": "0b50abef73",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "649f8c76a14196f96cacdd04a7e9fc03a7b28be3"
+    "commit": "0b50abef73acc104b03360c2a2c2fb64aa7a78df"
   },
   "_source": "git://github.com/cmaurer/angularjs-nvd3-directives.git",
   "_target": "master",

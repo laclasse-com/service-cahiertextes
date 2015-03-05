@@ -2,7 +2,7 @@
 @license textAngular
 Author : Austin Anderson
 License : 2013 MIT
-Version 1.3.0-pre9
+Version 1.3.7
 
 See README.md or https://github.com/fraywing/textAngular/wiki for requirements and use.
 */
@@ -85,7 +85,6 @@ angular.module('textAngularSetup', [])
 	//insertLink: "Please enter a URL to insert",
 	//insertVideo: "Please enter a youtube URL to embed",
 	html: {
-		buttontext: 'Toggle HTML',
 		tooltip: 'Toggle html / Rich Text'
 	},
 	// tooltip for heading - might be worth splitting
@@ -156,6 +155,17 @@ angular.module('textAngularSetup', [])
 		tooltip: 'Insert / edit link',
 		dialogPrompt: "Please enter a URL to insert"
 	},
+	editLink: {
+		reLinkButton: {
+			tooltip: "Relink"
+		},
+		unLinkButton: {
+			tooltip: "Unlink"
+		},
+		targetToggle: {
+			buttontext: "Open in New Window"
+		}
+	},
 	wordcount: {
 		tooltip: 'Display words Count'
 	},
@@ -165,7 +175,7 @@ angular.module('textAngularSetup', [])
 })
 .run(['taRegisterTool', '$window', 'taTranslations', 'taSelection', function(taRegisterTool, $window, taTranslations, taSelection){
 	taRegisterTool("html", {
-		buttontext: taTranslations.html.buttontext,
+		iconclass: 'fa fa-code',
 		tooltiptext: taTranslations.html.tooltip,
 		action: function(){
 			this.$editor().switchView();
@@ -417,7 +427,7 @@ angular.module('textAngularSetup', [])
 			// check if in list. If not in list then use formatBlock option
 			if(possibleNodes[0].tagName.toLowerCase() !== 'li' &&
 				possibleNodes[0].tagName.toLowerCase() !== 'ol' &&
-				possibleNodes[0].tagName.toLowerCase() !== 'ul') this.$editor().wrapSelection("formatBlock", "<p>");
+				possibleNodes[0].tagName.toLowerCase() !== 'ul') this.$editor().wrapSelection("formatBlock", "default");
 			restoreSelection();
 		}
 	});
@@ -554,7 +564,7 @@ angular.module('textAngularSetup', [])
 				// get the video ID
 				var ids = urlPrompt.match(/(\?|&)v=[^&]*/);
 				/* istanbul ignore else: if it's invalid don't worry - though probably should show some kind of error message */
-				if(ids.length > 0){
+				if(ids && ids.length > 0){
 					// create the embed link
 					var urlLink = "https://www.youtube.com/embed/" + ids[0].substring(3);
 					// create the HTML
@@ -607,7 +617,7 @@ angular.module('textAngularSetup', [])
 				});
 				container.append(link);
 				var buttonGroup = angular.element('<div class="btn-group pull-right">');
-				var reLinkButton = angular.element('<button type="button" class="btn btn-default btn-sm btn-small" tabindex="-1" unselectable="on"><i class="fa fa-edit icon-edit"></i></button>');
+				var reLinkButton = angular.element('<button type="button" class="btn btn-default btn-sm btn-small" tabindex="-1" unselectable="on" title="' + taTranslations.editLink.reLinkButton.tooltip + '"><i class="fa fa-edit icon-edit"></i></button>');
 				reLinkButton.on('click', function(event){
 					event.preventDefault();
 					var urlLink = $window.prompt(taTranslations.insertLink.dialogPrompt, $element.attr('href'));
@@ -618,7 +628,7 @@ angular.module('textAngularSetup', [])
 					editorScope.hidePopover();
 				});
 				buttonGroup.append(reLinkButton);
-				var unLinkButton = angular.element('<button type="button" class="btn btn-default btn-sm btn-small" tabindex="-1" unselectable="on"><i class="fa fa-unlink icon-unlink"></i></button>');
+				var unLinkButton = angular.element('<button type="button" class="btn btn-default btn-sm btn-small" tabindex="-1" unselectable="on" title="' + taTranslations.editLink.unLinkButton.tooltip + '"><i class="fa fa-unlink icon-unlink"></i></button>');
 				// directly before this click event is fired a digest is fired off whereby the reference to $element is orphaned off
 				unLinkButton.on('click', function(event){
 					event.preventDefault();
@@ -627,7 +637,7 @@ angular.module('textAngularSetup', [])
 					editorScope.hidePopover();
 				});
 				buttonGroup.append(unLinkButton);
-				var targetToggle = angular.element('<button type="button" class="btn btn-default btn-sm btn-small" tabindex="-1" unselectable="on">Open in New Window</button>');
+				var targetToggle = angular.element('<button type="button" class="btn btn-default btn-sm btn-small" tabindex="-1" unselectable="on">' + taTranslations.editLink.targetToggle.buttontext + '</button>');
 				if($element.attr('target') === '_blank'){
 					targetToggle.addClass('active');
 				}
@@ -644,7 +654,7 @@ angular.module('textAngularSetup', [])
 		}
 	});
 	taRegisterTool('wordcount', {
-		display: '<div id="toolbarWC" style="display:block; width:100px;">Words:{{wordcount}}</div>',
+		display: '<div id="toolbarWC" style="display:block; min-width:100px;">Words:{{wordcount}}</div>',
 		disabled: true,
 		wordcount: 0,
 		activeState: function(){ // this fires on keyup
@@ -664,7 +674,7 @@ angular.module('textAngularSetup', [])
 		}
 	});
 	taRegisterTool('charcount', {
-		display: '<div id="toolbarCC" style="display:block; width:120px;">Characters:{{charcount}}</div>',
+		display: '<div id="toolbarCC" style="display:block; min-width:120px;">Characters:{{charcount}}</div>',
 		disabled: true,
 		charcount: 0,
 		activeState: function(){ // this fires on keyup

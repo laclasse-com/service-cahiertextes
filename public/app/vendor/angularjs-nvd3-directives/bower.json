@@ -1,12 +1,11 @@
 {
   "name": "angularjs-nvd3-directives",
-  "version": "0.0.7",
   "description": "Angular.js directives for nvd3.js.",
   "authors": [
     "Christian Maurer"
   ],
   "license": "Apache License, v2.0",
-  "homepage": "http://cmaurer.github.io/angularjs-nvd3-directives/",
+  "homepage": "http://angularjs-nvd3-directives.github.io/angularjs-nvd3-directives/",
   "main": "./dist/angularjs-nvd3-directives.js",
   "keywords": [
     "d3",
@@ -21,19 +20,16 @@
     "**/.*",
     "node_modules",
     "bower_components",
-    "test",
-    "tests"
+    "test"
   ],
   "dependencies": {
-    "angular": "~1.2.4",
-    "d3": "~3.4.1",
+    "angular": "~1.2.13",
+    "d3": "~3.3.13",
     "nvd3": "~v1.1.15-beta"
   },
   "devDependencies": {
     "moment": "~2.5.0",
-    "angular-route": "~1.2.13"
-  },
-  "resolutions": {
-    "d3": "~3.4.1"
+    "angular-route": "~1.2.13",
+    "angular-mocks": "~1.2.13"
   }
 }

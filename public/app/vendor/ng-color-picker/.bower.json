@@ -1,11 +1,45 @@
 {
   "name": "ng-color-picker",
   "homepage": "https://github.com/joujiahe/ng-color-picker",
-  "_release": "d36f064bcd",
+  "authors": [
+    "Johnson Chou <joujiahe@gmail.com>"
+  ],
+  "description": "A simple color picker for AngularJS",
+  "main": [
+    "./color-picker.js",
+    "./color-picker.css"
+  ],
+  "moduleType": [
+    "globals"
+  ],
+  "ignore": [
+    "./example.html",
+    "./example.js",
+    "./index.php"
+  ],
+  "keywords": [
+    "color-picker",
+    "picker",
+    "colors",
+    "angular",
+    "angularjs"
+  ],
+  "dependencies": {
+    "angular": ">=1.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joujiahe/ng-color-picker"
+  },
+  "resolutions": {
+    "angular": "1.2.0"
+  },
+  "license": "MIT",
+  "_release": "357c8d648e",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "d36f064bcde6f170a026412ab1afddd11dd7ca13"
+    "commit": "357c8d648ecc82bdcdcce6bcf7ef96d2dacfdd44"
   },
   "_source": "https://github.com/joujiahe/ng-color-picker.git",
   "_target": "*",
