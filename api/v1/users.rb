@@ -7,7 +7,16 @@ module CahierDeTextesAPI
     class UsersAPI < Grape::API
       desc 'renvoi les infos de l\'utilisateur identifié'
       get '/current' do
-        user_verbose
+        utilisateur = user_verbose
+
+        parametres = UserParameters.where( uid: utilisateur[ :uid ] ).first
+        parametres = UserParameters.create( uid: utilisateur[ :uid ] ) if parametres.nil?
+        parametres.update( date_connexion: Time.now )
+        parametres.save
+
+        utilisateur[ 'parametrage_cahier_de_textes' ] = JSON.parse( parametres[:parameters] )
+
+        utilisateur
       end
 
       desc 'met à jour les paramètres utilisateurs'

@@ -6,8 +6,8 @@ require 'bundler'
 Bundler.require( :default, ENV['RACK_ENV'].to_sym )     # require tout les gems définis dans Gemfile
 
 require 'laclasse/common/helpers/authentication'
+require 'laclasse/helpers/user'
 
-require_relative './lib/helpers/user'
 require_relative './lib/helpers/data_extraction'
 
 require_relative './models/models'
@@ -18,9 +18,9 @@ require_relative './api/v1/api'
 
 module CahierDeTextesAPI
   class API < Grape::API
-    helpers CahierDeTextesApp::Helpers::User
     helpers CahierDeTextesApp::Helpers::DataExtraction
     helpers Laclasse::Helpers::Authentication
+    helpers Laclasse::Helpers::User
 
     format :txt
     get '/version' do

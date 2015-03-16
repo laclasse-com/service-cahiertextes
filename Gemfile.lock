@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/laclasse-com/laclasse-common.git
-  revision: 24f074b66e37df0e2bf93a8bec4b0c86a990276c
+  revision: ab48075d122f282c5e75d90692a52ea70de6b3ac
   branch: develop
   specs:
     laclasse-common (0.3)
@@ -41,8 +41,8 @@ GEM
       thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.2.5)
     equalizer (0.0.9)
-    execjs (2.3.0)
-    ffi (1.9.6)
+    execjs (2.4.0)
+    ffi (1.9.8)
     grape (0.11.0)
       activesupport
       builder
@@ -53,10 +53,10 @@ GEM
       rack-accept
       rack-mount
       virtus (>= 1.0.0)
-    grape-entity (0.4.4)
+    grape-entity (0.4.5)
       activesupport
       multi_json (>= 1.3.2)
-    grape-swagger (0.9.0)
+    grape-swagger (0.10.1)
       grape (>= 0.8.0)
       grape-entity
     hashie (3.4.0)
@@ -70,14 +70,14 @@ GEM
     jasmine-core (2.2.0)
     json (1.8.2)
     logstash-event (1.2.02)
-    logstash-logger (0.8.0)
+    logstash-logger (0.9.0)
       logstash-event (~> 1.2)
       stud
     method_source (0.8.2)
     mime-types (2.4.3)
     mini_portile (0.6.2)
     minitest (5.5.1)
-    multi_json (1.10.1)
+    multi_json (1.11.0)
     multi_xml (0.5.5)
     mysql2 (0.3.18)
     netrc (0.10.3)
@@ -125,7 +125,7 @@ GEM
       rspec-core (~> 3.2.0)
       rspec-expectations (~> 3.2.0)
       rspec-mocks (~> 3.2.0)
-    rspec-core (3.2.1)
+    rspec-core (3.2.2)
       rspec-support (~> 3.2.0)
     rspec-expectations (3.2.0)
       diff-lcs (>= 1.2.0, < 2.0)
@@ -140,16 +140,16 @@ GEM
       powerpack (~> 0.1)
       rainbow (>= 1.99.1, < 3.0)
       ruby-progressbar (~> 1.4)
-    rubocop-rspec (1.2.1)
+    rubocop-rspec (1.2.2)
     ruby-progressbar (1.7.1)
     rubyzip (1.1.7)
-    sass (3.4.12)
-    selenium-webdriver (2.44.0)
+    sass (3.4.13)
+    selenium-webdriver (2.45.0)
       childprocess (~> 0.5)
       multi_json (~> 1.0)
       rubyzip (~> 1.0)
       websocket (~> 1.0)
-    sequel (4.19.0)
+    sequel (4.20.0)
     show_me_the_cookies (2.6.0)
       capybara (~> 2.0)
     sinatra (1.4.5)
@@ -158,11 +158,11 @@ GEM
       tilt (~> 1.3, >= 1.3.4)
     slop (3.6.0)
     stud (0.0.19)
-    thread_safe (0.3.4)
+    thread_safe (0.3.5)
     tilt (1.4.1)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
-    uglifier (2.7.0)
+    uglifier (2.7.1)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
     virtus (1.0.4)
