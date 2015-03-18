@@ -5,7 +5,7 @@ require 'base64'
 require 'cgi'
 require 'openssl'
 
-require 'laclasse/common/cross_app/sender'
+require 'laclasse/cross_app/sender'
 
 require_relative '../config/options'
 

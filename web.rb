@@ -9,7 +9,7 @@ require_relative './config/init'
 
 Bundler.require( :default, ENV['RACK_ENV'].to_sym )     # require tout les gems définis dans Gemfile
 
-require 'laclasse/common/helpers/authentication'
+require 'laclasse/helpers/authentication'
 require 'laclasse/helpers/user'
 
 # Application Sinatra servant de base

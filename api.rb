@@ -5,7 +5,7 @@ require 'bundler'
 
 Bundler.require( :default, ENV['RACK_ENV'].to_sym )     # require tout les gems définis dans Gemfile
 
-require 'laclasse/common/helpers/authentication'
+require 'laclasse/helpers/authentication'
 require 'laclasse/helpers/user'
 
 require_relative './lib/helpers/data_extraction'

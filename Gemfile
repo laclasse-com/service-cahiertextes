@@ -19,8 +19,7 @@ gem 'rubyzip'
 gem 'uglifier'
 gem 'sass'
 
-# gem 'annuaire', git: 'https://github.com/laclasse-com/gem_annuaire.git'
-gem 'laclasse-common', git: 'https://github.com/laclasse-com/laclasse-common.git', branch: 'develop'
+gem 'laclasse-common', git: 'https://github.com/laclasse-com/laclasse-common.git', tag: '0.1'
 
 group :development do
   # gem 'guard'

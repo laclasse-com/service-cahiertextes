@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/laclasse-com/laclasse-common.git
-  revision: ab48075d122f282c5e75d90692a52ea70de6b3ac
-  branch: develop
+  revision: d159b7e0484bbd09721c3fd11232e0ea9740721e
+  tag: 0.1
   specs:
     laclasse-common (0.3)
       logstash-logger

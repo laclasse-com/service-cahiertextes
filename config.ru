@@ -1,8 +1,8 @@
 #!/usr/bin/env rackup
 # -*- coding: utf-8; mode: ruby -*-
 
-require 'laclasse/common/helpers/rack'
-require 'laclasse/common/laclasse_logger'
+require 'laclasse/helpers/rack'
+require 'laclasse/laclasse_logger'
 
 require_relative './lib/utils/deep_dup'
 
