@@ -11,7 +11,7 @@ require ::File.expand_path( '../config/init', __FILE__ )
 require ::File.expand_path( '../api', __FILE__ )
 require ::File.expand_path( '../web', __FILE__ )
 
-LOGGER = Laclasse::LoggerFactory.getLogger
+LOGGER = Laclasse::LoggerFactory.get_logger
 LOGGER.info( "Démarrage du Cahier de Textes avec #{LOGGER.loggers_count} logger#{LOGGER.loggers_count > 1 ? 's' : ''}" )
 
 Laclasse::Helpers::Rack.configure_rake self

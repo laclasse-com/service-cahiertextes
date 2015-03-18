@@ -22,7 +22,7 @@ require_relative './helper_mocks/mocked_data'
 
 require 'laclasse/laclasse_logger'
 
-LOGGER = Laclasse::LoggerFactory.getLogger
+LOGGER = Laclasse::LoggerFactory.get_logger
 LOGGER.info("Démarrage des test du Cahier de Textes avec #{LOGGER.loggers_count} logger#{LOGGER.loggers_count > 1 ? 's' : ''}")
 
 Capybara.default_driver = :selenium
