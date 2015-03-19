@@ -9,7 +9,7 @@ module CahierDeTextesAPI
       format :json
 
       before do
-        user_needs_to_be( %w( DIR ), false )
+        user_needs_to_be( %w( DIR ), true )
       end
 
       desc 'Receive a Pronote XML file and load it in DB.'
