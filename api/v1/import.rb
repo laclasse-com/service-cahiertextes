@@ -13,6 +13,9 @@ module CahierDeTextesAPI
       end
 
       desc 'Receive a Pronote XML file and load it in DB.'
+      params {
+        requires :file
+      }
       post '/pronote' do
         uai = ProNote.extract_uai_from_xml( File.open( params[:file][:tempfile] ) )
 
