@@ -6,25 +6,29 @@ angular.module( 'cahierDeTextesClientApp' )
 		  function ( $scope, $http, $upload, APP_PATH, Annuaire, current_user ) {
 		      $scope.in_progress = false;
 		      $scope.result = false;
-
 		      $scope.fichiers = null;
-		      $scope.launch_import = function( $files ) {
+
+		      $scope.onFileSelect = function( $files ) {
+			  $scope.fichiers = $files;
+		      };
+
+		      $scope.launch_import = function( $files ) { // $files: an array of files selected, each file has name, size, and type.
 			  $scope.result = false;
-			  //$files: an array of files selected, each file has name, size, and type.
-			  for (var i = 0; i < $files.length; i++) {
-			      var file = $files[i];
-			      $scope.upload = $upload.upload({
+
+			  for ( var i = 0; i < $files.length; i++ ) {
+			      var file = $files[ i ];
+			      $scope.upload = $upload.upload( {
 				  url: APP_PATH + '/api/v1/import/pronote',
 				  method: 'POST',
 				  file: file
-			      })
+			      } )
 				  .progress( function( evt ) {
 				      $scope.in_progress = true;
 				      console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
-				  })
+				  } )
 				  .error( function() {
 				      $scope.in_progress = false;
-				  })
+				  } )
 				  .success( function( data, status, headers, config ) {
 				      $scope.in_progress = false;
 				      $scope.result = data;
@@ -67,12 +71,8 @@ angular.module( 'cahierDeTextesClientApp' )
 						  $scope.regroupements = response.data;
 					      } );
 				      }
-				  });
+				  } );
 			  }
-		      };
-
-		      $scope.onFileSelect = function( $files ) {
-			  $scope.fichiers = $files;
 		      };
 
 		      angular.element('#ui-view-content').after( current_user.marqueur_xiti );

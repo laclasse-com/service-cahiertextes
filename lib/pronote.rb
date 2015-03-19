@@ -14,6 +14,7 @@ module ProNote
 
   def decrypt_wrapped_data( data, rsa_key_filename )
     pk = OpenSSL::PKey::RSA.new( File.read( rsa_key_filename ) )
+
     pk.private_decrypt data
   end
 
@@ -22,6 +23,7 @@ module ProNote
     aes.decrypt
     aes.key = aes_secret_key
     aes.iv = aes_iv
+
     aes.update( data ) + aes.final
   end
 
@@ -30,6 +32,7 @@ module ProNote
     buf = zstream.inflate(string)
     zstream.finish
     zstream.close
+
     buf
   end
 
@@ -62,6 +65,11 @@ module ProNote
     Nokogiri::XML( xml ).search( 'UAI' ).children.text
   end
 
+  def trace_rapport( rapport, key )
+    LOGGER.debug "Import #{key.to_s}, #{rapport[ key ][:success].length} succès."
+    LOGGER.debug "Import #{key.to_s}, #{rapport[ key ][:error].length} erreurs."
+  end
+
   def load_xml( xml, xsd = nil )
     rapport = {}
     edt_clair = Nokogiri::XML( decrypt_xml( xml ) )
@@ -90,6 +98,7 @@ module ProNote
         rapport[:plages_horaires][:success] << plage
       end
     end
+    trace_rapport( rapport, :plages_horaires )
 
     rapport[:salles] =  { success: [], error: [] }
     edt_clair.search('Salles').children.reject { |child| child.name == 'text' }.each do |node|
@@ -105,6 +114,7 @@ module ProNote
         rapport[:salles][:success] << salle
       end
     end
+    trace_rapport( rapport, :salles )
 
     ####
     # Les matières sont dans l'annuaire
@@ -134,15 +144,17 @@ module ProNote
         rapport[:matieres][:success] << matieres[ node['Ident'] ]
       end
     end
+    trace_rapport( rapport, :matieres )
 
     ####
     # Les enseignants sont dans l'annuaire
     ####
     rapport[:enseignants] = { success: [], error: [] }
     enseignants = {}
+
     edt_clair.search('Professeurs')
              .children
-             .reject { |child| child.name == 'text' }
+             .reject { |child| child.name == 'text' || child['Nom'].empty?  || child['Prenom'].empty? }
              .each do |node|
       user_annuaire = AnnuaireWrapper::Etablissement::User.search( etablissement.UAI, node['Nom'], node['Prenom'] )
       enseignants[ node['Ident'] ] = user_annuaire.nil? ? nil : user_annuaire['id_ent']
@@ -161,10 +173,9 @@ module ProNote
         end
       end
 
-      unless enseignants[ node['Ident'] ].nil?
-        rapport[:enseignants][:success] << enseignants[ node['Ident'] ]
-      end
+      rapport[:enseignants][:success] << enseignants[ node['Ident'] ] unless enseignants[ node['Ident'] ].nil?
     end
+    trace_rapport( rapport, :enseignants )
 
     ####
     # Les classes, parties de classe et groupes sont dans l'annuaire
@@ -314,7 +325,9 @@ module ProNote
                            enseignants: { success: [], error: [] },
                            regroupements: { success: [], error: [] },
                            salles: { success: [], error: [] } }
-    edt_clair.search('Cours/Cours').reject { |child| child.name == 'text' }.each do |node|
+    edt_clair.search('Cours/Cours')
+             .reject { |child| child.name == 'text' }
+             .each do |node|
       debut = PlageHoraire[ label: node['NumeroPlaceDebut'] ][:id]
       fin = PlageHoraire[ label: node['NumeroPlaceDebut'].to_i + node['NombrePlaces'].to_i - 1 ][:id]
       matiere_id = nil
