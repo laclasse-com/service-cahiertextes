@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe CahierDeTextesApp::Helpers::DataExtraction do
+describe CahierDeTextes do
   before :each do
     TableCleaner.new( DB, [] ).clean
 
