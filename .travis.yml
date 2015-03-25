@@ -15,7 +15,7 @@ before_script:
   - mysql -e 'create database CahierDeTextes;'
   - bundle exec rake db:migrations
 
-script: "bundle exec rspec spec/api/ spec/lib/"
+script: "bundle exec rspec"
 
 gemfile:
   - Gemfile
