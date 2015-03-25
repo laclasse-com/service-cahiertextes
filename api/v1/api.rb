@@ -11,7 +11,6 @@ require_relative './emplois_du_temps'
 require_relative './annuaire'
 require_relative './creneaux_emploi_du_temps'
 require_relative './plages_horaires'
-require_relative './reporting'
 
 module CahierDeTextesAPI
   module V1
