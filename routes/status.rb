@@ -13,11 +13,11 @@ module CahierDeTextesApp
           # test DB
           if DB.nil?
             status = 'KO'
-            reason = 'Base de données innaccessible.'
+            reason = 'Base de données inaccessible.'
           end
           if DB.tables.length == 0
             status = 'KO'
-            reason = 'Base de données non provisionnée.'
+            reason = 'Base de données vide.'
           end
 
           { app_id: ANNUAIRE[:app_id],
