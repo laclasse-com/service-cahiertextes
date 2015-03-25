@@ -12,11 +12,15 @@ Bundler.require( :default, ENV['RACK_ENV'].to_sym )     # require tout les gems 
 require 'laclasse/helpers/authentication'
 require 'laclasse/helpers/user'
 
+require_relative './lib/helpers/provisioning'
+
 # Application Sinatra servant de base
 module CahierDeTextesAPI
   class Web < Sinatra::Base
     helpers Laclasse::Helpers::Authentication
     helpers Laclasse::Helpers::User
+
+    helpers CahierDeTextesApp::Helpers::Provisioning
 
     configure :production, :development do
       set :protection, true
@@ -40,24 +44,7 @@ module CahierDeTextesAPI
     get "#{APP_PATH}/auth/:provider/callback" do
       init_session( request.env )
 
-      # provisioning
-      user[:user_detailed]['etablissements']
-        .each { |etab|
-        etablissement = Etablissement.where(UAI: etab[ 'code_uai' ]).first
-        if etablissement.nil?
-          etablissement = AnnuaireWrapper::Etablissement.get( etab[ 'code_uai' ] )
-          Etablissement.create(UAI: etablissement['code_uai' ] )
-          etablissement['classes']
-            .concat( etablissement['groupes_eleves'] )
-            .concat( etablissement['groupes_libres'] )
-            .each {
-            |regroupement|
-            cdt = CahierDeTextes.where( regroupement_id: regroupement['id'] ).first
-            CahierDeTextes.create( date_creation: Time.now,
-                                   regroupement_id: regroupement['id'] ) if cdt.nil?
-          }
-        end
-      }
+      provision( user )
 
       redirect_uri = URI( params[:url] )
       redirect "#{redirect_uri.path}?#{redirect_uri.query}##{redirect_uri.fragment}"
@@ -94,5 +81,5 @@ module CahierDeTextesAPI
     post "#{APP_PATH}/login/?" do
       login! "#{APP_PATH}/"
     end
-                 end
-                 end
+  end
+end
