@@ -8,8 +8,6 @@ Bundler.require( :default, ENV['RACK_ENV'].to_sym )     # require tout les gems 
 require 'laclasse/helpers/authentication'
 require 'laclasse/helpers/user'
 
-require_relative './lib/helpers/data_extraction'
-
 require_relative './models/models'
 require_relative './lib/data_management'
 require_relative './lib/pronote'
@@ -18,7 +16,6 @@ require_relative './api/v1/api'
 
 module CahierDeTextesAPI
   class API < Grape::API
-    helpers CahierDeTextesApp::Helpers::DataExtraction
     helpers Laclasse::Helpers::Authentication
     helpers Laclasse::Helpers::User
 

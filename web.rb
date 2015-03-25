@@ -12,8 +12,6 @@ Bundler.require( :default, ENV['RACK_ENV'].to_sym )     # require tout les gems 
 require 'laclasse/helpers/authentication'
 require 'laclasse/helpers/user'
 
-require_relative './lib/helpers/provisioning'
-
 require_relative './routes/index'
 require_relative './routes/auth'
 require_relative './routes/status'
@@ -23,8 +21,6 @@ module CahierDeTextesAPI
   class Web < Sinatra::Base
     helpers Laclasse::Helpers::Authentication
     helpers Laclasse::Helpers::User
-
-    helpers CahierDeTextesApp::Helpers::Provisioning
 
     configure :production, :development do
       set :protection, true

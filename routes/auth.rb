@@ -7,7 +7,7 @@ module CahierDeTextesApp
         app.get "#{APP_PATH}/auth/:provider/callback" do
           init_session( request.env )
 
-          provision( user )
+          DataManagement::Provisioning.provision( user )
 
           redirect_uri = URI( params[:url] )
           redirect "#{redirect_uri.path}?#{redirect_uri.query}##{redirect_uri.fragment}"
