@@ -161,7 +161,7 @@
 			    data-tooltip-placement="bottom"
 			    data-tooltip-html-unsafe="{{devoir.tooltip}}"
 			    data-ng-class="{ 'type1': devoir.type_devoir_id == 1, 'type2': devoir.type_devoir_id == 2, 'type3': devoir.type_devoir_id == 3, 'type4': devoir.type_devoir_id == 4, 'type5': devoir.type_devoir_id == 5, 'type6': devoir.type_devoir_id >= 6, 'fait': devoir.fait }" >
-			    <span><i class="picto" data-ng-style="{'background-image':'url(' + app_path + '/app/vendor/charte-graphique-laclasse-com/images/picto_devoir.svg)'}"></i> Devoir associé : <em>{{devoir.date_due | date : 'dd/MM'}}</em></span>
+			    <span><i class="picto" data-ng-style="{'background-image':'url(' + app_path + '/app/vendor/laclasse-common-client/images/picto_devoir.svg)'}"></i> Devoir associé : <em>{{devoir.date_due | date : 'dd/MM'}}</em></span>
 			</li>
 		    </ul>
 		</div>
@@ -421,7 +421,7 @@
 			<li data-ng-repeat="devoir in cours.devoirs"
 			    data-ng-if="!devoir.deleted">
 			    <ul>
-				<li data-ng-if="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir"><i class="picto" data-ng-style="{'background-image':'url(' + app_path + '/app/vendor/charte-graphique-laclasse-com/images/picto_devoir.svg)'}"></i> Type de devoir : <em>{{devoir.type_devoir.description}}</em></li>
+				<li data-ng-if="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir"><i class="picto" data-ng-style="{'background-image':'url(' + app_path + '/app/vendor/laclasse-common-client/images/picto_devoir.svg)'}"></i> Type de devoir : <em>{{devoir.type_devoir.description}}</em></li>
 				<li>Date due : <em>{{devoir.date_due | amDateFormat : 'dddd D MMMM YYYY'}}</em></li>
 				<li data-ng-bind-html="devoir.contenu"></li>
 			    </ul>

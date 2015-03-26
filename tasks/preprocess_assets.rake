@@ -61,7 +61,7 @@ namespace :preprocess_assets do
                                'public/app/vendor/ng-color-picker/color-picker.css',
                                'public/app/vendor/sweetalert/lib/sweet-alert.css',
                                'public/app/vendor/angular-toastr/dist/angular-toastr.css',
-                               'public/app/vendor/charte-graphique-laclasse-com/css/bootstrap-theme.css' ]
+                               'public/app/vendor/laclasse-common-client/css/bootstrap-theme.css' ]
                              .map { |fichier| File.read( fichier ) }.join,
                              syntax: :scss,
                              style: :compressed )

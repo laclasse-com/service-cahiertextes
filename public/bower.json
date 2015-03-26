@@ -20,7 +20,7 @@
     "underscore": "latest",
     "angular-animate": "latest",
     "angular-loading-bar": "latest",
-    "charte-graphique-laclasse-com": "git@gitlab.erasme.org:laclasse/charte-graphique-laclasse-com.git#latest",
+    "laclasse-common-client": "https://github.com/laclasse-com/laclasse-common-client.git#latest",
     "angularjs-nvd3-directives": "master",
     "angular-moment": "latest",
     "textAngular": "~1.3",

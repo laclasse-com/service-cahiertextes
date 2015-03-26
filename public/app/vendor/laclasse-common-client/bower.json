@@ -1,6 +1,6 @@
 {
-    "name": "charte-graphique-laclasse-com",
-    "version": "0.0.1",
+    "name": "laclasse-common-client",
+    "version": "0.5",
     "private": true,
     "main": "css/main.css",
     "ignore": [  ],
