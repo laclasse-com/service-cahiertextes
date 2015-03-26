@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/laclasse-com/laclasse-common.git
-  revision: 41e9eb6d29f0c358c2601c99267702beea0ea815
-  tag: 0.2.1
+  revision: 620cb68976d50152b2f8fa20ad0fbcee0469a77c
+  tag: 0.2.2
   specs:
     laclasse-common (0.3)
       logstash-logger
@@ -70,7 +70,7 @@ GEM
     jasmine-core (2.2.0)
     json (1.8.2)
     logstash-event (1.2.02)
-    logstash-logger (0.9.0)
+    logstash-logger (0.10.0)
       logstash-event (~> 1.2)
       stud
     method_source (0.8.2)

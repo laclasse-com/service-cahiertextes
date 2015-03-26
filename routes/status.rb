@@ -20,10 +20,12 @@ module CahierDeTextesApp
             reason = 'Base de données vide.'
           end
 
-          { app_id: ANNUAIRE[:app_id],
-            status: status,
-            reason: reason
-          }.to_json
+          app_status = app_infos
+
+          app_status[:status] = status
+          app_status[:reason] = reason
+
+          app_status.to_json
         end
 
         app.get "#{APP_PATH}/status/report/?" do
