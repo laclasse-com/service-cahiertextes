@@ -3,6 +3,7 @@
 
 require 'laclasse/helpers/rack'
 require 'laclasse/laclasse_logger'
+require 'laclasse/utils/health_check'
 
 require_relative './lib/utils/deep_dup'
 
@@ -13,6 +14,10 @@ require ::File.expand_path( '../web', __FILE__ )
 
 LOGGER = Laclasse::LoggerFactory.get_logger
 LOGGER.info( "Démarrage du Cahier de Textes avec #{LOGGER.loggers_count} logger#{LOGGER.loggers_count > 1 ? 's' : ''}" )
+
+Laclasse::Utils::HealthChecker.check
+
+LOGGER.info 'Cahier de Textes prêt à servir'
 
 Laclasse::Helpers::Rack.configure_rake self
 
