@@ -65,7 +65,7 @@ module CahierDeTextesAPI
         creneau = CreneauEmploiDuTemps.create( date_creation: Time.now,
                                                debut: dummy_PH.id,
                                                fin: dummy_PH.id,
-                                               jour_de_la_semaine: params[:jour_de_la_semaine] - 1, # FIXME: pas forcément toujours lundi
+                                               jour_de_la_semaine: params[:jour_de_la_semaine] - 1,
                                                matiere_id: params[:matiere_id] )
 
         params[:enseignant_id] = user[:uid]

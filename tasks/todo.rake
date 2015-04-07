@@ -7,7 +7,7 @@ task :todo do
 
   color = ""
 
-  Dir.glob('{api,config,migrations,lib,models,spec,public/app/{index.html,scripts,styles,views}}/**/*.{rb,html,xhtml,js}') do |file|
+  Dir.glob('{api,config,migrations,lib,models,spec,public/app/{index.html,scripts,styles,views}}/**/*.{rb,html,xhtml,js}') do |file| # rubocop:disable Metrics/LineLength
     lastline = todo = comment = long_comment = false
 
     File.readlines(file).each_with_index do |line, lineno|
@@ -25,7 +25,7 @@ task :todo do
       undercolor = undergreen  if line =~ /THINK/
 
       color = undercolor.gsub('4', '0')
-      
+
       if todo
         unless lastline and lastline + 1 == lineno
           puts

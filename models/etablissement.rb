@@ -46,7 +46,10 @@ class Etablissement < Sequel::Model( :etablissements )
           devoir = Devoir.where(cours_id: cours.id)
 
           { mois: month,
-            regroupement_id: CreneauEmploiDuTempsRegroupement.where(creneau_emploi_du_temps_id: cours.creneau_emploi_du_temps_id).first.regroupement_id,
+            regroupement_id: CreneauEmploiDuTempsRegroupement
+              .where( creneau_emploi_du_temps_id: cours.creneau_emploi_du_temps_id )
+              .first
+              .regroupement_id,
             matiere_id: CreneauEmploiDuTemps[ cours.creneau_emploi_du_temps_id ].matiere_id,
             cours: cours,
             devoirs: devoir,

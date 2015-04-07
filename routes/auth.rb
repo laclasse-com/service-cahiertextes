@@ -38,7 +38,10 @@ module CahierDeTextesApp
         # POST pour le login en mode REST, pour les applications souhaitant utiliser les API du Cahier de Textes.
         # Dans ce cas le paramètre restmod et requis.
         # Exemple avec curl :
-        # curl --data "username=$USER&password=$PWD" --cookie-jar ./cookieCT.txt --insecure --location http://[Server]/ct/login/?restmod=Y
+        # curl --data "username=$USER&password=$PWD" \
+        #      --cookie-jar ./cookieCT.txt \
+        #      --insecure \
+        #      --location http://[Server]/ct/login/?restmod=Y
         # Voir le  script d'exemple dans les specs.
         # @see ./spec/api/test_login_curl_proxy.sh
         app.post "#{APP_PATH}/login/?" do

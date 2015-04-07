@@ -8,7 +8,9 @@ class Devoir < Sequel::Model( :devoirs )
   many_to_one :cours
 
   def to_deep_hash( user = nil )
-    hash = JSON.parse( to_json( include: self.class.associations, except: [ :regroupement_id, :semaines_de_presence ] ), symbolize_names: true )
+    hash = JSON.parse( to_json( include: self.class.associations,
+                                except: [ :regroupement_id, :semaines_de_presence ] ),
+                       symbolize_names: true )
 
     hash[:ressources] = ressources.map do |ressource|
       ressource.to_hash

@@ -39,7 +39,11 @@ module ProNote
   def decrypt_xml( encrypted_xml )
     encrypted_edt_export_file = Nokogiri::XML( encrypted_xml )
 
-    crypted_wrapped_data = Base64.decode64( encrypted_edt_export_file.search( 'PARTENAIRE' ).select { |part| part.attributes[ 'NOM' ].value == PRONOTE[:nom_integrateur] }.first.text )
+    crypted_wrapped_data = Base64.decode64( encrypted_edt_export_file
+                                            .search( 'PARTENAIRE' )
+                                            .select { |part|
+                                              part.attributes[ 'NOM' ].value == PRONOTE[:nom_integrateur]
+                                            }.first.text )
     decrypted_wrapped_data = decrypt_wrapped_data( crypted_wrapped_data, PRONOTE[:cle_integrateur] )
     aes_secret_key = decrypted_wrapped_data[ 0..16 ]
     aes_iv = decrypted_wrapped_data[ 16..32 ]
@@ -70,6 +74,7 @@ module ProNote
     LOGGER.debug "Import #{key.to_s}, #{rapport[ key ][:error].length} erreurs."
   end
 
+  # rubocop:disable Metrics/MethodLength
   def load_xml( xml, xsd = nil )
     rapport = {}
     edt_clair = Nokogiri::XML( decrypt_xml( xml ) )
@@ -341,10 +346,12 @@ module ProNote
         end
       end
       unless matiere_id.nil?
-        creneau = DataManagement::Accessors.create_or_get( CreneauEmploiDuTemps, { jour_de_la_semaine: node['Jour'], # 1: 'lundi' .. 7: 'dimanche', norme ISO-8601
-                                                                                   debut: debut,
-                                                                                   fin: fin,
-                                                                                   matiere_id: matiere_id } )
+        creneau = DataManagement::Accessors
+                  .create_or_get( CreneauEmploiDuTemps,
+                                  { jour_de_la_semaine: node['Jour'], # 1: 'lundi' .. 7: 'dimanche', norme ISO-8601
+                                    debut: debut,
+                                    fin: fin,
+                                    matiere_id: matiere_id } )
 
         node.children.each do |subnode|
           case subnode.name
@@ -365,7 +372,9 @@ module ProNote
               rapport[:creneaux][:regroupements][:error] << "#{subnode['Ident']} (#{subnode.name})"
             else
               rapport[:creneaux][:regroupements][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
-              if creneau.regroupements.select { |cr| cr[:regroupement_id] == regroupements[ subnode.name ][ subnode['Ident'] ] }.count == 0
+              if creneau.regroupements.select { |cr|
+                   cr[:regroupement_id] == regroupements[ subnode.name ][ subnode['Ident'] ]
+                 }.count == 0
                 CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
                 creneau.add_regroupement(regroupement_id: regroupements[ subnode.name ][ subnode['Ident'] ],
                                          semaines_de_presence: corrige_semainiers( subnode['Semaines'], offset_semainiers ) )
@@ -373,7 +382,9 @@ module ProNote
               end
             end
           when 'Salle'
-            creneau.add_salle( Salle[ identifiant: subnode['Ident'] ] ) unless creneau.salles.include? Salle[ identifiant: subnode['Ident'] ]
+            unless creneau.salles.include?( Salle[ identifiant: subnode['Ident'] ] )
+              creneau.add_salle( Salle[ identifiant: subnode['Ident'] ] )
+            end
             cs = CreneauEmploiDuTempsSalle.where( salle_id: Salle[ identifiant: subnode['Ident'] ][:id] )
                                           .where( creneau_emploi_du_temps_id: creneau.id )
             cs.update(semaines_de_presence: corrige_semainiers( subnode['Semaines'], offset_semainiers ) )
@@ -394,4 +405,5 @@ module ProNote
 
     rapport
   end
+  # rubocop:enable Metrics/MethodLength
 end

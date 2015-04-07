@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 def load_test_data( dbdump = 'spec/fixtures/db_dump3.sql' )
-  system "mysql -u #{DB_CONFIG[:user]} #{DB_CONFIG[:password].empty? ? '' : '-p' + DB_CONFIG[:password]} #{DB_CONFIG[:name]} < #{dbdump}"
+  system "mysql -u #{DB_CONFIG[:user]} #{DB_CONFIG[:password].empty? ? '' : '-p' + DB_CONFIG[:password]} #{DB_CONFIG[:name]} < #{dbdump}" # rubocop:disable Metrics/LineLength
 end
 
 def generate_test_data
@@ -24,7 +24,7 @@ def generate_test_data
                                     .where(jour_de_la_semaine: Date.tomorrow.wday)
                                     .join(:creneaux_emploi_du_temps_enseignants, creneau_emploi_du_temps_id: :id)
                                     .where(enseignant_id: cours.enseignant_id)
-                                    .first                # FIXME: arbitrairement on choisi d'attacher le devoir au premier créneau
+                                    .first
 
           Devoir.create(cours_id: cours.id,
                         type_devoir_id: TypeDevoir.all.sample.id,

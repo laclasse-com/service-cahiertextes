@@ -89,6 +89,7 @@ namespace :preprocess_assets do
         .write( source_map )
 
     STDERR.puts 'Uglification of vendor Javascript'
+    # rubocop:disable Metrics/LineLength
     uglified, source_map = Uglify.those_files_with_map( [ 'public/app/vendor/jquery/dist/jquery.js',
                                                           'public/app/vendor/underscore/underscore.js',
                                                           'public/app/vendor/moment/min/moment-with-locales.js',
@@ -124,6 +125,7 @@ namespace :preprocess_assets do
                                                           'public/app/vendor/textAngular/src/textAngularSetup.js',
                                                           'public/app/vendor/textAngular/src/textAngular.js',
                                                           'public/app/vendor/angular-toastr/dist/angular-toastr.tpls.js' ] )
+    # rubocop:enable Metrics/LineLength
     File.open( './public/app/vendor/vendor.min.js', 'w' )
         .write( uglified )
     File.open( './public/app/vendor/vendor.min.js.map', 'w' )

@@ -23,7 +23,8 @@ module CahierDeTextesAPI
       }
       get '/:id' do
         cours = Cours[ params[:id] ]
-        error!( 'Cours inconnu', 404 ) if cours.nil? || ( cours.deleted && cours.date_modification < UNDELETE_TIME_WINDOW.minutes.ago )
+        error!( 'Cours inconnu', 404 ) if cours.nil? ||
+                                          ( cours.deleted && cours.date_modification < UNDELETE_TIME_WINDOW.minutes.ago )
 
         cours.to_deep_hash
       end

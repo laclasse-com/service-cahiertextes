@@ -1,4 +1,4 @@
-# Sequel Basic Scafolding Model Generator for MySQL 
+# Sequel Basic Scafolding Model Generator for MySQL
 # Requires sequel-3.34.0 and above.
 #
 # This routine takes all the table of a database, en generates all Sequel models
@@ -16,7 +16,7 @@
 #
 # StackOverflow question : http://stackoverflow.com/questions/10123818/does-a-sequel-models-generator-exists
 # Thanks to Leucos : https://github.com/leucos
-# Organisation : https://github.com/Erasme 
+# Organisation : https://github.com/Erasme
 
 require 'sequel'
 require_relative '../config/database'
@@ -89,7 +89,7 @@ models_to_create.each do |m|
   # HEADER : Table definition
   line = "# " << "-" * 30 << "+" << "-" * 21 << "+" << "-" * 10 << "+" << "-" * 10 << "+" << "-" * 19 << "+" << "-" * 20
   model.puts(line)
-  model.puts("# COLUMN_NAME" << " " * 19 << "| DATA_TYPE" << " " * 11 << "| NULL?" << " " * 4 << "| KEY" << " " * 5 << " | DEFAULT" << " " * 10 << " | EXTRA")
+  model.puts("# COLUMN_NAME" << " " * 19 << "| DATA_TYPE" << " " * 11 << "| NULL?" << " " * 4 << "| KEY" << " " * 5 << " | DEFAULT" << " " * 10 << " | EXTRA") # rubocop:disable Metrics/LineLength
   model.puts(line)
   DB.schema(m).each do |c|
       col = c[1]
@@ -108,10 +108,10 @@ models_to_create.each do |m|
       end
       tab4 = 9 - column_key.size
       default = col[:default].to_s
-      tab5 = 18 - default.size 
-      
+      tab5 = 18 - default.size
+
       extra = col[:auto_increment] ? "auto_increment" : ""
-      model.puts("# #{c[0]}#{' '*tab}| #{data_type}#{' '*tab2}| #{allow_null}#{' '*tab3}| #{column_key}#{' '*tab4}| #{default}#{' '*tab5}| #{extra}")
+      model.puts("# #{c[0]}#{' '*tab}| #{data_type}#{' '*tab2}| #{allow_null}#{' '*tab3}| #{column_key}#{' '*tab4}| #{default}#{' '*tab5}| #{extra}") # rubocop:disable Metrics/LineLength
   end
   model.puts line
   model.puts "#"
@@ -201,7 +201,7 @@ if !init.nil?
 MODEL_MAP = {}
 DB.tables.each do |table|
   capitalize_name = table.to_s.split(/[^a-z0-9]/i).map{|w| w.capitalize}.join
-  MODEL_MAP[table] = Kernel.const_get(capitalize_name) 
+  MODEL_MAP[table] = Kernel.const_get(capitalize_name)
 end
   "
   init.close
