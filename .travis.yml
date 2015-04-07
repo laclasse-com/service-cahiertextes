@@ -16,6 +16,7 @@ before_script:
   - bundle exec rake db:migrations
 
 script: "bundle exec rspec"
+script: "bundle exec rubocop -D"
 
 gemfile:
   - Gemfile
