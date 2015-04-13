@@ -37,18 +37,19 @@ module DataManagement
                                jour.mday,
                                creneau.plage_horaire_fin.fin.hour,
                                creneau.plage_horaire_fin.fin.min ).iso8601,
-                cours: creneau.cours.select { |cours| cours[:deleted] == false && cours.date_cours == jour }
-                                    .map do |cours|
+                cours: creneau.cours
+                  .select { |cours| cours[:deleted] == false && cours.date_cours == jour }
+                  .map do |cours|
                   hcours = cours.to_hash
-                  hcours[:ressources] = cours.ressources.map { |rsrc| rsrc.to_hash }
+                  hcours[:ressources] = cours.ressources.map(&:to_hash)
 
                   hcours
                 end
-                                    .first,
+                  .first,
                 devoirs: creneau.devoirs.select { |devoir| devoir[:deleted] == false && devoir.date_due == jour }
-                                        .map do |devoir|
+                  .map do |devoir|
                   hdevoir = devoir.to_hash
-                  hdevoir[:ressources] = devoir.ressources.map { |rsrc| rsrc.to_hash }
+                  hdevoir[:ressources] = devoir.ressources.map(&:to_hash)
                   hdevoir[:type_devoir_description] = devoir.type_devoir.description
 
                   hdevoir[:fait] = devoir.fait_par?( eleve_id ) unless eleve_id.nil?

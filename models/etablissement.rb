@@ -12,9 +12,9 @@ class Etablissement < Sequel::Model( :etablissements )
   end
 
   def statistiques_enseignants
-    AnnuaireWrapper::Etablissement.get( values[:UAI] )['enseignants']
-                                  .map do |enseignant|
-
+    AnnuaireWrapper::Etablissement
+      .get( values[:UAI] )['enseignants']
+      .map do |enseignant|
       { enseignant_id: enseignant['id_ent'],
         classes: saisies_enseignant( enseignant['id_ent'] )[:saisies]
           .group_by { |s| s[:regroupement_id] }
@@ -33,16 +33,12 @@ class Etablissement < Sequel::Model( :etablissements )
 
   def saisies_enseignant( enseignant_id )
     { enseignant_id: enseignant_id,
-      saisies: (1..12).map do
-        |month|
-
+      saisies: (1..12).map do |month|
         Cours
           .where( enseignant_id: enseignant_id )
           .where( 'extract( month from date_cours ) = ' + month.to_s )
           .where( deleted: false )
-          .map do
-          |cours|
-
+          .map do |cours|
           devoir = Devoir.where(cours_id: cours.id)
 
           { mois: month,

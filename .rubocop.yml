@@ -27,4 +27,7 @@ Metrics/LineLength:
 Metrics/MethodLength:
   Max: 200
 
+Lint/BlockAlignment:
+  Enabled: false
+
 inherit_from: .rubocop_todo.yml
