@@ -6,8 +6,7 @@ end
 
 def generate_test_data
   CahierDeTextes.all.each do |cahier_de_textes|
-    12.times do
-      |month|
+    12.times do |month|
       rand(2..4).times do
         creneau = CreneauEmploiDuTempsEnseignant.all.sample
 

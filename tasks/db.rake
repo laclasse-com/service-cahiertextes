@@ -13,9 +13,9 @@ namespace :db do
     # foreign_key dump is sometimes wrong with non autoincrmente type (ie char)
     # so we need to dump the base in two times : the structure without foreign_keys and the foreigne_key alone
     schema = DB.dump_schema_migration(foreign_key: false)
-    File.open(File.join(APP_ROOT, 'db', 'scripts', 'dump_db_schema.sql'), 'w'){|f| f.write(schema)}
+    File.open(File.join(APP_ROOT, 'db', 'scripts', 'dump_db_schema.sql'), 'w') { |f| f.write(schema) }
     fk = DB.dump_foreign_key_migration
-    File.open(File.join(APP_ROOT, 'db', 'scripts', 'dump_fk.sql'), 'w'){|f| f.write(fk)}
+    File.open(File.join(APP_ROOT, 'db', 'scripts', 'dump_fk.sql'), 'w') { |f| f.write(fk) }
   end
 
   desc 'Generating Sequel model from database.'
@@ -28,7 +28,7 @@ namespace :db do
     Sequel::Migrator.run( DB, 'migrations' )
   end
 
-  desc "Checks if a migration is needed"
+  desc 'Checks if a migration is needed'
   task check_migrate: :load_config do
     Sequel.extension :migration
     exit Sequel::Migrator.is_current?( Sequel::Model.db, 'migrations' ) ? 0 : 1

@@ -24,7 +24,7 @@ namespace :preprocess_assets do
   task templates: :load_config do
     STDERR.puts 'Compilation of angular templates into javascript files'
     Dir.glob( 'public/app/views/*.html' )
-       .each do |fichier|
+      .each do |fichier|
       target = "#{fichier.gsub( /views/, 'js/templates' )}.js"
       template_name = fichier.gsub( %r{public/app/}, '' )
       template = File.read( fichier )
@@ -33,7 +33,7 @@ namespace :preprocess_assets do
       # suppression des retour à la ligne
       template.tr!( "\n", '' )
       # escaping des apostrophes
-      template.gsub!(/'/){ %q(\') }
+      template.gsub!(/'/) { %q(\') }
 
       # élimination du précédent template JS si besoin
       File.delete( target ) if File.exist?( target )
@@ -66,7 +66,7 @@ namespace :preprocess_assets do
                              syntax: :scss,
                              style: :compressed )
     File.open( './public/app/vendor/vendor.min.css', 'w' )
-        .write( uglified )
+      .write( uglified )
 
     STDERR.puts 'Sassification of application CSS'
     uglified = Sass.compile( [ 'public/app/css/main.scss' ]
@@ -74,7 +74,7 @@ namespace :preprocess_assets do
                              syntax: :scss,
                              style: :compressed )
     File.open( './public/app/css/cdt.min.css', 'w' )
-        .write( uglified )
+      .write( uglified )
   end
 
   desc 'Minify JS using Uglifier'
@@ -84,9 +84,9 @@ namespace :preprocess_assets do
                                                            .reject { |fichier| /min\.js$/.match fichier }
                                                            .sort )
     File.open( './public/app/js/cdt.min.js', 'w' )
-        .write( uglified )
+      .write( uglified )
     File.open( './public/app/js/cdt.min.js.map', 'w' )
-        .write( source_map )
+      .write( source_map )
 
     STDERR.puts 'Uglification of vendor Javascript'
     # rubocop:disable Metrics/LineLength
@@ -127,8 +127,8 @@ namespace :preprocess_assets do
                                                           'public/app/vendor/angular-toastr/dist/angular-toastr.tpls.js' ] )
     # rubocop:enable Metrics/LineLength
     File.open( './public/app/vendor/vendor.min.js', 'w' )
-        .write( uglified )
+      .write( uglified )
     File.open( './public/app/vendor/vendor.min.js.map', 'w' )
-        .write( source_map )
+      .write( source_map )
   end
 end

@@ -21,7 +21,7 @@ describe CahierDeTextes do
                               debut: Time.parse( '14:00' ),
                               fin: Time.parse( '15:00' ))
 
-    5.times { |i|
+    5.times do |i|
       cedt = CreneauEmploiDuTemps.create( debut: ph.id,
                                           fin: ph.id,
                                           jour_de_la_semaine: i + 1,
@@ -56,7 +56,7 @@ describe CahierDeTextes do
                            contenu: 'Devoir de test' )
         cedt.add_devoir( d )
       end
-    }
+    end
   end
 
   it 'Calcule les statistiques du cahier de textes d\'un regroupement' do

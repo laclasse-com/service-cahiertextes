@@ -14,41 +14,41 @@ module CahierDeTextesAPI
       end
 
       desc 'Renvoi le détail d\'une matière'
-      params {
+      params do
         requires :id, desc: 'id de la matière'
-      }
+      end
       get '/matieres/:id' do
         AnnuaireWrapper::Matiere.get( params[:id] )
       end
 
       desc 'retourne la liste des enseignants de l\'établissement'
-      params {
+      params do
         requires :uai, desc: 'Code UAI de l\'établissement'
-      }
+      end
       get 'etablissements/:uai/enseignants' do
         AnnuaireWrapper::Etablissement.get_enseignants( params[:uai] )
       end
 
       desc 'retourne la liste des regroupements de l\'établissement'
-      params {
+      params do
         requires :uai, desc: 'Code UAI de l\'établissement'
-      }
+      end
       get 'etablissements/:uai/regroupements' do
         AnnuaireWrapper::Etablissement.get_regroupements( params[:uai] )
       end
 
       desc 'Renvoi le détail d\'un regroupement'
-      params {
+      params do
         requires :id, desc: 'id du regroupement'
-      }
+      end
       get '/regroupements/:id' do
         AnnuaireWrapper::Regroupement.get( params[:id] )
       end
 
       desc 'Renvoi le détail d\'un utilisateur'
-      params {
+      params do
         requires :id, desc: 'id de l\'utilisateur'
-      }
+      end
       get '/users/:id' do
         AnnuaireWrapper::User.get( params[:id] )
       end

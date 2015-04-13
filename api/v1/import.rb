@@ -13,9 +13,9 @@ module CahierDeTextesAPI
       end
 
       desc 'Receive a Pronote XML file and load it in DB.'
-      params {
+      params do
         requires :file
-      }
+      end
       post '/pronote' do
         uai = ProNote.extract_uai_from_xml( File.open( params[:file][:tempfile] ) )
 
@@ -28,10 +28,10 @@ module CahierDeTextesAPI
       end
 
       desc 'Identifie une Matière/Regroupement/Personne-Non-Identifié en lui donnant un ID Annuaire manuellement'
-      params {
+      params do
         requires :sha256
         requires :id_annuaire
-      }
+      end
       put '/mrpni/:sha256/est/:id_annuaire' do
         user_needs_to_be( %w( DIR ), true )
 

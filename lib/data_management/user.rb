@@ -11,22 +11,20 @@ module DataManagement
       DevoirTodoItem.where( eleve_id: uid ).destroy
 
       Cours.where( enseignant_id: uid ).each do |cours|
-        cours.devoirs.each do |devoir|
-          devoir.destroy
-        end
+        cours.devoirs.each(&:destroy)
         cours.destroy
       end
 
       CreneauEmploiDuTempsEnseignant.where( enseignant_id: uid )
-                                    .all
-                                    .each do |ce|
+        .all
+        .each do |ce|
         cours = Cours[ce.creneau_emploi_du_temps_id]
         ce.destroy
         cours.destroy if cours.enseignants.empty?
       end
     end
 
-    def merge( target_uid, source_uid )
+    def merge( _target_uid, _source_uid )
       # UserParameters.where( uid: uid ).destroy
 
       # DevoirTodoItem.where( eleve_id: uid ).destroy

@@ -139,7 +139,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
     if params[:enseignant_id]
       CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
       ce = add_enseignant( enseignant_id: params[:enseignant_id] )
-      #ce.update( semaines_de_presence: params[:semaines_de_presence_enseignant] ) if params[:semaines_de_presence_enseignant]
+      # ce.update( semaines_de_presence: params[:semaines_de_presence_enseignant] ) if params[:semaines_de_presence_enseignant]
       CreneauEmploiDuTempsEnseignant.restrict_primary_key
     end
 
@@ -152,15 +152,15 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
 
     unless params[:regroupement_id].nil? || params[:regroupement_id] == 'undefined'
       if CreneauEmploiDuTempsRegroupement
-          .where( creneau_emploi_du_temps_id: params[:id] )
-          .where( regroupement_id: params[:regroupement_id] ).count < 1
+         .where( creneau_emploi_du_temps_id: params[:id] )
+         .where( regroupement_id: params[:regroupement_id] ).count < 1
         CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
 
         # 1. first remove previous créneau-regroupement association
         previous_creneau_regroupement = CreneauEmploiDuTemps.last.regroupements
-                                                                 .select { |cr|
+                                        .select do |cr|
           cr.regroupement_id == params[:previous_regroupement_id]
-        }.first
+        end.first
         previous_creneau_regroupement.destroy unless previous_creneau_regroupement.nil?
 
         # 2. create the new one

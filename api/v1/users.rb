@@ -20,9 +20,9 @@ module CahierDeTextesAPI
       end
 
       desc 'met à jour les paramètres utilisateurs'
-      params {
+      params do
         requires :parametres, type: String
-      }
+      end
       put '/current/parametres' do
         parametres = UserParameters.where( uid: user[:uid] ).first
 

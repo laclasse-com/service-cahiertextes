@@ -13,18 +13,19 @@ require_relative '../config/options'
 module AnnuaireWrapper
   module User
     module_function
+
     # Service Utilisateur : init de la session et de son environnement
     def get( uid )
       Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_user,
-                                                    "#{uid}",
-                                                    expand: 'true' )
+                                                      "#{uid}",
+                                                      expand: 'true' )
     end
 
     # Liste des regroupements de l'utilisateur connecté
     def get_regroupements( uid )
       Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_user,
-                                                    "#{uid}/regroupements",
-                                                    expand: 'true' )
+                                                      "#{uid}/regroupements",
+                                                      expand: 'true' )
     end
   end
 
@@ -35,22 +36,22 @@ module AnnuaireWrapper
     # Liste des personnels d'un etablissement
     def get( uai )
       Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_etablissement,
-                                                    "#{uai}",
-                                                    expand: 'true' )
+                                                      "#{uai}",
+                                                      expand: 'true' )
     end
 
     # Liste des regroupements d'un établissement
     def get_regroupements( uai )
       Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_etablissement,
-                                                    "#{uai}/regroupements",
-                                                    expand: 'true' )
+                                                      "#{uai}/regroupements",
+                                                      expand: 'true' )
     end
 
     # Liste des regroupements d'un établissement
     def get_enseignants( uai )
       Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_etablissement,
-                                                    "#{uai}/enseignants",
-                                                    expand: 'true' )
+                                                      "#{uai}/enseignants",
+                                                      expand: 'true' )
     end
 
     module Regroupement
@@ -58,10 +59,10 @@ module AnnuaireWrapper
 
       def search( uai, label )
         Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_regroupement,
-                                                      '',
-                                                      { etablissement: uai,
+                                                        '',
+                                                        etablissement: uai,
                                                         nom: label,
-                                                        expand: 'false' } )
+                                                        expand: 'false' )
       end
     end
 
@@ -70,11 +71,11 @@ module AnnuaireWrapper
 
       def search( uai, nom, prenom )
         Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_user,
-                                                      '',
-                                                      { etablissement: uai,
+                                                        '',
+                                                        etablissement: uai,
                                                         nom: nom,
                                                         prenom: prenom,
-                                                        expand: 'true'} )
+                                                        expand: 'true' )
       end
     end
   end
@@ -84,20 +85,20 @@ module AnnuaireWrapper
 
     def query
       Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_matiere,
-                                                    '',
-                                                    expand: 'true' )
+                                                      '',
+                                                      expand: 'true' )
     end
 
     def get( id )
       Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_matiere,
-                                                    "#{CGI.escape( id )}",
-                                                    expand: 'false' )
+                                                      "#{CGI.escape( id )}",
+                                                      expand: 'false' )
     end
 
     def search( label )
       Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_matiere,
-                                                    "libelle/#{CGI.escape( label )}",
-                                                    expand: 'false' )
+                                                      "libelle/#{CGI.escape( label )}",
+                                                      expand: 'false' )
     end
   end
 
@@ -106,8 +107,8 @@ module AnnuaireWrapper
 
     def get( id )
       regroupement = Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_regroupement,
-                                                                   "#{CGI.escape( id )}",
-                                                                   expand: 'false' )
+                                                                     "#{CGI.escape( id )}",
+                                                                     expand: 'false' )
       regroupement['libelle'] = regroupement['libelle_aaf'] if regroupement['libelle'].nil?
 
       regroupement

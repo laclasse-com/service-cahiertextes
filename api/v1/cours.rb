@@ -18,9 +18,9 @@ module CahierDeTextesAPI
       end
 
       desc 'renvoi le détail d\'une séquence pédagogique'
-      params {
+      params do
         requires :id, desc: 'id du cours'
-      }
+      end
       get '/:id' do
         cours = Cours[ params[:id] ]
         error!( 'Cours inconnu', 404 ) if cours.nil? ||
@@ -30,14 +30,14 @@ module CahierDeTextesAPI
       end
 
       desc 'renseigne une séquence pédagogique'
-      params {
+      params do
         requires :regroupement_id
         requires :creneau_emploi_du_temps_id
         requires :date_cours, type: Date
         requires :contenu
 
         optional :ressources
-      }
+      end
       post do
         user_needs_to_be( %w( ENS ), true )
 
@@ -60,12 +60,12 @@ module CahierDeTextesAPI
       end
 
       desc 'modifie une séquence pédagogique'
-      params {
+      params do
         requires :id, type: Integer
         requires :contenu, type: String
 
         optional :ressources, type: Array
-      }
+      end
       put '/:id' do
         user_needs_to_be( %w( ENS ), true )
 
@@ -80,9 +80,9 @@ module CahierDeTextesAPI
       end
 
       desc 'valide une séquence pédagogique'
-      params {
+      params do
         requires :id
-      }
+      end
       put '/:id/valide' do
         user_needs_to_be( %w( DIR ), true )
 
@@ -95,12 +95,12 @@ module CahierDeTextesAPI
       end
 
       desc 'copie une séquence pédagogique'
-      params {
+      params do
         requires :id, type: Integer
         requires :creneau_emploi_du_temps_id
         requires :regroupement_id
         requires :date, type: Date
-      }
+      end
       put '/:id/copie/regroupement/:regroupement_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date/:date' do
         user_needs_to_be( %w( ENS ), true )
 
@@ -117,9 +117,9 @@ module CahierDeTextesAPI
       end
 
       desc 'marque une séquence pédagogique comme éffacée et inversement'
-      params {
+      params do
         requires :id
-      }
+      end
       delete '/:id' do
         user_needs_to_be( %w( ENS ), true )
 

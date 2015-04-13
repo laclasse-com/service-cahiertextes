@@ -7,12 +7,10 @@ module DataManagement
 
     def unfinished_creneaux
       CreneauEmploiDuTemps.where( matiere_id: '' )
-                          .all
-                          .select { |c| c.regroupements.empty? && c.date_creation < 1.week.ago }
-                          .each do |c|
-        c.enseignants.each do |ce|
-          ce.destroy
-        end
+        .all
+        .select { |c| c.regroupements.empty? && c.date_creation < 1.week.ago }
+        .each do |c|
+        c.enseignants.each(&:destroy)
         c.destroy
       end
     end
@@ -21,9 +19,7 @@ module DataManagement
       Ressource
         .all
         .select { |r| r.cours.empty? && r.devoirs.empty? }
-        .each do |r|
-        r.destroy
-      end
+        .each(&:destroy)
     end
   end
 end

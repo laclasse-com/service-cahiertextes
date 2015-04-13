@@ -9,15 +9,10 @@ class Cours < Sequel::Model( :cours )
   def to_deep_hash
     hash = JSON.parse( to_json( include: self.class.associations ), symbolize_names: true ) # FIXME: WTF
 
-    hash[:ressources] = ressources.map do |ressource|
-      ressource.to_hash
-    end
+    hash[:ressources] = ressources.map(&:to_hash)
     hash[:devoirs] = devoirs.select { |devoir| !devoir.deleted || devoir.date_modification > UNDELETE_TIME_WINDOW.minutes.ago }
     hash[:devoirs].each do |devoir|
-      devoir[:ressources] = devoir.ressources.map do |ressource|
-        ressource.to_hash
-      end
-
+      devoir[:ressources] = devoir.ressources.map(&:to_hash)
     end
 
     hash
@@ -38,7 +33,7 @@ class Cours < Sequel::Model( :cours )
   end
 
   def toggle_validated
-    self.date_validation = self.date_validation.nil? ? Time.now : nil
+    self.date_validation = date_validation.nil? ? Time.now : nil
 
     save
   end
@@ -49,11 +44,9 @@ class Cours < Sequel::Model( :cours )
 
     if params[:ressources]
       remove_all_ressources
-      params[:ressources].each do
-        |ressource|
-
-        add_ressource( DataManagement::Accessors.create_or_get( Ressource, { name: ressource['name'],
-                                                                             hash: ressource['hash'] } ) )
+      params[:ressources].each do |ressource|
+        add_ressource( DataManagement::Accessors.create_or_get( Ressource, name: ressource['name'],
+                                                                           hash: ressource['hash'] ) )
       end
     end
 
@@ -85,5 +78,4 @@ class Cours < Sequel::Model( :cours )
 end
 
 class CoursRessource < Sequel::Model( :cours_ressources )
-
 end

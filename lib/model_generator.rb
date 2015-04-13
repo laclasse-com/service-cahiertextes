@@ -22,30 +22,26 @@ require 'sequel'
 require_relative '../config/database'
 
 # Target dir
-@model_dir_target = APP_ROOT + "/model"
+@model_dir_target = APP_ROOT + '/model'
 
 # List of plugins to add to the model
-plugin_to_add = [
-  "validation_helpers",
-  "json_serializer",
-  "composition"
-]
+plugin_to_add = %w(validation_helpers json_serializer composition)
 
 # International Error message
-message_empty = "ne peut pas &ecirc;tre vide" # "cannot be empty"
+message_empty = 'ne peut pas &ecirc;tre vide' # "cannot be empty"
 
 # List of the tables we want to create scafolding Sequel model
 models_to_create = DB.tables
-#Data de migration Sequel
-models_to_create.delete_if {|m| m == :schema_info}
+# Data de migration Sequel
+models_to_create.delete_if { |m| m == :schema_info }
 ############### Do not modify below ################
 
 # Creating file and retreving a file pointer
 def createfile(name)
   filename = File.join(@model_dir_target, name)
-  if !File.exists?(filename)
+  if !File.exist?(filename)
     puts "creating #{filename}"
-    File.new(filename, "w")
+    File.new(filename, 'w')
   else
     puts "#{filename} already exists."
   end
@@ -53,11 +49,11 @@ end
 
 # Writing a nice header in files
 def writeheader(f, title)
-  f.puts "#coding: utf-8"
-  f.puts "#"
+  f.puts '#coding: utf-8'
+  f.puts '#'
   f.puts "# #{title}"
-  f.puts "# generated #{Time.now.to_s} by #{$0}"
-  f.puts "#"
+  f.puts "# generated #{Time.now} by #{$PROGRAM_NAME}"
+  f.puts '#'
 end
 
 # Write an association between two Models and manage special keys
@@ -79,60 +75,60 @@ end
 ############### Main ################
 models_to_create.each do |m|
   # Camelize table_name to create a ClassName
-  modelName = m.to_s.split(/[^a-z0-9]/i).map{|w| w.capitalize}.join
+  modelName = m.to_s.split(/[^a-z0-9]/i).map(&:capitalize).join
   # model creation if it does not exists
-  model = createfile(m.to_s + ".rb")
+  model = createfile(m.to_s + '.rb')
   next if model.nil?
 
   writeheader(model, "model for '#{m}' table")
 
   # HEADER : Table definition
-  line = "# " << "-" * 30 << "+" << "-" * 21 << "+" << "-" * 10 << "+" << "-" * 10 << "+" << "-" * 19 << "+" << "-" * 20
+  line = '# ' << '-' * 30 << '+' << '-' * 21 << '+' << '-' * 10 << '+' << '-' * 10 << '+' << '-' * 19 << '+' << '-' * 20
   model.puts(line)
-  model.puts("# COLUMN_NAME" << " " * 19 << "| DATA_TYPE" << " " * 11 << "| NULL?" << " " * 4 << "| KEY" << " " * 5 << " | DEFAULT" << " " * 10 << " | EXTRA") # rubocop:disable Metrics/LineLength
+  model.puts('# COLUMN_NAME' << ' ' * 19 << '| DATA_TYPE' << ' ' * 11 << '| NULL?' << ' ' * 4 << '| KEY' << ' ' * 5 << ' | DEFAULT' << ' ' * 10 << ' | EXTRA') # rubocop:disable Metrics/LineLength
   model.puts(line)
   DB.schema(m).each do |c|
-      col = c[1]
-      tab = 30 - c[0].to_s.size
-      data_type = col[:db_type].to_s
-      tab2 = 20 - data_type.size
-      allow_null = col[:allow_null].to_s
-      tab3 = 9 - allow_null.size
-      column_key = ""
-      if col[:primary_key]
-        column_key = "PRI"
-      else
-        DB.indexes(m).each do |name, info|
-          column_key = info[:unique] ? "UNI" : "MUL" if info[:columns].include?(c[0])
-        end
+    col = c[1]
+    tab = 30 - c[0].to_s.size
+    data_type = col[:db_type].to_s
+    tab2 = 20 - data_type.size
+    allow_null = col[:allow_null].to_s
+    tab3 = 9 - allow_null.size
+    column_key = ''
+    if col[:primary_key]
+      column_key = 'PRI'
+    else
+      DB.indexes(m).each do |_name, info|
+        column_key = info[:unique] ? 'UNI' : 'MUL' if info[:columns].include?(c[0])
       end
-      tab4 = 9 - column_key.size
-      default = col[:default].to_s
-      tab5 = 18 - default.size
+    end
+    tab4 = 9 - column_key.size
+    default = col[:default].to_s
+    tab5 = 18 - default.size
 
-      extra = col[:auto_increment] ? "auto_increment" : ""
-      model.puts("# #{c[0]}#{' '*tab}| #{data_type}#{' '*tab2}| #{allow_null}#{' '*tab3}| #{column_key}#{' '*tab4}| #{default}#{' '*tab5}| #{extra}") # rubocop:disable Metrics/LineLength
+    extra = col[:auto_increment] ? 'auto_increment' : ''
+    model.puts("# #{c[0]}#{' ' * tab}| #{data_type}#{' ' * tab2}| #{allow_null}#{' ' * tab3}| #{column_key}#{' ' * tab4}| #{default}#{' ' * tab5}| #{extra}") # rubocop:disable Metrics/LineLength
   end
   model.puts line
-  model.puts "#"
+  model.puts '#'
   model.puts "class #{modelName} < Sequel::Model(:#{m})"
-  model.puts ""
+  model.puts ''
   #
   # Add plugins
   #
-  model.puts "  # Plugins"
+  model.puts '  # Plugins'
   plugin_to_add.each do |p|
     model.puts "  plugin :#{p}"
   end
-  model.puts ""
+  model.puts ''
   #
   # Add table relationships
   #
-  model.puts "  # Referential integrity"
+  model.puts '  # Referential integrity'
   # many_to_one relationships
   DB.foreign_key_list(m).each do |fk|
-    write_association(model, "many_to_one", fk[:table], fk)
-   end
+    write_association(model, 'many_to_one', fk[:table], fk)
+  end
   # one_to_many relationships
   # Need to look in each table's foreign_key
   # querying directly mysql is better here but let's do it totally with Sequel
@@ -140,31 +136,31 @@ models_to_create.each do |m|
   DB.tables.each do |t|
     unless t == m
       DB.foreign_key_list(t).each do |fk|
-        write_association(model, "one_to_many", t, fk) if fk[:table] == m
+        write_association(model, 'one_to_many', t, fk) if fk[:table] == m
       end
     end
   end
 
-  model.puts ""
+  model.puts ''
   #
   # Add Validate method
   #
-  model.puts "  # Not nullable cols and unicity validation"
-  model.puts "  def validate"
-  model.puts "    super" # Don't forget to call super first
+  model.puts '  # Not nullable cols and unicity validation'
+  model.puts '  def validate'
+  model.puts '    super' # Don't forget to call super first
   list_of_not_nullable_cols = []
-  #list_of_errors_messages = ""
+  # list_of_errors_messages = ""
   list_of_unique_val_cols = []
   # not nullable columns
   DB.schema(m).each do |c|
     info = c[1]
-    if (!info[:allow_null] and info[:default].nil?) and !info[:primary_key]
+    if (!info[:allow_null] && info[:default].nil?) && !info[:primary_key]
       list_of_not_nullable_cols.push(c[0])
     end
   end
 
   # Unique columns
-  DB.indexes(m).each do |name, info|
+  DB.indexes(m).each do |_name, info|
     if info[:unique]
       # There could be several columns for one index
       info[:columns].each do |col|
@@ -181,16 +177,15 @@ models_to_create.each do |m|
   #
   # delete cascade
   # update cascade
-  model.puts "end"
+  model.puts 'end'
   model.close
 end
 
-
 # then create the init.rb file
-init = createfile("init.rb")
-if !init.nil?
-  writeheader(init, "include file to access all models")
-  init.puts "# MODELS"
+init = createfile('init.rb')
+unless init.nil?
+  writeheader(init, 'include file to access all models')
+  init.puts '# MODELS'
   models_to_create.each do |m|
     init.puts "require_relative '#{m}'"
   end
@@ -207,4 +202,4 @@ end
   init.close
 end
 
-puts "Done."
+puts 'Done.'

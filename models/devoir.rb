@@ -12,9 +12,7 @@ class Devoir < Sequel::Model( :devoirs )
                                 except: [ :regroupement_id, :semaines_de_presence ] ),
                        symbolize_names: true )
 
-    hash[:ressources] = ressources.map do |ressource|
-      ressource.to_hash
-    end
+    hash[:ressources] = ressources.map(&:to_hash)
 
     hash[:devoir_todo_items] = [] if user.nil?
     hash[:devoir_todo_items].select! { |dti| dti[:eleve_id] == user[:uid] } unless user.nil?
@@ -79,8 +77,8 @@ class Devoir < Sequel::Model( :devoirs )
       remove_all_ressources
 
       params[:ressources].each do |ressource|
-        add_ressource( DataManagement::Accessors.create_or_get( Ressource, { name: ressource['name'],
-                                                                             hash: ressource['hash'] } ) )
+        add_ressource( DataManagement::Accessors.create_or_get( Ressource, name: ressource['name'],
+                                                                           hash: ressource['hash'] ) )
       end
     end
 
@@ -95,7 +93,6 @@ class TypeDevoir < Sequel::Model( :types_devoir )
 end
 
 class DevoirRessource < Sequel::Model( :devoirs_ressources )
-
 end
 
 class DevoirTodoItem < Sequel::Model( :devoir_todo_items )

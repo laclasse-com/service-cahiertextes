@@ -10,9 +10,9 @@ module CahierDeTextesAPI
       end
 
       desc 'statistiques des cahiers de textes par classes/mois/matières'
-      params {
+      params do
         requires :uai, desc: 'Code UAI de l\'établissement'
-      }
+      end
       get '/:uai/statistiques/classes' do
         etablissement = Etablissement.where(uai: params[:uai]).first
 
@@ -22,10 +22,10 @@ module CahierDeTextesAPI
       end
 
       desc 'statistiques du cahier de textes d\'une classe'
-      params {
+      params do
         requires :uai, desc: 'Code UAI de l\'établissement'
         requires :regroupement_id, desc: 'identifiant annuaire de la classe'
-      }
+      end
       get '/:uai/statistiques/classes/:regroupement_id' do
         cahier_de_textes = CahierDeTextes[ regroupement_id: params[:regroupement_id] ]
 
@@ -35,9 +35,9 @@ module CahierDeTextesAPI
       end
 
       desc 'statistiques des cahiers de textes par enseignants/mois'
-      params {
+      params do
         requires :uai, desc: 'Code UAI de l\'établissement'
-      }
+      end
       get '/:uai/statistiques/enseignants' do
         etablissement = Etablissement.where(UAI: params[:uai]).first
 
@@ -47,10 +47,10 @@ module CahierDeTextesAPI
       end
 
       desc 'saisies détaillées d\'un enseignant dans les cahiers de textes par mois/classes'
-      params {
+      params do
         requires :uai, desc: 'Code UAI de l\'établissement'
         requires :enseignant_id, desc: 'identifiant annuaire de l\'enseignant'
-      }
+      end
       get '/:uai/statistiques/enseignants/:enseignant_id' do
         etablissement = Etablissement.where(uai: params[:uai]).first
 

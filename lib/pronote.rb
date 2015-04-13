@@ -41,9 +41,9 @@ module ProNote
 
     crypted_wrapped_data = Base64.decode64( encrypted_edt_export_file
                                             .search( 'PARTENAIRE' )
-                                            .select { |part|
+                                            .select do |part|
                                               part.attributes[ 'NOM' ].value == PRONOTE[:nom_integrateur]
-                                            }.first.text )
+                                            end.first.text )
     decrypted_wrapped_data = decrypt_wrapped_data( crypted_wrapped_data, PRONOTE[:cle_integrateur] )
     aes_secret_key = decrypted_wrapped_data[ 0..16 ]
     aes_iv = decrypted_wrapped_data[ 16..32 ]
@@ -65,21 +65,21 @@ module ProNote
     "#{debut}#{fin}".to_i 2
   end
 
-  def extract_uai_from_xml( xml, xsd = nil )
+  def extract_uai_from_xml( xml, _xsd = nil )
     Nokogiri::XML( xml ).search( 'UAI' ).children.text
   end
 
   def trace_rapport( rapport, key )
-    LOGGER.debug "Import #{key.to_s}, #{rapport[ key ][:success].length} succès."
-    LOGGER.debug "Import #{key.to_s}, #{rapport[ key ][:error].length} erreurs."
+    LOGGER.debug "Import #{key}, #{rapport[ key ][:success].length} succès."
+    LOGGER.debug "Import #{key}, #{rapport[ key ][:error].length} erreurs."
   end
 
   # rubocop:disable Metrics/MethodLength
-  def load_xml( xml, xsd = nil )
+  def load_xml( xml, _xsd = nil )
     rapport = {}
     edt_clair = Nokogiri::XML( decrypt_xml( xml ) )
 
-    etablissement = DataManagement::Accessors.create_or_get( Etablissement, { UAI: edt_clair.child['UAI'] } )
+    etablissement = DataManagement::Accessors.create_or_get( Etablissement, UAI: edt_clair.child['UAI'] )
 
     edt_clair.search('AnneeScolaire').reject { |child| child.name == 'text' }.each do |node|
       etablissement.debut_annee_scolaire = node['DateDebut']
@@ -91,9 +91,9 @@ module ProNote
 
     rapport[:plages_horaires] = { success: [], error: [] }
     edt_clair.search('PlacesParJour').children.reject { |child| child.name == 'text' }.each do |node|
-      plage = DataManagement::Accessors.create_or_get( PlageHoraire, { label: node['Numero'],
-                                                                       debut: node['LibelleHeureDebut'],
-                                                                       fin: node['LibelleHeureFin'] } )
+      plage = DataManagement::Accessors.create_or_get( PlageHoraire, label: node['Numero'],
+                                                                     debut: node['LibelleHeureDebut'],
+                                                                     fin: node['LibelleHeureFin'] )
 
       if plage.nil?
         rapport[:plages_horaires][:error] << { label: node['Numero'],
@@ -107,9 +107,9 @@ module ProNote
 
     rapport[:salles] =  { success: [], error: [] }
     edt_clair.search('Salles').children.reject { |child| child.name == 'text' }.each do |node|
-      salle = DataManagement::Accessors.create_or_get( Salle, { etablissement_id: etablissement.id,
-                                                                identifiant: node['Ident'],
-                                                                nom: node['Nom'] } )
+      salle = DataManagement::Accessors.create_or_get( Salle, etablissement_id: etablissement.id,
+                                                              identifiant: node['Ident'],
+                                                              nom: node['Nom'] )
 
       if salle.nil?
         rapport[:salles][:error] << { etablissement_id: etablissement.id,
@@ -127,9 +127,9 @@ module ProNote
     rapport[:matieres] = { success: [], error: [] }
     matieres = {}
     edt_clair.search('Matieres')
-             .children
-             .reject { |child| child.name == 'text' }
-             .each do |node|
+      .children
+      .reject { |child| child.name == 'text' }
+      .each do |node|
       matieres[ node['Ident'] ] = AnnuaireWrapper::Matiere.search( node['Libelle'] )['id']
       if matieres[ node['Ident'] ].nil?
         objet = { Libelle: node['Libelle'] }
@@ -158,9 +158,9 @@ module ProNote
     enseignants = {}
 
     edt_clair.search('Professeurs')
-             .children
-             .reject { |child| child.name == 'text' || child['Nom'].empty?  || child['Prenom'].empty? }
-             .each do |node|
+      .children
+      .reject { |child| child.name == 'text' || child['Nom'].empty?  || child['Prenom'].empty? }
+      .each do |node|
       user_annuaire = AnnuaireWrapper::Etablissement::User.search( etablissement.UAI, node['Nom'], node['Prenom'] )
       enseignants[ node['Ident'] ] = user_annuaire.nil? ? nil : user_annuaire['id_ent']
       if enseignants[ node['Ident'] ].nil?
@@ -191,9 +191,9 @@ module ProNote
     regroupements = { 'Classe' => {}, 'PartieDeClasse' => {}, 'Groupe' => {} }
 
     edt_clair.search('Classes')
-             .children
-             .reject { |child| child.name == 'text' }
-             .each do |node|
+      .children
+      .reject { |child| child.name == 'text' }
+      .each do |node|
       reponse_annuaire = AnnuaireWrapper::Etablissement::Regroupement.search( etablissement.UAI, node['Nom'] )
       code_annuaire = reponse_annuaire.nil? ? nil : reponse_annuaire['id']
       regroupements[ node.name ][ node['Ident'] ] = code_annuaire
@@ -331,8 +331,8 @@ module ProNote
                            regroupements: { success: [], error: [] },
                            salles: { success: [], error: [] } }
     edt_clair.search('Cours/Cours')
-             .reject { |child| child.name == 'text' }
-             .each do |node|
+      .reject { |child| child.name == 'text' }
+      .each do |node|
       debut = PlageHoraire[ label: node['NumeroPlaceDebut'] ][:id]
       fin = PlageHoraire[ label: node['NumeroPlaceDebut'].to_i + node['NombrePlaces'].to_i - 1 ][:id]
       matiere_id = nil
@@ -348,10 +348,10 @@ module ProNote
       unless matiere_id.nil?
         creneau = DataManagement::Accessors
                   .create_or_get( CreneauEmploiDuTemps,
-                                  { jour_de_la_semaine: node['Jour'], # 1: 'lundi' .. 7: 'dimanche', norme ISO-8601
-                                    debut: debut,
-                                    fin: fin,
-                                    matiere_id: matiere_id } )
+                                  jour_de_la_semaine: node['Jour'], # 1: 'lundi' .. 7: 'dimanche', norme ISO-8601
+                                  debut: debut,
+                                  fin: fin,
+                                  matiere_id: matiere_id )
 
         node.children.each do |subnode|
           case subnode.name
@@ -372,9 +372,9 @@ module ProNote
               rapport[:creneaux][:regroupements][:error] << "#{subnode['Ident']} (#{subnode.name})"
             else
               rapport[:creneaux][:regroupements][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
-              if creneau.regroupements.select { |cr|
+              if creneau.regroupements.select do |cr|
                    cr[:regroupement_id] == regroupements[ subnode.name ][ subnode['Ident'] ]
-                 }.count == 0
+                 end.count == 0
                 CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
                 creneau.add_regroupement(regroupement_id: regroupements[ subnode.name ][ subnode['Ident'] ],
                                          semaines_de_presence: corrige_semainiers( subnode['Semaines'], offset_semainiers ) )
@@ -386,7 +386,7 @@ module ProNote
               creneau.add_salle( Salle[ identifiant: subnode['Ident'] ] )
             end
             cs = CreneauEmploiDuTempsSalle.where( salle_id: Salle[ identifiant: subnode['Ident'] ][:id] )
-                                          .where( creneau_emploi_du_temps_id: creneau.id )
+                 .where( creneau_emploi_du_temps_id: creneau.id )
             cs.update(semaines_de_presence: corrige_semainiers( subnode['Semaines'], offset_semainiers ) )
             # cs.save
           end
@@ -396,11 +396,11 @@ module ProNote
 
     CreneauEmploiDuTempsRegroupement
       .select(:regroupement_id)
-      .map { |r| r.regroupement_id }
+      .map(&:regroupement_id)
       .uniq
       .reject { |id| id == 'undefined' }
       .each do |regroupement_id|
-      DataManagement::Accessors.create_or_get( CahierDeTextes, { regroupement_id: regroupement_id } )
+      DataManagement::Accessors.create_or_get( CahierDeTextes, regroupement_id: regroupement_id )
     end
 
     rapport

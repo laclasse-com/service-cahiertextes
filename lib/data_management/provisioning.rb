@@ -4,9 +4,10 @@ module DataManagement
   # Layer over models
   module Provisioning
     module_function
+
     def provision( user )
       user[:user_detailed]['etablissements']
-        .each { |etab|
+        .each do |etab|
         etablissement = Etablissement.where(UAI: etab[ 'code_uai' ]).first
         if etablissement.nil?
           etablissement = AnnuaireWrapper::Etablissement.get( etab[ 'code_uai' ] )
@@ -14,14 +15,13 @@ module DataManagement
           etablissement['classes']
             .concat( etablissement['groupes_eleves'] )
             .concat( etablissement['groupes_libres'] )
-            .each {
-            |regroupement|
+            .each do |regroupement|
             cdt = CahierDeTextes.where( regroupement_id: regroupement['id'] ).first
             CahierDeTextes.create( date_creation: Time.now,
                                    regroupement_id: regroupement['id'] ) if cdt.nil?
-          }
+          end
         end
-      }
+      end
     end
   end
 end

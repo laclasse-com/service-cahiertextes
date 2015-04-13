@@ -24,5 +24,4 @@ namespace :pry do
   task pry: :load_config do
     pry.binding
   end
-
 end
