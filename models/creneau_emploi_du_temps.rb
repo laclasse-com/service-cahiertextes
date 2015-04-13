@@ -7,6 +7,7 @@ module SemainesDePresenceMixin
 end
 
 class CreneauEmploiDuTempsSalle < Sequel::Model( :creneaux_emploi_du_temps_salles )
+  unrestrict_primary_key
   include SemainesDePresenceMixin
 
   many_to_one :creneau_emploi_du_temps
@@ -14,12 +15,14 @@ class CreneauEmploiDuTempsSalle < Sequel::Model( :creneaux_emploi_du_temps_salle
 end
 
 class CreneauEmploiDuTempsEnseignant < Sequel::Model( :creneaux_emploi_du_temps_enseignants )
+  unrestrict_primary_key
   include SemainesDePresenceMixin
 
   many_to_one :creneau_emploi_du_temps
 end
 
 class CreneauEmploiDuTempsRegroupement < Sequel::Model( :creneaux_emploi_du_temps_regroupements )
+  unrestrict_primary_key
   include SemainesDePresenceMixin
 
   many_to_one :creneau_emploi_du_temps
@@ -111,77 +114,81 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
       .compact
   end
 
+  def update_heure_debut( value )
+    plage_horaire_debut = PlageHoraire.where( debut: value ).first
+    if plage_horaire_debut.nil?
+      plage_horaire_debut = PlageHoraire.create( label: '',
+                                                 debut: value,
+                                                 fin: value + 1800 )
+    end
+    update( debut: plage_horaire_debut.id )
+  end
+
+  def update_heure_fin( value )
+    plage_horaire_fin = PlageHoraire.where( fin: value ).first
+    if plage_horaire_fin.nil?
+      plage_horaire_fin = PlageHoraire.create( label: '',
+                                               fin: value,
+                                               fin: value + 1800 )
+    end
+    update( fin: plage_horaire_fin.id )
+  end
+
+  def update_semaines_de_presence_enseignant( value )
+    ce = CreneauEmploiDuTempsEnseignant
+         .where( enseignant_id: user[:uid] )
+         .where( creneau_emploi_du_temps_id: params[:id] )
+    ce.update semaines_de_presence: value
+  end
+
+  def update_semaines_de_presence_regroupement( regroupement_id, semaines_de_presence_regroupement )
+    cr = CreneauEmploiDuTempsRegroupement
+         .where( creneau_emploi_du_temps_id: id )
+         .where( regroupement_id: regroupement_id)
+    cr.update semaines_de_presence: semaines_de_presence_regroupement unless cr.nil?
+  end
+
+  def update_regroupement( regroupement_id, previous_regroupement_id, semaines_de_presence_regroupement )
+    if CreneauEmploiDuTempsRegroupement
+       .where( creneau_emploi_du_temps_id: id )
+       .where( regroupement_id: regroupement_id ).count < 1
+      # 1. first remove previous créneau-regroupement association
+      previous_creneau_regroupement = CreneauEmploiDuTemps.last.regroupements
+                                      .select do |cr|
+        cr.regroupement_id == previous_regroupement_id
+      end.first
+      previous_creneau_regroupement.destroy unless previous_creneau_regroupement.nil?
+
+      # 2. create the new one
+      cr = add_regroupement regroupement_id: regroupement_id
+      cr.update semaines_de_presence: semaines_de_presence_regroupement if semaines_de_presence_regroupement
+    end
+
+    update_semaines_de_presence_regroupement( regroupement_id, semaines_de_presence_regroupement ) if semaines_de_presence_regroupement
+  end
+
+  def update_salle( salle_id, semaines_de_presence_salle )
+    cs = add_salle salle_id: salle_id
+    cs.update semaines_de_presence: semaines_de_presence_salle if semaines_de_presence_salle
+  end
+
+  # rubocop:disable Metrics/PerceivedComplexity
+  # rubocop:disable Metrics/CyclomaticComplexity
   def modifie( params )
-    if params[:heure_debut]
-      plage_horaire_debut = PlageHoraire.where(debut: params[:heure_debut] ).first
-      if plage_horaire_debut.nil?
-        plage_horaire_debut = PlageHoraire.create( label: '',
-                                                   debut: params[:heure_debut],
-                                                   fin: params[:heure_debut] + 1800 )
-      end
-      update( debut: plage_horaire_debut.id )
-    end
-
-    if params[:heure_fin]
-      plage_horaire_fin = PlageHoraire.where(fin: params[:heure_fin] ).first
-      if plage_horaire_fin.nil?
-        plage_horaire_fin = PlageHoraire.create( label: '',
-                                                 debut: params[:heure_fin] - 1800,
-                                                 fin: params[:heure_fin] )
-      end
-      update( fin: plage_horaire_fin.id )
-    end
-
+    update_heure_debut( params[:heure_debut] ) if params[:heure_debut]
+    update_heure_fin( params[:heure_fin] ) if params[:heure_fin]
     update( matiere_id: params[:matiere_id] ) if params[:matiere_id]
 
     save
 
-    if params[:enseignant_id]
-      CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
-      add_enseignant( enseignant_id: params[:enseignant_id] )
-      # ce = add_enseignant( enseignant_id: params[:enseignant_id] )
-      # ce.update( semaines_de_presence: params[:semaines_de_presence_enseignant] ) if params[:semaines_de_presence_enseignant]
-      CreneauEmploiDuTempsEnseignant.restrict_primary_key
-    end
+    add_enseignant( enseignant_id: params[:enseignant_id] ) if params[:enseignant_id]
 
-    if params[:semaines_de_presence_enseignant]
-      ce = CreneauEmploiDuTempsEnseignant
-           .where( enseignant_id: user[:uid] )
-           .where( creneau_emploi_du_temps_id: params[:id] )
-      ce.update semaines_de_presence: params[:semaines_de_presence_enseignant]
-    end
+    update_semaines_de_presence_enseignant( params[:semaines_de_presence_enseignant] ) if params[:semaines_de_presence_enseignant]
 
-    unless params[:regroupement_id].nil? || params[:regroupement_id] == 'undefined'
-      if CreneauEmploiDuTempsRegroupement
-         .where( creneau_emploi_du_temps_id: params[:id] )
-         .where( regroupement_id: params[:regroupement_id] ).count < 1
-        CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
+    update_regroupement( params[:regroupement_id], params[:previous_regroupement_id], params[:semaines_de_presence_regroupement] ) unless params[:regroupement_id].nil? || params[:regroupement_id] == 'undefined' # rubocop:disable Metrics/LineLength
 
-        # 1. first remove previous créneau-regroupement association
-        previous_creneau_regroupement = CreneauEmploiDuTemps.last.regroupements
-                                        .select do |cr|
-          cr.regroupement_id == params[:previous_regroupement_id]
-        end.first
-        previous_creneau_regroupement.destroy unless previous_creneau_regroupement.nil?
-
-        # 2. create the new one
-        cr = add_regroupement regroupement_id: params[:regroupement_id]
-        cr.update semaines_de_presence: params[:semaines_de_presence_regroupement] if params[:semaines_de_presence_regroupement]
-
-        CreneauEmploiDuTempsRegroupement.restrict_primary_key
-      end
-    end
-
-    if params[:semaines_de_presence_regroupement] && params[:regroupement_id]
-      cr = CreneauEmploiDuTempsRegroupement
-           .where( creneau_emploi_du_temps_id: params[:id] )
-           .where( regroupement_id: params[:regroupement_id])
-      cr.update semaines_de_presence: params[:semaines_de_presence_regroupement] unless cr.nil?
-    end
-
-    CreneauEmploiDuTempsSalle.unrestrict_primary_key
-    cs = add_salle salle_id: params[:salle_id] if params[:salle_id]
-    cs.update semaines_de_presence: params[:semaines_de_presence_salle] if params[:salle_id] && params[:semaines_de_presence_salle]
-    CreneauEmploiDuTempsSalle.restrict_primary_key
+    update_salle( params[:salle], params[:semaines_de_presence_salle] ) if params[:salle_id]
   end
+  # rubocop:enable Metrics/PerceivedComplexity
+  # rubocop:enable Metrics/CyclomaticComplexity
 end
