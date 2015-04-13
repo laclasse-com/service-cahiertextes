@@ -57,13 +57,13 @@ module CahierDeTextesAPI
       post  do
         user_needs_to_be( %w( ENS ), true )
 
-        dummy_PH = PlageHoraire.first
+        dummy_plage_horaire = PlageHoraire.first
 
-        error!( 'Aucune PlageHoraire définie', 500 ) if dummy_PH.nil?
+        error!( 'Aucune PlageHoraire définie', 500 ) if dummy_plage_horaire.nil?
 
         creneau = CreneauEmploiDuTemps.create( date_creation: Time.now,
-                                               debut: dummy_PH.id,
-                                               fin: dummy_PH.id,
+                                               debut: dummy_plage_horaire.id,
+                                               fin: dummy_plage_horaire.id,
                                                jour_de_la_semaine: params[:jour_de_la_semaine] - 1,
                                                matiere_id: params[:matiere_id] )
 

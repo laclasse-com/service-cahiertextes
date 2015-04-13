@@ -194,58 +194,58 @@ module ProNote
       .children
       .reject { |child| child.name == 'text' }
       .each do |node|
-      reponse_annuaire = AnnuaireWrapper::Etablissement::Regroupement.search( etablissement.UAI, node['Nom'] )
-      code_annuaire = reponse_annuaire.nil? ? nil : reponse_annuaire['id']
-      regroupements[ node.name ][ node['Ident'] ] = code_annuaire
-      if regroupements[ node.name ][ node['Ident'] ].nil?
-        objet = { UAI: etablissement.UAI, Nom: node['Nom'] }
-        sha256 = Digest::SHA256.hexdigest( objet.to_json )
+    reponse_annuaire = AnnuaireWrapper::Etablissement::Regroupement.search( etablissement.UAI, node['Nom'] )
+    code_annuaire = reponse_annuaire.nil? ? nil : reponse_annuaire['id']
+    regroupements[ node.name ][ node['Ident'] ] = code_annuaire
+    if regroupements[ node.name ][ node['Ident'] ].nil?
+      objet = { UAI: etablissement.UAI, Nom: node['Nom'] }
+      sha256 = Digest::SHA256.hexdigest( objet.to_json )
 
-        manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
-        if manually_linked_id.nil? || manually_linked_id.id_annuaire.nil?
-          FailedIdentification.create( date_creation: Time.now,
-                                       sha256: sha256 ) if manually_linked_id.nil?
-          rapport[:regroupements][node.name.to_sym][:error] << { sha256: sha256,
-                                                                 objet: objet }
-        else
-          regroupements[ node.name ][ node['Ident'] ] = manually_linked_id.id_annuaire
-        end
-      end
-
-      unless regroupements[ node.name ][ node['Ident'] ].nil?
-        rapport[:regroupements][node.name.to_sym][:success] << regroupements[ node.name ][ node['Ident'] ]
-      end
-
-      unless regroupements[ 'Classe' ][ node['Ident'] ].nil?
-        node.children.reject { |child| child.name == 'text' }.each do |subnode|
-          if subnode['Nom'].nil?
-            regroupements[ 'PartieDeClasse' ][ subnode['Ident'] ] = regroupements[ 'Classe' ][ node['Ident'] ]
-          else
-            reponse_annuaire = AnnuaireWrapper::Etablissement::Regroupement.search( etablissement.UAI, subnode['Nom'] )
-            code_annuaire = reponse_annuaire.nil? ? nil : reponse_annuaire['id']
-            regroupements[ subnode.name ][ subnode['Ident'] ] = code_annuaire
-            if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
-              objet = { UAI: etablissement.UAI, Nom: subnode['Nom'] }
-              sha256 = Digest::SHA256.hexdigest( objet.to_json )
-
-              manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
-              if manually_linked_id.nil? || manually_linked_id.id_annuaire.nil?
-                FailedIdentification.create( date_creation: Time.now,
-                                             sha256: sha256 ) if manually_linked_id.nil?
-                rapport[:regroupements][subnode.name.to_sym][:error] << { sha256: sha256,
-                                                                          objet: objet }
-              else
-                regroupements[ subnode.name ][ subnode['Ident'] ] = manually_linked_id.id_annuaire
-              end
-            end
-          end
-
-          unless regroupements[ subnode.name ][ subnode['Ident'] ].nil?
-            rapport[:regroupements][subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
-          end
-        end
+      manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
+      if manually_linked_id.nil? || manually_linked_id.id_annuaire.nil?
+        FailedIdentification.create( date_creation: Time.now,
+                                     sha256: sha256 ) if manually_linked_id.nil?
+        rapport[:regroupements][node.name.to_sym][:error] << { sha256: sha256,
+                                                               objet: objet }
+      else
+        regroupements[ node.name ][ node['Ident'] ] = manually_linked_id.id_annuaire
       end
     end
+
+    unless regroupements[ node.name ][ node['Ident'] ].nil?
+      rapport[:regroupements][node.name.to_sym][:success] << regroupements[ node.name ][ node['Ident'] ]
+    end
+
+    next if regroupements[ 'Classe' ][ node['Ident'] ].nil?
+    node.children.reject { |child| child.name == 'text' }.each do |subnode|
+      if subnode['Nom'].nil?
+        regroupements[ 'PartieDeClasse' ][ subnode['Ident'] ] = regroupements[ 'Classe' ][ node['Ident'] ]
+      else
+        reponse_annuaire = AnnuaireWrapper::Etablissement::Regroupement.search( etablissement.UAI, subnode['Nom'] )
+        code_annuaire = reponse_annuaire.nil? ? nil : reponse_annuaire['id']
+        regroupements[ subnode.name ][ subnode['Ident'] ] = code_annuaire
+        if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
+          objet = { UAI: etablissement.UAI, Nom: subnode['Nom'] }
+          sha256 = Digest::SHA256.hexdigest( objet.to_json )
+
+          manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
+          if manually_linked_id.nil? || manually_linked_id.id_annuaire.nil?
+            FailedIdentification.create( date_creation: Time.now,
+                                         sha256: sha256 ) if manually_linked_id.nil?
+            rapport[:regroupements][subnode.name.to_sym][:error] << { sha256: sha256,
+                                                                      objet: objet }
+          else
+            regroupements[ subnode.name ][ subnode['Ident'] ] = manually_linked_id.id_annuaire
+          end
+        end
+      end
+
+      unless regroupements[ subnode.name ][ subnode['Ident'] ].nil?
+        rapport[:regroupements][subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
+      end
+    end
+  end
+
     edt_clair.search('Groupes').children.reject { |child| child.name == 'text' }.each do |node|
       reponse_annuaire = AnnuaireWrapper::Etablissement::Regroupement.search( etablissement.UAI, node['Nom'] )
       code_annuaire = reponse_annuaire.nil? ? nil : reponse_annuaire['id']
@@ -269,57 +269,57 @@ module ProNote
         rapport[:regroupements][node.name.to_sym][:success] << regroupements[ node.name ][ node['Ident'] ]
       end
 
-      unless regroupements[ node.name ][ node['Ident'] ].nil?
-        node.children.each do |subnode|
-          case subnode.name
-          when 'PartieDeClasse'
-            if subnode['Nom'].nil?
-              regroupements[ 'PartieDeClasse' ][ subnode['Ident'] ] = regroupements[ 'Classe' ][ node['Ident'] ]
-            else
-              reponse_annuaire = AnnuaireWrapper::Etablissement::Regroupement.search( etablissement.UAI, subnode['Nom'] )
-              code_annuaire = reponse_annuaire.nil? ? nil : reponse_annuaire['id']
-              regroupements[ subnode.name ][ subnode['Ident'] ] = code_annuaire
-              if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
-                objet = { UAI: etablissement.UAI, Nom: subnode['Nom'] }
-                sha256 = Digest::SHA256.hexdigest( objet.to_json )
+      next if regroupements[ node.name ][ node['Ident'] ].nil?
 
-                manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
-                if manually_linked_id.nil? || manually_linked_id.id_annuaire.nil?
-                  FailedIdentification.create( date_creation: Time.now,
-                                               sha256: sha256 ) if manually_linked_id.nil?
-                  rapport[:regroupements][subnode.name.to_sym][:error] << { sha256: sha256,
-                                                                            objet: objet }
-                else
-                  regroupements[ subnode.name ][ subnode['Ident'] ] = manually_linked_id.id_annuaire
-                end
+      node.children.each do |subnode|
+        case subnode.name
+        when 'PartieDeClasse'
+          if subnode['Nom'].nil?
+            regroupements[ 'PartieDeClasse' ][ subnode['Ident'] ] = regroupements[ 'Classe' ][ node['Ident'] ]
+          else
+            reponse_annuaire = AnnuaireWrapper::Etablissement::Regroupement.search( etablissement.UAI, subnode['Nom'] )
+            code_annuaire = reponse_annuaire.nil? ? nil : reponse_annuaire['id']
+            regroupements[ subnode.name ][ subnode['Ident'] ] = code_annuaire
+            if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
+              objet = { UAI: etablissement.UAI, Nom: subnode['Nom'] }
+              sha256 = Digest::SHA256.hexdigest( objet.to_json )
+
+              manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
+              if manually_linked_id.nil? || manually_linked_id.id_annuaire.nil?
+                FailedIdentification.create( date_creation: Time.now,
+                                             sha256: sha256 ) if manually_linked_id.nil?
+                rapport[:regroupements][subnode.name.to_sym][:error] << { sha256: sha256,
+                                                                          objet: objet }
+              else
+                regroupements[ subnode.name ][ subnode['Ident'] ] = manually_linked_id.id_annuaire
               end
             end
+          end
+          unless regroupements[ subnode.name ][ subnode['Ident'] ].nil?
+            rapport[:regroupements][subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
+          end
+        when 'Classe'
+          unless subnode.name == 'text'
+            reponse_annuaire = AnnuaireWrapper::Etablissement::Regroupement.search( etablissement.UAI, subnode['Nom'] )
+            code_annuaire = reponse_annuaire.nil? ? nil : reponse_annuaire['id']
+            regroupements[ subnode.name ][ subnode['Ident'] ] = code_annuaire
+            if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
+              objet = { UAI: etablissement.UAI, Nom: subnode['Nom'] }
+              sha256 = Digest::SHA256.hexdigest( objet.to_json )
+
+              manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
+              if manually_linked_id.nil? || manually_linked_id.id_annuaire.nil?
+                FailedIdentification.create( date_creation: Time.now,
+                                             sha256: sha256 ) if manually_linked_id.nil?
+                rapport[:regroupements][subnode.name.to_sym][:error] << { sha256: sha256,
+                                                                          objet: objet }
+              else
+                regroupements[ subnode.name ][ subnode['Ident'] ] = manually_linked_id.id_annuaire
+              end
+            end
+
             unless regroupements[ subnode.name ][ subnode['Ident'] ].nil?
               rapport[:regroupements][subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
-            end
-          when 'Classe'
-            unless subnode.name == 'text'
-              reponse_annuaire = AnnuaireWrapper::Etablissement::Regroupement.search( etablissement.UAI, subnode['Nom'] )
-              code_annuaire = reponse_annuaire.nil? ? nil : reponse_annuaire['id']
-              regroupements[ subnode.name ][ subnode['Ident'] ] = code_annuaire
-              if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
-                objet = { UAI: etablissement.UAI, Nom: subnode['Nom'] }
-                sha256 = Digest::SHA256.hexdigest( objet.to_json )
-
-                manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
-                if manually_linked_id.nil? || manually_linked_id.id_annuaire.nil?
-                  FailedIdentification.create( date_creation: Time.now,
-                                               sha256: sha256 ) if manually_linked_id.nil?
-                  rapport[:regroupements][subnode.name.to_sym][:error] << { sha256: sha256,
-                                                                            objet: objet }
-                else
-                  regroupements[ subnode.name ][ subnode['Ident'] ] = manually_linked_id.id_annuaire
-                end
-              end
-
-              unless regroupements[ subnode.name ][ subnode['Ident'] ].nil?
-                rapport[:regroupements][subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
-              end
             end
           end
         end
@@ -345,51 +345,51 @@ module ProNote
           rapport[:creneaux][:matieres][:success] << matiere_id
         end
       end
-      unless matiere_id.nil?
-        creneau = DataManagement::Accessors
-                  .create_or_get( CreneauEmploiDuTemps,
-                                  jour_de_la_semaine: node['Jour'], # 1: 'lundi' .. 7: 'dimanche', norme ISO-8601
-                                  debut: debut,
-                                  fin: fin,
-                                  matiere_id: matiere_id )
+      next if matiere_id.nil?
+      creneau = DataManagement::Accessors
+                .create_or_get( CreneauEmploiDuTemps,
+                                jour_de_la_semaine: node['Jour'], # 1: 'lundi' .. 7: 'dimanche', norme ISO-8601
+                                debut: debut,
+                                fin: fin,
+                                matiere_id: matiere_id )
 
-        node.children.each do |subnode|
-          case subnode.name
-          when 'Professeur'
-            if enseignants[ subnode['Ident'] ].nil?
-              rapport[:creneaux][:enseignants][:error] << subnode['Ident']
-            else
-              rapport[:creneaux][:enseignants][:success] << enseignants[ subnode['Ident'] ]
-              if creneau.enseignants.select { |ce| ce[:enseignant_id] == enseignants[ subnode['Ident'] ] }.count == 0
-                CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
-                creneau.add_enseignant(enseignant_id: enseignants[ subnode['Ident'] ],
-                                       semaines_de_presence: corrige_semainiers( subnode['Semaines'], offset_semainiers ) )
-                CreneauEmploiDuTempsEnseignant.restrict_primary_key
-              end
+      node.children.each do |subnode|
+        case subnode.name
+        when 'Professeur'
+          if enseignants[ subnode['Ident'] ].nil?
+            rapport[:creneaux][:enseignants][:error] << subnode['Ident']
+          else
+            rapport[:creneaux][:enseignants][:success] << enseignants[ subnode['Ident'] ]
+            if creneau.enseignants.select { |ce| ce[:enseignant_id] == enseignants[ subnode['Ident'] ] }.count == 0
+              CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
+              creneau.add_enseignant(enseignant_id: enseignants[ subnode['Ident'] ],
+                                     semaines_de_presence: corrige_semainiers( subnode['Semaines'], offset_semainiers ) )
+              CreneauEmploiDuTempsEnseignant.restrict_primary_key
             end
-          when 'Classe', 'PartieDeClasse', 'Groupe' # on ne distingue pas les 3 types de regroupements
-            if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
-              rapport[:creneaux][:regroupements][:error] << "#{subnode['Ident']} (#{subnode.name})"
-            else
-              rapport[:creneaux][:regroupements][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
-              if creneau.regroupements.select do |cr|
-                   cr[:regroupement_id] == regroupements[ subnode.name ][ subnode['Ident'] ]
-                 end.count == 0
-                CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
-                creneau.add_regroupement(regroupement_id: regroupements[ subnode.name ][ subnode['Ident'] ],
-                                         semaines_de_presence: corrige_semainiers( subnode['Semaines'], offset_semainiers ) )
-                CreneauEmploiDuTempsRegroupement.restrict_primary_key
-              end
-            end
-          when 'Salle'
-            unless creneau.salles.include?( Salle[ identifiant: subnode['Ident'] ] )
-              creneau.add_salle( Salle[ identifiant: subnode['Ident'] ] )
-            end
-            cs = CreneauEmploiDuTempsSalle.where( salle_id: Salle[ identifiant: subnode['Ident'] ][:id] )
-                 .where( creneau_emploi_du_temps_id: creneau.id )
-            cs.update(semaines_de_presence: corrige_semainiers( subnode['Semaines'], offset_semainiers ) )
-            # cs.save
           end
+        when 'Classe', 'PartieDeClasse', 'Groupe' # on ne distingue pas les 3 types de regroupements
+          if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
+            rapport[:creneaux][:regroupements][:error] << "#{subnode['Ident']} (#{subnode.name})"
+          else
+            rapport[:creneaux][:regroupements][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
+            if creneau.regroupements.select do |cr|
+                 cr[:regroupement_id] == regroupements[ subnode.name ][ subnode['Ident'] ]
+               end.count == 0
+              CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
+              creneau.add_regroupement(regroupement_id: regroupements[ subnode.name ][ subnode['Ident'] ],
+                                       semaines_de_presence: corrige_semainiers( subnode['Semaines'], offset_semainiers ) )
+              CreneauEmploiDuTempsRegroupement.restrict_primary_key
+            end
+          end
+        when 'Salle'
+          unless creneau.salles.include?( Salle[ identifiant: subnode['Ident'] ] )
+            creneau.add_salle( Salle[ identifiant: subnode['Ident'] ] )
+          end
+          cs = CreneauEmploiDuTempsSalle
+               .where( salle_id: Salle[ identifiant: subnode['Ident'] ][:id] )
+               .where( creneau_emploi_du_temps_id: creneau.id )
+          cs.update(semaines_de_presence: corrige_semainiers( subnode['Semaines'], offset_semainiers ) )
+          # cs.save
         end
       end
     end

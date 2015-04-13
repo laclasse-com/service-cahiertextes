@@ -38,24 +38,24 @@ describe CahierDeTextes do
       cedt.add_regroupement( regroupement_id: i + 1 )
       CreneauEmploiDuTempsRegroupement.restrict_primary_key
 
-      if (i + 1).even?
-        ct = CahierDeTextes.create( date_creation: Time.now,
-                                    regroupement_id: i + 1 )
+      next unless (i + 1).even?
 
-        sp = Cours.create( creneau_emploi_du_temps_id: cedt.id,
-                           cahier_de_textes_id: ct.id,
-                           enseignant_id: "enseignant_#{i + 1}",
-                           date_cours: Date.parse( '2015-01-05' ) + i.day,
-                           contenu: 'Séquence pédagogique de test' )
-        cedt.add_cour( sp )
+      ct = CahierDeTextes.create( date_creation: Time.now,
+                                  regroupement_id: i + 1 )
 
-        d = Devoir.create( creneau_emploi_du_temps_id: cedt.id,
-                           cours_id: sp.id,
-                           type_devoir_id: TypeDevoir.first.id,
-                           date_due: Date.parse( '2015-01-05' ) + i.day + 1.week,
-                           contenu: 'Devoir de test' )
-        cedt.add_devoir( d )
-      end
+      sp = Cours.create( creneau_emploi_du_temps_id: cedt.id,
+                         cahier_de_textes_id: ct.id,
+                         enseignant_id: "enseignant_#{i + 1}",
+                         date_cours: Date.parse( '2015-01-05' ) + i.day,
+                         contenu: 'Séquence pédagogique de test' )
+      cedt.add_cour( sp )
+
+      d = Devoir.create( creneau_emploi_du_temps_id: cedt.id,
+                         cours_id: sp.id,
+                         type_devoir_id: TypeDevoir.first.id,
+                         date_due: Date.parse( '2015-01-05' ) + i.day + 1.week,
+                         contenu: 'Devoir de test' )
+      cedt.add_devoir( d )
     end
   end
 

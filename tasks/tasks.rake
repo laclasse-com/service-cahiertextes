@@ -1,7 +1,7 @@
 #
 # Rakefile
 #
-task :default => [:test]
+task default: [:test]
 
 desc 'Testing application.'
 task :test do

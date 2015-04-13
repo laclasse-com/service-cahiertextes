@@ -27,9 +27,6 @@ require_relative '../config/database'
 # List of plugins to add to the model
 plugin_to_add = %w(validation_helpers json_serializer composition)
 
-# International Error message
-message_empty = 'ne peut pas &ecirc;tre vide' # "cannot be empty"
-
 # List of the tables we want to create scafolding Sequel model
 models_to_create = DB.tables
 # Data de migration Sequel
@@ -75,7 +72,7 @@ end
 ############### Main ################
 models_to_create.each do |m|
   # Camelize table_name to create a ClassName
-  modelName = m.to_s.split(/[^a-z0-9]/i).map(&:capitalize).join
+  model_name = m.to_s.split(/[^a-z0-9]/i).map(&:capitalize).join
   # model creation if it does not exists
   model = createfile(m.to_s + '.rb')
   next if model.nil?
@@ -111,7 +108,7 @@ models_to_create.each do |m|
   end
   model.puts line
   model.puts '#'
-  model.puts "class #{modelName} < Sequel::Model(:#{m})"
+  model.puts "class #{model_name} < Sequel::Model(:#{m})"
   model.puts ''
   #
   # Add plugins
@@ -134,10 +131,9 @@ models_to_create.each do |m|
   # querying directly mysql is better here but let's do it totally with Sequel
   # Just for fun :)
   DB.tables.each do |t|
-    unless t == m
-      DB.foreign_key_list(t).each do |fk|
-        write_association(model, 'one_to_many', t, fk) if fk[:table] == m
-      end
+    next if t == m
+    DB.foreign_key_list(t).each do |fk|
+      write_association(model, 'one_to_many', t, fk) if fk[:table] == m
     end
   end
 
@@ -161,11 +157,11 @@ models_to_create.each do |m|
 
   # Unique columns
   DB.indexes(m).each do |_name, info|
-    if info[:unique]
-      # There could be several columns for one index
-      info[:columns].each do |col|
-        list_of_unique_val_cols.push(col)
-      end
+    next unless info[:unique]
+
+    # There could be several columns for one index
+    info[:columns].each do |col|
+      list_of_unique_val_cols.push(col)
     end
   end
 

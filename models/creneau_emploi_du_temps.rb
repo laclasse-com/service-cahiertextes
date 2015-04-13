@@ -138,7 +138,8 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
 
     if params[:enseignant_id]
       CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
-      ce = add_enseignant( enseignant_id: params[:enseignant_id] )
+      add_enseignant( enseignant_id: params[:enseignant_id] )
+      # ce = add_enseignant( enseignant_id: params[:enseignant_id] )
       # ce.update( semaines_de_presence: params[:semaines_de_presence_enseignant] ) if params[:semaines_de_presence_enseignant]
       CreneauEmploiDuTempsEnseignant.restrict_primary_key
     end
@@ -178,11 +179,9 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
       cr.update semaines_de_presence: params[:semaines_de_presence_regroupement] unless cr.nil?
     end
 
-    if params[:salle_id]
-      CreneauEmploiDuTempsSalle.unrestrict_primary_key
-      cs = add_salle salle_id: params[:salle_id]
-      cs.update semaines_de_presence: params[:semaines_de_presence_salle] if params[:semaines_de_presence_salle]
-      CreneauEmploiDuTempsSalle.restrict_primary_key
-    end
+    CreneauEmploiDuTempsSalle.unrestrict_primary_key
+    cs = add_salle salle_id: params[:salle_id] if params[:salle_id]
+    cs.update semaines_de_presence: params[:semaines_de_presence_salle] if params[:salle_id] && params[:semaines_de_presence_salle]
+    CreneauEmploiDuTempsSalle.restrict_primary_key
   end
 end
