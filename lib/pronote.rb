@@ -79,7 +79,9 @@ module ProNote
   # rubocop:disable Metrics/CyclomaticComplexity
   def load_xml( xml, _xsd = nil )
     rapport = {}
-    edt_clair = Nokogiri::XML( decrypt_xml( xml ) )
+    edt_clair = Nokogiri::XML( decrypt_xml( xml ) ) do |config|
+      config.noblanks
+    end
 
     etablissement = DataManagement::Accessors.create_or_get( Etablissement, UAI: edt_clair.child['UAI'] )
 
