@@ -85,12 +85,12 @@ module ProNote
 
     etablissement = DataManagement::Accessors.create_or_get( Etablissement, UAI: edt_clair.child['UAI'] )
 
-    edt_clair.search('AnneeScolaire').reject { |child| child.name == 'text' }.each do |node|
-      etablissement.debut_annee_scolaire = node['DateDebut']
-      etablissement.fin_annee_scolaire = node['DateFin']
-      etablissement.date_premier_jour_premiere_semaine = node['DatePremierJourSemaine1']
-      etablissement.save
-    end
+    annee_scolaire = edt_clair.search('AnneeScolaire').first.attributes
+    etablissement.debut_annee_scolaire = annee_scolaire['DateDebut'].value
+    etablissement.fin_annee_scolaire = annee_scolaire['DateFin'].value
+    etablissement.date_premier_jour_premiere_semaine = annee_scolaire['DatePremierJourSemaine1'].value
+    etablissement.save
+
     offset_semainiers = etablissement.date_premier_jour_premiere_semaine.cweek
 
     rapport[:plages_horaires] = { success: [], error: [] }
