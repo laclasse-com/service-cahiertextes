@@ -15,7 +15,7 @@ module ProNote
   def decrypt_wrapped_data( data, rsa_key_filename )
     pk = OpenSSL::PKey::RSA.new( File.read( rsa_key_filename ) )
 
-    pk.private_decrypt data
+    pk.private_decrypt( data )
   end
 
   def decrypt_payload( data, aes_secret_key, aes_iv )
@@ -29,7 +29,7 @@ module ProNote
 
   def inflate( string )
     zstream = Zlib::Inflate.new
-    buf = zstream.inflate(string)
+    buf = zstream.inflate( string )
     zstream.finish
     zstream.close
 
@@ -57,12 +57,12 @@ module ProNote
 
   def corrige_semainiers( semainier, decalage )
     semainier = semainier.to_i if semainier.is_a? String
-    semainier = semainier.to_s 2
+    semainier = semainier.to_s( 2 )
     pivot = semainier.length - decalage
     debut = semainier.slice( pivot, semainier.length )
     fin = semainier.slice( 0, pivot )
 
-    "#{debut}#{fin}".to_i 2
+    "#{debut}#{fin}".to_i( 2 )
   end
 
   def extract_uai_from_xml( xml, _xsd = nil )
