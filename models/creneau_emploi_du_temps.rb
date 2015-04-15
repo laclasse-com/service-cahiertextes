@@ -128,7 +128,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
     plage_horaire_fin = PlageHoraire.where( fin: value ).first
     if plage_horaire_fin.nil?
       plage_horaire_fin = PlageHoraire.create( label: '',
-                                               fin: value,
+                                               debut: value,
                                                fin: value + 1800 )
     end
     update( fin: plage_horaire_fin.id )
