@@ -154,9 +154,9 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
        .where( regroupement_id: regroupement_id ).count < 1
       # 1. first remove previous créneau-regroupement association
       previous_creneau_regroupement = CreneauEmploiDuTemps.last.regroupements
-                                      .select do |cr|
+                                      .find do |cr|
         cr.regroupement_id == previous_regroupement_id
-      end.first
+      end
       previous_creneau_regroupement.destroy unless previous_creneau_regroupement.nil?
 
       # 2. create the new one

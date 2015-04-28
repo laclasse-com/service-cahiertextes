@@ -11,8 +11,8 @@ task :todo do
     lastline = todo = comment = long_comment = false
 
     File.readlines(file).each_with_index do |line, lineno|
-      lineno      += 1
-      comment      = line =~ /^\s*?[#\/].*?$/
+      lineno += 1
+      comment = line =~ %r{^\s*?[#\/].*?$}
       long_comment = line =~ /^=begin/
       long_comment = line =~ /^=end/
 
