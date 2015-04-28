@@ -41,9 +41,9 @@ module ProNote
 
     crypted_wrapped_data = Base64.decode64( encrypted_edt_export_file
                                             .search( 'PARTENAIRE' )
-                                            .select do |part|
+                                            .find do |part|
                                               part.attributes[ 'NOM' ].value == PRONOTE[:nom_integrateur]
-                                            end.first.text )
+                                            end.text )
     decrypted_wrapped_data = decrypt_wrapped_data( crypted_wrapped_data, PRONOTE[:cle_integrateur] )
     aes_secret_key = decrypted_wrapped_data[ 0..16 ]
     aes_iv = decrypted_wrapped_data[ 16..32 ]

@@ -22,7 +22,7 @@ class TableCleaner
   include TSort
 
   def tables_to_clean( &block )
-    tsort.reverse.each( &block )
+    tsort.reverse_each( &block )
   end
 
   def tsort_each_node( &block )
