@@ -28,6 +28,9 @@ namespace :db do
     Sequel::Migrator.run( DB, 'migrations' )
   end
 
+  desc 'Apply migrations too'
+  task migrate: :migrations
+
   desc 'Checks if a migration is needed'
   task check_migrate: :load_config do
     Sequel.extension :migration
