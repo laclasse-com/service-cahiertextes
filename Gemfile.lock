@@ -146,7 +146,7 @@ GEM
       multi_json (~> 1.0)
       rubyzip (~> 1.0)
       websocket (~> 1.0)
-    sequel (4.21.0)
+    sequel (4.22.0)
     show_me_the_cookies (2.6.0)
       capybara (~> 2.0)
     sinatra (1.4.6)
