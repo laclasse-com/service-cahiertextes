@@ -12,7 +12,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				 $scope.zone = ZONE;
 
 				 var popup_ouverte = false;
-				 var filter_data = angular.identity;
+				 $scope.filter_data = angular.identity;
 				 $scope.scope = $scope;
 
 				 $scope.selected_regroupement_id = undefined;
@@ -35,7 +35,7 @@ angular.module( 'cahierDeTextesClientApp' )
 					 this.details = event;
 					 this.allDay = false;
 					 this.regroupement = _($scope.current_user.profil_actif.classes).findWhere({ id: parseInt( this.details.regroupement_id ) });
-					 this.title = this.regroupement.libelle;
+					 this.title = ( _(this.regroupement).isUndefined() ) ? '' : this.regroupement.libelle;
 					 this.matiere = _($scope.current_user.profil_actif.matieres).findWhere({ id: this.details.matiere_id });
 					 this.has_resources = _(event.cours).has( 'ressources' ) && event.cours.ressources.length > 0;
 					 this.temps_estime = 0;
@@ -95,7 +95,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
 				 $scope.refresh_calendar = function(  ) {
 				     $scope.calendar.options.weekends = $scope.current_user.parametrage_cahier_de_textes.affichage_week_ends;
-				     populate_calendar( filter_data( $scope.raw_data ) );
+				     populate_calendar( $scope.filter_data( $scope.raw_data ) );
 				 };
 
 				 var retrieve_data = function( from_date, to_date ) {
@@ -179,7 +179,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				 if ( _.contains( [ 'EVS', 'DIR'], $scope.current_user.profil_actif.profil_id ) ) {
 				     $scope.uniquement_mes_creneaux = false;
 
-				     filter_data = function( raw_data ) {
+				     $scope.filter_data = function( raw_data ) {
 					 var filtered_data = raw_data;
 
 					 // Filtrage sur une seule classe
@@ -220,7 +220,7 @@ angular.module( 'cahierDeTextesClientApp' )
 					  $scope.calendar.options.selectable = true;
 					  $scope.calendar.options.editable = true;
 
-					  filter_data = function( raw_data ) {
+					  $scope.filter_data = function( raw_data ) {
 					      var filtered_data = raw_data;
 
 					      // Filtrage sur une seule classe
