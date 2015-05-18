@@ -14,7 +14,7 @@ angular.module( 'cahierDeTextesClientApp', [ 'ngResource',
 					     'angularMoment',
 					     'theaquaNg',
 					     'textAngular',
-					     'angularFileUpload',
+					     'ngFileUpload',
 					     'ngColorPicker',
 					     'ui.checkbox',
 					     'toastr' ] );

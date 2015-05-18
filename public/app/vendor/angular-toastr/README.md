@@ -103,6 +103,10 @@ app.controller('foo', function($scope, toastr) {
 
 If no toast is passed in, all toasts will be closed.
 
+#### Other options
+
+A toast has a `isOpened` flag to see whether it is opened or not.
+
 ### Toastr customization
 
 You can customize the entire library like:
@@ -111,6 +115,7 @@ You can customize the entire library like:
 app.config(function(toastrConfig) {
   angular.extend(toastrConfig, {
     allowHtml: false,
+    autoDismiss: false,
     closeButton: false,
     closeHtml: '<button>&times;</button>',
     containerId: 'toast-container',
@@ -121,14 +126,20 @@ app.config(function(toastrConfig) {
       success: 'toast-success',
       warning: 'toast-warning'
     },
-    maxOpened: 0,
+    maxOpened: 0,    
     messageClass: 'toast-message',
     newestOnTop: true,
     onHidden: null,
     onShown: null,
     positionClass: 'toast-top-right',
+    preventDuplicates: false,
+    progressBar: false,
     tapToDismiss: true,
     target: 'body',
+    templates: {
+	  toast: 'directives/toast/toast.html',
+	  progressbar: 'directives/progressbar/progressbar.html'
+	},
     timeOut: 5000,
     titleClass: 'toast-title',
     toastClass: 'toast'
@@ -139,6 +150,7 @@ app.config(function(toastrConfig) {
 Those are the default values, you can pick what you need from it and override with your values.
 
 * **allowHtml**: Your toast can use custom HTML here (See [Issue 3](https://github.com/Foxandxss/angular-toastr/issues/3))
+* **autoDismiss** If set, show only the most recent `maxOpened` toast(s)
 * **closeButton**: Whether to display an "X" close button on the toast.
 * **closeHtml**: Html element to be used as a close button.
 * **containerId**: The name of the container where you want to append your toasts (the container will be created for you).
@@ -150,8 +162,11 @@ Those are the default values, you can pick what you need from it and override wi
 * **onHidden**: A callback function called when a toast gets hidden.
 * **onShown**: A callback function called when a toast is shown.
 * **positionClass**: The position where the toasts are added.
+* **preventDuplicates**: Prevent duplicates of the last toast.
+* **progressBar**: A progress bar to see the timeout in real time.
 * **tapToDismiss**: Whether the toast should be dismissed when it is clicked.
 * **target**: The element to put the toastr container.
+* **templates**: To override the default path of the templates.
 * **timeOut**: The timeout before the toasts disappear.
 * **titleClass**: The class for the toast's title.
 * **toastClass**: Base class for toasts.
@@ -224,6 +239,7 @@ There you can override:
 * **messageClass**: If you want to modify the message look.
 * **onHidden**: Function to call when the toast gets hidden.
 * **onShown**: Function to call when the toast is shown.
+* **progressBar** Show a progress bar for the toast.
 * **tapToDismiss**: If you want a concrete toast to toggle the close on click.
 * **timeOut**: For that concrete toast timeout.
 * **titleClass**: To override the title class of the toast.
@@ -280,6 +296,10 @@ Then you can see if you have your new tests pass.
 Try to avoid generating the `/dist` files on a patch because sometimes they don't want to merge nicely and it is a pain to merge by hand.
 
 ----------
+
+## Libraries using `angular-toastr``
+
+* [CodeScaleInc/angular-toastr-flash](https://github.com/CodeScaleInc/angular-toastr-flash) - A library to show flash messages using toasts.
 
 ## Credits
 

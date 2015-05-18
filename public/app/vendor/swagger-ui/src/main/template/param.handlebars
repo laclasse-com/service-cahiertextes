@@ -6,8 +6,10 @@
 			<input type="file" name='{{name}}'/>
 			<div class="parameter-content-type" />
 		{{else}}
-			{{#if defaultValue}}
-				<textarea class='body-textarea' name='{{name}}'>{{defaultValue}}</textarea>
+			{{#if default}}
+				<textarea class='body-textarea' name='{{name}}'>{{default}}</textarea>
+        <br />
+        <div class="parameter-content-type" />
 			{{else}}
 				<textarea class='body-textarea' name='{{name}}'></textarea>
 				<br />
@@ -19,8 +21,8 @@
 			<input type="file" name='{{name}}'/>
 			<div class="parameter-content-type" />
 		{{else}}
-			{{#if defaultValue}}
-				<input class='parameter' minlength='0' name='{{name}}' placeholder='' type='text' value='{{defaultValue}}'/>
+			{{#if default}}
+				<input class='parameter' minlength='0' name='{{name}}' placeholder='' type='text' value='{{default}}'/>
 			{{else}}
 				<input class='parameter' minlength='0' name='{{name}}' placeholder='' type='text' value=''/>
 			{{/if}}
@@ -28,7 +30,7 @@
 	{{/if}}
 
 </td>
-<td>{{{description}}}</td>
+<td class="markdown">{{{description}}}</td>
 <td>{{{paramType}}}</td>
 <td>
 	<span class="model-signature"></span>

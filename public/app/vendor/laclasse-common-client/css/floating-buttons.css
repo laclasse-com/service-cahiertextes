@@ -36,14 +36,14 @@
 }
 .floating-button.save {
     background-image: url('../images/icon_admin-valider.svg');
-    bottom: 5em;
+    bottom: 5.5em;
 }
 .floating-button.cancel {
     background-image: url('../images/icon_admin-annuler.svg');
-    bottom: 3em;
+    bottom: 3.5em;
 }
 .floating-button.action1 {
     background-image: url('../images/icon_admin-ajouter.svg');
     right: 3.5em;
-    bottom: 1.35em;
+    bottom: 1.25em;
 }

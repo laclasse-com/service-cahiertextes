@@ -1,10 +1,16 @@
 class ResourceView extends Backbone.View
-  initialize: ->
+  initialize: (opts={}) ->
+    @auths = opts.auths
+    if "" is @model.description
+      @model.description = null
+    if @model.description?
+      @model.summary = @model.description
 
   render: ->
-    $(@el).html(Handlebars.templates.resource(@model))
-
     methods = {}
+
+
+    $(@el).html(Handlebars.templates.resource(@model))
 
     # Render each operation
     for operation in @model.operationsArray
@@ -23,7 +29,7 @@ class ResourceView extends Backbone.View
 
     $('.toggleEndpointList', @el).click(this.callDocs.bind(this, 'toggleEndpointListForResource'))
     $('.collapseResource', @el).click(this.callDocs.bind(this, 'collapseOperationsForResource'))
-    $('.expandResource', @el).click(this.callDocs.bind(this, 'expandOperationsForResoruce'))
+    $('.expandResource', @el).click(this.callDocs.bind(this, 'expandOperationsForResource'))
     
     return @
 
@@ -32,7 +38,13 @@ class ResourceView extends Backbone.View
     operation.number = @number
 
     # Render an operation and add it to operations li
-    operationView = new OperationView({model: operation, tagName: 'li', className: 'endpoint', swaggerOptions: @options.swaggerOptions})
+    operationView = new OperationView({
+      model: operation,
+      tagName: 'li',
+      className: 'endpoint',
+      swaggerOptions: @options.swaggerOptions,
+      auths: @auths
+    })
     $('.endpoints', $(@el)).append operationView.render().el
 
     @number++

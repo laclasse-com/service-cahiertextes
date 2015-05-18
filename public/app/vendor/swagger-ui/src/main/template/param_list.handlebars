@@ -3,7 +3,7 @@
   <select {{#isArray this}} multiple='multiple'{{/isArray}} class='parameter' name='{{name}}'>
     {{#if required}}
     {{else}}
-      {{#if defaultValue}}
+      {{#if default}}
       {{else}}
         {{#isArray this}}
         {{else}}
@@ -20,6 +20,6 @@
     {{/each}}
   </select>
 </td>
-<td>{{{description}}}</td>
+<td class="markdown">{{{description}}}</td>
 <td>{{{paramType}}}</td>
 <td><span class="model-signature"></span></td>

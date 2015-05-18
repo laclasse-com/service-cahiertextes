@@ -59,7 +59,7 @@ namespace :preprocess_assets do
                                'public/app/vendor/nvd3/nv.d3.min.css',
                                'public/app/vendor/ng-switcher/dist/ng-switcher.min.css',
                                'public/app/vendor/ng-color-picker/color-picker.css',
-                               'public/app/vendor/sweetalert/lib/sweet-alert.css',
+                               'public/app/vendor/sweetalert/dist/sweetalert.css',
                                'public/app/vendor/angular-toastr/dist/angular-toastr.css',
                                'public/app/vendor/laclasse-common-client/css/bootstrap-theme.css' ]
                              .map { |fichier| File.read( fichier ) }.join,
@@ -95,7 +95,7 @@ namespace :preprocess_assets do
                                                           'public/app/vendor/moment/min/moment-with-locales.js',
                                                           'public/app/vendor/moment-timezone/moment-timezone.js',
                                                           'public/app/vendor/ng-file-upload/angular-file-upload-shim.js',
-                                                          'public/app/vendor/sweetalert/lib/sweet-alert.js',
+                                                          'public/app/vendor/sweetalert/dist/sweetalert.min.js',
                                                           'public/app/vendor/rangy/rangy-core.js',
                                                           'public/app/vendor/rangy/rangy-cssclassapplier.js',
                                                           'public/app/vendor/rangy/rangy-selectionsaverestore.js',

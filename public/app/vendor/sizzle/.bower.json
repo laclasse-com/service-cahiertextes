@@ -1,6 +1,6 @@
 {
   "name": "sizzle",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "main": "./dist/sizzle.js",
   "license": "MIT",
   "ignore": [
@@ -24,11 +24,11 @@
     "jquery"
   ],
   "homepage": "https://github.com/jquery/sizzle",
-  "_release": "2.1.1",
+  "_release": "2.2.0",
   "_resolution": {
     "type": "version",
-    "tag": "2.1.1",
-    "commit": "6f936d47773354d63a0b9e90cb0eb3fe9abf955a"
+    "tag": "2.2.0",
+    "commit": "a7f8d579032cc8f3739710a62cab4321a14068b5"
   },
   "_source": "git://github.com/jquery/sizzle.git",
   "_target": "*",
