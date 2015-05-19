@@ -2,8 +2,8 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller('ImportCtrl',
-		[ '$scope', '$http', '$upload', 'APP_PATH', 'Annuaire', 'current_user',
-		  function ( $scope, $http, $upload, APP_PATH, Annuaire, current_user ) {
+		[ '$scope', '$http', 'Upload', 'APP_PATH', 'Annuaire', 'current_user',
+		  function ( $scope, $http, Upload, APP_PATH, Annuaire, current_user ) {
 		      $scope.in_progress = false;
 		      $scope.result = false;
 		      $scope.fichiers = null;
@@ -17,7 +17,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
 			  for ( var i = 0; i < $files.length; i++ ) {
 			      var file = $files[ i ];
-			      $scope.upload = $upload.upload( {
+			      $scope.upload = Upload.upload( {
 				  url: APP_PATH + '/api/v1/import/pronote',
 				  method: 'POST',
 				  file: file
