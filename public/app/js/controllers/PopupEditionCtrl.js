@@ -193,7 +193,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				       } );
 			       };
 			       if ( $scope.dirty ) {
-				   swal( { title: 'Ceci supprimera le créneau à compter du ' + $filter( 'date' )( creneau.heure_debut, 'fullDate' ),
+				   swal( { title: 'Ceci supprimera le créneau à compter du ' + $filter( 'amDateFormat' )( creneau.heure_debut, 'dddd D MMMM YYYY' ),
 					   text: 'Le créneau avec ses séquences pédagogiques et devoirs associés restera visible pour les dates antérieures.',
 					   type: 'warning',
 					   showCancelButton: true,
