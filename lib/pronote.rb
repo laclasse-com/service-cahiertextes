@@ -215,7 +215,7 @@ module ProNote
       .reject { |child| child.name == 'text' }
       .each do |node|
       reponse_annuaire = AnnuaireWrapper::Etablissement::Regroupement.search( etablissement.UAI, node['Nom'] )
-      code_annuaire = reponse_annuaire.nil?  || !( reponse_annuaire.is_a? Array ) ? nil : reponse_annuaire['id']
+      code_annuaire = reponse_annuaire.nil?  || !( reponse_annuaire.is_a? Array ) ? nil : reponse_annuaire.first['id']
       regroupements[ node.name ][ node['Ident'] ] = code_annuaire
       if regroupements[ node.name ][ node['Ident'] ].nil?
         objet = { UAI: etablissement.UAI, Nom: node['Nom'] }
@@ -242,7 +242,7 @@ module ProNote
           regroupements[ 'PartieDeClasse' ][ subnode['Ident'] ] = regroupements[ 'Classe' ][ node['Ident'] ]
         else
           reponse_annuaire = AnnuaireWrapper::Etablissement::Regroupement.search( etablissement.UAI, subnode['Nom'] )
-          code_annuaire = reponse_annuaire.nil? || !( reponse_annuaire.is_a? Array ) ? nil : reponse_annuaire['id']
+          code_annuaire = reponse_annuaire.nil? || !( reponse_annuaire.is_a? Array ) ? nil : reponse_annuaire.first['id']
           regroupements[ subnode.name ][ subnode['Ident'] ] = code_annuaire
           if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
             objet = { UAI: etablissement.UAI, Nom: subnode['Nom'] }
@@ -268,7 +268,7 @@ module ProNote
 
     edt_clair.search('Groupes').children.reject { |child| child.name == 'text' }.each do |node|
       reponse_annuaire = AnnuaireWrapper::Etablissement::Regroupement.search( etablissement.UAI, node['Nom'] )
-      code_annuaire = reponse_annuaire.nil? || !( reponse_annuaire.is_a? Array ) ? nil : reponse_annuaire['id']
+      code_annuaire = reponse_annuaire.nil? || !( reponse_annuaire.is_a? Array ) ? nil : reponse_annuaire.first['id']
       regroupements[ node.name ][ node['Ident'] ] = code_annuaire
       if regroupements[ node.name ][ node['Ident'] ].nil?
         objet = { UAI: etablissement.UAI, Nom: node['Nom'] }
@@ -298,7 +298,7 @@ module ProNote
             regroupements[ 'PartieDeClasse' ][ subnode['Ident'] ] = regroupements[ 'Classe' ][ node['Ident'] ]
           else
             reponse_annuaire = AnnuaireWrapper::Etablissement::Regroupement.search( etablissement.UAI, subnode['Nom'] )
-            code_annuaire = reponse_annuaire.nil? || !( reponse_annuaire.is_a? Array ) ? nil : reponse_annuaire['id']
+            code_annuaire = reponse_annuaire.nil? || !( reponse_annuaire.is_a? Array ) ? nil : reponse_annuaire.first['id']
             regroupements[ subnode.name ][ subnode['Ident'] ] = code_annuaire
             if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
               objet = { UAI: etablissement.UAI, Nom: subnode['Nom'] }
@@ -322,7 +322,7 @@ module ProNote
           next if subnode.name == 'text'
 
           reponse_annuaire = AnnuaireWrapper::Etablissement::Regroupement.search( etablissement.UAI, subnode['Nom'] )
-          code_annuaire = reponse_annuaire.nil? || !( reponse_annuaire.is_a? Array ) ? nil : reponse_annuaire['id']
+          code_annuaire = reponse_annuaire.nil? || !( reponse_annuaire.is_a? Array ) ? nil : reponse_annuaire.first['id']
           regroupements[ subnode.name ][ subnode['Ident'] ] = code_annuaire
           if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
             objet = { UAI: etablissement.UAI, Nom: subnode['Nom'] }
@@ -393,7 +393,7 @@ module ProNote
           else
             rapport[:creneaux][:regroupements][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
             if creneau.regroupements.select do |cr|
-                 cr[:regroupement_id] == regroupements[ subnode.name ][ subnode['Ident'] ]
+                 cr[:regroupement_id] == "#{regroupements[ subnode.name ][ subnode['Ident'] ]}"
                end.count == 0
               CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
               creneau.add_regroupement(regroupement_id: regroupements[ subnode.name ][ subnode['Ident'] ],
