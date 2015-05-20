@@ -380,7 +380,7 @@ module ProNote
             rapport[:creneaux][:enseignants][:error] << subnode['Ident']
           else
             rapport[:creneaux][:enseignants][:success] << enseignants[ subnode['Ident'] ]
-            if creneau.enseignants.select { |ce| ce[:enseignant_id] == enseignants[ subnode['Ident'] ] }.count == 0
+            if creneau.enseignants.count { |ce| ce[:enseignant_id] == enseignants[ subnode['Ident'] ] } == 0
               CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
               creneau.add_enseignant(enseignant_id: enseignants[ subnode['Ident'] ],
                                      semaines_de_presence: corrige_semainiers( subnode['Semaines'], offset_semainiers ) )
@@ -392,9 +392,9 @@ module ProNote
             rapport[:creneaux][:regroupements][:error] << "#{subnode['Ident']} (#{subnode.name})"
           else
             rapport[:creneaux][:regroupements][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
-            if creneau.regroupements.select do |cr|
+            if creneau.regroupements.count do |cr|
                  cr[:regroupement_id] == "#{regroupements[ subnode.name ][ subnode['Ident'] ]}"
-               end.count == 0
+               end == 0
               CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
               creneau.add_regroupement(regroupement_id: regroupements[ subnode.name ][ subnode['Ident'] ],
                                        semaines_de_presence: corrige_semainiers( subnode['Semaines'], offset_semainiers ) )

@@ -24,7 +24,7 @@ class Etablissement < Sequel::Model( :etablissements )
               .group_by { |rs| rs[:mois] }
               .map do |mois, mois_saisies|
               { month: mois,
-                validated: mois_saisies.select { |s| s[:valide] }.count,
+                validated: mois_saisies.count { |s| s[:valide] },
                 filled: mois_saisies.count }
             end }
         end }
