@@ -181,7 +181,7 @@ module ProNote
 
       user_annuaire = AnnuaireWrapper::Etablissement::User.search( etablissement.UAI, node['Nom'], node['Prenom'] )
 
-      enseignants[ node['Ident'] ] = user_annuaire.nil? ? nil : user_annuaire['id_ent']
+      enseignants[ node['Ident'] ] = user_annuaire.nil? ? nil : user_annuaire.first['id_ent']
 
       if enseignants[ node['Ident'] ].nil?
         objet = { UAI: etablissement.UAI, Nom: node['Nom'], Prenom: node['Prenom'] }
