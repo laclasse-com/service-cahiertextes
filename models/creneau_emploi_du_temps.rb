@@ -98,7 +98,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
                                    jour.mday,
                                    c.plage_horaire_fin.fin.hour,
                                    c.plage_horaire_fin.fin.min ).iso8601,
-              has_cours: c.cours.select { |cours| cours.date_cours == jour }.count > 0,
+              has_cours: c.cours.count { |cours| cours.date_cours == jour } > 0,
               jour_de_la_semaine: c.jour_de_la_semaine,
               matiere_id: c.matiere_id,
               regroupement_id: regroupement.regroupement_id,
