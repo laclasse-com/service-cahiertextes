@@ -215,7 +215,7 @@ module ProNote
       .reject { |child| child.name == 'text' }
       .each do |node|
       reponse_annuaire = AnnuaireWrapper::Etablissement::Regroupement.search( etablissement.UAI, node['Nom'] )
-      code_annuaire = reponse_annuaire.nil?  || !( reponse_annuaire.is_a? Array ) ? nil : reponse_annuaire.first['id']
+      code_annuaire = reponse_annuaire.nil? || !( reponse_annuaire.is_a? Array ) ? nil : reponse_annuaire.first['id']
       regroupements[ node.name ][ node['Ident'] ] = code_annuaire
       if regroupements[ node.name ][ node['Ident'] ].nil?
         objet = { UAI: etablissement.UAI, Nom: node['Nom'] }
