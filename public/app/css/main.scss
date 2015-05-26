@@ -422,17 +422,7 @@ h2 {
 
 #loading-bar .bar {
     height: 12px;
-}
-
-#loading-bar-spinner {
-    top: calc(50% - 64px );
-    left: calc(50% - 64px );
-    .spinner-icon {
-	background-color: rgba(0, 0, 0, 0.25);
-	height: 128px;
-	width: 128px;
-	border-radius: 64px;
-    }
+    opacity: 0.66;
 }
 
 .individualPieChart {
