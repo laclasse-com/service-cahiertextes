@@ -73,22 +73,22 @@ angular.module( 'cahierDeTextesClientApp' )
 						     agenda: { titleFormat: 'MMMM YYYY',
 							       columnFormat: 'ddd',
 							       timeFormat: ' ' }, //$locale.DATETIME_FORMATS.shortTime + '{ - ' + $locale.DATETIME_FORMATS.shortTime + '}' },
-						 week: { titleFormat: '[Semaine du] D MMMM YYYY',
-							 columnFormat: 'ddd D/M',
-							 timeFormat: ' ' },
-						 day: { titleFormat: 'DDDD D MMMM YYYY',
-							columnFormat: 'DDDD D MMMM',
-							timeFormat: ' ' }
-					       },
-					defaultView: 'agendaWeek',
-					editable: false,
-					eventDurationEditable: false,
-					disableDragging: true,
-					selectable: false,
-					selectHelper: true,
-					weekends: false
-				    };
-				  } ] )
+						     week: { titleFormat: '[Semaine du] D MMMM YYYY',
+							     columnFormat: 'ddd D/M',
+							     timeFormat: ' ' },
+						     day: { titleFormat: 'DDDD D MMMM YYYY',
+							    columnFormat: 'DDDD D MMMM',
+							    timeFormat: ' ' }
+						 },
+						 defaultView: 'agendaWeek',
+						 editable: false,
+						 eventDurationEditable: false,
+						 eventStartEditable: false,
+						 selectable: false,
+						 selectHelper: true,
+						 weekends: false
+					       };
+				    } ] )
 
 // options des graphiques
     .factory( 'CHART_COLORS_FUNCTION', [ 'THEME',
@@ -209,28 +209,28 @@ angular.module( 'cahierDeTextesClientApp' )
 	       } ] )
     .config( [ 'toastrConfig',
 	       function( toastrConfig ) {
-	angular.extend(toastrConfig, {
-	    allowHtml: true,
-	    closeButton: false,
-	    closeHtml: '<button>&times;</button>',
-	    containerId: 'toast-container',
-	    extendedTimeOut: 1000,
-	    iconClasses: {
-		error: 'toast-error',
-		info: 'toast-info',
-		success: 'toast-success',
-		warning: 'toast-warning'
-	    },
-	    maxOpened: 0,
-	    messageClass: 'toast-message',
-	    newestOnTop: true,
-	    onHidden: null,
-	    onShown: null,
-	    positionClass: 'toast-bottom-right',
-	    tapToDismiss: true,
-	    target: 'body',
-	    timeOut: 5000,
-	    titleClass: 'toast-title',
-	    toastClass: 'toast'
-	} );
-    } ] );
+		   angular.extend(toastrConfig, {
+		       allowHtml: true,
+		       closeButton: false,
+		       closeHtml: '<button>&times;</button>',
+		       containerId: 'toast-container',
+		       extendedTimeOut: 1000,
+		       iconClasses: {
+			   error: 'toast-error',
+			   info: 'toast-info',
+			   success: 'toast-success',
+			   warning: 'toast-warning'
+		       },
+		       maxOpened: 0,
+		       messageClass: 'toast-message',
+		       newestOnTop: true,
+		       onHidden: null,
+		       onShown: null,
+		       positionClass: 'toast-bottom-right',
+		       tapToDismiss: true,
+		       target: 'body',
+		       timeOut: 5000,
+		       titleClass: 'toast-title',
+		       toastClass: 'toast'
+		   } );
+	       } ] );
