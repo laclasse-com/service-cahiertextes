@@ -13,6 +13,7 @@
 // see https://github.com/umdjs/umd/blob/master/returnExports.js
 (function (root, factory) {
     'use strict';
+
     /*global define, exports, module */
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
@@ -74,14 +75,14 @@ if (!Object.getPrototypeOf) {
 //ES5 15.2.3.3
 //http://es5.github.com/#x15.2.3.3
 
-function doesGetOwnPropertyDescriptorWork(object) {
+var doesGetOwnPropertyDescriptorWork = function doesGetOwnPropertyDescriptorWork(object) {
     try {
         object.sentinel = 0;
         return Object.getOwnPropertyDescriptor(object, 'sentinel').value === 0;
     } catch (exception) {
         return false;
     }
-}
+};
 
 //check whether getOwnPropertyDescriptor works if it's given. Otherwise,
 //shim partially.
@@ -222,7 +223,7 @@ if (!Object.create) {
             empty.__proto__ = null;
             /*eslint-enable no-proto */
 
-            function Empty() {}
+            var Empty = function Empty() {};
             Empty.prototype = empty;
             // short-circuit future calls
             createEmpty = function () {
@@ -235,7 +236,7 @@ if (!Object.create) {
     Object.create = function create(prototype, properties) {
 
         var object;
-        function Type() {} // An empty constructor.
+        var Type = function Type() {}; // An empty constructor.
 
         if (prototype === null) {
             object = createEmpty();
@@ -279,14 +280,14 @@ if (!Object.create) {
 // WebKit Bugs:
 //     https://bugs.webkit.org/show_bug.cgi?id=36423
 
-function doesDefinePropertyWork(object) {
+var doesDefinePropertyWork = function doesDefinePropertyWork(object) {
     try {
         Object.defineProperty(object, 'sentinel', {});
         return 'sentinel' in object;
     } catch (exception) {
         return false;
     }
-}
+};
 
 // check whether defineProperty works if it's given. Otherwise,
 // shim partially.

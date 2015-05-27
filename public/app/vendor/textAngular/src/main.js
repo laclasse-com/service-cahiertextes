@@ -88,6 +88,7 @@ textAngular.directive("textAngular", [
 			require: '?ngModel',
 			scope: {},
 			restrict: "EA",
+			priority: 2, // So we override validators correctly
 			link: function(scope, element, attrs, ngModel){
 				// all these vars should not be accessable outside this directive
 				var _keydown, _keyup, _keypress, _mouseup, _focusin, _focusout,
@@ -118,7 +119,7 @@ textAngular.directive("textAngular", [
 							scope['$redoTaBindtaTextElement' + _serial]();
 						}else{
 							// catch errors like FF erroring when you try to force an undo with nothing done
-							_taExecCommand(command, false, opt);
+							_taExecCommand(command, false, opt, scope.defaultTagAttributes);
 							if(isSelectableElementTool){
 								// re-apply the selectable tool events
 								scope['reApplyOnSelectorHandlerstaTextElement' + _serial]();
@@ -134,6 +135,14 @@ textAngular.directive("textAngular", [
 				if(attrs.taFocussedClass)			scope.classes.focussed = attrs.taFocussedClass;
 				if(attrs.taTextEditorClass)			scope.classes.textEditor = attrs.taTextEditorClass;
 				if(attrs.taHtmlEditorClass)			scope.classes.htmlEditor = attrs.taHtmlEditorClass;
+				if(attrs.taDefaultTagAttributes){
+					try	{
+						//	TODO: This should use angular.merge to enhance functionality once angular 1.4 is required
+						angular.extend(scope.defaultTagAttributes, angular.fromJson(attrs.taDefaultTagAttributes));
+					} catch (error) {
+						$log.error(error);
+					}
+				}
 				// optional setup functions
 				if(attrs.taTextEditorSetup)			scope.setup.textEditorSetup = scope.$parent.$eval(attrs.taTextEditorSetup);
 				if(attrs.taHtmlEditorSetup)			scope.setup.htmlEditorSetup = scope.$parent.$eval(attrs.taHtmlEditorSetup);
@@ -259,7 +268,7 @@ textAngular.directive("textAngular", [
 								pos.x = ratio > newRatio ? pos.x : pos.y / ratio;
 								pos.y = ratio > newRatio ? pos.x * ratio : pos.y;
 							}
-							el = angular.element(_el);
+							var el = angular.element(_el);
 							el.attr('height', Math.max(0, pos.y));
 							el.attr('width', Math.max(0, pos.x));
 							
@@ -295,13 +304,15 @@ textAngular.directive("textAngular", [
 					'id': 'taHtmlElement' + _serial,
 					'ng-show': 'showHtml',
 					'ta-bind': 'ta-bind',
-					'ng-model': 'html'
+					'ng-model': 'html',
+					'ng-model-options': element.attr('ng-model-options')
 				});
 				scope.displayElements.text.attr({
 					'id': 'taTextElement' + _serial,
 					'contentEditable': 'true',
 					'ta-bind': 'ta-bind',
-					'ng-model': 'html'
+					'ng-model': 'html',
+					'ng-model-options': element.attr('ng-model-options')
 				});
 				scope.displayElements.scrollWindow.attr({'ng-hide': 'showHtml'});
 				if(attrs.taDefaultWrap) scope.displayElements.text.attr('ta-default-wrap', attrs.taDefaultWrap);
@@ -376,7 +387,15 @@ textAngular.directive("textAngular", [
 				};
 				scope.endAction = function(){
 					scope._actionRunning = false;
-					if(_savedSelection) $window.rangy.removeMarkers(_savedSelection);
+					if(_savedSelection){
+						if(scope.showHtml){
+							scope.displayElements.html[0].focus();
+						}else{
+							scope.displayElements.text[0].focus();
+						}
+						$window.rangy.restoreSelection(_savedSelection);
+						$window.rangy.removeMarkers(_savedSelection);
+					}
 					_savedSelection = false;
 					scope.updateSelectedStyles();
 					// only update if in text or WYSIWYG mode
@@ -467,19 +486,13 @@ textAngular.directive("textAngular", [
 						}
 						scope.displayElements.forminput.val(ngModel.$viewValue);
 						// if the editors aren't focused they need to be updated, otherwise they are doing the updating
-						/* istanbul ignore else: don't care */
-						if(!scope._elementSelectTriggered){
-							// catch model being null or undefined
-							scope.html = ngModel.$viewValue || '';
-						}
+						scope.html = ngModel.$viewValue || '';
 					};
 					// trigger the validation calls
-					var _validity = function(value){
-						if(attrs.required) ngModel.$setValidity('required', !(!value || value.trim() === ''));
-						return value;
+					if(element.attr('required')) ngModel.$validators.required = function(modelValue, viewValue) {
+						var value = modelValue || viewValue;
+						return !(!value || value.trim() === '');
 					};
-					ngModel.$parsers.push(_validity);
-					ngModel.$formatters.push(_validity);
 				}else{
 					// if no ngModel then update from the contents of the origional html.
 					scope.displayElements.forminput.val(_originalContents);
@@ -925,7 +938,7 @@ textAngular.directive('textAngularToolbar', [
 					
 					toolElement.attr('name', toolScope.name);
 					// important to not take focus from the main text/html entry
-					toolElement.attr('unselectable', 'on');
+					toolElement.attr('ta-button', 'ta-button');
 					toolElement.attr('ng-disabled', 'isDisabled()');
 					toolElement.attr('tabindex', '-1');
 					toolElement.attr('ng-click', 'executeAction()');
@@ -934,14 +947,6 @@ textAngular.directive('textAngularToolbar', [
 					if (toolDefinition && toolDefinition.tooltiptext) {
 						toolElement.attr('title', toolDefinition.tooltiptext);
 					}
-
-					toolElement.on('mousedown', function(e, eventData){
-						/* istanbul ignore else: this is for catching the jqLite testing*/
-						if(eventData) angular.extend(e, eventData);
-						// this prevents focusout from firing on the editor when clicking toolbar buttons
-						e.preventDefault();
-						return false;
-					});
 					if(toolDefinition && !toolDefinition.display && !toolScope._display){
 						// first clear out the current contents if any
 						toolElement[0].innerHTML = '';
