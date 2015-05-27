@@ -471,7 +471,7 @@
 	<span><span class="glyphicon glyphicon-transfer"></span> Revenir en modification</span>
     </button>
 
-    <button type="button" class="btn btn-sm btn-success pull-right" data-ng-click="valider()" data-ng-if="!creneau.etranger && dirty || mode_edition_creneau">
+    <button type="button" class="btn btn-sm btn-success pull-right" data-ng-click="valider()" data-ng-if="!creneau.etranger && dirty || (mode_edition_creneau && scope.selected_regroupement)">
 	<span class="glyphicon glyphicon-ok-sign"></span> Valider
     </button>
     <button type="button" class="btn btn-sm btn-default pull-right" data-ng-click="annuler()">
