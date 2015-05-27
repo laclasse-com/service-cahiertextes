@@ -35,13 +35,13 @@
     "angular": "1.2.0"
   },
   "license": "MIT",
-  "_release": "430cc92365",
+  "_release": "690a0229ff",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "430cc92365efcf4ab797150cd4b0ec4ed1cb786e"
+    "commit": "690a0229ff88bfb13422c0865be611b9f2674584"
   },
-  "_source": "https://github.com/joujiahe/ng-color-picker.git",
+  "_source": "https://github.com/cycojesus/ng-color-picker.git",
   "_target": "*",
-  "_originalSource": "https://github.com/joujiahe/ng-color-picker.git"
+  "_originalSource": "https://github.com/cycojesus/ng-color-picker.git"
 }
