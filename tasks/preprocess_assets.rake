@@ -97,7 +97,7 @@ namespace :preprocess_assets do
                                                           'public/app/vendor/ng-file-upload/angular-file-upload-shim.js',
                                                           'public/app/vendor/sweetalert/dist/sweetalert.min.js',
                                                           'public/app/vendor/rangy/rangy-core.js',
-                                                          'public/app/vendor/rangy/rangy-cssclassapplier.js',
+                                                          'public/app/vendor/rangy/rangy-classapplier.js',
                                                           'public/app/vendor/rangy/rangy-selectionsaverestore.js',
                                                           'public/app/vendor/rangy/rangy-serializer.js',
                                                           'public/app/vendor/angular/angular.js',
