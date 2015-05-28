@@ -3,11 +3,11 @@
 angular.module( 'cahierDeTextesClientApp' )
     .controller( 'PopupEditionCtrl',
 		 [ '$scope', '$filter', '$q', '$sce', '$modalInstance', '$locale', 'toastr',
-		   'APP_PATH', 'DOCS_URL', 'SEMAINES_VACANCES', 'ZONE', 'POPUP_ACTIONS',
+		   'APP_PATH', 'DOCS_URL', 'SEMAINES_VACANCES', 'ZONE', 'POPUP_ACTIONS', 'LOCALHOST',
 		   'Documents', 'API', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs', 'User',
 		   'cours', 'devoirs', 'creneau', 'raw_data', 'classes', 'matieres',
 		   function ( $scope, $filter, $q, $sce, $modalInstance, $locale, toastr,
-			      APP_PATH, DOCS_URL, SEMAINES_VACANCES, ZONE, POPUP_ACTIONS,
+			      APP_PATH, DOCS_URL, SEMAINES_VACANCES, ZONE, POPUP_ACTIONS, LOCALHOST,
 			      Documents, API, CreneauEmploiDuTemps, Cours, Devoirs, User,
 			      cours, devoirs, creneau, raw_data, classes, matieres )
 		   {
@@ -489,19 +489,24 @@ angular.module( 'cahierDeTextesClientApp' )
 				   $scope.faulty_docs_app = true;
 			       };
 
-			       Documents.list_files()
-				   .success( function ( response ) {
-				       if ( _(response.error).isEmpty() && _(response).has( 'files' ) ) {
-					   $scope.cartable = response;
-					   $scope.cartable.files = _( response.files ).reject( function( file ) {
-					       return _(file).has( 'phash' );
-					   } ); //.rest();
-					   $scope.cartable.expandedNodes = [];
-				       } else {
-					   dead_Documents();
-				       }
-				   } )
-				   .error( dead_Documents );
+			       if ( LOCALHOST ) {
+				   $scope.erreurs.push( { message: "Instance sur localhost" } );
+				   $scope.faulty_docs_app = true;
+			       } else {
+				   Documents.list_files()
+				       .success( function ( response ) {
+					   if ( _(response.error).isEmpty() && _(response).has( 'files' ) ) {
+					       $scope.cartable = response;
+					       $scope.cartable.files = _( response.files ).reject( function( file ) {
+						   return _(file).has( 'phash' );
+					       } ); //.rest();
+					       $scope.cartable.expandedNodes = [];
+					   } else {
+					       dead_Documents();
+					   }
+				       } )
+				       .error( dead_Documents );
+			       }
 
 			       $scope.consume_Documents_response_callback = function( item ) {
 				   return function( response ) {
