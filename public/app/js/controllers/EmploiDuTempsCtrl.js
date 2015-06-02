@@ -11,6 +11,8 @@ angular.module( 'cahierDeTextesClientApp' )
 				 $scope.current_user = current_user;
 				 $scope.zone = ZONE;
 
+				 $scope.emploi_du_temps = angular.element('#emploi_du_temps');
+
 				 var popup_ouverte = false;
 				 $scope.filter_data = angular.identity;
 				 $scope.scope = $scope;

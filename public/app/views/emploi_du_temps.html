@@ -17,18 +17,19 @@
   </div>
   <div class="panel-body"
        data-ng-class="{'vacances': c_est_les_vacances}">
-    <div data-calendar="emploi_du_temps"
-	 data-ui-calendar="calendar.options"
-	 class="calendar"
-	 data-ng-model="calendar.events"
-	 calendar-watch-event="extraEventSignature"
-	 data-ng-swipe-left="prev()"
-	 data-ng-swipe-right="next()"></div>
-    <div class="col-md-12">
-	<div class="pull-right legende">
-	<label>Légende :</label>
-	<label><span class="label edt-cours" title="Cours"> </span> Cours</label>
-	    <!-- <span class="label edt-permanence" title="Permanence"> </span> Permanence -->
+	  <div data-calendar="emploi_du_temps"
+		  id="emploi_du_temps"
+		  data-ui-calendar="calendar.options"
+		  class="calendar"
+		  data-ng-model="calendar.events"
+		  calendar-watch-event="extraEventSignature"
+		  data-ng-swipe-left="prev()"
+		  data-ng-swipe-right="next()"></div>
+	  <div class="col-md-12">
+		  <div class="pull-right legende">
+			  <label>Légende :</label>
+			  <label><span class="label edt-cours" title="Cours"> </span> Cours</label>
+			  <!-- <span class="label edt-permanence" title="Permanence"> </span> Permanence -->
 	    <label><span class="label edt-devoir-a-faire" title="Devoir à faire"> </span> Devoir à faire</label>
 	    <label data-ng-if="current_user.profil_actif.profil_id === 'ELV'"><span class="label edt-devoir-fait" title="Devoir fait ! Youpi !"> </span> Devoir fait</label>
 		<label><span class="label edt-devoir-note-maison" title="Devoir à faire à la maison"> </span> DM - devoir maison</label>
