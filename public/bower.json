@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "dependencies": {
     "angular": "latest",
-    "angular-bootstrap": "latest",
+      "angular-bootstrap": "0.12",
     "angular-cookies": "latest",
     "angular-i18n": "latest",
     "angular-mocks": "latest",
