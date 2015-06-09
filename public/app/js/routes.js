@@ -193,5 +193,16 @@ angular.module( 'cahierDeTextesClientApp' )
 				   controller: 'StatsEnseignantCtrl'
 			       }
 			   }
+		       })
+		       .state('enseignant.import', {
+			   parent: 'enseignant',
+			   url: '/import',
+			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ENS' ] ); } ] },
+			   views: {
+			       'content': {
+				   controller: 'ImportCtrl',
+				   templateUrl: 'views/import.html'
+			       }
+			   }
 		       });
 	       } ] );

@@ -19,7 +19,7 @@ module CahierDeTextesAPI
       post '/pronote' do
         uai = ProNote.extract_uai_from_xml( File.open( params[:file][:tempfile] ) )
 
-        error!( '401 Unauthorized', 401 ) unless user_is_profils_in_etablissement?( %w( DIR ), uai )
+        error!( '401 Unauthorized', 401 ) unless user_is_profils_in_etablissement?( %w( DIR ENS ), uai )
 
         # on retourne un log succint des infos chargées
         { filename: params[:file][:filename],
@@ -33,7 +33,7 @@ module CahierDeTextesAPI
         requires :id_annuaire
       end
       put '/mrpni/:sha256/est/:id_annuaire' do
-        user_needs_to_be( %w( DIR ), true )
+        user_needs_to_be( %w( DIR ENS ), true )
 
         fi = FailedIdentification.where( sha256: params[:sha256] ).first
         unless fi.nil?

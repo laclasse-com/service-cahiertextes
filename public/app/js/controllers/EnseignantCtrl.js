@@ -17,6 +17,13 @@ angular.module( 'cahierDeTextesClientApp' )
 					css_class: 'glyphicon glyphicon-stats',
 					active: false } ];
 
+		      if ( current_user.profil_actif.admin ) {
+			  $scope.tabs.push( { heading: 'Imports',
+					      uisref: 'enseignant.import',
+					      css_class: 'glyphicon glyphicon-import',
+					      active: false } );
+		      }
+
 		      _($scope.tabs).each( function( tab ) {
 			  tab.active = tab.uisref == $state.current.name;
 		      } );
