@@ -7,10 +7,8 @@ module CahierDeTextesApp
         app.get "#{APP_PATH}/auth/:provider/callback" do
           init_session( request.env )
 
-          app_in_user_profile = user[:user_detailed]['applications'].find { |a| a['id'] == 'CTXT' }
-
           # TODO: can do better, might induce infinite redirect loop
-          logout! "#{env['rack.url_scheme']}://#{env['HTTP_HOST']}#{APP_PATH}/" if app_in_user_profile.nil? || !app_in_user_profile['active']
+          logout! "#{env['rack.url_scheme']}://#{env['HTTP_HOST']}#{APP_PATH}/" unless user_can_access_app?( ANNUAIRE[:app_id] )
 
           DataManagement::Provisioning.provision( user )
 
