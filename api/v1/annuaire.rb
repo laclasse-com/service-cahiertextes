@@ -34,7 +34,15 @@ module CahierDeTextesAPI
         requires :uai, desc: 'Code UAI de l\'établissement'
       end
       get 'etablissements/:uai/regroupements' do
-        AnnuaireWrapper::Etablissement.get_regroupements( params[:uai] )
+        regroupements = AnnuaireWrapper::Etablissement.get_regroupements( params[:uai] )
+
+        regroupements.keys.each do |type|
+          regroupements[ type ].each do |regroupement|
+            regroupement[ 'libelle' ] ||= regroupement[ 'libelle_aaf' ]
+          end
+        end
+
+        regroupements
       end
 
       desc 'Renvoi le détail d\'un regroupement'
