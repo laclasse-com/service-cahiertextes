@@ -1,235 +1,237 @@
 <div class="panel panel-default">
-  <div class="panel-heading">
+	<div class="panel-heading">
 
-    <input type="file"
-	   name="fichier"
-	   class="btn btn-primary pull-left"
-	   ng-file-select="onFileSelect($files)" />
+		<input type="file"
+			name="fichier"
+			class="btn btn-primary pull-left"
+			ng-model="fichiers"
+			ngf-select="true"
+			ngf-change="onFileSelect($files)" />
 
-    <button class="btn pull-right"
-	    data-ng-class="{'disabled btn-default': !fichiers || in_progress, 'btn-primary': fichiers}"
-	    data-ng-click="launch_import( fichiers )" >
-	<span data-ng-if="!result.rapport"><span class="glyphicon glyphicon-log-in"></span> Importer</span>
-	<span data-ng-if="result.rapport"><span class="glyphicon glyphicon-log-in"></span> Ré-Importer</span>
-    </button>
-    <div class="clearfix"></div>
-  </div>
+		<button class="btn pull-right"
+			data-ng-class="{'disabled btn-default': !fichiers || in_progress, 'btn-primary': fichiers}"
+			data-ng-click="launch_import( fichiers )" >
+			<span data-ng-if="!result.rapport"><span class="glyphicon glyphicon-log-in"></span> Importer</span>
+			<span data-ng-if="result.rapport"><span class="glyphicon glyphicon-log-in"></span> Ré-Importer</span>
+		</button>
+		<div class="clearfix"></div>
+	</div>
 </div>
 
 <div class="panel panel-default" data-ng-if="result.rapport">
-  <div class="panel-body">
-    <label>{{result.rapport.plages_horaires.success.length}} Plages Horaires créées</label>
-  </div>
+	<div class="panel-body">
+		<label>{{result.rapport.plages_horaires.success.length}} Plages Horaires créées</label>
+	</div>
 
-  <div class="panel-body">
-    <label>{{result.rapport.salles.success.length}} Salles créées</label>
-  </div>
+	<div class="panel-body">
+		<label>{{result.rapport.salles.success.length}} Salles créées</label>
+	</div>
 
-  <div class="panel-body">
-    <label>{{result.rapport.matieres.success.length}} Matières identifiées</label>
-  </div>
+	<div class="panel-body">
+		<label>{{result.rapport.matieres.success.length}} Matières identifiées</label>
+	</div>
 
-  <div class="panel-body">
-    <label>{{result.rapport.matieres.error.length}} Matières inconnues</label>
-    <div class="col-md-12">
-      <table class="table table-striped">
-	<thead>
-	  <tr>
-	    <th width="37.5%">Matière Pronote</th>
-	    <th width="37.5%">Matière Officielle</th>
-	    <th width="15%">
-	      <button class="btn btn-primary" data-ng-click="identifie_massivement_objets( result.rapport.matieres.error )">
-		<span class="glyphicon glyphicon-link"></span>
-	      </button>
-	    </th>
-	    <th width="15%"></th>
-	  </tr>
-	</thead>
-	<tbody>
-	  <tr data-ng-repeat="matiere in result.rapport.matieres.error track by $index">
-	    <td>{{matiere.objet.Libelle}}</td>
-	    <td>
-	      <select data-ng-options="m.id as m.libelle_long for m in matieres | orderBy:'libelle_long'"
-		      data-ng-model="matiere.id_annuaire"></select>
-	    </td>
-	    <td>
-	      <button class="btn"
-		      data-ng-class="{'disabled btn-default': !matiere.id_annuaire, 'btn-primary': matiere.id_annuaire}"
-		      data-ng-click="identifie_objet( matiere )">
-		<span class="glyphicon glyphicon-link"></span>
-	      </button>
-	    </td>
-	    <td><span class="glyphicon glyphicon-ok" data-ng-if="matiere.identified"></span></td>
-	  </tr>
-	</tbody>
-      </table>
-    </div>
-  </div>
+	<div class="panel-body">
+		<label>{{result.rapport.matieres.error.length}} Matières inconnues</label>
+		<div class="col-md-12">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th width="37.5%">Matière Pronote</th>
+						<th width="37.5%">Matière Officielle</th>
+						<th width="15%">
+							<button class="btn btn-primary" data-ng-click="identifie_massivement_objets( result.rapport.matieres.error )">
+								<span class="glyphicon glyphicon-link"></span>
+							</button>
+						</th>
+						<th width="15%"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr data-ng-repeat="matiere in result.rapport.matieres.error track by $index">
+						<td>{{matiere.objet.Libelle}}</td>
+						<td>
+							<select data-ng-options="m.id as m.libelle_long for m in matieres | orderBy:'libelle_long'"
+								data-ng-model="matiere.id_annuaire"></select>
+						</td>
+						<td>
+							<button class="btn"
+								data-ng-class="{'disabled btn-default': !matiere.id_annuaire, 'btn-primary': matiere.id_annuaire}"
+								data-ng-click="identifie_objet( matiere )">
+								<span class="glyphicon glyphicon-link"></span>
+							</button>
+						</td>
+						<td><span class="glyphicon glyphicon-ok" data-ng-if="matiere.identified"></span></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 
-  <div class="panel-body">
-    <label>{{result.rapport.enseignants.success.length}} Enseignants prises en compte</label>
-  </div>
+	<div class="panel-body">
+		<label>{{result.rapport.enseignants.success.length}} Enseignants prises en compte</label>
+	</div>
 
-  <div class="panel-body">
-    <label>{{result.rapport.enseignants.error.length}} Enseignants non prises en compte</label>
-    <table class="table table-striped">
-      <thead>
-	<tr>
-	  <th width="37.5%">Enseignant Pronote</th>
-	  <th width="37.5%">Enseignant Annuaire</th>
-	  <th width="15%">
-	    <button class="btn btn-primary" data-ng-click="identifie_massivement_objets( result.rapport.enseignants.error )">
-	      <span class="glyphicon glyphicon-link"></span>
-	    </button>
-	  </th>
-	  <th width="15%"></th>
-	</tr>
-      </thead>
-      <tbody>
-	<tr data-ng-repeat="enseignant in result.rapport.enseignants.error track by $index">
-	  <td>{{enseignant.objet.Nom}} {{enseignant.objet.Prenom}}</td>
-	  <td>
-	    <select data-ng-options="e.id_ent as e.nom+' '+e.prenom for e in enseignants | orderBy:'nom'"
-		    data-ng-model="enseignant.id_annuaire"></select>
-	  </td>
-	  <td>
-	    <button class="btn"
-		    data-ng-class="{'disabled btn-default': !enseignant.id_annuaire, 'btn-primary': enseignant.id_annuaire}"
-		    data-ng-click="identifie_objet( enseignant )">
-	      <span class="glyphicon glyphicon-link"></span>
-	    </button>
-	  </td>
-	  <td><span class="glyphicon glyphicon-ok" data-ng-if="enseignant.identified"></span></td>
-	</tr>
-      </tbody>
-    </table>
-  </div>
+	<div class="panel-body">
+		<label>{{result.rapport.enseignants.error.length}} Enseignants non prises en compte</label>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th width="37.5%">Enseignant Pronote</th>
+					<th width="37.5%">Enseignant Annuaire</th>
+					<th width="15%">
+						<button class="btn btn-primary" data-ng-click="identifie_massivement_objets( result.rapport.enseignants.error )">
+							<span class="glyphicon glyphicon-link"></span>
+						</button>
+					</th>
+					<th width="15%"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr data-ng-repeat="enseignant in result.rapport.enseignants.error track by $index">
+					<td>{{enseignant.objet.Nom}} {{enseignant.objet.Prenom}}</td>
+					<td>
+						<select data-ng-options="e.id_ent as e.nom+' '+e.prenom for e in enseignants | orderBy:'nom'"
+							data-ng-model="enseignant.id_annuaire"></select>
+					</td>
+					<td>
+						<button class="btn"
+							data-ng-class="{'disabled btn-default': !enseignant.id_annuaire, 'btn-primary': enseignant.id_annuaire}"
+							data-ng-click="identifie_objet( enseignant )">
+							<span class="glyphicon glyphicon-link"></span>
+						</button>
+					</td>
+					<td><span class="glyphicon glyphicon-ok" data-ng-if="enseignant.identified"></span></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 
-  <div class="panel-body">
-    <label>{{result.rapport.regroupements.Classe.success.length}} Classes prises en compte</label>
-  </div>
+	<div class="panel-body">
+		<label>{{result.rapport.regroupements.Classe.success.length}} Classes prises en compte</label>
+	</div>
 
-  <div class="panel-body">
-    <label>{{result.rapport.regroupements.Classe.error.length}} Classes non prises en compte</label>
-    <table class="table table-striped">
-      <thead>
-	<tr>
-	  <th width="37.5%">Classe Pronote</th>
-	  <th width="37.5%">Classe Annuaire</th>
-	  <th width="15%">
-	    <button class="btn btn-primary" data-ng-click="identifie_massivement_objets( result.rapport.regroupements.Classe.error )">
-	      <span class="glyphicon glyphicon-link"></span>
-	    </button>
-	  </th>
-	  <th width="15%"></th>
-	</tr>
-      </thead>
-      <tbody>
-	<tr data-ng-repeat="regroupement in result.rapport.regroupements.Classe.error track by $index">
-	  <td>{{regroupement.objet.Nom}}</td>
-	  <td>
-	    <select data-ng-options="r.id as r.libelle for r in regroupements.classes | orderBy:'libelle'"
-		    data-ng-model="regroupement.id_annuaire"></select>
-	  </td>
-	  <td>
-	    <button class="btn"
-		    data-ng-class="{'disabled btn-default': !regroupement.id_annuaire, 'btn-primary': regroupement.id_annuaire}"
-		    data-ng-click="identifie_objet( regroupement )">
-	      <span class="glyphicon glyphicon-link"></span>
-	    </button>
-	  </td>
-	  <td><span class="glyphicon glyphicon-ok" data-ng-if="regroupement.identified"></span></td>
-	</tr>
-      </tbody>
-    </table>
-  </div>
+	<div class="panel-body">
+		<label>{{result.rapport.regroupements.Classe.error.length}} Classes non prises en compte</label>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th width="37.5%">Classe Pronote</th>
+					<th width="37.5%">Classe Annuaire</th>
+					<th width="15%">
+						<button class="btn btn-primary" data-ng-click="identifie_massivement_objets( result.rapport.regroupements.Classe.error )">
+							<span class="glyphicon glyphicon-link"></span>
+						</button>
+					</th>
+					<th width="15%"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr data-ng-repeat="regroupement in result.rapport.regroupements.Classe.error track by $index">
+					<td>{{regroupement.objet.Nom}}</td>
+					<td>
+						<select data-ng-options="r.id as r.libelle for r in regroupements.classes | orderBy:'libelle'"
+							data-ng-model="regroupement.id_annuaire"></select>
+					</td>
+					<td>
+						<button class="btn"
+							data-ng-class="{'disabled btn-default': !regroupement.id_annuaire, 'btn-primary': regroupement.id_annuaire}"
+							data-ng-click="identifie_objet( regroupement )">
+							<span class="glyphicon glyphicon-link"></span>
+						</button>
+					</td>
+					<td><span class="glyphicon glyphicon-ok" data-ng-if="regroupement.identified"></span></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 
-  <div class="panel-body">
-    <label>{{result.rapport.regroupements.PartieDeClasse.success.length}} Parties de Classes prises en compte</label>
-  </div>
+	<div class="panel-body">
+		<label>{{result.rapport.regroupements.PartieDeClasse.success.length}} Parties de Classes prises en compte</label>
+	</div>
 
-  <div class="panel-body">
-    <label>{{result.rapport.regroupements.PartieDeClasse.error.length}} Parties de Classes non prises en compte</label>
-    <table class="table table-striped">
-      <thead>
-	<tr>
-	  <th width="37.5%">Partie de classe Pronote</th>
-	  <th width="37.5%">Classe Annuaire</th>
-	  <th width="15%">
-	    <button class="btn btn-primary" data-ng-click="identifie_massivement_objets( result.rapport.regroupements.PartieDeClasse.error )">
-	      <span class="glyphicon glyphicon-link"></span>
-	    </button>
-	  </th>
-	  <th width="15%"></th>
-	</tr>
-      </thead>
-      <tbody>
-	<tr data-ng-repeat="regroupement in result.rapport.regroupements.PartieDeClasse.error track by $index">
-	  <td>{{regroupement.objet.Nom}}</td>
-	  <td>
-	    <select data-ng-options="r.id as r.libelle for r in regroupements.classes | orderBy:'libelle'"
-		    data-ng-model="regroupement.id_annuaire"></select>
-	  </td>
-	  <td>
-	    <button class="btn"
-		    data-ng-class="{'disabled btn-default': !regroupement.id_annuaire, 'btn-primary': regroupement.id_annuaire}"
-		    data-ng-click="identifie_objet( regroupement )">
-	      <span class="glyphicon glyphicon-link"></span>
-	    </button>
-	  </td>
-	  <td><span class="glyphicon glyphicon-ok" data-ng-if="regroupement.identified"></span></td>
-	</tr>
-      </tbody>
-    </table>
-  </div>
+	<div class="panel-body">
+		<label>{{result.rapport.regroupements.PartieDeClasse.error.length}} Parties de Classes non prises en compte</label>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th width="37.5%">Partie de classe Pronote</th>
+					<th width="37.5%">Classe Annuaire</th>
+					<th width="15%">
+						<button class="btn btn-primary" data-ng-click="identifie_massivement_objets( result.rapport.regroupements.PartieDeClasse.error )">
+							<span class="glyphicon glyphicon-link"></span>
+						</button>
+					</th>
+					<th width="15%"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr data-ng-repeat="regroupement in result.rapport.regroupements.PartieDeClasse.error track by $index">
+					<td>{{regroupement.objet.Nom}}</td>
+					<td>
+						<select data-ng-options="r.id as r.libelle for r in regroupements.classes | orderBy:'libelle'"
+							data-ng-model="regroupement.id_annuaire"></select>
+					</td>
+					<td>
+						<button class="btn"
+							data-ng-class="{'disabled btn-default': !regroupement.id_annuaire, 'btn-primary': regroupement.id_annuaire}"
+							data-ng-click="identifie_objet( regroupement )">
+							<span class="glyphicon glyphicon-link"></span>
+						</button>
+					</td>
+					<td><span class="glyphicon glyphicon-ok" data-ng-if="regroupement.identified"></span></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 
-  <div class="panel-body">
-    <label>{{result.rapport.regroupements.Groupe.success.length}} Groupes prises en compte</label>
-  </div>
+	<div class="panel-body">
+		<label>{{result.rapport.regroupements.Groupe.success.length}} Groupes prises en compte</label>
+	</div>
 
-  <div class="panel-body">
-    <label>{{result.rapport.regroupements.Groupe.error.length}} Groupes non prises en compte</label>
-    <table class="table table-striped">
-      <thead>
-	<tr>
-	  <th width="37.5%">Groupe Pronote</th>
-	  <th width="37.5%">Groupe Annuaire</th>
-	  <th width="15%">
-	    <button class="btn btn-primary" data-ng-click="identifie_massivement_objets( result.rapport.regroupements.Groupe.error )">
-	      <span class="glyphicon glyphicon-link"></span>
-	    </button>
-	  </th>
-	  <th width="15%"></th>
-	</tr>
-      </thead>
-      <tbody>
-	<tr data-ng-repeat="regroupement in result.rapport.regroupements.Groupe.error track by $index">
-	  <td>{{regroupement.objet.Nom}}</td>
-	  <td>
-	    <select data-ng-options="r.id as r.libelle for r in regroupements.groupes_eleves | orderBy:'libelle'"
-		    data-ng-model="regroupement.id_annuaire"></select>
-	  </td>
-	  <td>
-	    <button class="btn"
-		    data-ng-class="{'disabled btn-default': !regroupement.id_annuaire, 'btn-primary': regroupement.id_annuaire}"
-		    data-ng-click="identifie_objet( regroupement )">
-	      <span class="glyphicon glyphicon-link"></span>
-	    </button>
-	  </td>
-	  <td><span class="glyphicon glyphicon-ok" data-ng-if="regroupement.identified"></span></td>
-	</tr>
-      </tbody>
-    </table>
-  </div>
+	<div class="panel-body">
+		<label>{{result.rapport.regroupements.Groupe.error.length}} Groupes non prises en compte</label>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th width="37.5%">Groupe Pronote</th>
+					<th width="37.5%">Groupe Annuaire</th>
+					<th width="15%">
+						<button class="btn btn-primary" data-ng-click="identifie_massivement_objets( result.rapport.regroupements.Groupe.error )">
+							<span class="glyphicon glyphicon-link"></span>
+						</button>
+					</th>
+					<th width="15%"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr data-ng-repeat="regroupement in result.rapport.regroupements.Groupe.error track by $index">
+					<td>{{regroupement.objet.Nom}}</td>
+					<td>
+						<select data-ng-options="r.id as r.libelle for r in regroupements.groupes_eleves | orderBy:'libelle'"
+							data-ng-model="regroupement.id_annuaire"></select>
+					</td>
+					<td>
+						<button class="btn"
+							data-ng-class="{'disabled btn-default': !regroupement.id_annuaire, 'btn-primary': regroupement.id_annuaire}"
+							data-ng-click="identifie_objet( regroupement )">
+							<span class="glyphicon glyphicon-link"></span>
+						</button>
+					</td>
+					<td><span class="glyphicon glyphicon-ok" data-ng-if="regroupement.identified"></span></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 
-  <div class="panel-body">
-    <label>{{result.rapport.creneaux.success.length}} Creneaux importés</label>
-  </div>
+	<div class="panel-body">
+		<label>{{result.rapport.creneaux.success.length}} Creneaux importés</label>
+	</div>
 
-  <div class="panel-body">
-    <label>{{result.rapport.creneaux.error.length}} Creneaux non prises en compte</label>
-    <ul>
-      <li data-ng-repeat="creneau in result.rapport.creneaux.error track by $index">{{creneau}}</li>
-    </ul>
-  </div>
+	<div class="panel-body">
+		<label>{{result.rapport.creneaux.error.length}} Creneaux non prises en compte</label>
+		<ul>
+			<li data-ng-repeat="creneau in result.rapport.creneaux.error track by $index">{{creneau}}</li>
+		</ul>
+	</div>
 </div>

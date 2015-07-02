@@ -79,7 +79,7 @@ module ProNote
     sha256 = Digest::SHA256.hexdigest( objet.to_json )
     manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
 
-    if manually_linked_id.nil? || manually_linked_id.id_annuaire.nil?
+    if manually_linked_id.nil?
       FailedIdentification.create( date_creation: Time.now,
                                    sha256: sha256 )
       manually_linked_id = { id_annuaire: nil }
@@ -156,7 +156,7 @@ module ProNote
         sha256 = Digest::SHA256.hexdigest( objet.to_json )
 
         manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
-        if manually_linked_id.nil? || manually_linked_id.id_annuaire.nil?
+        if manually_linked_id.nil?
           FailedIdentification.create( date_creation: Time.now,
                                        sha256: sha256 ) if manually_linked_id.nil?
           rapport[:matieres][:error] << { sha256: sha256,
@@ -190,7 +190,7 @@ module ProNote
         sha256 = Digest::SHA256.hexdigest( objet.to_json )
 
         manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
-        if manually_linked_id.nil? || manually_linked_id.id_annuaire.nil?
+        if manually_linked_id.nil?
           FailedIdentification.create( date_creation: Time.now,
                                        sha256: sha256 ) if manually_linked_id.nil?
           rapport[:enseignants][:error] << { sha256: sha256,
@@ -224,7 +224,7 @@ module ProNote
         sha256 = Digest::SHA256.hexdigest( objet.to_json )
 
         manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
-        if manually_linked_id.nil? || manually_linked_id.id_annuaire.nil?
+        if manually_linked_id.nil?
           FailedIdentification.create( date_creation: Time.now,
                                        sha256: sha256 ) if manually_linked_id.nil?
           rapport[:regroupements][node.name.to_sym][:error] << { sha256: sha256,
@@ -251,7 +251,7 @@ module ProNote
             sha256 = Digest::SHA256.hexdigest( objet.to_json )
 
             manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
-            if manually_linked_id.nil? || manually_linked_id.id_annuaire.nil?
+            if manually_linked_id.nil?
               FailedIdentification.create( date_creation: Time.now,
                                            sha256: sha256 )
               rapport[:regroupements][subnode.name.to_sym][:error] << { sha256: sha256,
@@ -277,7 +277,7 @@ module ProNote
         sha256 = Digest::SHA256.hexdigest( objet.to_json )
 
         manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
-        if manually_linked_id.nil? || manually_linked_id.id_annuaire.nil?
+        if manually_linked_id.nil?
           FailedIdentification.create( date_creation: Time.now,
                                        sha256: sha256 ) if manually_linked_id.nil?
           rapport[:regroupements][node.name.to_sym][:error] << { sha256: sha256,
@@ -307,7 +307,7 @@ module ProNote
               sha256 = Digest::SHA256.hexdigest( objet.to_json )
 
               manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
-              if manually_linked_id.nil? || manually_linked_id.id_annuaire.nil? # rubocop:disable Metrics/BlockNesting
+              if manually_linked_id.nil? # rubocop:disable Metrics/BlockNesting
                 FailedIdentification.create( date_creation: Time.now,
                                              sha256: sha256 )
                 rapport[:regroupements][subnode.name.to_sym][:error] << { sha256: sha256,
@@ -331,7 +331,7 @@ module ProNote
             sha256 = Digest::SHA256.hexdigest( objet.to_json )
 
             manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
-            if manually_linked_id.nil? || manually_linked_id.id_annuaire.nil?
+            if manually_linked_id.nil?
               FailedIdentification.create( date_creation: Time.now,
                                            sha256: sha256 )
               rapport[:regroupements][subnode.name.to_sym][:error] << { sha256: sha256,
