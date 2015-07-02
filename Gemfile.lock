@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/laclasse-com/laclasse-common.git
-  revision: 11787d60b26b61ac80a685bc5813f30f05893fdb
+  revision: 885f987f09de77ec4d09dd03432fe3253f9e89f5
   specs:
     laclasse-common (0.2.5)
       logstash-logger
@@ -43,7 +43,7 @@ GEM
       unf (>= 0.0.5, < 1.0.0)
     equalizer (0.0.11)
     execjs (2.5.2)
-    ffi (1.9.9)
+    ffi (1.9.10)
     grape (0.12.0)
       activesupport
       builder
@@ -146,7 +146,7 @@ GEM
       multi_json (~> 1.0)
       rubyzip (~> 1.0)
       websocket (~> 1.0)
-    sequel (4.23.0)
+    sequel (4.24.0)
     show_me_the_cookies (2.6.0)
       capybara (~> 2.0)
     sinatra (1.4.6)
