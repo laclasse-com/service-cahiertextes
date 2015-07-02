@@ -7,7 +7,7 @@ module CahierDeTextesApp
         app.get "#{APP_PATH}/auth/:provider/callback" do
           init_session( request.env )
 
-          user_can_access_app?( ANNUAIRE[:app_id] )
+          # error!( '401 Unauthorized', 401 ) unless user_can_access_app?( ANNUAIRE[:app_id] )
 
           DataManagement::Provisioning.provision( user )
 
