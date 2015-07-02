@@ -7,8 +7,7 @@ module CahierDeTextesApp
         app.get "#{APP_PATH}/auth/:provider/callback" do
           init_session( request.env )
 
-          # TODO: can do better, might induce infinite redirect loop
-          logout! "#{env['rack.url_scheme']}://#{env['HTTP_HOST']}#{APP_PATH}/" unless user_can_access_app?( ANNUAIRE[:app_id] )
+          user_can_access_app?( ANNUAIRE[:app_id] )
 
           DataManagement::Provisioning.provision( user )
 
