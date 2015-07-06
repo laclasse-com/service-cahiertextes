@@ -75,20 +75,6 @@ module ProNote
     LOGGER.debug "Import #{key}, #{rapport[ key ][:error].length} erreurs."
   end
 
-  def identify( objet )
-    sha256 = Digest::SHA256.hexdigest( objet.to_json )
-    manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
-
-    if manually_linked_id.nil?
-      FailedIdentification.create( date_creation: Time.now,
-                                   sha256: sha256 )
-      manually_linked_id = { id_annuaire: nil }
-    end
-
-    { sha256: sha256,
-      id: manually_linked_id.id_annuaire }
-  end
-
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/PerceivedComplexity
   # rubocop:disable Metrics/CyclomaticComplexity
