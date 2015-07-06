@@ -42,6 +42,8 @@ GEM
     domain_name (0.5.24)
       unf (>= 0.0.5, < 1.0.0)
     equalizer (0.0.11)
+    equivalent-xml (0.6.0)
+      nokogiri (>= 1.4.3)
     execjs (2.5.2)
     ffi (1.9.10)
     grape (0.12.0)
@@ -179,6 +181,7 @@ PLATFORMS
 
 DEPENDENCIES
   capybara
+  equivalent-xml
   grape
   grape-swagger
   laclasse-common!

@@ -30,4 +30,5 @@ group :development do
   gem 'show_me_the_cookies'
   gem 'rubocop'
   gem 'rubocop-rspec'
+  gem 'equivalent-xml'
 end

@@ -7,6 +7,8 @@ require 'rack/test'
 require 'sequel'
 require 'tsort'
 require 'capybara/rspec'
+require 'rspec/matchers' # req by equivalent-xml custom matcher `be_equivalent_to`
+require 'equivalent-xml'
 
 require_relative '../config/constants'
 require_relative '../config/options'
