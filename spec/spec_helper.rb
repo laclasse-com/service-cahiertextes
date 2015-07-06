@@ -18,6 +18,7 @@ require_relative '../web'
 require_relative './helper_lib/table_cleaner'
 require_relative './helper_lib/test_data'
 require_relative './helper_mocks/helpers/authentication'
+require_relative './helper_mocks/lib/annuaire_wrapper'
 require_relative './helper_mocks/mocked_data'
 
 require 'laclasse/laclasse_logger'
