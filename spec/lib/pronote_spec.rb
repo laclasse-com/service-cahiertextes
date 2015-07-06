@@ -36,5 +36,6 @@ describe ProNote do
     expect( rapport[:matieres][:error].count ).to eq 25
     expect( rapport[:enseignants][:error].count ).to eq 31
     expect( CreneauEmploiDuTemps.count ).to eq 0
+    expect( FailedIdentification.count ).to eq 120
   end
 end
