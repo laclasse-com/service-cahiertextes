@@ -143,7 +143,7 @@ module ProNote
         manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
         if manually_linked_id.nil?
           FailedIdentification.create( date_creation: Time.now,
-                                       sha256: sha256 ) if manually_linked_id.nil?
+                                       sha256: sha256 )
         else
           matieres[ node['Ident'] ] = manually_linked_id.id_annuaire
         end
@@ -178,7 +178,7 @@ module ProNote
         manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
         if manually_linked_id.nil?
           FailedIdentification.create( date_creation: Time.now,
-                                       sha256: sha256 ) if manually_linked_id.nil?
+                                       sha256: sha256 )
         else
           enseignants[ node['Ident'] ] = manually_linked_id.id_annuaire
         end
@@ -215,7 +215,7 @@ module ProNote
         manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
         if manually_linked_id.nil?
           FailedIdentification.create( date_creation: Time.now,
-                                       sha256: sha256 ) if manually_linked_id.nil?
+                                       sha256: sha256 )
         else
           regroupements[ node.name ][ node['Ident'] ] = manually_linked_id.id_annuaire
         end
@@ -270,7 +270,7 @@ module ProNote
         manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
         if manually_linked_id.nil?
           FailedIdentification.create( date_creation: Time.now,
-                                       sha256: sha256 ) if manually_linked_id.nil?
+                                       sha256: sha256 )
         else
           regroupements[ node.name ][ node['Ident'] ] = manually_linked_id.id_annuaire
         end
