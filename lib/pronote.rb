@@ -92,7 +92,6 @@ module ProNote
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/PerceivedComplexity
   # rubocop:disable Metrics/CyclomaticComplexity
-  # rubocop:disable Metrics/AbcSize
   def load_xml( xml, _xsd = nil )
     rapport = {}
     edt_clair = Nokogiri::XML( decrypt_xml( xml ) ) do |config|
@@ -427,7 +426,6 @@ module ProNote
 
     rapport
   end
-  # rubocop:ensable Metrics/AbcSize
   # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/PerceivedComplexity
   # rubocop:enable Metrics/MethodLength
