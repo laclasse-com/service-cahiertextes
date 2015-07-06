@@ -75,63 +75,62 @@ module ProNote
     LOGGER.debug "Import #{key}, #{rapport[ key ][:error].length} erreurs."
   end
 
-  # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Metrics/PerceivedComplexity
-  # rubocop:disable Metrics/CyclomaticComplexity
-  def load_xml( xml, _xsd = nil )
-    rapport = {}
-    edt_clair = Nokogiri::XML( decrypt_xml( xml ) ) do |config|
-      config.noblanks
-    end
+  def load_etablissement( xml )
+    etablissement = DataManagement::Accessors.create_or_get( Etablissement, UAI: xml.child['UAI'] )
 
-    etablissement = DataManagement::Accessors.create_or_get( Etablissement, UAI: edt_clair.child['UAI'] )
-
-    annee_scolaire = edt_clair.search('AnneeScolaire').first.attributes
+    annee_scolaire = xml.search('AnneeScolaire').first.attributes
     etablissement.debut_annee_scolaire = annee_scolaire['DateDebut'].value
     etablissement.fin_annee_scolaire = annee_scolaire['DateFin'].value
     etablissement.date_premier_jour_premiere_semaine = annee_scolaire['DatePremierJourSemaine1'].value
     etablissement.save
 
-    offset_semainiers = etablissement.date_premier_jour_premiere_semaine.cweek
+    etablissement
+  end
 
-    rapport[:plages_horaires] = { success: [], error: [] }
-    edt_clair.search('PlacesParJour').children.reject { |child| child.name == 'text' }.each do |node|
+  def load_plages_horaires( xml )
+    rapport = { success: [], error: [] }
+    xml.search('PlacesParJour').children.reject { |child| child.name == 'text' }.each do |node|
       plage = DataManagement::Accessors.create_or_get( PlageHoraire, label: node['Numero'],
                                                                      debut: node['LibelleHeureDebut'],
                                                                      fin: node['LibelleHeureFin'] )
 
       if plage.nil?
-        rapport[:plages_horaires][:error] << { label: node['Numero'],
-                                               debut: node['LibelleHeureDebut'],
-                                               fin: node['LibelleHeureFin'] }
+        rapport[:error] << { label: node['Numero'],
+                             debut: node['LibelleHeureDebut'],
+                             fin: node['LibelleHeureFin'] }
       else
-        rapport[:plages_horaires][:success] << plage
+        rapport[:success] << plage
       end
     end
-    trace_rapport( rapport, :plages_horaires )
 
-    rapport[:salles] =  { success: [], error: [] }
-    edt_clair.search('Salles').children.reject { |child| child.name == 'text' }.each do |node|
+    rapport
+  end
+
+  def load_salles( xml, etablissement )
+    rapport = { success: [], error: [] }
+
+    xml.search('Salles').children.reject { |child| child.name == 'text' }.each do |node|
       salle = DataManagement::Accessors.create_or_get( Salle, etablissement_id: etablissement.id,
                                                               identifiant: node['Ident'],
                                                               nom: node['Nom'] )
 
       if salle.nil?
-        rapport[:salles][:error] << { etablissement_id: etablissement.id,
-                                      identifiant: node['Ident'],
-                                      nom: node['Nom'] }
+        rapport[:error] << { etablissement_id: etablissement.id,
+                             identifiant: node['Ident'],
+                             nom: node['Nom'] }
       else
-        rapport[:salles][:success] << salle
+        rapport[:success] << salle
       end
     end
-    trace_rapport( rapport, :salles )
 
-    ####
-    # Les matières sont dans l'annuaire
-    ####
-    rapport[:matieres] = { success: [], error: [] }
+    rapport
+  end
+
+  def load_matieres( xml )
+    rapport = { success: [], error: [] }
     matieres = {}
-    edt_clair.search('Matieres')
+
+    xml.search('Matieres')
       .children
       .reject { |child| child.name == 'text' }
       .each do |node|
@@ -149,21 +148,23 @@ module ProNote
         end
       end
       if matieres[ node['Ident'] ].nil?
-        rapport[:matieres][:error] << { sha256: sha256,
-                                        objet: objet }
+        rapport[:error] << { sha256: sha256,
+                             objet: objet }
       else
-        rapport[:matieres][:success] << matieres[ node['Ident'] ]
+        rapport[:success] << matieres[ node['Ident'] ]
       end
     end
-    trace_rapport( rapport, :matieres )
 
-    ####
-    # Les enseignants sont dans l'annuaire
-    ####
-    rapport[:enseignants] = { success: [], error: [] }
+    [ rapport, matieres ]
+  end
+
+  # rubocop:disable Metrics/PerceivedComplexity
+  # rubocop:disable Metrics/CyclomaticComplexity
+  def load_enseignants( xml, etablissement )
+    rapport = { success: [], error: [] }
     enseignants = {}
 
-    edt_clair.search('Professeur')
+    xml.search('Professeur')
       .each do |node|
       next if node['Nom'].nil? || node['Nom'].empty? || node['Prenom'].nil? || node['Prenom'].empty?
 
@@ -185,23 +186,27 @@ module ProNote
       end
 
       if enseignants[ node['Ident'] ].nil?
-        rapport[:enseignants][:error] << { sha256: sha256,
-                                           objet: objet }
+        rapport[:error] << { sha256: sha256,
+                             objet: objet }
       else
-        rapport[:enseignants][:success] << enseignants[ node['Ident'] ]
+        rapport[:success] << enseignants[ node['Ident'] ]
       end
     end
-    trace_rapport( rapport, :enseignants )
 
-    ####
-    # Les classes, parties de classe et groupes sont dans l'annuaire
-    ####
-    rapport[:regroupements] = { Classe: { success: [], error: [] },
-                                Groupe: { success: [], error: [] },
-                                PartieDeClasse: { success: [], error: [] } }
+    [ rapport, enseignants ]
+  end
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/PerceivedComplexity
+
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/PerceivedComplexity
+  def load_regroupements( xml, etablissement )
+    rapport = { Classe: { success: [], error: [] },
+                Groupe: { success: [], error: [] },
+                PartieDeClasse: { success: [], error: [] } }
     regroupements = { 'Classe' => {}, 'PartieDeClasse' => {}, 'Groupe' => {} }
 
-    edt_clair.search('Classes')
+    xml.search('Classes')
       .children
       .reject { |child| child.name == 'text' }
       .each do |node|
@@ -222,10 +227,10 @@ module ProNote
       end
 
       if regroupements[ node.name ][ node['Ident'] ].nil?
-        rapport[:regroupements][node.name.to_sym][:error] << { sha256: sha256,
-                                                               objet: objet }
+        rapport[node.name.to_sym][:error] << { sha256: sha256,
+                                               objet: objet }
       else
-        rapport[:regroupements][node.name.to_sym][:success] << regroupements[ node.name ][ node['Ident'] ]
+        rapport[node.name.to_sym][:success] << regroupements[ node.name ][ node['Ident'] ]
       end
 
       next if regroupements[ 'Classe' ][ node['Ident'] ].nil?
@@ -251,15 +256,15 @@ module ProNote
         end
 
         if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
-          rapport[:regroupements][subnode.name.to_sym][:error] << { sha256: sha256,
-                                                                    objet: objet }
+          rapport[subnode.name.to_sym][:error] << { sha256: sha256,
+                                                    objet: objet }
         else
-          rapport[:regroupements][subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
+          rapport[subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
         end
       end
     end
 
-    edt_clair.search('Groupes').children.reject { |child| child.name == 'text' }.each do |node|
+    xml.search('Groupes').children.reject { |child| child.name == 'text' }.each do |node|
       reponse_annuaire = AnnuaireWrapper::Etablissement::Regroupement.search( etablissement.UAI, node['Nom'] )
       code_annuaire = reponse_annuaire.nil? || !( reponse_annuaire.is_a? Array ) ? nil : reponse_annuaire.first['id']
       regroupements[ node.name ][ node['Ident'] ] = code_annuaire
@@ -277,10 +282,10 @@ module ProNote
       end
 
       if regroupements[ node.name ][ node['Ident'] ].nil?
-        rapport[:regroupements][node.name.to_sym][:error] << { sha256: sha256,
-                                                               objet: objet }
+        rapport[node.name.to_sym][:error] << { sha256: sha256,
+                                               objet: objet }
       else
-        rapport[:regroupements][node.name.to_sym][:success] << regroupements[ node.name ][ node['Ident'] ]
+        rapport[node.name.to_sym][:success] << regroupements[ node.name ][ node['Ident'] ]
       end
 
       next if regroupements[ node.name ][ node['Ident'] ].nil?
@@ -309,10 +314,10 @@ module ProNote
           end
 
           if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
-            rapport[:regroupements][subnode.name.to_sym][:error] << { sha256: sha256,
-                                                                      objet: objet }
+            rapport[subnode.name.to_sym][:error] << { sha256: sha256,
+                                                      objet: objet }
           else
-            rapport[:regroupements][subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
+            rapport[subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
           end
         when 'Classe'
           next if subnode.name == 'text'
@@ -334,20 +339,31 @@ module ProNote
           end
 
           if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
-            rapport[:regroupements][subnode.name.to_sym][:error] << { sha256: sha256,
-                                                                      objet: objet }
+            rapport[subnode.name.to_sym][:error] << { sha256: sha256,
+                                                      objet: objet }
           else
-            rapport[:regroupements][subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
+            rapport[subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
           end
         end
       end
     end
 
-    rapport[:creneaux] = { matieres: { success: [], error: [] },
-                           enseignants: { success: [], error: [] },
-                           regroupements: { success: [], error: [] },
-                           salles: { success: [], error: [] } }
-    edt_clair.search('Cours/Cours')
+    [ rapport, regroupements ]
+  end
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/PerceivedComplexity
+
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/PerceivedComplexity
+  def load_creneaux( xml, etablissement, matieres, enseignants, regroupements )
+    rapport = { matieres: { success: [], error: [] },
+                enseignants: { success: [], error: [] },
+                regroupements: { success: [], error: [] },
+                salles: { success: [], error: [] } }
+
+    offset_semainiers = etablissement.date_premier_jour_premiere_semaine.cweek
+
+    xml.search('Cours/Cours')
       .reject { |child| child.name == 'text' }
       .each do |node|
       debut = PlageHoraire[ label: node['NumeroPlaceDebut'] ][:id]
@@ -357,9 +373,9 @@ module ProNote
       node.children.reject { |child| child.name == 'text' }.each do |subnode|  # FIXME: peut sûrement mieux faire
         matiere_id = matieres[ subnode['Ident'] ] if subnode.name == 'Matiere'
         if matiere_id.nil?
-          rapport[:creneaux][:matieres][:error] << subnode['Ident']
+          rapport[:matieres][:error] << subnode['Ident']
         else
-          rapport[:creneaux][:matieres][:success] << matiere_id
+          rapport[:matieres][:success] << matiere_id
         end
       end
       next if matiere_id.nil?
@@ -374,9 +390,9 @@ module ProNote
         case subnode.name
         when 'Professeur'
           if enseignants[ subnode['Ident'] ].nil?
-            rapport[:creneaux][:enseignants][:error] << subnode['Ident']
+            rapport[:enseignants][:error] << subnode['Ident']
           else
-            rapport[:creneaux][:enseignants][:success] << enseignants[ subnode['Ident'] ]
+            rapport[:enseignants][:success] << enseignants[ subnode['Ident'] ]
             if creneau.enseignants.count { |ce| ce[:enseignant_id] == enseignants[ subnode['Ident'] ] } == 0
               CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
               creneau.add_enseignant(enseignant_id: enseignants[ subnode['Ident'] ],
@@ -386,9 +402,9 @@ module ProNote
           end
         when 'Classe', 'PartieDeClasse', 'Groupe' # on ne distingue pas les 3 types de regroupements
           if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
-            rapport[:creneaux][:regroupements][:error] << "#{subnode['Ident']} (#{subnode.name})"
+            rapport[:regroupements][:error] << "#{subnode['Ident']} (#{subnode.name})"
           else
-            rapport[:creneaux][:regroupements][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
+            rapport[:regroupements][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
             if creneau.regroupements.count do |cr|
                  cr[:regroupement_id] == "#{regroupements[ subnode.name ][ subnode['Ident'] ]}"
                end == 0
@@ -411,6 +427,12 @@ module ProNote
       end
     end
 
+    rapport
+  end
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/PerceivedComplexity
+
+  def provision_cahiers_de_textes
     CreneauEmploiDuTempsRegroupement
       .select(:regroupement_id)
       .map(&:regroupement_id)
@@ -419,11 +441,50 @@ module ProNote
       .each do |regroupement_id|
       DataManagement::Accessors.create_or_get( CahierDeTextes, regroupement_id: regroupement_id )
     end
+  end
+
+  def load_xml( xml, _xsd = nil )
+    rapport = {}
+    edt_clair = Nokogiri::XML( decrypt_xml( xml ) ) do |config|
+      config.noblanks
+    end
+
+    etablissement = load_etablissement( edt_clair )
+
+    rapport[:plages_horaires] = load_plages_horaires( edt_clair )
+    trace_rapport( rapport, :plages_horaires )
+
+    rapport[:salles] = load_salles( edt_clair, etablissement )
+    trace_rapport( rapport, :salles )
+
+    ####
+    # Les matières sont dans l'annuaire
+    ####
+    rapport[:matieres], matieres = load_matieres( edt_clair )
+    trace_rapport( rapport, :matieres )
+
+    ####
+    # Les enseignants sont dans l'annuaire
+    ####
+    rapport[:enseignants], enseignants = load_enseignants( edt_clair, etablissement )
+    trace_rapport( rapport, :enseignants )
+
+    ####
+    # Les classes, parties de classe et groupes sont dans l'annuaire
+    ####
+    rapport[:regroupements], regroupements = load_regroupements( edt_clair, etablissement )
+    rapport[:regroupements].keys.each do |key|
+      trace_rapport( rapport[:regroupements], key )
+    end
+
+    rapport[:creneaux] = load_creneaux( edt_clair, etablissement, matieres, enseignants, regroupements )
+    rapport[:creneaux].keys.each do |key|
+      trace_rapport( rapport[:creneaux], key )
+    end
+
+    provision_cahiers_de_textes
 
     rapport
   end
-  # rubocop:enable Metrics/CyclomaticComplexity
-  # rubocop:enable Metrics/PerceivedComplexity
-  # rubocop:enable Metrics/MethodLength
 end
 # rubocop:enable Metrics/ModuleLength
