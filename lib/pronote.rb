@@ -158,13 +158,14 @@ module ProNote
         if manually_linked_id.nil?
           FailedIdentification.create( date_creation: Time.now,
                                        sha256: sha256 ) if manually_linked_id.nil?
-          rapport[:matieres][:error] << { sha256: sha256,
-                                          objet: objet }
         else
           matieres[ node['Ident'] ] = manually_linked_id.id_annuaire
         end
       end
-      unless matieres[ node['Ident'] ].nil?
+      if matieres[ node['Ident'] ].nil?
+        rapport[:matieres][:error] << { sha256: sha256,
+                                        objet: objet }
+      else
         rapport[:matieres][:success] << matieres[ node['Ident'] ]
       end
     end
@@ -192,11 +193,14 @@ module ProNote
         if manually_linked_id.nil?
           FailedIdentification.create( date_creation: Time.now,
                                        sha256: sha256 ) if manually_linked_id.nil?
-          rapport[:enseignants][:error] << { sha256: sha256,
-                                             objet: objet }
         else
           enseignants[ node['Ident'] ] = manually_linked_id.id_annuaire
         end
+      end
+
+      if enseignants[ node['Ident'] ].nil?
+        rapport[:enseignants][:error] << { sha256: sha256,
+                                           objet: objet }
       else
         rapport[:enseignants][:success] << enseignants[ node['Ident'] ]
       end
@@ -226,14 +230,15 @@ module ProNote
         if manually_linked_id.nil?
           FailedIdentification.create( date_creation: Time.now,
                                        sha256: sha256 ) if manually_linked_id.nil?
-          rapport[:regroupements][node.name.to_sym][:error] << { sha256: sha256,
-                                                                 objet: objet }
         else
           regroupements[ node.name ][ node['Ident'] ] = manually_linked_id.id_annuaire
         end
       end
 
-      unless regroupements[ node.name ][ node['Ident'] ].nil?
+      if regroupements[ node.name ][ node['Ident'] ].nil?
+        rapport[:regroupements][node.name.to_sym][:error] << { sha256: sha256,
+                                                               objet: objet }
+      else
         rapport[:regroupements][node.name.to_sym][:success] << regroupements[ node.name ][ node['Ident'] ]
       end
 
@@ -253,15 +258,16 @@ module ProNote
             if manually_linked_id.nil?
               FailedIdentification.create( date_creation: Time.now,
                                            sha256: sha256 )
-              rapport[:regroupements][subnode.name.to_sym][:error] << { sha256: sha256,
-                                                                        objet: objet }
             else
               regroupements[ subnode.name ][ subnode['Ident'] ] = manually_linked_id.id_annuaire
             end
           end
         end
 
-        unless regroupements[ subnode.name ][ subnode['Ident'] ].nil?
+        if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
+          rapport[:regroupements][subnode.name.to_sym][:error] << { sha256: sha256,
+                                                                    objet: objet }
+        else
           rapport[:regroupements][subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
         end
       end
@@ -279,14 +285,15 @@ module ProNote
         if manually_linked_id.nil?
           FailedIdentification.create( date_creation: Time.now,
                                        sha256: sha256 ) if manually_linked_id.nil?
-          rapport[:regroupements][node.name.to_sym][:error] << { sha256: sha256,
-                                                                 objet: objet }
         else
           regroupements[ node.name ][ node['Ident'] ] = manually_linked_id.id_annuaire
         end
       end
 
-      unless regroupements[ node.name ][ node['Ident'] ].nil?
+      if regroupements[ node.name ][ node['Ident'] ].nil?
+        rapport[:regroupements][node.name.to_sym][:error] << { sha256: sha256,
+                                                               objet: objet }
+      else
         rapport[:regroupements][node.name.to_sym][:success] << regroupements[ node.name ][ node['Ident'] ]
       end
 
@@ -309,14 +316,16 @@ module ProNote
               if manually_linked_id.nil? # rubocop:disable Metrics/BlockNesting
                 FailedIdentification.create( date_creation: Time.now,
                                              sha256: sha256 )
-                rapport[:regroupements][subnode.name.to_sym][:error] << { sha256: sha256,
-                                                                          objet: objet }
               else
                 regroupements[ subnode.name ][ subnode['Ident'] ] = manually_linked_id.id_annuaire
               end
             end
           end
-          unless regroupements[ subnode.name ][ subnode['Ident'] ].nil?
+
+          if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
+            rapport[:regroupements][subnode.name.to_sym][:error] << { sha256: sha256,
+                                                                      objet: objet }
+          else
             rapport[:regroupements][subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
           end
         when 'Classe'
@@ -333,14 +342,15 @@ module ProNote
             if manually_linked_id.nil?
               FailedIdentification.create( date_creation: Time.now,
                                            sha256: sha256 )
-              rapport[:regroupements][subnode.name.to_sym][:error] << { sha256: sha256,
-                                                                        objet: objet }
             else
               regroupements[ subnode.name ][ subnode['Ident'] ] = manually_linked_id.id_annuaire
             end
           end
 
-          unless regroupements[ subnode.name ][ subnode['Ident'] ].nil?
+          if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
+            rapport[:regroupements][subnode.name.to_sym][:error] << { sha256: sha256,
+                                                                      objet: objet }
+          else
             rapport[:regroupements][subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
           end
         end
