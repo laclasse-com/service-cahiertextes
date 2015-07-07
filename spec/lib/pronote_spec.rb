@@ -14,7 +14,9 @@ describe ProNote do
   end
 
   it 'decrypts the XML file' do
-    unless ENV['TRAVIS']
+    if ENV['TRAVIS']
+      LOGGER.debug 'Travis doesn\'t have the private key to test this'
+    else
       xml_decrypted = Nokogiri::XML( ProNote.decrypt_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ) ) )
 
       xml_clear = Nokogiri::XML( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A_Enclair.xml' ) )
@@ -24,7 +26,9 @@ describe ProNote do
   end
 
   it 'decrypts and load the whole file, one pass, annuaire finds nothing' do
-    unless ENV['TRAVIS']
+    if ENV['TRAVIS']
+      LOGGER.debug 'Travis doesn\'t have the private key to test this'
+    else
       module AnnuaireWrapper
         module Matiere
           module_function
@@ -66,7 +70,9 @@ describe ProNote do
   end
 
   it 'decrypts and load the whole file, one pass, annuaire finds everything' do
-    unless ENV['TRAVIS']
+    if ENV['TRAVIS']
+      LOGGER.debug 'Travis doesn\'t have the private key to test this'
+    else
       module AnnuaireWrapper
         module Matiere
           module_function
