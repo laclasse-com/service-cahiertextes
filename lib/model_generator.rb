@@ -82,7 +82,7 @@ models_to_create.each do |m|
   # HEADER : Table definition
   line = '# ' << '-' * 30 << '+' << '-' * 21 << '+' << '-' * 10 << '+' << '-' * 10 << '+' << '-' * 19 << '+' << '-' * 20
   model.puts(line)
-  model.puts('# COLUMN_NAME' << ' ' * 19 << '| DATA_TYPE' << ' ' * 11 << '| NULL?' << ' ' * 4 << '| KEY' << ' ' * 5 << ' | DEFAULT' << ' ' * 10 << ' | EXTRA') # rubocop:disable Metrics/LineLength
+  model.puts('# COLUMN_NAME' << ' ' * 19 << '| DATA_TYPE' << ' ' * 11 << '| NULL?' << ' ' * 4 << '| KEY' << ' ' * 5 << ' | DEFAULT' << ' ' * 10 << ' | EXTRA')
   model.puts(line)
   DB.schema(m).each do |c|
     col = c[1]
@@ -104,7 +104,7 @@ models_to_create.each do |m|
     tab5 = 18 - default.size
 
     extra = col[:auto_increment] ? 'auto_increment' : ''
-    model.puts("# #{c[0]}#{' ' * tab}| #{data_type}#{' ' * tab2}| #{allow_null}#{' ' * tab3}| #{column_key}#{' ' * tab4}| #{default}#{' ' * tab5}| #{extra}") # rubocop:disable Metrics/LineLength
+    model.puts("# #{c[0]}#{' ' * tab}| #{data_type}#{' ' * tab2}| #{allow_null}#{' ' * tab3}| #{column_key}#{' ' * tab4}| #{default}#{' ' * tab5}| #{extra}")
   end
   model.puts line
   model.puts '#'

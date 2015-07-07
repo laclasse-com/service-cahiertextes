@@ -185,7 +185,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
 
     update_semaines_de_presence_enseignant( params[:semaines_de_presence_enseignant] ) if params[:semaines_de_presence_enseignant]
 
-    update_regroupement( params[:regroupement_id], params[:previous_regroupement_id], params[:semaines_de_presence_regroupement] ) unless params[:regroupement_id].nil? || params[:regroupement_id] == 'undefined' # rubocop:disable Metrics/LineLength
+    update_regroupement( params[:regroupement_id], params[:previous_regroupement_id], params[:semaines_de_presence_regroupement] ) unless params[:regroupement_id].nil? || params[:regroupement_id] == 'undefined'
 
     update_salle( params[:salle], params[:semaines_de_presence_salle] ) if params[:salle_id]
   end
