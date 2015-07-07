@@ -13,21 +13,21 @@ describe ProNote do
   end
 
   it 'extract the UAI from the XML file' do
-    uai = ProNote.extract_uai_from_xml( File.read( './spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ) )
+    uai = ProNote.extract_uai_from_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ) )
 
     expect( uai ).to eq '0134567A'
   end
 
   it 'decrypts the XML file' do
-    xml_decrypted = Nokogiri::XML( ProNote.decrypt_xml( File.read( './spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ) ) )
+    xml_decrypted = Nokogiri::XML( ProNote.decrypt_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ) ) )
 
-    xml_clear = Nokogiri::XML( File.read( './spec/fixtures/Edt_To_LaclasseCom_0134567A_Enclair.xml' ) )
+    xml_clear = Nokogiri::XML( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A_Enclair.xml' ) )
 
     expect( xml_clear ).to be_equivalent_to( xml_decrypted )
   end
 
   it 'decrypts and load the whole file, first pass' do
-    rapport = ProNote.load_xml( File.read( './spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ) )
+    rapport = ProNote.load_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ) )
 
     expect( rapport[:plages_horaires][:success].count ).to eq 20
     expect( PlageHoraire.count ).to eq 20
