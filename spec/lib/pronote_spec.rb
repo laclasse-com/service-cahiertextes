@@ -93,8 +93,6 @@ describe ProNote do
 
     rapport = ProNote.load_xml( PRONOTE_ENCRYPTED_XML )
 
-    File.open( '/tmp/rapport.import.json', 'w' ) { |f| f.write rapport }
-
     expect( rapport[:plages_horaires][:success].count ).to eq 20
     expect( PlageHoraire.count ).to eq 20
     expect( rapport[:salles][:success].count ).to eq 24
