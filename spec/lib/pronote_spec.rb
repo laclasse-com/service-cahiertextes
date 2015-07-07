@@ -2,23 +2,21 @@
 
 require 'spec_helper'
 
-require_relative '../helper_mocks/pronote_xml'
-
 describe ProNote do
   before :each do
     TableCleaner.new( DB, [] ).clean
   end
 
   it 'extract the UAI from the XML file' do
-    uai = ProNote.extract_uai_from_xml( PRONOTE_ENCRYPTED_XML )
+    uai = ProNote.extract_uai_from_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ) )
 
     expect( uai ).to eq '0134567A'
   end
 
   it 'decrypts the XML file' do
-    xml_decrypted = Nokogiri::XML( ProNote.decrypt_xml( PRONOTE_ENCRYPTED_XML ) )
+    xml_decrypted = Nokogiri::XML( ProNote.decrypt_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ) ) )
 
-    xml_clear = Nokogiri::XML( PRONOTE_CLEAR_XML )
+    xml_clear = Nokogiri::XML( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A_Enclair.xml' ) )
 
     expect( xml_clear ).to be_equivalent_to( xml_decrypted )
   end
@@ -51,7 +49,7 @@ describe ProNote do
       end
     end
 
-    rapport = ProNote.load_xml( PRONOTE_ENCRYPTED_XML )
+    rapport = ProNote.load_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ) )
 
     expect( rapport[:plages_horaires][:success].count ).to eq 20
     expect( PlageHoraire.count ).to eq 20
@@ -91,7 +89,7 @@ describe ProNote do
       end
     end
 
-    rapport = ProNote.load_xml( PRONOTE_ENCRYPTED_XML )
+    rapport = ProNote.load_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ) )
 
     expect( rapport[:plages_horaires][:success].count ).to eq 20
     expect( PlageHoraire.count ).to eq 20
