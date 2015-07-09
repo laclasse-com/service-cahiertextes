@@ -89,7 +89,8 @@ module ProNote
 
   def load_plages_horaires( xml )
     rapport = { success: [], error: [] }
-    xml.search('PlacesParJour').children.reject { |child| child.name == 'text' }.each do |node|
+    xml.search('PlacesParJour').children.each do |node|
+      next if node.name == 'text'
       plage = DataManagement::Accessors.create_or_get( PlageHoraire, label: node['Numero'],
                                                                      debut: node['LibelleHeureDebut'],
                                                                      fin: node['LibelleHeureFin'] )
@@ -132,8 +133,9 @@ module ProNote
 
     xml.search('Matieres')
       .children
-      .reject { |child| child.name == 'text' }
       .each do |node|
+      next if node.name == 'text'
+
       matieres[ node['Ident'] ] = AnnuaireWrapper::Matiere.search( node['Libelle'] )['id']
       if matieres[ node['Ident'] ].nil?
         objet = { Libelle: node['Libelle'] }
@@ -146,13 +148,11 @@ module ProNote
         else
           matieres[ node['Ident'] ] = manually_linked_id.id_annuaire
         end
+
+        rapport[:error] << { sha256: sha256, objet: objet } if matieres[ node['Ident'] ].nil?
       end
-      if matieres[ node['Ident'] ].nil?
-        rapport[:error] << { sha256: sha256,
-                             objet: objet }
-      else
-        rapport[:success] << matieres[ node['Ident'] ]
-      end
+
+      rapport[:success] << matieres[ node['Ident'] ] unless matieres[ node['Ident'] ].nil?
     end
 
     [ rapport, matieres ]
@@ -183,14 +183,10 @@ module ProNote
         else
           enseignants[ node['Ident'] ] = manually_linked_id.id_annuaire
         end
+        rapport[:error] << { sha256: sha256, objet: objet } if enseignants[ node['Ident'] ].nil?
       end
 
-      if enseignants[ node['Ident'] ].nil?
-        rapport[:error] << { sha256: sha256,
-                             objet: objet }
-      else
-        rapport[:success] << enseignants[ node['Ident'] ]
-      end
+      rapport[:success] << enseignants[ node['Ident'] ] unless enseignants[ node['Ident'] ].nil?
     end
 
     [ rapport, enseignants ]
@@ -208,8 +204,9 @@ module ProNote
 
     xml.search('Classes')
       .children
-      .reject { |child| child.name == 'text' }
       .each do |node|
+      next if node.name == 'text'
+
       reponse_annuaire = AnnuaireWrapper::Etablissement::Regroupement.search( etablissement.UAI, node['Nom'] )
       code_annuaire = reponse_annuaire.nil? || !( reponse_annuaire.is_a? Array ) ? nil : reponse_annuaire.first['id']
       regroupements[ node.name ][ node['Ident'] ] = code_annuaire
@@ -224,17 +221,17 @@ module ProNote
         else
           regroupements[ node.name ][ node['Ident'] ] = manually_linked_id.id_annuaire
         end
+
+        rapport[node.name.to_sym][:error] << { sha256: sha256, objet: objet } if regroupements[ node.name ][ node['Ident'] ].nil?
       end
 
-      if regroupements[ node.name ][ node['Ident'] ].nil?
-        rapport[node.name.to_sym][:error] << { sha256: sha256,
-                                               objet: objet }
-      else
-        rapport[node.name.to_sym][:success] << regroupements[ node.name ][ node['Ident'] ]
-      end
+      rapport[node.name.to_sym][:success] << regroupements[ node.name ][ node['Ident'] ] unless regroupements[ node.name ][ node['Ident'] ].nil?
 
       next if regroupements[ 'Classe' ][ node['Ident'] ].nil?
-      node.children.reject { |child| child.name == 'text' }.each do |subnode|
+
+      node.children.each do |subnode|
+        next if subnode.name == 'text'
+
         if subnode['Nom'].nil?
           regroupements[ 'PartieDeClasse' ][ subnode['Ident'] ] = regroupements[ 'Classe' ][ node['Ident'] ]
         else
@@ -244,7 +241,6 @@ module ProNote
           if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
             objet = { UAI: etablissement.UAI, Nom: subnode['Nom'] }
             sha256 = Digest::SHA256.hexdigest( objet.to_json )
-
             manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
             if manually_linked_id.nil?
               FailedIdentification.create( date_creation: Time.now,
@@ -252,19 +248,18 @@ module ProNote
             else
               regroupements[ subnode.name ][ subnode['Ident'] ] = manually_linked_id.id_annuaire
             end
+
+            rapport[node.name.to_sym][:error] << { sha256: sha256, objet: objet } if regroupements[ node.name ][ node['Ident'] ].nil?
           end
         end
 
-        if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
-          rapport[subnode.name.to_sym][:error] << { sha256: sha256,
-                                                    objet: objet }
-        else
-          rapport[subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
-        end
+        rapport[subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ] unless regroupements[ subnode.name ][ subnode['Ident'] ].nil?
       end
     end
 
-    xml.search('Groupes').children.reject { |child| child.name == 'text' }.each do |node|
+    xml.search('Groupes').children.each do |node|
+      next if node.name == 'text'
+
       reponse_annuaire = AnnuaireWrapper::Etablissement::Regroupement.search( etablissement.UAI, node['Nom'] )
       code_annuaire = reponse_annuaire.nil? || !( reponse_annuaire.is_a? Array ) ? nil : reponse_annuaire.first['id']
       regroupements[ node.name ][ node['Ident'] ] = code_annuaire
@@ -279,14 +274,10 @@ module ProNote
         else
           regroupements[ node.name ][ node['Ident'] ] = manually_linked_id.id_annuaire
         end
-      end
 
-      if regroupements[ node.name ][ node['Ident'] ].nil?
-        rapport[node.name.to_sym][:error] << { sha256: sha256,
-                                               objet: objet }
-      else
-        rapport[node.name.to_sym][:success] << regroupements[ node.name ][ node['Ident'] ]
+        rapport[node.name.to_sym][:error] << { sha256: sha256, objet: objet } if regroupements[ node.name ][ node['Ident'] ].nil?
       end
+      rapport[node.name.to_sym][:success] << regroupements[ node.name ][ node['Ident'] ] unless regroupements[ node.name ][ node['Ident'] ].nil?
 
       next if regroupements[ node.name ][ node['Ident'] ].nil?
 
@@ -311,14 +302,11 @@ module ProNote
                 regroupements[ subnode.name ][ subnode['Ident'] ] = manually_linked_id.id_annuaire
               end
             end
+
+            rapport[subnode.name.to_sym][:error] << { sha256: sha256, objet: objet } if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
           end
 
-          if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
-            rapport[subnode.name.to_sym][:error] << { sha256: sha256,
-                                                      objet: objet }
-          else
-            rapport[subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
-          end
+          rapport[subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ] unless regroupements[ subnode.name ][ subnode['Ident'] ].nil?
         when 'Classe'
           next if subnode.name == 'text'
 
@@ -336,14 +324,11 @@ module ProNote
             else
               regroupements[ subnode.name ][ subnode['Ident'] ] = manually_linked_id.id_annuaire
             end
+
+            rapport[subnode.name.to_sym][:error] << { sha256: sha256, objet: objet } if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
           end
 
-          if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
-            rapport[subnode.name.to_sym][:error] << { sha256: sha256,
-                                                      objet: objet }
-          else
-            rapport[subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
-          end
+          rapport[subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ] unless regroupements[ subnode.name ][ subnode['Ident'] ].nil?
         end
       end
     end
@@ -364,27 +349,23 @@ module ProNote
     offset_semainiers = etablissement.date_premier_jour_premiere_semaine.cweek
 
     xml.search('Cours/Cours')
-      .reject { |child| child.name == 'text' }
       .each do |node|
+      next if node.name == 'text'
+
       debut = PlageHoraire[ label: node['NumeroPlaceDebut'] ][:id]
       fin = PlageHoraire[ label: node['NumeroPlaceDebut'].to_i + node['NombrePlaces'].to_i - 1 ][:id]
-      matiere_id = nil
+      matiere_id = matieres[ node.search( 'Matiere' ).first.attributes['Ident'].value ]
 
-      node.children.reject { |child| child.name == 'text' }.each do |subnode|  # FIXME: peut sûrement mieux faire
-        matiere_id = matieres[ subnode['Ident'] ] if subnode.name == 'Matiere'
-        if matiere_id.nil?
-          rapport[:matieres][:error] << subnode['Ident']
-        else
-          rapport[:matieres][:success] << matiere_id
-        end
-      end
       next if matiere_id.nil?
+
       creneau = DataManagement::Accessors
                 .create_or_get( CreneauEmploiDuTemps,
                                 jour_de_la_semaine: node['Jour'], # 1: 'lundi' .. 7: 'dimanche', norme ISO-8601
                                 debut: debut,
                                 fin: fin,
                                 matiere_id: matiere_id )
+
+      LOGGER.debug " . Created Créneau #{CreneauEmploiDuTemps.count} #{creneau.id} (#{matiere_id} ; #{debut} ; #{fin})"
 
       node.children.each do |subnode|
         case subnode.name
@@ -398,8 +379,11 @@ module ProNote
               creneau.add_enseignant(enseignant_id: enseignants[ subnode['Ident'] ],
                                      semaines_de_presence: corrige_semainiers( subnode['Semaines'], offset_semainiers ) )
               CreneauEmploiDuTempsEnseignant.restrict_primary_key
+
+              LOGGER.debug "  -> added enseignant #{enseignants[ subnode['Ident'] ]}"
             end
           end
+
         when 'Classe', 'PartieDeClasse', 'Groupe' # on ne distingue pas les 3 types de regroupements
           if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
             rapport[:regroupements][:error] << "#{subnode['Ident']} (#{subnode.name})"
@@ -412,17 +396,21 @@ module ProNote
               creneau.add_regroupement(regroupement_id: regroupements[ subnode.name ][ subnode['Ident'] ],
                                        semaines_de_presence: corrige_semainiers( subnode['Semaines'], offset_semainiers ) )
               CreneauEmploiDuTempsRegroupement.restrict_primary_key
+
+              LOGGER.debug "  -> added regroupement #{regroupements[ subnode['Ident'] ]}"
             end
           end
+
         when 'Salle'
           unless creneau.salles.include?( Salle[ identifiant: subnode['Ident'] ] )
             creneau.add_salle( Salle[ identifiant: subnode['Ident'] ] )
+
+            LOGGER.debug "  -> added salle #{Salle[ identifiant: subnode['Ident'] ]}"
           end
           cs = CreneauEmploiDuTempsSalle
                .where( salle_id: Salle[ identifiant: subnode['Ident'] ][:id] )
                .where( creneau_emploi_du_temps_id: creneau.id )
           cs.update(semaines_de_presence: corrige_semainiers( subnode['Semaines'], offset_semainiers ) )
-          # cs.save
         end
       end
     end
