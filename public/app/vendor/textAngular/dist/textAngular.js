@@ -2,13 +2,13 @@
 @license textAngular
 Author : Austin Anderson
 License : 2013 MIT
-Version 1.4.1
+Version 1.4.2
 
 See README.md or https://github.com/fraywing/textAngular/wiki for requirements and use.
 */
 
 (function(){ // encapsulate all variables so they don't become global vars
-"use strict";					
+"use strict";
 // IE version detection - http://stackoverflow.com/questions/4169160/javascript-ie-detection-why-not-use-simple-conditional-comments
 // We need this as IE sometimes plays funny tricks with the contenteditable.
 // ----------------------------------------------------------
@@ -30,12 +30,12 @@ var _browserDetect = {
 			v = 3,
 			div = document.createElement('div'),
 			all = div.getElementsByTagName('i');
-		
+
 		while (
 			div.innerHTML = '<!--[if gt IE ' + (++v) + ']><i></i><![endif]-->',
 			all[0]
 		);
-		
+
 		return v > 4 ? v : undef;
 	}()),
 	webkit: /AppleWebKit\/([\d.]+)/i.test(navigator.userAgent)
@@ -63,11 +63,11 @@ if(_browserDetect.webkit) {
 					curelement.select(); // use select to place cursor for input elements.
 				}
 			}
-		}	
+		}
 		globalContentEditableBlur = false;
 	}, false); // add global click handler
 	angular.element(document).ready(function () {
-		angular.element(document.body).append(angular.element('<input id="textAngular-editableFix-010203040506070809" class="ta-hidden-input" unselectable="on" tabIndex="-1">'));
+		angular.element(document.body).append(angular.element('<input id="textAngular-editableFix-010203040506070809" class="ta-hidden-input" aria-hidden="true" unselectable="on" tabIndex="-1">'));
 	});
 }
 
@@ -140,7 +140,7 @@ if(_browserDetect.ie > 8 || _browserDetect.ie === undefined){
 		/* istanbul ignore next: browser catches */
 		if(_sheet.cssRules) insertIndex = Math.max(_sheet.cssRules.length - 1, 0);
 		else if(_sheet.rules) insertIndex = Math.max(_sheet.rules.length - 1, 0);
-		
+
 		/* istanbul ignore else: untestable IE option */
 		if(_sheet.insertRule) {
 			_sheet.insertRule(selector + "{" + rules + "}", insertIndex);
@@ -182,6 +182,7 @@ if(_browserDetect.ie > 8 || _browserDetect.ie === undefined){
 		}
 	};
 }
+
 angular.module('textAngular.factories', [])
 .factory('taBrowserTag', [function(){
 	return function(tag){
@@ -983,7 +984,7 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 			var _firstMatch = /(^[^<]|>)[^<]/i.exec(_blankVal);
 			var _firstTagIndex;
 			if(!_firstMatch){
-				// find the end of the first tag removing all the 
+				// find the end of the first tag removing all the
 				// Don't do a global replace as that would be waaayy too long, just replace the first 4 occurences should be enough
 				_blankVal = _blankVal.toString().replace(/="[^"]*"/i, '').replace(/="[^"]*"/i, '').replace(/="[^"]*"/i, '').replace(/="[^"]*"/i, '');
 				_firstTagIndex = _blankVal.indexOf('>');
@@ -1018,11 +1019,11 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 .directive('taBind', [
 		'taSanitize', '$timeout', '$window', '$document', 'taFixChrome', 'taBrowserTag',
 		'taSelection', 'taSelectableElements', 'taApplyCustomRenderers', 'taOptions',
-		'_taBlankTest', '$parse', 'taDOM',
+		'_taBlankTest', '$parse', 'taDOM', 'textAngularManager',
 		function(
 			taSanitize, $timeout, $window, $document, taFixChrome, taBrowserTag,
 			taSelection, taSelectableElements, taApplyCustomRenderers, taOptions,
-			_taBlankTest, $parse, taDOM){
+			_taBlankTest, $parse, taDOM, textAngularManager){
 	// Uses for this are textarea or input with ng-model and ta-bind='text'
 	// OR any non-form element with contenteditable="contenteditable" ta-bind="html|text" ng-model
 	return {
@@ -1042,7 +1043,7 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 			var BLOCKED_KEYS = /^(9|19|20|27|33|34|35|36|37|38|39|40|45|112|113|114|115|116|117|118|119|120|121|122|123|144|145)$/i;
 			var UNDO_TRIGGER_KEYS = /^(8|13|32|46|59|61|107|109|186|187|188|189|190|191|192|219|220|221|222)$/i; // spaces, enter, delete, backspace, all punctuation
 			var _pasteHandler;
-			
+
 			// defaults to the paragraph element, but we need the line-break or it doesn't allow you to type into the empty element
 			// non IE is '<p><br/></p>', ie is '<p></p>' as for once IE gets it correct...
 			var _defaultVal, _defaultTest;
@@ -1064,12 +1065,12 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 						'<' + attrs.taDefaultWrap.toUpperCase() + '>&nbsp;</' + attrs.taDefaultWrap.toUpperCase() + '>' :
 						'<' + attrs.taDefaultWrap + '>&nbsp;</' + attrs.taDefaultWrap + '>';
 			}
-			
+
 			/* istanbul ignore else */
 			if(!ngModelOptions.$options) ngModelOptions.$options = {}; // ng-model-options support
-			
+
 			var _blankTest = _taBlankTest(_defaultTest);
-			
+
 			var _ensureContentWrapped = function(value){
 				if(_blankTest(value)) return value;
 				var domTest = angular.element("<div>" + value + "</div>");
@@ -1101,13 +1102,13 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 				}
 				return value;
 			};
-			
+
 			if(attrs.taPaste) _pasteHandler = $parse(attrs.taPaste);
-			
+
 			element.addClass('ta-bind');
-			
+
 			var _undoKeyupTimeout;
-			
+
 			scope['$undoManager' + (attrs.id || '')] = ngModel.$undoManager = {
 				_stack: [],
 				_index: 0,
@@ -1141,7 +1142,7 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 					return this._stack[this._index];
 				}
 			};
-			
+
 			var _redoUndoTimeout;
 			var _undo = scope['$undoTaBind' + (attrs.id || '')] = function(){
 				/* istanbul ignore else: can't really test it due to all changes being ignored as well in readonly */
@@ -1158,7 +1159,7 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 					}
 				}
 			};
-			
+
 			var _redo = scope['$redoTaBind' + (attrs.id || '')] = function(){
 				/* istanbul ignore else: can't really test it due to all changes being ignored as well in readonly */
 				if(!_isReadonly && _isContentEditable){
@@ -1175,14 +1176,14 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 					}
 				}
 			};
-			
+
 			// in here we are undoing the converts used elsewhere to prevent the < > and & being displayed when they shouldn't in the code.
 			var _compileHtml = function(){
 				if(_isContentEditable) return element[0].innerHTML;
 				if(_isInputFriendly) return element.val();
 				throw ('textAngular Error: attempting to update non-editable taBind');
 			};
-			
+
 			var _setViewValue = function(_val, triggerUndo, skipRender){
 				_skipRender = skipRender || false;
 				if(typeof triggerUndo === "undefined" || triggerUndo === null) triggerUndo = true && _isContentEditable; // if not contentEditable then the native undo/redo is fine
@@ -1200,18 +1201,18 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 				}
 				ngModel.$render();
 			};
-			
+
 			//used for updating when inserting wrapped elements
 			scope['updateTaBind' + (attrs.id || '')] = function(){
 				if(!_isReadonly) _setViewValue(undefined, undefined, true);
 			};
-			
+
 			// catch DOM XSS via taSanitize
 			// Sanitizing both ways is identical
 			var _sanitize = function(unsafe){
 				return (ngModel.$oldViewValue = taSanitize(taFixChrome(unsafe), ngModel.$oldViewValue, _disableSanitizer));
 			};
-			
+
 			// trigger the validation calls
 			if(element.attr('required')) ngModel.$validators.required = function(modelValue, viewValue) {
 				return !_blankTest(modelValue || viewValue);
@@ -1225,7 +1226,7 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 			ngModel.$formatters.unshift(function(value){
 				return ngModel.$undoManager.push(value || '');
 			});
-			
+
 			//this code is used to update the models when data is entered/deleted
 			if(_isInputFriendly){
 				scope.events = {};
@@ -1234,7 +1235,7 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 					element.on('change blur', scope.events.change = scope.events.blur = function(){
 						if(!_isReadonly) ngModel.$setViewValue(_compileHtml());
 					});
-					
+
 					element.on('keydown', scope.events.keydown = function(event, eventData){
 						/* istanbul ignore else: this is for catching the jqLite testing*/
 						if(eventData) angular.extend(event, eventData);
@@ -1244,7 +1245,7 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 							// get caret position/selection
 							var start = this.selectionStart;
 							var end = this.selectionEnd;
-							
+
 							var value = element.val();
 							if(event.shiftKey){
 								// find \t
@@ -1252,14 +1253,14 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 								if(_tab !== -1 && _tab >= _linebreak){
 									// set textarea value to: text before caret + tab + text after caret
 									element.val(value.substring(0, _tab) + value.substring(_tab + 1));
-									
+
 									// put caret at right position again (add one for the tab)
 									this.selectionStart = this.selectionEnd = start - 1;
 								}
 							}else{
 								// set textarea value to: text before caret + tab + text after caret
 								element.val(value.substring(0, start) + "\t" + value.substring(end));
-								
+
 								// put caret at right position again (add one for the tab)
 								this.selectionStart = this.selectionEnd = start + 1;
 							}
@@ -1267,13 +1268,13 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 							event.preventDefault();
 						}
 					});
-					
+
 					var _repeat = function(string, n){
 						var result = '';
 						for(var _n = 0; _n < n; _n++) result += string;
 						return result;
 					};
-					
+
 					var recursiveListFormat = function(listNode, tablevel){
 						var _html = '', _children = listNode.childNodes;
 						tablevel++;
@@ -1303,7 +1304,7 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 								else htmlValue += '' + _children[i].outerHTML;
 							}
 						}
-						
+
 						return htmlValue;
 					});
 				}else{
@@ -1345,7 +1346,7 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 									if(!dom[0].childNodes[i] || dom[0].childNodes[i].nodeName === "#text" || dom[0].childNodes[i].tagName.toLowerCase() !== "p") continue;
 									var el = angular.element(dom[0].childNodes[i]);
 									var _listMatch = (el.attr('class') || '').match(/MsoList(Bullet|Number|Paragraph)(CxSp(First|Middle|Last)|)/i);
-									
+
 									if(_listMatch){
 										if(el[0].childNodes.length < 2 || el[0].childNodes[1].childNodes.length < 1){
 											continue;
@@ -1355,9 +1356,9 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 										var indent = parseFloat((_indentMatch)?_indentMatch[1]:0);
 										var _levelMatch = (el.attr('style') || '').match(/mso-list:l([0-9]+) level([0-9]+) lfo[0-9+]($|;)/i);
 										// prefers the mso-list syntax
-										
+
 										if(_levelMatch && _levelMatch[2]) indent = parseInt(_levelMatch[2]);
-										
+
 										if ((_levelMatch && (!_list.lastLevelMatch || _levelMatch[1] !== _list.lastLevelMatch[1])) || !_listMatch[3] || _listMatch[3].toLowerCase() === "first" || (_list.lastIndent.peek() === null) || (_list.isUl !== isUl && _list.lastIndent.peek() === indent)) {
 											_resetList(isUl);
 											targetDom.append(_list.element);
@@ -1382,7 +1383,7 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 												targetDom.append(_list.element);
 											}
 										}
-										
+
 										_list.lastLevelMatch = _levelMatch;
 										if(indent !== _list.lastIndent.peek()) _list.lastIndent.push(indent);
 										_list.lastLi = angular.element("<li>");
@@ -1399,7 +1400,7 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 									for(var _n = node[0].childNodes.length - 1; _n >= 0; _n--) node.after(node[0].childNodes[_n]);
 									node.remove();
 								};
-								
+
 								angular.forEach(targetDom.find('span'), function(node){
 									node.removeAttribute('lang');
 									if(node.attributes.length <= 0) _unwrapElement(node);
@@ -1431,16 +1432,16 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 								// Webkit on Apple tags
 								text = text.replace(/<br class="Apple-interchange-newline"[^>]*?>/ig, '').replace(/<span class="Apple-converted-space">( |&nbsp;)<\/span>/ig, '&nbsp;');
 							}
-							
+
 							if (/<li(\s.*)?>/i.test(text) && /(<ul(\s.*)?>|<ol(\s.*)?>).*<li(\s.*)?>/i.test(text) === false) {
 								// insert missing parent of li element
 								text = text.replace(/<li(\s.*)?>.*<\/li(\s.*)?>/i, '<ul>$&</ul>');
 							}
-							
+
 							if(_pasteHandler) text = _pasteHandler(scope, {$html: text}) || text;
-							
+
 							text = taSanitize(text, '', _disableSanitizer);
-							
+
 							taSelection.insertHtml(text, element[0]);
 							$timeout(function(){
 								ngModel.$setViewValue(_compileHtml());
@@ -1452,7 +1453,7 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 							element.removeClass('processing-paste');
 						}
 					};
-					
+
 					element.on('paste', scope.events.paste = function(e, eventData){
 						/* istanbul ignore else: this is for catching the jqLite testing*/
 						if(eventData) angular.extend(e, eventData);
@@ -1461,7 +1462,7 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 							e.preventDefault();
 							return false;
 						}
-						
+
 						// Code adapted from http://stackoverflow.com/questions/2176861/javascript-get-clipboard-data-on-paste-event-cross-browser/6804718#6804718
 						_processingPaste = true;
 						element.addClass('processing-paste');
@@ -1478,7 +1479,7 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 							} else if (/text\/plain/i.test(_types)) {
 								pastedContent = clipboardData.getData('text/plain');
 							}
-							
+
 							processpaste(pastedContent);
 							e.stopPropagation();
 							e.preventDefault();
@@ -1504,10 +1505,20 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 						}, 0);
 						else e.preventDefault();
 					});
-					
+
 					element.on('keydown', scope.events.keydown = function(event, eventData){
 						/* istanbul ignore else: this is for catching the jqLite testing*/
 						if(eventData) angular.extend(event, eventData);
+						// keyCode 9 is the TAB key
+						/* istanbul ignore next: not sure how to test this  */
+						if (event.ctrlKey===false && event.metaKey===false && event.keyCode===9) {
+							event.preventDefault();
+							event.specialKey = 'TabKey';
+							if (event.shiftKey) {
+								event.specialKey = 'ShiftTabKey';
+							}
+							textAngularManager.sendKeyCommand(scope, event);
+						}
 						/* istanbul ignore else: readonly check */
 						if(!_isReadonly){
 							if(!event.altKey && (event.metaKey || event.ctrlKey)){
@@ -1565,7 +1576,7 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 									while(!selection.tagName.match(VALIDELEMENTS) && selection !== element[0]){
 										selection = selection.parentNode;
 									}
-									
+
 									if(selection.tagName.toLowerCase() !== attrs.taDefaultWrap && selection.tagName.toLowerCase() !== 'li' && (selection.innerHTML.trim() === '' || selection.innerHTML.trim() === '<br>')){
 										var _new = angular.element(_defaultVal);
 										angular.element(selection).replaceWith(_new);
@@ -1619,13 +1630,14 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 					element.on('focus', scope.events.focus = function(){
 						_focussed = true;
 						element.removeClass('placeholder-text');
+						_reApplyOnSelectorHandlers();
 					});
-					
+
 					element.on('mouseup', scope.events.mouseup = function(){
 						var _selection = taSelection.getSelection();
 						if(_selection.start.element === element[0] && element.children().length) taSelection.setSelectionToElementStart(element.children()[0]);
 					});
-					
+
 					// prevent propagation on mousedown in editor, see #206
 					element.on('mousedown', scope.events.mousedown = function(event, eventData){
 						/* istanbul ignore else: this is for catching the jqLite testing*/
@@ -1668,7 +1680,7 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 							.on('click', selectorClickHandler);
 					});
 			};
-			
+
 			var _setInnerHTML = function(newval){
 				element[0].innerHTML = newval;
 			};
@@ -1689,7 +1701,7 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 						element.removeClass('placeholder-text');
 						if(_renderTimeout) $timeout.cancel(_renderTimeout);
 						_renderTimeout = $timeout(function(){
-							/* istanbul ignore if: Can't be bothered testing this... */ 
+							/* istanbul ignore if: Can't be bothered testing this... */
 							if(!_focussed){
 								element[0].focus();
 								taSelection.setSelectionToElementEnd(element.children()[element.children().length - 1]);
@@ -1735,7 +1747,7 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 				}
 				_renderInProgress = _skipRender = false;
 			};
-			
+
 			if(attrs.taReadonly){
 				//set initial value
 				_isReadonly = scope.$eval(attrs.taReadonly);
@@ -1908,7 +1920,7 @@ textAngular.directive("textAngular", [
 					_originalContents, _toolbars,
 					_serial = (attrs.serial) ? attrs.serial : Math.floor(Math.random() * 10000000000000000),
 					_taExecCommand, _resizeMouseDown, _updateSelectedStylesTimeout;
-				
+
 				scope._name = (attrs.name) ? attrs.name : 'textAngularEditor' + _serial;
 
 				var oneEvent = function(_element, event, action){
@@ -2074,17 +2086,24 @@ textAngular.directive("textAngular", [
 								x: Math.max(0, startPosition.width + (event.clientX - startPosition.x)),
 								y: Math.max(0, startPosition.height + (event.clientY - startPosition.y))
 							};
-							
-							if(event.shiftKey){
-								// keep ratio
+
+							// DEFAULT: the aspect ratio is not locked unless the Shift key is pressed.
+							//
+							// attribute: ta-resize-force-aspect-ratio -- locks resize into maintaing the aspect ratio
+							var bForceAspectRatio = (attrs.taResizeForceAspectRatio !== undefined);
+							// attribute: ta-resize-maintain-aspect-ratio=true causes the space ratio to remain locked
+							// unless the Shift key is pressed
+							var bFlipKeyBinding = attrs.taResizeMaintainAspectRatio;
+							var bKeepRatio =  bForceAspectRatio || (bFlipKeyBinding && !event.shiftKey);
+							if(bKeepRatio) {
 								var newRatio = pos.y / pos.x;
 								pos.x = ratio > newRatio ? pos.x : pos.y / ratio;
 								pos.y = ratio > newRatio ? pos.x * ratio : pos.y;
 							}
 							var el = angular.element(_el);
-							el.attr('height', Math.max(0, pos.y));
-							el.attr('width', Math.max(0, pos.x));
-							
+							el.css('height', Math.round(Math.max(0, pos.y)));
+							el.css('width', Math.round(Math.max(0, pos.x)));
+
 							// reflow the popover tooltip
 							scope.reflowResizeOverlay(_el);
 						};
@@ -2099,6 +2118,7 @@ textAngular.directive("textAngular", [
 						event.preventDefault();
 					};
 
+					scope.displayElements.resize.anchors[3].off('mousedown');
 					scope.displayElements.resize.anchors[3].on('mousedown', _resizeMouseDown);
 
 					scope.reflowResizeOverlay(_el);
@@ -2129,12 +2149,12 @@ textAngular.directive("textAngular", [
 				});
 				scope.displayElements.scrollWindow.attr({'ng-hide': 'showHtml'});
 				if(attrs.taDefaultWrap) scope.displayElements.text.attr('ta-default-wrap', attrs.taDefaultWrap);
-				
+
 				if(attrs.taUnsafeSanitizer){
 					scope.displayElements.text.attr('ta-unsafe-sanitizer', attrs.taUnsafeSanitizer);
 					scope.displayElements.html.attr('ta-unsafe-sanitizer', attrs.taUnsafeSanitizer);
 				}
-				
+
 				// add the main elements to the origional element
 				scope.displayElements.scrollWindow.append(scope.displayElements.text);
 				element.append(scope.displayElements.scrollWindow);
@@ -2167,14 +2187,14 @@ textAngular.directive("textAngular", [
 						}
 					});
 				}
-				
+
 				if(attrs.taPaste){
 					scope._pasteHandler = function(_html){
 						return $parse(attrs.taPaste)(scope.$parent, {$html: _html});
 					};
 					scope.displayElements.text.attr('ta-paste', '_pasteHandler($html)');
 				}
-				
+
 				// compile the scope with the text and html elements only - if we do this with the main element it causes a compile loop
 				$compile(scope.displayElements.scrollWindow)(scope);
 				$compile(scope.displayElements.html)(scope);
@@ -2206,7 +2226,7 @@ textAngular.directive("textAngular", [
 						}else{
 							scope.displayElements.text[0].focus();
 						}
-						$window.rangy.restoreSelection(_savedSelection);
+						// $window.rangy.restoreSelection(_savedSelection);
 						$window.rangy.removeMarkers(_savedSelection);
 					}
 					_savedSelection = false;
@@ -2242,11 +2262,11 @@ textAngular.directive("textAngular", [
 				};
 				scope.displayElements.html.on('blur', _focusout);
 				scope.displayElements.text.on('blur', _focusout);
-				
+
 				scope.displayElements.text.on('paste', function(event){
 					element.triggerHandler('paste', event);
 				});
-				
+
 				// Setup the default toolbar tools, this way allows the user to add new tools like plugins.
 				// This is on the editor for future proofing if we find a better way to do this.
 				scope.queryFormatBlockState = function(command){
@@ -2516,8 +2536,8 @@ textAngular.service('textAngularManager', ['taToolExecuteAction', 'taTools', 'ta
 					sendKeyCommand: function(event){
 						// we return true if we applied an action, false otherwise
 						var result = false;
-						if(event.ctrlKey || event.metaKey) angular.forEach(taTools, function(tool, name){
-							if(tool.commandKeyCode && tool.commandKeyCode === event.which){
+						if(event.ctrlKey || event.metaKey || event.specialKey) angular.forEach(taTools, function(tool, name){
+							if(tool.commandKeyCode && (tool.commandKeyCode === event.which || tool.commandKeyCode === event.specialKey)){
 								for(var _t = 0; _t < _toolbars.length; _t++){
 									if(_toolbars[_t].tools[name] !== undefined){
 										taToolExecuteAction.call(_toolbars[_t].tools[name], scope);
@@ -2583,7 +2603,7 @@ textAngular.service('textAngularManager', ['taToolExecuteAction', 'taTools', 'ta
 										break;
 									}
 								}
-								if(result) break; 
+								if(result) break;
 							}
 						}
 						return result;
@@ -2707,6 +2727,20 @@ textAngular.service('textAngularManager', ['taToolExecuteAction', 'taTools', 'ta
 				/* istanbul ignore else: phase catch */
 				if(!editors[name].scope.$$phase) editors[name].scope.$digest();
 			}else throw('textAngular Error: No Editor with name "' + name + '" exists');
+		},
+		// this is used by taBind to send a key command in response to a special key event
+		sendKeyCommand: function(scope, event){
+			angular.forEach(editors, function(_editor){
+				/* istanbul ignore else: if nothing to do, do nothing */
+				if (_editor.editorFunctions.sendKeyCommand(event)){
+					/* istanbul ignore else: don't run if already running */
+					if(!scope._bUpdateSelectedStyles){
+						scope.updateSelectedStyles();
+					}
+					event.preventDefault();
+					return false;
+				} 
+			});
 		}
 	};
 }]);
@@ -2745,10 +2779,10 @@ textAngular.directive('textAngularToolbar', [
 						toolElement = angular.element(toolDefinition.display);
 					}
 					else toolElement = angular.element("<button type='button'>");
-					
+
 					if(toolDefinition && toolDefinition["class"]) toolElement.addClass(toolDefinition["class"]);
 					else toolElement.addClass(scope.classes.toolbarButton);
-					
+
 					toolElement.attr('name', toolScope.name);
 					// important to not take focus from the main text/html entry
 					toolElement.attr('ta-button', 'ta-button');
@@ -2887,4 +2921,5 @@ textAngular.directive('textAngularToolbar', [
 			}
 		};
 	}
-]);})();
+]);
+})();

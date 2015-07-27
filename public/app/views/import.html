@@ -18,21 +18,24 @@
 	</div>
 </div>
 
-<div class="panel panel-default" data-ng-if="result.rapport">
+<div class="panel panel-default rapport" data-ng-if="result.rapport">
 	<div class="panel-body">
-		<label>{{result.rapport.plages_horaires.success.length}} Plages Horaires créées</label>
+		<label><em>{{result.rapport.plages_horaires.success.length}}</em> Plages Horaires créées</label>
+		<span class="label label-info" data-ng-repeat="plage_horaire in result.rapport.plages_horaires.success">{{plage_horaire.debut | amDateFormat: 'HH:mm'}} - {{plage_horaire.fin | amDateFormat: 'HH:mm'}}</span>
 	</div>
 
 	<div class="panel-body">
-		<label>{{result.rapport.salles.success.length}} Salles créées</label>
+		<label><em>{{result.rapport.salles.success.length}}</em> Salles créées</label>
+		<span class="label label-info" data-ng-repeat="salle in result.rapport.salles.success">{{salle.nom}}</span>
 	</div>
 
-	<div class="panel-body">
-		<label>{{result.rapport.matieres.success.length}} Matières identifiées</label>
+	<div class="panel-body" data-ng-if="result.rapport.matieres.success.length > 0 || result.rapport.matieres.error.length > 0">
+		<label><em>{{result.rapport.matieres.success.length}}</em> Matières identifiées</label>
+		<span class="label label-info" data-ng-repeat="matiere in result.rapport.matieres.success">{{matiere.libelle}}</span>
 	</div>
 
-	<div class="panel-body">
-		<label>{{result.rapport.matieres.error.length}} Matières inconnues</label>
+	<div class="panel-body" data-ng-if="result.rapport.matieres.error.length > 0">
+		<label><em>{{result.rapport.matieres.error.length}}</em> Matières inconnues</label>
 		<div class="col-md-12">
 			<table class="table table-striped">
 				<thead>
@@ -68,12 +71,13 @@
 		</div>
 	</div>
 
-	<div class="panel-body">
-		<label>{{result.rapport.enseignants.success.length}} Enseignants prises en compte</label>
+	<div class="panel-body" data-ng-if="result.rapport.enseignants.success.length > 0 || result.rapport.enseignants.error.length > 0">
+		<label><em>{{result.rapport.enseignants.success.length}}</em> Enseignants pris en compte</label>
+		<span class="label label-info" data-ng-repeat="enseignant in result.rapport.enseignants.success">{{enseignant.prenom}} {{enseignant.nom}}</span>
 	</div>
 
-	<div class="panel-body">
-		<label>{{result.rapport.enseignants.error.length}} Enseignants non prises en compte</label>
+	<div class="panel-body" data-ng-if="result.rapport.enseignants.error.length > 0">
+		<label><em>{{result.rapport.enseignants.error.length}}</em> Enseignants non prises en compte</label>
 		<table class="table table-striped">
 			<thead>
 				<tr>
@@ -107,12 +111,13 @@
 		</table>
 	</div>
 
-	<div class="panel-body">
-		<label>{{result.rapport.regroupements.Classe.success.length}} Classes prises en compte</label>
+	<div class="panel-body" data-ng-if="result.rapport.regroupements.Classe.success.length > 0 || result.rapport.regroupements.Classe.error.length > 0">
+		<label><em>{{result.rapport.regroupements.Classe.success.length}}</em> Classes prises en compte</label>
+		<span class="label label-info" data-ng-repeat="classe in result.rapport.regroupements.Classe.success">{{classe.nom}}</span>
 	</div>
 
-	<div class="panel-body">
-		<label>{{result.rapport.regroupements.Classe.error.length}} Classes non prises en compte</label>
+	<div class="panel-body" data-ng-if="result.rapport.regroupements.Classe.error.length > 0">
+		<label><em>{{result.rapport.regroupements.Classe.error.length}}</em> Classes non prises en compte</label>
 		<table class="table table-striped">
 			<thead>
 				<tr>
@@ -146,12 +151,13 @@
 		</table>
 	</div>
 
-	<div class="panel-body">
-		<label>{{result.rapport.regroupements.PartieDeClasse.success.length}} Parties de Classes prises en compte</label>
+	<div class="panel-body" data-ng-if="result.rapport.regroupements.PartieDeClasse.success.length > 0 || result.rapport.regroupements.PartieDeClasse.error.length > 0">
+		<label><em>{{result.rapport.regroupements.PartieDeClasse.success.length}}</em> Parties de Classes prises en compte</label>
+		<span class="label label-info" data-ng-repeat="partie_de_classe in result.rapport.regroupements.PartieDeClasse.success">{{partie_de_classe.nom}}</span>
 	</div>
 
-	<div class="panel-body">
-		<label>{{result.rapport.regroupements.PartieDeClasse.error.length}} Parties de Classes non prises en compte</label>
+	<div class="panel-body" data-ng-if="result.rapport.regroupements.PartieDeClasse.error.length > 0">
+		<label><em>{{result.rapport.regroupements.PartieDeClasse.error.length}}</em> Parties de Classes non prises en compte</label>
 		<table class="table table-striped">
 			<thead>
 				<tr>
@@ -171,26 +177,27 @@
 					<td>
 						<select data-ng-options="r.id as r.libelle for r in regroupements.classes | orderBy:'libelle'"
 							data-ng-model="regroupement.id_annuaire"></select>
-					</td>
-					<td>
-						<button class="btn"
-							data-ng-class="{'disabled btn-default': !regroupement.id_annuaire, 'btn-primary': regroupement.id_annuaire}"
-							data-ng-click="identifie_objet( regroupement )">
-							<span class="glyphicon glyphicon-link"></span>
-						</button>
-					</td>
-					<td><span class="glyphicon glyphicon-ok" data-ng-if="regroupement.identified"></span></td>
-				</tr>
-			</tbody>
-		</table>
+						</td>
+						<td>
+							<button class="btn"
+								data-ng-class="{'disabled btn-default': !regroupement.id_annuaire, 'btn-primary': regroupement.id_annuaire}"
+								data-ng-click="identifie_objet( regroupement )">
+								<span class="glyphicon glyphicon-link"></span>
+							</button>
+						</td>
+						<td><span class="glyphicon glyphicon-ok" data-ng-if="regroupement.identified"></span></td>
+					</tr>
+				</tbody>
+			</table>
 	</div>
 
-	<div class="panel-body">
-		<label>{{result.rapport.regroupements.Groupe.success.length}} Groupes prises en compte</label>
+	<div class="panel-body" data-ng-if="result.rapport.regroupements.Groupe.success.length > 0 || result.rapport.regroupements.Groupe.error.length > 0">
+		<label><em>{{result.rapport.regroupements.Groupe.success.length}}</em> Groupes prises en compte</label>
+		<span class="label label-info" data-ng-repeat="groupe in result.rapport.regroupements.Groupe.success">{{groupe.nom}}</span>
 	</div>
 
-	<div class="panel-body">
-		<label>{{result.rapport.regroupements.Groupe.error.length}} Groupes non prises en compte</label>
+	<div class="panel-body" data-ng-if="result.rapport.regroupements.Groupe.error.length > 0">
+		<label><em>{{result.rapport.regroupements.Groupe.error.length}}</em> Groupes non prises en compte</label>
 		<table class="table table-striped">
 			<thead>
 				<tr>
@@ -224,12 +231,15 @@
 		</table>
 	</div>
 
-	<div class="panel-body">
-		<label>{{result.rapport.creneaux.success.length}} Creneaux importés</label>
+	<div class="panel-body" data-ng-if="result.rapport.creneaux.success.length > 0 || result.rapport.creneaux.error.length > 0">
+		<label><em>{{result.rapport.creneaux.success.length}}</em> Creneaux importés</label>
+		<ul>
+			<li data-ng-repeat="creneau in result.rapport.creneaux.success">{{creneau}}</li>
+		</ul>
 	</div>
 
-	<div class="panel-body">
-		<label>{{result.rapport.creneaux.error.length}} Creneaux non prises en compte</label>
+	<div class="panel-body" data-ng-if="result.rapport.creneaux.error.length > 0">
+		<label><em>{{result.rapport.creneaux.error.length}}</em> Creneaux non prises en compte</label>
 		<ul>
 			<li data-ng-repeat="creneau in result.rapport.creneaux.error track by $index">{{creneau}}</li>
 		</ul>
