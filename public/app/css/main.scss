@@ -910,3 +910,18 @@ fieldset {
 .cartable .disabled button.from-docs { display: none; }
 .cartable button.from-ct { display: none; }
 .cartable .disabled button.from-ct { display: inline; }
+
+
+// Page import
+.rapport {
+    .panel-body {
+	label {
+	    float: left;
+	    width: 100%;
+	}
+	span.label {
+	    float: left;
+	    margin: 0 0 2px 2px;
+	}
+    }
+}

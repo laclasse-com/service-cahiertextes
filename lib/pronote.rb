@@ -152,7 +152,7 @@ module ProNote
         rapport[:error] << { sha256: sha256, objet: objet } if matieres[ node['Ident'] ].nil?
       end
 
-      rapport[:success] << matieres[ node['Ident'] ] unless matieres[ node['Ident'] ].nil?
+      rapport[:success] << { id: matieres[ node['Ident'] ], libelle: node['Libelle'] } unless matieres[ node['Ident'] ].nil?
     end
 
     [ rapport, matieres ]
@@ -186,7 +186,7 @@ module ProNote
         rapport[:error] << { sha256: sha256, objet: objet } if enseignants[ node['Ident'] ].nil?
       end
 
-      rapport[:success] << enseignants[ node['Ident'] ] unless enseignants[ node['Ident'] ].nil?
+      rapport[:success] << { id: enseignants[ node['Ident'] ], nom: node['Nom'], prenom: node['Prenom'] } unless enseignants[ node['Ident'] ].nil?
     end
 
     [ rapport, enseignants ]
@@ -225,7 +225,7 @@ module ProNote
         rapport[node.name.to_sym][:error] << { sha256: sha256, objet: objet } if regroupements[ node.name ][ node['Ident'] ].nil?
       end
 
-      rapport[node.name.to_sym][:success] << regroupements[ node.name ][ node['Ident'] ] unless regroupements[ node.name ][ node['Ident'] ].nil?
+      rapport[node.name.to_sym][:success] << { id: regroupements[ node.name ][ node['Ident'] ], nom: node['Nom'] } unless regroupements[ node.name ][ node['Ident'] ].nil?
 
       next if regroupements[ 'Classe' ][ node['Ident'] ].nil?
 
@@ -253,7 +253,7 @@ module ProNote
           end
         end
 
-        rapport[subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ] unless regroupements[ subnode.name ][ subnode['Ident'] ].nil?
+        rapport[subnode.name.to_sym][:success] << { id: regroupements[ subnode.name ][ subnode['Ident'] ], nom: subnode['Nom'] } unless regroupements[ subnode.name ][ subnode['Ident'] ].nil?
       end
     end
 
@@ -277,7 +277,7 @@ module ProNote
 
         rapport[node.name.to_sym][:error] << { sha256: sha256, objet: objet } if regroupements[ node.name ][ node['Ident'] ].nil?
       end
-      rapport[node.name.to_sym][:success] << regroupements[ node.name ][ node['Ident'] ] unless regroupements[ node.name ][ node['Ident'] ].nil?
+      rapport[node.name.to_sym][:success] << { id: regroupements[ node.name ][ node['Ident'] ], nom: node['Nom'] } unless regroupements[ node.name ][ node['Ident'] ].nil?
 
       next if regroupements[ node.name ][ node['Ident'] ].nil?
 
@@ -306,7 +306,7 @@ module ProNote
             rapport[subnode.name.to_sym][:error] << { sha256: sha256, objet: objet } if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
           end
 
-          rapport[subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ] unless regroupements[ subnode.name ][ subnode['Ident'] ].nil?
+          rapport[subnode.name.to_sym][:success] << { id: regroupements[ subnode.name ][ subnode['Ident'] ], nom: subnode['Nom'] } unless regroupements[ subnode.name ][ subnode['Ident'] ].nil?
         when 'Classe'
           next if subnode.name == 'text'
 
@@ -328,7 +328,7 @@ module ProNote
             rapport[subnode.name.to_sym][:error] << { sha256: sha256, objet: objet } if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
           end
 
-          rapport[subnode.name.to_sym][:success] << regroupements[ subnode.name ][ subnode['Ident'] ] unless regroupements[ subnode.name ][ subnode['Ident'] ].nil?
+          rapport[subnode.name.to_sym][:success] << { id: regroupements[ subnode.name ][ subnode['Ident'] ], nom: subnode['Nom'] } unless regroupements[ subnode.name ][ subnode['Ident'] ].nil?
         end
       end
     end
@@ -349,7 +349,7 @@ module ProNote
     offset_semainiers = etablissement.date_premier_jour_premiere_semaine.cweek
 
     xml.search('Cours/Cours')
-      .each do |node|
+       .each do |node|
       next if node.name == 'text'
 
       debut = PlageHoraire[ label: node['NumeroPlaceDebut'] ][:id]
