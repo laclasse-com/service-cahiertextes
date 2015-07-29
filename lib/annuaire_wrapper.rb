@@ -47,7 +47,7 @@ module AnnuaireWrapper
                                                       expand: 'true' )
     end
 
-    # Liste des regroupements d'un établissement
+    # Liste des enseignants d'un établissement
     def get_enseignants( uai )
       Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_etablissement,
                                                       "#{uai}/enseignants",
