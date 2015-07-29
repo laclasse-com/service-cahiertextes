@@ -110,6 +110,7 @@ module AnnuaireWrapper
                                                                      "#{CGI.escape( id )}",
                                                                      expand: 'false' )
       regroupement['libelle'] = regroupement['libelle_aaf'] if regroupement['libelle'].nil?
+      regroupement['libelle_aaf'] = regroupement['libelle'] if regroupement['libelle_aaf'].nil?
 
       regroupement
     end
