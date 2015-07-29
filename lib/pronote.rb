@@ -348,8 +348,9 @@ module ProNote
 
     offset_semainiers = etablissement.date_premier_jour_premiere_semaine.cweek
 
-    xml.search('Cours/Cours')
-       .each do |node|
+    xml
+      .search('Cours/Cours')
+      .each do |node|
       next if node.name == 'text'
 
       debut = PlageHoraire[ label: node['NumeroPlaceDebut'] ][:id]
