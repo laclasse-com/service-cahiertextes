@@ -138,14 +138,14 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
     ce = CreneauEmploiDuTempsEnseignant
          .where( enseignant_id: user[:uid] )
          .where( creneau_emploi_du_temps_id: params[:id] )
-    ce.update semaines_de_presence: value
+    ce.update( semaines_de_presence: value )
   end
 
   def update_semaines_de_presence_regroupement( regroupement_id, semaines_de_presence_regroupement )
     cr = CreneauEmploiDuTempsRegroupement
          .where( creneau_emploi_du_temps_id: id )
          .where( regroupement_id: regroupement_id)
-    cr.update semaines_de_presence: semaines_de_presence_regroupement unless cr.nil?
+    cr.update( semaines_de_presence: semaines_de_presence_regroupement ) unless cr.nil?
   end
 
   def update_regroupement( regroupement_id, previous_regroupement_id, semaines_de_presence_regroupement )
@@ -160,15 +160,21 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
       previous_creneau_regroupement.destroy unless previous_creneau_regroupement.nil?
 
       # 2. create the new one
-      cr = add_regroupement regroupement_id: regroupement_id
-      cr.update semaines_de_presence: semaines_de_presence_regroupement if semaines_de_presence_regroupement
+      CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
+      cr = add_regroupement( regroupement_id: regroupement_id )
+      CreneauEmploiDuTempsRegroupement.restrict_primary_key
+
+      cr.update( semaines_de_presence: semaines_de_presence_regroupement ) if semaines_de_presence_regroupement
     end
 
     update_semaines_de_presence_regroupement( regroupement_id, semaines_de_presence_regroupement ) if semaines_de_presence_regroupement
   end
 
   def update_salle( salle_id, semaines_de_presence_salle )
-    cs = add_salle salle_id: salle_id
+    CreneauEmploiDuTempsSalle.unrestrict_primary_key
+    cs = add_salle( salle_id: salle_id )
+    CreneauEmploiDuTempsSalle.restrict_primary_key
+
     cs.update semaines_de_presence: semaines_de_presence_salle if semaines_de_presence_salle
   end
 
@@ -181,8 +187,9 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
 
     save
 
+    CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
     add_enseignant( enseignant_id: params[:enseignant_id] ) if params[:enseignant_id]
-
+    CreneauEmploiDuTempsEnseignant.restrict_primary_key
     update_semaines_de_presence_enseignant( params[:semaines_de_presence_enseignant] ) if params[:semaines_de_presence_enseignant]
 
     update_regroupement( params[:regroupement_id], params[:previous_regroupement_id], params[:semaines_de_presence_regroupement] ) unless params[:regroupement_id].nil? || params[:regroupement_id] == 'undefined'
