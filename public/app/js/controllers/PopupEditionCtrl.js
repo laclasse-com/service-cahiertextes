@@ -69,6 +69,8 @@ angular.module( 'cahierDeTextesClientApp' )
 				   regroupement.regroupement_id = parseInt( regroupement.regroupement_id );
 			       } );
 			   }
+			   $scope.creneau.tmp_heure_debut = moment( $scope.creneau.tmp_heure_debut );
+			   $scope.creneau.tmp_heure_fin = moment( $scope.creneau.tmp_heure_fin );
 			   $scope.creneau.n_week = moment($scope.creneau.tmp_heure_debut).week();
 
 			   // Gestion des semaines actives

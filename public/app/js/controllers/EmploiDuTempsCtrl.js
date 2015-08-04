@@ -261,8 +261,8 @@ angular.module( 'cahierDeTextesClientApp' )
 					      }
 					      if ( !popup_ouverte ) {
 						  // création du créneau avec les bons horaires
-						  start = $filter('correctTimeZone')(start);
-						  end = $filter('correctTimeZone')(end);
+						  start = new Date( start );
+						  end = new Date( end );
 						  var regroupement_id = _($scope.selected_regroupement_id).isNull() ? null : '' + $scope.selected_regroupement_id;
 						  var new_creneau = new CreneauEmploiDuTemps( { regroupement_id: regroupement_id,
 												jour_de_la_semaine: start.getDay() + 1,

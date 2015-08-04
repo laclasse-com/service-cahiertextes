@@ -8,7 +8,9 @@ angular.module( 'cahierDeTextesClientApp' )
     .filter( 'correctTimeZone',
 	     function() {
 		 return function( d ) {
-		     var timezoneOffset = new Date( d ).getTimezoneOffset() * 60000;
-		     return new Date( new Date( d ) - timezoneOffset );
+		     d = new Date( d );
+		     var timezoneOffset = d.getTimezoneOffset() / 60;
+		     d.setHours( d.getHours() - timezoneOffset );
+		     return d;
 		 };
 	     } );

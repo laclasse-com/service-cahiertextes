@@ -48,7 +48,7 @@ angular.module( 'cahierDeTextesClientApp' )
 						 minTime: '07:00:00',
 						 maxTime: '19:00:00',
 						 timeFormat: '',
-						 ignoreTimezone: true,
+						 ignoreTimezone: false,
 						 axisFormat: $locale.DATETIME_FORMATS.shortTime,
 						 allDaySlot: false,
 						 theme: false,
