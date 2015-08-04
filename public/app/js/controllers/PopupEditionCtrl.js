@@ -489,7 +489,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				   $scope.faulty_docs_app = true;
 			       };
 
-			       if ( LOCALHOST ) {
+			       if ( LOCALHOST() ) {
 				   $scope.erreurs.push( { message: "Instance sur localhost" } );
 				   $scope.faulty_docs_app = true;
 			       } else {

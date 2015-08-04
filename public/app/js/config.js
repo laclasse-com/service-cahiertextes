@@ -3,10 +3,10 @@
 angular.module( 'cahierDeTextesClientApp' )
     .config( [ '$compileProvider', 'LOCALHOST',
 	       function( $compileProvider, LOCALHOST ) {
-		   if ( ! LOCALHOST ) {
+		   if ( ! LOCALHOST() ) {
 		       $compileProvider.debugInfoEnabled( false );
 		   } else {
-		       console.log( 'Riding http://localhost !' )
+		       console.log( 'Running on localhost !' )
 		   }
 	       } ] )
 // Loading Bar

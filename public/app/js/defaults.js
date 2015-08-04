@@ -3,7 +3,7 @@
 // Note: pour des raisons pratiques certaines constantes sémantiquement parlant sont en fait des factory ou des services
 
 angular.module( 'cahierDeTextesClientApp' )
-    .constant( 'LOCALHOST', function() {
+    .service( 'LOCALHOST', function() {
 	return !_(location.host.match( /localhost/ )).isNull();
     } )
     .constant( 'API_VERSION', 'v1' )
