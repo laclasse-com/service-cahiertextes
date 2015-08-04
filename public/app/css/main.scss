@@ -863,6 +863,11 @@ fieldset {
 	border-color: #323232;
     }
 }
+.semainier {
+    .btn-group-xs > .btn, .btn-xs {
+	padding: 1px;
+    }
+}
 .btn-group.templates-semainier {
     .btn {
 	margin: 0 4px;
