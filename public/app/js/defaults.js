@@ -4,7 +4,7 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .constant( 'LOCALHOST', function() {
-	return location.host.match( /localhost/ );
+	return !_(location.host.match( /localhost/ )).isNull();
     } )
     .constant( 'API_VERSION', 'v1' )
     .constant( 'SEMAINES_VACANCES', { A: [ 1, 7, 8, 16, 17, 28, 29, 30, 31, 32, 33, 34, 43, 44 ],
