@@ -3,7 +3,7 @@
 angular.module( 'cahierDeTextesClientApp' )
     .config( [ '$compileProvider', 'LOCALHOST',
 	       function( $compileProvider, LOCALHOST ) {
-		   if ( ! LOCALHOST() ) {
+		   if ( ! LOCALHOST ) {
 		       $compileProvider.debugInfoEnabled( false );
 		   } else {
 		       console.log( 'Running on localhost !' )

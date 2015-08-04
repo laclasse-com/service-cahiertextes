@@ -489,7 +489,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				   $scope.faulty_docs_app = true;
 			       };
 
-			       if ( LOCALHOST() ) {
+			       if ( LOCALHOST ) {
 				   $scope.erreurs.push( { message: "Instance sur localhost" } );
 				   $scope.faulty_docs_app = true;
 			       } else {
@@ -516,22 +516,22 @@ angular.module( 'cahierDeTextesClientApp' )
 				       } else {
 					   item.ressources.push( {
 					       name: _( response.added ).first().name,
-					       hash: _( response.added ).first().hash,
-					       url: $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + _( response.added ).first().hash )
-					   } );
-					   $scope.is_dirty();
-				       }
-				   };
-			       };
-
-			       $scope.upload_and_add_ressource = function ( item, fichiers ) {
-				   if ( item.ressources === undefined ) {
-				       item.ressources = [];
+					   hash: _( response.added ).first().hash,
+					   url: $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + _( response.added ).first().hash )
+				       } );
+				       $scope.is_dirty();
 				   }
-				   var responses = Documents.upload_dans_cahier_de_textes( $scope.selected_regroupement, fichiers );
-				   for ( var i = 0; i < responses.length; i++ ) {
-				       responses[ i ]
-					   .success( $scope.consume_Documents_response_callback( item ) )
+			       };
+			   };
+
+			   $scope.upload_and_add_ressource = function ( item, fichiers ) {
+			       if ( item.ressources === undefined ) {
+				   item.ressources = [];
+			       }
+			       var responses = Documents.upload_dans_cahier_de_textes( $scope.selected_regroupement, fichiers );
+			       for ( var i = 0; i < responses.length; i++ ) {
+				   responses[ i ]
+				       .success( $scope.consume_Documents_response_callback( item ) )
 					   .error( function ( response ) {
 					       console.debug( response.error );
 					   } );
