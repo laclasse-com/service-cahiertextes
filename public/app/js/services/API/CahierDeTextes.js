@@ -20,8 +20,9 @@ angular.module( 'cahierDeTextesClientApp' )
 				       .reject( function( item ) { return _.isUndefined( item.id ); } )
 				       .value();
 
-				   // Liste des matières liées au profil
-				   profil.matieres = _.chain(response.classes)
+				   if ( profil['profil_id'] != 'DIR' && profil['profil_id'] != 'EVS' ) {
+				       // Liste des matières liées au profil
+				       profil.matieres = _.chain(response.classes)
 				       .filter( function( classe ) { return classe.etablissement_code == profil.etablissement_code_uai; } )
 				       .map( function( classe ) {
 					   return { id: _(classe.matiere_enseignee_id).isNull() ? classe.matiere_libelle : classe.matiere_enseignee_id,
@@ -29,7 +30,8 @@ angular.module( 'cahierDeTextesClientApp' )
 				       } )
 				       .uniq( function( item ) { return item.id; } )
 				       .reject( function( item ) { return _.isUndefined( item.id ); } )
-				       .value();
+					   .value();
+				   }
 			       } );
 			       response.profil_actif = _(response.profils).findWhere( { actif: true } );
 

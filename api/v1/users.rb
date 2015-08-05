@@ -16,6 +16,14 @@ module CahierDeTextesAPI
 
         utilisateur[ 'parametrage_cahier_de_textes' ] = JSON.parse( parametres[:parameters] )
 
+        matieres = AnnuaireWrapper::Matiere.query
+
+        utilisateur[ 'profils' ].select do |profil|
+          profil['profil_id'] == 'DIR' || profil['profil_id'] == 'EVS'
+        end.each do |profil|
+          profil['matieres'] = matieres
+        end
+
         utilisateur
       end
 
