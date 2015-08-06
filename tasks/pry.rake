@@ -22,6 +22,7 @@ namespace :pry do
 
   desc 'Open pry with app environment'
   task pry: :load_config do
+    LOGGER = Laclasse::LoggerFactory.get_logger
     pry.binding
   end
 end
