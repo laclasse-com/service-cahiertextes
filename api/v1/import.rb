@@ -24,7 +24,7 @@ module CahierDeTextesAPI
         # on retourne un log succint des infos chargées
         { filename: params[:file][:filename],
           size: params[:file][:tempfile].size,
-          rapport: ProNote.load_xml( File.open( params[:file][:tempfile] ) ) }
+          rapport: ProNote.decrypt_and_load_xml( File.open( params[:file][:tempfile] ) ) }
       end
 
       desc 'Identifie une Matière/Regroupement/Personne-Non-Identifié en lui donnant un ID Annuaire manuellement'

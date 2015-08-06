@@ -432,11 +432,10 @@ module ProNote
     end
   end
 
-  def load_xml( xml, _xsd = nil )
+  def load_xml( decrypted_xml )
     rapport = {}
-    edt_clair = Nokogiri::XML( decrypt_xml( xml ) ) do |config|
-      config.noblanks
-    end
+
+    edt_clair = Nokogiri::XML( decrypted_xml ) { |config| config.noblanks }
 
     etablissement = load_etablissement( edt_clair )
 
@@ -474,6 +473,10 @@ module ProNote
     provision_cahiers_de_textes
 
     rapport
+  end
+
+  def decrypt_and_load_xml( xml, _xsd = nil )
+    load_xml( decrypt_xml( xml ) )
   end
 end
 # rubocop:enable Metrics/ModuleLength
