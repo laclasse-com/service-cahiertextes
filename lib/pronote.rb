@@ -59,10 +59,18 @@ module ProNote
   def corrige_semainiers( semainier, decalage )
     semainier = semainier.to_i if semainier.is_a? String
     semainier = semainier.to_s( 2 )
+
+    # pad semainier
+    (53 - semainier.length).times { semainier = '0' + semainier }
+
+    # find cutting point
     pivot = semainier.length - decalage
+
+    # cut in halves
     debut = semainier.slice( pivot, semainier.length )
     fin = semainier.slice( 0, pivot )
 
+    # glue and serve
     "#{debut}#{fin}".to_i( 2 )
   end
 
