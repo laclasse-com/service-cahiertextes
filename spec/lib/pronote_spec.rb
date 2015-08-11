@@ -7,6 +7,15 @@ describe ProNote do
     TableCleaner.new( DB, [] ).clean
   end
 
+  it 'correct the semainier from school to civil calendar' do
+    original = '1111111001111111011111100111111001111111111000000000'
+    fixed    = '1111110011111100111111111100000000011111110011111110'
+
+    computed = ProNote.pad_semainier( ProNote.corrige_semainiers( original.to_i( 2 ), 36 ).to_s( 2 ) )
+
+    expect( computed ).to eq fixed
+  end
+
   it 'extract the UAI from the XML file' do
     uai = ProNote.extract_uai_from_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ) )
 
