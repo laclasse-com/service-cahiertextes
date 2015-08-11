@@ -44,7 +44,7 @@ Sequel.migration do
       foreign_key :creneau_emploi_du_temps_id, :creneaux_emploi_du_temps, null: false
       foreign_key :salle_id, :salles, null: false
 
-      Bignum :semaines_de_presence, unsigned: true, default: 2**53 - 1, null: false
+      Bignum :semaines_de_presence, unsigned: true, default: 2**52 - 1, null: false
     end
 
     create_table!(:creneaux_emploi_du_temps_enseignants) do
@@ -52,7 +52,7 @@ Sequel.migration do
       foreign_key :creneau_emploi_du_temps_id, :creneaux_emploi_du_temps, null: false
 
       String :enseignant_id, null: false
-      Bignum :semaines_de_presence, unsigned: true, default: 2**53 - 1, null: false
+      Bignum :semaines_de_presence, unsigned: true, default: 2**52 - 1, null: false
     end
 
     create_table!(:creneaux_emploi_du_temps_regroupements) do
@@ -60,7 +60,7 @@ Sequel.migration do
       foreign_key :creneau_emploi_du_temps_id, :creneaux_emploi_du_temps, null: false
 
       String :regroupement_id, null: false
-      Bignum :semaines_de_presence, unsigned: true, default: 2**53 - 1, null: false
+      Bignum :semaines_de_presence, unsigned: true, default: 2**52 - 1, null: false
     end
 
     create_table!(:ressources) do

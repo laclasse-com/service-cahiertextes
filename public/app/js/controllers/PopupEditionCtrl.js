@@ -89,7 +89,7 @@ angular.module( 'cahierDeTextesClientApp' )
 			       return moment( new Date( year ) ).isoWeek( n_week ).month();
 			   };
 
-			   var tmp_overlay_semainier = _.range(1, 53).map( function( s ) { return { semaine: s,
+			   var tmp_overlay_semainier = _.range(1, 52).map( function( s ) { return { semaine: s,
 												    mois: what_month( s ) }; } );
 
 			   $scope.overlay_semainier = tmp_overlay_semainier;
@@ -101,7 +101,7 @@ angular.module( 'cahierDeTextesClientApp' )
 			   var fixnum_to_bitfield = function( fixnum ) {
 			       var string = fixnum.toString(2);
 			       var padding = '';
-			       _(53 - string.length).times( function() { padding += '0'; } );
+			       _(52 - string.length).times( function() { padding += '0'; } );
 			       string = padding + string;
 			       return _(string.split('')
 					.map( function( e ) { return parseInt( e ); } )
