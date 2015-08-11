@@ -36,6 +36,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
   one_to_many :cours, class: :Cours
   one_to_many :devoirs
 
+  many_to_one :etablissement, class: :Etablissement, key: :etablissement_id
   many_to_one :plage_horaire_debut, class: :PlageHoraire, key: :debut
   many_to_one :plage_horaire_fin, class: :PlageHoraire, key: :fin
 

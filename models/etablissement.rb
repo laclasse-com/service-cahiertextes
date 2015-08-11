@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 class Etablissement < Sequel::Model( :etablissements )
+  one_to_many :creneaux_emploi_du_temps, class: :CreneauEmploiDuTemps
+
   def statistiques_classes
     AnnuaireWrapper::Etablissement.get( values[:UAI] )['classes']
       .map do |classe|

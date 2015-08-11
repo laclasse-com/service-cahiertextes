@@ -61,11 +61,14 @@ module CahierDeTextesAPI
 
         error!( 'Aucune PlageHoraire définie', 500 ) if dummy_plage_horaire.nil?
 
+        etablissement_id = Etablissement[ UAI: user[:user_detailed]['profil_actif']['etablissement_code_uai'] ].id
+
         creneau = CreneauEmploiDuTemps.create( date_creation: Time.now,
                                                debut: dummy_plage_horaire.id,
                                                fin: dummy_plage_horaire.id,
                                                jour_de_la_semaine: params[:jour_de_la_semaine] - 1,
-                                               matiere_id: params[:matiere_id] )
+                                               matiere_id: params[:matiere_id],
+                                               etablissement_id: etablissement_id )
 
         params[:enseignant_id] = user[:uid]
         creneau.modifie( params )

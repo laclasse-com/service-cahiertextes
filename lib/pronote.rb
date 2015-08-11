@@ -135,8 +135,7 @@ module ProNote
     rapport = { success: [], error: [] }
 
     xml.search('Salles').children.reject { |child| child.name == 'text' }.each do |node|
-      salle = DataManagement::Accessors.create_or_get( Salle, etablissement_id: etablissement.id,
-                                                              identifiant: node['Ident'],
+      salle = DataManagement::Accessors.create_or_get( Salle, identifiant: node['Ident'],
                                                               nom: node['Nom'] )
 
       if salle.nil?
@@ -385,6 +384,7 @@ module ProNote
 
       creneau = DataManagement::Accessors
                 .create_or_get( CreneauEmploiDuTemps,
+                                etablissement_id: etablissement.id,
                                 jour_de_la_semaine: node['Jour'],
                                 debut: debut,
                                 fin: fin,
