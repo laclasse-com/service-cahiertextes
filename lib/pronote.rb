@@ -375,7 +375,7 @@ module ProNote
     xml
       .search('Cours/Cours')
       .each do |node|
-      next if node.name == 'text'
+      next if node.name == 'text' || node.key?( 'SemainesAnnulation' )
 
       debut = PlageHoraire[ label: node['NumeroPlaceDebut'] ][:id]
       fin = PlageHoraire[ label: node['NumeroPlaceDebut'].to_i + node['NombrePlaces'].to_i - 1 ][:id]
@@ -385,12 +385,12 @@ module ProNote
 
       creneau = DataManagement::Accessors
                 .create_or_get( CreneauEmploiDuTemps,
-                                jour_de_la_semaine: node['Jour'], # 1: 'lundi' .. 7: 'dimanche', norme ISO-8601
+                                jour_de_la_semaine: node['Jour'],
                                 debut: debut,
                                 fin: fin,
                                 matiere_id: matiere_id )
 
-      LOGGER.debug " . Created Créneau #{CreneauEmploiDuTemps.count} #{creneau.id} (#{matiere_id} ; #{debut} ; #{fin})"
+      LOGGER.debug " . Created Créneau n#{CreneauEmploiDuTemps.count} i#{creneau.id} (d#{node['Jour']} m#{matiere_id} from #{debut} to #{fin})"
 
       node.children.each do |subnode|
         case subnode.name
