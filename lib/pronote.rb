@@ -406,6 +406,13 @@ module ProNote
               CreneauEmploiDuTempsEnseignant.restrict_primary_key
 
               LOGGER.debug "  -> added enseignant #{enseignants[ subnode['Ident'] ]}"
+            else
+              ce = CreneauEmploiDuTempsEnseignant
+                   .where( enseignant_id: enseignants[ subnode['Ident'] ] )
+                   .where( creneau_emploi_du_temps_id: creneau.id )
+              ce.update(semaines_de_presence: corrige_semainiers( subnode['Semaines'], offset_semainiers ) )
+
+              LOGGER.debug "  -> updated enseignant #{enseignants[ subnode['Ident'] ]}"
             end
           end
 
@@ -423,9 +430,15 @@ module ProNote
               CreneauEmploiDuTempsRegroupement.restrict_primary_key
 
               LOGGER.debug "  -> added regroupement #{regroupements[ subnode['Ident'] ]}"
+            else
+              cr = CreneauEmploiDuTempsRegroupement
+                   .where( regroupement_id: regroupements[ subnode.name ][ subnode['Ident'] ] )
+                   .where( creneau_emploi_du_temps_id: creneau.id )
+              cr.update(semaines_de_presence: corrige_semainiers( subnode['Semaines'], offset_semainiers ) )
+
+              LOGGER.debug "  -> updated regroupement #{cr[:creneau_emploi_du_temps_id]}"
             end
           end
-
         when 'Salle'
           unless creneau.salles.include?( Salle[ identifiant: subnode['Ident'] ] )
             creneau.add_salle( Salle[ identifiant: subnode['Ident'] ] )
