@@ -56,22 +56,38 @@ module ProNote
     inflate decrypted_payload
   end
 
+  def pad_semainier( semainier )
+    (52 - semainier.length).times { semainier += '0' }
+
+    semainier
+  end
+
   def corrige_semainiers( semainier, decalage )
+    # STDERR.puts '@@@@ Correction d\'un semainier'
+    # STDERR.puts "    o: #{semainier}"
+
     semainier = semainier.to_i if semainier.is_a? String
     semainier = semainier.to_s( 2 )
 
-    # pad semainier
-    (53 - semainier.length).times { semainier = '0' + semainier }
+    semainier = pad_semainier( semainier )
+    # STDERR.puts "   op: #{semainier}"
 
     # find cutting point
-    pivot = semainier.length - decalage
+    pivot_point = 52 - decalage
+    # STDERR.puts "   pp: #{' ' * pivot_point}^"
 
     # cut in halves
-    debut = semainier.slice( pivot, semainier.length )
-    fin = semainier.slice( 0, pivot )
+    debut = semainier.slice( pivot_point, semainier.length )
+    # STDERR.puts "    d: #{debut}"
+    fin = semainier.slice( 0, pivot_point )
+    # STDERR.puts "    f: #{' ' * debut.length}#{fin}"
 
     # glue and serve
-    "#{debut}#{fin}".to_i( 2 )
+    fixed_semainier = "#{debut}#{fin}"
+    # STDERR.puts "   fs: #{fixed_semainier}"
+    # STDERR.puts "  fsi: #{fixed_semainier.to_i( 2 )}"
+
+    fixed_semainier.to_i( 2 )
   end
 
   def extract_uai_from_xml( xml, _xsd = nil )
