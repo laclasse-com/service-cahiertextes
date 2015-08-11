@@ -21,6 +21,9 @@ Style/SpaceInsideRangeLiteral:
 Style/AsciiComments:
   Enabled: false
 
+Style/MultilineBlockChain:
+  Enabled: false
+
 Metrics/ClassLength:
   Max: 300
 
