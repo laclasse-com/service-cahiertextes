@@ -50,6 +50,7 @@ module CahierDeTextesAPI
         requires :regroupement_id
 
         optional :salle_id
+        optional :enseignant_id
         optional :semaines_de_presence_regroupement, type: Fixnum
         optional :semaines_de_presence_enseignant, type: Fixnum
         optional :semaines_de_presence_salle, type: Fixnum
@@ -70,7 +71,8 @@ module CahierDeTextesAPI
                                                matiere_id: params[:matiere_id],
                                                etablissement_id: etablissement_id )
 
-        params[:enseignant_id] = user[:uid]
+        params[:enseignant_id] = user[:uid] unless params.key? :enseignant_id
+
         creneau.modifie( params )
 
         creneau
@@ -87,6 +89,7 @@ module CahierDeTextesAPI
         optional :heure_debut, type: Time
         optional :heure_fin, type: Time
         optional :salle_id
+        optional :enseignant_id
         optional :semaines_de_presence_regroupement, type: Fixnum
         optional :semaines_de_presence_enseignant, type: Fixnum
         optional :semaines_de_presence_salle, type: Fixnum
