@@ -386,105 +386,107 @@ module ProNote
     xml
       .search('Cours/Cours')
       .each do |node|
-        next if node.name == 'text' || node.key?( 'SemainesAnnulation' )
+      next if node.name == 'text' || node.key?( 'SemainesAnnulation' )
 
-        matiere_id = matieres[ node.search( 'Matiere' ).first.attributes['Ident'].value ]
-        next if matiere_id.nil?
+      matiere_id = matieres[ node.search( 'Matiere' ).first.attributes['Ident'].value ]
+      next if matiere_id.nil?
 
-        this_creneau_regroupements = node.children.select { |subnode| %w(Classe PartieDeClasse Groupe).include? subnode.name }
-        next if this_creneau_regroupements.empty?
+      this_creneau_regroupements = node.children.select { |subnode| %w(Classe PartieDeClasse Groupe).include? subnode.name }
+      next if this_creneau_regroupements.empty?
 
-        this_creneau_enseignants = node.children.select { |subnode| subnode.name == 'Professeur' }
-        next if this_creneau_enseignants.empty?
+      this_creneau_enseignants = node.children.select { |subnode| subnode.name == 'Professeur' }
+      next if this_creneau_enseignants.empty?
 
-        this_creneau_salles = node.children.select { |subnode| subnode.name == 'Salle' }
+      this_creneau_salles = node.children.select { |subnode| subnode.name == 'Salle' }
 
-        debut = PlageHoraire[ label: node['NumeroPlaceDebut'] ][:id]
-        fin = PlageHoraire[ label: node['NumeroPlaceDebut'].to_i + node['NombrePlaces'].to_i - 1 ][:id]
+      debut = PlageHoraire[ label: node['NumeroPlaceDebut'] ][:id]
+      fin = PlageHoraire[ label: node['NumeroPlaceDebut'].to_i + node['NombrePlaces'].to_i - 1 ][:id]
 
-        creneau = DataManagement::Accessors
-                  .create_or_get( CreneauEmploiDuTemps,
-                                  etablissement_id: etablissement.id,
-                                  jour_de_la_semaine: node['Jour'],
-                                  debut: debut,
-                                  fin: fin,
-                                  matiere_id: matiere_id )
-        # creneau = CreneauEmploiDuTemps.create( jour_de_la_semaine: node['Jour'],
-        #                                        debut: debut,
-        #                                        fin: fin,
-        #                                        matiere_id: matiere_id,
-        #                                        date_creation: Time.now )
+      this_creneau_regroupements.each do |subnode|
+        if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
+          rapport[:regroupements][:error] << "#{subnode['Ident']} (#{subnode.name})"
+        else
+          creneau = DataManagement::Accessors
+                    .create_or_get( CreneauEmploiDuTemps,
+                                    etablissement_id: etablissement.id,
+                                    jour_de_la_semaine: node['Jour'],
+                                    debut: debut,
+                                    fin: fin,
+                                    matiere_id: matiere_id )
 
-        LOGGER.debug " . Created Créneau n#{CreneauEmploiDuTemps.count} i#{creneau.id} (d#{node['Jour']} m#{matiere_id} from #{debut} to #{fin})"
+          creneau = CreneauEmploiDuTemps.create( etablissement_id: etablissement.id,
+                                                 jour_de_la_semaine: node['Jour'],
+                                                 debut: debut,
+                                                 fin: fin,
+                                                 matiere_id: matiere_id,
+                                                 date_creation: Time.now ) unless creneau.regroupements.empty?
 
-        this_creneau_regroupements.each do |subnode|
-          if regroupements[ subnode.name ][ subnode['Ident'] ].nil?
-            rapport[:regroupements][:error] << "#{subnode['Ident']} (#{subnode.name})"
-          else
-            rapport[:regroupements][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
-            if creneau.regroupements.count { |cr| cr[:regroupement_id] == "#{regroupements[ subnode.name ][ subnode['Ident'] ]}" } == 0
-              CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
-              creneau.add_regroupement(regroupement_id: regroupements[ subnode.name ][ subnode['Ident'] ],
-                                       semaines_de_presence: corrige_semainiers( subnode['Semaines'], offset_semainiers ) )
-              CreneauEmploiDuTempsRegroupement.restrict_primary_key
+          LOGGER.debug " . Created Créneau n#{CreneauEmploiDuTemps.count} i#{creneau.id} (d#{node['Jour']} m#{matiere_id} from #{debut} to #{fin})"
 
-              LOGGER.debug "  -> added regroupement #{regroupements[ subnode['Ident'] ]}"
-            else
-              cr = CreneauEmploiDuTempsRegroupement
-                   .where( regroupement_id: regroupements[ subnode.name ][ subnode['Ident'] ] )
-                   .where( creneau_emploi_du_temps_id: creneau.id )
-              cr.update(semaines_de_presence: corrige_semainiers( subnode['Semaines'], offset_semainiers ) )
-
-              LOGGER.debug "  -> updated regroupement #{cr[:creneau_emploi_du_temps_id]}"
-            end
-          end
-        end
-        this_creneau_regroupements_ids = creneau.regroupements.map { |regroupement| regroupement[ :regroupement_id ].to_i }
-
-        if this_creneau_regroupements_ids.empty?
-          creneau.destroy
-          next
-        end
-
-        this_creneau_enseignants.each do |subnode|
-          STDERR.puts "#{this_creneau_regroupements_ids} & #{enseignants[ subnode['Ident'] ][:regroupements]} = #{this_creneau_regroupements_ids & enseignants[ subnode['Ident'] ][:regroupements]}" unless enseignants[ subnode['Ident'] ].nil? || enseignants[ subnode['Ident'] ][:id].nil? || enseignants[ subnode['Ident'] ][:regroupements].nil?
-          if enseignants[ subnode['Ident'] ].nil? ||
-             enseignants[ subnode['Ident'] ][:id].nil? ||
-             enseignants[ subnode['Ident'] ][:regroupements].nil? ||
-             ( this_creneau_regroupements_ids & enseignants[ subnode['Ident'] ][:regroupements] ).empty?
-            rapport[:enseignants][:error] << subnode['Ident']
-          else
-            rapport[:enseignants][:success] << enseignants[ subnode['Ident'] ][:id]
-            if creneau.enseignants.count { |ce| ce[:enseignant_id] == enseignants[ subnode['Ident'] ][:id] } == 0
-              CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
-              creneau.add_enseignant(enseignant_id: enseignants[ subnode['Ident'] ][:id],
+          rapport[:regroupements][:success] << regroupements[ subnode.name ][ subnode['Ident'] ]
+          if creneau.regroupements.count { |cr| cr[:regroupement_id] == "#{regroupements[ subnode.name ][ subnode['Ident'] ]}" } == 0
+            CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
+            creneau.add_regroupement(regroupement_id: regroupements[ subnode.name ][ subnode['Ident'] ],
                                      semaines_de_presence: corrige_semainiers( subnode['Semaines'], offset_semainiers ) )
-              CreneauEmploiDuTempsEnseignant.restrict_primary_key
+            CreneauEmploiDuTempsRegroupement.restrict_primary_key
 
-              LOGGER.debug "  -> added enseignant #{enseignants[ subnode['Ident'] ][:id]}"
+            LOGGER.debug "  -> added regroupement #{regroupements[ subnode['Ident'] ]}"
+          else
+            cr = CreneauEmploiDuTempsRegroupement
+                 .where( regroupement_id: regroupements[ subnode.name ][ subnode['Ident'] ] )
+                 .where( creneau_emploi_du_temps_id: creneau.id )
+            cr.update(semaines_de_presence: corrige_semainiers( subnode['Semaines'], offset_semainiers ) )
+
+            LOGGER.debug "  -> updated regroupement #{cr[:creneau_emploi_du_temps_id]}"
+          end
+          this_creneau_regroupements_ids = creneau.regroupements.map { |regroupement| regroupement[ :regroupement_id ].to_i }
+
+          if this_creneau_regroupements_ids.empty?
+            creneau.destroy
+            next
+          end
+
+          this_creneau_enseignants.each do |subnode_enseignant|
+            STDERR.puts "#{this_creneau_regroupements_ids} & #{enseignants[ subnode_enseignant['Ident'] ][:regroupements]} = #{this_creneau_regroupements_ids & enseignants[ subnode_enseignant['Ident'] ][:regroupements]}" unless enseignants[ subnode_enseignant['Ident'] ].nil? || enseignants[ subnode_enseignant['Ident'] ][:id].nil? || enseignants[ subnode_enseignant['Ident'] ][:regroupements].nil?
+            if enseignants[ subnode_enseignant['Ident'] ].nil? ||
+               enseignants[ subnode_enseignant['Ident'] ][:id].nil? ||
+               enseignants[ subnode_enseignant['Ident'] ][:regroupements].nil? ||
+               ( this_creneau_regroupements_ids & enseignants[ subnode_enseignant['Ident'] ][:regroupements] ).empty?
+              rapport[:enseignants][:error] << subnode_enseignant['Ident']
             else
-              ce = CreneauEmploiDuTempsEnseignant
-                   .where( enseignant_id: enseignants[ subnode['Ident'] ][:id] )
-                   .where( creneau_emploi_du_temps_id: creneau.id )
-              ce.update(semaines_de_presence: corrige_semainiers( subnode['Semaines'], offset_semainiers ) )
+              rapport[:enseignants][:success] << enseignants[ subnode_enseignant['Ident'] ][:id]
+              if creneau.enseignants.count { |ce| ce[:enseignant_id] == enseignants[ subnode_enseignant['Ident'] ][:id] } == 0
+                CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
+                creneau.add_enseignant(enseignant_id: enseignants[ subnode_enseignant['Ident'] ][:id],
+                                       semaines_de_presence: corrige_semainiers( subnode_enseignant['Semaines'], offset_semainiers ) )
+                CreneauEmploiDuTempsEnseignant.restrict_primary_key
 
-              LOGGER.debug "  -> updated enseignant #{enseignants[ subnode['Ident'] ][:id]}"
+                LOGGER.debug "  -> added enseignant #{enseignants[ subnode_enseignant['Ident'] ][:id]}"
+              else
+                ce = CreneauEmploiDuTempsEnseignant
+                     .where( enseignant_id: enseignants[ subnode_enseignant['Ident'] ][:id] )
+                     .where( creneau_emploi_du_temps_id: creneau.id )
+                ce.update(semaines_de_presence: corrige_semainiers( subnode_enseignant['Semaines'], offset_semainiers ) )
+
+                LOGGER.debug "  -> updated enseignant #{enseignants[ subnode_enseignant['Ident'] ][:id]}"
+              end
             end
           end
-        end
 
-        this_creneau_salles.each do |subnode|
-          unless creneau.salles.include?( Salle[ identifiant: subnode['Ident'] ] )
-            creneau.add_salle( Salle[ identifiant: subnode['Ident'] ] )
+          this_creneau_salles.each do |subnode_salle|
+            unless creneau.salles.include?( Salle[ identifiant: subnode_salle['Ident'] ] )
+              creneau.add_salle( Salle[ identifiant: subnode_salle['Ident'] ] )
 
-            LOGGER.debug "  -> added salle #{Salle[ identifiant: subnode['Ident'] ]}"
+              LOGGER.debug "  -> added salle #{Salle[ identifiant: subnode_salle['Ident'] ]}"
+            end
+            cs = CreneauEmploiDuTempsSalle
+                 .where( salle_id: Salle[ identifiant: subnode_salle['Ident'] ][:id] )
+                 .where( creneau_emploi_du_temps_id: creneau.id )
+            cs.update(semaines_de_presence: corrige_semainiers( subnode_salle['Semaines'], offset_semainiers ) )
           end
-          cs = CreneauEmploiDuTempsSalle
-               .where( salle_id: Salle[ identifiant: subnode['Ident'] ][:id] )
-               .where( creneau_emploi_du_temps_id: creneau.id )
-          cs.update(semaines_de_presence: corrige_semainiers( subnode['Semaines'], offset_semainiers ) )
         end
       end
+    end
 
     rapport
   end
