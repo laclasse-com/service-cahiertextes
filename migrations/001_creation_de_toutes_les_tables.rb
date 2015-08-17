@@ -35,7 +35,7 @@ Sequel.migration do
       Integer :jour_de_la_semaine, null: false
       String :matiere_id, null: false
       TrueClass :deleted, default: false
-      DateTime :date_creation,  null: false, default: Time.now
+      DateTime :date_creation, null: false, default: Time.now
       DateTime :date_suppression
     end
 
