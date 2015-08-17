@@ -65,7 +65,7 @@ describe ProNote do
         end
       end
 
-      rapport = ProNote.load_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ) )
+      rapport = ProNote.decrypt_and_load_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ) )
 
       expect( rapport[:plages_horaires][:success].count ).to eq 20
       expect( PlageHoraire.count ).to eq 20
@@ -107,9 +107,22 @@ describe ProNote do
             end
           end
         end
+
+        module User
+          module_function
+
+          def get( _uid )
+            { 'classes' => [ { 'etablissement_code' => '0134567A',
+                               'classe_id' => 1 } ],
+              'groupes_eleves' => [ { 'etablissement_code' => '0134567A',
+                                      'groupe_id' => 2 } ],
+              'groupes_libres' => []
+            }
+          end
+        end
       end
 
-      rapport = ProNote.load_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ) )
+      rapport = ProNote.decrypt_and_load_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ) )
 
       expect( rapport[:plages_horaires][:success].count ).to eq 20
       expect( PlageHoraire.count ).to eq 20
@@ -117,7 +130,7 @@ describe ProNote do
       expect( Salle.count ).to eq 24
       expect( rapport[:matieres][:success].count ).to eq 25
       expect( rapport[:enseignants][:success].count ).to eq 31
-      expect( CreneauEmploiDuTemps.count ).to eq 414
+      expect( CreneauEmploiDuTemps.count ).to eq 392
       expect( FailedIdentification.count ).to eq 0
     end
   end
@@ -154,7 +167,7 @@ describe ProNote do
       end
 
       LOGGER.info 'First Pass'
-      rapport = ProNote.load_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ) )
+      rapport = ProNote.decrypt_and_load_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ) )
 
       expect( rapport[:plages_horaires][:success].count ).to eq 20
       expect( PlageHoraire.count ).to eq 20
@@ -168,7 +181,7 @@ describe ProNote do
       FailedIdentification.where( id_annuaire: nil ).update( id_annuaire: :sha256 )
 
       LOGGER.info 'Second Pass'
-      rapport2nd = ProNote.load_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ) )
+      rapport2nd = ProNote.decrypt_and_load_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ) )
 
       expect( rapport2nd[:plages_horaires][:success].count ).to eq 20
       expect( PlageHoraire.count ).to eq 20
@@ -176,7 +189,7 @@ describe ProNote do
       expect( Salle.count ).to eq 24
       expect( rapport2nd[:matieres][:error].count ).to eq 0
       expect( rapport2nd[:enseignants][:error].count ).to eq 0
-      expect( CreneauEmploiDuTemps.count ).to eq 414 # 51?
+      expect( CreneauEmploiDuTemps.count ).to eq 392
       expect( FailedIdentification.where( id_annuaire: nil ).count ).to eq 0
     end
   end
