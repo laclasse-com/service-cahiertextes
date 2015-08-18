@@ -343,8 +343,6 @@ module ProNote
 
           rapport[subnode.name.to_sym][:success] << { id: regroupements[ subnode.name ][ subnode['Ident'] ], nom: subnode['Nom'] } unless regroupements[ subnode.name ][ subnode['Ident'] ].nil?
         when 'Classe'
-          next if subnode.name == 'text'
-
           reponse_annuaire = AnnuaireWrapper::Etablissement::Regroupement.search( etablissement.UAI, subnode['Nom'] )
           code_annuaire = reponse_annuaire.nil? || !( reponse_annuaire.is_a? Array ) ? nil : reponse_annuaire.first['id']
           regroupements[ subnode.name ][ subnode['Ident'] ] = code_annuaire
@@ -414,12 +412,15 @@ module ProNote
                                     fin: fin,
                                     matiere_id: matiere_id )
 
-          creneau = CreneauEmploiDuTemps.create( etablissement_id: etablissement.id,
-                                                 jour_de_la_semaine: node['Jour'],
-                                                 debut: debut,
-                                                 fin: fin,
-                                                 matiere_id: matiere_id,
-                                                 date_creation: Time.now ) unless creneau.regroupements.empty?
+          STDERR.puts "!!!> #{creneau.regroupements.map(&:regroupement_id)}.include?( #{regroupements[ subnode.name ][ subnode['Ident'] ]} ) = #{creneau.regroupements.map(&:regroupement_id).include?( regroupements[ subnode.name ][ subnode['Ident'] ].to_s )}"
+          unless creneau.regroupements.map(&:regroupement_id).include?( regroupements[ subnode.name ][ subnode['Ident'] ].to_s )
+            creneau = CreneauEmploiDuTemps.create( etablissement_id: etablissement.id,
+                                                   jour_de_la_semaine: node['Jour'],
+                                                   debut: debut,
+                                                   fin: fin,
+                                                   matiere_id: matiere_id,
+                                                   date_creation: Time.now )
+          end
 
           LOGGER.debug " . Created Créneau n#{CreneauEmploiDuTemps.count} i#{creneau.id} (d#{node['Jour']} m#{matiere_id} from #{debut} to #{fin})"
 
