@@ -3,7 +3,7 @@
 Sequel.migration do
   up do
     alter_table( :creneaux_emploi_du_temps ) do
-      add_foreign_key :etablissement_id, :etablissements, null: false
+      add_foreign_key :etablissement_id, :etablissements, null: true
     end
     alter_table( :salles ) do
       drop_foreign_key :etablissement_id
