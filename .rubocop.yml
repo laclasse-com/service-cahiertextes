@@ -24,6 +24,9 @@ Style/AsciiComments:
 Style/MultilineBlockChain:
   Enabled: false
 
+Style/ExtraSpacing:
+  Enabled: false
+
 Metrics/ClassLength:
   Max: 300
 
