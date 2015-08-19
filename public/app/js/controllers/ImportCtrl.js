@@ -13,6 +13,13 @@ angular.module( 'cahierDeTextesClientApp' )
 		      };
 
 		      $scope.launch_import = function( $files ) { // $files: an array of files selected, each file has name, size, and type.
+			  swal( { type: 'info',
+				  title: 'Import des données en cours.',
+				  text: 'Merci de bien vouloir patienter, cette opération peut être longue (jusqu\'à 10 minutes).',
+				  showCancelButton: false,
+				  showConfirmButton: false
+				} );
+
 			  $scope.result = false;
 
 			  for ( var i = 0; i < $files.length; i++ ) {
@@ -24,10 +31,14 @@ angular.module( 'cahierDeTextesClientApp' )
 			      } )
 				  .progress( function( evt ) {
 				      $scope.in_progress = true;
-				      console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
 				  } )
 				  .error( function() {
 				      $scope.in_progress = false;
+				      swal( { type: 'error',
+					      title: 'Erreur lors de l\'importation.',
+					      text: 'Merci de contacter le support.',
+					      showCancelButton: false
+					    } );
 				  } )
 				  .success( function( data, status, headers, config ) {
 				      $scope.in_progress = false;
@@ -71,6 +82,13 @@ angular.module( 'cahierDeTextesClientApp' )
 						  $scope.regroupements = response.data;
 					      } );
 				      }
+
+				      swal( { type: 'success',
+					      title: 'Les données ont été importées dans le Cahier de Textes avec succès.',
+					      text: 'S\'il subsiste des éléments n\'ayant pû être identifiés nous vous demandons de faire le recollement manuellement puis de relancer le processus d\'import en cliquant sur le bouton « Ré-importer ».',
+					      showCancelButton: false
+					    } );
+
 				  } );
 			  }
 		      };
