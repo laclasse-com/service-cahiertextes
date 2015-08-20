@@ -525,7 +525,6 @@ module ProNote
     ####
     # Les enseignants sont dans l'annuaire
     ####
-    p enseignants
     trace_rapport( rapport, :enseignants )
     enseignants, rapport[:enseignants] = load_enseignants( edt_clair, etablissement )
 
