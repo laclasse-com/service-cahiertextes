@@ -178,7 +178,7 @@ module ProNote
       rapport[:success] << { id: matieres[ node['Ident'] ], libelle: node['Libelle'] } unless matieres[ node['Ident'] ].nil?
     end
 
-    [ rapport, matieres ]
+    [ matieres, rapport ]
   end
 
   # rubocop:disable Metrics/PerceivedComplexity
@@ -223,7 +223,7 @@ module ProNote
       rapport[:success] << { id: enseignants[ node['Ident'] ][:id], nom: node['Nom'], prenom: node['Prenom'] }
     end
 
-    [ rapport, enseignants ]
+    [ enseignants, rapport ]
   end
   # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/PerceivedComplexity
@@ -366,7 +366,7 @@ module ProNote
       end
     end
 
-    [ rapport, regroupements ]
+    [ regroupements, rapport ]
   end
   # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/PerceivedComplexity
@@ -521,23 +521,23 @@ module ProNote
     ####
     # Les matières sont dans l'annuaire
     ####
-    rapport[:matieres], matieres = load_matieres( edt_clair )
     trace_rapport( rapport, :matieres )
+    matieres, rapport[:matieres] = load_matieres( edt_clair )
 
     ####
     # Les enseignants sont dans l'annuaire
     ####
-    rapport[:enseignants], enseignants = load_enseignants( edt_clair, etablissement )
     p enseignants
     trace_rapport( rapport, :enseignants )
+    enseignants, rapport[:enseignants] = load_enseignants( edt_clair, etablissement )
 
     ####
     # Les classes, parties de classe et groupes sont dans l'annuaire
     ####
-    rapport[:regroupements], regroupements = load_regroupements( edt_clair, etablissement )
     rapport[:regroupements].keys.each do |key|
       trace_rapport( rapport[:regroupements], key )
     end
+    regroupements, rapport[:regroupements] = load_regroupements( edt_clair, etablissement )
 
     rapport[:creneaux] = load_creneaux( edt_clair, etablissement, matieres, enseignants, regroupements )
     rapport[:creneaux].keys.each do |key|
