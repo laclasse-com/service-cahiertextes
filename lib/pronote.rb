@@ -67,9 +67,7 @@ module ProNote
     # STDERR.puts "    o: #{semainier}"
 
     semainier = semainier.to_i if semainier.is_a? String
-    semainier = semainier.to_s( 2 )
-
-    semainier = pad_semainier( semainier )
+    semainier = pad_semainier( semainier.to_s( 2 ) )
     # STDERR.puts "   op: #{semainier}"
 
     # find cutting point
