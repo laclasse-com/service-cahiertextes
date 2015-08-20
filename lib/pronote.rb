@@ -95,8 +95,8 @@ module ProNote
   end
 
   def trace_rapport( rapport, key )
-    LOGGER.debug "Import #{key}, #{rapport[ key ][:success].length} succès."
-    LOGGER.debug "Import #{key}, #{rapport[ key ][:error].length} erreurs."
+    LOGGER.info "Import #{key}, #{rapport[ key ][:success].length} succès."
+    LOGGER.info "Import #{key}, #{rapport[ key ][:error].length} erreurs."
   end
 
   def load_etablissement( xml )
