@@ -6,20 +6,20 @@ module DataManagement
 
     # rubocop:disable Metrics/PerceivedComplexity
     # rubocop:disable Metrics/CyclomaticComplexity
-    def get( debut, fin, regroupements_ids, eleve_id )
+    def get( debut, fin, regroupements_ids, profil_type, eleve_id )
       # Nota Bene: semainiers callés sur l'année civile
-      CreneauEmploiDuTemps
-        .association_join( :regroupements, :enseignants )
-        .select_append( :regroupements__semaines_de_presence___semainier_regroupement )
-        .select_append( :enseignants__semaines_de_presence___semainier_enseignant )
-        .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{1.year.ago}'" )
-        .where( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{fin}')" )
-        .where( regroupement_id: regroupements_ids )
-        .all
-        .map do |creneau|
+      emploi_du_temps = CreneauEmploiDuTemps
+                        .association_join( :regroupements, :enseignants )
+                        .select_append( :regroupements__semaines_de_presence___semainier_regroupement )
+                        .select_append( :enseignants__semaines_de_presence___semainier_enseignant )
+                        .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{1.year.ago}'" )
+                        .where( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{fin}')" )
+                        .where( regroupement_id: regroupements_ids )
+                        .all
+                        .map do |creneau|
         ( debut .. fin )
-          .select { |day| day.wday == creneau.jour_de_la_semaine } # only the same weekday as the creneau
-          .map do |jour|
+        .select { |day| day.wday == creneau.jour_de_la_semaine } # only the same weekday as the creneau
+        .map do |jour|
             if creneau[:semainier_regroupement][ jour.cweek ] == 1 &&
                creneau[:semainier_enseignant][ jour.cweek ] == 1
               cahier_de_textes = CahierDeTextes.where( regroupement_id: creneau[:regroupement_id] ).first
@@ -42,16 +42,16 @@ module DataManagement
                                creneau.plage_horaire_fin.fin.hour,
                                creneau.plage_horaire_fin.fin.min ).iso8601,
                 cours: creneau.cours
-                  .select { |cours| cours[:deleted] == false && cours.date_cours == jour }
-                  .map do |cours|
+                       .select { |cours| cours[:deleted] == false && cours.date_cours == jour }
+                       .map do |cours|
                   hcours = cours.to_hash
                   hcours[:ressources] = cours.ressources.map(&:to_hash)
 
                   hcours
                 end
-                  .first,
+                       .first,
                 devoirs: creneau.devoirs.select { |devoir| devoir[:deleted] == false && devoir.date_due == jour }
-                  .map do |devoir|
+                         .map do |devoir|
                   hdevoir = devoir.to_hash
                   hdevoir[:ressources] = devoir.ressources.map(&:to_hash)
                   hdevoir[:type_devoir_description] = devoir.type_devoir.description
@@ -66,8 +66,12 @@ module DataManagement
             end
           end
       end
-        .flatten
-        .compact
+                        .flatten
+                        .compact
+
+      emploi_du_temps = emploi_du_temps.each { |c| c.delete :enseignant_id }.uniq if %w(ELV TUT).include? profil_type
+
+      emploi_du_temps
     end
     # rubocop:enable Metrics/CyclomaticComplexity
     # rubocop:enable Metrics/PerceivedComplexity
