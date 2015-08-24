@@ -1,14 +1,14 @@
 'use strict';
 
 angular.module( 'cahierDeTextesClientApp' )
-    .config( [ '$compileProvider', 'LOCALHOST',
-	       function( $compileProvider, LOCALHOST ) {
-		   if ( ! LOCALHOST ) {
-		       $compileProvider.debugInfoEnabled( false );
-		   } else {
-		       console.log( 'Running on localhost !' )
-		   }
-	       } ] )
+// .config( [ '$compileProvider', 'LOCALHOST',
+//	       function( $compileProvider, LOCALHOST ) {
+//		   if ( ! LOCALHOST ) {
+//		       $compileProvider.debugInfoEnabled( false );
+//		   } else {
+//		       console.log( 'Running on localhost !' )
+//		   }
+//	       } ] )
 // Loading Bar
     .config( [ 'cfpLoadingBarProvider',
 	       function( cfpLoadingBarProvider ) {
