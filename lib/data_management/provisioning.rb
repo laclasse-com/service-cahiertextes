@@ -12,19 +12,18 @@ module DataManagement
       else
         user[:user_detailed]['etablissements']
           .each do |etab|
-          etablissement = Etablissement.where(UAI: etab[ 'code_uai' ]).first
-
-          next unless etablissement.nil?
-
           etablissement = AnnuaireWrapper::Etablissement.get( etab[ 'code_uai' ] )
-          Etablissement.create(UAI: etablissement['code_uai' ] )
+
+          next if etablissement.key? 'error'
+
+          Accessors.create_or_get( Etablissement, UAI: etab[ 'code_uai' ] )
+
           etablissement['classes']
             .concat( etablissement['groupes_eleves'] )
             .concat( etablissement['groupes_libres'] )
             .each do |regroupement|
-            cdt = CahierDeTextes.where( regroupement_id: regroupement['id'] ).first
-            CahierDeTextes.create( date_creation: Time.now,
-                                   regroupement_id: regroupement['id'] ) if cdt.nil?
+            Accessors.create_or_get( CahierDeTextes,
+                                     regroupement_id: regroupement['id'] )
           end
         end
       end
