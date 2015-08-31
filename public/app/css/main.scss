@@ -27,7 +27,6 @@ body {
 
 header {
     background: none repeat scroll 0 0 #fff;
-    position: fixed;
     width: 100%;
     z-index: 1;
     height: 112px;
@@ -42,13 +41,9 @@ header.embedded {
 
 #ui-view-content {
     padding: 0 15px;
-    padding-top: 112px;
     max-width: 1170px;
     width: 100%;
     margin: 0 auto;
-}
-#ui-view-content.embedded {
-    padding-top: 68px;
 }
 
 /* Tabs */
