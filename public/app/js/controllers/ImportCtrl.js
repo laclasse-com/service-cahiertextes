@@ -8,13 +8,15 @@ angular.module( 'cahierDeTextesClientApp' )
 		      $scope.result = false;
 		      $scope.fichiers = null;
 
+		      $scope.second_pass = false;
+
 		      $scope.onFileSelect = function( $files ) {
 			  $scope.fichiers = $files;
 		      };
 
 		      $scope.launch_import = function( $files ) { // $files: an array of files selected, each file has name, size, and type.
 			  swal( { type: 'info',
-				  title: 'Import des données en cours.',
+				  title: $scope.second_pass ? 'Import des données en cours.' : 'Vérification et recollement des données en cours',
 				  text: 'Merci de bien vouloir patienter, cette opération peut être longue (jusqu\'à 10 minutes).',
 				  showCancelButton: false,
 				  showConfirmButton: false
@@ -27,7 +29,9 @@ angular.module( 'cahierDeTextesClientApp' )
 			      $scope.upload = Upload.upload( {
 				  url: APP_PATH + '/api/v1/import/pronote',
 				  method: 'POST',
-				  file: file
+				  file: file,
+				  fields: { create_creneaux: $scope.second_pass },
+				  sendFieldsAs: 'form'
 			      } )
 				  .progress( function( evt ) {
 				      $scope.in_progress = true;
@@ -43,6 +47,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				  .success( function( data, status, headers, config ) {
 				      $scope.in_progress = false;
 				      $scope.result = data;
+				      $scope.second_pass = true;
 
 				      $scope.identifie_objet = function( mrpni ) {
 					  if ( _(mrpni).has('id_annuaire')
@@ -84,7 +89,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				      }
 
 				      swal( { type: 'success',
-					      title: 'Les données ont été importées dans le Cahier de Textes avec succès.',
+					      title: $scope.second_pass ? 'Les données ont été importées dans le Cahier de Textes avec succès.' : 'Les recollements possibles ont été fait.',
 					      text: 'S\'il subsiste des éléments n\'ayant pû être identifiés nous vous demandons de faire le recollement manuellement puis de relancer le processus d\'import en cliquant sur le bouton « Ré-importer ».',
 					      showCancelButton: false
 					    } );

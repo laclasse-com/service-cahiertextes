@@ -226,7 +226,7 @@ module ProNote
       .search('Classes')
       .children
       .each do |node|
-      next if node.name == 'text'
+      next unless %w(PartieDeClasse Classe Groupe).include? node.name
 
       reponse_annuaire = AnnuaireWrapper::Etablissement::Regroupement.search( etablissement.UAI, node['Nom'] )
       code_annuaire = reponse_annuaire.nil? || !( reponse_annuaire.is_a? Array ) ? nil : reponse_annuaire.first['id']
@@ -251,10 +251,10 @@ module ProNote
       next if regroupements[ 'Classe' ][ node['Ident'] ].nil?
 
       node.children.each do |subnode|
-        next if subnode.name == 'text'
+        next unless %w(PartieDeClasse Classe Groupe).include? subnode.name
 
-        if subnode['Nom'].nil?
-          regroupements[ 'PartieDeClasse' ][ subnode['Ident'] ] = regroupements[ 'Classe' ][ node['Ident'] ]
+        if !subnode.key?( 'Nom') || subnode['Nom'].nil?
+          regroupements[ subnode.name ][ subnode['Ident'] ] = regroupements[ 'Classe' ][ node['Ident'] ]
         else
           reponse_annuaire = AnnuaireWrapper::Etablissement::Regroupement.search( etablissement.UAI, subnode['Nom'] )
           code_annuaire = reponse_annuaire.nil? || !( reponse_annuaire.is_a? Array ) ? nil : reponse_annuaire.first['id']
@@ -279,7 +279,7 @@ module ProNote
     end
 
     xml.search('Groupes').children.each do |node|
-      next if node.name == 'text'
+      next unless %w(Groupe).include? node.name
 
       reponse_annuaire = AnnuaireWrapper::Etablissement::Regroupement.search( etablissement.UAI, node['Nom'] )
       code_annuaire = reponse_annuaire.nil? || !( reponse_annuaire.is_a? Array ) ? nil : reponse_annuaire.first['id']
@@ -303,6 +303,8 @@ module ProNote
       next if regroupements[ node.name ][ node['Ident'] ].nil?
 
       node.children.each do |subnode|
+        next unless %w(PartieDeClasse Classe Groupe).include? subnode.name
+
         case subnode.name
         when 'PartieDeClasse'
           if subnode['Nom'].nil?
@@ -505,7 +507,7 @@ module ProNote
     end
   end
 
-  def load_xml( decrypted_xml )
+  def load_xml( decrypted_xml, create_creneaux )
     rapport = {}
 
     edt_clair = Nokogiri::XML( decrypted_xml ) { |config| config.noblanks }
@@ -538,18 +540,21 @@ module ProNote
       trace_rapport( rapport[:regroupements], key )
     end
 
-    rapport[:creneaux] = load_creneaux( edt_clair, etablissement, matieres, enseignants, regroupements )
-    # rapport[:creneaux].keys.each do |key|
-    #   trace_rapport( rapport[:creneaux], key )
-    # end
+    if create_creneaux
+      LOGGER.debug 'Creating Créneaux'
+      rapport[:creneaux] = load_creneaux( edt_clair, etablissement, matieres, enseignants, regroupements )
+      # rapport[:creneaux].keys.each do |key|
+      #   trace_rapport( rapport[:creneaux], key )
+      # end
 
-    provision_cahiers_de_textes
+      provision_cahiers_de_textes
+    end
 
     rapport
   end
 
-  def decrypt_and_load_xml( xml, _xsd = nil )
-    load_xml( decrypt_xml( xml ) )
+  def decrypt_and_load_xml( xml, create_creneaux = false, _xsd = nil )
+    load_xml( decrypt_xml( xml ), create_creneaux )
   end
 end
 # rubocop:enable Metrics/ModuleLength

@@ -65,7 +65,7 @@ describe ProNote do
         end
       end
 
-      rapport = ProNote.decrypt_and_load_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ) )
+      rapport = ProNote.decrypt_and_load_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ), true )
 
       expect( rapport[:plages_horaires][:success].count ).to eq 20
       expect( PlageHoraire.count ).to eq 20
@@ -122,7 +122,7 @@ describe ProNote do
         end
       end
 
-      rapport = ProNote.decrypt_and_load_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ) )
+      rapport = ProNote.decrypt_and_load_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ), true )
 
       expect( rapport[:plages_horaires][:success].count ).to eq 20
       expect( PlageHoraire.count ).to eq 20
@@ -167,7 +167,7 @@ describe ProNote do
       end
 
       LOGGER.info 'First Pass'
-      rapport = ProNote.decrypt_and_load_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ) )
+      rapport = ProNote.decrypt_and_load_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ), true )
 
       expect( rapport[:plages_horaires][:success].count ).to eq 20
       expect( PlageHoraire.count ).to eq 20
@@ -181,7 +181,7 @@ describe ProNote do
       FailedIdentification.where( id_annuaire: nil ).update( id_annuaire: :sha256 )
 
       LOGGER.info 'Second Pass'
-      rapport2nd = ProNote.decrypt_and_load_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ) )
+      rapport2nd = ProNote.decrypt_and_load_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ), true )
 
       expect( rapport2nd[:plages_horaires][:success].count ).to eq 20
       expect( PlageHoraire.count ).to eq 20
