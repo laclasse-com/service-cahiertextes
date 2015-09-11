@@ -15,11 +15,12 @@ angular.module( 'cahierDeTextesClientApp' )
 				      { heading: 'Emplois du Temps',
 					uisref: 'principal.emploi_du_temps',
 					css_class: 'glyphicon glyphicon-calendar',
-					active: false },
-				      { heading: 'Import Pronote',
-					uisref: 'principal.import',
-					css_class: 'glyphicon glyphicon-import',
-					active: false } ];
+					active: false }// ,
+				      // { heading: 'Import Pronote',
+				      //	uisref: 'principal.import',
+				      //	css_class: 'glyphicon glyphicon-import',
+				      //	active: false }
+				    ];
 		      _($scope.tabs).each( function( tab ) {
 			  tab.active = tab.uisref == $state.current.name;
 		      } );

@@ -30,17 +30,17 @@ angular.module( 'cahierDeTextesClientApp' )
 			   templateUrl: 'views/index.html',
 			   controller: 'PrincipalCtrl'
 		       })
-		       .state('principal.import', {
-			   parent: 'principal',
-			   url: '/import',
-			   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } ] },
-			   views: {
-			       'content': {
-				   controller: 'ImportCtrl',
-				   templateUrl: 'views/import.html'
-			       }
-			   }
-		       })
+		       // .state('principal.import', {
+		       //	   parent: 'principal',
+		       //	   url: '/import',
+		       //	   resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } ] },
+		       //	   views: {
+		       //	       'content': {
+		       //		   controller: 'ImportCtrl',
+		       //		   templateUrl: 'views/import.html'
+		       //	       }
+		       //	   }
+		       // })
 		       .state('principal.enseignants', {
 			   parent: 'principal',
 			   url: '/enseignants',
