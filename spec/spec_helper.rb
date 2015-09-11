@@ -38,5 +38,5 @@ RSpec.configure do |config|
   # Use the specified formatter
   config.formatter = :documentation # :progress, :html, :textmate
 
-  config.include ShowMeTheCookies, type: :feature
+  # config.include ShowMeTheCookies, type: :feature
 end
