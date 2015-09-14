@@ -48,11 +48,13 @@ module CahierDeTextesAPI
         end
                             .uniq
 
+        date_rentree = Date.parse( "#{Date.today.month > 8 ? Date.today.year : Date.today.year - 1}-09-01" )
+        
         # Nota Bene: creneau[:semaines_de_presence][ 1 ] == première semaine de janvier
         CreneauEmploiDuTemps
           .association_join( :enseignants )
           .association_join( :regroupements )
-          .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{1.year.ago}'" )
+          .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{date_rentree}'" )
           .where( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{params[:fin]}')" )
           .where( regroupement_id: regroupements_ids )
           .all
