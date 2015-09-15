@@ -18,9 +18,7 @@ module CahierDeTextesAPI
 
         matieres = AnnuaireWrapper::Matiere.query
 
-        utilisateur[ 'profils' ].select do |profil|
-          profil['profil_id'] == 'DIR' || profil['profil_id'] == 'EVS'
-        end.each do |profil|
+        utilisateur[ 'profils' ].each do |profil|
           profil['matieres'] = matieres
         end
 
