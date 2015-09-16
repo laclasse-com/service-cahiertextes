@@ -4,7 +4,7 @@ class CahierDeTextes < Sequel::Model( :cahiers_de_textes )
   one_to_many :cours, class: :Cours
 
   def statistiques
-    date_rentree = Date.parse( "#{Date.today.month > 8 ? Date.today.year : Date.today.year - 1}-09-01" )
+    date_rentree = Date.parse( "#{Date.today.month > 8 ? Date.today.year : Date.today.year - 1}-08-15" )
 
     cours = Cours
             .where( cahier_de_textes_id: id )

@@ -34,7 +34,7 @@ class Etablissement < Sequel::Model( :etablissements )
   end
 
   def saisies_enseignant( enseignant_id )
-    date_rentree = Date.parse( "#{Date.today.month > 8 ? Date.today.year : Date.today.year - 1}-09-01" )
+    date_rentree = Date.parse( "#{Date.today.month > 8 ? Date.today.year : Date.today.year - 1}-08-15" )
 
     { enseignant_id: enseignant_id,
       saisies: (1..12).map do |month|
@@ -61,7 +61,7 @@ class Etablissement < Sequel::Model( :etablissements )
   end
 
   def valide_enseignant!( enseignant_id )
-    date_rentree = Date.parse( "#{Date.today.month > 8 ? Date.today.year : Date.today.year - 1}-09-01" )
+    date_rentree = Date.parse( "#{Date.today.month > 8 ? Date.today.year : Date.today.year - 1}-08-15" )
 
     Cours
       .where(enseignant_id: enseignant_id)
