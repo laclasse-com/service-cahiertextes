@@ -5,15 +5,14 @@ require_relative '../../lib/annuaire'
 module CahierDeTextesAPI
   module V1
     class EmploisDuTempsAPI < Grape::API
-
       desc 'emploi du temps de l\'utilisateur durant l\'intervalle de dates donné'
-      params {
+      params do
         requires :debut, type: Date
         requires :fin, type: Date
 
         optional :uai
         optional :uid
-      }
+      end
       get '/du/:debut/au/:fin' do
         params[:debut] = Date.parse( params[:debut].iso8601 )
         params[:fin] = Date.parse( params[:fin].iso8601 )
@@ -48,8 +47,8 @@ module CahierDeTextesAPI
         end
                             .uniq
 
-        date_rentree = Date.parse( "#{Date.today.month > 8 ? Date.today.year : Date.today.year - 1}-09-01" )
-        
+        date_rentree = Date.parse( "#{Date.today.month > 8 ? Date.today.year : Date.today.year - 1}-09-01" ) - 1.month
+
         # Nota Bene: creneau[:semaines_de_presence][ 1 ] == première semaine de janvier
         CreneauEmploiDuTemps
           .association_join( :enseignants )
@@ -80,21 +79,21 @@ module CahierDeTextesAPI
                   end: Time.new( jour.year, jour.month, jour.mday, creneau.plage_horaire_fin.fin.hour, creneau.plage_horaire_fin.fin.min ).iso8601,
                   cours: creneau.cours.select { |cours| cours[:deleted] == false && cours.date_cours == jour }
                                       .map do |cours|
-                    hcours = cours.to_hash
-                    hcours[:ressources] = cours.ressources.map { |rsrc| rsrc.to_hash }
+                           hcours = cours.to_hash
+                           hcours[:ressources] = cours.ressources.map(&:to_hash)
 
-                    hcours
-                  end
+                           hcours
+                         end
                                       .first,
                   devoirs: creneau.devoirs.select { |devoir| devoir[:deleted] == false && devoir.date_due == jour }
                                           .map do |devoir|
-                    hdevoir = devoir.to_hash
-                    hdevoir[:ressources] = devoir.ressources.map { |rsrc| rsrc.to_hash }
-                    hdevoir[:type_devoir_description] = devoir.type_devoir.description
-                    hdevoir[:fait] = devoir.fait_par?( user.uid )
+                             hdevoir = devoir.to_hash
+                             hdevoir[:ressources] = devoir.ressources.map(&:to_hash)
+                             hdevoir[:type_devoir_description] = devoir.type_devoir.description
+                             hdevoir[:fait] = devoir.fait_par?( user.uid )
 
-                    hdevoir
-                  end
+                             hdevoir
+                           end
                 }
               else
                 next
