@@ -34,10 +34,13 @@ class Etablissement < Sequel::Model( :etablissements )
   end
 
   def saisies_enseignant( enseignant_id )
+    date_rentree = Date.parse( "#{Date.today.month > 8 ? Date.today.year : Date.today.year - 1}-09-01" )
+
     { enseignant_id: enseignant_id,
       saisies: (1..12).map do |month|
         Cours
           .where( enseignant_id: enseignant_id )
+          .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{date_rentree}'" )
           .where( 'extract( month from date_cours ) = ' + month.to_s )
           .where( deleted: false )
           .map do |cours|
@@ -58,8 +61,11 @@ class Etablissement < Sequel::Model( :etablissements )
   end
 
   def valide_enseignant!( enseignant_id )
+    date_rentree = Date.parse( "#{Date.today.month > 8 ? Date.today.year : Date.today.year - 1}-09-01" )
+
     Cours
       .where(enseignant_id: enseignant_id)
+      .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{date_rentree}'" )
       .where('date_validation IS NULL')
       .where( deleted: false )
       .update( date_validation: Time.now )
