@@ -5,13 +5,35 @@ module DataManagement
   module Cleansing
     module_function
 
-    def unfinished_creneaux
-      CreneauEmploiDuTemps.where( matiere_id: '' )
-        .all
-        .select { |c| c.regroupements.empty? && c.date_creation < 1.week.ago }
-        .each do |c|
-        c.enseignants.each(&:destroy)
-        c.destroy
+    module Creneaux
+      module_function
+
+      def unfinished
+        CreneauEmploiDuTemps
+          .where( matiere_id: '' )
+          .all
+          .select { |c| c.regroupements.empty? && c.date_creation < 1.week.ago }
+          .each do |c|
+          c.enseignants.each(&:destroy)
+          c.destroy
+        end
+      end
+
+      def deleted_and_unused
+        creneaux = CreneauEmploiDuTemps
+                   .where( deleted: true )
+                   .all
+                   .select { |c| c.cours.empty? && c.devoirs.empty? }
+
+        creneaux.each do |c|
+          c.enseignants.each(&:destroy)
+          c.regroupements.each(&:destroy)
+          c.salles.each do |salle|
+            c.remove_salle( salle )
+          end
+        end
+
+        creneaux.each(&:destroy)
       end
     end
 
