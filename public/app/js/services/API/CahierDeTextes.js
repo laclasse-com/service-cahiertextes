@@ -121,7 +121,8 @@ angular.module( 'cahierDeTextesClientApp' )
 	       function( $resource, APP_PATH, API_VERSION ) {
 		   return $resource( APP_PATH + '/api/' + API_VERSION + '/etablissements/:uai/statistiques/enseignants/:enseignant_id',
 				     { uai: '@uai',
-				       enseignant_id: '@enseignant_id' } );
+				       enseignant_id: '@enseignant_id',
+				       detailed: '@detailed' } );
 	       } ] );
 
 angular.module( 'cahierDeTextesClientApp' )

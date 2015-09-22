@@ -37,13 +37,16 @@ module CahierDeTextesAPI
       desc 'statistiques des cahiers de textes par enseignants/mois'
       params do
         requires :uai, desc: 'Code UAI de l\'établissement'
+
+        optional :detailed, desc: 'include full details of each Enseignant for graphs'
       end
       get '/:uai/statistiques/enseignants' do
+        detailed = params.key?(:detailed) ? params[:detailed] == 'true' : false
         etablissement = Etablissement.where(UAI: params[:uai]).first
 
         error!( "Établissement #{params[:uai]} inconnu", 404 ) if etablissement.nil?
 
-        etablissement.statistiques_enseignants
+        etablissement.statistiques_enseignants( detailed )
       end
 
       desc 'saisies détaillées d\'un enseignant dans les cahiers de textes par mois/classes'
