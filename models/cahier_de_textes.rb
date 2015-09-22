@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 
+require_relative '../lib/utils/date_rentree'
+
 class CahierDeTextes < Sequel::Model( :cahiers_de_textes )
   one_to_many :cours, class: :Cours
 
   def statistiques
-    date_rentree = Date.parse( "#{Date.today.month > 8 ? Date.today.year : Date.today.year - 1}-08-15" )
-
     cours = Cours
             .where( cahier_de_textes_id: id )
             .where( cours__deleted: false )
-            .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{date_rentree}'" )
+            .where( "DATE_FORMAT( cours.date_creation, '%Y-%m-%d') >= '#{Utils.date_rentree}'" )
 
     { regroupement_id: regroupement_id,
       matieres: cours
