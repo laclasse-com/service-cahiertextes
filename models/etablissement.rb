@@ -47,13 +47,11 @@ class Etablissement < Sequel::Model( :etablissements )
           .where( deleted: false )
           .map do |cours|
           devoirs = Devoir.where(cours_id: cours.id)
+          creneau = CreneauEmploiDuTemps[ cours.creneau_emploi_du_temps_id ]
 
           { mois: month,
-            regroupement_id: CreneauEmploiDuTempsRegroupement
-              .where( creneau_emploi_du_temps_id: cours.creneau_emploi_du_temps_id )
-              .first
-              .regroupement_id,
-            matiere_id: CreneauEmploiDuTemps[ cours.creneau_emploi_du_temps_id ].matiere_id,
+            regroupement_id: creneau.regroupements.first.regroupement_id,
+            matiere_id: creneau.matiere_id,
             cours: cours,
             devoirs: devoirs,
             valide: !cours.date_validation.nil? }
