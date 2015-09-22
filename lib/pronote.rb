@@ -85,13 +85,17 @@ module ProNote
     # LOGGER.info "Import #{key}, #{rapport[ key ][:error].length} erreurs."
   end
 
-  def load_etablissement( xml )
+  def load_etablissement( xml, stage )
     etablissement = DataManagement::Accessors.create_or_get( Etablissement, UAI: xml.child['UAI'] )
 
     annee_scolaire = xml.search('AnneeScolaire').first.attributes
     etablissement.debut_annee_scolaire = annee_scolaire['DateDebut'].value
     etablissement.fin_annee_scolaire = annee_scolaire['DateFin'].value
     etablissement.date_premier_jour_premiere_semaine = annee_scolaire['DatePremierJourSemaine1'].value
+
+    etablissement.add_import( date_import: Time.now,
+                              type: 'pronote',
+                              stage: stage )
     etablissement.save
 
     etablissement
@@ -136,7 +140,7 @@ module ProNote
     rapport
   end
 
-  def load_matieres( xml )
+  def load_matieres( xml, etablissement )
     rapport = { success: [], error: [] }
     matieres = {}
 
@@ -152,7 +156,8 @@ module ProNote
 
         manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
         if manually_linked_id.nil?
-          FailedIdentification.create( date_creation: Time.now,
+          FailedIdentification.create( import_id: etablissement.imports.last.id,
+                                       date_creation: Time.now,
                                        sha256: sha256 )
         else
           matieres[ node['Ident'] ] = manually_linked_id.id_annuaire
@@ -187,7 +192,8 @@ module ProNote
 
         manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
         if manually_linked_id.nil?
-          FailedIdentification.create( date_creation: Time.now,
+          FailedIdentification.create( import_id: etablissement.imports.last.id,
+                                       date_creation: Time.now,
                                        sha256: sha256 )
         else
           enseignants[ node['Ident'] ] = { id: manually_linked_id.id_annuaire }
@@ -237,7 +243,8 @@ module ProNote
 
         manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
         if manually_linked_id.nil?
-          FailedIdentification.create( date_creation: Time.now,
+          FailedIdentification.create( import_id: etablissement.imports.last.id,
+                                       date_creation: Time.now,
                                        sha256: sha256 )
         else
           regroupements[ node.name ][ node['Ident'] ] = manually_linked_id.id_annuaire
@@ -264,7 +271,8 @@ module ProNote
             sha256 = Digest::SHA256.hexdigest( objet.to_json )
             manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
             if manually_linked_id.nil?
-              FailedIdentification.create( date_creation: Time.now,
+              FailedIdentification.create( import_id: etablissement.imports.last.id,
+                                           date_creation: Time.now,
                                            sha256: sha256 )
             else
               regroupements[ subnode.name ][ subnode['Ident'] ] = manually_linked_id.id_annuaire
@@ -290,7 +298,8 @@ module ProNote
 
         manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
         if manually_linked_id.nil?
-          FailedIdentification.create( date_creation: Time.now,
+          FailedIdentification.create( import_id: etablissement.imports.last.id,
+                                       date_creation: Time.now,
                                        sha256: sha256 )
         else
           regroupements[ node.name ][ node['Ident'] ] = manually_linked_id.id_annuaire
@@ -319,7 +328,8 @@ module ProNote
 
               manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
               if manually_linked_id.nil? # rubocop:disable Metrics/BlockNesting
-                FailedIdentification.create( date_creation: Time.now,
+                FailedIdentification.create( import_id: etablissement.imports.last.id,
+                                             date_creation: Time.now,
                                              sha256: sha256 )
               else
                 regroupements[ subnode.name ][ subnode['Ident'] ] = manually_linked_id.id_annuaire
@@ -340,7 +350,8 @@ module ProNote
 
             manually_linked_id = FailedIdentification.where( sha256: sha256 ).first
             if manually_linked_id.nil?
-              FailedIdentification.create( date_creation: Time.now,
+              FailedIdentification.create( import_id: etablissement.imports.last.id,
+                                           date_creation: Time.now,
                                            sha256: sha256 )
             else
               regroupements[ subnode.name ][ subnode['Ident'] ] = manually_linked_id.id_annuaire
@@ -512,7 +523,7 @@ module ProNote
 
     edt_clair = Nokogiri::XML( decrypted_xml ) { |config| config.noblanks }
 
-    etablissement = load_etablissement( edt_clair )
+    etablissement = load_etablissement( edt_clair, create_creneaux ? 1 : 0 )
 
     rapport[:plages_horaires] = load_plages_horaires( edt_clair )
     trace_rapport( rapport, :plages_horaires )
@@ -524,7 +535,7 @@ module ProNote
     # Les matières sont dans l'annuaire
     ####
     trace_rapport( rapport, :matieres )
-    matieres, rapport[:matieres] = load_matieres( edt_clair )
+    matieres, rapport[:matieres] = load_matieres( edt_clair, etablissement )
 
     ####
     # Les enseignants sont dans l'annuaire

@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 
+require_relative '../lib/utils/date_rentree'
+
 class Etablissement < Sequel::Model( :etablissements )
   one_to_many :creneaux_emploi_du_temps, class: :CreneauEmploiDuTemps
+  one_to_many :imports
 
   def statistiques_classes
-    AnnuaireWrapper::Etablissement.get( values[:UAI] )['classes']
+    AnnuaireWrapper::Etablissement
+      .get( values[:UAI] )['classes']
       .map do |classe|
       cdt = CahierDeTextes.where( regroupement_id: classe['id'] ).first
       cdt = CahierDeTextes.create( date_creation: Time.now,

@@ -27,4 +27,7 @@ require_relative './devoir'
 require_relative './failed_identification'
 
 # Paramètres utilisateur
-require_relative './user_parameters.rb'
+require_relative './user_parameters'
+
+# Imports
+require_relative './import'
