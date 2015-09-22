@@ -46,7 +46,7 @@ class Etablissement < Sequel::Model( :etablissements )
           .where( 'extract( month from date_cours ) = ' + month.to_s )
           .where( deleted: false )
           .map do |cours|
-          devoir = Devoir.where(cours_id: cours.id)
+          devoirs = Devoir.where(cours_id: cours.id)
 
           { mois: month,
             regroupement_id: CreneauEmploiDuTempsRegroupement
@@ -55,7 +55,7 @@ class Etablissement < Sequel::Model( :etablissements )
               .regroupement_id,
             matiere_id: CreneauEmploiDuTemps[ cours.creneau_emploi_du_temps_id ].matiere_id,
             cours: cours,
-            devoirs: devoir,
+            devoirs: devoirs,
             valide: !cours.date_validation.nil? }
         end
       end.flatten
