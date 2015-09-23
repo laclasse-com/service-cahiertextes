@@ -21,15 +21,15 @@ class Etablissement < Sequel::Model( :etablissements )
         classes: saisies_enseignant( enseignant['id_ent'] )[:saisies]
           .group_by { |s| s[:regroupement_id] }
           .map do |regroupement_id, regroupement_saisies|
-          { regroupement_id: regroupement_id,
-            statistiques: regroupement_saisies
-              .group_by { |rs| rs[:mois] }
-              .map do |mois, mois_saisies|
-              { month: mois,
-                validated: mois_saisies.select { |s| s[:valide] }.count,
-                filled: mois_saisies.count }
-            end }
-        end }
+                   { regroupement_id: regroupement_id,
+                     statistiques: regroupement_saisies
+                       .group_by { |rs| rs[:mois] }
+                       .map do |mois, mois_saisies|
+                                     { month: mois,
+                                       validated: mois_saisies.select { |s| s[:valide] }.count,
+                                       filled: mois_saisies.count }
+                                   end }
+                 end }
     end
   end
 
@@ -37,27 +37,23 @@ class Etablissement < Sequel::Model( :etablissements )
     date_rentree = Date.parse( "#{Date.today.month > 8 ? Date.today.year : Date.today.year - 1}-09-01" )
 
     { enseignant_id: enseignant_id,
-      saisies: (1..12).map do
-        |month|
+      saisies: Cours
+        .where( enseignant_id: enseignant_id )
+        .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{date_rentree}'" )
+        .where( deleted: false )
+        .map do
+        |cours|
 
-        Cours
-          .where( enseignant_id: enseignant_id )
-          .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{date_rentree}'" )
-          .where( "extract( month from date_cours ) = #{month}" )
-          .where( deleted: false )
-          .map do
-          |cours|
+                 devoirs = Devoir.where(cours_id: cours.id)
+                 creneau = CreneauEmploiDuTemps[ cours.creneau_emploi_du_temps_id ]
 
-          devoir = Devoir.where(cours_id: cours.id)
-
-          { mois: month,
-            regroupement_id: CreneauEmploiDuTempsRegroupement.where(creneau_emploi_du_temps_id: cours.creneau_emploi_du_temps_id).first.regroupement_id,
-            matiere_id: CreneauEmploiDuTemps[ cours.creneau_emploi_du_temps_id ].matiere_id,
-            cours: cours,
-            devoirs: devoir,
-            valide: !cours.date_validation.nil? }
-        end
-      end.flatten
+                 { mois: cours.date_cours.month,
+                   regroupement_id: creneau.regroupements.first.regroupement_id,
+                   matiere_id: creneau.matiere_id,
+                   cours: cours,
+                   devoirs: devoirs,
+                   valide: !cours.date_validation.nil? }
+               end
     }
   end
 
