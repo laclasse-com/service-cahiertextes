@@ -46,24 +46,22 @@ class Etablissement < Sequel::Model( :etablissements )
 
   def saisies_enseignant( enseignant_id )
     { enseignant_id: enseignant_id,
-      saisies: (1..12).map do |month|
-        Cours
-          .where( enseignant_id: enseignant_id )
-          .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{Utils.date_rentree}'" )
-          .where( 'extract( month from date_cours ) = ' + month.to_s )
-          .where( deleted: false )
-          .map do |cours|
-          devoirs = Devoir.where(cours_id: cours.id)
-          creneau = CreneauEmploiDuTemps[ cours.creneau_emploi_du_temps_id ]
+      saisies: Cours
+        .where( enseignant_id: enseignant_id )
+        .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{Utils.date_rentree}'" )
+        .where( 'extract( month from date_cours ) = ' + month.to_s )
+        .where( deleted: false )
+        .map do |cours|
+        devoirs = Devoir.where(cours_id: cours.id)
+        creneau = CreneauEmploiDuTemps[ cours.creneau_emploi_du_temps_id ]
 
-          { mois: month,
-            regroupement_id: creneau.regroupements.first.regroupement_id,
-            matiere_id: creneau.matiere_id,
-            cours: cours,
-            devoirs: devoirs,
-            valide: !cours.date_validation.nil? }
-        end
-      end.flatten
+        { mois: cours.date_cours.month,
+          regroupement_id: creneau.regroupements.first.regroupement_id,
+          matiere_id: creneau.matiere_id,
+          cours: cours,
+          devoirs: devoirs,
+          valide: !cours.date_validation.nil? }
+      end
     }
   end
 
