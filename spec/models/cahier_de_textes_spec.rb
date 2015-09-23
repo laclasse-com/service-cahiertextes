@@ -50,6 +50,7 @@ describe CahierDeTextes do
                          cahier_de_textes_id: ct.id,
                          enseignant_id: "enseignant_#{i + 1}",
                          date_cours: Date.parse( "#{Time.now.year}-09-01" ) + i.day,
+                         date_creation: Time.now,
                          contenu: 'Séquence pédagogique de test' )
       cedt.add_cour( sp )
 
@@ -57,6 +58,7 @@ describe CahierDeTextes do
                          cours_id: sp.id,
                          type_devoir_id: TypeDevoir.first.id,
                          date_due: Date.parse( "#{Time.now.year}-09-01" ) + i.day + 1.week,
+                         date_creation: Time.now,
                          contenu: 'Devoir de test' )
       cedt.add_devoir( d )
     end
@@ -69,7 +71,7 @@ describe CahierDeTextes do
     expect( stats[:matieres].count ).to eq 1
     expect( stats[:matieres][0][:matiere_id] ).to eq '001122'
     expect( stats[:matieres][0][:mois].count ).to eq 12
-    expect( stats[:matieres][0][:mois][0][:filled] ).to eq 1
-    expect( stats[:matieres][0][:mois][0][:validated] ).to eq 0
+    expect( stats[:matieres][0][:mois][8][:filled] ).to eq 1
+    expect( stats[:matieres][0][:mois][8][:validated] ).to eq 0
   end
 end
