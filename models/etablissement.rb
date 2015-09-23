@@ -49,7 +49,6 @@ class Etablissement < Sequel::Model( :etablissements )
       saisies: Cours
         .where( enseignant_id: enseignant_id )
         .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{Utils.date_rentree}'" )
-        .where( 'extract( month from date_cours ) = ' + month.to_s )
         .where( deleted: false )
         .map do |cours|
         devoirs = Devoir.where(cours_id: cours.id)
