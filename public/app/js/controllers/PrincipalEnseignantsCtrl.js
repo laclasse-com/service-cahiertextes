@@ -83,20 +83,6 @@ angular.module( 'cahierDeTextesClientApp' )
 			      displayed_data.filled = 0;
 			      displayed_data.validated = 0;
 			      _(displayed_data).each( function( enseignant ) {
-				  var stats_enseignant = _(enseignant.classes).reduce( function( totaux, classe ) {
-				      var stats_classe = _(classe.statistiques).reduce( function( totaux, mois ) {
-					  return { filled: totaux.filled + mois.filled,
-						   validated: totaux.validated + mois.validated};
-				      }, { filled: 0, validated: 0});
-
-				      return { filled: totaux.filled + stats_classe.filled,
-					       validated: totaux.validated + stats_classe.validated};
-				  }, { filled: 0, validated: 0});
-
-				  // stats de l'enseignant
-				  enseignant.filled = stats_enseignant.filled;
-				  enseignant.validated = stats_enseignant.validated;
-
 				  // mise à jour stats globales
 				  displayed_data.filled += stats_enseignant.filled;
 				  displayed_data.validated += stats_enseignant.validated;
@@ -106,17 +92,6 @@ angular.module( 'cahierDeTextesClientApp' )
 			      $scope.pieChart.populate( displayed_data );
 			      $scope.barChart.populate( displayed_data );
 			  }
-		      };
-
-		      var extract_details_enseignants_promises = function( data ) {
-			  return _(data).pluck('enseignant_id')
-			      .map(function ( enseignant_id ) {
-				  toastr.info( 'Récupération des informations',
-					       'de l\'enseignant ' + enseignant_id,
-					       { progressBar: true,
-						 timeOut: 5000 } );
-				  return Annuaire.get_user( enseignant_id ).$promise;
-			      });
 		      };
 
 		      $scope.individualCharts = {
@@ -147,7 +122,22 @@ angular.module( 'cahierDeTextesClientApp' )
 					      .uniq()
 					      .value();
 
+
 					  details_enseignants[ enseignant_annuaire.id_ent ] = enseignant_annuaire;
+
+					  var stats_enseignant = _(enseignant_annuaire.classes).reduce( function( totaux, classe ) {
+					      var stats_classe = _(classe.statistiques).reduce( function( totaux, mois ) {
+						  return { filled: totaux.filled + mois.filled,
+							   validated: totaux.validated + mois.validated};
+					      }, { filled: 0, validated: 0});
+
+					      return { filled: totaux.filled + stats_classe.filled,
+						       validated: totaux.validated + stats_classe.validated};
+					  }, { filled: 0, validated: 0});
+
+					  // stats de l'enseignant
+					  enseignant.filled = stats_enseignant.filled;
+					  enseignant.validated = stats_enseignant.validated;
 
 					  $scope.classes = $scope.classes.concat( _(enseignant_annuaire.classes)
 										  .map( function( regroupement ) {
@@ -164,12 +154,12 @@ angular.module( 'cahierDeTextesClientApp' )
 
 					  $scope.classes = _($scope.classes).uniq( function( regroupement ) { return regroupement.id; } );
 
-					  $scope.individualCharts.add( enseignant, details_enseignants[ enseignant.enseignant_id ]);
+					  $scope.individualCharts.add( enseignant, enseignant_annuaire );
 				      } );
 
 			      } );
 
-			      $scope.process_data();
+			      // $scope.process_data();
 			  } );
 
 		      angular.element('#ui-view-content').after( current_user.marqueur_xiti );
