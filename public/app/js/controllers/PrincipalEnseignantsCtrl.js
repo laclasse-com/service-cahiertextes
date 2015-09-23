@@ -8,8 +8,16 @@ angular.module( 'cahierDeTextesClientApp' )
 		      $scope.annee = _($locale.DATETIME_FORMATS.MONTH).toArray();
 		      $scope.selected_regroupement_id = null;
 		      $scope.selected_mois = null;
-		      $scope.classes = [];
-		      $scope.details_enseignants = {};
+		      $scope.classes = [ ];
+		      var details_enseignants = {};
+
+		      $scope.htmlify_classes_list = function( classes ) {
+			  return 'Classes : <ul><li>' + _(classes).map( function( classe ) { return classe.classe_libelle; } ).join( '</li><li>' ) + '</li></ul>';
+		      };
+
+		      $scope.htmlify_matieres_list = function( matieres ) {
+			  return 'Matières : <ul><li>' + matieres.join( '</li><li>' ) + '</li></ul>';
+		      };
 
 		      $scope.pieChart = PIECHART_DEFINITION();
 		      $scope.barChart = BARCHART_DEFINITION();
@@ -22,71 +30,26 @@ angular.module( 'cahierDeTextesClientApp' )
 		      };
 
 		      $scope.barChart.populate = function( enseignants ) {
-			  var saisies = { key: "saisies", values: [] };
-			  var valides = { key: "visas", values: [] };
+			  var saisies = { key: "saisies", values: [ ] };
+			  var valides = { key: "visas", values: [ ] };
 
 			  _(enseignants).each( function( enseignant ) {
-			      saisies.values.push( [ $scope.details_enseignants[enseignant.enseignant_id].full_name, enseignant.filled ] );
-			      valides.values.push( [ $scope.details_enseignants[enseignant.enseignant_id].full_name, enseignant.validated ] );
+			      saisies.values.push( [ details_enseignants[ enseignant.enseignant_id ].full_name, enseignant.filled ] );
+			      valides.values.push( [ details_enseignants[ enseignant.enseignant_id ].full_name, enseignant.validated ] );
 			  } );
 
 			  $scope.barChart.data = [ valides, saisies ];
 		      };
 
-		      $scope.htmlify_classes_list = function( classes ) {
-			  return 'Classes : <ul><li>' + _(classes).map( function( classe ) { return classe.classe_libelle; } ).join( '</li><li>' ) + '</li></ul>';
-		      };
-
-		      $scope.htmlify_matieres_list = function( matieres ) {
-			  return 'Matières : <ul><li>' + matieres.join( '</li><li>' ) + '</li></ul>';
-		      };
-
-		      $scope.individualCharts = {
-			  enseignants: [],
-			  populate: function( data, details_enseignants ) {
-			      $scope.individualCharts.enseignants = _(data)
-				  .map( function( enseignant ) {
-				      var individualChart = { enseignant: details_enseignants[ enseignant.enseignant_id ],
-							      pieChart: PIECHART_DEFINITION() };
-				      individualChart.pieChart.data = [ { label: 'visas',
-									  value: enseignant.validated },
-									{ label: 'saisies',
-									  value: enseignant.filled - enseignant.validated } ];
-				      return individualChart;
-				  });
-			  } };
-
-		      $scope.extract_classes = function( details_enseignants ) {
-			  return _.chain(details_enseignants)
-			      .map( function( enseignant ) {
-				  return [ _(enseignant.classes).map( function( regroupement ) { return { id: regroupement.classe_id,
-													  libelle: regroupement.classe_libelle,
-													  type: 'classe' }; } ),
-					   _(enseignant.groupes_eleves).map( function( regroupement ) { return { id: regroupement.groupe_id,
-														 libelle: regroupement.groupe_libelle,
-														 type: 'groupe' }; } ) ];
-			      } )
-			      .flatten()
-			      .uniq( function( regroupement ) { return regroupement.id; } )
-			      .value();
-		      };
-
-		      $scope.extract_details_enseignants_promises = function( data ) {
-			  return _(data).pluck('enseignant_id')
-			      .map(function ( enseignant_id ) {
-				  return Annuaire.get_user( enseignant_id ).$promise;
-			      });
-		      };
-
 		      $scope.process_data = function(  ) {
 			  if ( $scope.raw_data !== undefined ) {
-			      $scope.displayed_data = $scope.raw_data;
+			      var displayed_data = $scope.raw_data;
 
 			      // filtrage sur la classe sélectionnée
 			      if ( $scope.selected_regroupement_id != null ) {
-				  $scope.displayed_data = _.chain($scope.displayed_data)
+				  displayed_data = _.chain(displayed_data)
 				      .reject( function( enseignant ) {
-					  return _.chain($scope.details_enseignants[ enseignant.enseignant_id ].classes)
+					  return _.chain(details_enseignants[ enseignant.enseignant_id ].classes)
 					      .findWhere({ classe_id: parseInt( $scope.selected_regroupement_id ) })
 					      .isUndefined()
 					      .value();
@@ -103,7 +66,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
 			      // filtrage sur le mois sélectionné
 			      if ( $scope.selected_mois != null ) {
-				  $scope.displayed_data = _($scope.displayed_data).map( function( enseignant ) {
+				  displayed_data = _(displayed_data).map( function( enseignant ) {
 				      return { enseignant_id: enseignant.enseignant_id,
 					       classes: _(enseignant.classes).map( function( classe ) {
 						   return { regroupement_id: classe.regroupement_id,
@@ -117,9 +80,9 @@ angular.module( 'cahierDeTextesClientApp' )
 			      }
 
 			      // tri et calcul des données
-			      $scope.displayed_data.filled = 0;
-			      $scope.displayed_data.validated = 0;
-			      _($scope.displayed_data).each( function( enseignant ) {
+			      displayed_data.filled = 0;
+			      displayed_data.validated = 0;
+			      _(displayed_data).each( function( enseignant ) {
 				  var stats_enseignant = _(enseignant.classes).reduce( function( totaux, classe ) {
 				      var stats_classe = _(classe.statistiques).reduce( function( totaux, mois ) {
 					  return { filled: totaux.filled + mois.filled,
@@ -135,37 +98,78 @@ angular.module( 'cahierDeTextesClientApp' )
 				  enseignant.validated = stats_enseignant.validated;
 
 				  // mise à jour stats globales
-				  $scope.displayed_data.filled += stats_enseignant.filled;
-				  $scope.displayed_data.validated += stats_enseignant.validated;
+				  displayed_data.filled += stats_enseignant.filled;
+				  displayed_data.validated += stats_enseignant.validated;
 			      });
 
 			      // consommation des données dans les graphiques
-			      $scope.pieChart.populate( $scope.displayed_data );
-			      $scope.individualCharts.populate( $scope.displayed_data, $scope.details_enseignants );
-			      $scope.barChart.populate( $scope.displayed_data );
+			      $scope.pieChart.populate( displayed_data );
+			      $scope.barChart.populate( displayed_data );
+			  }
+		      };
+
+		      var extract_details_enseignants_promises = function( data ) {
+			  return _(data).pluck('enseignant_id')
+			      .map(function ( enseignant_id ) {
+				  toastr.info( 'Récupération des informations',
+					       'de l\'enseignant ' + enseignant_id,
+					       { progressBar: true,
+						 timeOut: 5000 } );
+				  return Annuaire.get_user( enseignant_id ).$promise;
+			      });
+		      };
+
+		      $scope.individualCharts = {
+			  enseignants: [ ],
+			  add: function( enseignant, details_enseignant ) {
+			      var individualChart = { enseignant: details_enseignants[ enseignant.enseignant_id ],
+						      pieChart: PIECHART_DEFINITION() };
+			      individualChart.pieChart.data = [ { label: 'visas',
+								  value: enseignant.validated },
+								{ label: 'saisies',
+								  value: enseignant.filled - enseignant.validated } ];
+			      $scope.individualCharts.enseignants.push( individualChart );
 			  }
 		      };
 
 		      // Récupération et consommation des données
-		      API.query_enseignants( { uai: current_user['profil_actif']['etablissement_code_uai'] } )
+		      API.query_enseignants( { uai: current_user[ 'profil_actif' ][ 'etablissement_code_uai' ] } )
 			  .$promise.then( function success( response ) {
 			      $scope.raw_data = _(response).reject( function( enseignant ) {
 				  return enseignant.enseignant_id === '';
 			      });
 
-			      $q.all( $scope.extract_details_enseignants_promises( $scope.raw_data ) )
-				  .then( function( enseignants ) {
-				      _(enseignants).each(function( enseignant ) {
-					  enseignant.matieres = _.chain(enseignant.classes)
+			      _($scope.raw_data).each( function( enseignant ) {
+				  Annuaire.get_user( enseignant.enseignant_id ).$promise
+				      .then( function( enseignant_annuaire ) {
+					  enseignant_annuaire.matieres = _.chain(enseignant_annuaire.classes)
 					      .pluck( 'matiere_libelle' )
 					      .uniq()
 					      .value();
-					  $scope.details_enseignants[enseignant.id_ent] = enseignant;
-				      });
 
-				      $scope.classes = $scope.extract_classes( $scope.details_enseignants );
-				      $scope.process_data();
-				  });
+					  details_enseignants[ enseignant_annuaire.id_ent ] = enseignant_annuaire;
+
+					  $scope.classes = $scope.classes.concat( _(enseignant_annuaire.classes)
+										  .map( function( regroupement ) {
+										      return { id: regroupement.classe_id,
+											       libelle: regroupement.classe_libelle,
+											       type: 'classe' };
+										  } ) );
+					  $scope.classes = $scope.classes.concat( _(enseignant_annuaire.groupes_eleves)
+										  .map( function( regroupement ) {
+										      return { id: regroupement.groupe_id,
+											       libelle: regroupement.groupe_libelle,
+											       type: 'groupe' };
+										  } ) );
+
+					  $scope.classes = _($scope.classes).uniq( function( regroupement ) { return regroupement.id; } );
+
+					  $scope.individualCharts.add( enseignant, details_enseignants[ enseignant.enseignant_id ]);
+				      } );
+
+			      } );
+
+			      $scope.process_data();
 			  } );
 
 		      angular.element('#ui-view-content').after( current_user.marqueur_xiti );
