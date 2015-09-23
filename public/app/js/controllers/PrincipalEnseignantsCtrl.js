@@ -4,8 +4,6 @@ angular.module( 'cahierDeTextesClientApp' )
     .controller('PrincipalEnseignantsCtrl',
 		[ '$scope', '$locale', 'THEME', '$q', 'API', 'Annuaire', 'current_user', 'PIECHART_DEFINITION', 'BARCHART_DEFINITION',
 		  function( $scope, $locale, THEME, $q, API, Annuaire, current_user, PIECHART_DEFINITION, BARCHART_DEFINITION ) {
-		      $scope.detailed = true;
-
 		      $scope.scope = $scope;
 		      $scope.annee = _($locale.DATETIME_FORMATS.MONTH).toArray();
 		      $scope.selected_regroupement_id = null;
@@ -149,8 +147,7 @@ angular.module( 'cahierDeTextesClientApp' )
 		      };
 
 		      // Récupération et consommation des données
-		      API.query_enseignants( { uai: current_user['profil_actif']['etablissement_code_uai'],
-					       detailed: $scope.detailed } )
+		      API.query_enseignants( { uai: current_user['profil_actif']['etablissement_code_uai'] } )
 			  .$promise.then( function success( response ) {
 			      $scope.raw_data = _(response).reject( function( enseignant ) {
 				  return enseignant.enseignant_id === '';

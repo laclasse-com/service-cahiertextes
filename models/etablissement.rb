@@ -17,30 +17,23 @@ class Etablissement < Sequel::Model( :etablissements )
     end
   end
 
-  def statistiques_enseignants( detailed = true )
+  def statistiques_enseignants
     AnnuaireWrapper::Etablissement
       .get( values[:UAI] )['enseignants']
       .map do |enseignant|
-      stats_enseignant = { enseignant_id: enseignant['id_ent'],
-                           classe: nil }
-
-      if detailed
-        stats_enseignant[:classes] = saisies_enseignant( enseignant['id_ent'] )[:saisies]
-                                     .group_by { |s| s[:regroupement_id] }
-                                     .map do |regroupement_id, regroupement_saisies|
+      { enseignant_id: enseignant['id_ent'],
+        classes: saisies_enseignant( enseignant['id_ent'] )[:saisies]
+          .group_by { |s| s[:regroupement_id] }
+          .map do |regroupement_id, regroupement_saisies|
           { regroupement_id: regroupement_id,
             statistiques: regroupement_saisies
-                          .group_by { |rs| rs[:mois] }
-                          .map do |mois, mois_saisies|
+              .group_by { |rs| rs[:mois] }
+              .map do |mois, mois_saisies|
               { month: mois,
                 validated: mois_saisies.count { |s| s[:valide] },
                 filled: mois_saisies.count }
-            end
-          }
-        end
-      end
-
-      stats_enseignant
+            end }
+        end }
     end
   end
 
