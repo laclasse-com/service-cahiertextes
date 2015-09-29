@@ -1,18 +1,20 @@
 <div class="panel panel-default">
-  <div class="panel-body">
-	  <select class="col-md-2"
-		  data-ng-model="scope.selected_mois"
-		  data-ng-change="process_data()"
-		  data-ng-options="annee.indexOf(m)+1 as m for m in annee">
-		  <option value="">Toute l'année</option>
-	  </select>
-	  <select class="col-md-2"
-		  data-ng-model="scope.selected_regroupement_id"
-		  data-ng-change="process_data()"
-		  data-ng-options="classe.id as classe.libelle group by classe.type for classe in classes | orderBy:'libelle'">
-		  <option value="">Toutes les classes</option>
-	  </select>
-  </div>
+	<div class="panel-heading">
+		<div class="row">
+			<select class="col-md-3 pull-right"
+				data-ng-model="scope.selected_mois"
+				data-ng-change="process_data()"
+				data-ng-options="annee.indexOf(m)+1 as m for m in annee">
+				<option value="">Toute l'année</option>
+			</select>
+			<select class="col-md-3 pull-right"
+				data-ng-model="scope.selected_regroupement_id"
+				data-ng-change="process_data()"
+				data-ng-options="classe.id as classe.libelle group by classe.type for classe in classes | orderBy:'libelle'">
+				<option value="">Toutes les classes</option>
+			</select>
+		</div>
+	</div>
 </div>
 
 <div class="panel panel-default">

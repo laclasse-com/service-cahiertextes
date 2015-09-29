@@ -820,9 +820,7 @@ h3, .h3 {
 }
 
 fieldset {
-    float: left;
     margin: 0 3px;
-    max-width: 4em;
     legend {
 	font-size: 0.65em;
 	margin: 0;
@@ -858,6 +856,10 @@ fieldset {
     }
 }
 .semainier {
+    fieldset {
+	float: left;
+	max-width: 4em;
+    }
     .btn-group-xs > .btn, .btn-xs {
 	padding: 1px;
     }

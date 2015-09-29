@@ -1,136 +1,138 @@
 <div class="panel panel-default">
-  <div class="panel-heading">
-    <div class="row">
-      <h4 class="col-md-6 pull-left">{{enseignant.prenom}} {{enseignant.nom}}</h4>
+	<div class="panel-heading">
+		<div class="row">
+			<a class="btn btn-info pull-left" data-ui-sref="principal.enseignants" data-ng-if="current_user.profil_actif.profil_id === 'DIR'" >← Retour à la liste des enseignants</a>
 
-      <select class="col-md-3 pull-right" data-ng-model="classe" data-ng-change="process_data()" data-ng-options="classe as classe.libelle group by classe.type for (id, classe) in classes | orderBy:'libelle'">
-	<option value="">Toutes les classes</option>
-      </select>
+			<select class="col-md-3 pull-right" data-ng-model="classe" data-ng-change="process_data()" data-ng-options="classe as classe.libelle group by classe.type for (id, classe) in classes | orderBy:'libelle'">
+				<option value="">Toutes les classes</option>
+			</select>
 
-      <select class="col-md-3 pull-right" data-ng-model="moisCourant" data-ng-change="process_data()" data-ng-options="mois.indexOf(m)+1 as m for m in mois">
-	<option value="">Toute l'année</option>
-      </select>
-    </div>
-  </div>
+			<select class="col-md-3 pull-right" data-ng-model="moisCourant" data-ng-change="process_data()" data-ng-options="mois.indexOf(m)+1 as m for m in mois">
+				<option value="">Toute l'année</option>
+			</select>
+		</div>
+	</div>
 
-  <div class="panel-body">
-    <div class="col-md-4">
-      <div class="panel panel-default">
 	<div class="panel-body">
-	  <legend><span class="glyphicon glyphicon-envelope"></span> <a href="mailto:{{enseignant.emails[0].adresse}}">{{enseignant.emails[0].adresse}}</a></legend>
+		<h4 class="col-md-12 pull-left">{{enseignant.prenom}} {{enseignant.nom}}</h4>
+		<div class="col-md-4">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<legend><span class="glyphicon glyphicon-envelope"></span> <a href="mailto:{{enseignant.emails[0].adresse}}">{{enseignant.emails[0].adresse}}</a></legend>
 
-	  <fieldset data-ng-if="enseignant.prof_principal.length > 0">
-	    <legend><span class="glyphicon glyphicon-bell"></span> Professeur principal de</legend>
-	    <span class="label label-info pull-left" data-ng-repeat="classe in enseignant.prof_principal">{{classe}}</span>
-	  </fieldset>
+					<fieldset>
+						<legend><span class="glyphicon glyphicon-briefcase"></span> Matières enseignées</legend>
+						<span class="label label-primary pull-left" data-ng-repeat="matiere in enseignant.liste_matieres">{{matiere}}</span>
+					</fieldset>
 
-	  <fieldset>
-	    <legend><span class="glyphicon glyphicon-briefcase"></span> Matières enseignées</legend>
-	    <span class="label label-primary pull-left" data-ng-repeat="matiere in enseignant.liste_matieres">{{matiere}}</span>
-	  </fieldset>
-	  <fieldset>
-	    <legend><span class="glyphicon glyphicon-envelope"></span> Classes</legend>
-	    <span class="label label-info pull-left" data-ng-repeat="classe in enseignant.liste_classes">{{classe.classe_libelle}}</span>
-	  </fieldset>
+					<fieldset>
+						<legend><span class="glyphicon glyphicon-envelope"></span> Classes</legend>
+						<span class="label label-info pull-left" data-ng-repeat="classe in enseignant.liste_classes">{{classe.classe_libelle}}</span>
+					</fieldset>
+
+					<fieldset data-ng-if="enseignant.prof_principal.length > 0">
+						<legend><span class="glyphicon glyphicon-bell"></span> Professeur principal de</legend>
+						<span class="label label-info pull-left" data-ng-repeat="classe in enseignant.prof_principal">{{classe}}</span>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-8">
+			<div class="panel panel-default">
+				<div class="panel-body row">
+					<nvd3-pie-chart id="globalPieChart" class="col-md-4"
+						data="graphiques.pieChart.data"
+						objectEquality="true"
+						noData="Aucune saisie"
+						margin="{left:0,top:0,bottom:0,right:0}"
+						showLegend="true"
+						tooltips="true"
+						color="graphiques.pieChart.colorFunction()"
+						legendColor="graphiques.pieChart.colorFunction()"
+						x="graphiques.pieChart.xFunction()"
+						y="graphiques.pieChart.yFunction()" >
+						<svg></svg>
+					</nvd3-pie-chart>
+					<nvd3-multi-bar-chart id="globalBarChart" class="col-md-8"
+						data="graphiques.barChart.data"
+						objectEquality="true"
+						noData="Aucune saisie"
+						rotateLabels="20"
+						showXAxis="true"
+						showYAxis="true"
+						showControls="false"
+						showLegend="true"
+						tooltips="true"
+						color="graphiques.barChart.colorFunction()"
+						legendColor="graphiques.barChart.colorFunction()"
+						tooltipcontent="graphiques.barChart.tooltipContent()"
+						xAxisTickFormat="graphiques.barChart.xAxisTickFormatFunction()" >
+						<svg></svg>
+					</nvd3-multi-bar-chart>
+				</div>
+			</div>
+		</div>
 	</div>
-      </div>
-    </div>
-    <div class="col-md-8">
-      <div class="panel panel-default">
-	<div class="panel-body row">
-	  <nvd3-pie-chart id="globalPieChart" class="col-md-4"
-			  data="graphiques.pieChart.data"
-			  objectEquality="true"
-			  noData="Aucune saisie"
-			  margin="{left:0,top:0,bottom:0,right:0}"
-			  showLegend="true"
-			  tooltips="true"
-			  color="graphiques.pieChart.colorFunction()"
-			  legendColor="graphiques.pieChart.colorFunction()"
-			  x="graphiques.pieChart.xFunction()"
-			  y="graphiques.pieChart.yFunction()" >
-	    <svg></svg>
-	  </nvd3-pie-chart>
-	  <nvd3-multi-bar-chart id="globalBarChart" class="col-md-8"
-				data="graphiques.barChart.data"
-				objectEquality="true"
-				noData="Aucune saisie"
-				rotateLabels="20"
-				showXAxis="true"
-				showYAxis="true"
-				showControls="false"
-				showLegend="true"
-				tooltips="true"
-				color="graphiques.barChart.colorFunction()"
-				legendColor="graphiques.barChart.colorFunction()"
-				tooltipcontent="graphiques.barChart.tooltipContent()"
-				xAxisTickFormat="graphiques.barChart.xAxisTickFormatFunction()" >
-	    <svg></svg>
-	  </nvd3-multi-bar-chart>
-	</div>
-      </div>
-    </div>
-  </div>
 </div>
 
 <div class="panel panel-default">
-  <div class="panel-heading">
-    <button class="btn btn-primary pull-right"
-	    data-ng-click="valide_all()"
-	    data-ng-if="current_user.profil_actif.profil_id === 'DIR' && nb_saisies_visables > 0">
-      <span class="glyphicon glyphicon-check"></span> Viser la totalité
-    </button>
+	<div class="panel-heading">
+		<button class="btn btn-primary pull-right"
+			data-ng-click="valide_all()"
+			data-ng-if="current_user.profil_actif.profil_id === 'DIR' && nb_saisies_visables > 0">
+			<span class="glyphicon glyphicon-check"></span> Viser la totalité
+		</button>
 
 
-    <label>
-	<checkbox class="btn-success"
-		  data-ng-model="scope.montre_valides"
-		  data-ng-change="process_data()"></checkbox>
-	afficher les saisies visées
-    </label>
+		<label>
+			<checkbox class="btn-success"
+				data-ng-model="scope.montre_valides"
+				data-ng-change="process_data()"></checkbox>
+			afficher les saisies visées
+		</label>
 
-    <div class="clearfix"></div>
-  </div>
-  <div class="panel-body">
-    <table class="table">
-      <thead>
-	<tr>
-	    <th style="width:12em;">Date</th>
-	    <th style="width:12em;">Classe</th>
-	    <th style="width:12em;">Matière</th>
-	    <th>Cours</th>
-	    <th>Travail à faire</th>
-	    <th>Visée</th>
-	</tr>
-      </thead>
-      <tbody>
-	<tr data-ng-repeat="saisie in raw_data"
-	    data-ng-class="{'even': $even, 'odd': $odd, 'recent': saisie.recent && current_user.profil_actif.profil_id === 'DIR' }"
-	    data-ng-if="(scope.montre_valides || saisie.cours.date_validation == null) && (scope.classe == null || saisie.regroupement_id === scope.classe.id) && (scope.moisCourant == null || saisie.mois == scope.moisCourant)">
-	    <td>{{saisie.cours.date_cours | amDateFormat:'Do MMMM YYYY'}}</td>
-	    <td data-ng-bind="classes[ saisie.regroupement_id ].libelle"></td>
-	    <td data-ng-bind="matieres[ saisie.matiere_id ].libelle_long"></td>
-	    <td>
-		<div class="alert alert-default" data-ng-bind-html="saisie.cours.contenu"></div>
-	    </td>
-	    <td>
-		<div class="alert alert-default" data-ng-repeat="devoir in saisie.devoirs" data-ng-bind-html="devoir.contenu"></div>
-	    </td>
-	    <td>
-		<div data-ng-switcher
-		     data-ng-if="current_user.profil_actif.profil_id === 'DIR' && !saisie.recent"
-		     data-ng-model="saisie.valide"
-		     data-ng-change="valide( saisie )" >
-		</div>
-		<div data-ng-if="current_user.profil_actif.profil_id !== 'DIR' || saisie.recent">
-		    <div class="switch disabled"
-			 ng-class="{'switch-left': !saisie.valide, 'switch-right': saisie.valide}">
-			<div class="switch-button"> </div>
-		    </div>
-		</div>
-	    </td>
-	</tr>
-      </tbody>
-    </table>
-  </div>
+		<div class="clearfix"></div>
+	</div>
+	<div class="panel-body">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="width:12em;">Date</th>
+					<th style="width:12em;">Classe</th>
+					<th style="width:12em;">Matière</th>
+					<th>Cours</th>
+					<th>Travail à faire</th>
+					<th>Visée</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr data-ng-repeat="saisie in raw_data"
+					data-ng-class="{'even': $even, 'odd': $odd, 'recent': saisie.recent && current_user.profil_actif.profil_id === 'DIR' }"
+					data-ng-if="(scope.montre_valides || saisie.cours.date_validation == null) && (scope.classe == null || saisie.regroupement_id === scope.classe.id) && (scope.moisCourant == null || saisie.mois == scope.moisCourant)">
+					<td>{{saisie.cours.date_cours | amDateFormat:'Do MMMM YYYY'}}</td>
+					<td data-ng-bind="classes[ saisie.regroupement_id ].libelle"></td>
+					<td data-ng-bind="matieres[ saisie.matiere_id ].libelle_long"></td>
+					<td>
+						<div class="alert alert-default" data-ng-bind-html="saisie.cours.contenu"></div>
+					</td>
+					<td>
+						<div class="alert alert-default" data-ng-repeat="devoir in saisie.devoirs" data-ng-bind-html="devoir.contenu"></div>
+					</td>
+					<td>
+						<div data-ng-switcher
+							data-ng-if="current_user.profil_actif.profil_id === 'DIR' && !saisie.recent"
+							data-ng-model="saisie.valide"
+							data-ng-change="valide( saisie )" >
+						</div>
+						<div data-ng-if="current_user.profil_actif.profil_id !== 'DIR' || saisie.recent">
+							<div class="switch disabled"
+								ng-class="{'switch-left': !saisie.valide, 'switch-right': saisie.valide}">
+								<div class="switch-button"> </div>
+							</div>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </div>
