@@ -19,27 +19,27 @@ angular.module( 'cahierDeTextesClientApp' )
 			  return 'Matières : <ul><li>' + matieres.join( '</li><li>' ) + '</li></ul>';
 		      };
 
-		      $scope.pieChart = PIECHART_DEFINITION();
-		      $scope.barChart = BARCHART_DEFINITION();
+		      // $scope.pieChart = PIECHART_DEFINITION();
+		      // $scope.barChart = BARCHART_DEFINITION();
 
-		      $scope.pieChart.populate = function( data ) {
-			  $scope.pieChart.data = [ { label: 'saisies',
-						     value: data.filled - data.validated },
-						   { label: 'visas',
-						     value: data.validated } ];
-		      };
+		      // $scope.pieChart.populate = function( data ) {
+		      //	  $scope.pieChart.data = [ { label: 'saisies',
+		      //				     value: data.filled - data.validated },
+		      //				   { label: 'visas',
+		      //				     value: data.validated } ];
+		      // };
 
-		      $scope.barChart.populate = function( enseignants ) {
-			  var saisies = { key: "saisies", values: [ ] };
-			  var valides = { key: "visas", values: [ ] };
+		      // $scope.barChart.populate = function( enseignants ) {
+		      //	  var saisies = { key: "saisies", values: [ ] };
+		      //	  var valides = { key: "visas", values: [ ] };
 
-			  _(enseignants).each( function( enseignant ) {
-			      saisies.values.push( [ details_enseignants[ enseignant.enseignant_id ].full_name, enseignant.filled ] );
-			      valides.values.push( [ details_enseignants[ enseignant.enseignant_id ].full_name, enseignant.validated ] );
-			  } );
+		      //	  _(enseignants).each( function( enseignant ) {
+		      //	      saisies.values.push( [ details_enseignants[ enseignant.enseignant_id ].full_name, enseignant.filled ] );
+		      //	      valides.values.push( [ details_enseignants[ enseignant.enseignant_id ].full_name, enseignant.validated ] );
+		      //	  } );
 
-			  $scope.barChart.data = [ valides, saisies ];
-		      };
+		      //	  $scope.barChart.data = [ valides, saisies ];
+		      // };
 
 		      $scope.process_data = function(  ) {
 			  if ( $scope.raw_data !== undefined ) {
@@ -84,13 +84,13 @@ angular.module( 'cahierDeTextesClientApp' )
 			      displayed_data.validated = 0;
 			      _(displayed_data).each( function( enseignant ) {
 				  // mise à jour stats globales
-				  displayed_data.filled += stats_enseignant.filled;
-				  displayed_data.validated += stats_enseignant.validated;
+				  displayed_data.filled += enseignant.filled;
+				  displayed_data.validated += enseignant.validated;
 			      });
 
-			      // consommation des données dans les graphiques
-			      $scope.pieChart.populate( displayed_data );
-			      $scope.barChart.populate( displayed_data );
+			      // // consommation des données dans les graphiques
+			      // $scope.pieChart.populate( displayed_data );
+			      // $scope.barChart.populate( displayed_data );
 			  }
 		      };
 
