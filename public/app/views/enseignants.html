@@ -70,7 +70,7 @@
 			<span data-ng-if="individualChart.pieChart.data[0].value + individualChart.pieChart.data[1].value == 0">
 				Aucune saisie à ce jour.
 			</span>
-			<span data-ng-if="!(individualChart.pieChart.data[0].value + individualChart.pieChart.data[1].value == 0)">
+			<span data-ng-if="individualChart.pieChart.data[0].value + individualChart.pieChart.data[1].value > 0">
 				<nvd3-pie-chart id="individualPieChart{{$index}}" class="individualPieChart"
 					width="64"
 					height="64"

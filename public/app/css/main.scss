@@ -497,7 +497,6 @@ footer {
     h2 { text-align: center;
 	 text-transform: uppercase;
 	 color: #b2b2b2;
-	 font-family: "Open Sans";
 	 font-size: 21px;
 	 font-weight: bolder; }
     .creneau {
@@ -508,7 +507,6 @@ footer {
 	    h3 {
 		margin: 0;
 		padding: 0.5em 1.7em 1em;
-		font-family: "Open Sans";
 		font-size: 18px;
 		font-weight: bolder;
 		color: #b2b2b2;
@@ -698,6 +696,10 @@ fieldset .label {
 
 label {
     color: #999;
+    span.new-SP-or-devoir {
+	float: left;
+	font-size: 90%;
+    }
 }
 
 h3, .h3 {
@@ -793,6 +795,7 @@ h3, .h3 {
 
 .options {
     margin-left: 1em;
+    line-height: 2em;
 }
 
 .alert-default {

@@ -12,6 +12,10 @@ angular.module( 'cahierDeTextesClientApp' )
 		       $scope.classes = {};
 		       $scope.montre_valides = current_user.profil_actif.profil_id !== 'DIR';
 
+		       var calc_nb_saisies_visables = function( raw_data ) {
+			   return _(raw_data).select( { recent: false, valide: false } ).length;
+		       };
+
 		       var filtre_saisies = function ( saisies, mois, classe ) {
 			   var data = saisies;
 			   if ( mois !== null ) {
@@ -36,14 +40,15 @@ angular.module( 'cahierDeTextesClientApp' )
 				   $timeout( function() { response.date_validation = date_validation_holder; }, 3000 );
 			       }
 
-			       calc_nb_saisies_visables( $scope.raw_data );
+			       $scope.nb_saisies_visables = calc_nb_saisies_visables( $scope.raw_data );
+
 			       if ( !disable_toastr ) {
 				   if ( saisie.valide ) {
 				       toastr.success( 'Séquence pédagogique visée.',
 						       'Opération réussie' );
 				   } else {
 				       toastr.info( 'Séquence pédagogique dé-visée.',
-						   'Opération réussie' );
+						    'Opération réussie' );
 				   }
 			       }
 			   } );
@@ -134,16 +139,10 @@ angular.module( 'cahierDeTextesClientApp' )
 				       // saisie.devoir = new Devoirs( saisie.devoir );
 				       return saisie;
 				   } );
+
 			       // consommation des données par les graphiques
 			       $scope.graphiques.populate( $scope.raw_data );
 			   }
-		       };
-
-		       var calc_nb_saisies_visables = function( raw_data ) {
-			   $scope.nb_saisies_visables = _(raw_data)
-			       .reject( function( saisie ) {
-				   return saisie.valide || saisie.recent;
-			       } ).length;
 		       };
 
 		       $scope.current_user = current_user;
@@ -199,7 +198,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
 				   $scope.raw_data = response.saisies;
 
-				   calc_nb_saisies_visables( $scope.raw_data );
+				   $scope.nb_saisies_visables = calc_nb_saisies_visables( $scope.raw_data );
 
 				   $scope.matieres = extract( $scope.raw_data, 'matiere_id',
 							      function( matiere_id ) {
