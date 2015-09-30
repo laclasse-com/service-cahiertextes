@@ -125,7 +125,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
 					  details_enseignants[ enseignant_annuaire.id_ent ] = enseignant_annuaire;
 
-					  var stats_enseignant = _(enseignant_annuaire.classes).reduce( function( totaux, classe ) {
+					  var stats_enseignant = _(enseignant.classes).reduce( function( totaux, classe ) {
 					      var stats_classe = _(classe.statistiques).reduce( function( totaux, mois ) {
 						  return { filled: totaux.filled + mois.filled,
 							   validated: totaux.validated + mois.validated};
