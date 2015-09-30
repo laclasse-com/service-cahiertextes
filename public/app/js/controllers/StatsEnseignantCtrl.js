@@ -156,6 +156,15 @@ angular.module( 'cahierDeTextesClientApp' )
 			   .$promise.then(
 			       function ( response ) {
 				   $scope.enseignant = response;
+
+				   $scope.enseignant.email_principal = _($scope.enseignant.emails).find( { principal: true } );
+				   if ( _($scope.enseignant.email_principal).isUndefined() ) {
+				       $scope.enseignant.email_principal = _($scope.enseignant.emails).find( { type: 'Ent' } );
+				   }
+				   if ( _($scope.enseignant.email_principal).isUndefined() ) {
+				       $scope.enseignant.email_principal = _($scope.enseignant.emails).first();
+				   }
+
 				   // filtrer les classes de l'enseignant sur l'établissement actif
 				   $scope.enseignant.liste_classes = _.chain( $scope.enseignant.classes )
 				       .reject( function( classe ) {
