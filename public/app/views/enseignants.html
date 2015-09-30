@@ -36,7 +36,7 @@
 			data="barChart.data"
 			objectEquality="true"
 			noData="Aucune saisie"
-			rotateLabels="20"
+			rotateLabels="35"
 			showXAxis="true"
 			showYAxis="true"
 			showControls="false"
@@ -54,13 +54,13 @@
 <div class="col-md-3 bloc-enseignant" data-ng-repeat="individualChart in individualCharts.enseignants | orderBy:'enseignant.full_name'">
 	<div class="panel panel-default">
 		<div class="panel-heading">
+			<span class="glyphicon glyphicon-home pull-right"
+				tooltip-trigger="click"
+				tooltip-html-unsafe="{{htmlify_classes_list( individualChart.enseignant.classes )}}"></span>
+			<span class="glyphicon glyphicon-briefcase pull-right"
+				tooltip-trigger="click"
+				tooltip-html-unsafe="{{htmlify_matieres_list( individualChart.enseignant.matieres )}}"></span>
 			<h4>
-				<span class="glyphicon glyphicon-home"
-					tooltip-trigger="click"
-					tooltip-html-unsafe="{{htmlify_classes_list( individualChart.enseignant.classes )}}"></span>
-				<span class="glyphicon glyphicon-briefcase"
-					tooltip-trigger="click"
-					tooltip-html-unsafe="{{htmlify_matieres_list( individualChart.enseignant.matieres )}}"></span>
 				<a data-ui-sref="principal.enseignant({ enseignant_id: individualChart.enseignant.id_ent })">
 					{{individualChart.enseignant.full_name}}
 				</a>

@@ -286,6 +286,7 @@ h2 {
 	padding-bottom: 0;
 	span.glyphicon {
 	    cursor: pointer;
+	    margin-left: 3px;
 	}
     }
     .panel-body {
@@ -421,6 +422,8 @@ h2 {
 
 .individualPieChart {
     float: left;
+    height: 64px;
+    width: 64px;
 }
 
 footer {
