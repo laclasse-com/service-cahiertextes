@@ -4,7 +4,7 @@
 			data-ng-if="current_user.profil_actif.profil_id === 'ENS' || current_user.profil_actif.profil_id === 'EVS' || current_user.profil_actif.profil_id === 'DIR' || current_user.profil_actif.profil_id === 'DOC'"
 			data-ng-model="scope.selected_regroupement_id"
 			data-ng-change="refresh_calendar()"
-			data-ng-options="classe.id as classe.libelle group by classe.type for classe in current_user.profil_actif.classes | orderBy:'libelle'">
+			data-ng-options="classe.id as classe.libelle group by classe.type for classe in current_user.profil_actif.classes | orderBy:['type','libelle']">
 			<option value="" selected
 				data-ng-if="current_user.profil_actif.profil_id != 'EVS' && current_user.profil_actif.profil_id != 'DIR'">Toutes mes classes</option>
 		</select>
