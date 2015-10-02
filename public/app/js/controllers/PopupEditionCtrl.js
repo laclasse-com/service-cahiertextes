@@ -24,7 +24,6 @@ angular.module( 'cahierDeTextesClientApp' )
 
 		       // http://stackoverflow.com/questions/19408883/angularjs-select-not-2-way-binding-to-model
 		       $scope.scope = $scope;
-		       //  ^ ^ Cette ligne est peut-être inutile ?
 
 		       User.get_user().then( function( response ) {
 			   $scope.current_user = response.data;
@@ -47,7 +46,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
 			   // Initialisations {{{
 			   $scope.classes = classes;
-			   $scope.matieres = matieres;
+			   $scope.matieres = _(matieres).sortBy( 'libelle_long' );
 
 			   $scope.creneau = creneau;
 			   $scope.mode_edition_creneau = $scope.creneau.en_creation;
@@ -518,22 +517,22 @@ angular.module( 'cahierDeTextesClientApp' )
 				       } else {
 					   item.ressources.push( {
 					       name: _( response.added ).first().name,
-					   hash: _( response.added ).first().hash,
-					   url: $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + _( response.added ).first().hash )
-				       } );
-				       $scope.is_dirty();
-				   }
+					       hash: _( response.added ).first().hash,
+					       url: $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + _( response.added ).first().hash )
+					   } );
+					   $scope.is_dirty();
+				       }
+				   };
 			       };
-			   };
 
-			   $scope.upload_and_add_ressource = function ( item, fichiers ) {
-			       if ( item.ressources === undefined ) {
-				   item.ressources = [];
-			       }
-			       var responses = Documents.upload_dans_cahier_de_textes( $scope.selected_regroupement, fichiers );
-			       for ( var i = 0; i < responses.length; i++ ) {
-				   responses[ i ]
-				       .success( $scope.consume_Documents_response_callback( item ) )
+			       $scope.upload_and_add_ressource = function ( item, fichiers ) {
+				   if ( item.ressources === undefined ) {
+				       item.ressources = [];
+				   }
+				   var responses = Documents.upload_dans_cahier_de_textes( $scope.selected_regroupement, fichiers );
+				   for ( var i = 0; i < responses.length; i++ ) {
+				       responses[ i ]
+					   .success( $scope.consume_Documents_response_callback( item ) )
 					   .error( function ( response ) {
 					       console.debug( response.error );
 					   } );
