@@ -2,7 +2,7 @@
      data-ng-swipe-left="decr_offset()"
      data-ng-swipe-right="incr_offset()">
     <div class="panel-heading">
-	<div class="col-md-12" data-ng-if="current_user.profil_actif.profil_id === 'ENS'">
+	    <div class="col-md-12" data-ng-if="current_user.profil_actif.profil_id === 'ENS' || current_user.profil_actif.profil_id === 'DOC'">
 	    <select class="col-md-3 pull-left"
 		    data-ng-model="scope.selected_regroupement_id"
 		    data-ng-options="classe.id as classe.libelle group by classe.type for classe in classes | orderBy:'libelle'">

@@ -88,7 +88,7 @@ module CahierDeTextesAPI
         optional :temps_estime
       end
       post  do
-        user_needs_to_be( %w( ENS ), true )
+        user_needs_to_be( %w( ENS DOC ), true )
 
         error!( 'Créneau invalide', 409 ) if CreneauEmploiDuTemps[ params[:creneau_emploi_du_temps_id] ].nil?
 
@@ -139,7 +139,7 @@ module CahierDeTextesAPI
         optional :temps_estime
       end
       put '/:id' do
-        user_needs_to_be( %w( ENS ), true )
+        user_needs_to_be( %w( ENS DOC ), true )
 
         devoir = Devoir[ params[:id] ]
         error!( 'Devoir inconnu', 404 ) if devoir.nil?
@@ -157,7 +157,7 @@ module CahierDeTextesAPI
         requires :date_due
       end
       put '/:id/copie/cours/:cours_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date_due/:date_due' do
-        user_needs_to_be( %w( ENS ), true )
+        user_needs_to_be( %w( ENS DOC ), true )
 
         devoir = Devoir[ params[:id] ]
         error!( 'Devoir inconnu', 404 ) if devoir.nil?
@@ -187,7 +187,7 @@ module CahierDeTextesAPI
         requires :id
       end
       delete '/:id' do
-        user_needs_to_be( %w( ENS ), true )
+        user_needs_to_be( %w( ENS DOC ), true )
 
         devoir = Devoir[ params[:id] ]
         error!( 'Devoir inconnu', 404 ) if devoir.nil?

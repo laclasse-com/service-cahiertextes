@@ -75,7 +75,7 @@ angular.module( 'cahierDeTextesClientApp' )
 					     this.className = 'edt-cours';
 					     if ( !_(event.cours).isNull() ) {
 						 this.className += '-saisie';
-						 if ( !_(event.cours.date_validation).isNull() && $scope.current_user.profil_actif.profil_id === 'ENS' ) {
+						 if ( !_(event.cours.date_validation).isNull() && ( $scope.current_user.profil_actif.profil_id === 'ENS' && $scope.current_user.profil_actif.profil_id === 'DOC' ) ) {
 						     this.className += '-valide';
 						 }
 					     }
@@ -207,98 +207,99 @@ angular.module( 'cahierDeTextesClientApp' )
 					 $scope.reload_data = popup_callback;
 				     }
 				 }
-				 // Les non-ENS ne sont qu'en lecture seule
-				 if ( $scope.current_user.profil_actif.profil_id != 'ENS' ) {
-				     $scope.calendar.options.eventClick = function( event ) {
-					 if ( !popup_ouverte && ( ( event.details.devoirs.length > 0 ) || ( ! _(event.details.cours).isNull() && _(event.details.cours).has( 'contenu' ) ) ) ) {
-					     PopupsCreneau.display( event.title, event.details.cours, event.details.devoirs, popup_callback, popup_ouverte );
-					 }
-				     };
-				 }
+		      // Les non-(ENS|DOC) ne sont qu'en lecture seule
+		      if ( $scope.current_user.profil_actif.profil_id != 'ENS' || $scope.current_user.profil_actif.profil_id != 'DOC' ) {
+			  $scope.calendar.options.eventClick = function( event ) {
+			      if ( !popup_ouverte && ( ( event.details.devoirs.length > 0 ) || ( ! _(event.details.cours).isNull() && _(event.details.cours).has( 'contenu' ) ) ) ) {
+				  PopupsCreneau.display( event.title, event.details.cours, event.details.devoirs, popup_callback, popup_ouverte );
+			      }
+			  };
+		      }
 
-				 if ( $scope.current_user.profil_actif.profil_id == 'ENS'
-				      || ( $scope.current_user.profil_actif.admin && !_.contains( [ 'ELV', 'TUT'], $scope.current_user.profil_actif.profil_id ) ) ) {
-					  $scope.uniquement_mes_creneaux = false;
-					  $scope.calendar.options.selectable = true;
-					  $scope.calendar.options.editable = true;
+		      if ( $scope.current_user.profil_actif.profil_id == 'ENS'
+			   || $scope.current_user.profil_actif.profil_id == 'DOC'
+			   || ( $scope.current_user.profil_actif.admin && !_.contains( [ 'ELV', 'TUT'], $scope.current_user.profil_actif.profil_id ) ) ) {
+			  $scope.uniquement_mes_creneaux = false;
+			  $scope.calendar.options.selectable = true;
+			  $scope.calendar.options.editable = true;
 
-					  $scope.filter_data = function( raw_data ) {
-					      var filtered_data = raw_data;
+			  $scope.filter_data = function( raw_data ) {
+			      var filtered_data = raw_data;
 
-					      // Filtrage sur une seule classe
-					      filtered_data = filter_by_regroupement( filtered_data, $scope.selected_regroupement_id );
+			      // Filtrage sur une seule classe
+			      filtered_data = filter_by_regroupement( filtered_data, $scope.selected_regroupement_id );
 
-					      filtered_data = filter_by_enseignant_id( filtered_data, $scope.current_user.uid, $scope.uniquement_mes_creneaux );
+			      filtered_data = filter_by_enseignant_id( filtered_data, $scope.current_user.uid, $scope.uniquement_mes_creneaux );
 
-					      return filtered_data;
-					  };
+			      return filtered_data;
+			  };
 
-					  // édition d'un créneau existant
-					  $scope.calendar.options.eventClick = function ( event ) {
-					      if ( !popup_ouverte ) {
-						  CreneauEmploiDuTemps.get( { id: event.details.creneau_emploi_du_temps_id } )
-						      .$promise
-						      .then( function( creneau_selectionne ) {
-							  creneau_selectionne.dirty = false;
-							  creneau_selectionne.en_creation = false;
-							  creneau_selectionne.heure_debut = event.start;
-							  creneau_selectionne.heure_fin = event.end;
-							  creneau_selectionne.regroupement_id = event.details.regroupement_id;
+			  // édition d'un créneau existant
+			  $scope.calendar.options.eventClick = function ( event ) {
+			      if ( !popup_ouverte ) {
+				  CreneauEmploiDuTemps.get( { id: event.details.creneau_emploi_du_temps_id } )
+				      .$promise
+				      .then( function( creneau_selectionne ) {
+					  creneau_selectionne.dirty = false;
+					  creneau_selectionne.en_creation = false;
+					  creneau_selectionne.heure_debut = event.start;
+					  creneau_selectionne.heure_fin = event.end;
+					  creneau_selectionne.regroupement_id = event.details.regroupement_id;
 
-							  PopupsCreneau.edition( $scope.raw_data,
-										 $scope.current_user.profil_actif.matieres, $scope.current_user.profil_actif.classes,
-										 creneau_selectionne, event.details.cours, event.details.devoirs,
-										 popup_callback, popup_ouverte );
-						      } );
-					      }
-					  };
+					  PopupsCreneau.edition( $scope.raw_data,
+								 $scope.current_user.profil_actif.matieres, $scope.current_user.profil_actif.classes,
+								 creneau_selectionne, event.details.cours, event.details.devoirs,
+								 popup_callback, popup_ouverte );
+				      } );
+			      }
+			  };
 
-					  // création d'un nouveau créneau
-					  // Le regroupement_id peut être null car on n'a pas fait de choix au niveau de la select box des classes sur full_calendar
-					  $scope.calendar.options.select = function ( start, end, allDay ) {
-					      if ( end - start == 1800000 ) {
-						  end = moment( end ).add( 30, 'minutes' ).toDate();
-					      }
-					      if ( !popup_ouverte ) {
-						  // création du créneau avec les bons horaires
-						  start = new Date( start );
-						  end = new Date( end );
-						  var regroupement_id = _($scope.selected_regroupement_id).isNull() ? null : '' + $scope.selected_regroupement_id;
-						  var new_creneau = new CreneauEmploiDuTemps( { regroupement_id: regroupement_id,
-												jour_de_la_semaine: start.getDay() + 1,
-												heure_debut: moment(start).toISOString(),
-												heure_fin: moment(end).toISOString(),
-												matiere_id: '' } );
+			  // création d'un nouveau créneau
+			  // Le regroupement_id peut être null car on n'a pas fait de choix au niveau de la select box des classes sur full_calendar
+			  $scope.calendar.options.select = function ( start, end, allDay ) {
+			      if ( end - start == 1800000 ) {
+				  end = moment( end ).add( 30, 'minutes' ).toDate();
+			      }
+			      if ( !popup_ouverte ) {
+				  // création du créneau avec les bons horaires
+				  start = new Date( start );
+				  end = new Date( end );
+				  var regroupement_id = _($scope.selected_regroupement_id).isNull() ? null : '' + $scope.selected_regroupement_id;
+				  var new_creneau = new CreneauEmploiDuTemps( { regroupement_id: regroupement_id,
+										jour_de_la_semaine: start.getDay() + 1,
+										heure_debut: moment(start).toISOString(),
+										heure_fin: moment(end).toISOString(),
+										matiere_id: '' } );
 
-						  new_creneau.$save()
-						      .then( function () {
-							  new_creneau.dirty = true;
-							  new_creneau.en_creation = true;
-							  new_creneau.heure_debut = start;
-							  new_creneau.heure_fin = end;
-							  new_creneau.regroupement_id = regroupement_id;
+				  new_creneau.$save()
+				      .then( function () {
+					  new_creneau.dirty = true;
+					  new_creneau.en_creation = true;
+					  new_creneau.heure_debut = start;
+					  new_creneau.heure_fin = end;
+					  new_creneau.regroupement_id = regroupement_id;
 
-							  PopupsCreneau.edition( $scope.raw_data,
-										 $scope.current_user.profil_actif.matieres, $scope.current_user.profil_actif.classes,
-										 new_creneau, null, [],
-										 popup_callback, popup_ouverte );
+					  PopupsCreneau.edition( $scope.raw_data,
+								 $scope.current_user.profil_actif.matieres, $scope.current_user.profil_actif.classes,
+								 new_creneau, null, [],
+								 popup_callback, popup_ouverte );
 
-							  $scope.emploi_du_temps.fullCalendar( 'unselect' );
-						      } );
-					      }
-					  };
-				      }
-				 if ( $scope.current_user.profil_actif.profil_id == 'ENS' ) {
-				     $scope.uniquement_mes_creneaux = true;
-				 }
+					  $scope.emploi_du_temps.fullCalendar( 'unselect' );
+				      } );
+			      }
+			  };
+		      }
+		      if ( $scope.current_user.profil_actif.profil_id == 'ENS' || $scope.current_user.profil_actif.profil_id == 'DOC' ) {
+			  $scope.uniquement_mes_creneaux = true;
+		      }
 
-				 // Récupération d'une date prédéfinie s'il y a lieu
-				 if ( $scope.current_user.date ) {
-				     var mdate = moment( $scope.current_user.date );
-				     $scope.calendar.options.year = mdate.year();
-				     $scope.calendar.options.month = mdate.month();
-				     $scope.calendar.options.date = mdate.date();
-				 }
+		      // Récupération d'une date prédéfinie s'il y a lieu
+		      if ( $scope.current_user.date ) {
+			  var mdate = moment( $scope.current_user.date );
+			  $scope.calendar.options.year = mdate.year();
+			  $scope.calendar.options.month = mdate.month();
+			  $scope.calendar.options.date = mdate.date();
+		      }
 
-				 angular.element('#ui-view-content').after( current_user.marqueur_xiti );
-			     } ] );
+		      angular.element('#ui-view-content').after( current_user.marqueur_xiti );
+		  } ] );

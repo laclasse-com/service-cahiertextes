@@ -19,6 +19,7 @@ angular.module( 'cahierDeTextesClientApp' )
 				       stateName = 'principal.enseignants';
 				       break;
 				   case 'ENS':
+				   case 'DOC':
 				       stateName = 'enseignant.emploi_du_temps';
 				       break;
 				   case 'EVS':
@@ -29,8 +30,8 @@ angular.module( 'cahierDeTextesClientApp' )
 				       stateName = 'eleve.emploi_du_temps';
 				       break;
 				   }
-				   $state.go( stateName, $state.params, { reload: true, inherit: true, notify: true } );
-			       }
+				$state.go( stateName, $state.params, { reload: true, inherit: true, notify: true } );
+			    }
 			} );
 		    };
 		}

@@ -24,7 +24,7 @@
 	    <div class="col-md-6">
 		<label>Choisir la matière :</label>
 		<select data-ng-model="scope.selected_matiere"
-			data-ng-options="matiere as matiere.libelle_long for matiere in matieres track by matiere.id"
+			data-ng-options="matiere as matiere.libelle_long for matiere in matieres track by matiere.id | orderBy:'libelle_long'"
 			data-ng-required="true">
 		</select>
 	    </div>

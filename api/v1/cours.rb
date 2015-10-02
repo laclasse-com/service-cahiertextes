@@ -14,7 +14,7 @@ module CahierDeTextesAPI
         # pas de gestion restriction d'accès sur les get
         next if request.get?
 
-        user_needs_to_be( %w( ENS DIR ), false )
+        user_needs_to_be( %w( ENS DOC DIR ), false )
       end
 
       desc 'renvoi le détail d\'une séquence pédagogique'
@@ -39,7 +39,7 @@ module CahierDeTextesAPI
         optional :ressources
       end
       post do
-        user_needs_to_be( %w( ENS ), true )
+        user_needs_to_be( %w( ENS DOC ), true )
 
         error!( 'Créneau invalide', 409 ) if CreneauEmploiDuTemps[ params[:creneau_emploi_du_temps_id] ].nil?
 
@@ -67,7 +67,7 @@ module CahierDeTextesAPI
         optional :ressources, type: Array
       end
       put '/:id' do
-        user_needs_to_be( %w( ENS ), true )
+        user_needs_to_be( %w( ENS DOC ), true )
 
         cours = Cours[ params[:id] ]
 
@@ -102,7 +102,7 @@ module CahierDeTextesAPI
         requires :date, type: Date
       end
       put '/:id/copie/regroupement/:regroupement_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date/:date' do
-        user_needs_to_be( %w( ENS ), true )
+        user_needs_to_be( %w( ENS DOC ), true )
 
         cours = Cours[ params[:id] ]
 
@@ -121,7 +121,7 @@ module CahierDeTextesAPI
         requires :id
       end
       delete '/:id' do
-        user_needs_to_be( %w( ENS ), true )
+        user_needs_to_be( %w( ENS DOC ), true )
 
         cours = Cours[ params[:id].to_i ]
 

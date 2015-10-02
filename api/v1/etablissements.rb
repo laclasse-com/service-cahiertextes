@@ -6,7 +6,7 @@ module CahierDeTextesAPI
       format :json
 
       before  do
-        user_needs_to_be( %w( DIR ENS ), false )
+        user_needs_to_be( %w( DIR ENS DOC ), false )
       end
 
       desc 'statistiques des cahiers de textes par classes/mois/matières'

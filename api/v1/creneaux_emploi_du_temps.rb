@@ -56,7 +56,7 @@ module CahierDeTextesAPI
         optional :semaines_de_presence_salle, type: Fixnum
       end
       post  do
-        user_needs_to_be( %w( ENS ), true )
+        user_needs_to_be( %w( ENS DOC ), true )
 
         dummy_plage_horaire = PlageHoraire.first
 
@@ -95,7 +95,7 @@ module CahierDeTextesAPI
         optional :semaines_de_presence_salle, type: Fixnum
       end
       put '/:id'  do
-        user_needs_to_be( %w( ENS ), true )
+        user_needs_to_be( %w( ENS DOC ), true )
 
         creneau = CreneauEmploiDuTemps[ params[:id] ]
 
@@ -113,7 +113,7 @@ module CahierDeTextesAPI
         requires :date_creneau, type: Date
       end
       delete '/:id' do
-        user_needs_to_be( %w( ENS ), true )
+        user_needs_to_be( %w( ENS DOC ), true )
 
         creneau = CreneauEmploiDuTemps[ params[:id] ]
 
