@@ -87,11 +87,11 @@ module AnnuaireWrapper
       matieres = Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_matiere,
                                                                  '',
                                                                  expand: 'true' )
-      matieres << { 'id' => 'documentation', 'libelle_court' => nil, 'libelle_long' => 'DOCUMENTATION' }
+      matieres << { 'id' => 'documentation', 'libelle_court' => nil, 'libelle_long' => 'CDI' }
     end
 
     def get( id )
-      return { 'id' => 'documentation', 'libelle_court' => nil, 'libelle_long' => 'DOCUMENTATION' } if id == 'documentation'
+      return { 'id' => 'documentation', 'libelle_court' => nil, 'libelle_long' => 'CDI' } if id == 'documentation'
 
       Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_matiere,
                                                       "#{CGI.escape( id )}",
@@ -99,7 +99,7 @@ module AnnuaireWrapper
     end
 
     def search( label )
-      return { 'id' => 'documentation', 'libelle_court' => nil, 'libelle_long' => 'DOCUMENTATION' } if label == 'DOCUMENTATION'
+      return { 'id' => 'documentation', 'libelle_court' => nil, 'libelle_long' => 'CDI' } if label == 'CDI'
 
       Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_matiere,
                                                       "libelle/#{CGI.escape( label )}",
