@@ -16,7 +16,7 @@
 	    <div class="col-md-6">
 		<label>Choisir la classe :</label>
 		<select data-ng-model="scope.selected_regroupement"
-			data-ng-options="classe as classe.libelle group by classe.type for classe in classes | orderBy:'libelle'"
+			data-ng-options="classe as classe.libelle group by classe.type for classe in classes | orderBy:['type','libelle']"
 			data-ng-required="true">
 		</select>
 	    </div>

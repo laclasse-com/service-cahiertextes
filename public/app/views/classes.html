@@ -4,7 +4,7 @@
 
 <div class="panel panel-default" data-ng-if="!empty">
   <div class="panel-body">
-	  <select data-ng-model="scope.selected_regroupement_id" data-ng-change="process_data()" data-ng-options="classe.id as classe.libelle group by classe.type for classe in classes | orderBy:'libelle'">
+	  <select data-ng-model="scope.selected_regroupement_id" data-ng-change="process_data()" data-ng-options="classe.id as classe.libelle group by classe.type for classe in classes | orderBy:['type','libelle']">
 		  <option value="" selected>Toute les classes</option>
 	  </select>
 

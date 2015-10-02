@@ -3,7 +3,7 @@
 		<div class="row">
 			<a class="btn btn-info pull-left" data-ui-sref="principal.enseignants" data-ng-if="current_user.profil_actif.profil_id === 'DIR'" >← Retour à la liste des enseignants</a>
 
-			<select class="col-md-3 pull-right" data-ng-model="classe" data-ng-change="process_data()" data-ng-options="classe as classe.libelle group by classe.type for (id, classe) in classes | orderBy:'libelle'">
+			<select class="col-md-3 pull-right" data-ng-model="classe" data-ng-change="process_data()" data-ng-options="classe as classe.libelle group by classe.type for (id, classe) in classes | orderBy:['type','libelle']">
 				<option value="">Toutes les classes</option>
 			</select>
 

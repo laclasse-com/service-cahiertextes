@@ -10,7 +10,7 @@
 			<select class="col-md-3 pull-right"
 				data-ng-model="scope.selected_regroupement_id"
 				data-ng-change="process_data()"
-				data-ng-options="classe.id as classe.libelle group by classe.type for classe in classes | orderBy:'libelle'">
+				data-ng-options="classe.id as classe.libelle group by classe.type for classe in classes | orderBy:['type','libelle']">
 				<option value="">Toutes les classes</option>
 			</select>
 		</div>
