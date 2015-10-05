@@ -6,15 +6,14 @@ require_relative '../../models/creneau_emploi_du_temps'
 module CahierDeTextesAPI
   module V1
     class CreneauxEmploiDuTempsAPI < Grape::API
-
       desc 'renvoi un créneau'
-      params {
+      params do
         requires :id
 
         optional :expand, type: Boolean
         optional :debut, type: Date
         optional :fin, type: Date
-      }
+      end
       get '/:id' do
         expand = !params[:expand].nil? && params[:expand] && !params[:debut].nil? && !params[:fin].nil?
 
@@ -33,18 +32,20 @@ module CahierDeTextesAPI
       end
 
       desc 'renvoi les créneaux similaires à ce créneau'
-      params {
+      params do
         requires :id
         requires :debut, type: Date
         requires :fin, type: Date
-      }
+      end
       get '/:id/similaires' do
+        date_rentree = Date.parse( "#{Date.today.month > 8 ? Date.today.year : Date.today.year - 1}-08-15" )
+
         creneau = CreneauEmploiDuTemps[ params[:id] ]
         CreneauEmploiDuTemps
           .association_join( :enseignants )
           .where( enseignant_id: user.uid )
           .where( matiere_id: creneau.matiere_id )
-          .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{1.year.ago}'" )
+          .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{date_rentree}'" )
           .where( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{params[:fin]}')" )
           .all
           .map do |c|
@@ -76,7 +77,7 @@ module CahierDeTextesAPI
       end
 
       desc 'crée un créneau'
-      params {
+      params do
         requires :jour_de_la_semaine, type: Integer
         requires :heure_debut, type: Time
         requires :heure_fin, type: Time
@@ -87,7 +88,7 @@ module CahierDeTextesAPI
         optional :semaines_de_presence_regroupement, type: Fixnum
         optional :semaines_de_presence_enseignant, type: Fixnum
         optional :semaines_de_presence_salle, type: Fixnum
-      }
+      end
       post  do
         error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS' ) || user.admin?
 
@@ -134,7 +135,7 @@ module CahierDeTextesAPI
       end
 
       desc 'modifie un créneau'
-      params {
+      params do
         requires :id, type: Integer
 
         optional :matiere_id
@@ -146,7 +147,7 @@ module CahierDeTextesAPI
         optional :semaines_de_presence_regroupement, type: Fixnum
         optional :semaines_de_presence_enseignant, type: Fixnum
         optional :semaines_de_presence_salle, type: Fixnum
-      }
+      end
       put '/:id'  do
         error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS' ) || user.admin?
 
@@ -220,10 +221,10 @@ module CahierDeTextesAPI
       end
 
       desc 'marque un créneau comme éffacé et inversement'
-      params {
+      params do
         requires :id, type: Integer
         requires :date_creneau, type: Date
-      }
+      end
       delete '/:id' do
         error!( '401 Unauthorized', 401 ) unless user.is?( 'ENS' ) || user.admin?
 
