@@ -84,7 +84,6 @@
       <script type="text/javascript" src="<%=APP_PATH%>/app/js/defaults.js?v=<%=APP_VERSION%>"></script>
       <script type="text/javascript" src="<%=APP_PATH%>/app/js/routes.js?v=<%=APP_VERSION%>"></script>
       <script type="text/javascript" src="<%=APP_PATH%>/app/js/http_interceptors.js?v=<%=APP_VERSION%>"></script>
-      <script type="text/javascript" src="<%=APP_PATH%>/app/js/constants.js?v=<%=APP_VERSION%>"></script>
       <script type="text/javascript" src="<%=APP_PATH%>/app/js/config.js?v=<%=APP_VERSION%>"></script>
 
       <script type="text/javascript" src="<%=APP_PATH%>/app/js/services/API/CahierDeTextes.js?v=<%=APP_VERSION%>"></script>
@@ -134,5 +133,12 @@
       <script type="text/javascript" src="<%=APP_PATH%>/app/js/templates/popup_edition.html.js?v=<%=APP_VERSION%>"></script>
       <script type="text/javascript" src="<%=APP_PATH%>/app/js/templates/stats_enseignant.html.js?v=<%=APP_VERSION%>"></script>
     <% end %>
+    <script>
+     angular.module( 'cahierDeTextesClientApp' )
+            .constant( 'VERSION', '<%=APP_PATH%>' )
+            .constant( 'APP_PATH', '<%=APP_PATH%>' )
+            .constant( 'DOCS_URL', '<%=DOCS_URL%>' );
+    </script>
+
   </body>
 </html>

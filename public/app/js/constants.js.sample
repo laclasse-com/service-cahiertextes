@@ -1,6 +1,0 @@
-'use strict';
-
-angular.module( 'cahierDeTextesClientApp' )
-    .constant( 'APP_PATH', '/ct' )
-    .constant( 'VERSION', '0.numéro.de.version' )
-    .constant( 'DOCS_URL', 'http://www.dev.laclasse.com/docs-beta' );
