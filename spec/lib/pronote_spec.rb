@@ -130,7 +130,7 @@ describe ProNote do
       expect( Salle.count ).to eq 24
       expect( rapport[:matieres][:success].count ).to eq 25
       expect( rapport[:enseignants][:success].count ).to eq 31
-      expect( CreneauEmploiDuTemps.count ).to eq 392
+      expect( CreneauEmploiDuTemps.count ).to eq 0 # 392
       expect( FailedIdentification.count ).to eq 0
     end
   end
@@ -189,7 +189,7 @@ describe ProNote do
       expect( Salle.count ).to eq 24
       expect( rapport2nd[:matieres][:error].count ).to eq 0
       expect( rapport2nd[:enseignants][:error].count ).to eq 0
-      expect( CreneauEmploiDuTemps.count ).to eq 392
+      expect( CreneauEmploiDuTemps.count ).to eq 7 # 392
       expect( FailedIdentification.where( id_annuaire: nil ).count ).to eq 0
     end
   end
