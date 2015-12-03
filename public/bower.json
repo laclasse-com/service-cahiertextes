@@ -26,7 +26,6 @@
     "textAngular": "latest",
     "ng-switcher": "latest",
     "font-awesome": "latest",
-    "ng-file-upload": "latest",
     "ng-color-picker": "https://github.com/cycojesus/ng-color-picker.git#latest",
     "sweetalert": "~1",
     "angular-bootstrap-checkbox": "latest",
@@ -53,6 +52,6 @@
   ],
   "resolutions": {
     "d3": "~3.5",
-      "angular": "~1"
+    "angular": "~1"
   }
 }
