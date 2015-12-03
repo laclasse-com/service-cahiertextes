@@ -116,8 +116,6 @@ namespace :preprocess_assets do
                                                           'public/app/vendor/fullcalendar/dist/fullcalendar.js',
                                                           'public/app/vendor/fullcalendar/dist/lang-all.js',
                                                           'public/app/vendor/ng-color-picker/color-picker.js',
-                                                          'public/app/vendor/ng-file-upload/ng-file-upload-shim.js',
-                                                          'public/app/vendor/ng-file-upload/ng-file-upload.js',
                                                           'public/app/vendor/ng-switcher/dist/ng-switcher.js',
                                                           'public/app/vendor/nvd3/nv.d3.js',
                                                           'public/app/vendor/textAngular/src/textAngular-sanitize.js',
