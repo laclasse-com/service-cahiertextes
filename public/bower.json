@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "dependencies": {
     "angular": "latest",
-    "angular-bootstrap": "0.12",
+      "angular-bootstrap": "latest",
     "angular-cookies": "latest",
     "angular-i18n": "latest",
     "angular-mocks": "latest",
@@ -34,8 +34,8 @@
     "moment-timezone": "latest",
     "angular-touch": "latest",
     "angular-toastr": "latest",
-    "fullcalendar": "~2.3",
-    "d3": "~3.5"
+      "fullcalendar": "~2",
+      "d3": "~3"
   },
   "devDependencies": {
     "angular-mocks": "latest",
@@ -50,7 +50,6 @@
     "tests"
   ],
   "resolutions": {
-    "d3": "~3.5",
       "angular": "~1.4"
   }
 }
