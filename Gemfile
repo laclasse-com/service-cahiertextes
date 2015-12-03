@@ -25,8 +25,6 @@ group :development do
   gem 'pry'
   gem 'rack-test'
   gem 'rspec'
-  gem 'selenium-webdriver'
-  gem 'capybara'
   gem 'show_me_the_cookies'
   gem 'rubocop'
   gem 'rubocop-rspec'

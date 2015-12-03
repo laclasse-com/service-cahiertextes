@@ -6,7 +6,6 @@ ENV['RACK_ENV'] ||= 'test'
 require 'rack/test'
 require 'sequel'
 require 'tsort'
-require 'capybara/rspec'
 require 'rspec/matchers' # req by equivalent-xml custom matcher `be_equivalent_to`
 require 'equivalent-xml'
 
@@ -27,9 +26,6 @@ require 'laclasse/laclasse_logger'
 
 LOGGER = Laclasse::LoggerFactory.get_logger
 LOGGER.info("Démarrage des test du Cahier de Textes avec #{LOGGER.loggers_count} logger#{LOGGER.loggers_count > 1 ? 's' : ''}")
-
-Capybara.default_driver = :selenium
-Capybara.app = CahierDeTextesAPI::Web
 
 RSpec.configure do |config|
   config.mock_with :rspec
