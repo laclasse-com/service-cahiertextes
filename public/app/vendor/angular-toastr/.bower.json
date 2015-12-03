@@ -1,6 +1,6 @@
 {
   "name": "angular-toastr",
-  "version": "1.4.1",
+  "version": "1.6.0",
   "authors": [
     "Jesus Rodriguez <Foxandxss@gmail.com>"
   ],
@@ -32,11 +32,11 @@
     "angular": ">=1.3.0"
   },
   "homepage": "https://github.com/Foxandxss/angular-toastr",
-  "_release": "1.4.1",
+  "_release": "1.6.0",
   "_resolution": {
     "type": "version",
-    "tag": "1.4.1",
-    "commit": "94de209e134839df3241fc2fd301d3807751e65b"
+    "tag": "1.6.0",
+    "commit": "24a1ff0f65680759ffbc616428931df649e87f55"
   },
   "_source": "git://github.com/Foxandxss/angular-toastr.git",
   "_target": "*",
