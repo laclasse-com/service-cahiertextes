@@ -6,7 +6,7 @@ ENV['RACK_ENV'] ||= 'test'
 require 'rack/test'
 require 'sequel'
 require 'tsort'
-require 'rspec/matchers' # req by equivalent-xml custom matcher `be_equivalent_to`
+require 'rspec/matchers' # required by equivalent-xml custom matcher `be_equivalent_to`
 require 'equivalent-xml'
 
 require_relative '../config/constants'
@@ -30,15 +30,9 @@ LOGGER.info("Démarrage des test du Cahier de Textes avec #{LOGGER.loggers_count
 RSpec.configure do |config|
   config.mock_with :rspec
   config.expect_with :rspec
-
-  # Use color in STDOUT
-  config.color = true
-
-  # Use color not only in STDOUT but also in pagers and files
-  config.tty = true
-
-  # Use the specified formatter
-  config.formatter = :documentation # :progress, :html, :textmate
+  config.color = true # Use color in STDOUT
+  config.tty = true # Use color not only in STDOUT but also in pagers and files
+  config.formatter = :documentation # Use the specified formatter: :progress, :html, :textmate, :documentation
 
   config.include ShowMeTheCookies, type: :feature
 end
