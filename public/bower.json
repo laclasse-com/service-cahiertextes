@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "dependencies": {
     "angular": "latest",
-      "angular-bootstrap": "latest",
+    "angular-bootstrap": "latest",
     "angular-cookies": "latest",
     "angular-i18n": "latest",
     "angular-mocks": "latest",
@@ -12,7 +12,6 @@
     "angular-scenario": "latest",
     "angular-ui-calendar": "latest",
     "angular-ui-router": "latest",
-    "bootstrap": "latest",
     "es5-shim": "latest",
     "json3": "latest",
     "sizzle": "latest",
@@ -34,22 +33,23 @@
     "moment-timezone": "latest",
     "angular-touch": "latest",
     "angular-toastr": "latest",
-      "fullcalendar": "~2",
+      "fullcalendar": "~2.5.0",
       "d3": "~3"
   },
-  "devDependencies": {
-    "angular-mocks": "latest",
-    "angular-scenario": "latest"
-  },
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "components",
-    "vendor",
-    "test",
-    "tests"
-  ],
-  "resolutions": {
-      "angular": "~1.4"
-  }
+    "devDependencies": {
+        "angular-mocks": "latest",
+        "angular-scenario": "latest"
+    },
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "components",
+        "vendor",
+        "test",
+        "tests"
+    ],
+    "resolutions": {
+        "angular": "~1.4",
+        "fullcalendar": "~2.5.0"
+    }
 }
