@@ -21,21 +21,12 @@ angular.module( 'cahierDeTextesClientApp' )
 
                           $scope.result = false;
 
-                          $scope.upload = fileUpload.uploadFileToUrl( fichier, APP_PATH + '/api/v1/import/pronote' )
-                          // Upload.upload( {
-                          //     url: APP_PATH + '/api/v1/import/pronote',
-                          //     method: 'POST',
-                          //     file: fichier,
-                          //     fields: { create_creneaux: $scope.second_pass },
-                          //     sendFieldsAs: 'form'
-                          // } )
-                          //     .progress( function( evt ) {
-                          //         $scope.in_progress = true;
-                          //     } )
-                              .then( function( data, status, headers, config ) {
+                          $scope.upload = fileUpload.uploadFileToUrl( fichier,
+                                                                      APP_PATH + '/api/v1/import/pronote',
+                                                                      { create_creneaux: $scope.second_pass } )
+                              .then( function success( response, status, headers, config ) {
                                   $scope.in_progress = false;
-                                  $scope.result = data;
-                                  $scope.second_pass = true;
+                                  $scope.result = response.data;
 
                                   $scope.identifie_objet = function( mrpni ) {
                                       if ( _(mrpni).has('id_annuaire')
@@ -82,7 +73,8 @@ angular.module( 'cahierDeTextesClientApp' )
                                           showCancelButton: false
                                         } );
 
-                              }, function() {
+                                  $scope.second_pass = true;
+                              }, function error() {
                                   $scope.in_progress = false;
                                   swal( { type: 'error',
                                           title: 'Erreur lors de l\'importation.',
