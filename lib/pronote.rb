@@ -521,7 +521,7 @@ module ProNote
   def load_xml( decrypted_xml, create_creneaux )
     rapport = {}
 
-    edt_clair = Nokogiri::XML( decrypted_xml ) { |config| config.noblanks }
+    edt_clair = Nokogiri::XML( decrypted_xml, &:noblanks )
 
     etablissement = load_etablissement( edt_clair, create_creneaux ? 1 : 0 )
 
