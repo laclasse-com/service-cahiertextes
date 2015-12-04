@@ -5,10 +5,6 @@
     <div class="col-md-12 user" data-ng-if="!embedded" data-ng-cloak>
         <div class="pull-right">
             {{current_user['prenom']}} {{current_user['nom']}}
-            <select id="profils"
-                    data-ng-model="current_user.profil_actif"
-                    data-ng-options="profil.etablissement_nom + ' : ' + profil.profil_nom group by profil.etablissement_nom for profil in current_user.profils" data-ng-change="reload()">
-            </select>
             <a class="btn btn-danger" href="logout" uib-tooltip="Déconnexion" tooltip-placement="bottom"><i class="glyphicon glyphicon-log-out"></i></a>
         </div>
     </div>
