@@ -1,98 +1,64 @@
 <div class="panel panel-default">
-	<div class="panel-heading">
-		<div class="row">
-			<select class="col-md-3 pull-right"
-				data-ng-model="scope.selected_mois"
-				data-ng-change="process_data()"
-				data-ng-options="annee.indexOf(m)+1 as m for m in annee">
-				<option value="">Toute l'année</option>
-			</select>
-			<select class="col-md-3 pull-right"
-				data-ng-model="scope.selected_regroupement_id"
-				data-ng-change="process_data()"
-				data-ng-options="classe.id as classe.libelle group by classe.type for classe in classes | orderBy:['type','libelle']">
-				<option value="">Toutes les classes</option>
-			</select>
-		</div>
-	</div>
+    <div class="panel-heading">
+        <div class="row">
+            <select class="col-md-3 pull-right"
+                    data-ng-model="scope.selected_mois"
+                    data-ng-change="process_data()"
+                    data-ng-options="annee.indexOf(m)+1 as m for m in annee">
+                <option value="">Toute l'année</option>
+            </select>
+            <select class="col-md-3 pull-right"
+                    data-ng-model="scope.selected_regroupement_id"
+                    data-ng-change="process_data()"
+                    data-ng-options="classe.id as classe.libelle group by classe.type for classe in classes | orderBy:['type','libelle']">
+                <option value="">Toutes les classes</option>
+            </select>
+        </div>
+    </div>
 </div>
-<!--
-<div class="panel panel-default">
-<div class="panel-body row">
-<nvd3-pie-chart id="globalPieChart" class="col-md-4"
-data="pieChart.data"
-objectEquality="true"
-noData="Aucune saisie"
-margin="{left:0,top:0,bottom:0,right:0}"
-showLegend="true"
-tooltips="true"
-color="pieChart.colorFunction()"
-legendColor="pieChart.colorFunction()"
-x="pieChart.xFunction()"
-y="pieChart.yFunction()" >
-<svg></svg>
-</nvd3-pie-chart>
-<nvd3-multi-bar-chart id="globalBarChart" class="col-md-8"
-data="barChart.data"
-objectEquality="true"
-noData="Aucune saisie"
-rotateLabels="35"
-showXAxis="true"
-showYAxis="true"
-showControls="false"
-showLegend="true"
-tooltips="true"
-color="barChart.colorFunction()"
-legendColor="barChart.colorFunction()"
-tooltipcontent="barChart.tooltipContent()"
-xAxisTickFormat="barChart.xAxisTickFormatFunction()" >
-<svg></svg>
-</nvd3-multi-bar-chart>
-</div>
-</div> -->
 
 <div class="col-md-3 bloc-enseignant" data-ng-repeat="individualChart in individualCharts.enseignants | orderBy:'enseignant.full_name'">
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<span class="glyphicon glyphicon-home pull-right"
-				tooltip-trigger="click"
-				tooltip-html-unsafe="{{htmlify_classes_list( individualChart.enseignant.classes )}}"></span>
-			<span class="glyphicon glyphicon-briefcase pull-right"
-				tooltip-trigger="click"
-				tooltip-html-unsafe="{{htmlify_matieres_list( individualChart.enseignant.matieres )}}"></span>
-			<h4>
-				<a data-ui-sref="principal.enseignant({ enseignant_id: individualChart.enseignant.id_ent })">
-					{{individualChart.enseignant.full_name}}
-				</a>
-			</h4>
-		</div>
-		<div class="panel-body">
-			<span data-ng-if="individualChart.pieChart.data[0].value + individualChart.pieChart.data[1].value == 0">
-				Aucune saisie à ce jour.
-			</span>
-			<span data-ng-if="individualChart.pieChart.data[0].value + individualChart.pieChart.data[1].value > 0">
-				<nvd3-pie-chart id="individualPieChart{{$index}}" class="individualPieChart"
-					width="64"
-					height="64"
-					data="individualChart.pieChart.data"
-					margin="{left:0,top:0,bottom:0,right:0}"
-					x="individualChart.pieChart.xFunction()"
-					y="individualChart.pieChart.yFunction()"
-					color="individualChart.pieChart.colorFunction()"
-					showLabels="false"
-					labelType="value"
-					showLegend="false"
-					tooltips="true"
-					pieLabelsOutside="false"
-					objectEquality="true"
-					noData="Aucune saisie" >
-					<svg></svg>
-				</nvd3-pie-chart>
-				<span class="badge badge-info">
-					{{individualChart.pieChart.data[0].value + individualChart.pieChart.data[1].value}} saisies<br>
-					{{individualChart.pieChart.data[0].value}} visées
-				</span>
-			</span>
-		</div>
-	</div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon-home pull-right"
+                  uib-tooltip-trigger="click"
+                  uib-tooltip-html-unsafe="{{htmlify_classes_list( individualChart.enseignant.classes )}}"></span>
+            <span class="glyphicon glyphicon-briefcase pull-right"
+                  uib-tooltip-trigger="click"
+                  uib-tooltip-html-unsafe="{{htmlify_matieres_list( individualChart.enseignant.matieres )}}"></span>
+            <h4>
+                <a data-ui-sref="principal.enseignant({ enseignant_id: individualChart.enseignant.id_ent })">
+                    {{individualChart.enseignant.full_name}}
+                </a>
+            </h4>
+        </div>
+        <div class="panel-body">
+            <span data-ng-if="individualChart.pieChart.data[0].value + individualChart.pieChart.data[1].value == 0">
+                Aucune saisie à ce jour.
+            </span>
+            <span data-ng-if="individualChart.pieChart.data[0].value + individualChart.pieChart.data[1].value > 0">
+                <nvd3-pie-chart id="individualPieChart{{$index}}" class="individualPieChart"
+                                width="64"
+                                height="64"
+                                data="individualChart.pieChart.data"
+                                margin="{left:0,top:0,bottom:0,right:0}"
+                                x="individualChart.pieChart.xFunction()"
+                                y="individualChart.pieChart.yFunction()"
+                                color="individualChart.pieChart.colorFunction()"
+                                showLabels="false"
+                                labelType="value"
+                                showLegend="false"
+                                tooltips="true"
+                                pieLabelsOutside="false"
+                                objectEquality="true"
+                                noData="Aucune saisie" >
+                    <svg></svg>
+                </nvd3-pie-chart>
+                <span class="badge badge-info">
+                    {{individualChart.pieChart.data[0].value + individualChart.pieChart.data[1].value}} saisies<br>
+                    {{individualChart.pieChart.data[0].value}} visées
+                </span>
+            </span>
+        </div>
+    </div>
 </div>
