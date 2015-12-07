@@ -75,5 +75,26 @@ module DataManagement
     end
     # rubocop:enable Metrics/CyclomaticComplexity
     # rubocop:enable Metrics/PerceivedComplexity
+
+    def ical( debut, fin, regroupements_ids, profil_type, eleve_id )
+      ical = Icalendar::Calendar.new
+
+      get( debut, fin, regroupements_ids, profil_type, eleve_id )
+        .each do |creneau|
+        ical.event do |e|
+          # [:regroupement_id, :enseignant_id, :creneau_emploi_du_temps_id, :matiere_id, :cahier_de_textes_id, :start, :end, :cours, :devoirs]
+          e.dtstart = DateTime.parse( creneau[:start] )
+          e.dtend = DateTime.parse( creneau[:end] )
+          e.summary = "#{creneau[:regroupement_id]} - #{creneau[:matiere_id]}"
+          e.description = e.summary
+          # e.created = DateTime.parse( creneau[:date_creation] )
+          # e.last_modified = DateTime.parse( creneau[:date_modification] )
+        end
+      end
+
+      ical.publish
+
+      ical.to_ical
+    end
   end
 end

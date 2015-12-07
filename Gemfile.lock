@@ -63,6 +63,7 @@ GEM
     http-cookie (1.0.2)
       domain_name (~> 0.5)
     i18n (0.7.0)
+    icalendar (2.3.0)
     ice_nine (0.11.1)
     json (1.8.3)
     logstash-event (1.2.02)
@@ -175,6 +176,7 @@ DEPENDENCIES
   equivalent-xml
   grape
   grape-swagger
+  icalendar
   laclasse-common!
   mysql2
   nokogiri
