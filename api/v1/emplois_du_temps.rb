@@ -45,13 +45,11 @@ module CahierDeTextesAPI
         content_type 'text/calendar'
         header 'Content-Disposition', "filename*=UTF-8''emploi_du_temps_#{params.key?(:uid) ? params[:uid] : user[:uid]}.ics"
 
-        ical = DataManagement::EmploiDuTemps.ical( Date.parse( params[:debut].iso8601 ),
-                                                   Date.parse( params[:fin].iso8601 ),
-                                                   user_regroupements_ids( params[:uid] ),
-                                                   user[:user_detailed]['profil_actif']['profil_id'],
-                                                   params[:uid] )
-
-        ical
+        DataManagement::EmploiDuTemps.ical( Date.parse( params[:debut].iso8601 ),
+                                            Date.parse( params[:fin].iso8601 ),
+                                            user_regroupements_ids( params[:uid] ),
+                                            user[:user_detailed]['profil_actif']['profil_id'],
+                                            params[:uid] )
       end
     end
   end
