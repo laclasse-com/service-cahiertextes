@@ -5,7 +5,7 @@
 angular.module( 'cahierDeTextesClientApp' )
     .constant( 'LOCALHOST', false )
     .constant( 'API_VERSION', 'v1' )
-    .constant( 'SEMAINES_VACANCES', { A: [ 7, 8, 15, 16, 27, 28, 29, 30, 31, 32, 33, 34, 35, 43, 44 ],
+    .constant( 'SEMAINES_VACANCES', { A: [ 7, 8, 15, 16, 27, 28, 29, 30, 31, 32, 33, 34, 35, 43, 44, 52, 53 ],
                                       B: [  ],
                                       C: [  ] } )
     .constant( 'ZONE', 'A' )
