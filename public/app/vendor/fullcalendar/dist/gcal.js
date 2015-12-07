@@ -1,5 +1,5 @@
 /*!
- * FullCalendar v2.5.0 Google Calendar Plugin
+ * FullCalendar v2.3.1 Google Calendar Plugin
  * Docs & License: http://fullcalendar.io/
  * (c) 2015 Adam Shaw
  */
@@ -18,11 +18,11 @@
 
 
 var API_BASE = 'https://www.googleapis.com/calendar/v3/calendars';
-var FC = $.fullCalendar;
-var applyAll = FC.applyAll;
+var fc = $.fullCalendar;
+var applyAll = fc.applyAll;
 
 
-FC.sourceNormalizers.push(function(sourceOptions) {
+fc.sourceNormalizers.push(function(sourceOptions) {
 	var googleCalendarId = sourceOptions.googleCalendarId;
 	var url = sourceOptions.url;
 	var match;
@@ -64,7 +64,7 @@ FC.sourceNormalizers.push(function(sourceOptions) {
 });
 
 
-FC.sourceFetchers.push(function(sourceOptions, start, end, timezone) {
+fc.sourceFetchers.push(function(sourceOptions, start, end, timezone) {
 	if (sourceOptions.googleCalendarId) {
 		return transformOptions(sourceOptions, start, end, timezone, this); // `this` is the calendar
 	}
@@ -80,13 +80,17 @@ function transformOptions(sourceOptions, start, end, timezone, calendar) {
 
 	function reportError(message, apiErrorObjs) {
 		var errorObjs = apiErrorObjs || [ { message: message } ]; // to be passed into error handlers
+		var consoleObj = window.console;
+		var consoleWarnFunc = consoleObj ? (consoleObj.warn || consoleObj.log) : null;
 
 		// call error handlers
 		(sourceOptions.googleCalendarError || $.noop).apply(calendar, errorObjs);
 		(calendar.options.googleCalendarError || $.noop).apply(calendar, errorObjs);
 
 		// print error to debug console
-		FC.warn.apply(null, [ message ].concat(apiErrorObjs || []));
+		if (consoleWarnFunc) {
+			consoleWarnFunc.apply(consoleObj, [ message ].concat(apiErrorObjs || []));
+		}
 	}
 
 	if (!apiKey) {

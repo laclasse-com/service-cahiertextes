@@ -33,7 +33,6 @@
     "moment-timezone": "latest",
     "angular-touch": "latest",
     "angular-toastr": "latest",
-      "fullcalendar": "~2.5.0",
       "d3": "~3"
   },
     "devDependencies": {
@@ -49,7 +48,6 @@
         "tests"
     ],
     "resolutions": {
-        "angular": "~1.4",
-        "fullcalendar": "~2.5.0"
+        "angular": "~1.4"
     }
 }
