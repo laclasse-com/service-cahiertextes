@@ -90,6 +90,10 @@ angular.module( 'cahierDeTextesClientApp' )
                           } );
                       };
 
+                      $scope.refresh_calendar = function() {
+                          $scope.calendar.events[ 0 ] = to_fullcalendar_events( $scope.filter_data( $scope.raw_data ) );
+                      };
+
                       var retrieve_data = function( from_date, to_date ) {
                           if ( $scope.current_user.profil_actif.profil_id != 'TUT' || $scope.current_user.enfant_actif ) {
                               EmploisDuTemps.query( { debut: from_date,
@@ -99,7 +103,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                   .$promise
                                   .then( function success( response ) {
                                       $scope.raw_data = response;
-                                      $scope.calendar.events[ 0 ] = to_fullcalendar_events( $scope.filter_data( $scope.raw_data ) );
+                                      $scope.refresh_calendar();
                                   });
                           }
                       };
