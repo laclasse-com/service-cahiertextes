@@ -19,12 +19,9 @@ angular.module( 'cahierDeTextesClientApp' )
 
                       $scope.selected_regroupement_id = undefined;
 
-                      $scope.prev = function() {
-                          $scope.emploi_du_temps.fullCalendar('prev');
-                      };
-                      $scope.next = function() {
-                          $scope.emploi_du_temps.fullCalendar('next');
-                      };
+                      $scope.prev = function() { $scope.emploi_du_temps.fullCalendar('prev'); };
+                      $scope.next = function() { $scope.emploi_du_temps.fullCalendar('next'); };
+
                       var popup_callback = function( scope_popup ) {
                           var view = $scope.emploi_du_temps.fullCalendar( 'getView' );
                           retrieve_data( view.start.toDate(), view.end.toDate() );
@@ -89,90 +86,90 @@ angular.module( 'cahierDeTextesClientApp' )
                           };
 
                           return _( filtered_data ).map( function( event ) {
-                          return new CalendarEvent( event );
-                      } );
-                  };
+                              return new CalendarEvent( event );
+                          } );
+                      };
 
-                  var retrieve_data = function( from_date, to_date ) {
-                      if ( $scope.current_user.profil_actif.profil_id != 'TUT' || $scope.current_user.enfant_actif ) {
-                          EmploisDuTemps.query( { debut: from_date,
-                                                  fin: to_date,
-                                                  uai: $scope.current_user.profil_actif.etablissement_code_uai,
-                                                  uid: $scope.current_user.profil_actif.profil_id == 'TUT' ? $scope.current_user.enfant_actif.enfant.id_ent : null } )
-                              .$promise
-                              .then( function success( response ) {
-                                  $scope.raw_data = response;
-                                  $scope.calendar.events[ 0 ] = to_fullcalendar_events( $scope.filter_data( $scope.raw_data ) );
-                              });
-                      }
-                  };
-
-                  $scope.sont_ce_les_vacances = function( i_semaine, zone ) {
-                      return SEMAINES_VACANCES[ zone ].indexOf( i_semaine ) != -1;
-                  };
-
-                  // configuration du composant calendrier
-                  $scope.extraEventSignature = function(event) {
-                      return "" + event.matiere;
-                  };
-
-                  $scope.calendar = { options: CALENDAR_OPTIONS,
-                                      events: [  ] };
-
-                  $scope.calendar.options.weekends = $scope.current_user.parametrage_cahier_de_textes.affichage_week_ends;
-
-                  $scope.calendar.options.viewRender = function( view, element ) {
-                      $scope.current_user.date = view.start;
-                      $scope.n_week = view.start.week();
-                      $scope.c_est_les_vacances = $scope.sont_ce_les_vacances( $scope.n_week, $scope.zone );
-                      retrieve_data( view.start.toDate(), view.end.toDate() );
-                  };
-
-                  $scope.calendar.options.eventRender = function ( event, element ) {
-                      // FIXME: manipulation du DOM dans le contrôleur, sale, mais obligé pour l'interprétation du HTML ?
-                      var elt_fc_content_title = element.find( '.fc-title' );
-                      var elt_fc_content = element.find( '.fc-content' );
-
-                      if ( !_(event.matiere).isUndefined() ) {
-                          elt_fc_content_title.append( ' - ' + event.matiere.libelle_long );
-                      }
-
-                      if ( event.has_resources ) {
-                          elt_fc_content.prepend( '<i class="glyphicon glyphicon-paperclip"></i>' );
-                      }
-                      if ( $scope.current_user.profil_actif.profil_id !== 'ELV' ) {
-                          if ( event.temps_estime > 0 ) {
-                              var class_couleur = '';
-                              if (event.temps_estime  < 4 ) {
-                                  class_couleur = ' label-success';
-                              } else if (event.temps_estime  < 8 ) {
-                                  class_couleur = ' label-info';
-                              } else if (event.temps_estime  < 12 ) {
-                                  class_couleur = ' label-warning';
-                              } else if (event.temps_estime  <= 15 ) {
-                                  class_couleur = ' label-danger';
-                              }
-                              elt_fc_content.prepend( '<div class="est-time est-time-' + event.temps_estime + class_couleur + '"></div>' );
+                      var retrieve_data = function( from_date, to_date ) {
+                          if ( $scope.current_user.profil_actif.profil_id != 'TUT' || $scope.current_user.enfant_actif ) {
+                              EmploisDuTemps.query( { debut: from_date,
+                                                      fin: to_date,
+                                                      uai: $scope.current_user.profil_actif.etablissement_code_uai,
+                                                      uid: $scope.current_user.profil_actif.profil_id == 'TUT' ? $scope.current_user.enfant_actif.enfant.id_ent : null } )
+                                  .$promise
+                                  .then( function success( response ) {
+                                      $scope.raw_data = response;
+                                      $scope.calendar.events[ 0 ] = to_fullcalendar_events( $scope.filter_data( $scope.raw_data ) );
+                                  });
                           }
-                      }
-                  };
+                      };
 
-                  $scope.calendar.options.weekends = $scope.current_user.parametrage_cahier_de_textes.affichage_week_ends;
+                      $scope.sont_ce_les_vacances = function( i_semaine, zone ) {
+                          return SEMAINES_VACANCES[ zone ].indexOf( i_semaine ) != -1;
+                      };
 
-                  var filter_by_regroupement = function( raw_data, selected_regroupement_id ) {
-                      return ( _($scope.selected_regroupement_id).isUndefined() || _($scope.selected_regroupement_id).isNull() ) ? raw_data : _( raw_data ).filter( function( creneau ) {
-                          return creneau.regroupement_id == selected_regroupement_id;
-                      } );
-                  };
-                  var filter_by_enseignant_id = function( raw_data, uid, active ) {
-                      return !active ? raw_data : _( raw_data ).filter( function( creneau ) {
-                          return creneau.enseignant_id == uid;
-                      } );
-                  };
+                      // configuration du composant calendrier
+                      $scope.extraEventSignature = function(event) {
+                          return "" + event.matiere;
+                      };
 
-                  $scope.uniquement_mes_creneaux = false;
-                  // ############################## Profile-specific code ##############################################
-                  // Les EVS et DIR on une classe sélectionnée par défaut
+                      $scope.calendar = { options: CALENDAR_OPTIONS,
+                                          events: [  ] };
+
+                      $scope.calendar.options.weekends = $scope.current_user.parametrage_cahier_de_textes.affichage_week_ends;
+
+                      $scope.calendar.options.viewRender = function( view, element ) {
+                          $scope.current_user.date = view.start;
+                          $scope.n_week = view.start.week();
+                          $scope.c_est_les_vacances = $scope.sont_ce_les_vacances( $scope.n_week, $scope.zone );
+                          retrieve_data( view.start.toDate(), view.end.toDate() );
+                      };
+
+                      $scope.calendar.options.eventRender = function ( event, element ) {
+                          // FIXME: manipulation du DOM dans le contrôleur, sale, mais obligé pour l'interprétation du HTML ?
+                          var elt_fc_content_title = element.find( '.fc-title' );
+                          var elt_fc_content = element.find( '.fc-content' );
+
+                          if ( !_(event.matiere).isUndefined() ) {
+                              elt_fc_content_title.append( ' - ' + event.matiere.libelle_long );
+                          }
+
+                          if ( event.has_resources ) {
+                              elt_fc_content.prepend( '<i class="glyphicon glyphicon-paperclip"></i>' );
+                          }
+                          if ( $scope.current_user.profil_actif.profil_id !== 'ELV' ) {
+                              if ( event.temps_estime > 0 ) {
+                                  var class_couleur = '';
+                                  if (event.temps_estime  < 4 ) {
+                                      class_couleur = ' label-success';
+                                  } else if (event.temps_estime  < 8 ) {
+                                      class_couleur = ' label-info';
+                                  } else if (event.temps_estime  < 12 ) {
+                                      class_couleur = ' label-warning';
+                                  } else if (event.temps_estime  <= 15 ) {
+                                      class_couleur = ' label-danger';
+                                  }
+                                  elt_fc_content.prepend( '<div class="est-time est-time-' + event.temps_estime + class_couleur + '"></div>' );
+                              }
+                          }
+                      };
+
+                      $scope.calendar.options.weekends = $scope.current_user.parametrage_cahier_de_textes.affichage_week_ends;
+
+                      var filter_by_regroupement = function( raw_data, selected_regroupement_id ) {
+                          return ( _($scope.selected_regroupement_id).isUndefined() || _($scope.selected_regroupement_id).isNull() ) ? raw_data : _( raw_data ).filter( function( creneau ) {
+                              return creneau.regroupement_id == selected_regroupement_id;
+                          } );
+                      };
+                      var filter_by_enseignant_id = function( raw_data, uid, active ) {
+                          return !active ? raw_data : _( raw_data ).filter( function( creneau ) {
+                              return creneau.enseignant_id == uid;
+                          } );
+                      };
+
+                      $scope.uniquement_mes_creneaux = false;
+                      // ############################## Profile-specific code ##############################################
+                      // Les EVS et DIR on une classe sélectionnée par défaut
                       if ( _( [ 'EVS', 'DIR'] ).contains( $scope.current_user.profil_actif.profil_id ) ) {
                           $scope.uniquement_mes_creneaux = false;
 
