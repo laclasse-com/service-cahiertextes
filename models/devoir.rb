@@ -43,7 +43,7 @@ class Devoir < Sequel::Model( :devoirs )
   end
 
   def toggle_deleted
-    update( deleted: !devoir.deleted, date_modification: Time.now )
+    update( deleted: !deleted, date_modification: Time.now )
     save                        # useful?
   end
 
