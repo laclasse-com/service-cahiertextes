@@ -1,83 +1,83 @@
 <div class="message" data-ng-if="empty">
-  <h1><span class="label label-danger"><span class="glyphicon glyphicon-warning-sign"></span> Aucune donnée</span></h1>
+    <h1><span class="label label-danger"><span class="glyphicon glyphicon-warning-sign"></span> Aucune donnée</span></h1>
 </div>
 
 <div class="panel panel-default" data-ng-if="!empty">
-  <div class="panel-body">
-	  <select data-ng-model="scope.selected_regroupement_id" data-ng-change="process_data()" data-ng-options="classe.id as classe.libelle group by classe.type for classe in classes | orderBy:['type','libelle']">
-		  <option value="" selected>Toute les classes</option>
-	  </select>
+    <div class="panel-body">
+        <select data-ng-model="scope.selected_regroupement_id" data-ng-change="process_data()" data-ng-options="classe.id as classe.libelle group by classe.type for classe in classes | orderBy:['type','libelle']">
+            <option value="" selected>Toute les classes</option>
+        </select>
 
-	  <select class="col-md-3" data-ng-model="scope.selected_mois" data-ng-change="process_data()" data-ng-options="annee.indexOf(m)+1 as m for m in annee">
-		  <option value="">Toute l'année</option>
-	  </select>
+        <select class="col-md-3" data-ng-model="scope.selected_mois" data-ng-change="process_data()" data-ng-options="annee.indexOf(m)+1 as m for m in annee">
+            <option value="">Toute l'année</option>
+        </select>
 
-	  <select class="col-md-3" data-ng-model="scope.selected_matiere" data-ng-change="process_data()" data-ng-options="m.id as m.libelle_long for m in matieres">
-		  <option value="">Toute les matières</option>
-	  </select>
-  </div>
+        <select class="col-md-3" data-ng-model="scope.selected_matiere" data-ng-change="process_data()" data-ng-options="m.id as m.libelle_long for m in matieres">
+            <option value="">Toute les matières</option>
+        </select>
+    </div>
 </div>
 
 <div class="panel panel-default">
-  <div class="panel-body row">
-    <nvd3-pie-chart id="globalPieChart" class="col-md-4"
-		    data="pieChart.data"
-		    objectEquality="true"
-		    noData="Aucune saisie"
-		    margin="{left:0,top:0,bottom:0,right:0}"
-		    showLegend="true"
-		    tooltips="true"
-		    color="pieChart.colorFunction()"
-		    legendColor="pieChart.colorFunction()"
-		    x="pieChart.xFunction()"
-		    y="pieChart.yFunction()" >
-      <svg></svg>
-    </nvd3-pie-chart>
-    <nvd3-multi-bar-chart id="globalBarChart" class="col-md-8"
-			  data="barChart.data"
-			  objectEquality="true"
-			  noData="Aucune saisie"
-			  rotateLabels="20"
-			  showXAxis="true"
-			  showYAxis="true"
-			  showControls="false"
-			  showLegend="true"
-			  tooltips="true"
-			  color="barChart.colorFunction()"
-			  legendColor="barChart.colorFunction()"
-			  tooltipcontent="barChart.tooltipContent()"
-			  xAxisTickFormat="barChart.xAxisTickFormatFunction()" >
-      <svg></svg>
-    </nvd3-multi-bar-chart>
-  </div>
+    <div class="panel-body row">
+        <nvd3-pie-chart id="globalPieChart" class="col-md-4"
+                        data="pieChart.data"
+                        objectEquality="true"
+                        noData="Aucune saisie"
+                        margin="{left:0,top:0,bottom:0,right:0}"
+                        showLegend="true"
+                        tooltips="true"
+                        color="pieChart.colorFunction()"
+                        legendColor="pieChart.colorFunction()"
+                        x="pieChart.xFunction()"
+                        y="pieChart.yFunction()" >
+            <svg></svg>
+        </nvd3-pie-chart>
+        <nvd3-multi-bar-chart id="globalBarChart" class="col-md-8"
+                              data="barChart.data"
+                              objectEquality="true"
+                              noData="Aucune saisie"
+                              rotateLabels="33"
+                              showXAxis="true"
+                              showYAxis="true"
+                              showControls="false"
+                              showLegend="true"
+                              tooltips="true"
+                              color="barChart.colorFunction()"
+                              legendColor="barChart.colorFunction()"
+                              tooltipcontent="barChart.tooltipContent()"
+                              xAxisTickFormat="barChart.xAxisTickFormatFunction()" >
+            <svg></svg>
+        </nvd3-multi-bar-chart>
+    </div>
 </div>
 
 <div class="col-md-12" data-ng-if="!classe">
-  <div class="col-md-3"
-       data-ng-repeat="classe in individualCharts.classes | orderBy:'regroupement.libelle'">
-    <div class="panel panel-default">
-      <div class="panel-heading"><h3 class="panel-title">{{classe.regroupement.libelle}}</h3></div>
-      <div class="panel-body">
-	<nvd3-pie-chart id="individualPieChart{{$index}}" class="individualPieChart"
-			width="64"
-			height="64"
-			data="classe.pieChart.data"
-			margin="{left:0,top:0,bottom:0,right:0}"
-			x="classe.pieChart.xFunction()"
-			y="classe.pieChart.yFunction()"
-			color="classe.pieChart.colorFunction()"
-			showLabels="false"
-			labelType="value"
-			showLegend="false"
-			tooltips="true"
-			pieLabelsOutside="false"
-			objectEquality="true"
-			noData="Aucune saisie" >
-	  <svg></svg>
-	</nvd3-pie-chart>
+    <div class="col-md-3"
+         data-ng-repeat="classe in individualCharts.classes | orderBy:'regroupement.libelle'">
+        <div class="panel panel-default">
+            <div class="panel-heading"><h3 class="panel-title">{{classe.regroupement.libelle}}</h3></div>
+            <div class="panel-body">
+                <nvd3-pie-chart id="individualPieChart{{$index}}" class="individualPieChart"
+                                width="64"
+                                height="64"
+                                data="classe.pieChart.data"
+                                margin="{left:0,top:0,bottom:0,right:0}"
+                                x="classe.pieChart.xFunction()"
+                                y="classe.pieChart.yFunction()"
+                                color="classe.pieChart.colorFunction()"
+                                showLabels="false"
+                                labelType="value"
+                                showLegend="false"
+                                tooltips="true"
+                                pieLabelsOutside="false"
+                                objectEquality="true"
+                                noData="Aucune saisie" >
+                    <svg></svg>
+                </nvd3-pie-chart>
 
-	<span class="badge badge-info">{{classe.pieChart.data[0].value}} / {{classe.pieChart.data[0].value + classe.pieChart.data[1].value}}</span>
-      </div>
+                <span class="badge badge-info">{{classe.pieChart.data[0].value}} / {{classe.pieChart.data[0].value + classe.pieChart.data[1].value}}</span>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
