@@ -8,9 +8,9 @@ angular.module( 'cahierDeTextesClientApp' )
 		amMoment.changeLocale( 'fr' );
 	    } ] )
     .constant( 'API_VERSION', 'v1' )
-    .constant( 'SEMAINES_VACANCES', { A: [ 1, 7, 8, 16, 17, 28, 29, 30, 31, 32, 33, 34, 43, 44 ],
-				      B: [ 1, 7, 8, 16, 17, 28, 29, 30, 31, 32, 33, 34, 43, 44 ],
-				      C: [ 1, 7, 8, 16, 17, 28, 29, 30, 31, 32, 33, 34, 43, 44 ] } )
+    .constant( 'SEMAINES_VACANCES', { A: [ 7, 8, 15, 16, 27, 28, 29, 30, 31, 32, 33, 34, 35, 43, 44, 52, 53 ],
+                                      B: [ 7, 8, 15, 16, 27, 28, 29, 30, 31, 32, 33, 34, 35, 43, 44, 52, 53 ],
+                                      C: [ 7, 8, 15, 16, 27, 28, 29, 30, 31, 32, 33, 34, 35, 43, 44, 52, 53 ] } )
     .constant( 'ZONE', 'A' )
 // Configuration d'angular-moment
     .constant('angularMomentConfig', {
