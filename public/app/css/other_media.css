@@ -1,5 +1,7 @@
 @media print {
-    header, footer {
+    header,
+    footer,
+    .cahier-de-textes .actions {
         display: none;
     }
 }
