@@ -106,7 +106,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr data-ng-repeat="saisie in raw_data"
+                <tr data-ng-repeat="saisie in raw_data | orderBy:'cours.date_cours'"
                     data-ng-class="{'even': $even, 'odd': $odd, 'recent': saisie.recent && current_user.profil_actif.profil_id === 'DIR' }"
                     data-ng-if="(scope.montre_valides || saisie.cours.date_validation == null) && (scope.classe == null || saisie.regroupement_id === scope.classe.id) && (scope.moisCourant == null || saisie.mois == scope.moisCourant)">
                     <td>{{saisie.cours.date_cours | amDateFormat:'Do MMMM YYYY'}}</td>
