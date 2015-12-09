@@ -69,7 +69,8 @@ namespace :preprocess_assets do
       .write( uglified )
 
     STDERR.puts 'Sassification of application CSS'
-    uglified = Sass.compile( [ 'public/app/css/main.scss' ]
+    uglified = Sass.compile( [ 'public/app/css/main.scss',
+                               'public/app/css/other_media.css' ]
                              .map { |fichier| File.read( fichier ) }.join,
                              syntax: :scss,
                              style: :compressed )
