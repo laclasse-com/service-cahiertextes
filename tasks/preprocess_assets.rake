@@ -61,7 +61,8 @@ namespace :preprocess_assets do
                                'public/app/vendor/ng-color-picker/color-picker.css',
                                'public/app/vendor/sweetalert/dist/sweetalert.css',
                                'public/app/vendor/angular-toastr/dist/angular-toastr.css',
-                               'public/app/vendor/laclasse-common-client/css/bootstrap-theme.css' ]
+                               'public/app/vendor/laclasse-common-client/css/bootstrap-theme.css',
+                               'public/app/vendor/ui-select/dist/select.css' ]
                              .map { |fichier| File.read( fichier ) }.join,
                              syntax: :scss,
                              style: :compressed )
@@ -122,7 +123,8 @@ namespace :preprocess_assets do
                                                           'public/app/vendor/textAngular/src/textAngular-sanitize.js',
                                                           'public/app/vendor/textAngular/src/textAngularSetup.js',
                                                           'public/app/vendor/textAngular/dist/textAngular.js',
-                                                          'public/app/vendor/angular-toastr/dist/angular-toastr.tpls.js' ] )
+                                                          'public/app/vendor/angular-toastr/dist/angular-toastr.tpls.js',
+                                                          'public/app/vendor/ui-select/dist/select.js' ] )
     File.open( './public/app/vendor/vendor.min.js', 'w' )
       .write( uglified )
     File.open( './public/app/vendor/vendor.min.js.map', 'w' )

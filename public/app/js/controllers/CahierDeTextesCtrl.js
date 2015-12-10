@@ -20,10 +20,17 @@ angular.module( 'cahierDeTextesClientApp' )
                       var matieres_enseignees = [];
                       var popup_ouverte = false;
                       $scope.scope = $scope;
-                      $scope.selected_regroupement_id = null;
                       $scope.selected_creneau_vide = null;
-
                       $scope.complet = false;
+
+                      $scope.select_all_regroupements = function() {
+                          $scope.selected_regroupements = $scope.current_user.profil_actif.classes;
+                      };
+
+                      $scope.select_no_regroupements = function() {
+                          $scope.selected_regroupements = [];
+                      };
+                      $scope.select_all_regroupements();
 
                       var filter_creneaux_avec_saisies = function( raw_data ) {
                           return _.chain(raw_data)
@@ -159,13 +166,12 @@ angular.module( 'cahierDeTextesClientApp' )
                                   creneau_selectionne.regroupement_id = event.regroupement_id;
 
                                   PopupsCreneau.edition( $scope.raw_data,
-                                                         matieres_enseignees, $scope.classes,
+                                                         matieres_enseignees, $scope.current_user.profil_actif.classes,
                                                          creneau_selectionne, event.cours, event.devoirs,
                                                          $scope.popup_callback, popup_ouverte );
                               } );
                       };
                       matieres_enseignees = $scope.current_user.profil_actif.matieres;
-                      $scope.classes = $scope.current_user.profil_actif.classes;
 
                       angular.element('#ui-view-content').after( current_user.marqueur_xiti );
                   } ] );

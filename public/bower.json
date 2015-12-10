@@ -33,21 +33,22 @@
     "moment-timezone": "latest",
     "angular-touch": "latest",
     "angular-toastr": "latest",
-      "d3": "~3"
+    "d3": "~3",
+    "ui-select": "angular-ui-select#~0.13.2"
   },
-    "devDependencies": {
-        "angular-mocks": "latest",
-        "angular-scenario": "latest"
-    },
-    "ignore": [
-        "**/.*",
-        "node_modules",
-        "components",
-        "vendor",
-        "test",
-        "tests"
-    ],
-    "resolutions": {
-        "angular": "~1.4"
-    }
+  "devDependencies": {
+    "angular-mocks": "latest",
+    "angular-scenario": "latest"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components",
+    "vendor",
+    "test",
+    "tests"
+  ],
+  "resolutions": {
+    "angular": "~1.4"
+  }
 }

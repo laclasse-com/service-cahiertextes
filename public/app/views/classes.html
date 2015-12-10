@@ -4,9 +4,20 @@
 
 <div class="panel panel-default" data-ng-if="!empty">
     <div class="panel-body">
-        <select data-ng-model="scope.selected_regroupement_id" data-ng-change="process_data()" data-ng-options="classe.id as classe.libelle group by classe.type for classe in classes | orderBy:['type','libelle']">
-            <option value="" selected>Toute les classes</option>
-        </select>
+
+        <ui-select multiple class="pull-left" theme="bootstrap" style="width: 1045px;"
+                   data-ng-change="process_data()"
+                   data-ng-model="scope.selected_regroupements">
+            <ui-select-match placeholder="Regroupement(s)...">{{$item.libelle}}</ui-select-match>
+            <ui-select-choices repeat="classe in classes | orderBy:['type','libelle']"
+                               group-by="'type'">
+                {{classe.libelle}}
+            </ui-select-choices>
+        </ui-select>
+        <button class="btn btn-sm btn-primary"
+                data-ng-click="select_all_regroupements()"><span class="glyphicon glyphicon-certificate"></span></button>
+        <button class="btn btn-sm btn-default"
+                data-ng-click="select_no_regroupements()"><span class="glyphicon glyphicon-erase"></span></button>
 
         <select class="col-md-3" data-ng-model="scope.selected_mois" data-ng-change="process_data()" data-ng-options="annee.indexOf(m)+1 as m for m in annee">
             <option value="">Toute l'année</option>

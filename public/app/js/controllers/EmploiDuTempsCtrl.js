@@ -17,10 +17,18 @@ angular.module( 'cahierDeTextesClientApp' )
                       $scope.filter_data = angular.identity;
                       $scope.scope = $scope;
 
-                      $scope.selected_regroupement_id = undefined;
-
                       $scope.prev = function() { $scope.emploi_du_temps.fullCalendar('prev'); };
                       $scope.next = function() { $scope.emploi_du_temps.fullCalendar('next'); };
+
+                      $scope.select_all_regroupements = function() {
+                          $scope.selected_regroupements = $scope.current_user.profil_actif.classes;
+                          $scope.refresh_calendar();
+                      };
+
+                      $scope.select_no_regroupements = function() {
+                          $scope.selected_regroupements = [];
+                          $scope.refresh_calendar();
+                      };
 
                       var popup_callback = function( scope_popup ) {
                           var view = $scope.emploi_du_temps.fullCalendar( 'getView' );
@@ -160,9 +168,9 @@ angular.module( 'cahierDeTextesClientApp' )
 
                       $scope.calendar.options.weekends = $scope.current_user.parametrage_cahier_de_textes.affichage_week_ends;
 
-                      var filter_by_regroupement = function( raw_data, selected_regroupement_id ) {
-                          return ( _($scope.selected_regroupement_id).isUndefined() || _($scope.selected_regroupement_id).isNull() ) ? raw_data : _( raw_data ).filter( function( creneau ) {
-                              return creneau.regroupement_id == selected_regroupement_id;
+                      var filter_by_regroupement = function( raw_data, selected_regroupements_ids ) {
+                          return _( raw_data ).filter( function( creneau ) {
+                              return _(selected_regroupements_ids).contains( parseInt( creneau.regroupement_id ) );
                           } );
                       };
                       var filter_by_enseignant_id = function( raw_data, uid, active ) {
@@ -173,20 +181,15 @@ angular.module( 'cahierDeTextesClientApp' )
 
                       $scope.uniquement_mes_creneaux = false;
                       // ############################## Profile-specific code ##############################################
-                      // Les EVS et DIR on une classe sélectionnée par défaut
+                      // Les EVS et DIR n'ont qu'une classe sélectionnée par défaut
                       if ( _( [ 'EVS', 'DIR'] ).contains( $scope.current_user.profil_actif.profil_id ) ) {
                           $scope.uniquement_mes_creneaux = false;
 
                           $scope.filter_data = function( raw_data ) {
-                              var filtered_data = raw_data;
-
-                              // Filtrage sur une seule classe
-                              filtered_data = filter_by_regroupement( filtered_data, $scope.selected_regroupement_id );
-
-                              return filtered_data;
+                              return filter_by_regroupement( raw_data, _($scope.selected_regroupements).pluck( 'id' ) );
                           };
 
-                          $scope.selected_regroupement_id = $scope.current_user.profil_actif.classes[0].id;
+                          $scope.selected_regroupements = [ $scope.current_user.profil_actif.classes[0] ];
                       }
                       // Les TUT peuvent choisir parmi leurs enfants
                       if ( $scope.current_user.profil_actif.profil_id == 'TUT' ) {
@@ -220,10 +223,7 @@ angular.module( 'cahierDeTextesClientApp' )
                           $scope.calendar.options.editable = true;
 
                           $scope.filter_data = function( raw_data ) {
-                              var filtered_data = raw_data;
-
-                              // Filtrage sur une seule classe
-                              filtered_data = filter_by_regroupement( filtered_data, $scope.selected_regroupement_id );
+                              var filtered_data = filter_by_regroupement( raw_data, _($scope.selected_regroupements).pluck( 'id' ) );
 
                               filtered_data = filter_by_enseignant_id( filtered_data, $scope.current_user.uid, $scope.uniquement_mes_creneaux );
 
@@ -260,7 +260,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                   // création du créneau avec les bons horaires
                                   start = new Date( start );
                                   end = new Date( end );
-                                  var regroupement_id = _($scope.selected_regroupement_id).isNull() ? null : '' + $scope.selected_regroupement_id;
+                                  var regroupement_id = $scope.selected_regroupements.length == 1 ? '' + $scope.selected_regroupements[0].id : null;
                                   var new_creneau = new CreneauEmploiDuTemps( { regroupement_id: regroupement_id,
                                                                                 jour_de_la_semaine: start.getDay() + 1,
                                                                                 heure_debut: moment(start).toISOString(),
@@ -287,6 +287,9 @@ angular.module( 'cahierDeTextesClientApp' )
                       }
 
                       $scope.uniquement_mes_creneaux = ( $scope.current_user.profil_actif.profil_id == 'ENS' || $scope.current_user.profil_actif.profil_id == 'DOC' );
+                      if ( $scope.current_user.profil_actif.profil_id == 'ENS' || $scope.current_user.profil_actif.profil_id == 'DOC' ) {
+                          $scope.selected_regroupements = $scope.current_user.profil_actif.classes;
+                      }
 
                       // Récupération d'une date prédéfinie s'il y a lieu
                       if ( $scope.current_user.date ) {
