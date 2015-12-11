@@ -51,53 +51,32 @@ angular.module( 'cahierDeTextesClientApp' )
                                     } ] )
 
 // options des graphiques
-    .service( 'MULTIBARCHART_DEFINITION',
-              function() {
-                  return function() {
-                      return { data: [ { label: 'saisie', value: 0 },
-                                       { label: 'valide', value: 0 } ],
-                               options: { chart: { type: 'multiBarChart',
-                                                   height: 128,
-                                                   x: function( d ) { return d.label; },
-                                                   y: function( d ) { return d.value; },
-                                                   showLabels: false,
-                                                   showLegend: true,
-                                                   // legend: { margin: { top: 5,
-                                                   //                     right: 150,
-                                                   //                     bottom: 0,
-                                                   //                     left: 0
-                                                   //                   }
-                                                   //         },
-                                                   duration: 500,
-                                                   labelThreshold: 0.01,
-                                                   labelSunbeamLayout: true
-                                                 }
-                                        }
-                             };
-                  };
-              } )
-    .service( 'PIECHART_DEFINITION',
-              function() {
-                  return function() {
-                      return { data: [ { label: 'saisie', value: 0 },
-                                       { label: 'valide', value: 0 } ],
-                               options: { chart: { type: 'pieChart',
-                                                   height: 128,
-                                                   x: function( d ) { return d.label; },
-                                                   y: function( d ) { return d.value; },
-                                                   showLabels: false,
-                                                   showLegend: true,
-                                                   // legend: { margin: { top: 5,
-                                                   //                     right: 150,
-                                                   //                     bottom: 0,
-                                                   //                     left: 0
-                                                   //                   }
-                                                   //         },
-                                                   duration: 500,
-                                                   labelThreshold: 0.01,
-                                                   labelSunbeamLayout: true
-                                                 }
-                                        }
-                             };
-                  };
-              } );
+    .constant( 'MULTIBARCHART_DEFINITION',
+               { data: [],
+                 options: { chart: { type: 'multiBarChart',
+                                     height: 240,
+                                     showControls: false,
+                                     showLegend: true,
+                                     showLabels: true,
+                                     stacked: false,
+                                     duration: 500,
+                                     labelThreshold: 0.01,
+                                     labelSunbeamLayout: true
+                                   }
+                          }
+               } )
+    .constant( 'PIECHART_DEFINITION',
+               { data: [ { label: 'saisie', value: 0 },
+                         { label: 'valide', value: 0 } ],
+                 options: { chart: { type: 'pieChart',
+                                     height: 128,
+                                     x: function( d ) { return d.label; },
+                                     y: function( d ) { return d.value; },
+                                     showLabels: false,
+                                     showLegend: true,
+                                     duration: 500,
+                                     labelThreshold: 0.01,
+                                     labelSunbeamLayout: true
+                                   }
+                          }
+               } );

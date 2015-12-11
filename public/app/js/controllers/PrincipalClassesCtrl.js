@@ -2,8 +2,8 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller('PrincipalClassesCtrl',
-                [ '$scope', '$locale', '$q', 'API', 'Annuaire', 'current_user', 'PIECHART_DEFINITION', 'MULTIBARCHART_DEFINITION',
-                  function ( $scope, $locale, $q, API, Annuaire, current_user, PIECHART_DEFINITION, MULTIBARCHART_DEFINITION ) {
+                [ '$scope', '$locale', 'API', 'Annuaire', 'current_user', 'PIECHART_DEFINITION', 'MULTIBARCHART_DEFINITION',
+                  function ( $scope, $locale, API, Annuaire, current_user, PIECHART_DEFINITION, MULTIBARCHART_DEFINITION ) {
                       $scope.empty = false;
                       $scope.scope = $scope;
 
@@ -29,8 +29,8 @@ angular.module( 'cahierDeTextesClientApp' )
                       $scope.global_stats    = { filled: 0,
                                                  validated: 0 };
 
-                      $scope.pieChart = PIECHART_DEFINITION();
-                      $scope.multiBarChart = MULTIBARCHART_DEFINITION();
+                      $scope.pieChart = angular.copy( PIECHART_DEFINITION );
+                      $scope.multiBarChart = angular.copy( MULTIBARCHART_DEFINITION );
                       $scope.pieChart.populate = function( data ) {
                           $scope.pieChart.data = [ { label: 'saisie',
                                                      value: data.filled - data.validated },
@@ -38,23 +38,26 @@ angular.module( 'cahierDeTextesClientApp' )
                                                      value: data.validated } ];
                       };
                       $scope.multiBarChart.populate = function( data ) {
-                          var data_bootstrap = [];
-                          _(12).times( function( i ) { data_bootstrap.push( [ $scope.annee[ i ], 0 ] ); } );
+                          var data_bootstrap = _($scope.annee).map( function( mois ) {
+                              return { key: mois,
+                                       y : 0 };
+                          } );
 
                           var multiBarChart_data = data.reduce( function( monthly_stats, regroupement ) {
                               _(12).times( function( i ) {
-                                  monthly_stats.filled[ i ][ 1 ] += regroupement.mensuel.filled[i];
-                                  monthly_stats.validated[ i ][ 1 ] += regroupement.mensuel.validated[i];
-                              });
+                                  monthly_stats.filled[ i ].x = $scope.annee[ i ];
+                                  monthly_stats.validated[ i ].x = $scope.annee[ i ];
+                                  monthly_stats.filled[ i ].y += regroupement.mensuel.filled[ i ];
+                                  monthly_stats.validated[ i ].y += regroupement.mensuel.validated[ i ];
+                              } );
                               return monthly_stats;
                           }, { filled: angular.copy( data_bootstrap ),
                                validated: angular.copy( data_bootstrap ) } );
 
-                          $scope.multiBarChart.data = [];
-                          $scope.multiBarChart.data.push( { key: 'saisie',
-                                                            values: multiBarChart_data.filled } );
-                          $scope.multiBarChart.data.push( { key: 'valide',
-                                                            values: multiBarChart_data.validated} );
+                          $scope.multiBarChart.data = [ { key: 'saisie',
+                                                          values: multiBarChart_data.filled },
+                                                        { key: 'valide',
+                                                          values: multiBarChart_data.validated} ];
                       };
 
                       $scope.individualCharts = { classes: [],
@@ -63,7 +66,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                                       $scope.individualCharts.classes = _(data)
                                                           .map( function( regroupement ) {
                                                               var individualChart = { regroupement: hashed_classes[ regroupement.regroupement_id ],
-                                                                                      pieChart: PIECHART_DEFINITION() };
+                                                                                      pieChart: angular.copy( PIECHART_DEFINITION ) };
                                                               individualChart.pieChart.data = [ { label: 'saisie',
                                                                                                   value: regroupement.filled - regroupement.validated },
                                                                                                 { label: 'valide',

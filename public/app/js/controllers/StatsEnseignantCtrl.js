@@ -23,9 +23,9 @@ angular.module( 'cahierDeTextesClientApp' )
                            if ( mois !== null ) {
                                data = _( data ).where( { mois: mois } );
                            }
-                           if ( regroupements !== null ) {
-                               data = _( data ).where( { regroupement_id: _(regroupements).pluck( 'id' ) } );
-                           }
+                           data = _( data ).select( function( saisie ) {
+                               return _.chain(regroupements).pluck( 'id' ).contains( saisie.regroupement_id ).value();
+                           } );
 
                            return data;
                        };
@@ -87,39 +87,31 @@ angular.module( 'cahierDeTextesClientApp' )
 
                        // Graphiques
                        $scope.graphiques = {
-                           pieChart: PIECHART_DEFINITION(),
-                           multiBarChart: MULTIBARCHART_DEFINITION(),
+                           pieChart: angular.copy( PIECHART_DEFINITION ),
+                           multiBarChart: angular.copy( MULTIBARCHART_DEFINITION ),
                            populate: function ( data ) {
-                               $scope.graphiques.multiBarChart.data = [];
-                               $scope.graphiques.pieChart.data = [ {
-                                   label: 'visas',
-                                   value: 0
-                               }, {
-                                   label: 'saisies',
-                                   value: 0
-                               } ];
+                               $scope.graphiques.multiBarChart.data = [ { key: "saisies",
+                                                                          values: [] },
+                                                                        { key: "visas",
+                                                                          values: [] }];
+                               $scope.graphiques.pieChart.data = [ { label: 'visas',
+                                                                     value: 0 },
+                                                                   { label: 'saisies',
+                                                                     value: 0 } ];
 
-                               var saisies = {
-                                   key: "saisies",
-                                   values: []
-                               };
-                               var valides = {
-                                   key: "visas",
-                                   values: []
-                               };
-
-                               _.chain( filtre_saisies( data, $scope.moisCourant, $scope.classe ) )
+                               _.chain( filtre_saisies( data, $scope.moisCourant, $scope.selected_regroupements ) )
                                    .groupBy( 'regroupement_id' )
                                    .each( function ( classe ) {
                                        var filled = classe.length;
-                                       var validated = _( classe ).where( {
-                                           valide: true
-                                       } ).length;
+                                       var validated = _( classe ).where( { valide: true } ).length;
+                                       var nom_regroupement = _($scope.classes).findWhere( { id: classe[ 0 ].regroupement_id } ).libelle;
 
-                                       saisies.values.push( [ $scope.classes[ classe[ 0 ].regroupement_id ].libelle, filled ] );
-                                       valides.values.push( [ $scope.classes[ classe[ 0 ].regroupement_id ].libelle, validated ] );
-
-                                       $scope.graphiques.multiBarChart.data = [ valides, saisies ];
+                                       $scope.graphiques.multiBarChart.data[0].values.push( { key: nom_regroupement,
+                                                                                              x: nom_regroupement,
+                                                                                              y: filled } );
+                                       $scope.graphiques.multiBarChart.data[1].values.push( { key: nom_regroupement,
+                                                                                              x: nom_regroupement,
+                                                                                              y: validated } );
 
                                        $scope.graphiques.pieChart.data[ 0 ].value += validated;
                                        $scope.graphiques.pieChart.data[ 1 ].value += filled - validated;

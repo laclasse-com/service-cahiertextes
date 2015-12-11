@@ -45,12 +45,13 @@ angular.module( 'cahierDeTextesClientApp' )
                                             display: true,
                                             html_classes: htmlify_classes_list( enseignant.classes ),
                                             html_matieres: htmlify_matieres_list( enseignant.matieres ),
-                                            pieChart: PIECHART_DEFINITION() };
+                                            pieChart: angular.copy( PIECHART_DEFINITION ) };
 
                               chart.pieChart.data = [ { label: 'visas',
                                                         value: enseignant.validated },
                                                       { label: 'saisies',
                                                         value: enseignant.filled - enseignant.validated } ];
+
                               $scope.individualCharts.enseignants.push( chart );
                           }
                       };
