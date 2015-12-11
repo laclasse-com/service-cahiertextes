@@ -2,8 +2,8 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller('PrincipalEnseignantsCtrl',
-                [ '$scope', '$locale', 'THEME', '$q', 'API', 'Annuaire', 'current_user', 'PIECHART_DEFINITION', 'BARCHART_DEFINITION',
-                  function( $scope, $locale, THEME, $q, API, Annuaire, current_user, PIECHART_DEFINITION, BARCHART_DEFINITION ) {
+                [ '$scope', '$locale', '$q', 'API', 'Annuaire', 'current_user', 'PIECHART_DEFINITION',
+                  function( $scope, $locale, $q, API, Annuaire, current_user, PIECHART_DEFINITION ) {
                       $scope.scope = $scope;
                       // $scope.annee = _($locale.DATETIME_FORMATS.MONTH).toArray();
                       // $scope.selected_mois = null;
@@ -41,16 +41,17 @@ angular.module( 'cahierDeTextesClientApp' )
                       $scope.individualCharts = {
                           enseignants: [ ],
                           add: function( enseignant ) {
-                              var individualChart = { enseignant: enseignant,
-                                                      display: true,
-                                                      html_classes: htmlify_classes_list( enseignant.classes ),
-                                                      html_matieres: htmlify_matieres_list( enseignant.matieres ),
-                                                      pieChart: PIECHART_DEFINITION() };
-                              individualChart.pieChart.data = [ { label: 'visas',
-                                                                  value: enseignant.validated },
-                                                                { label: 'saisies',
-                                                                  value: enseignant.filled - enseignant.validated } ];
-                              $scope.individualCharts.enseignants.push( individualChart );
+                              var chart = { enseignant: enseignant,
+                                            display: true,
+                                            html_classes: htmlify_classes_list( enseignant.classes ),
+                                            html_matieres: htmlify_matieres_list( enseignant.matieres ),
+                                            pieChart: PIECHART_DEFINITION() };
+
+                              chart.pieChart.data = [ { label: 'visas',
+                                                        value: enseignant.validated },
+                                                      { label: 'saisies',
+                                                        value: enseignant.filled - enseignant.validated } ];
+                              $scope.individualCharts.enseignants.push( chart );
                           }
                       };
 

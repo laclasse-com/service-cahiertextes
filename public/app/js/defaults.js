@@ -21,16 +21,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                   DEVOIR_DUPLICATED: 'DEVOIR_DUPLICATED',
                                   DEVOIR_DELETED: 'DEVOIR_DELETED'
                                 } )
-// .constant('angularMomentConfig', {
-//	timezone: 'Europe/Paris'
-// })
-// définition des couleurs
-    .constant( 'THEME', { filled: { base: '#aaffaa',
-                                    stroke: '#88aa88' },
-                          validated: { base: '#00ff00',
-                                       stroke: '#00aa00' }
-                        } )
-
 // options des calendriers
     .factory( 'CALENDAR_OPTIONS', [ '$locale',
                                     function( $locale ) {
@@ -61,35 +51,53 @@ angular.module( 'cahierDeTextesClientApp' )
                                     } ] )
 
 // options des graphiques
-    .factory( 'CHART_COLORS_FUNCTION', [ 'THEME',
-                                         function( THEME ) {
-                                             return function() {
-                                                 var couleurs = [ THEME.validated.base, THEME.filled.base ];
-                                                 return function( d, i ) {
-                                                     return couleurs[ i ];
-                                                 };
-                                             };
-                                         } ] )
-    .service( 'BARCHART_DEFINITION', [ 'CHART_COLORS_FUNCTION',
-                                       function( CHART_COLORS_FUNCTION ) {
-                                           return function() {
-                                               return { data: [],
-                                                        tooltipContent: function() {
-                                                            return function( key, x, y, e, graph ) {
-                                                                return '<h2>' + x + '</h2><p>' + y + ' ' + key + '</p>';
-                                                            };
-                                                        },
-                                                        xAxisTickFormatFunction: function() { return function( d ) { return d; }; },
-                                                        colorFunction: CHART_COLORS_FUNCTION };
-                                           };
-                                       } ] )
-    .service( 'PIECHART_DEFINITION', [ 'CHART_COLORS_FUNCTION',
-                                       function( CHART_COLORS_FUNCTION ) {
-                                           return function() {
-                                               return { data: [ { label: 'saisie', value: 0 },
-                                                                { label: 'valide', value: 0 } ],
-                                                        xFunction: function(){ return function(d) { return d.label; }; },
-                                                        yFunction: function(){ return function(d) { return d.value; }; },
-                                                        colorFunction: CHART_COLORS_FUNCTION };
-                                           };
-                                       } ] );
+    .service( 'MULTIBARCHART_DEFINITION',
+              function() {
+                  return function() {
+                      return { data: [ { label: 'saisie', value: 0 },
+                                       { label: 'valide', value: 0 } ],
+                               options: { chart: { type: 'multiBarChart',
+                                                   height: 128,
+                                                   x: function( d ) { return d.label; },
+                                                   y: function( d ) { return d.value; },
+                                                   showLabels: false,
+                                                   showLegend: true,
+                                                   // legend: { margin: { top: 5,
+                                                   //                     right: 150,
+                                                   //                     bottom: 0,
+                                                   //                     left: 0
+                                                   //                   }
+                                                   //         },
+                                                   duration: 500,
+                                                   labelThreshold: 0.01,
+                                                   labelSunbeamLayout: true
+                                                 }
+                                        }
+                             };
+                  };
+              } )
+    .service( 'PIECHART_DEFINITION',
+              function() {
+                  return function() {
+                      return { data: [ { label: 'saisie', value: 0 },
+                                       { label: 'valide', value: 0 } ],
+                               options: { chart: { type: 'pieChart',
+                                                   height: 128,
+                                                   x: function( d ) { return d.label; },
+                                                   y: function( d ) { return d.value; },
+                                                   showLabels: false,
+                                                   showLegend: true,
+                                                   // legend: { margin: { top: 5,
+                                                   //                     right: 150,
+                                                   //                     bottom: 0,
+                                                   //                     left: 0
+                                                   //                   }
+                                                   //         },
+                                                   duration: 500,
+                                                   labelThreshold: 0.01,
+                                                   labelSunbeamLayout: true
+                                                 }
+                                        }
+                             };
+                  };
+              } );

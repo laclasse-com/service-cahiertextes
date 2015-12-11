@@ -18,14 +18,6 @@
                     data-ng-click="select_all_regroupements()"><span class="glyphicon glyphicon-certificate"></span></button>
             <button class="btn btn-sm btn-default pull-left"
                     data-ng-click="select_no_regroupements()"><span class="glyphicon glyphicon-erase"></span></button>
-            <!--
-                 <select class="col-md-3 pull-right"
-                 data-ng-model="scope.selected_mois"
-                 data-ng-change="filter_data()"
-                 data-ng-options="annee.indexOf(m)+1 as m for m in annee">
-                 <option value="">Toute l'année</option>
-                 </select> -->
-
         </div>
     </div>
 </div>
@@ -51,29 +43,9 @@
             <span data-ng-if="chart.pieChart.data[0].value + chart.pieChart.data[1].value == 0">
                 Aucune saisie à ce jour.
             </span>
-            <span data-ng-if="chart.pieChart.data[0].value + chart.pieChart.data[1].value > 0">
-                <nvd3-pie-chart id="individualPieChart{{$index}}" class="individualPieChart"
-                                width="64"
-                                height="64"
-                                data="chart.pieChart.data"
-                                margin="{left:0,top:0,bottom:0,right:0}"
-                                x="chart.pieChart.xFunction()"
-                                y="chart.pieChart.yFunction()"
-                                color="chart.pieChart.colorFunction()"
-                                showLabels="false"
-                                labelType="value"
-                                showLegend="false"
-                                tooltips="true"
-                                pieLabelsOutside="false"
-                                objectEquality="true"
-                                noData="Aucune saisie" >
-                    <svg></svg>
-                </nvd3-pie-chart>
-                <span class="badge badge-info">
-                    {{chart.pieChart.data[0].value + chart.pieChart.data[1].value}} saisies<br>
-                    {{chart.pieChart.data[0].value}} visées
-                </span>
-            </span>
+            <nvd3 data="chart.pieChart.data" options="chart.pieChart.options"
+                  data-ng-if="chart.pieChart.data[0].value + chart.pieChart.data[1].value > 0">
+            </nvd3>
         </div>
     </div>
 </div>

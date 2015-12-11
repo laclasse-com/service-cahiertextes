@@ -51,35 +51,8 @@
         <div class="col-md-8">
             <div class="panel panel-default">
                 <div class="panel-body row">
-                    <nvd3-pie-chart id="globalPieChart" class="col-md-4"
-                                    data="graphiques.pieChart.data"
-                                    objectEquality="true"
-                                    noData="Aucune saisie"
-                                    margin="{left:0,top:0,bottom:0,right:0}"
-                                    showLegend="true"
-                                    tooltips="true"
-                                    color="graphiques.pieChart.colorFunction()"
-                                    legendColor="graphiques.pieChart.colorFunction()"
-                                    x="graphiques.pieChart.xFunction()"
-                                    y="graphiques.pieChart.yFunction()" >
-                        <svg></svg>
-                    </nvd3-pie-chart>
-                    <nvd3-multi-bar-chart id="globalBarChart" class="col-md-8"
-                                          data="graphiques.barChart.data"
-                                          objectEquality="true"
-                                          noData="Aucune saisie"
-                                          rotateLabels="-33"
-                                          showXAxis="true"
-                                          showYAxis="true"
-                                          showControls="false"
-                                          showLegend="true"
-                                          tooltips="true"
-                                          color="graphiques.barChart.colorFunction()"
-                                          legendColor="graphiques.barChart.colorFunction()"
-                                          tooltipcontent="graphiques.barChart.tooltipContent()"
-                                          xAxisTickFormat="graphiques.barChart.xAxisTickFormatFunction()" >
-                        <svg></svg>
-                    </nvd3-multi-bar-chart>
+                    <nvd3 data="graphiques.pieChart.data" options="graphiques.pieChart.options"></nvd3>
+                    <nvd3 data="graphiques.multiBarChart.data" options="graphiques.multiBarChart.options"></nvd3>
                 </div>
             </div>
         </div>

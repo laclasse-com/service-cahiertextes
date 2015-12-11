@@ -2,8 +2,8 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller('PrincipalClassesCtrl',
-                [ '$scope', 'THEME', '$locale', '$q', 'API', 'Annuaire', 'current_user', 'PIECHART_DEFINITION', 'BARCHART_DEFINITION',
-                  function ( $scope, THEME, $locale, $q, API, Annuaire, current_user, PIECHART_DEFINITION, BARCHART_DEFINITION ) {
+                [ '$scope', '$locale', '$q', 'API', 'Annuaire', 'current_user', 'PIECHART_DEFINITION', 'MULTIBARCHART_DEFINITION',
+                  function ( $scope, $locale, $q, API, Annuaire, current_user, PIECHART_DEFINITION, MULTIBARCHART_DEFINITION ) {
                       $scope.empty = false;
                       $scope.scope = $scope;
 
@@ -30,18 +30,18 @@ angular.module( 'cahierDeTextesClientApp' )
                                                  validated: 0 };
 
                       $scope.pieChart = PIECHART_DEFINITION();
-                      $scope.barChart = BARCHART_DEFINITION();
+                      $scope.multiBarChart = MULTIBARCHART_DEFINITION();
                       $scope.pieChart.populate = function( data ) {
                           $scope.pieChart.data = [ { label: 'saisie',
                                                      value: data.filled - data.validated },
                                                    { label: 'valide',
                                                      value: data.validated } ];
                       };
-                      $scope.barChart.populate = function( data ) {
+                      $scope.multiBarChart.populate = function( data ) {
                           var data_bootstrap = [];
                           _(12).times( function( i ) { data_bootstrap.push( [ $scope.annee[ i ], 0 ] ); } );
 
-                          var barChart_data = data.reduce( function( monthly_stats, regroupement ) {
+                          var multiBarChart_data = data.reduce( function( monthly_stats, regroupement ) {
                               _(12).times( function( i ) {
                                   monthly_stats.filled[ i ][ 1 ] += regroupement.mensuel.filled[i];
                                   monthly_stats.validated[ i ][ 1 ] += regroupement.mensuel.validated[i];
@@ -50,11 +50,11 @@ angular.module( 'cahierDeTextesClientApp' )
                           }, { filled: angular.copy( data_bootstrap ),
                                validated: angular.copy( data_bootstrap ) } );
 
-                          $scope.barChart.data = [];
-                          $scope.barChart.data.push( { key: 'saisie',
-                                                       values: barChart_data.filled } );
-                          $scope.barChart.data.push( { key: 'valide',
-                                                       values: barChart_data.validated} );
+                          $scope.multiBarChart.data = [];
+                          $scope.multiBarChart.data.push( { key: 'saisie',
+                                                            values: multiBarChart_data.filled } );
+                          $scope.multiBarChart.data.push( { key: 'valide',
+                                                            values: multiBarChart_data.validated} );
                       };
 
                       $scope.individualCharts = { classes: [],
@@ -173,7 +173,7 @@ angular.module( 'cahierDeTextesClientApp' )
                               // consommation des données dans les graphiques
                               $scope.individualCharts.populate( $scope.displayed_data, $scope.classes );
                               $scope.pieChart.populate( $scope.displayed_data );
-                              $scope.barChart.populate( $scope.displayed_data );
+                              $scope.multiBarChart.populate( $scope.displayed_data );
                           }
                       };
 

@@ -3,14 +3,14 @@
 angular.module( 'cahierDeTextesClientApp' )
     .controller( 'StatsEnseignantCtrl',
                  [ '$scope', '$stateParams', '$q', '$locale', '$timeout', 'moment', 'toastr',
-                   'API', 'Cours', 'Annuaire', 'current_user', 'PIECHART_DEFINITION', 'BARCHART_DEFINITION',
+                   'API', 'Cours', 'Annuaire', 'current_user', 'PIECHART_DEFINITION', 'MULTIBARCHART_DEFINITION',
                    function ( $scope, $stateParams, $q, $locale, $timeout, moment, toastr,
-                              API, Cours, Annuaire, current_user, PIECHART_DEFINITION, BARCHART_DEFINITION ) {
+                              API, Cours, Annuaire, current_user, PIECHART_DEFINITION, MULTIBARCHART_DEFINITION ) {
                        $scope.mois = _($locale.DATETIME_FORMATS.MONTH).toArray();
                        $scope.scope = $scope;
                        $scope.moisCourant = null;
                        $scope.matieres = {};
-                       $scope.classes = {};
+                       $scope.classes = [];
                        $scope.montre_valides = current_user.profil_actif.profil_id !== 'DIR';
 
                        var calc_nb_saisies_visables = function( raw_data ) {
@@ -88,9 +88,9 @@ angular.module( 'cahierDeTextesClientApp' )
                        // Graphiques
                        $scope.graphiques = {
                            pieChart: PIECHART_DEFINITION(),
-                           barChart: BARCHART_DEFINITION(),
+                           multiBarChart: MULTIBARCHART_DEFINITION(),
                            populate: function ( data ) {
-                               $scope.graphiques.barChart.data = [];
+                               $scope.graphiques.multiBarChart.data = [];
                                $scope.graphiques.pieChart.data = [ {
                                    label: 'visas',
                                    value: 0
@@ -119,7 +119,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                        saisies.values.push( [ $scope.classes[ classe[ 0 ].regroupement_id ].libelle, filled ] );
                                        valides.values.push( [ $scope.classes[ classe[ 0 ].regroupement_id ].libelle, validated ] );
 
-                                       $scope.graphiques.barChart.data = [ valides, saisies ];
+                                       $scope.graphiques.multiBarChart.data = [ valides, saisies ];
 
                                        $scope.graphiques.pieChart.data[ 0 ].value += validated;
                                        $scope.graphiques.pieChart.data[ 1 ].value += filled - validated;
