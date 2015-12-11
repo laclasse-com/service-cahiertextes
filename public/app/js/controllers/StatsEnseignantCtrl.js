@@ -94,9 +94,9 @@ angular.module( 'cahierDeTextesClientApp' )
                                                                           values: [] },
                                                                         { key: "visas",
                                                                           values: [] }];
-                               $scope.graphiques.pieChart.data = [ { label: 'visas',
+                               $scope.graphiques.pieChart.data = [ { label: 'saisies',
                                                                      value: 0 },
-                                                                   { label: 'saisies',
+                                                                   { label: 'visas',
                                                                      value: 0 } ];
 
                                _.chain( filtre_saisies( data, $scope.moisCourant, $scope.selected_regroupements ) )
@@ -113,8 +113,8 @@ angular.module( 'cahierDeTextesClientApp' )
                                                                                               x: nom_regroupement,
                                                                                               y: validated } );
 
-                                       $scope.graphiques.pieChart.data[ 0 ].value += validated;
-                                       $scope.graphiques.pieChart.data[ 1 ].value += filled - validated;
+                                       $scope.graphiques.pieChart.data[ 0 ].value += filled - validated;
+                                       $scope.graphiques.pieChart.data[ 1 ].value += validated;
                                    } );
                            }
                        };

@@ -47,10 +47,10 @@ angular.module( 'cahierDeTextesClientApp' )
                                             html_matieres: htmlify_matieres_list( enseignant.matieres ),
                                             pieChart: angular.copy( PIECHART_DEFINITION ) };
 
-                              chart.pieChart.data = [ { label: 'visas',
-                                                        value: enseignant.validated },
-                                                      { label: 'saisies',
-                                                        value: enseignant.filled - enseignant.validated } ];
+                              chart.pieChart.data = [ { label: 'saisies',
+                                                        value: enseignant.filled - enseignant.validated },
+                                                      { label: 'visas',
+                                                        value: enseignant.validated } ];
 
                               $scope.individualCharts.enseignants.push( chart );
                           }
