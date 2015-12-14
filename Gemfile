@@ -20,6 +20,7 @@ gem 'sinatra'
 gem 'uglifier'
 
 gem 'laclasse-common', git: 'https://github.com/laclasse-com/laclasse-common.git'
+# gem 'laclasse-common', path: '/home/cycojesus/projets/Erasme/laclasse-common'
 
 group :development do
   gem 'pry'
