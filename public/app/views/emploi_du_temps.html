@@ -5,7 +5,7 @@
                    data-ng-change="refresh_calendar()"
                    data-ng-model="scope.selected_regroupements">
             <ui-select-match placeholder="Regroupement(s)...">{{$item.libelle}}</ui-select-match>
-            <ui-select-choices repeat="classe in current_user.profil_actif.classes | orderBy:['type','libelle']"
+            <ui-select-choices repeat="classe in current_user.profil_actif.regroupements | orderBy:['type','libelle']"
                                group-by="'type'">
                 {{classe.libelle}}
             </ui-select-choices>

@@ -21,7 +21,7 @@ angular.module( 'cahierDeTextesClientApp' )
                       $scope.next = function() { $scope.emploi_du_temps.fullCalendar('next'); };
 
                       $scope.select_all_regroupements = function() {
-                          $scope.selected_regroupements = $scope.current_user.profil_actif.classes;
+                          $scope.selected_regroupements = $scope.current_user.profil_actif.regroupements;
                           $scope.refresh_calendar();
                       };
 
@@ -41,7 +41,7 @@ angular.module( 'cahierDeTextesClientApp' )
                               var _this = this; //pour pouvoir le référencé dans les .then()
                               this.details = event;
                               this.allDay = false;
-                              this.regroupement = _($scope.current_user.profil_actif.classes).findWhere({ id: parseInt( this.details.regroupement_id ) });
+                              this.regroupement = _($scope.current_user.profil_actif.regroupements).findWhere({ id: parseInt( this.details.regroupement_id ) });
                               this.title = ( _(this.regroupement).isUndefined() ) ? '' : this.regroupement.libelle;
                               this.matiere = _($scope.current_user.profil_actif.matieres).findWhere({ id: this.details.matiere_id });
                               this.has_resources = _(event.cours).has( 'ressources' ) && event.cours.ressources.length > 0;
@@ -189,7 +189,7 @@ angular.module( 'cahierDeTextesClientApp' )
                               return filter_by_regroupement( raw_data, _($scope.selected_regroupements).pluck( 'id' ) );
                           };
 
-                          $scope.selected_regroupements = [ $scope.current_user.profil_actif.classes[0] ];
+                          $scope.selected_regroupements = [ $scope.current_user.profil_actif.regroupements[0] ];
                       }
                       // Les TUT peuvent choisir parmi leurs enfants
                       if ( $scope.current_user.profil_actif.profil_id == 'TUT' ) {
@@ -243,7 +243,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                           creneau_selectionne.regroupement_id = event.details.regroupement_id;
 
                                           PopupsCreneau.edition( $scope.raw_data,
-                                                                 $scope.current_user.profil_actif.matieres, $scope.current_user.profil_actif.classes,
+                                                                 $scope.current_user.profil_actif.matieres, $scope.current_user.profil_actif.regroupements,
                                                                  creneau_selectionne, event.details.cours, event.details.devoirs,
                                                                  popup_callback, popup_ouverte );
                                       } );
@@ -276,7 +276,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                           new_creneau.regroupement_id = regroupement_id;
 
                                           PopupsCreneau.edition( $scope.raw_data,
-                                                                 $scope.current_user.profil_actif.matieres, $scope.current_user.profil_actif.classes,
+                                                                 $scope.current_user.profil_actif.matieres, $scope.current_user.profil_actif.regroupements,
                                                                  new_creneau, null, [],
                                                                  popup_callback, popup_ouverte );
 
@@ -288,7 +288,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
                       $scope.uniquement_mes_creneaux = ( $scope.current_user.profil_actif.profil_id == 'ENS' || $scope.current_user.profil_actif.profil_id == 'DOC' );
                       if ( $scope.current_user.profil_actif.profil_id == 'ENS' || $scope.current_user.profil_actif.profil_id == 'DOC' ) {
-                          $scope.selected_regroupements = $scope.current_user.profil_actif.classes;
+                          $scope.selected_regroupements = $scope.current_user.profil_actif.regroupements;
                       }
 
                       // Récupération d'une date prédéfinie s'il y a lieu

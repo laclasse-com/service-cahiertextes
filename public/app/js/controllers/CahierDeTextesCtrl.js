@@ -24,7 +24,7 @@ angular.module( 'cahierDeTextesClientApp' )
                       $scope.complet = false;
 
                       $scope.select_all_regroupements = function() {
-                          $scope.selected_regroupements = $scope.current_user.profil_actif.classes;
+                          $scope.selected_regroupements = $scope.current_user.profil_actif.regroupements;
                       };
 
                       $scope.select_no_regroupements = function() {
@@ -131,7 +131,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                   _($scope.raw_data).each( function( creneau ) {
                                       creneau.matiere = _($scope.current_user.profil_actif.matieres).findWhere({ id: creneau.matiere_id });
-                                      creneau.regroupement = _($scope.current_user.profil_actif.classes).findWhere({ id: parseInt( creneau.regroupement_id ) });
+                                      creneau.regroupement = _($scope.current_user.profil_actif.regroupements).findWhere({ id: parseInt( creneau.regroupement_id ) });
                                   });
 
                                   $scope.creneaux_vides = filter_creneaux_vides( $scope.raw_data );
@@ -166,7 +166,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                   creneau_selectionne.regroupement_id = event.regroupement_id;
 
                                   PopupsCreneau.edition( $scope.raw_data,
-                                                         matieres_enseignees, $scope.current_user.profil_actif.classes,
+                                                         matieres_enseignees, $scope.current_user.profil_actif.regroupements,
                                                          creneau_selectionne, event.cours, event.devoirs,
                                                          $scope.popup_callback, popup_ouverte );
                               } );

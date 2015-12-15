@@ -98,7 +98,7 @@ angular.module( 'cahierDeTextesClientApp' )
                               .pluck( 'regroupement_id' )
                               .map(function( regroupement_id ) {
                                   regroupement_id = parseInt( regroupement_id );
-                                  var regroupement = _(current_user.profil_actif.classes).findWhere({ id: regroupement_id });
+                                  var regroupement = _(current_user.profil_actif.regroupements).findWhere({ id: regroupement_id });
                                   if ( _(regroupement).isUndefined() ) {
                                       regroupement = Annuaire.get_regroupement( regroupement_id );
                                   }
