@@ -1,30 +1,31 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-	<div class="row">
-	    <a class="btn btn-info pull-left" data-ui-sref="principal.enseignants" data-ng-if="current_user.profil_actif.profil_id === 'DIR'" >← Retour à la liste des enseignants</a>
-	</div>
-	<div class="row">
+	    <div class="row">
+		    <a class="btn btn-info pull-left" data-ui-sref="principal.enseignants" data-ng-if="current_user.profil_actif.profil_id === 'DIR'" >← Retour à la liste des enseignants</a>
+	    </div>
+	    <div class="row">
 
-		<div class="ui-select-wrapper">
-			<ui-select multiple class="pull-left" theme="bootstrap"
-				data-ng-change="process_data()"
-				data-ng-model="scope.selected_regroupements">
-				<ui-select-match placeholder="Regroupement(s)...">{{$item.libelle}}</ui-select-match>
-				<ui-select-choices repeat="classe in classes | orderBy:['type','libelle']"
-					group-by="'type'">
-					{{classe.libelle}}
-				</ui-select-choices>
-			</ui-select>
-			<button class="btn btn-xs btn-primary"
-				data-ng-click="select_all_regroupements()"><span class="glyphicon glyphicon-certificate"></span></button>
-			<button class="btn btn-xs btn-default"
-				data-ng-click="select_no_regroupements()"><span class="glyphicon glyphicon-erase"></span></button>
-		</div>
+		    <div class="ui-select-wrapper">
+			    <ui-select multiple class="pull-left" theme="bootstrap"
+				    append-to-body="true"
+				    data-ng-change="process_data()"
+				    data-ng-model="scope.selected_regroupements">
+				    <ui-select-match placeholder="Regroupement(s)...">{{$item.libelle}}</ui-select-match>
+				    <ui-select-choices repeat="classe in classes | orderBy:['type','libelle']"
+					    group-by="'type'">
+					    {{classe.libelle}}
+				    </ui-select-choices>
+			    </ui-select>
+			    <button class="btn btn-xs btn-primary"
+				    data-ng-click="select_all_regroupements()"><span class="glyphicon glyphicon-certificate"></span></button>
+			    <button class="btn btn-xs btn-default"
+				    data-ng-click="select_no_regroupements()"><span class="glyphicon glyphicon-erase"></span></button>
+		    </div>
 
-		<select class="col-md-3 pull-right" data-ng-model="moisCourant" data-ng-change="process_data()" data-ng-options="mois.indexOf(m)+1 as m for m in mois">
-			<option value="">Toute l'année</option>
-		</select>
-	</div>
+		    <select class="col-md-3 pull-right" data-ng-model="moisCourant" data-ng-change="process_data()" data-ng-options="mois.indexOf(m)+1 as m for m in mois">
+			    <option value="">Toute l'année</option>
+		    </select>
+	    </div>
     </div>
 
     <div class="panel-body">

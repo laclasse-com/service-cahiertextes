@@ -7,6 +7,7 @@
 
 	    <div class="ui-select-wrapper">
 		    <ui-select multiple class="pull-left" theme="bootstrap"
+			    append-to-body="true"
 			    data-ng-change="process_data()"
 			    data-ng-model="scope.selected_regroupements">
 			    <ui-select-match placeholder="Regroupement(s)...">{{$item.libelle}}</ui-select-match>

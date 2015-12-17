@@ -1,49 +1,50 @@
 <div class="panel panel-default">
-    <div class="panel-heading" data-ng-if="current_user.profil_actif.profil_id === 'ENS' || current_user.profil_actif.profil_id === 'EVS' || current_user.profil_actif.profil_id === 'DIR' || current_user.profil_actif.profil_id === 'DOC'">
+	<div class="panel-heading" data-ng-if="current_user.profil_actif.profil_id === 'ENS' || current_user.profil_actif.profil_id === 'EVS' || current_user.profil_actif.profil_id === 'DIR' || current_user.profil_actif.profil_id === 'DOC'">
 
-	    <div class="ui-select-wrapper">
-		    <ui-select multiple class="pull-left" theme="bootstrap"
-			    data-ng-change="refresh_calendar()"
-			    data-ng-model="scope.selected_regroupements">
-			    <ui-select-match placeholder="Regroupement(s)...">{{$item.libelle}}</ui-select-match>
-			    <ui-select-choices repeat="classe in current_user.profil_actif.regroupements | orderBy:['type','libelle']"
-				    group-by="'type'">
-				    {{classe.libelle}}
-			    </ui-select-choices>
-		    </ui-select>
-		    <button class="btn btn-xs btn-primary"
-			    data-ng-click="select_all_regroupements()"><span class="glyphicon glyphicon-certificate"></span></button>
-		    <button class="btn btn-xs btn-default"
-			    data-ng-click="select_no_regroupements()"><span class="glyphicon glyphicon-erase"></span></button>
-	    </div>
+		<div class="ui-select-wrapper">
+			<ui-select multiple class="pull-left" theme="bootstrap"
+				append-to-body="true"
+				data-ng-change="refresh_calendar()"
+				data-ng-model="scope.selected_regroupements">
+				<ui-select-match placeholder="Regroupement(s)...">{{$item.libelle}}</ui-select-match>
+				<ui-select-choices repeat="classe in current_user.profil_actif.regroupements | orderBy:['type','libelle']"
+					group-by="'type'">
+					{{classe.libelle}}
+				</ui-select-choices>
+			</ui-select>
+			<button class="btn btn-xs btn-primary"
+				data-ng-click="select_all_regroupements()"><span class="glyphicon glyphicon-certificate"></span></button>
+			<button class="btn btn-xs btn-default"
+				data-ng-click="select_no_regroupements()"><span class="glyphicon glyphicon-erase"></span></button>
+		</div>
 
-	    <div class="pull-right options" data-ng-if="current_user.profil_actif.profil_id === 'ENS' || current_user.profil_actif.profil_id === 'DOC'">
-		    <label><checkbox class="btn-info" data-ng-model="scope.uniquement_mes_creneaux"
-				   data-ng-change="refresh_calendar()"></checkbox> Ne montrer que ce qui me concerne directement</label>
-	    </div>
+		<div class="pull-right options" data-ng-if="current_user.profil_actif.profil_id === 'ENS' || current_user.profil_actif.profil_id === 'DOC'">
+			<label><checkbox class="btn-info" data-ng-model="scope.uniquement_mes_creneaux"
+				       data-ng-change="refresh_calendar()"></checkbox> Ne montrer que ce qui me concerne directement</label>
+		</div>
 
-	    <div class="clearfix"></div>
-    </div>
-    <div class="panel-body"
-	    data-ng-class="{'vacances': c_est_les_vacances}">
-	    <div data-calendar="emploi_du_temps"
-		    id="emploi_du_temps"
-		    data-ui-calendar="calendar.options"
-		    class="calendar"
-		    data-ng-model="calendar.events"
-		    calendar-watch-event="extraEventSignature"
-		    data-ng-swipe-left="prev()"
-		    data-ng-swipe-right="next()"></div>
-	    <div class="col-md-12">
-		    <div class="pull-right legende">
-			    <label>Légende :</label>
-			    <label><span class="label edt-cours" title="Cours"> </span> Cours</label>
-			    <!-- <span class="label edt-permanence" title="Permanence"> </span> Permanence -->
-			    <label><span class="label edt-devoir-a-faire" title="Devoir à faire"> </span> Devoir à faire</label>
-			    <label data-ng-if="current_user.profil_actif.profil_id === 'ELV'"><span class="label edt-devoir-fait" title="Devoir fait ! Youpi !"> </span> Devoir fait</label>
-			    <label><span class="label edt-devoir-note-maison" title="Devoir à faire à la maison"> </span> DM - devoir maison</label>
-			    <label><span class="label edt-devoir-note-surveille" title="Devoir surveillé"> </span> DS - devoir surveillé</label>
-		    </div>
-	    </div>
-    </div>
+		<div class="clearfix"></div>
+	</div>
+	<div class="panel-body"
+		data-ng-class="{'vacances': c_est_les_vacances}">
+		<div data-calendar="emploi_du_temps"
+			id="emploi_du_temps"
+			data-ui-calendar="calendar.options"
+			class="calendar"
+			data-ng-model="calendar.events"
+			calendar-watch-event="extraEventSignature"
+			data-ng-swipe-left="prev()"
+			data-ng-swipe-right="next()"></div>
+		<div class="col-md-12">
+			<div class="pull-right legende">
+				<label>Légende :</label>
+				<label><span class="label edt-cours" title="Cours"> </span> Cours</label>
+				<!-- <span class="label edt-permanence" title="Permanence"> </span> Permanence -->
+				<label><span class="label edt-devoir-a-faire" title="Devoir à faire"> </span> Devoir à faire</label>
+				<label data-ng-if="current_user.profil_actif.profil_id === 'ELV'"><span class="label edt-devoir-fait" title="Devoir fait ! Youpi !"> </span> Devoir fait</label>
+				<label><span class="label edt-devoir-note-maison" title="Devoir à faire à la maison"> </span> DM - devoir maison</label>
+				<label><span class="label edt-devoir-note-surveille" title="Devoir surveillé"> </span> DS - devoir surveillé</label>
+			</div>
+		</div>
+	</div>
 </div>
