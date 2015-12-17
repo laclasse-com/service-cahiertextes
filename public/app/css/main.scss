@@ -919,6 +919,17 @@ fieldset {
 .cartable .disabled button.from-ct { display: inline; }
 
 
+// ui-select
+.ui-select-wrapper {
+    width: 100%;
+    .ui-select-container {
+	width: 97.5%;
+	max-height: 115px;
+	overflow-x: hidden;
+	overflow-y: auto; //scroll;
+    }
+}
+
 // Page import
 .rapport {
     .panel-body {
