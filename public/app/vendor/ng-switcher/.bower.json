@@ -28,6 +28,6 @@
     "commit": "ba3e3fdbf0a23cf7f4038ec834708bd40c6f6998"
   },
   "_source": "git://github.com/theaqua/ng-switcher.git",
-  "_target": "*",
+  "_target": "master",
   "_originalSource": "ng-switcher"
 }

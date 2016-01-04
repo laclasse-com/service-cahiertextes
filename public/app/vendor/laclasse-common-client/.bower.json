@@ -13,6 +13,6 @@
     "commit": "529e3418cb91d5a7ad6904db8101ff6c89f12d04"
   },
   "_source": "https://github.com/laclasse-com/laclasse-common-client.git",
-  "_target": "*",
+  "_target": "master",
   "_originalSource": "https://github.com/laclasse-com/laclasse-common-client.git"
 }

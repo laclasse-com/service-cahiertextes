@@ -24,6 +24,6 @@
     "commit": "3f24a199a88ddfb6ad96a3db453ea04cf1baf344"
   },
   "_source": "git://github.com/moment/moment-timezone.git",
-  "_target": "*",
+  "_target": "~0.4",
   "_originalSource": "moment-timezone"
 }

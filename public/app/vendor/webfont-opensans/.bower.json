@@ -26,6 +26,6 @@
     "commit": "661f9c86a1b4c9380b05fb79506b6d98e48a94d0"
   },
   "_source": "git://github.com/sonicparke/webfont-opensans.git",
-  "_target": "*",
+  "_target": "~0.0",
   "_originalSource": "webfont-opensans"
 }

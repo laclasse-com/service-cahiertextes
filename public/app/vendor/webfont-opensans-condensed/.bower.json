@@ -21,6 +21,6 @@
     "commit": "85171f041c4b2bf200c9e7b47d49ed32df3fdf8c"
   },
   "_source": "git://github.com/jjlharrison/webfont-opensans-condensed.git",
-  "_target": "*",
+  "_target": "~0.1",
   "_originalSource": "webfont-opensans-condensed"
 }

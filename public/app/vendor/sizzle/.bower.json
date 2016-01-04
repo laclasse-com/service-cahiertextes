@@ -31,6 +31,6 @@
     "commit": "774e9ba8036943de9fc83b0411f4730ddafebbd1"
   },
   "_source": "git://github.com/jquery/sizzle.git",
-  "_target": "*",
+  "_target": "~2.2",
   "_originalSource": "sizzle"
 }

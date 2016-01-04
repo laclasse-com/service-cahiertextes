@@ -42,6 +42,6 @@
     "commit": "690a0229ff88bfb13422c0865be611b9f2674584"
   },
   "_source": "https://github.com/cycojesus/ng-color-picker.git",
-  "_target": "*",
+  "_target": "master",
   "_originalSource": "https://github.com/cycojesus/ng-color-picker.git"
 }
