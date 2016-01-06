@@ -12,19 +12,21 @@ require_relative './annuaire'
 require_relative './creneaux_emploi_du_temps'
 require_relative './plages_horaires'
 
+require_relative './log'
+
 module CahierDeTextesAPI
   module V1
     class API < Grape::API
       version 'v1', using: :path, vendor: 'laclasse.com'
       format :json
       rescue_from :all
-
+      
       resource( :users                    ) { mount ::CahierDeTextesAPI::V1::UsersAPI }
-
+      
       resource( :import                   ) { mount ::CahierDeTextesAPI::V1::ImportAPI }
-
+      
       resource( :annuaire                 ) { mount ::CahierDeTextesAPI::V1::AnnuaireAPI }
-
+      
       resource( :etablissements           ) { mount ::CahierDeTextesAPI::V1::EtablissementsAPI }
       resource( :cours                    ) { mount ::CahierDeTextesAPI::V1::CoursAPI }
       resource( :devoirs                  ) { mount ::CahierDeTextesAPI::V1::DevoirsAPI }
@@ -32,7 +34,9 @@ module CahierDeTextesAPI
       resource( :emplois_du_temps         ) { mount ::CahierDeTextesAPI::V1::EmploisDuTempsAPI }
       resource( :creneaux_emploi_du_temps ) { mount ::CahierDeTextesAPI::V1::CreneauxEmploiDuTempsAPI }
       resource( :plages_horaires          ) { mount ::CahierDeTextesAPI::V1::PlagesHorairesAPI }
-
+      
+      resource( :log                      ) { mount ::CahierDeTextesAPI::V1::LogAPI }
+      
       add_swagger_documentation base_path: "#{APP_PATH}/api",
                                 api_version: 'v1',
                                 hide_documentation_path: true
