@@ -133,15 +133,6 @@ angular.module( 'cahierDeTextesClientApp' )
 				     $scope.semaines_actives.regroupement = semaines_toutes_actives();
 				 }
 			       },
-			       // { label: 'Rien',
-			       //	 apply: function() {
-			       //	     var template = [];
-			       //	     _(52).times( function() {
-			       //		 template.push( 0 );
-			       //	     });
-			       //	     $scope.semaines_actives.regroupement = template;
-			       //	 }
-			       // },
 			       { label: 'Paires',
 				 apply: function() {
 				     var template = [];
