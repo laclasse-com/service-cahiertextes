@@ -2,11 +2,11 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller( 'PopupEditionCtrl',
-		 [ '$scope', '$filter', '$q', '$sce', '$modalInstance', '$locale', 'toastr',
+		 [ '$scope', '$filter', '$q', '$sce', '$uibModalInstance', '$locale', 'toastr',
 		   'APP_PATH', 'DOCS_URL', 'SEMAINES_VACANCES', 'ZONE', 'POPUP_ACTIONS', 'LOCALHOST',
 		   'Documents', 'API', 'CreneauEmploiDuTemps', 'Cours', 'Devoirs', 'User',
 		   'cours', 'devoirs', 'creneau', 'raw_data', 'classes', 'matieres',
-		   function ( $scope, $filter, $q, $sce, $modalInstance, $locale, toastr,
+		   function ( $scope, $filter, $q, $sce, $uibModalInstance, $locale, toastr,
 			      APP_PATH, DOCS_URL, SEMAINES_VACANCES, ZONE, POPUP_ACTIONS, LOCALHOST,
 			      Documents, API, CreneauEmploiDuTemps, Cours, Devoirs, User,
 			      cours, devoirs, creneau, raw_data, classes, matieres )
@@ -189,7 +189,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
 			   // helpers
 			   $scope.fermer = function () {
-			       $modalInstance.close( $scope );
+			       $uibModalInstance.close( $scope );
 			   };
 
 			   $scope.effacer_creneau = function() {

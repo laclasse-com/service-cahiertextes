@@ -2,9 +2,9 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller('PopupDisplayCtrl',
-		[ '$scope', '$sce', '$modalInstance', 'toastr', 'APP_PATH', 'DOCS_URL', 'Cours', 'Devoirs', 'User',
+		[ '$scope', '$sce', '$uibModalInstance', 'toastr', 'APP_PATH', 'DOCS_URL', 'Cours', 'Devoirs', 'User',
 		  'titre', 'cours', 'devoirs',
-		  function( $scope, $sce, $modalInstance, toastr, APP_PATH, DOCS_URL, Cours, Devoirs, User,
+		  function( $scope, $sce, $uibModalInstance, toastr, APP_PATH, DOCS_URL, Cours, Devoirs, User,
 			    titre, cours, devoirs ) {
 		      $scope.app_path = APP_PATH;
 		      $scope.titre = titre;
@@ -47,7 +47,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
 		      $scope.tab_SP_active = _($scope.devoirs).isEmpty();
 		      $scope.fermer = function() {
-			  $modalInstance.close( $scope );
+			  $uibModalInstance.close( $scope );
 		      };
 
 		      User.get_user().then( function( response ) {
@@ -70,4 +70,4 @@ angular.module( 'cahierDeTextesClientApp' )
 
 			  angular.element('#ui-view-content').after( $scope.current_user.marqueur_xiti );
 		      } );
-			    } ] );
+		  } ] );
