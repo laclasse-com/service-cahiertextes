@@ -133,28 +133,32 @@ angular.module( 'cahierDeTextesClientApp' )
 				     $scope.semaines_actives.regroupement = semaines_toutes_actives();
 				 }
 			       },
-			       { label: 'Paires',
+			       { label: 'Semaine A',
 				 apply: function() {
 				     var template = [];
+				     var semaines_depuis_les_vacances = 0;
 				     _(52).times( function( i ) {
-					 if ( !$scope.sont_ce_les_vacances( i + 1, ZONE ) && ( ( i + 1 ) % 2 == 0 ) ) {
-					     template.push( 1 );
+					 if ( $scope.sont_ce_les_vacances( i + 1, ZONE ) ) {
+					     semaines_depuis_les_vacances = 0;
 					 } else {
-					     template.push( 0 );
+					     semaines_depuis_les_vacances++;
 					 }
+					 template.push( ( semaines_depuis_les_vacances % 2 == 1 ) ? 1 : 0 );
 				     });
 				     $scope.semaines_actives.regroupement = template;
 				 }
 			       },
-			       { label: 'Impaires',
+			       { label: 'Semaine B',
 				 apply: function() {
 				     var template = [];
+				     var semaines_depuis_les_vacances = 0;
 				     _(52).times( function( i ) {
-					 if ( !$scope.sont_ce_les_vacances( i + 1, ZONE ) && ( ( i + 1 ) % 2 == 1 ) ) {
-					     template.push( 1 );
+					 if ( $scope.sont_ce_les_vacances( i + 1, ZONE ) ) {
+					     semaines_depuis_les_vacances = 0;
 					 } else {
-					     template.push( 0 );
+					     semaines_depuis_les_vacances++;
 					 }
+					 template.push( ( semaines_depuis_les_vacances % 2 == 0 ) ? 1 : 0 );
 				     });
 				     $scope.semaines_actives.regroupement = template;
 				 }
