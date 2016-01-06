@@ -127,55 +127,70 @@ angular.module( 'cahierDeTextesClientApp' )
 			   };
 
 			   $scope.semaines_actives = { regroupement: [] };
-			   $scope.apply_template = function( template_name ) {
-			       var template = [];
-			       switch( template_name ) {
-			       case 'tout':
-				   $scope.semaines_actives.regroupement = semaines_toutes_actives();
-				   break;
-			       case 'rien':
-				   _(52).times( function() {
-				       template.push( 0 );
-				   });
-				   $scope.semaines_actives.regroupement = template;
-				   break;
-			       case 'paires':
-				   _(52).times( function( i ) {
-				       if ( !$scope.sont_ce_les_vacances( i + 1, ZONE ) && ( ( i + 1 ) % 2 == 0 ) ) {
-					   template.push( 1 );
-				       } else {
-					   template.push( 0 );
-				       }
-				   });
-				   $scope.semaines_actives.regroupement = template;
-				   break;
-			       case 'impaires':
-				   _(52).times( function( i ) {
-				       if ( !$scope.sont_ce_les_vacances( i + 1, ZONE ) && ( ( i + 1 ) % 2 == 1 ) ) {
-					   template.push( 1 );
-				       } else {
-					   template.push( 0 );
-				       }
-				   });
-				   $scope.semaines_actives.regroupement = template;
-				   break;
-			       case 'unique':
-				   _(52).times( function( week ) {
-				       template.push( ( week + 1 == $scope.creneau.n_week ) ? 1 : 0 );
-				   });
-				   $scope.semaines_actives.regroupement = template;
-				   break;
-			       case 'inverser':
-				   $scope.semaines_actives.regroupement = _($scope.semaines_actives.regroupement).map( function( w, i ) {
-				       return ( ( w == 0 ) && !$scope.sont_ce_les_vacances( i + 1, ZONE ) ) ? 1 : 0;
-				   } );
-				   break;
-			       case 'reinitialiser':
-				   $scope.semaines_actives.regroupement = $scope.creneau.en_creation ? semaines_toutes_actives() : fixnum_to_bitfield( _(creneau.regroupements).findWhere( { regroupement_id: creneau.regroupement_id } ).semaines_de_presence );
-				   break;
+			   $scope.templates_semainier = [
+			       { label: 'Tout',
+				 apply: function() {
+				     $scope.semaines_actives.regroupement = semaines_toutes_actives();
+				 }
+			       },
+			       // { label: 'Rien',
+			       //	 apply: function() {
+			       //	     var template = [];
+			       //	     _(52).times( function() {
+			       //		 template.push( 0 );
+			       //	     });
+			       //	     $scope.semaines_actives.regroupement = template;
+			       //	 }
+			       // },
+			       { label: 'Paires',
+				 apply: function() {
+				     var template = [];
+				     _(52).times( function( i ) {
+					 if ( !$scope.sont_ce_les_vacances( i + 1, ZONE ) && ( ( i + 1 ) % 2 == 0 ) ) {
+					     template.push( 1 );
+					 } else {
+					     template.push( 0 );
+					 }
+				     });
+				     $scope.semaines_actives.regroupement = template;
+				 }
+			       },
+			       { label: 'Impaires',
+				 apply: function() {
+				     var template = [];
+				     _(52).times( function( i ) {
+					 if ( !$scope.sont_ce_les_vacances( i + 1, ZONE ) && ( ( i + 1 ) % 2 == 1 ) ) {
+					     template.push( 1 );
+					 } else {
+					     template.push( 0 );
+					 }
+				     });
+				     $scope.semaines_actives.regroupement = template;
+				 }
+			       },
+			       { label: 'Unique',
+				 apply: function() {
+				     var template = [];
+				     _(52).times( function( week ) {
+					 template.push( ( week + 1 == $scope.creneau.n_week ) ? 1 : 0 );
+				     });
+				     $scope.semaines_actives.regroupement = template;
+				 }
+			       },
+			       { label: 'Inverser',
+				 apply: function() {
+				     $scope.semaines_actives.regroupement = _($scope.semaines_actives.regroupement).map( function( w, i ) {
+					 return ( ( w == 0 ) && !$scope.sont_ce_les_vacances( i + 1, ZONE ) ) ? 1 : 0;
+				     } );
+				 }
+			       },
+			       { label: 'Réinitialiser',
+				 apply: function() {
+				     $scope.semaines_actives.regroupement = $scope.creneau.en_creation ? semaines_toutes_actives() : fixnum_to_bitfield( _(creneau.regroupements).findWhere( { regroupement_id: creneau.regroupement_id } ).semaines_de_presence );
+				 }
 			       }
-			   };
-			   $scope.apply_template( 'reinitialiser' );
+			   ];
+			   _($scope.templates_semainier).findWhere( { label: 'Réinitialiser' } ).apply();
 
 			   // helpers
 			   $scope.fermer = function () {
