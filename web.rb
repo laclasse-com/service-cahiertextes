@@ -21,17 +21,17 @@ module CahierDeTextesAPI
     helpers Laclasse::Helpers::Authentication
     helpers Laclasse::Helpers::User
     helpers Laclasse::Helpers::AppInfos
-    
+
     configure :production, :development do
       set :protection, true
       set :protection, except: :frame_options
     end
-    
+
     before  do
       pass if %r{#{APP_PATH}/(auth|login|status)/}.match(request.path)
       login! request.path_info unless logged?
     end
-    
+
     ##### routes #################################################################
     register CahierDeTextesApp::Routes::Index
     register CahierDeTextesApp::Routes::Auth

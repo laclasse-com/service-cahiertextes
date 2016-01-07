@@ -7,14 +7,11 @@ module CahierDeTextesAPI
       params do
         requires :uid, type: String
         requires :uai, type: String
-        requires :timestamp #, type: BigNum
-        #        requires :action, type: String
+        requires :timestamp
         requires :url, type: String
         optional :comment, type: String
       end
       post do
-        p env #[ 'HTTP_X_FORWARDED_FOR' ]
-        
         params[:ip] = env[ 'HTTP_X_FORWARDED_FOR' ]
         AnnuaireWrapper::Log.add( params )
       end
