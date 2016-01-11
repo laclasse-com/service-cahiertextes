@@ -139,9 +139,12 @@
     <% end %>
     <script>
     angular.module( 'cahierDeTextesClientApp' )
-	    .constant( 'VERSION', '<%=APP_VERSION%>' )
-	    .constant( 'APP_PATH', '<%=APP_PATH%>' )
-	    .constant( 'DOCS_URL', '<%=DOCS_URL%>' );
+            .constant( 'VERSION', '<%=APP_VERSION%>' )
+            .constant( 'APP_PATH', '<%=APP_PATH%>' )
+           .constant( 'DOCS_URL', '<%=DOCS_URL%>' )
+           .constant( 'SEMAINES_VACANCES', { A: <%=CahierDeTextesApp::Utils::Holidays.get( 'A', DateTime.now.month > 7 ? DateTime.now.year : DateTime.now.year - 1 )%>,
+                                             B: <%=CahierDeTextesApp::Utils::Holidays.get( 'B', DateTime.now.month > 7 ? DateTime.now.year : DateTime.now.year - 1 )%>,
+                                             C: <%=CahierDeTextesApp::Utils::Holidays.get( 'C', DateTime.now.month > 7 ? DateTime.now.year : DateTime.now.year - 1 )%> } );
     </script>
 
   </body>
