@@ -97,14 +97,14 @@ h2 {
 .fc-event-inner {
     display: table;
     .glyphicon-paperclip {
-	position: absolute;
+        position: absolute;
     }
     .fc-event-title {
-	display: table-cell;
-	vertical-align: middle;
-	text-align: center;
-	width: 100%;
-	line-height: 1em;
+        display: table-cell;
+        vertical-align: middle;
+        text-align: center;
+        width: 100%;
+        line-height: 1em;
     }
 }
 
@@ -500,8 +500,8 @@ footer {
       list-style: none;
       line-height: 2em;
       em {
-	font-weight: bold;
-	font-style: normal;
+        font-weight: bold;
+        font-style: normal;
       }
     }
   }
@@ -622,7 +622,7 @@ h3, .h3 {
     a {
       color: #000;
       &:hover {
-	text-decoration: none;
+        text-decoration: none;
       }
     }
   }
@@ -705,19 +705,20 @@ button.this-week {
   }
   &.disabled {
     cursor: default;
+    opacity: 0.5;
   }
 }
 
 /* textAngular */
 .ta-root {
-  padding: 0;
+    padding: 0;
 }
 
 .ta-toolbar {
-  background-color: #eee;
-  button.btn {
-    padding: 6px 7px;
-  }
+    background-color: #eee;
+    button.btn {
+        padding: 6px 7px;
+    }
 }
 
 .ta-scroll-window.ta-text.ta-editor, .ta-scroll-window > .ta-bind {
