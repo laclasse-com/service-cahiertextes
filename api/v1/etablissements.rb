@@ -9,6 +9,58 @@ module CahierDeTextesAPI
         user_needs_to_be( %w( DIR ENS DOC ), false )
       end
 
+      desc 'que connait le CTXT d\'un établissement'
+      params do
+        requires :uai, desc: 'Code UAI de l\'établissement'
+      end
+      get '/:uai' do
+        etablissement = Etablissement.where(uai: params[:uai]).first
+
+        error!( "Établissement #{params[:uai]} inconnu", 404 ) if etablissement.nil?
+
+        etablissement
+      end
+
+      desc 'création d\'un établissement'
+      params do
+        requires :uai, desc: 'Code UAI de l\'établissement'
+
+        optional :debut_annee_scolaire, desc: 'Date de commencement de l\'année scolaire'
+        optional :fin_annee_scolaire, desc: 'Date de fin de l\'année scolaire'
+        optional :date_premier_jour_premiere_semaine, desc: 'Date du premier jour de la semaine de commencement de l\'année scolaire'
+      end
+      post '/:uai' do
+        etablissement = DataManagement::Accessors.create_or_get( Etablissement,
+                                                                 UAI: params[:uai] )
+
+        etablissement.debut_annee_scolaire = params[:debut_annee_scolaire] if params.key?( :debut_annee_scolaire )
+        etablissement.fin_annee_scolaire = params[:fin_annee_scolaire] if params.key?( :fin_annee_scolaire )
+        etablissement.date_premier_jour_premiere_semaine = params[:date_premier_jour_premiere_semaine] if params.key?( :date_premier_jour_premiere_semaine )
+        etablissement.save
+
+        etablissement
+      end
+
+      desc 'mise à jour d\'un établissement'
+      params do
+        requires :uai, desc: 'Code UAI de l\'établissement'
+
+        optional :debut_annee_scolaire, desc: 'Date de commencement de l\'année scolaire'
+        optional :fin_annee_scolaire, desc: 'Date de fin de l\'année scolaire'
+        optional :date_premier_jour_premiere_semaine, desc: 'Date du premier jour de la semaine de commencement de l\'année scolaire'
+      end
+      put '/:uai' do
+        etablissement = Etablissement.where(uai: params[:uai]).first
+
+        error!( "Établissement #{params[:uai]} inconnu", 404 ) if etablissement.nil?
+
+        etablissement.debut_annee_scolaire = params[:debut_annee_scolaire] if params.key?( :debut_annee_scolaire )
+        etablissement.fin_annee_scolaire = params[:fin_annee_scolaire] if params.key?( :fin_annee_scolaire )
+        etablissement.date_premier_jour_premiere_semaine = params[:date_premier_jour_premiere_semaine] if params.key?( :date_premier_jour_premiere_semaine )
+
+        etablissement
+      end
+
       desc 'statistiques des cahiers de textes par classes/mois/matières'
       params do
         requires :uai, desc: 'Code UAI de l\'établissement'
@@ -57,6 +109,16 @@ module CahierDeTextesAPI
         error!( "Établissement #{params[:uai]} inconnu", 404 ) if etablissement.nil?
 
         etablissement.saisies_enseignant( params[:enseignant_id] )
+      end
+
+      # Salles
+      desc 'renvoi toutes les salles'
+      get '/:uai/salles' do
+        etablissement = Etablissement.where(uai: params[:uai]).first
+
+        error!( "Établissement #{params[:uai]} inconnu", 404 ) if etablissement.nil?
+
+        etablissement.salles
       end
     end
   end

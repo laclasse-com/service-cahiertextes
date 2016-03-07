@@ -135,11 +135,11 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
     update( fin: plage_horaire_fin.id )
   end
 
-  def update_semaines_de_presence_enseignant( value )
+  def update_semaines_de_presence_enseignant( enseignant_id, semaines_de_presence_enseignant )
     ce = CreneauEmploiDuTempsEnseignant
-         .where( enseignant_id: user[:uid] )
-         .where( creneau_emploi_du_temps_id: params[:id] )
-    ce.update( semaines_de_presence: value )
+         .where( enseignant_id: enseignant_id )
+         .where( creneau_emploi_du_temps_id: id )
+    ce.update( semaines_de_presence: semaines_de_presence_enseignant )
   end
 
   def update_semaines_de_presence_regroupement( regroupement_id, semaines_de_presence_regroupement )
@@ -150,12 +150,14 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
   end
 
   def update_regroupement( regroupement_id, previous_regroupement_id, semaines_de_presence_regroupement )
+    regroupement_id = regroupement_id
+
     if CreneauEmploiDuTempsRegroupement
-       .where( creneau_emploi_du_temps_id: id )
-       .where( regroupement_id: regroupement_id ).count < 1
+        .where( creneau_emploi_du_temps_id: id )
+        .where( regroupement_id: regroupement_id ).count < 1
       # 1. first remove previous créneau-regroupement association
       previous_creneau_regroupement = CreneauEmploiDuTemps.last.regroupements
-                                      .find do |cr|
+                                                               .find do |cr|
         cr.regroupement_id == previous_regroupement_id
       end
       previous_creneau_regroupement.destroy unless previous_creneau_regroupement.nil?
@@ -172,30 +174,44 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
   end
 
   def update_salle( salle_id, semaines_de_presence_salle )
-    CreneauEmploiDuTempsSalle.unrestrict_primary_key
-    cs = add_salle( salle_id: salle_id )
-    CreneauEmploiDuTempsSalle.restrict_primary_key
+    creneau_salle = CreneauEmploiDuTempsSalle
+                    .where( creneau_emploi_du_temps_id: id )
+                    .where( salle_id: salle_id )
+    if creneau_salle.nil?
+      p 'Adding salle'
+      salle = Salle[salle_id]
+      return nil if salle.nil?
 
-    cs.update semaines_de_presence: semaines_de_presence_salle if semaines_de_presence_salle
+      CreneauEmploiDuTempsSalle.unrestrict_primary_key
+      creneau_salle = add_salle( salle )
+      CreneauEmploiDuTempsSalle.restrict_primary_key
+    end
+
+    creneau_salle.update( semaines_de_presence: semaines_de_presence_salle ) if semaines_de_presence_salle
   end
 
   # rubocop:disable Metrics/PerceivedComplexity
   # rubocop:disable Metrics/CyclomaticComplexity
   def modifie( params )
-    update_heure_debut( params[:heure_debut] ) if params[:heure_debut]
-    update_heure_fin( params[:heure_fin] ) if params[:heure_fin]
-    update( matiere_id: params[:matiere_id] ) if params[:matiere_id]
+    params[:heure_debut] = Time.parse( params[:heure_debut] ) unless params[:heure_debut].is_a? Time
+    params[:heure_fin] = Time.parse( params[:heure_fin] ) unless params[:heure_fin].is_a? Time
+
+    update_heure_debut( params[:heure_debut] ) if params.key?( :heure_debut )
+    update_heure_fin( params[:heure_fin] ) if params.key?( :heure_fin )
+    update( matiere_id: params[:matiere_id] ) if params.key?( :matiere_id )
 
     save
 
-    CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
-    add_enseignant( enseignant_id: params[:enseignant_id] ) if params[:enseignant_id]
-    CreneauEmploiDuTempsEnseignant.restrict_primary_key
-    update_semaines_de_presence_enseignant( params[:semaines_de_presence_enseignant] ) if params[:semaines_de_presence_enseignant]
+    if params.key?( :enseignant_id ) && enseignants.count { |e| e[:enseignant_id] == params[:enseignant_id] } == 0
+      CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
+      add_enseignant( enseignant_id: params[:enseignant_id] )
+      CreneauEmploiDuTempsEnseignant.restrict_primary_key
+    end
+    update_semaines_de_presence_enseignant( params[:enseignant_id], params[:semaines_de_presence_enseignant] ) if params.key?( :semaines_de_presence_enseignant )
 
-    update_regroupement( params[:regroupement_id], params[:previous_regroupement_id], params[:semaines_de_presence_regroupement] ) unless params[:regroupement_id].nil? || params[:regroupement_id] == 'undefined'
+    update_regroupement( params[:regroupement_id], params[:previous_regroupement_id], params[:semaines_de_presence_regroupement] ) if params.key?( :regroupement_id ) && params[:regroupement_id] != -1
 
-    update_salle( params[:salle], params[:semaines_de_presence_salle] ) if params[:salle_id]
+    update_salle( params[:salle_id], params[:semaines_de_presence_salle] ) if params.key?( :salle_id )
   end
   # rubocop:enable Metrics/PerceivedComplexity
   # rubocop:enable Metrics/CyclomaticComplexity
