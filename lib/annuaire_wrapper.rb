@@ -34,10 +34,10 @@ module AnnuaireWrapper
     module_function
 
     # Liste des personnels d'un etablissement
-    def get( uai )
-      Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_etablissement,
+    def get( uai, version = 1 )
+      Laclasse::CrossApp::Sender.send_request_signed( version == 2 ? :service_annuaire_v2_etablissement : :service_annuaire_etablissement,
                                                       "#{uai}",
-                                                      expand: 'true' )
+                                                      {} )
     end
 
     # Liste des regroupements d'un établissement
