@@ -2,6 +2,7 @@
 
 require_relative '../../models/models'
 require_relative '../../lib/pronote'
+require_relative '../../lib/utils/xml_to_hash'
 
 module CahierDeTextesAPI
   module V1
@@ -31,6 +32,18 @@ module CahierDeTextesAPI
           create_creneaux: create_creneaux,
           rapport: ProNote.decrypt_and_load_xml( File.open( params[:file][:tempfile] ),
                                                  create_creneaux ) }
+      end
+
+      desc 'Receive a Pronote XML file, decrypt it and send it back a JSON.'
+      params do
+        requires :file
+      end
+      post '/pronote/decrypt' do
+        uai = ProNote.extract_uai_from_xml( File.open( params[:file][:tempfile] ) )
+
+        error!( '401 Unauthorized', 401 ) unless user_is_profils_in_etablissement?( %w( DIR ENS DOC ), uai )
+
+        Hash.from_xml( ProNote.decrypt_xml(  File.open( params[:file][:tempfile] ) ) )
       end
 
       desc 'Identifie une Matière/Regroupement/Personne-Non-Identifié en lui donnant un ID Annuaire manuellement'
