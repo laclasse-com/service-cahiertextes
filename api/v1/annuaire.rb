@@ -25,7 +25,7 @@ module CahierDeTextesAPI
       params do
         requires :uai, desc: 'Code UAI de l\'établissement'
       end
-      get 'etablissements/:uai/enseignants' do
+      get '/etablissements/:uai/enseignants' do
         AnnuaireWrapper::Etablissement.get_enseignants( params[:uai] )
       end
 
@@ -33,7 +33,7 @@ module CahierDeTextesAPI
       params do
         requires :uai, desc: 'Code UAI de l\'établissement'
       end
-      get 'etablissements/:uai/regroupements' do
+      get '/etablissements/:uai/regroupements' do
         regroupements = AnnuaireWrapper::Etablissement.get_regroupements( params[:uai] )
 
         regroupements.keys.each do |type|
