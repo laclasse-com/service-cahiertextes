@@ -6,6 +6,12 @@ AllCops:
     - tasks/**/*
     - Guardfile
 
+Style/AsciiIdentifiers:
+  Enabled: false
+
+Style/VariableName:
+  Enabled: false
+
 Style/SpaceInsideBrackets:
   Enabled: false
 

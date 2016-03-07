@@ -28,7 +28,7 @@ module CahierDeTextesAPI
       get '/etablissements/:uai' do
         AnnuaireWrapper::Etablissement.get( params[:uai], 2 )
       end
-      
+
       desc 'retourne la liste des enseignants de l\'établissement'
       params do
         requires :uai, desc: 'Code UAI de l\'établissement'

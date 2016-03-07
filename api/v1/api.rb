@@ -38,7 +38,7 @@ module CahierDeTextesAPI
       resource( :plages_horaires          ) { mount ::CahierDeTextesAPI::V1::PlagesHorairesAPI }
       resource( :salles                   ) { mount ::CahierDeTextesAPI::V1::SallesAPI }
       resource( :cahiers_de_textes        ) { mount ::CahierDeTextesAPI::V1::CahiersDeTextesAPI }
-      
+
       resource( :log                      ) { mount ::CahierDeTextesAPI::V1::LogAPI }
 
       add_swagger_documentation base_path: "#{APP_PATH}/api",

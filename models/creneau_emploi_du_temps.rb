@@ -152,12 +152,9 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
   def update_regroupement( regroupement_id, previous_regroupement_id, semaines_de_presence_regroupement )
     regroupement_id = regroupement_id
 
-    if CreneauEmploiDuTempsRegroupement
-        .where( creneau_emploi_du_temps_id: id )
-        .where( regroupement_id: regroupement_id ).count < 1
+    if CreneauEmploiDuTempsRegroupement.where( creneau_emploi_du_temps_id: id ).where( regroupement_id: regroupement_id ).count < 1
       # 1. first remove previous créneau-regroupement association
-      previous_creneau_regroupement = CreneauEmploiDuTemps.last.regroupements
-                                                               .find do |cr|
+      previous_creneau_regroupement = CreneauEmploiDuTemps.last.regroupements.find do |cr|
         cr.regroupement_id == previous_regroupement_id
       end
       previous_creneau_regroupement.destroy unless previous_creneau_regroupement.nil?
