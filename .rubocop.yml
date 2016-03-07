@@ -9,6 +9,9 @@ AllCops:
 Style/AsciiIdentifiers:
   Enabled: false
 
+Style/CommandLiteral:
+  Enabled: false
+
 Style/VariableName:
   Enabled: false
 

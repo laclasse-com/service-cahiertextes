@@ -16,7 +16,7 @@ APP_ROOT = File.expand_path(File.join(File.dirname(__FILE__), '..'))
 APP_PATH = '/app'
 
 # Version de l'application
-APP_VERSION = %x{ git describe --tag }.chomp
+APP_VERSION = %x( git describe --tag ).chomp
 
 # Langage par défaut de l'application
 LANG = 'fr'
