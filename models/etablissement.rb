@@ -8,7 +8,7 @@ class Etablissement < Sequel::Model( :etablissements )
 
   def statistiques_classes
     AnnuaireWrapper::Etablissement
-      .get( values[:UAI] )['classes']
+      .get_regroupements( values[:UAI] )['classes']
       .map do |classe|
       cdt = CahierDeTextes.where( regroupement_id: classe['id'] ).first
       cdt = CahierDeTextes.create( date_creation: Time.now,
@@ -19,7 +19,7 @@ class Etablissement < Sequel::Model( :etablissements )
 
   def statistiques_enseignants
     AnnuaireWrapper::Etablissement
-      .get( values[:UAI] )['enseignants']
+      .get_enseignants( values[:UAI] )['enseignants']
       .map do |enseignant|
       { enseignant_id: enseignant['id_ent'],
         classes: saisies_enseignant( enseignant['id_ent'] )[:saisies]
