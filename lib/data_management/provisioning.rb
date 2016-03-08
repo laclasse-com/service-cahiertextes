@@ -12,15 +12,13 @@ module DataManagement
       else
         user[:user_detailed]['etablissements']
           .each do |etab|
-          etablissement = AnnuaireWrapper::Etablissement.get( etab[ 'code_uai' ] )
+          etablissement = AnnuaireWrapper::Etablissement.get( etab[ 'code_uai' ], 2 )
 
           next if etablissement.key? 'error'
 
           Accessors.create_or_get( Etablissement, UAI: etab[ 'code_uai' ] )
 
-          etablissement['classes']
-            .concat( etablissement['groupes_eleves'] )
-            .concat( etablissement['groupes_libres'] )
+          etablissement['groups']
             .each do |regroupement|
             Accessors.create_or_get( CahierDeTextes,
                                      regroupement_id: regroupement['id'] )
