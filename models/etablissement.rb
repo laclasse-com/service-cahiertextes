@@ -20,7 +20,7 @@ class Etablissement < Sequel::Model( :etablissements )
 
   def statistiques_enseignants
     AnnuaireWrapper::Etablissement
-      .get_enseignants( values[:UAI] )['enseignants']
+      .get_enseignants( values[:UAI] )
       .map do |enseignant|
       { enseignant_id: enseignant['id_ent'],
         classes: saisies_enseignant( enseignant['id_ent'] )[:saisies]
