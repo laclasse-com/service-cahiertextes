@@ -106,6 +106,7 @@
       <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/HeaderCtrl.js?v=<%=APP_VERSION%>"></script>
       <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/FooterCtrl.js?v=<%=APP_VERSION%>"></script>
 
+      <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/ImportCtrl.js?v=<%=APP_VERSION%>"></script>
       <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/OldImportCtrl.js?v=<%=APP_VERSION%>"></script>
 
       <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/VieScolaireCtrl.js?v=<%=APP_VERSION%>"></script>
@@ -131,6 +132,7 @@
       <script type="text/javascript" src="<%=APP_PATH%>/app/js/templates/devoirs.html.js?v=<%=APP_VERSION%>"></script>
       <script type="text/javascript" src="<%=APP_PATH%>/app/js/templates/emploi_du_temps.html.js?v=<%=APP_VERSION%>"></script>
       <script type="text/javascript" src="<%=APP_PATH%>/app/js/templates/enseignants.html.js?v=<%=APP_VERSION%>"></script>
+      <script type="text/javascript" src="<%=APP_PATH%>/app/js/templates/import.html.js?v=<%=APP_VERSION%>"></script>
       <script type="text/javascript" src="<%=APP_PATH%>/app/js/templates/oldimport.html.js?v=<%=APP_VERSION%>"></script>
       <script type="text/javascript" src="<%=APP_PATH%>/app/js/templates/index.html.js?v=<%=APP_VERSION%>"></script>
       <script type="text/javascript" src="<%=APP_PATH%>/app/js/templates/popup_display.html.js?v=<%=APP_VERSION%>"></script>
@@ -138,13 +140,13 @@
       <script type="text/javascript" src="<%=APP_PATH%>/app/js/templates/stats_enseignant.html.js?v=<%=APP_VERSION%>"></script>
     <% end %>
     <script>
-    angular.module( 'cahierDeTextesClientApp' )
+     angular.module( 'cahierDeTextesClientApp' )
             .constant( 'VERSION', '<%=APP_VERSION%>' )
             .constant( 'APP_PATH', '<%=APP_PATH%>' )
-           .constant( 'DOCS_URL', '<%=DOCS_URL%>' )
-           .constant( 'SEMAINES_VACANCES', { A: <%=CahierDeTextesApp::Utils::Holidays.get( 'A', DateTime.now.month > 7 ? DateTime.now.year : DateTime.now.year - 1 )%>,
-                                             B: <%=CahierDeTextesApp::Utils::Holidays.get( 'B', DateTime.now.month > 7 ? DateTime.now.year : DateTime.now.year - 1 )%>,
-                                             C: <%=CahierDeTextesApp::Utils::Holidays.get( 'C', DateTime.now.month > 7 ? DateTime.now.year : DateTime.now.year - 1 )%> } );
+            .constant( 'DOCS_URL', '<%=DOCS_URL%>' )
+            .constant( 'SEMAINES_VACANCES', { A: <%=CahierDeTextesApp::Utils::Holidays.get( 'A', DateTime.now.month > 7 ? DateTime.now.year : DateTime.now.year - 1 )%>,
+                                              B: <%=CahierDeTextesApp::Utils::Holidays.get( 'B', DateTime.now.month > 7 ? DateTime.now.year : DateTime.now.year - 1 )%>,
+                                              C: <%=CahierDeTextesApp::Utils::Holidays.get( 'C', DateTime.now.month > 7 ? DateTime.now.year : DateTime.now.year - 1 )%> } );
     </script>
 
   </body>

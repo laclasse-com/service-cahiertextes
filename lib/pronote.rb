@@ -56,6 +56,9 @@ module ProNote
     inflate decrypted_payload
   end
 
+  ####################
+  # OLD IMPORT BELOW #
+  ####################
   def pad_semainier( semainier )
     (52 - semainier.length).times { semainier += '0' }
 
