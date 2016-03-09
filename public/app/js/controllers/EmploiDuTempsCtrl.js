@@ -3,10 +3,10 @@
 angular.module( 'cahierDeTextesClientApp' )
     .controller('EmploiDuTempsCtrl',
                 [ '$scope', 'moment',
-                  'CALENDAR_OPTIONS', 'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'EmploisDuTemps', 'PopupsCreneau', 'CreneauEmploiDuTemps',
+                  'CALENDAR_OPTIONS', 'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'EmploisDuTemps', 'PopupsCreneau', 'CreneauxEmploiDuTemps',
                   'current_user',
                   function ( $scope, moment,
-                             CALENDAR_OPTIONS, APP_PATH, SEMAINES_VACANCES, ZONE, EmploisDuTemps, PopupsCreneau, CreneauEmploiDuTemps,
+                             CALENDAR_OPTIONS, APP_PATH, SEMAINES_VACANCES, ZONE, EmploisDuTemps, PopupsCreneau, CreneauxEmploiDuTemps,
                              current_user ) {
                       $scope.current_user = current_user;
                       $scope.zone = ZONE;
@@ -233,7 +233,7 @@ angular.module( 'cahierDeTextesClientApp' )
                           // édition d'un créneau existant
                           $scope.calendar.options.eventClick = function ( event ) {
                               if ( !popup_ouverte ) {
-                                  CreneauEmploiDuTemps.get( { id: event.details.creneau_emploi_du_temps_id } )
+                                  CreneauxEmploiDuTemps.get( { id: event.details.creneau_emploi_du_temps_id } )
                                       .$promise
                                       .then( function( creneau_selectionne ) {
                                           creneau_selectionne.dirty = false;
@@ -261,11 +261,11 @@ angular.module( 'cahierDeTextesClientApp' )
                                   start = new Date( start );
                                   end = new Date( end );
                                   var regroupement_id = $scope.selected_regroupements.length == 1 ? '' + $scope.selected_regroupements[0].id : null;
-                                  var new_creneau = new CreneauEmploiDuTemps( { regroupement_id: regroupement_id,
-                                                                                jour_de_la_semaine: start.getDay() + 1,
-                                                                                heure_debut: moment(start).toISOString(),
-                                                                                heure_fin: moment(end).toISOString(),
-                                                                                matiere_id: '' } );
+                                  var new_creneau = new CreneauxEmploiDuTemps( { regroupement_id: regroupement_id,
+                                                                                 jour_de_la_semaine: start.getDay() + 1,
+                                                                                 heure_debut: moment(start).toISOString(),
+                                                                                 heure_fin: moment(end).toISOString(),
+                                                                                 matiere_id: '' } );
 
                                   new_creneau.$save()
                                       .then( function () {

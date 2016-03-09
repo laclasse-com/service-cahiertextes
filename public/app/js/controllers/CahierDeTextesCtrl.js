@@ -3,9 +3,9 @@
 angular.module( 'cahierDeTextesClientApp' )
     .controller('CahierDeTextesCtrl',
                 [ '$scope', '$sce', '$q', '$stateParams', 'moment',
-                  'APP_PATH', 'DOCS_URL', 'API', 'EmploisDuTemps', 'current_user', 'PopupsCreneau', 'CreneauEmploiDuTemps',
+                  'APP_PATH', 'DOCS_URL', 'API', 'EmploisDuTemps', 'current_user', 'PopupsCreneau', 'CreneauxEmploiDuTemps',
                   function ( $scope, $sce, $q, $stateParams, moment,
-                             APP_PATH, DOCS_URL, API, EmploisDuTemps, current_user, PopupsCreneau, CreneauEmploiDuTemps ) {
+                             APP_PATH, DOCS_URL, API, EmploisDuTemps, current_user, PopupsCreneau, CreneauxEmploiDuTemps ) {
                       $scope.$watch( 'complet', function() {
                           $scope.retrieve_data();
                       } );
@@ -156,7 +156,7 @@ angular.module( 'cahierDeTextesClientApp' )
                       $scope.popup_callback = $scope.retrieve_data;
 
                       $scope.edition_creneau = function ( event ) {
-                          CreneauEmploiDuTemps.get( { id: event.creneau_emploi_du_temps_id } )
+                          CreneauxEmploiDuTemps.get( { id: event.creneau_emploi_du_temps_id } )
                               .$promise
                               .then( function( creneau_selectionne ) {
                                   creneau_selectionne.dirty = false;
