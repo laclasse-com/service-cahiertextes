@@ -84,7 +84,11 @@ angular.module( 'cahierDeTextesClientApp' )
                                      { update: { method: 'PUT' },
                                        delete: { method: 'DELETE',
                                                  params: { id: '@id',
-                                                           date_creneau: '@date_creneau' } } } );
+                                                           date_creneau: '@date_creneau' } },
+                                       bulk: { method: 'POST',
+                                               isArray: true,
+                                               url: APP_PATH + '/api/' + API_VERSION + '/creneaux_emploi_du_temps/bulk',
+                                               params: { creneaux_emploi_du_temps: '@creneaux_emploi_du_temps' } } } );
                } ] );
 
 angular.module( 'cahierDeTextesClientApp' )
@@ -122,6 +126,38 @@ angular.module( 'cahierDeTextesClientApp' )
                    return $resource( APP_PATH + '/api/' + API_VERSION + '/etablissements/:uai/statistiques/enseignants/:enseignant_id',
                                      { uai: '@uai',
                                        enseignant_id: '@enseignant_id' } );
+               } ] );
+
+angular.module( 'cahierDeTextesClientApp' )
+    .factory('Etablissements',
+             [ '$resource', 'APP_PATH', 'API_VERSION',
+               function( $resource, APP_PATH, API_VERSION ) {
+                   return $resource( APP_PATH + '/api/' + API_VERSION + '/etablissements/:uai',
+                                     { uai: '@uai' } );
+               } ] );
+
+angular.module( 'cahierDeTextesClientApp' )
+    .factory('Salles',
+             [ '$resource', 'APP_PATH', 'API_VERSION',
+               function( $resource, APP_PATH, API_VERSION ) {
+                   return $resource( APP_PATH + '/api/' + API_VERSION + '/salles/:id',
+                                     { id: '@id' },
+                                     { bulk: { method: 'POST',
+                                               isArray: true,
+                                               url: APP_PATH + '/api/' + API_VERSION + '/salles/bulk',
+                                               params: { salles: '@salles' } } } );
+               } ] );
+
+angular.module( 'cahierDeTextesClientApp' )
+    .factory('CahiersDeTextes',
+             [ '$resource', 'APP_PATH', 'API_VERSION',
+               function( $resource, APP_PATH, API_VERSION ) {
+                   return $resource( APP_PATH + '/api/' + API_VERSION + '/cahiers_de_textes/:id',
+                                     { id: '@id' },
+                                     { bulk: { method: 'POST',
+                                               isArray: true,
+                                               url: APP_PATH + '/api/' + API_VERSION + '/cahiers_de_textes/bulk',
+                                               params: { cahiers_de_textes: '@cahiers_de_textes' } } } );
                } ] );
 
 angular.module( 'cahierDeTextesClientApp' )

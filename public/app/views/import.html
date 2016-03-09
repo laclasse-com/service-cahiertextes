@@ -1,17 +1,130 @@
 <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="panel-heading">
 
-            <input type="file" file-model="scope.fichier" />
+        <input type="file" file-model="fichier" />
 
-                <button class="btn pull-right"
-                        data-ng-class="{'disabled btn-default': !fichier || in_progress, 'btn-primary': fichier}"
-                        data-ng-click="launch_import( fichier )" >
-                    <span class="glyphicon glyphicon-log-in"></span> Déchiffrer
-                </button>
-                <div class="clearfix"></div>
-        </div>
+        <button class="btn pull-right"
+data-ng-if="!pronote"
+data-ng-class="{'disabled btn-default': !fichier || in_progress, 'btn-primary': fichier}"
+data-ng-click="load_data( fichier )" >
+            <span class="glyphicon glyphicon-log-in"></span> Charger les données
+        </button>
+        <button class="btn btn-primary pull-right"
+data-ng-if="pronote && etablissement && matieres"
+data-ng-click="process_import()" >
+            <span class="glyphicon glyphicon-cogs"></span> Lancer l'import
+        </button>
+        <div class="clearfix"></div>
+    </div>
 </div>
 
-<div class="panel panel-default" data-ng-if="result">
-    {{result}}
+<div class="alert alert-info" role="alert" data-ng-if="processing && !pronote"><i class="fa fa-spinner fa-pulse"></i> Décryptage des données Pronote</div>
+<div class="alert alert-info" role="alert" data-ng-if="processing && !etablissement"><i class="fa fa-spinner fa-pulse"></i> Chargement des données de l'établissement</div>
+<div class="alert alert-info" role="alert" data-ng-if="!matieres"><i class="fa fa-spinner fa-pulse"></i> Chargement de la liste des matières officielles</div>
+
+<div class="alert" role="alert" data-ng-if="nb_expected_salles" data-ng-class="{'alert-success': nb_salles_created == nb_expected_salles, 'alert-danger': nb_salles_created == 0 || nb_expected_salles == 0, 'alert-warning': nb_salles_created < nb_expected_salles}">
+        {{nb_salles_created}} salles créées sur {{nb_expected_salles}} attendues.
+    <div class="progress-bar-container">
+        <div class="progress-bar" data-ng-style="{ width: ( ( nb_salles_created / nb_expected_salles ) * 100 ) + '%'}"></div>
+    </div>
+</div>
+<div class="alert" role="alert" data-ng-if="nb_expected_cahiers_de_textes" data-ng-class="{'alert-success': nb_cahiers_de_textes_created == nb_expected_cahiers_de_textes, 'alert-danger': nb_cahiers_de_textes_created == 0 || nb_expected_cahiers_de_textes == 0, 'alert-warning': nb_cahiers_de_textes_created < nb_expected_cahiers_de_textes}">
+        {{nb_cahiers_de_textes_created}} cahiers_de_textes créés sur les {{nb_expected_cahiers_de_textes}} attendus.
+    <div class="progress-bar-container">
+        <div class="progress-bar" data-ng-style="{ width: ( ( nb_cahiers_de_textes_created / nb_expected_cahiers_de_textes ) * 100 ) + '%' }"></div>
+    </div>
+</div>
+<div class="alert" role="alert" data-ng-if="nb_expected_creneaux" data-ng-class="{'alert-success': nb_creneaux_created == nb_expected_creneaux, 'alert-danger': nb_creneaux_created == 0 || nb_expected_creneaux == 0, 'alert-warning': nb_creneaux_created < nb_expected_creneaux}">
+        {{nb_creneaux_created}} creneaux créés sur {{nb_expected_creneaux_ready}} attendus.
+    <div class="progress-bar-container">
+        <div class="progress-bar" data-ng-style="{ width: ( ( nb_creneaux_created / nb_expected_creneaux ) * 100 ) + '%' }"></div>
+    </div>
+</div>
+
+<div class="panel panel-default import row" data-ng-if="pronote">
+    <h1>
+                Année scolaire du {{pronote.AnneeScolaire[0].DateDebut | date:'fullDate'}} au {{pronote.AnneeScolaire[0].DateFin | date:'fullDate'}}
+    </h1>
+
+    <tabset justified="true">
+        <tab heading="Créneaux d'emploi du temps ({{nb_expected_creneaux_ready}} seront créés)">
+            <table class="table table-striped table-bordered table-hover table-condensed">
+                <thead>
+                    <tr>
+                        <th> <a data-ng-click="sortCreneauxBy='Jour'">Jour</a> </th>
+                        <th> <a data-ng-click="sortCreneauxBy='NumeroPlaceDebut'">à</a> </th>
+                        <th> pendant </th>
+                        <th> <a data-ng-click="sortCreneauxBy='Matiere'">matière</a> </th>
+                        <th> <a data-ng-click="sortCreneauxBy='Professeur'">enseignant(s)</a> </th>
+                        <th> <a data-ng-click="sortCreneauxBy=['Classe','Groupe']">regroupement(s)</a> </th>
+                        <th> <a data-ng-click="sortCreneauxBy='Salle'">salle(s)</a> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="creneau in pronote.Cours[0].Cours | orderBy:sortCreneauxBy"
+data-ng-class="{'danger': !creneau.ready }">
+                        <td>{{creneau.Jour}}</td>
+                        <td>{{pronote.plages_horaires[ creneau.NumeroPlaceDebut ].LibelleHeureDebut}}</td>
+                        <td>{{creneau.NombrePlaces}}</td>
+                        <td>{{pronote.matieres[ creneau.Matiere[0].Ident ].laclasse.libelle_long}}</td>
+                        <td>
+                            <div data-ng-repeat="node in creneau.Professeur">
+                                                                {{pronote.enseignants[ node.Ident ].laclasse.lastname}} <sup>({{node.Semaines}})</sup>
+                            </div>
+                        </td>
+                        <td>
+                            <div data-ng-repeat="node in creneau.Classe" data-ng-style="{'background-color': '{{pronote.classes[ node.Ident ].Couleur}}' }">
+                                                                {{pronote.classes[ node.Ident ].laclasse.libelle_aaf}} <sup>({{node.Semaines}})</sup>
+                            </div>
+                            <div data-ng-repeat="node in creneau.Groupe" data-ng-style="{'background-color': '{{pronote.groupes[ node.Ident ].Couleur}}' }">
+                                                                {{pronote.groupes[ node.Ident ].laclasse.libelle_aaf}} <sup>({{node.Semaines}})</sup>
+                            </div>
+                        </td>
+                        <td>
+                            <div data-ng-repeat="node in creneau.Salle">
+                                                                {{pronote.salles[ node.Ident ].Nom}} <sup>({{node.Semaines}})</sup>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </tab>
+
+        <tab heading="{{dataset.title}} ({{dataset.nb_unmatched}} à traiter)"
+data-ng-repeat="dataset in matcheable_data">
+            <table class="table table-striped table-bordered table-hover table-condensed">
+                <thead>
+                    <tr>
+                        <th>Pronote</th>
+                        <th>Annuaire Académique</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="node in dataset.pronote | orderBy:['-edit','displayed_label']"
+data-ng-class="{'warning': node.edit}">
+                        <td>
+                            <span>
+                                                                {{node.displayed_label}}
+                            </span>
+                        </td>
+                        <td>
+                            <span data-ng-if="!node.edit">{{node.laclasse.displayed_label}}</span>
+                            <select class="select-annuaire"
+data-ng-if="node.edit && matieres"
+data-ng-model="node.laclasse"
+data-ng-change="score_creneaux_update_counters()"
+data-ng-options="official as official.displayed_label for official in dataset.annuaire | orderBy:'displayed_label'">{{official.displayed_label}}</select>
+                        </td>
+                        <td>
+                            <button class="btn btn-default"
+data-ng-if="!node.edit"
+data-ng-click="node.edit = true"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </tab>
+    </tabset>
 </div>
