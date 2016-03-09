@@ -22,7 +22,11 @@ module CahierDeTextesAPI
 
         error!( '401 Unauthorized', 401 ) unless user_is_profils_in_etablissement?( %w( DIR ENS DOC ), uai )
 
-        Hash.from_xml( ProNote.decrypt_xml(  File.open( params[:file][:tempfile] ) ) )
+        hash = Hash.from_xml( ProNote.decrypt_xml(  File.open( params[:file][:tempfile] ) ) )[:ExportEmploiDuTemps]
+
+        %w( Eleves Etiquettes MotifsAbsence Absences ) .each { |key| hash.delete key.to_sym }
+
+        hash
       end
 
       ####################
