@@ -12,6 +12,7 @@ angular.module( 'cahierDeTextesClientApp' )
                       $scope.etablissement = false;
                       $scope.matieres = false;
                       $scope.fichier = null;
+                      $scope.loading_file = false;
                       $scope.processing = false;
                       $scope.matcheable_data = [];
 
@@ -43,7 +44,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
                       $scope.load_data = function( fichier ) {
                           $scope.pronote = false;
-                          $scope.processing = true;
+                          $scope.loading_file = true;
 
                           fileUpload.uploadFileToUrl( fichier, APP_PATH + '/api/v1/import/pronote/decrypt' )
                               .success( function( data, status, headers, config ) {
@@ -142,6 +143,8 @@ angular.module( 'cahierDeTextesClientApp' )
                                                                          annuaire: $scope.etablissement.groupes_eleves } );
 
                                           $scope.score_creneaux_update_counters(  );
+
+                                          $scope.loading_file = false;
                                       } );
                               } );
                       };
@@ -203,6 +206,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
                       $scope.process_import = function() {
                           var bulk_package_size = 15;
+                          $scope.processing = true;
 
                           // Create Etablissement
                           var ct_etablissement = new Etablissements( {
@@ -336,6 +340,8 @@ angular.module( 'cahierDeTextesClientApp' )
                                                    } );
                                            }
                                        } );
+
+                          $scope.processing = false;
                       };
 
                       angular.element('#ui-view-content').after( current_user.marqueur_xiti );
