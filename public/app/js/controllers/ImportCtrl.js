@@ -8,6 +8,10 @@ angular.module( 'cahierDeTextesClientApp' )
                   function ( $scope, $http, $locale, toastr, APP_PATH, Annuaire, fileUpload,
                              Etablissements, PlagesHoraires, Salles, CreneauxEmploiDuTemps, CahiersDeTextes,
                              current_user ) {
+                      var groupByKey = function( array, key ) {
+                          return _.chain( array ).map( function( i ) { return i[ key ]; } ).object( array ).value();
+                      };
+
                       $scope.jours_de_la_semaine = $locale.DATETIME_FORMATS.DAY;
                       $scope.pronote = false;
                       $scope.etablissement = false;
@@ -51,6 +55,7 @@ angular.module( 'cahierDeTextesClientApp' )
                               .success( function( data, status, headers, config ) {
                                   // 1. Récupérer le fichier Pronote décrypté
                                   $scope.pronote = data;
+                                  $scope.pronote.GrilleHoraire[0].DureePlace = parseInt( $scope.pronote.GrilleHoraire[0].DureePlace );
 
                                   Annuaire.get_etablissement( $scope.pronote.UAI )
                                       .then( function( response ) {
@@ -118,10 +123,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                                       regroupement.laclasse.displayed_label = regroupement.laclasse.libelle_aaf;
                                                   }
                                               } );
-
-                                          var groupByKey = function( array, key ) {
-                                              return _.chain( array ).map( function( i ) { return i[ key ]; } ).object( array ).value();
-                                          };
 
                                           $scope.pronote.matieres = groupByKey( $scope.pronote.Matieres[0].Matiere, 'Ident' );
                                           $scope.pronote.enseignants = groupByKey( $scope.pronote.Professeurs[0].Professeur, 'Ident' );
