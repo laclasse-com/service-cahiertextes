@@ -340,25 +340,3 @@ angular.module( 'cahierDeTextesClientApp' )
 
                       angular.element('#ui-view-content').after( current_user.marqueur_xiti );
                   } ] );
-// 'use strict';
-
-// angular.module( 'cahierDeTextesClientApp' )
-//     .controller('ImportCtrl',
-//                 [ '$scope', '$http', 'fileUpload', 'APP_PATH', 'Annuaire', 'current_user',
-//                   function ( $scope, $http, fileUpload, APP_PATH, Annuaire, current_user ) {
-//                       $scope.scope = $scope;
-//                       $scope.pronote = false;
-
-//                       $scope.launch_import = function( fichier ) {
-//                           $scope.upload = fileUpload.uploadFileToUrl( fichier,
-//                                                                       APP_PATH + '/api/v1/import/pronote/decrypt',
-//                                                                       {} )
-//                               .then( function success( response, status, headers, config ) {
-//                                   $scope.pronote = response.data;
-//                               }, function error() {
-//                                   $scope.pronote = false;
-//                               } );
-//                       };
-
-//                       angular.element('#ui-view-content').after( current_user.marqueur_xiti );
-//                   } ] );
