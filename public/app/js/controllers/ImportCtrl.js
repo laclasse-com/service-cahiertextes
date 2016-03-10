@@ -2,12 +2,13 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller('ImportCtrl',
-                [ '$scope', '$http', 'toastr', 'APP_PATH', 'Annuaire', 'fileUpload',
+                [ '$scope', '$http', '$locale', 'toastr', 'APP_PATH', 'Annuaire', 'fileUpload',
                   'Etablissements', 'PlagesHoraires', 'Salles', 'CreneauxEmploiDuTemps', 'CahiersDeTextes',
                   'current_user',
-                  function ( $scope, $http, toastr, APP_PATH, Annuaire, fileUpload,
+                  function ( $scope, $http, $locale, toastr, APP_PATH, Annuaire, fileUpload,
                              Etablissements, PlagesHoraires, Salles, CreneauxEmploiDuTemps, CahiersDeTextes,
                              current_user ) {
+                      $scope.jours_de_la_semaine = $locale.DATETIME_FORMATS.DAY;
                       $scope.pronote = false;
                       $scope.etablissement = false;
                       $scope.matieres = false;

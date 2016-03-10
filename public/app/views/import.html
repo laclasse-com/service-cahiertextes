@@ -72,7 +72,7 @@
                         <tbody>
                             <tr data-ng-repeat="creneau in pronote.Cours[0].Cours | orderBy:sortCreneauxBy"
                                 data-ng-class="{'danger': !creneau.ready }">
-                                <td>{{creneau.Jour}}</td>
+                                <td>{{jours_de_la_semaine[ creneau.Jour ]}}</td>
                                 <td>{{pronote.plages_horaires[ creneau.NumeroPlaceDebut ].LibelleHeureDebut}}</td>
                                 <td>{{creneau.NombrePlaces}}</td>
                                 <td>{{pronote.matieres[ creneau.Matiere[0].Ident ].laclasse.libelle_long}}</td>
