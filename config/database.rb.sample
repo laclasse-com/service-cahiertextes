@@ -11,7 +11,7 @@ DB_CONFIG = { name: 'CahierDeTextes',
               host: '127.0.0.1',
               user: 'root',
               password: '',
-              charset: 'utf8' }
+              charset: 'utf8' }.freeze
 
 DB = Sequel.mysql2( DB_CONFIG[:name],
                     host: DB_CONFIG[:host],

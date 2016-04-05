@@ -7,4 +7,4 @@
 PRONOTE = {
   nom_integrateur: 'LaclasseCom',
   cle_integrateur: '/dummy/path'
-}
+}.freeze

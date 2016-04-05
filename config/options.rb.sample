@@ -4,37 +4,37 @@
 #
 
 # development ou production
-ENV[ 'RACK_ENV' ]  = 'development'
+ENV[ 'RACK_ENV' ] = 'development'
 
 # niveau de log de l'application
-LOG_LEVEL = '' # Logger::INFO
+LOG_LEVEL = ''.freeze # Logger::INFO
 
 # Chemin absolu de l'application sur le serveur
 APP_ROOT = File.expand_path(File.join(File.dirname(__FILE__), '..'))
 
 # Mapping HAProxy de l'application, ex : '/v3/ct'
-APP_PATH = '/app'
+APP_PATH = '/app'.freeze
 
 # Version de l'application
 APP_VERSION = %x( git describe --tag ).chomp
 
 # Langage par défaut de l'application
-LANG = 'fr'
+LANG = 'fr'.freeze
 
 # Clé de hachage pour les cookies Rack
-SESSION_KEY = 'SomeKey'
+SESSION_KEY = 'SomeKey'.freeze
 
 # Durée de la session en seconde (défaut 3600)
 SESSION_TIME = 3600
 
 # Url de l'ENT
-URL_ENT = 'http://www.dev.laclasse.com'
+URL_ENT = 'http://www.dev.laclasse.com'.freeze
 
 # Url des Docs
-DOCS_URL = 'https://v3dev.laclasse.com/docs/'
+DOCS_URL = 'https://v3dev.laclasse.com/docs/'.freeze
 
 # nom du serveur d'annuaire ENT (xml-aaf académiques)
-SERVICE_ANNUAIRE_ENT = 'http://www.dev.laclasse/com/annuaire/'
+SERVICE_ANNUAIRE_ENT = 'http://www.dev.laclasse/com/annuaire/'.freeze
 
 # SSL verification mode
 ## OpenSSL::SSL::VERIFY_PEER => check SSL server cert
@@ -55,7 +55,7 @@ module CASAUTH
     service_validate_url: '/sso/serviceValidate',
     logout_url: '/sso/logout',
     logout_saml_url: '/saml/saml2/idp/SingleLogoutService.php'
-  }
+  }.freeze
 end
 
 #
@@ -69,7 +69,7 @@ ANNUAIRE = {
   api_mode: 'v3',
   # service_annuaire_user: '/pls/public/!ajax_server.service?serviceName=serviceApiUser&uid=' pour l'annuaire v2
   service_annuaire_user: '/api/app/users/'
-}
+}.freeze
 
 #
 # Configuration du service Etherpad
@@ -111,7 +111,7 @@ REDIS = {
   host: 'redis.dev.laclasse.lan',
   port: 6379,
   redis_root: 'com.laclasse.v3localhost'
-}
+}.freeze
 
 #
 # Configuration du service de mail
