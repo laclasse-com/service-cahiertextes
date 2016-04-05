@@ -14,7 +14,6 @@ before_script:
   - cp config/constants.rb.sample config/constants.rb
   - cp config/database.rb.sample config/database.rb
   - cp config/options.rb.sample config/options.rb
-  - cp config/thin.yml.sample config/thin.yml
   - mysql -e 'create database CahierDeTextes;'
   - bundle exec rake db:migrations
 
