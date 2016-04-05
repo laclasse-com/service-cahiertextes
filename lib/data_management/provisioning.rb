@@ -8,13 +8,13 @@ module DataManagement
     def provision( user )
       if user[:user_detailed].nil? || user[:user_detailed]['etablissements'].nil?
         LOGGER.warn 'user has no etablissements defined'
-        LOGGER.warn "#{user}"
+        LOGGER.warn user.to_s
       else
         user[:user_detailed]['etablissements']
           .each do |etab|
           etablissement = AnnuaireWrapper::Etablissement.get( etab[ 'code_uai' ], 2 )
 
-          next if etablissement.key? 'error'
+          next if etablissement == 'Not Found' || etablissement.key?( 'error' )
 
           Accessors.create_or_get( Etablissement, UAI: etab[ 'code_uai' ] )
 
