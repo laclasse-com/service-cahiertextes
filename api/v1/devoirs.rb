@@ -10,56 +10,34 @@ module CahierDeTextesAPI
     class DevoirsAPI < Grape::API
       desc 'renvoi tous les devoirs concernant l\'utilisateur durant la période donnée'
       params do
-        optional :debut, type: Date
-        optional :fin, type: Date
-        optional :uid
+        requires :debut, type: Date
+        requires :fin, type: Date
+
+        optional :uid, type: String
+        optional :uai, type: String
       end
       get '/' do
         if params[:uid]
           user_annuaire = AnnuaireWrapper::User.get( user[:uid] )
-          error!( '401 Unauthorized', 401 ) unless user_annuaire['profils']
-                                                   .find do |p|
-            p['actif']
-          end['profil_id'] == 'TUT' &&
-                                                   !( user_annuaire['enfants']
-                                                      .find { |e| e['enfant']['id_ent'] == params[:uid] }.nil? )
+          error!( '401 Unauthorized', 401 ) unless user_annuaire['profils'].find { |p| p['actif'] }['profil_id'] == 'TUT' && !user_annuaire['enfants'].find { |e| e['enfant']['id_ent'] == params[:uid] }.nil?
 
           regroupements_annuaire = AnnuaireWrapper::User.get_regroupements( params[:uid] )
         else
           regroupements_annuaire = AnnuaireWrapper::User.get_regroupements( user[:uid] )
         end
 
-        regroupements_ids = regroupements_annuaire['classes']
-                            .concat( regroupements_annuaire['groupes_eleves'] )
-                            .concat( regroupements_annuaire['groupes_libres'] )
-                            .reject { |regroupement| regroupement['etablissement_code'] != params[:uai] if params[:uai] }
-                            .map do |regroupement|
-          if regroupement.key? 'classe_id'
-            regroupement['classe_id']
-          elsif regroupement.key? 'groupe_id'
-            regroupement['groupe_id']
-          elsif regroupement.key? 'id'
-            regroupement['id']
-          end
-        end
-                            .uniq
+        regroupements_ids = regroupements_annuaire['classes'].concat( regroupements_annuaire['groupes_eleves'] )
+                                                             .concat( regroupements_annuaire['groupes_libres'] )
+                                                             .reject { |regroupement| regroupement['etablissement_code'] != params[:uai] if params[:uai] }
+                                                             .map { |regroupement| regroupement.key?( 'classe_id' ) ? regroupement['classe_id'] : regroupement.key?( 'groupe_id' ) ? regroupement['groupe_id'] : regroupement['id'] } # rubocop:disable Style/NestedTernaryOperator
+                                                             .uniq
 
-        if params[:debut].nil? || params[:fin].nil?
-          devoirs = Devoir
-                    .join(:creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :creneau_emploi_du_temps_id)
-                    .where( regroupement_id: regroupements_ids )
-                    .where( deleted: false )
-        else
-          devoirs = Devoir
-                    .join(:creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :creneau_emploi_du_temps_id)
-                    .where( regroupement_id: regroupements_ids )
-                    .where( deleted: false )
-                    .where( date_due: params[:debut] .. params[:fin] )
-        end
+        devoirs = Devoir.join(:creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :creneau_emploi_du_temps_id)
+                        .where( regroupement_id: regroupements_ids )
+                        .where( deleted: false )
+                        .where( date_due: params[:debut] .. params[:fin] )
 
-        devoirs.map do |devoir|
-          devoir.to_deep_hash( uid: params[:uid] ? params[:uid] : user[:uid] )
-        end
+        devoirs.map { |devoir| devoir.to_deep_hash( uid: params[:uid] ? params[:uid] : user[:uid] ) }
       end
 
       desc 'renvoi le détail d\'un devoir'
@@ -69,8 +47,7 @@ module CahierDeTextesAPI
       get '/:id' do
         devoir = Devoir[ params[:id] ]
 
-        error!( 'Devoir inconnu', 404 ) if devoir.nil? ||
-                                           ( devoir.deleted && devoir.date_modification < UNDELETE_TIME_WINDOW.minutes.ago )
+        error!( 'Devoir inconnu', 404 ) if devoir.nil? || ( devoir.deleted && devoir.date_modification < UNDELETE_TIME_WINDOW.minutes.ago )
 
         devoir.to_deep_hash( user )
       end
@@ -103,9 +80,9 @@ module CahierDeTextesAPI
           devoir.update( cours_id: params[:cours_id] )
         else
           cours = Cours.where( creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id] )
-                  .where( date_cours: params[:date_due] )
-                  .where( deleted: false )
-                  .first
+                       .where( date_cours: params[:date_due] )
+                       .where( deleted: false )
+                       .first
           if cours.nil?
             cahier_de_textes = CahierDeTextes.where( regroupement_id: params[:regroupement_id] ).first
             cahier_de_textes = CahierDeTextes.create( date_creation: Time.now,
