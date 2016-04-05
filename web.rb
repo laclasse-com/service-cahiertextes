@@ -30,7 +30,7 @@ module CahierDeTextesAPI
     end
 
     before  do
-      pass if %r{#{APP_PATH}/(auth|login|status)/}.match(request.path)
+      pass if %r{#{APP_PATH}/(auth|login|status)/} =~ request.path
       login! request.path_info unless logged?
     end
 

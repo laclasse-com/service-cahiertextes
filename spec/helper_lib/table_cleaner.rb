@@ -25,15 +25,15 @@ class TableCleaner
     tsort.reverse_each( &block )
   end
 
-  def tsort_each_node( &block )
+  def tsort_each_node
     @db.tables.each do |t|
-      block.call t unless @excluded_tables.include? t
+      yield t unless @excluded_tables.include? t
     end
   end
 
-  def tsort_each_child( table, &block )
+  def tsort_each_child( table )
     @db.foreign_key_list(table).each do |fk|
-      block.call fk[:table] unless @excluded_tables.include? fk[:table]
+      yield fk[:table] unless @excluded_tables.include? fk[:table]
     end
   end
 end

@@ -6,6 +6,9 @@ AllCops:
     - tasks/**/*
     - Guardfile
 
+Style/UnneededInterpolation:
+  Enabled: false
+
 Style/AsciiIdentifiers:
   Enabled: false
 

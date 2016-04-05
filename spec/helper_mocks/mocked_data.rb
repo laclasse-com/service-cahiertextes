@@ -362,4 +362,4 @@ MOCKED_DATA = {
                        'nom' => 'Le%20Moine',
                        'prenom' => 'Gwenhael',
                        'id_ent' => 'VAC65103' } ] }
-}
+}.freeze

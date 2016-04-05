@@ -149,9 +149,7 @@ module ProNote
     rapport = { success: [], error: [] }
     matieres = {}
 
-    xml.search('Matieres')
-      .children
-      .each do |node|
+    xml.search('Matieres').children.each do |node|
       next if node.name == 'text'
 
       matieres[ node['Ident'] ] = AnnuaireWrapper::Matiere.search( node['Libelle'] )['id']
@@ -184,7 +182,7 @@ module ProNote
     enseignants = {}
 
     xml.search('Professeur')
-      .each do |node|
+       .each do |node|
       next if node['Nom'].nil? || node['Nom'].empty? || node['Prenom'].nil? || node['Prenom'].empty?
 
       user_annuaire = AnnuaireWrapper::Etablissement::User.search( etablissement.UAI, node['Nom'], node['Prenom'] )
@@ -423,8 +421,8 @@ module ProNote
       LOGGER.debug '****=EVERYTHING LOOKS GOOD, CONTINUING'
 
       this_creneau_salles = node.children
-                            .select { |subnode| subnode.name == 'Salle' }
-                            .map do |subnode_salle|
+                                .select { |subnode| subnode.name == 'Salle' }
+                                .map do |subnode_salle|
         { salle: Salle[ identifiant: subnode_salle['Ident'] ],
           semainier: subnode_salle['Semaines'] }
       end

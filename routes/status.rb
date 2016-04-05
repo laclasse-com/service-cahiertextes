@@ -15,7 +15,7 @@ module CahierDeTextesApp
             status = 'KO'
             reason = 'Base de données inaccessible.'
           end
-          if DB.tables.length == 0
+          if DB.tables.empty?
             status = 'KO'
             reason = 'Base de données vide.'
           end

@@ -76,38 +76,35 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
         .reject { |day| day.wday != c.jour_de_la_semaine }
         .map do |jour|
         c.regroupements.map do |regroupement|
-          if regroupement.semaines_de_presence[ jour.cweek ] == 1
-            { id: c.id,
-              creneau_emploi_du_temps_id: c.id,
-              start: Time.new( jour.year,
-                               jour.month,
-                               jour.mday,
-                               c.plage_horaire_debut.debut.hour,
-                               c.plage_horaire_debut.debut.min ).iso8601,
-              end: Time.new( jour.year,
+          next unless regroupement.semaines_de_presence[ jour.cweek ] == 1
+          { id: c.id,
+            creneau_emploi_du_temps_id: c.id,
+            start: Time.new( jour.year,
                              jour.month,
                              jour.mday,
-                             c.plage_horaire_fin.fin.hour,
-                             c.plage_horaire_fin.fin.min ).iso8601,
-              heure_debut: Time.new( jour.year,
-                                     jour.month,
-                                     jour.mday,
-                                     c.plage_horaire_debut.debut.hour,
-                                     c.plage_horaire_debut.debut.min ).iso8601,
-              heure_fin: Time.new( jour.year,
+                             c.plage_horaire_debut.debut.hour,
+                             c.plage_horaire_debut.debut.min ).iso8601,
+            end: Time.new( jour.year,
+                           jour.month,
+                           jour.mday,
+                           c.plage_horaire_fin.fin.hour,
+                           c.plage_horaire_fin.fin.min ).iso8601,
+            heure_debut: Time.new( jour.year,
                                    jour.month,
                                    jour.mday,
-                                   c.plage_horaire_fin.fin.hour,
-                                   c.plage_horaire_fin.fin.min ).iso8601,
-              has_cours: c.cours.count { |cours| cours.date_cours == jour } > 0,
-              jour_de_la_semaine: c.jour_de_la_semaine,
-              matiere_id: c.matiere_id,
-              regroupement_id: regroupement.regroupement_id,
-              semaines_de_presence: regroupement.semaines_de_presence,
-              vierge: c.cours.count == 0 && c.devoirs.count == 0 }
-          else
-            next
-          end
+                                   c.plage_horaire_debut.debut.hour,
+                                   c.plage_horaire_debut.debut.min ).iso8601,
+            heure_fin: Time.new( jour.year,
+                                 jour.month,
+                                 jour.mday,
+                                 c.plage_horaire_fin.fin.hour,
+                                 c.plage_horaire_fin.fin.min ).iso8601,
+            has_cours: c.cours.count { |cours| cours.date_cours == jour } > 0,
+            jour_de_la_semaine: c.jour_de_la_semaine,
+            matiere_id: c.matiere_id,
+            regroupement_id: regroupement.regroupement_id,
+            semaines_de_presence: regroupement.semaines_de_presence,
+            vierge: c.cours.count == 0 && c.devoirs.count == 0 }
         end
       end
     end

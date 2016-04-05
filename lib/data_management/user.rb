@@ -15,9 +15,7 @@ module DataManagement
         cours.destroy
       end
 
-      CreneauEmploiDuTempsEnseignant.where( enseignant_id: uid )
-        .all
-        .each do |ce|
+      CreneauEmploiDuTempsEnseignant.where( enseignant_id: uid ) .all .each do |ce|
         cours = Cours[ce.creneau_emploi_du_temps_id]
         ce.destroy
         cours.destroy if cours.enseignants.empty?

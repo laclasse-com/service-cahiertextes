@@ -24,7 +24,7 @@ class Hash
         attributes[ node.attributes[ key ].name.to_sym ] = node.attributes[ key ].value
       end
 
-      return attributes unless node.children.size > 0
+      return attributes if node.children.empty?
 
       node.children.each do |child|
         result = xml_node_to_hash( child )
