@@ -298,6 +298,4 @@ angular.module( 'cahierDeTextesClientApp' )
                           $scope.calendar.options.month = mdate.month();
                           $scope.calendar.options.date = mdate.date();
                       }
-
-                      angular.element('#ui-view-content').after( current_user.marqueur_xiti );
                   } ] );

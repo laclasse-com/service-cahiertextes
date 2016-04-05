@@ -172,6 +172,4 @@ angular.module( 'cahierDeTextesClientApp' )
                               } );
                       };
                       matieres_enseignees = $scope.current_user.profil_actif.matieres;
-
-                      angular.element('#ui-view-content').after( current_user.marqueur_xiti );
                   } ] );

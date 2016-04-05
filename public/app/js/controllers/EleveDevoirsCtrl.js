@@ -108,6 +108,4 @@ angular.module( 'cahierDeTextesClientApp' )
                                   $scope.period_offset = 0;
                               };
                           });
-
-                      angular.element('#ui-view-content').after( current_user.marqueur_xiti );
                   } ] );

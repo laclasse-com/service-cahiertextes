@@ -345,6 +345,4 @@ angular.module( 'cahierDeTextesClientApp' )
 
                           $scope.processing = false;
                       };
-
-                      angular.element('#ui-view-content').after( current_user.marqueur_xiti );
                   } ] );
