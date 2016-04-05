@@ -1,0 +1,11 @@
+threads 1,8
+workers 3
+daemonize
+bind 'tcp://0.0.0.0:42630'
+environment 'production'
+directory '/home/erasme/laclasse-cahiertextes/'
+pidfile '/var/run/laclasse-cahiertextes/puma.pid'
+state_path '/var/run/laclasse-cahiertextes/puma.state'
+activate_control_app 'tcp://0.0.0.0:42631', { auth_token: 'randomized gibberish' }
+stdout_redirect '/var/log/laclasse-cahiertextes/puma.log', '/var/log/laclasse-cahiertextes/puma_error.log', true
+tag 'puma-laclasse-cahiertextes'
