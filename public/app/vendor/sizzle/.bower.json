@@ -23,14 +23,14 @@
     "jquery"
   ],
   "homepage": "https://github.com/jquery/sizzle",
-  "version": "2.2.1",
-  "_release": "2.2.1",
+  "version": "2.3.0",
+  "_release": "2.3.0",
   "_resolution": {
     "type": "version",
-    "tag": "2.2.1",
-    "commit": "774e9ba8036943de9fc83b0411f4730ddafebbd1"
+    "tag": "2.3.0",
+    "commit": "8d56cba3212f6722a0b47330143d329d7297277e"
   },
   "_source": "git://github.com/jquery/sizzle.git",
-  "_target": "~2.2",
+  "_target": "~2",
   "_originalSource": "sizzle"
 }

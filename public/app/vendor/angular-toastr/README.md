@@ -14,12 +14,33 @@ The goal is to provide the same API than the original one but without jQuery and
 
 ## Installation
 
-Grab the latest [release](https://github.com/Foxandxss/angular-toastr/releases) and add both the `css` and `javascript` file:
+Use npm:
+
+```
+$ npm install angular-toastr
+```
+
+If you are not using npm (you should), you can use bower:
+
+```
+$ bower install angular-toastr
+```
+
+To use a CDN, you can include the next two lines:
+
+```html
+<script src="https://npmcdn.com/angular-toastr/dist/angular-toastr.tpls.js"></script>
+<link rel="stylesheet" href="https://npmcdn.com/angular-toastr/dist/angular-toastr.css" />
+```
+
+Or you can grab the latest [release](https://github.com/Foxandxss/angular-toastr/releases) and add both the `css` and `javascript` file:
 
 ```html
 <link rel="stylesheet" type="text/css" href="angular-toastr.css" />
 <script type="text/javascript" src="angular-toastr.tpls.js"></script>
 ```
+
+**Note:** If you add a script tag for angular-toastr, keep in mind that you need the `tpls` version **or** the other depending if you want the default template or not (see below).
 
 If you want animations, don't forget to add `angular-animate`.
 
@@ -27,12 +48,6 @@ Then add `toastr` to your modules dependencies:
 
 ```javascript
 angular.module('app', ['ngAnimate', 'toastr'])
-```
-
-You can also install `angular-toastr` from bower:
-
-```
-$ bower install angular-toastr
 ```
 
 ## Usage
@@ -100,6 +115,16 @@ app.controller('foo', function($scope, toastr) {
 ```
 
 If no toast is passed in, all toasts will be closed.
+
+#### Getting active (open) toasts:
+
+```javascript
+app.controller('foo', function($scope, toastr) {
+  toastr.active();
+});
+```
+
+It return the number of active toasts in screen.
 
 #### Other options
 
