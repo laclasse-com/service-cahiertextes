@@ -47,8 +47,8 @@ module CahierDeTextesAPI
         requires :heure_debut, type: Time
         requires :heure_fin, type: Time
         requires :matiere_id, type: String
-        requires :regroupement_id, type: Fixnum
 
+        optional :regroupement_id, type: String
         optional :salle_id, type: Fixnum
         optional :enseignant_id, type: String
         optional :semaines_de_presence_regroupement, type: Fixnum
