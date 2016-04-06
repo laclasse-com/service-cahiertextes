@@ -2,16 +2,20 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller('EmploiDuTempsCtrl',
-                [ '$scope', 'moment',
+                [ '$scope', 'moment', '$stateParams', '$state',
                   'CALENDAR_OPTIONS', 'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'EmploisDuTemps', 'PopupsCreneau', 'CreneauxEmploiDuTemps',
                   'current_user',
-                  function ( $scope, moment,
+                  function ( $scope, moment, $stateParams, $state,
                              CALENDAR_OPTIONS, APP_PATH, SEMAINES_VACANCES, ZONE, EmploisDuTemps, PopupsCreneau, CreneauxEmploiDuTemps,
                              current_user ) {
                       $scope.current_user = current_user;
                       $scope.zone = ZONE;
 
                       $scope.emploi_du_temps = angular.element('#emploi_du_temps');
+
+                      if ( moment( $stateParams.from ).isValid() && moment( $stateParams.to ).isValid() ) {
+                          $scope.emploi_du_temps.fullCalendar( 'gotoDate', moment( $stateParams.from ) );
+                      }
 
                       var popup_ouverte = false;
                       $scope.filter_data = angular.identity;
@@ -131,6 +135,10 @@ angular.module( 'cahierDeTextesClientApp' )
                       $scope.calendar.options.weekends = $scope.current_user.parametrage_cahier_de_textes.affichage_week_ends;
 
                       $scope.calendar.options.viewRender = function( view, element ) {
+                          $stateParams = { from: view.start.toDate().toISOString(),
+                                           to: view.end.toDate().toISOString() };
+                          $state.go( $state.current, $stateParams, { notify: false, reload: false } );
+
                           $scope.current_user.date = view.start;
                           $scope.n_week = view.start.week();
                           $scope.c_est_les_vacances = $scope.sont_ce_les_vacances( $scope.n_week, $scope.zone );

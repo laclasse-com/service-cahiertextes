@@ -129,7 +129,7 @@ angular.module( 'cahierDeTextesClientApp' )
                        })
                        .state('eleve.emploi_du_temps', {
                            parent: 'eleve',
-                           url: '/emploi_du_temps',
+                           url: '/emploi_du_temps/:from/:to',
                            resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ELV', 'TUT' ] ); } ] },
                            views: {
                                'content': {
