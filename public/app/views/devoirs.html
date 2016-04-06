@@ -2,75 +2,78 @@
      data-ng-swipe-left="decr_offset()"
      data-ng-swipe-right="incr_offset()">
     <div class="panel-heading">
-	<div class="row col-md-12">
-	    <h2>
-		Du {{from_date | amDateFormat:'Do MMMM YYYY'}} au {{to_date | amDateFormat:'Do MMMM YYYY'}}
-	    </h2>
-	</div>
+        <div class="row col-md-12">
+            <h2>
+                Du {{from_date | amDateFormat:'Do MMMM YYYY'}} au {{to_date | amDateFormat:'Do MMMM YYYY'}}
+            </h2>
+        </div>
 
-	<div class="row col-md-12">
-	    <select class="pull-left"
-		    data-ng-options="id as matiere.libelle_long for (id,matiere) in matieres"
-		    data-ng-model="id_matiere_selected"
-		    data-ng-change="filter_data( id_matiere_selected )">
-		<option value="" selected>Toutes les matières</option>
-	    </select>
+        <div class="row col-md-12">
+            <select class="pull-left"
+                    data-ng-options="id as matiere.libelle_long for (id,matiere) in matieres"
+                    data-ng-model="id_matiere_selected"
+                    data-ng-change="filter_data( id_matiere_selected )">
+                <option value="" selected>Toutes les matières</option>
+            </select>
 
-	    <select class="pull-left"
-		    data-ng-model="period_offset"
-		    data-ng-options="period.offset as period.label for period in period_offsets_list">
-	    </select>
+            <select class="pull-left"
+                    data-ng-model="period_offset"
+                    data-ng-options="period.offset as period.label for period in period_offsets_list">
+            </select>
 
-	    <div class="pull-left options">
-		<label><checkbox data-ng-model="affiche_faits"></checkbox> Afficher les devoirs déjà fait</label>
-		<label><checkbox data-ng-model="tri_ascendant"></checkbox>  Tri ascendant</label>
-	    </div>
-	</div>
-	<div class="clearfix"></div>
+            <div class="pull-left options">
+                <label><checkbox data-ng-model="affiche_faits"></checkbox> Afficher les devoirs déjà fait</label>
+                <label><checkbox data-ng-model="tri_ascendant"></checkbox> Tri ascendant</label>
+            </div>
+        </div>
+        <div class="clearfix"></div>
     </div>
 </div>
 <ul class="list-group todo-list" data-ng-if="devoirs">
     <li data-ng-repeat="devoir in devoirs | orderBy:'date_due':tri_ascendant"
-	data-ng-if="devoir.date_fait == null || affiche_faits"
-	style="list-style:none"
-	class="devoir list-group-item" >
+        data-ng-if="devoir.date_fait == null || affiche_faits"
+        style="list-style:none"
+        class="devoir list-group-item" >
 
-	<div class="row alert alert-default title">
-	    <div class="pull-left date">{{devoir.date_due | amDateFormat: 'dddd D MMMM'}}</div>
-	</div>
+        <div class="row alert alert-default title">
+            <div class="pull-left date">{{devoir.date_due | amDateFormat: 'dddd D MMMM'}}</div>
+        </div>
 
-	<div class="row contenu"
-	     data-ng-class="{ 'type1': devoir.type_devoir_id == 1, 'type2': devoir.type_devoir_id == 2, 'type3': devoir.type_devoir_id == 3, 'type4': devoir.type_devoir_id == 4, 'type5': devoir.type_devoir_id == 5, 'type6': devoir.type_devoir_id == 6, 'fait': devoir.fait, 'a-faire': !devoir.fait }">
+        <div class="row contenu"
+             data-ng-class="{ 'type1': devoir.type_devoir_id == 1, 'type2': devoir.type_devoir_id == 2, 'type3': devoir.type_devoir_id == 3, 'type4': devoir.type_devoir_id == 4, 'type5': devoir.type_devoir_id == 5, 'type6': devoir.type_devoir_id == 6, 'fait': devoir.fait, 'a-faire': !devoir.fait }">
 
-	    <div class="col-md-5 alert alert-default">
-		<h5> {{devoir.matiere.libelle_long}}</h5>
-		<h6>{{devoir.type_devoir.description}} :</h6>
-		<div class="alert alert-default" data-ng-bind-html="devoir.contenu"></div>
+            <div class="col-md-5 alert alert-default">
+                <h5> {{devoir.matiere.libelle_long}}</h5>
+                <h6>{{devoir.type_devoir.description}} :</h6>
+                <div class="alert alert-default" data-ng-bind-html="devoir.contenu"></div>
 
-		<div class="row col-md-12 ressources">
-		    <div class="attached-document" data-ng-repeat="ressource in devoir.ressources">
-			<a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
-		    </div>
-		</div>
-	    </div>
+                <div class="row col-md-12 ressources">
+                    <div class="attached-document" data-ng-repeat="ressource in devoir.ressources">
+                        <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
+                    </div>
+                </div>
+            </div>
 
-	    <div class="col-md-4 alert alert-default">
-		<h5>Séquence pédagogique du {{devoir.cours.date_cours | amDateFormat:'dddd D MMMM'}}</h5>
-		<div class="alert alert-default" data-ng-bind-html="devoir.cours.contenu"></div>
-	    </div>
+            <div class="col-md-4 alert alert-default">
+                <h5>Séquence pédagogique du {{devoir.cours.date_cours | amDateFormat:'dddd D MMMM'}}</h5>
+                <div class="alert alert-default" data-ng-bind-html="devoir.cours.contenu"></div>
+            </div>
 
-	    <div class="col-md-1 detail">
-		<a class="btn btn-default" data-ui-sref="eleve.devoirs.popup({ titre: devoir.matiere.libelle_long, cours_id: devoir.cours.id, devoirs_ids: '[' + devoir.id + ']' })">Détail</a>
-	    </div>
+            <div class="col-md-1 detail">
+                <a class="btn btn-default" data-ui-sref="eleve.devoirs.popup({ titre: devoir.matiere.libelle_long, cours_id: devoir.cours.id, devoirs_ids: '[' + devoir.id + ']' })">Détail</a>
+            </div>
 
-	    <div class="col-md-2 todo">
-		<div data-ng-switcher
-			data-ng-if="!(devoir.type_devoir_id == 1) && current_user.profil_actif.profil_id === 'ELV'"
-		     data-ng-model="devoir.fait"
-		     data-ng-change="fait( devoir )" ></div>
-	    </div>
-	</div>
+            <div class="col-md-2 todo">
+                <div data-ng-switcher
+                     data-ng-if="!(devoir.type_devoir_id == 1) && current_user.profil_actif.profil_id === 'ELV'"
+                     data-ng-model="devoir.fait"
+                     data-ng-change="fait( devoir )" ></div>
+            </div>
+        </div>
 
-	<div class="clearfix"></div>
+        <div class="clearfix"></div>
     </li>
 </ul>
+<span class="no-data" data-ng-if="!devoirs">
+    Aucun devoir trouvé pour cette période.
+</span>

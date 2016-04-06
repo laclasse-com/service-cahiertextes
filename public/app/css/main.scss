@@ -15,9 +15,9 @@ body {
     border-radius: 6px;
     padding: 60px;
     h1 {
-	font-size: 60px;
-	line-height: 1;
-	letter-spacing: -1px;
+        font-size: 60px;
+        line-height: 1;
+        letter-spacing: -1px;
     }
 }
 
@@ -31,7 +31,7 @@ header {
     z-index: 1;
     height: 112px;
     .user {
-	padding: 1em;
+        padding: 1em;
     }
 }
 header.embedded {
@@ -53,7 +53,7 @@ header.embedded {
     margin-bottom: 5px;
     padding: 0 1em;
     a {
-	margin: 0.5em;
+        margin: 0.5em;
     }
 }
 
@@ -136,14 +136,14 @@ h2 {
     display: table;
     height: 100%;
     .glyphicon-paperclip {
-	position: absolute;
+        position: absolute;
     }
     .fc-title {
-	display: table-cell;
-	vertical-align: middle;
-	text-align: center;
-	width: 100%;
-	line-height: 1em;
+        display: table-cell;
+        vertical-align: middle;
+        text-align: center;
+        width: 100%;
+        line-height: 1em;
     }
 }
 
@@ -279,21 +279,21 @@ h2 {
 
 .bloc-enseignant {
     .panel {
-	height: 11em;
+        height: 11em;
     }
     .panel-heading {
-	padding-top: 0;
-	padding-bottom: 0;
-	span.glyphicon {
-	    cursor: pointer;
-	    margin-left: 3px;
-	}
+        padding-top: 0;
+        padding-bottom: 0;
+        span.glyphicon {
+            cursor: pointer;
+            margin-left: 3px;
+        }
     }
     .panel-body {
-	text-align: center;
-	.badge {
-	    text-align: left;
-	}
+        text-align: center;
+        .badge {
+            text-align: left;
+        }
     }
 }
 
@@ -315,14 +315,14 @@ h2 {
 
 .panel-heading.enseignant-saisie {
     input, select {
-	display: inline;
+        display: inline;
     }
     .panel-title {
-	display: inline;
-	width: 33%;
+        display: inline;
+        width: 33%;
     }
     input {
-	border: 1px solid #aaa;
+        border: 1px solid #aaa;
     }
 }
 
@@ -343,36 +343,36 @@ h2 {
 
 .duplication-saisie {
     div {
-	width: 100%;
-	min-height: 20em;
+        width: 100%;
+        min-height: 20em;
     }
     .footer {
-	min-height: 2.5em;
-	max-height: 2.5em;
-	height: 2.5em;
+        min-height: 2.5em;
+        max-height: 2.5em;
+        height: 2.5em;
     }
     select {
-	width: 100%;
+        width: 100%;
     }
 }
 
 .ressources {
     .attached-document {
-	float: left;
-	border: 1px solid #aaa;
-	background-color: #999;
-	margin: 3px;
-	padding-left: 2px;
-	a {
-	    color: #fff;
-	}
+        float: left;
+        border: 1px solid #aaa;
+        background-color: #999;
+        margin: 3px;
+        padding-left: 2px;
+        a {
+            color: #fff;
+        }
     }
     .dropdown-menu {
-	padding: 3px;
+        padding: 3px;
     }
     .upload, .treecontrol-container {
-	float: left;
-	width: 100%;
+        float: left;
+        width: 100%;
     }
 }
 
@@ -391,10 +391,10 @@ h2 {
 .tree-leaf {
     text-align: left;
     &.odd {
-	background-color: #ded;
+        background-color: #ded;
     }
     &.even {
-	background-color: #fff;
+        background-color: #fff;
     }
 }
 
@@ -440,29 +440,29 @@ footer {
 
 .devoir {
     .info, .contenu {
-	margin-left: 3em;
+        margin-left: 3em;
     }
     .info .matiere {
-	font-weight: bold;
+        font-weight: bold;
     }
     .todo, .detail {
-	margin: 6px;
+        margin: 6px;
     }
     .todo {
-	margin-top: 8px;
-	button {
-	    border: 0;
-	}
+        margin-top: 8px;
+        button {
+            border: 0;
+        }
     }
     .date {
-	margin-left: 0.7em;
-	text-transform: uppercase;
+        margin-left: 0.7em;
+        text-transform: uppercase;
     }
     .title {
-	border-bottom: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
     }
     .devoir {
-	border-left: 1px solid #ccc;
+        border-left: 1px solid #ccc;
     }
 }
 
@@ -470,91 +470,91 @@ footer {
     padding-top: 0;
     padding-bottom: 0;
     .title {
-	text-align: center;
-	margin-bottom: 0;
+        text-align: center;
+        margin-bottom: 0;
     }
     h5 {
-	font-weight: bold;
+        font-weight: bold;
     }
     .todo, .detail {
-	text-align: center;
-	margin: auto;
-	margin-top: 5em;
+        text-align: center;
+        margin: auto;
+        margin-top: 5em;
     }
     .todo {
-	.switch {
-	    margin: 0 auto;
-	}
+        .switch {
+            margin: 0 auto;
+        }
     }
     .detail {
-	a.btn {
-	    display: inline-block;
-	}
+        a.btn {
+            display: inline-block;
+        }
     }
     .contenu {
-	margin-left: -15px;
+        margin-left: -15px;
     }
 }
 
 .cahier-de-textes {
     h2 { text-align: center;
-	 text-transform: uppercase;
-	 color: #b2b2b2;
-	 font-size: 21px;
-	 font-weight: bolder; }
+         text-transform: uppercase;
+         color: #b2b2b2;
+         font-size: 21px;
+         font-weight: bolder; }
     .creneau {
-	list-style-type: none;
-	padding-bottom: 0;
-	.date {
-	    border-bottom: 1px solid #ddd;
-	    h3 {
-		margin: 0;
-		padding: 0.5em 1.7em 1em;
-		font-size: 18px;
-		font-weight: bolder;
-		color: #b2b2b2;
-	    }
-	}
-	.detail {
-	    border-left: 1em solid transparent;
-	    padding-top: 1em;
-	    padding-bottom: 1em;
-	    &.vise {
-		border-color: #0f0;
-	    }
-	    .infos {
-		span {
-		    float: left;
-		    width: 100%;
-		}
-		.regroupement, .matiere {
-		    font-weight: bold;
-		}
-		.matiere {
-		    color: #8e8e8e;
-		}
-	    }
-	    .devoir {
-		list-style: none;
-		span {
-		    float: left;
-		    width: 100%;
-		}
-		.type {
-		    font-weight: bold;
-		}
-		.temps-estime {
-		    color: #b2b2b2;
-		}
-		.contenu {
-		    margin: 0;
-		}
-	    }
-	    .actions {
-		text-align: center;
-		padding-top: 2em;
-	    }
-	}
+        list-style-type: none;
+        padding-bottom: 0;
+        .date {
+            border-bottom: 1px solid #ddd;
+            h3 {
+                margin: 0;
+                padding: 0.5em 1.7em 1em;
+                font-size: 18px;
+                font-weight: bolder;
+                color: #b2b2b2;
+            }
+        }
+        .detail {
+            border-left: 1em solid transparent;
+            padding-top: 1em;
+            padding-bottom: 1em;
+            &.vise {
+                border-color: #0f0;
+            }
+            .infos {
+                span {
+                    float: left;
+                    width: 100%;
+                }
+                .regroupement, .matiere {
+                    font-weight: bold;
+                }
+                .matiere {
+                    color: #8e8e8e;
+                }
+            }
+            .devoir {
+                list-style: none;
+                span {
+                    float: left;
+                    width: 100%;
+                }
+                .type {
+                    font-weight: bold;
+                }
+                .temps-estime {
+                    color: #b2b2b2;
+                }
+                .contenu {
+                    margin: 0;
+                }
+            }
+            .actions {
+                text-align: center;
+                padding-top: 2em;
+            }
+        }
     }
 }
 
@@ -565,56 +565,56 @@ footer {
 .modal-header {
     padding: 0;
     h3 {
-	font-size: 18px;
-	font-weight: bolder;
-	color: #aaa;
-	text-align: center;
+        font-size: 18px;
+        font-weight: bolder;
+        color: #aaa;
+        text-align: center;
     }
     h4 {
-	font-size: 16px;
-	font-weight: bolder;
-	color: #aaa;
-	text-align: center;
+        font-size: 16px;
+        font-weight: bolder;
+        color: #aaa;
+        text-align: center;
     }
 }
 .modal-body {
     .tab-content {
-	min-height: 20em;
-	// max-height: 34em;
-	overflow-x: hidden;
-	overflow-y: auto;
-	border: 0;
+        min-height: 20em;
+        // max-height: 34em;
+        overflow-x: hidden;
+        overflow-y: auto;
+        border: 0;
     }
     .infos ul {
-	padding-left: 0;
-	width: 100%;
-	li {
-	    width: 100%;
-	    text-align: left;
-	    list-style: none;
-	    line-height: 2em;
-	    em {
-		font-weight: bold;
-		font-style: normal;
-	    }
-	}
+        padding-left: 0;
+        width: 100%;
+        li {
+            width: 100%;
+            text-align: left;
+            list-style: none;
+            line-height: 2em;
+            em {
+                font-weight: bold;
+                font-style: normal;
+            }
+        }
     }
     .toggle-fait {
-	margin-bottom: 5px;
-	.switch {
-	    margin: 0 auto;
-	}
+        margin-bottom: 5px;
+        .switch {
+            margin: 0 auto;
+        }
     }
     .infos {
-	.clickable {
-	    border: 1px solid #666;
-	    cursor: pointer;
-	    font-size: 0.9em;
-	    padding: 0 0.15em;
-	}
-	.type1, .type2, .type3, .type4, .type5, .type6, .a-faire, .fait {
-	    border-left: 0.5em solid #fff;
-	}
+        .clickable {
+            border: 1px solid #666;
+            cursor: pointer;
+            font-size: 0.9em;
+            padding: 0 0.15em;
+        }
+        .type1, .type2, .type3, .type4, .type5, .type6, .a-faire, .fait {
+            border-left: 0.5em solid #fff;
+        }
     }
 }
 
@@ -700,8 +700,8 @@ fieldset .label {
 label {
     color: #999;
     span.new-SP-or-devoir {
-	float: left;
-	font-size: 90%;
+        float: left;
+        font-size: 90%;
     }
 }
 
@@ -712,26 +712,26 @@ h3, .h3 {
 .edition-creneau {
     line-height: 4;
     .horaire {
-	label {
-	    margin-right: 2em;
-	}
-	.dropdown.horaire {
-	    line-height: 0;
-	    margin: 0 1em 0 0.5em;
-	    display: inline-block;
-	    font-weight: bold;
-	    font-size: 1.2em;
-	    .dropdown-menu {
-		text-align: center;
-		min-width: 115px;
-	    }
-	    a {
-		color: #000;
-		&:hover {
-		    text-decoration: none;
-		}
-	    }
-	}
+        label {
+            margin-right: 2em;
+        }
+        .dropdown.horaire {
+            line-height: 0;
+            margin: 0 1em 0 0.5em;
+            display: inline-block;
+            font-weight: bold;
+            font-size: 1.2em;
+            .dropdown-menu {
+                text-align: center;
+                min-width: 115px;
+            }
+            a {
+                color: #000;
+                &:hover {
+                    text-decoration: none;
+                }
+            }
+        }
     }
 }
 
@@ -740,25 +740,25 @@ h3, .h3 {
 .switch {
     border-radius: 13px;
     &.switch-left {
-	background-color: #ae8ab8;
-	border-color: #ae8ab8;
+        background-color: #ae8ab8;
+        border-color: #ae8ab8;
     }
     &.switch-right {
-	background-color: #8dc47c;
-	border-color: #8dc47c;
-	color: #8dc47c;
+        background-color: #8dc47c;
+        border-color: #8dc47c;
+        color: #8dc47c;
     }
     .switch-button {
-	height: 26px;
-	width: 26px;
-	margin-top: 1px;
-	border: 0;
+        height: 26px;
+        width: 26px;
+        margin-top: 1px;
+        border: 0;
     }
     &.switch-left .switch-button {
-	left: 1px;
+        left: 1px;
     }
     &.switch-right .switch-button {
-	left: 21px;
+        left: 21px;
     }
 }
 
@@ -807,82 +807,82 @@ h3, .h3 {
 
 .switch {
     .switch-button {
-	font-family: FontAwesome;
-	font-style: normal;
-	font-weight: normal;
-	line-height: 1;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	font-size: 1.5em;
-	padding: 3px;
+        font-family: FontAwesome;
+        font-style: normal;
+        font-weight: normal;
+        line-height: 1;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-size: 1.5em;
+        padding: 3px;
     }
     &.switch-right .switch-button::before {
-	content: " \f00c";
+        content: " \f00c";
     }
     &.disabled {
-	cursor: default;
-	opacity: 0.5;
+        cursor: default;
+        opacity: 0.5;
     }
 }
 
 fieldset {
     margin: 0 3px;
     legend {
-	font-size: 0.65em;
-	margin: 0;
-	border: 0;
+        font-size: 0.65em;
+        margin: 0;
+        border: 0;
     }
     .btn-group {
-	float: left;
-	height: 100%;
-	.btn.btn-xs {
-	    font-size: 0.65em;
-	    width: 2em;
-	    margin: 2px;
-	}
-	.btn:active, .btn.active {
-	    box-shadow: 0;
-	}
+        float: left;
+        height: 100%;
+        .btn.btn-xs {
+            font-size: 0.65em;
+            width: 2em;
+            margin: 2px;
+        }
+        .btn:active, .btn.active {
+            box-shadow: 0;
+        }
     }
 }
 .legende, .semainier {
     .active {
-	background-color: #e8c254;
-	border-color: transparent;
-	box-shadow: 0;
+        background-color: #e8c254;
+        border-color: transparent;
+        box-shadow: 0;
     }
     .vacances {
-	background-color: #b2b2b2;
-	border-color: transparent;
-	box-shadow: 0;
+        background-color: #b2b2b2;
+        border-color: transparent;
+        box-shadow: 0;
     }
     .this-week {
-	font-weight: bold;
-	border-color: #323232;
+        font-weight: bold;
+        border-color: #323232;
     }
 }
 .semainier {
     fieldset {
-	float: left;
-	max-width: 4em;
+        float: left;
+        max-width: 4em;
     }
     .btn-group-xs > .btn, .btn-xs {
-	padding: 1px;
+        padding: 1px;
     }
 }
 .btn-group.templates-semainier {
     .btn {
-	margin: 0 4px;
+        margin: 0 4px;
     }
 }
 .legende {
     font-size: 0.75em;
     span {
-	cursor: inherit;
-	display: inline-block;
-	height: 1.5em;
-	width: 1em;
-	margin-left: 1em;
+        cursor: inherit;
+        display: inline-block;
+        height: 1.5em;
+        width: 1em;
+        margin-left: 1em;
     }
 }
 
@@ -897,7 +897,7 @@ fieldset {
 .ta-toolbar {
     background-color: #eee;
     button.btn {
-	padding: 6px 7px;
+        padding: 6px 7px;
     }
 }
 
@@ -923,31 +923,43 @@ fieldset {
 .ui-select-wrapper {
     width: 100%;
     .ui-select-container {
-	width: 97.5%;
-	max-height: 115px;
-	overflow-x: hidden;
-	overflow-y: auto; //scroll;
+        width: 97.5%;
+        max-height: 115px;
+        overflow-x: hidden;
+        overflow-y: auto; //scroll;
     }
 }
 
 // Page import
 .rapport {
     .panel-body {
-	label {
-	    float: left;
-	    width: 100%;
-	}
-	span.label {
-	    float: left;
-	    margin: 0 0 2px 2px;
-	}
+        label {
+            float: left;
+            width: 100%;
+        }
+        span.label {
+            float: left;
+            margin: 0 0 2px 2px;
+        }
     }
 }
 
 
 legend {
     .email {
-	font-size: 18px;
-	word-wrap: break-word;
+        font-size: 18px;
+        word-wrap: break-word;
     }
+}
+
+.no-data {
+    color: rgba( 64, 255, 64, 0.25 );
+    display: table-cell;
+    font-size: 4em;
+    font-weight: bold;
+    height: 6em;
+    text-align: center;
+    transform: rotate(-10deg);
+    vertical-align: middle;
+    width: 100%;
 }
