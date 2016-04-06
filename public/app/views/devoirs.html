@@ -20,8 +20,10 @@
                     data-ng-model="period_offset"
                     data-ng-options="period.offset as period.label for period in period_offsets_list">
             </select>
+            <button class="btn btn-default" data-ng-click="incr_offset()"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></button>
+            <button class="btn btn-default" data-ng-click="decr_offset()"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
 
-            <div class="pull-left options">
+            <div class="pull-right options">
                 <label><checkbox data-ng-model="affiche_faits"></checkbox> Afficher les devoirs déjà fait</label>
                 <label><checkbox data-ng-model="tri_ascendant"></checkbox> Tri ascendant</label>
             </div>
