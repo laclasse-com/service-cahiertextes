@@ -87,7 +87,7 @@ angular.module( 'cahierDeTextesClientApp' )
                        })
                        .state('principal.emploi_du_temps', {
                            parent: 'principal',
-                           url: '/emploi_du_temps',
+                           url: '/emploi_du_temps/:date',
                            resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } ] },
                            views: {
                                'content': {
@@ -109,7 +109,7 @@ angular.module( 'cahierDeTextesClientApp' )
                        .state('vie_scolaire.emploi_du_temps', {
                            resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'EVS' ] ); } ] },
                            parent: 'vie_scolaire',
-                           url: '/emploi_du_temps',
+                           url: '/emploi_du_temps/:date',
                            views: {
                                'content': {
                                    templateUrl: 'views/emploi_du_temps.html',
@@ -129,7 +129,7 @@ angular.module( 'cahierDeTextesClientApp' )
                        })
                        .state('eleve.emploi_du_temps', {
                            parent: 'eleve',
-                           url: '/emploi_du_temps/:from/:to',
+                           url: '/emploi_du_temps/:date',
                            resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ELV', 'TUT' ] ); } ] },
                            views: {
                                'content': {
@@ -174,7 +174,7 @@ angular.module( 'cahierDeTextesClientApp' )
                        })
                        .state('enseignant.emploi_du_temps', {
                            parent: 'enseignant',
-                           url: '/emploi_du_temps',
+                           url: '/emploi_du_temps/:date',
                            resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ENS', 'DOC' ] ); } ] },
                            views: {
                                'content': {
@@ -185,7 +185,7 @@ angular.module( 'cahierDeTextesClientApp' )
                        })
                        .state('enseignant.cahier_de_textes', {
                            parent: 'enseignant',
-                           url: '/cahier_de_textes',
+                           url: '/cahier_de_textes/:date',
                            resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ENS', 'DOC' ] ); } ] },
                            views: {
                                'content': {

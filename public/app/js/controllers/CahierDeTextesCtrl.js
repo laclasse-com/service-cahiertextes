@@ -2,17 +2,12 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller('CahierDeTextesCtrl',
-                [ '$scope', '$sce', '$q', '$stateParams', 'moment',
-                  'APP_PATH', 'DOCS_URL', 'API', 'EmploisDuTemps', 'current_user', 'PopupsCreneau', 'CreneauxEmploiDuTemps',
-                  function ( $scope, $sce, $q, $stateParams, moment,
-                             APP_PATH, DOCS_URL, API, EmploisDuTemps, current_user, PopupsCreneau, CreneauxEmploiDuTemps ) {
-                      $scope.$watch( 'complet', function() {
-                          $scope.retrieve_data();
-                      } );
-                      $scope.$watch( 'period_offset', function() {
-                          $scope.complet = $scope.period_offset == 9999;
-                          $scope.retrieve_data();
-                      } );
+                [ '$scope', '$sce', '$q', '$state', '$stateParams', 'moment',
+                  'APP_PATH', 'DOCS_URL', 'API', 'EmploisDuTemps', 'current_user', 'PopupsCreneau', 'CreneauxEmploiDuTemps', 'Utils',
+                  function ( $scope, $sce, $q, $state, $stateParams, moment,
+                             APP_PATH, DOCS_URL, API, EmploisDuTemps, current_user, PopupsCreneau, CreneauxEmploiDuTemps, Utils ) {
+                      var first_load = true;
+                      var changing_period_offset = false;
 
                       $scope.current_user = current_user;
 
@@ -96,8 +91,10 @@ angular.module( 'cahierDeTextesClientApp' )
                       };
 
                       $scope.retrieve_data = function() {
+                          changing_period_offset = true;
+                          var now = moment();
+
                           if ( $scope.complet ) {
-                              var now = moment();
                               $scope.from_date = moment();
                               $scope.to_date = moment();
                               if ( now.month() + 1 > 8 ) {
@@ -115,11 +112,29 @@ angular.module( 'cahierDeTextesClientApp' )
                               $scope.from_date = $scope.from_date.toDate();
                               $scope.to_date = $scope.to_date.toDate();
                           } else {
-                              $scope.current_user.date = moment().subtract( $scope.period_offset, 'months' ).toDate();
+                              if ( first_load && moment( $stateParams.date ).isValid() ) {
+                                  console.log('using date from $stateParams')
+                                  console.log($stateParams.date)
+                                  if ( moment( $stateParams.date ).isBefore( Utils.school_year_start() ) ) {
+                                      $stateParams.date = Utils.school_year_start();
+                                  } else if ( moment( $stateParams.date ).isAfter( Utils.school_year_end() ) ) {
+                                      $stateParams.date = Utils.school_year_end();
+                                  }
+
+                                  $scope.current_user.date = moment( $stateParams.date ).toDate();
+
+                                  $scope.period_offset = moment.duration( now - $scope.current_user.date ).months() - 1;
+                              } else {
+                                  $scope.current_user.date = moment().subtract( $scope.period_offset, 'months' ).toDate();
+                              }
+                              console.log($scope.current_user.date)
 
                               $scope.from_date = moment( $scope.current_user.date ).subtract( 2, 'weeks' ).startOf( 'week' ).toDate();
                               $scope.to_date = moment( $scope.current_user.date ).add( 2, 'weeks' ).endOf( 'week' ).toDate();
                           }
+
+                          $stateParams.date = $scope.from_date.toISOString().split('T')[0];
+                          $state.go( $state.current, $stateParams, { notify: false, reload: false } );
 
                           EmploisDuTemps.query( { debut: $scope.from_date,
                                                   fin: $scope.to_date,
@@ -152,6 +167,9 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                   $scope.selected_creneau_vide = null;
                               });
+
+                          first_load = false;
+                          changing_period_offset = false;
                       };
                       $scope.popup_callback = $scope.retrieve_data;
 
@@ -172,4 +190,11 @@ angular.module( 'cahierDeTextesClientApp' )
                               } );
                       };
                       matieres_enseignees = $scope.current_user.profil_actif.matieres;
+
+                      $scope.$watch( 'period_offset', function() {
+                          if ( !changing_period_offset ) {
+                              $scope.complet = $scope.period_offset == 9999;
+                              $scope.retrieve_data();
+                          }
+                      } );
                   } ] );

@@ -3,18 +3,27 @@
 angular.module( 'cahierDeTextesClientApp' )
     .controller('EmploiDuTempsCtrl',
                 [ '$scope', 'moment', '$stateParams', '$state',
-                  'CALENDAR_OPTIONS', 'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'EmploisDuTemps', 'PopupsCreneau', 'CreneauxEmploiDuTemps',
+                  'CALENDAR_OPTIONS', 'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'EmploisDuTemps', 'PopupsCreneau', 'CreneauxEmploiDuTemps', 'Utils',
                   'current_user',
                   function ( $scope, moment, $stateParams, $state,
-                             CALENDAR_OPTIONS, APP_PATH, SEMAINES_VACANCES, ZONE, EmploisDuTemps, PopupsCreneau, CreneauxEmploiDuTemps,
+                             CALENDAR_OPTIONS, APP_PATH, SEMAINES_VACANCES, ZONE, EmploisDuTemps, PopupsCreneau, CreneauxEmploiDuTemps, Utils,
                              current_user ) {
                       $scope.current_user = current_user;
                       $scope.zone = ZONE;
+                      var first_load = true;
 
                       $scope.emploi_du_temps = angular.element('#emploi_du_temps');
+                      console.log($scope.emploi_du_temps)
+                      if ( moment( $stateParams.date ).isValid() ) {
+                          console.log('trying ' + $stateParams.date);
+                          if ( moment( $stateParams.date ).isBefore( Utils.school_year_start() ) ) {
+                              $stateParams.date = Utils.school_year_start();
+                          } else if ( moment( $stateParams.date ).isAfter( Utils.school_year_end() ) ) {
+                              $stateParams.date = Utils.school_year_end();
+                          }
+                          console.log('finally going to ' + $stateParams.date);
 
-                      if ( moment( $stateParams.from ).isValid() && moment( $stateParams.to ).isValid() ) {
-                          $scope.emploi_du_temps.fullCalendar( 'gotoDate', moment( $stateParams.from ) );
+                          $scope.emploi_du_temps.fullCalendar( 'gotoDate', $stateParams.date );
                       }
 
                       var popup_ouverte = false;
@@ -126,7 +135,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
                       // configuration du composant calendrier
                       $scope.extraEventSignature = function(event) {
-                          return "" + event.matiere;
+                          return '' + event.matiere;
                       };
 
                       $scope.calendar = { options: CALENDAR_OPTIONS,
@@ -135,13 +144,17 @@ angular.module( 'cahierDeTextesClientApp' )
                       $scope.calendar.options.weekends = $scope.current_user.parametrage_cahier_de_textes.affichage_week_ends;
 
                       $scope.calendar.options.viewRender = function( view, element ) {
-                          $stateParams = { from: view.start.toDate().toISOString(),
-                                           to: view.end.toDate().toISOString() };
+                          console.log('in viewRender, trying to go to ' + moment($stateParams.date).toDate().toISOString().split('T')[0]);
+                          $stateParams.date = $scope.emploi_du_temps.fullCalendar('getDate').toDate().toISOString().split('T')[0];
                           $state.go( $state.current, $stateParams, { notify: false, reload: false } );
+
+                          console.log('in viewRender, trying to go to ' + moment($stateParams.date).toDate().toISOString().split('T')[0]);
+                          console.log('in viewRender, going to ' + view.start.toDate().toISOString().split('T')[0]);
 
                           $scope.current_user.date = view.start;
                           $scope.n_week = view.start.week();
                           $scope.c_est_les_vacances = $scope.sont_ce_les_vacances( $scope.n_week, $scope.zone );
+
                           retrieve_data( view.start.toDate(), view.end.toDate() );
                       };
 
@@ -299,11 +312,11 @@ angular.module( 'cahierDeTextesClientApp' )
                           $scope.selected_regroupements = $scope.current_user.profil_actif.regroupements;
                       }
 
-                      // Récupération d'une date prédéfinie s'il y a lieu
-                      if ( $scope.current_user.date ) {
-                          var mdate = moment( $scope.current_user.date );
-                          $scope.calendar.options.year = mdate.year();
-                          $scope.calendar.options.month = mdate.month();
-                          $scope.calendar.options.date = mdate.date();
-                      }
+                      // // Récupération d'une date prédéfinie s'il y a lieu
+                      // if ( $scope.current_user.date ) {
+                      //     var mdate = moment( $scope.current_user.date );
+                      //     $scope.calendar.options.year = mdate.year();
+                      //     $scope.calendar.options.month = mdate.month();
+                      //     $scope.calendar.options.date = mdate.date();
+                      // }
                   } ] );
