@@ -10,9 +10,9 @@
 
         <div class="row col-md-12">
             <select class="pull-left"
-                    data-ng-options="id as matiere.libelle_long for (id,matiere) in matieres"
-                    data-ng-model="id_matiere_selected"
-                    data-ng-change="filter_data( id_matiere_selected )">
+                    data-ng-options="matiere as matiere.libelle_long for (id,matiere) in matieres"
+                    data-ng-model="matiere_selected"
+                    data-ng-change="filter_data( matiere_selected )">
                 <option value="" selected>Toutes les matières</option>
             </select>
 

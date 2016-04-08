@@ -140,7 +140,7 @@ angular.module( 'cahierDeTextesClientApp' )
                        })
                        .state('eleve.devoirs', {
                            parent: 'eleve',
-                           url: '/devoirs',
+                           url: '/devoirs/:from/:to/:matiere',
                            resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ELV', 'TUT' ] ); } ] },
                            views: {
                                'content': {

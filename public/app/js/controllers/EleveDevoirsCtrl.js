@@ -2,16 +2,18 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller('EleveDevoirsCtrl',
-                [ '$scope', '$sce', '$timeout', 'toastr',
+                [ '$scope', '$sce', '$timeout', 'toastr', '$state', '$stateParams', 'moment',
                   'APP_PATH', 'DOCS_URL', 'API', 'Annuaire', 'Devoirs', 'Cours', 'CreneauxEmploiDuTemps',
                   'current_user',
-                  function( $scope, $sce, $timeout, toastr,
+                  function( $scope, $sce, $timeout, toastr, $state, $stateParams, moment,
                             APP_PATH, DOCS_URL, API, Annuaire, Devoirs, Cours, CreneauxEmploiDuTemps,
                             current_user ) {
                       // popup d'affichage des détails
                       $scope.affiche_faits = false;
                       $scope.tri_ascendant = true;
                       $scope.popup_ouverte = false;
+                      $scope.matiere_selected = null;
+
                       $scope.fait = function( devoir ) {
                           devoir.$fait()
                               .then( function( response ) {
@@ -37,6 +39,10 @@ angular.module( 'cahierDeTextesClientApp' )
                           $scope.from_date = moment().subtract( $scope.period_offset, 'months' ).subtract( 2, 'weeks' ).toDate();
                           $scope.to_date = moment().subtract( $scope.period_offset, 'months' ).add( 2, 'weeks' ).toDate();
 
+                          $stateParams.from = $scope.from_date.toISOString().split('T')[0];
+                          $stateParams.to = $scope.to_date.toISOString().split('T')[0];
+                          $state.go( $state.current, $stateParams, { notify: false, reload: false } );
+
                           API.query_devoirs({ debut: $scope.from_date,
                                               fin: $scope.to_date,
                                               uid: $scope.current_user.profil_actif.profil_id == 'TUT' ? $scope.current_user.enfant_actif.enfant.id_ent : null })
@@ -53,18 +59,21 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                       return devoir;
                                   });
-                                  $scope.devoirs = $scope.all_devoirs;
+                                  $scope.filter_data( $scope.matiere_selected );
                               });
                       };
 
-                      $scope.filter_data = function( matiere_id ) {
-                          if ( _(matiere_id).isNull() ) {
+                      $scope.filter_data = function( matiere ) {
+                          if ( _(matiere).isNull() ) {
                               $scope.devoirs = $scope.all_devoirs;
+                              $stateParams.matiere = null;
                           } else {
                               $scope.devoirs = _($scope.all_devoirs).select( function( devoir ) {
-                                  return devoir.creneau_emploi_du_temps.matiere_id == matiere_id;
+                                  return devoir.creneau_emploi_du_temps.matiere_id == matiere.id;
                               } );
+                              $stateParams.matiere = matiere.libelle_long;
                           }
+                          $state.go( $state.current, $stateParams, { notify: false, reload: false } );
                       };
 
                       $scope.period_offset = 0;
