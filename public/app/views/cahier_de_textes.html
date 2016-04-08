@@ -7,12 +7,13 @@
                     <div class="ui-select-wrapper">
                             <ui-select multiple class="pull-left" theme="bootstrap"
                                     append-to-body="true"
-                                    data-ng-model="scope.selected_regroupements">
-                                    <ui-select-match placeholder="Regroupement(s)...">{{$item.libelle}}</ui-select-match>
-                                    <ui-select-choices repeat="classe in current_user.profil_actif.regroupements | orderBy:['type','libelle']"
-                                            group-by="'type'">
-                                            {{classe.libelle}}
-                                    </ui-select-choices>
+                                       data-ng-model="scope.selected_regroupements"
+                                       data-ng-change="update_regroupements_in_url">
+                                <ui-select-match placeholder="Regroupement(s)...">{{$item.libelle}}</ui-select-match>
+                                <ui-select-choices repeat="classe in current_user.profil_actif.regroupements | orderBy:['type','libelle']"
+                                                   group-by="'type'">
+                                    {{classe.libelle}}
+                                </ui-select-choices>
                             </ui-select>
                             <button class="btn btn-xs btn-primary"
                                     data-ng-click="select_all_regroupements()"><span class="glyphicon glyphicon-certificate"></span></button>

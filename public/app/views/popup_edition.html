@@ -4,387 +4,389 @@
     <h3>{{creneau.heure_debut | amDateFormat : 'dddd D MMMM YYYY' }}, semaine {{creneau.n_week}}</h3>
     <!-- {{{ Lecture seule -->
     <h4>
-	<span data-ng-if="!mode_edition_creneau || !creneau.vierge">
-	    {{selected_regroupement.libelle}} - {{selected_matiere.libelle_long}} ({{creneau.heure_debut | amDateFormat: 'HH:mm'}} - {{creneau.heure_fin | amDateFormat: 'HH:mm'}})
-	</span>
+        <span data-ng-if="!mode_edition_creneau || !creneau.vierge">
+            {{selected_regroupement.libelle}} - {{selected_matiere.libelle_long}} ({{creneau.heure_debut | amDateFormat: 'HH:mm'}} - {{creneau.heure_fin | amDateFormat: 'HH:mm'}})
+        </span>
     </h4>
     <!-- }}} -->
 
     <!-- {{{ Édition -->
     <div class="edition-creneau" data-ng-if="mode_edition_creneau">
-	<div class="row" data-ng-if="creneau.vierge">
-	    <div class="col-md-6">
-		<label>Choisir la classe :</label>
-		<select data-ng-model="scope.selected_regroupement"
-			data-ng-options="classe as classe.libelle group by classe.type for classe in classes | orderBy:['type','libelle']"
-			data-ng-required="true">
-		</select>
-	    </div>
+        <div class="row" data-ng-if="creneau.vierge">
+            <div class="col-md-6">
+                <label>Choisir la classe :</label>
+                <select data-ng-model="scope.selected_regroupement"
+                        data-ng-options="classe as classe.libelle group by classe.type for classe in classes | orderBy:['type','libelle']"
+                        data-ng-required="true">
+                </select>
+            </div>
 
-	    <div class="col-md-6">
-		<label>Choisir la matière :</label>
-		<select data-ng-model="scope.selected_matiere"
-			data-ng-options="matiere as matiere.libelle_long for matiere in matieres | orderBy:['libelle_long']"
-			data-ng-required="true">
-		</select>
-	    </div>
-	</div>
+            <div class="col-md-6">
+                <label>Choisir la matière :</label>
+                <select data-ng-model="scope.selected_matiere"
+                        data-ng-options="matiere as matiere.libelle_long for matiere in matieres | orderBy:['libelle_long']"
+                        data-ng-required="true">
+                </select>
+            </div>
+        </div>
 
-	<div class="row">
-	    <div class="col-md-12 horaire">
-		<label>Choisir l'horaire :</label>
-		de
-		<div uib-dropdown class="uib-dropdown horaire">
-		    <a uib-dropdown-toggle class="uib-dropdown-toggle" role="button" data-toggle="uib-dropdown" data-target="#" href="">{{creneau.tmp_heure_debut | amDateFormat: 'HH:mm'}}</a>
-		    <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng-click="$event.stopPropagation()">
-			    <uib-timepicker class="uib-timepicker"
-				    data-ng-model="creneau.tmp_heure_debut"
-				    data-show-meridian="false"
-				    data-minute-step="5"
-				    data-ng-required="true"></uib-timepicker>
-		    </div>
-		</div>
-		à
-		<div uib-dropdown class="uib-dropdown horaire">
-			<a uib-dropdown-toggle class="uib-dropdown-toggle" role="button" data-toggle="uib-dropdown" data-target="#" href="">{{creneau.tmp_heure_fin | amDateFormat: 'HH:mm'}}</a>
-			<div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng-click="$event.stopPropagation()">
-				<uib-timepicker class="uib-timepicker"
-					data-ng-model="creneau.tmp_heure_fin"
-					data-show-meridian="false"
-					data-minute-step="5"
-					data-ng-required="true"></uib-timepicker>
-			</div>
-		</div>
-	    </div>
-	</div>
+        <div class="row">
+            <div class="col-md-12 horaire">
+                <label>Choisir l'horaire :</label>
+                de
+                <div uib-dropdown class="uib-dropdown horaire">
+                    <a uib-dropdown-toggle class="uib-dropdown-toggle" role="button" data-toggle="uib-dropdown" data-target="#" href="">{{creneau.tmp_heure_debut | amDateFormat: 'HH:mm'}}</a>
+                    <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng-click="$event.stopPropagation()">
+                            <uib-timepicker class="uib-timepicker"
+                                    data-ng-model="creneau.tmp_heure_debut"
+                                    data-show-meridian="false"
+                                    data-minute-step="5"
+                                    data-ng-required="true"></uib-timepicker>
+                    </div>
+                </div>
+                à
+                <div uib-dropdown class="uib-dropdown horaire">
+                        <a uib-dropdown-toggle class="uib-dropdown-toggle" role="button" data-toggle="uib-dropdown" data-target="#" href="">{{creneau.tmp_heure_fin | amDateFormat: 'HH:mm'}}</a>
+                        <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng-click="$event.stopPropagation()">
+                                <uib-timepicker class="uib-timepicker"
+                                        data-ng-model="creneau.tmp_heure_fin"
+                                        data-show-meridian="false"
+                                        data-minute-step="5"
+                                        data-ng-required="true"></uib-timepicker>
+                        </div>
+                </div>
+            </div>
+        </div>
 
-	<div class="row">
-		<div class="col-md-12">
-			<label>Choisir les semaines actives :</label>
-			<div class="btn-group templates-semainier">
-				<button class="btn btn-xs"
-					data-ng-repeat="template in templates_semainier"
-					data-ng-click="template.apply()">{{template.label}}</button>
-			</div>
-			<div class="semainier">
-				<fieldset data-ng-repeat="mois in overlay_semainier track by $index">
-					<legend>{{annee[ $index ]}}</legend>
-					<div class="btn-group">
-						<button type="button" class="btn btn-xs btn-default"
-							data-ng-class="{'active': semaines_actives.regroupement[ semaine.semaine - 1 ], 'vacances': sont_ce_les_vacances( semaine.semaine, ZONE ), 'this-week': semaine.semaine === creneau.n_week}"
-							data-ng-model="semaines_actives.regroupement[ semaine.semaine - 1 ]"
-							uib-btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0"
-							data-ng-repeat="semaine in mois track by $index" >
-							{{semaine.semaine}}
-						</button>
-					</div>
-				</fieldset>
-			</div>
+        <div class="row">
+                <div class="col-md-12">
+                        <label>Choisir les semaines actives :</label>
+                        <div class="btn-group templates-semainier">
+                                <button class="btn btn-xs"
+                                        data-ng-repeat="template in templates_semainier"
+                                        data-ng-click="template.apply()">{{template.label}}</button>
+                        </div>
+                        <div class="semainier">
+                            <fieldset data-ng-repeat="mois in overlay_semainier | orderBy:'index'">
+                                <legend>{{mois.label}}</legend>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-xs btn-default"
+                                            data-ng-repeat="semaine in mois.semaines track by $index"
+                                            data-ng-class="{'active': semaines_actives.regroupement[ semaine.semaine - 1 ], 'vacances': sont_ce_les_vacances( semaine.semaine, ZONE ), 'this-week': semaine.semaine === creneau.n_week}"
+                                            data-ng-model="semaines_actives.regroupement[ semaine.semaine - 1 ]"
+                                            uib-btn-checkbox
+                                            btn-checkbox-true="1"
+                                            btn-checkbox-false="0" >
+                                        {{semaine.semaine}}
+                                    </button>
+                                </div>
+                            </fieldset>
+                        </div>
 
-			<div class="pull-right legende">
-				<label>Légende :</label>
-				<span class="btn btn-xs btn-default" title="Créneau absent de cette semaine"> </span> Créneau absent de cette semaine
-				<span class="btn btn-xs btn-default active" title="Créneau présent cette semaine"> </span> Créneau présent cette semaine
-				<span class="btn btn-xs btn-default vacances" title="Vacances scolaires"> </span> Vacances scolaires
-			</div>
+                        <div class="pull-right legende">
+                            <label>Légende :</label>
+                            <span class="btn btn-xs btn-default" title="Créneau absent de cette semaine"> </span> Créneau absent de cette semaine
+                            <span class="btn btn-xs btn-default active" title="Créneau présent cette semaine"> </span> Créneau présent cette semaine
+                            <span class="btn btn-xs btn-default vacances" title="Vacances scolaires"> </span> Vacances scolaires
+                        </div>
 
-		</div>
-	</div>
+                </div>
+        </div>
     </div>
     <!-- }}} -->
 
     <div class="error-messages">
-	    <div class="alert alert-danger" role="alert" data-ng-repeat="erreur in erreurs">{{erreur.message}}</div>
+        <div class="alert alert-danger" role="alert" data-ng-repeat="erreur in erreurs">{{erreur.message}}</div>
     </div>
 </div>
 
 <div class="modal-body" data-ng-if="!mode_edition_creneau && !mode_duplication">
     <uib-tabset>
 
-	<!-- ####################### Séquence Pédagogique du jour ####################### -->
-	<uib-tab heading="Séquence pédagogique du jour" >
-	    <div class="row">
-		<div class="col-md-9 contenu">
-		    <div class="panel panel-default">
+        <!-- ####################### Séquence Pédagogique du jour ####################### -->
+        <uib-tab heading="Séquence pédagogique du jour" >
+            <div class="row">
+                <div class="col-md-9 contenu">
+                    <div class="panel panel-default">
 
-			<div data-text-angular
-			     class="panel-body"
-			     data-ng-model="cours.contenu"
-			     data-ng-change="is_dirty( cours )"
-			     data-ng-if="cours.editable && !cours.deleted" ></div>
-			<div class="panel-body"
-			     data-ng-bind-html="cours.contenu"
-			     data-ng-if="!cours.editable && !cours.deleted" ></div>
-			<div class="panel-body deleted"
-			     data-ng-if="cours.deleted" >(Séquence pédagogique supprimée)</div>
-			<div class="panel-footer ressources" data-ng-if="!cours.deleted">
-			    <div class="row">
-				<div class="attached-document" data-ng-repeat="ressource in cours.ressources">
-				    <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
-				    <button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( cours, ressource.hash )">✕</button>
-				</div>
-			    </div>
+                        <div data-text-angular
+                             class="panel-body"
+                             data-ng-model="cours.contenu"
+                             data-ng-change="is_dirty( cours )"
+                             data-ng-if="cours.editable && !cours.deleted" ></div>
+                        <div class="panel-body"
+                             data-ng-bind-html="cours.contenu"
+                             data-ng-if="!cours.editable && !cours.deleted" ></div>
+                        <div class="panel-body deleted"
+                             data-ng-if="cours.deleted" >(Séquence pédagogique supprimée)</div>
+                        <div class="panel-footer ressources" data-ng-if="!cours.deleted">
+                            <div class="row">
+                                <div class="attached-document" data-ng-repeat="ressource in cours.ressources">
+                                    <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
+                                    <button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( cours, ressource.hash )">✕</button>
+                                </div>
+                            </div>
 
-			    <div uib-dropdown class="uib-dropdown" data-ng-if="!creneau.etranger">
-				<button uib-dropdown-toggle class="btn btn-sm btn-default uib-dropdown-toggle pull-right" role="button" data-toggle="uib-dropdown" data-target="#" href=""
-					data-ng-class="{'disabled': faulty_docs_app}">
-				    <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
-				</button>
-				<div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng-click="$event.stopPropagation()">
-				    <div cartable
-					 class="treecontrol-container"
-					 data-racine="cartable.files"
-					 data-target="cours"
-					 data-regroupement="selected_regroupement"
-					 data-add-callback="consume_Documents_response_callback">
-				    </div>
-				    <input type="file"
-					   class="upload"
-					   name="upload[]"
-					   multiple
-					   onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().cours, this.files)" />
-				</div>
-			    </div>
-			    <div class="clearfix"></div>
-			</div>
-		    </div>
-		</div>
-		<div class="col-md-3 infos">
-		    <ul class="pull-left">
-			<li class="clickable"
-			    data-ng-repeat="devoir in cours.devoirs"
-			    data-ng-if="!devoir.deleted"
-			    data-uib-tooltip-trigger="click"
-			    data-uib-tooltip-placement="bottom"
-			    data-uib-tooltip-html-unsafe="{{devoir.tooltip}}"
-			    data-ng-class="{ 'type1': devoir.type_devoir_id == 1, 'type2': devoir.type_devoir_id == 2, 'type3': devoir.type_devoir_id == 3, 'type4': devoir.type_devoir_id == 4, 'type5': devoir.type_devoir_id == 5, 'type6': devoir.type_devoir_id >= 6, 'fait': devoir.fait }" >
-			    <span><i class="picto" data-ng-style="{'background-image':'url(' + app_path + '/app/vendor/laclasse-common-client/images/picto_devoir.svg)'}"></i> Devoir associé : <em>{{devoir.date_due | date : 'dd/MM'}}</em></span>
-			</li>
-		    </ul>
-		</div>
-		<div class="col-md-3" data-ng-if="cours.id">
-		    <button type="button" class="btn btn-xs btn-default pull-right supprimer"
-			    data-ng-click="effacer_cours(  )"
-			    data-ng-if="cours.deleted || ( !creneau.etranger && cours.editable )" >
-			<span data-ng-if="!cours.deleted"><span class="glyphicon glyphicon-trash"></span> Supprimer</span>
-			<span data-ng-if="cours.deleted"><span class="glyphicon glyphicon-trash"></span> Annuler la suppression</span>
-		    </button>
-		</div>
-	    </div>
+                            <div uib-dropdown class="uib-dropdown" data-ng-if="!creneau.etranger">
+                                <button uib-dropdown-toggle class="btn btn-sm btn-default uib-dropdown-toggle pull-right" role="button" data-toggle="uib-dropdown" data-target="#" href=""
+                                        data-ng-class="{'disabled': faulty_docs_app}">
+                                    <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
+                                </button>
+                                <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng-click="$event.stopPropagation()">
+                                    <div cartable
+                                         class="treecontrol-container"
+                                         data-racine="cartable.files"
+                                         data-target="cours"
+                                         data-regroupement="selected_regroupement"
+                                         data-add-callback="consume_Documents_response_callback">
+                                    </div>
+                                    <input type="file"
+                                           class="upload"
+                                           name="upload[]"
+                                           multiple
+                                           onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().cours, this.files)" />
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 infos">
+                    <ul class="pull-left">
+                        <li class="clickable"
+                            data-ng-repeat="devoir in cours.devoirs"
+                            data-ng-if="!devoir.deleted"
+                            data-uib-tooltip-trigger="click"
+                            data-uib-tooltip-placement="bottom"
+                            data-uib-tooltip-html-unsafe="{{devoir.tooltip}}"
+                            data-ng-class="{ 'type1': devoir.type_devoir_id == 1, 'type2': devoir.type_devoir_id == 2, 'type3': devoir.type_devoir_id == 3, 'type4': devoir.type_devoir_id == 4, 'type5': devoir.type_devoir_id == 5, 'type6': devoir.type_devoir_id >= 6, 'fait': devoir.fait }" >
+                            <span><i class="picto" data-ng-style="{'background-image':'url(' + app_path + '/app/vendor/laclasse-common-client/images/picto_devoir.svg)'}"></i> Devoir associé : <em>{{devoir.date_due | date : 'dd/MM'}}</em></span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-3" data-ng-if="cours.id">
+                    <button type="button" class="btn btn-xs btn-default pull-right supprimer"
+                            data-ng-click="effacer_cours(  )"
+                            data-ng-if="cours.deleted || ( !creneau.etranger && cours.editable )" >
+                        <span data-ng-if="!cours.deleted"><span class="glyphicon glyphicon-trash"></span> Supprimer</span>
+                        <span data-ng-if="cours.deleted"><span class="glyphicon glyphicon-trash"></span> Annuler la suppression</span>
+                    </button>
+                </div>
+            </div>
 
-	    <div class="panel panel-default">
-		<div class="panel-heading">
-		    Travail à faire suite à cette séquence pédagogique
-		</div>
-		<div class="panel-body">
-		    <button class="btn btn-default ajout-devoir"
-			    data-ng-if="!creneau.etranger"
-			    data-ng-click="ajout_devoir( cours.devoirs, 'next' )">
-			<span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
-		    </button>
-		    <div class="panel panel-default"
-			 data-ng-repeat="devoir in cours.devoirs">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Travail à faire suite à cette séquence pédagogique
+                </div>
+                <div class="panel-body">
+                    <button class="btn btn-default ajout-devoir"
+                            data-ng-if="!creneau.etranger"
+                            data-ng-click="ajout_devoir( cours.devoirs, 'next' )">
+                        <span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
+                    </button>
+                    <div class="panel panel-default"
+                         data-ng-repeat="devoir in cours.devoirs">
 
-			<div class="row">
-			    <div class="col-md-9"
-				 data-ng-if="!devoir.deleted">
-				<div class="panel-heading enseignant-saisie" data-ng-if="!creneau.etranger">
-				    <label class="col-md-6" data-ng-if="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir">Type de travail :
-					<select data-ng-required="true"
-						data-ng-change="is_dirty( null )"
-						data-ng-model="devoir.type_devoir_id"
-						data-ng-options="type_de_devoir.id as type_de_devoir.description for type_de_devoir in types_de_devoir">
-					</select>
-				    </label>
-				    <label class="col-md-6">Date de rendu :
-					<select data-ng-required="true"
-						data-ng-model="devoir.date_due"
-						data-ng-change="set_creneau_date_due( devoir )"
-						data-ng-options="creneau.date_due as ( creneau | formateCreneau ) group by creneau.semaine for creneau in creneaux_devoirs_possibles">
-					</select>
-				    </label>
+                        <div class="row">
+                            <div class="col-md-9"
+                                 data-ng-if="!devoir.deleted">
+                                <div class="panel-heading enseignant-saisie" data-ng-if="!creneau.etranger">
+                                    <label class="col-md-6" data-ng-if="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir">Type de travail :
+                                        <select data-ng-required="true"
+                                                data-ng-change="is_dirty( null )"
+                                                data-ng-model="devoir.type_devoir_id"
+                                                data-ng-options="type_de_devoir.id as type_de_devoir.description for type_de_devoir in types_de_devoir">
+                                        </select>
+                                    </label>
+                                    <label class="col-md-6">Date de rendu :
+                                        <select data-ng-required="true"
+                                                data-ng-model="devoir.date_due"
+                                                data-ng-change="set_creneau_date_due( devoir )"
+                                                data-ng-options="creneau.date_due as ( creneau | formateCreneau ) group by creneau.semaine for creneau in creneaux_devoirs_possibles">
+                                        </select>
+                                    </label>
 
-				    <div class="col-md-12">
-					<label>Temps de travail estimé : </label>
-					<rating data-ng-model="devoir.temps_estime"
-						max="15"
-						readonly="false"
-						ng-click="is_dirty( null )"
-						on-hover="estimation_over(devoir, value)"
-						on-leave="estimation_leave(devoir)"
-						state-on="'temps-est-on'"
-						state-off="'temps-est-off'"></rating>
-					<span class="label pull-right" data-ng-class="{'label-success': devoir.overValue<4, 'label-info': devoir.overValue>=4 && devoir.overValue<8 , 'label-warning': devoir.overValue>=8 && devoir.overValue<12, 'label-danger': devoir.overValue>=12}" data-ng-if="devoir.overValue > 0 || devoir.temps_estime > 0">{{devoir.minutes || devoir.temps_estime * 5}} min</span>
-				    </div>
-				    <div class="clearfix"></div>
-				</div>
-				<text-angular class="panel-body" data-ng-model="devoir.contenu" data-ng-change="is_dirty( devoir )" data-ng-if="!creneau.etranger"></text-angular>
+                                    <div class="col-md-12">
+                                        <label>Temps de travail estimé : </label>
+                                        <rating data-ng-model="devoir.temps_estime"
+                                                max="15"
+                                                readonly="false"
+                                                ng-click="is_dirty( null )"
+                                                on-hover="estimation_over(devoir, value)"
+                                                on-leave="estimation_leave(devoir)"
+                                                state-on="'temps-est-on'"
+                                                state-off="'temps-est-off'"></rating>
+                                        <span class="label pull-right" data-ng-class="{'label-success': devoir.overValue<4, 'label-info': devoir.overValue>=4 && devoir.overValue<8 , 'label-warning': devoir.overValue>=8 && devoir.overValue<12, 'label-danger': devoir.overValue>=12}" data-ng-if="devoir.overValue > 0 || devoir.temps_estime > 0">{{devoir.minutes || devoir.temps_estime * 5}} min</span>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <text-angular class="panel-body" data-ng-model="devoir.contenu" data-ng-change="is_dirty( devoir )" data-ng-if="!creneau.etranger"></text-angular>
 
-				<div class="panel-heading enseignant-saisie" data-ng-if="creneau.etranger">
-				    <label data-ng-if="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir">Type de travail : <em>{{devoir.type_devoir.description}}</em></label>
-				    <label data-ng-if="devoir.temps_estime">Temps de travail estimé : <em>{{devoir.temps_estime * 5}} min</em></label>
-				</div>
-				<div class="panel-body" data-ng-bind-html="devoir.contenu" data-ng-if="creneau.etranger"></div>
+                                <div class="panel-heading enseignant-saisie" data-ng-if="creneau.etranger">
+                                    <label data-ng-if="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir">Type de travail : <em>{{devoir.type_devoir.description}}</em></label>
+                                    <label data-ng-if="devoir.temps_estime">Temps de travail estimé : <em>{{devoir.temps_estime * 5}} min</em></label>
+                                </div>
+                                <div class="panel-body" data-ng-bind-html="devoir.contenu" data-ng-if="creneau.etranger"></div>
 
-				<div class="panel-footer ressources">
-				    <div class="row">
-					<div class="attached-document" data-ng-repeat="ressource in devoir.ressources">
-					    <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
-					    <button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( devoir, ressource.hash )">✕</button>
-					</div>
-				    </div>
+                                <div class="panel-footer ressources">
+                                    <div class="row">
+                                        <div class="attached-document" data-ng-repeat="ressource in devoir.ressources">
+                                            <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
+                                            <button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( devoir, ressource.hash )">✕</button>
+                                        </div>
+                                    </div>
 
-				    <div uib-dropdown class="uib-dropdown" data-ng-if="!creneau.etranger">
-					<button uib-dropdown-toggle class="btn btn-sm btn-default uib-dropdown-toggle pull-right" role="button" data-toggle="uib-dropdown" data-target="#" href=""
-						data-ng-class="{'disabled': faulty_docs_app}">
-					    <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
-					</button>
-					<div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng-click="$event.stopPropagation()">
-					    <div cartable
-						 class="treecontrol-container"
-						 data-racine="cartable.files"
-						 data-target="devoir"
-						 data-regroupement="selected_regroupement"
-						 data-add-callback="consume_Documents_response_callback">
-					    </div>
+                                    <div uib-dropdown class="uib-dropdown" data-ng-if="!creneau.etranger">
+                                        <button uib-dropdown-toggle class="btn btn-sm btn-default uib-dropdown-toggle pull-right" role="button" data-toggle="uib-dropdown" data-target="#" href=""
+                                                data-ng-class="{'disabled': faulty_docs_app}">
+                                            <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
+                                        </button>
+                                        <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng-click="$event.stopPropagation()">
+                                            <div cartable
+                                                 class="treecontrol-container"
+                                                 data-racine="cartable.files"
+                                                 data-target="devoir"
+                                                 data-regroupement="selected_regroupement"
+                                                 data-add-callback="consume_Documents_response_callback">
+                                            </div>
 
-					    <input type="file"
-						   class="upload"
-						   name="upload[]"
-						   multiple
-						   onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files)" />
-					</div>
-				    </div>
-				    <div class="clearfix"></div>
-				</div>
+                                            <input type="file"
+                                                   class="upload"
+                                                   name="upload[]"
+                                                   multiple
+                                                   onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files)" />
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
 
-			    </div>
+                            </div>
 
-			    <div class="col-md-9 deleted"
-				 data-ng-if="devoir.deleted" >(Devoir supprimé)</div>
+                            <div class="col-md-9 deleted"
+                                 data-ng-if="devoir.deleted" >(Devoir supprimé)</div>
 
-			    <div class="col-md-3">
-				<button type="button" class="btn btn-xs btn-default pull-right supprimer"
-					data-ng-click="effacer_devoir( devoir )"
-					data-ng-if="!creneau.etranger && !devoir.cours.deleted">
-				    <span data-ng-if="!devoir.deleted"><span class="glyphicon glyphicon-trash"></span> Supprimer</span>
-				    <span data-ng-if="devoir.deleted"><span class="glyphicon glyphicon-trash"></span> Annuler la suppression</span>
-				</button>
-			    </div>
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-xs btn-default pull-right supprimer"
+                                        data-ng-click="effacer_devoir( devoir )"
+                                        data-ng-if="!creneau.etranger && !devoir.cours.deleted">
+                                    <span data-ng-if="!devoir.deleted"><span class="glyphicon glyphicon-trash"></span> Supprimer</span>
+                                    <span data-ng-if="devoir.deleted"><span class="glyphicon glyphicon-trash"></span> Annuler la suppression</span>
+                                </button>
+                            </div>
 
-			</div>
-		    </div>
-		</div>
-	    </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-	</uib-tab>
+        </uib-tab>
 
-	<!-- ####################### Devoirs dûs ce jour ####################### -->
-	<uib-tab>
-	    <uib-tab-heading data-ng-class="{'has': devoirs.length > 0}">Travail à faire pour ce jour</uib-tab-heading>
+        <!-- ####################### Devoirs dûs ce jour ####################### -->
+        <uib-tab>
+            <uib-tab-heading data-ng-class="{'has': devoirs.length > 0}">Travail à faire pour ce jour</uib-tab-heading>
 
-	    <button class="btn btn-default ajout-devoir" data-ng-click="ajout_devoir( devoirs, creneau )" data-ng-if="!creneau.etranger">
-		<span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
-	    </button>
-	    <div class="clearfix"></div>
+            <button class="btn btn-default ajout-devoir" data-ng-click="ajout_devoir( devoirs, creneau )" data-ng-if="!creneau.etranger">
+                <span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
+            </button>
+            <div class="clearfix"></div>
 
-	    <div class="panel panel-default" data-ng-repeat="devoir in devoirs">
+            <div class="panel panel-default" data-ng-repeat="devoir in devoirs">
 
-		<div class="row">
-		    <div class="col-md-9"
-			 data-ng-if="!devoir.deleted">
+                <div class="row">
+                    <div class="col-md-9"
+                         data-ng-if="!devoir.deleted">
 
-			<div class="panel-heading enseignant-saisie" data-ng-if="!creneau.etranger">
-			    <label class="col-md-12" data-ng-if="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir">Type de travail :
-				<select data-ng-required="true"
-					data-ng-change="is_dirty( null )"
-					data-ng-model="devoir.type_devoir_id"
-					data-ng-options="type_de_devoir.id as type_de_devoir.description for type_de_devoir in types_de_devoir">
-				</select>
-			    </label>
+                        <div class="panel-heading enseignant-saisie" data-ng-if="!creneau.etranger">
+                            <label class="col-md-12" data-ng-if="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir">Type de travail :
+                                <select data-ng-required="true"
+                                        data-ng-change="is_dirty( null )"
+                                        data-ng-model="devoir.type_devoir_id"
+                                        data-ng-options="type_de_devoir.id as type_de_devoir.description for type_de_devoir in types_de_devoir">
+                                </select>
+                            </label>
 
-			    <div class="col-md-12">
-				<label>Temps de travail estimé : </label>
-				<rating data-ng-model="devoir.temps_estime"
-					max="15"
-					readonly="false"
-					ng-click="is_dirty( null )"
-					on-hover="estimation_over(devoir, value)"
-					on-leave="estimation_leave(devoir)"
-					state-on="'temps-est-on'"
-					state-off="'temps-est-off'"></rating>
-				<span class="label pull-right" data-ng-class="{'label-success': devoir.overValue<4, 'label-info': devoir.overValue>=4 && devoir.overValue<8 , 'label-warning': devoir.overValue>=8 && devoir.overValue<12, 'label-danger': devoir.overValue>=12}" data-ng-if="devoir.overValue > 0 || devoir.temps_estime > 0">{{devoir.minutes || devoir.temps_estime * 5}} min</span>
-			    </div>
-			    <div class="clearfix"></div>
-			</div>
-			<text-angular class="panel-body" data-ng-model="devoir.contenu" data-ng-change="is_dirty( devoir )" data-ng-if="!creneau.etranger"></text-angular>
+                            <div class="col-md-12">
+                                <label>Temps de travail estimé : </label>
+                                <rating data-ng-model="devoir.temps_estime"
+                                        max="15"
+                                        readonly="false"
+                                        ng-click="is_dirty( null )"
+                                        on-hover="estimation_over(devoir, value)"
+                                        on-leave="estimation_leave(devoir)"
+                                        state-on="'temps-est-on'"
+                                        state-off="'temps-est-off'"></rating>
+                                <span class="label pull-right" data-ng-class="{'label-success': devoir.overValue<4, 'label-info': devoir.overValue>=4 && devoir.overValue<8 , 'label-warning': devoir.overValue>=8 && devoir.overValue<12, 'label-danger': devoir.overValue>=12}" data-ng-if="devoir.overValue > 0 || devoir.temps_estime > 0">{{devoir.minutes || devoir.temps_estime * 5}} min</span>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <text-angular class="panel-body" data-ng-model="devoir.contenu" data-ng-change="is_dirty( devoir )" data-ng-if="!creneau.etranger"></text-angular>
 
-			<div class="panel-heading enseignant-saisie" data-ng-if="creneau.etranger">
-				<label>Type de travail : <em>{{devoir.type_devoir.description}}</em></label>
-				<label data-ng-if="devoir.temps_estime">Temps de travail estimé : <em>{{devoir.temps_estime * 5}} min</em></label>
-			</div>
-			<div class="panel-body" data-ng-bind-html="devoir.contenu" data-ng-if="creneau.etranger"></div>
+                        <div class="panel-heading enseignant-saisie" data-ng-if="creneau.etranger">
+                            <label>Type de travail : <em>{{devoir.type_devoir.description}}</em></label>
+                            <label data-ng-if="devoir.temps_estime">Temps de travail estimé : <em>{{devoir.temps_estime * 5}} min</em></label>
+                        </div>
+                        <div class="panel-body" data-ng-bind-html="devoir.contenu" data-ng-if="creneau.etranger"></div>
 
-			<div class="panel-footer ressources">
-				<div class="row">
-					<div class="attached-document" data-ng-repeat="ressource in devoir.ressources">
-						<a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
-						<button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( devoir, ressource.hash )">✕</button>
-					</div>
-				</div>
+                        <div class="panel-footer ressources">
+                            <div class="row">
+                                <div class="attached-document" data-ng-repeat="ressource in devoir.ressources">
+                                    <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
+                                    <button class="btn btn-sm btn-danger" data-ng-click="remove_ressource( devoir, ressource.hash )">✕</button>
+                                </div>
+                            </div>
 
-				<div uib-dropdown class="uib-dropdown" data-ng-if="!creneau.etranger">
-					<button uib-dropdown-toggle class="btn btn-sm btn-default uib-dropdown-toggle pull-right" role="button" data-toggle="uib-dropdown" data-target="#" href=""
-						data-ng-class="{'disabled': faulty_docs_app}">
-						<span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
-					</button>
-					<div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng-click="$event.stopPropagation()">
-						<div cartable
-							class="treecontrol-container"
-							data-racine="cartable.files"
-							data-target="devoir"
-							data-regroupement="selected_regroupement"
-							data-add-callback="consume_Documents_response_callback">
-						</div>
+                            <div uib-dropdown class="uib-dropdown" data-ng-if="!creneau.etranger">
+                                <button uib-dropdown-toggle class="btn btn-sm btn-default uib-dropdown-toggle pull-right" role="button" data-toggle="uib-dropdown" data-target="#" href=""
+                                        data-ng-class="{'disabled': faulty_docs_app}">
+                                    <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
+                                </button>
+                                <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng-click="$event.stopPropagation()">
+                                    <div cartable
+                                         class="treecontrol-container"
+                                         data-racine="cartable.files"
+                                         data-target="devoir"
+                                         data-regroupement="selected_regroupement"
+                                         data-add-callback="consume_Documents_response_callback">
+                                    </div>
 
-						<input type="file"
-							class="upload"
-							name="upload[]"
-							multiple
-							onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files)" />
-					</div>
-				</div>
-				<div class="clearfix"></div>
-			</div>
-		    </div>
+                                    <input type="file"
+                                           class="upload"
+                                           name="upload[]"
+                                           multiple
+                                           onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files)" />
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
 
-		    <div class="col-md-3 infos"
-			    data-ng-if="!devoir.deleted">
-			    <ul class="pull-left">
-				    <li class="clickable"
-					    data-ng-if="devoir.cours.contenu"
-					    data-uib-tooltip-trigger="click"
-					    data-uib-tooltip-placement="bottom"
-					    data-uib-tooltip-html-unsafe="<em>{{devoir.cours.date_cours | amDateFormat : 'dddd D MMMM YYYY'}}</em><hr />{{devoir.cours.contenu}}">
-					    <span class="glyphicon glyphicon-briefcase"></span> Séquence Pédagogique
-				    </li>
-			    </ul>
-		    </div>
+                    <div class="col-md-3 infos"
+                         data-ng-if="!devoir.deleted">
+                        <ul class="pull-left">
+                            <li class="clickable"
+                                data-ng-if="devoir.cours.contenu"
+                                data-uib-tooltip-trigger="click"
+                                data-uib-tooltip-placement="bottom"
+                                data-uib-tooltip-html-unsafe="<em>{{devoir.cours.date_cours | amDateFormat : 'dddd D MMMM YYYY'}}</em><hr />{{devoir.cours.contenu}}">
+                                <span class="glyphicon glyphicon-briefcase"></span> Séquence Pédagogique
+                            </li>
+                        </ul>
+                    </div>
 
-		    <div class="col-md-9 deleted"
-			    data-ng-if="devoir.deleted" >(Devoir supprimé)</div>
+                    <div class="col-md-9 deleted"
+                         data-ng-if="devoir.deleted" >(Devoir supprimé)</div>
 
-		    <div class="col-md-3">
-			    <button type="button" class="btn btn-xs btn-default pull-right supprimer"
-				    data-ng-click="effacer_devoir( devoir )" data-ng-if="!creneau.etranger && !devoir.cours.deleted">
-				    <span data-ng-if="!devoir.deleted"><span class="glyphicon glyphicon-trash"></span> Supprimer</span>
-				    <span data-ng-if="devoir.deleted"><span class="glyphicon glyphicon-trash"></span> Annuler la suppression</span>
-			    </button>
-		    </div>
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-xs btn-default pull-right supprimer"
+                                data-ng-click="effacer_devoir( devoir )" data-ng-if="!creneau.etranger && !devoir.cours.deleted">
+                            <span data-ng-if="!devoir.deleted"><span class="glyphicon glyphicon-trash"></span> Supprimer</span>
+                            <span data-ng-if="devoir.deleted"><span class="glyphicon glyphicon-trash"></span> Annuler la suppression</span>
+                        </button>
+                    </div>
 
-		</div>
-	    </div>
-	</uib-tab>
+                </div>
+            </div>
+        </uib-tab>
 
     </uib-tabset>
     <div class="clearfix"></div>
@@ -392,88 +394,88 @@
 
 <!-- Duplication de Séquence Pédagogique -->
 <div class="modal-body" data-ng-if="mode_duplication">
-	<div class="alert alert-success" role="alert" data-ng-if="creneaux_similaires.length == 0">Plus aucune duplication possible</div>
-	<div class="duplication-saisie" data-ng-if="creneaux_similaires.length > 0" >
-		<div class="col-md-12">
-			<ol>
-				<li>
-					<label>Choisir le créneau vers lequel copier la séquence pédagogique :</label>
-					<ul>
-						<li data-ng-bind-html="cours.contenu"></li>
-					</ul>
-					<select class="col-md-3 pull-left"
-						data-ng-model="scope.selected_regroupement_id_duplication"
-						data-ng-options="classe.id as classe.libelle for classe in classes">
-						<option value="" selected>Toutes les classes</option>
-					</select>
-					<select data-ng-required
-						data-ng-change="creneau_cible_duplication_SP_updated()"
-						data-ng-model="creneaux_similaires.selected"
-						data-ng-options="creneau as ( creneau | formateCreneau ) group by creneau.classe.libelle for creneau in creneaux_similaires | orderBy:['+start'] | filter:selected_regroupement_id_duplication" >
-					</select>
-				</li>
-				<li data-ng-if="cours.devoirs.length > 0">
-					<label>Choisir le créneau vers lequel copier ses devoirs :</label>
-					<ol>
-						<li data-ng-repeat="devoir in cours.devoirs"
-							data-ng-if="!devoir.deleted">
-							<ul>
-								<li data-ng-if="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir"><i class="picto" data-ng-style="{'background-image':'url(' + app_path + '/app/vendor/laclasse-common-client/images/picto_devoir.svg)'}"></i> Type de devoir : <em>{{devoir.type_devoir.description}}</em></li>
-								<li>Date due : <em>{{devoir.date_due | amDateFormat : 'dddd D MMMM YYYY'}}</em></li>
-								<li data-ng-bind-html="devoir.contenu"></li>
-							</ul>
-							<select data-ng-change="are_we_go_for_duplication()"
-								data-ng-model="devoir.creneau_cible"
-								data-ng-options="creneau as ( creneau | formateCreneau ) for creneau in creneaux_devoirs_possibles_duplication | orderBy:'date_due'" >
-							</select>
-						</li>
-					</ol>
-				</li>
-			</ol>
-		</div>
-		<div class="col-md-12 footer">
-			<button type="button" class="btn btn-sm btn-success pull-right"
-				data-ng-click="dupliquer()"
-				data-ng-class="{ 'disabled': !ok_go_for_duplication }">
-				<span><span class="glyphicon glyphicon-share"></span> Dupliquer</span>
-			</button>
-		</div>
-	</div>
-	<div class="clearfix"></div>
+    <div class="alert alert-success" role="alert" data-ng-if="creneaux_similaires.length == 0">Plus aucune duplication possible</div>
+    <div class="duplication-saisie" data-ng-if="creneaux_similaires.length > 0" >
+        <div class="col-md-12">
+            <ol>
+                <li>
+                    <label>Choisir le créneau vers lequel copier la séquence pédagogique :</label>
+                    <ul>
+                        <li data-ng-bind-html="cours.contenu"></li>
+                    </ul>
+                    <select class="col-md-3 pull-left"
+                            data-ng-model="scope.selected_regroupement_id_duplication"
+                            data-ng-options="classe.id as classe.libelle for classe in classes">
+                        <option value="" selected>Toutes les classes</option>
+                    </select>
+                    <select data-ng-required
+                            data-ng-change="creneau_cible_duplication_SP_updated()"
+                            data-ng-model="creneaux_similaires.selected"
+                            data-ng-options="creneau as ( creneau | formateCreneau ) group by creneau.classe.libelle for creneau in creneaux_similaires | orderBy:['+start'] | filter:selected_regroupement_id_duplication" >
+                    </select>
+                </li>
+                <li data-ng-if="cours.devoirs.length > 0">
+                    <label>Choisir le créneau vers lequel copier ses devoirs :</label>
+                    <ol>
+                        <li data-ng-repeat="devoir in cours.devoirs"
+                            data-ng-if="!devoir.deleted">
+                            <ul>
+                                <li data-ng-if="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir"><i class="picto" data-ng-style="{'background-image':'url(' + app_path + '/app/vendor/laclasse-common-client/images/picto_devoir.svg)'}"></i> Type de devoir : <em>{{devoir.type_devoir.description}}</em></li>
+                                <li>Date due : <em>{{devoir.date_due | amDateFormat : 'dddd D MMMM YYYY'}}</em></li>
+                                <li data-ng-bind-html="devoir.contenu"></li>
+                            </ul>
+                            <select data-ng-change="are_we_go_for_duplication()"
+                                    data-ng-model="devoir.creneau_cible"
+                                    data-ng-options="creneau as ( creneau | formateCreneau ) for creneau in creneaux_devoirs_possibles_duplication | orderBy:'date_due'" >
+                            </select>
+                        </li>
+                    </ol>
+                </li>
+            </ol>
+        </div>
+        <div class="col-md-12 footer">
+            <button type="button" class="btn btn-sm btn-success pull-right"
+                    data-ng-click="dupliquer()"
+                    data-ng-class="{ 'disabled': !ok_go_for_duplication }">
+                <span><span class="glyphicon glyphicon-share"></span> Dupliquer</span>
+            </button>
+        </div>
+    </div>
+    <div class="clearfix"></div>
 </div>
 <!-- /Duplication de Séquence Pédagogique -->
 
 <div class="modal-footer">
-	<button type="button" class="btn btn-sm btn-warning pull-left"
-		data-ng-if="!creneau.etranger && mode_edition_creneau && dirty"
-		data-ng-click="effacer_creneau()">
-		<span class="glyphicon glyphicon-trash"></span> Supprimer le créneau
-	</button>
+    <button type="button" class="btn btn-sm btn-warning pull-left"
+            data-ng-if="!creneau.etranger && mode_edition_creneau && dirty"
+            data-ng-click="effacer_creneau()">
+        <span class="glyphicon glyphicon-trash"></span> Supprimer le créneau
+    </button>
 
-	<button type="button" class="btn btn-sm btn-default pull-left"
-		data-ng-click="switch_to_creneau_edition()"
-		data-ng-if="!creneau.etranger && !mode_edition_creneau" >
-		<span><span class="glyphicon glyphicon-edit"></span> Modifier le créneau</span>
-	</button>
+    <button type="button" class="btn btn-sm btn-default pull-left"
+            data-ng-click="switch_to_creneau_edition()"
+            data-ng-if="!creneau.etranger && !mode_edition_creneau" >
+        <span><span class="glyphicon glyphicon-edit"></span> Modifier le créneau</span>
+    </button>
 
-	<button type="button" class="btn btn-sm btn-default pull-left"
-		data-ng-click="switch_to_duplication_mode()"
-		data-ng-if="!creneau.etranger && cours.contenu && !mode_edition_creneau && !mode_duplication && creneaux_similaires.length > 0 && !dirty" >
-		<span><span class="glyphicon glyphicon-transfer"></span> Copier à d'autres créneaux</span>
-	</button>
+    <button type="button" class="btn btn-sm btn-default pull-left"
+            data-ng-click="switch_to_duplication_mode()"
+            data-ng-if="!creneau.etranger && cours.contenu && !mode_edition_creneau && !mode_duplication && creneaux_similaires.length > 0 && !dirty" >
+        <span><span class="glyphicon glyphicon-transfer"></span> Copier à d'autres créneaux</span>
+    </button>
 
-	<button type="button" class="btn btn-sm btn-default"
-		data-ng-click="switch_to_modification_mode()"
-		data-ng-if="mode_duplication || mode_edition_creneau && !creneau.en_creation" >
-		<span><span class="glyphicon glyphicon-transfer"></span> Revenir en modification</span>
-	</button>
+    <button type="button" class="btn btn-sm btn-default"
+            data-ng-click="switch_to_modification_mode()"
+            data-ng-if="mode_duplication || mode_edition_creneau && !creneau.en_creation" >
+        <span><span class="glyphicon glyphicon-transfer"></span> Revenir en modification</span>
+    </button>
 
-	<button type="button" class="btn btn-sm btn-success pull-right" data-ng-click="valider()" data-ng-if="!creneau.etranger && dirty || (mode_edition_creneau && scope.selected_regroupement)">
-		<span class="glyphicon glyphicon-ok-sign"></span> Valider
-	</button>
-	<button type="button" class="btn btn-sm btn-default pull-right" data-ng-click="annuler()">
-		<span class="glyphicon glyphicon-remove-sign"></span>
-		<span data-ng-if="dirty || mode_edition_creneau"> Annuler</span>
-		<span data-ng-if="!dirty && !mode_edition_creneau"> Fermer</span>
-	</button>
+    <button type="button" class="btn btn-sm btn-success pull-right" data-ng-click="valider()" data-ng-if="!creneau.etranger && dirty || (mode_edition_creneau && scope.selected_regroupement)">
+        <span class="glyphicon glyphicon-ok-sign"></span> Valider
+    </button>
+    <button type="button" class="btn btn-sm btn-default pull-right" data-ng-click="annuler()">
+        <span class="glyphicon glyphicon-remove-sign"></span>
+        <span data-ng-if="dirty || mode_edition_creneau"> Annuler</span>
+        <span data-ng-if="!dirty && !mode_edition_creneau"> Fermer</span>
+    </button>
 </div>

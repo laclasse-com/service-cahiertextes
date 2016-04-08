@@ -38,6 +38,8 @@ angular.module( 'cahierDeTextesClientApp' )
                                                      value: data.validated } ];
                       };
                       $scope.multiBarChart.populate = function( data ) {
+                          var sort_by_index = function( a, b ) { return a.index > b.index; };
+
                           var data_bootstrap = _($scope.annee).map( function( mois ) {
                               return { key: mois,
                                        y : 0 };
@@ -45,19 +47,24 @@ angular.module( 'cahierDeTextesClientApp' )
 
                           var multiBarChart_data = data.reduce( function( monthly_stats, regroupement ) {
                               _(12).times( function( i ) {
+                                  var index = i > 7 ? i - 8 : i + 4;
+                                  monthly_stats.filled[ i ].index = index;
                                   monthly_stats.filled[ i ].x = $scope.annee[ i ];
-                                  monthly_stats.validated[ i ].x = $scope.annee[ i ];
                                   monthly_stats.filled[ i ].y += regroupement.mensuel.filled[ i ];
+
+                                  monthly_stats.validated[ i ].index = index;
+                                  monthly_stats.validated[ i ].x = $scope.annee[ i ];
                                   monthly_stats.validated[ i ].y += regroupement.mensuel.validated[ i ];
                               } );
                               return monthly_stats;
                           }, { filled: angular.copy( data_bootstrap ),
                                validated: angular.copy( data_bootstrap ) } );
 
+
                           $scope.multiBarChart.data = [ { key: 'saisies',
-                                                          values: multiBarChart_data.filled },
+                                                          values: multiBarChart_data.filled.sort( sort_by_index ) },
                                                         { key: 'visas',
-                                                          values: multiBarChart_data.validated} ];
+                                                          values: multiBarChart_data.validated.sort( sort_by_index ) } ];
                       };
 
                       $scope.individualCharts = { classes: [],

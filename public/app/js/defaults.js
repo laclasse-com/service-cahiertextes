@@ -57,9 +57,10 @@ angular.module( 'cahierDeTextesClientApp' )
                                      showLabels: true,
                                      stacked: false,
                                      duration: 500,
-                                     labelThreshold: 0.01,
+                                     reduceXTicks: false,
+                                     rotateLabels: -45,
                                      labelSunbeamLayout: true,
-                                     color: function(d, i){
+                                     color: function( d, i ) {
                                          var colors = { saisies: '#aaffaa',
                                                         visas: '#00ff00' };
                                          return colors[ d.key ];
@@ -74,7 +75,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                      height: 128,
                                      x: function( d ) { return d.label; },
                                      y: function( d ) { return d.value; },
-                                     color: function(d, i){
+                                     color: function( d, i ) {
                                          var colors = { saisies: '#aaffaa',
                                                         visas: '#00ff00' };
                                          return colors[ d.label ];

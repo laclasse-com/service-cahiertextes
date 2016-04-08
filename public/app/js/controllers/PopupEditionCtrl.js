@@ -2,11 +2,11 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller( 'PopupEditionCtrl',
-                 [ '$scope', '$filter', '$q', '$sce', '$uibModalInstance', '$locale', 'toastr',
+                 [ '$scope', '$filter', '$q', '$sce', '$uibModalInstance', '$locale', 'toastr', 'moment',
                    'APP_PATH', 'DOCS_URL', 'SEMAINES_VACANCES', 'ZONE', 'POPUP_ACTIONS', 'LOCALHOST',
                    'Documents', 'API', 'CreneauxEmploiDuTemps', 'Cours', 'Devoirs', 'User',
                    'cours', 'devoirs', 'creneau', 'raw_data', 'classes', 'matieres',
-                   function ( $scope, $filter, $q, $sce, $uibModalInstance, $locale, toastr,
+                   function ( $scope, $filter, $q, $sce, $uibModalInstance, $locale, toastr, moment,
                               APP_PATH, DOCS_URL, SEMAINES_VACANCES, ZONE, POPUP_ACTIONS, LOCALHOST,
                               Documents, API, CreneauxEmploiDuTemps, Cours, Devoirs, User,
                               cours, devoirs, creneau, raw_data, classes, matieres )
@@ -76,25 +76,24 @@ angular.module( 'cahierDeTextesClientApp' )
                            var what_month = function( n_week ) {
                                var now = moment();
                                var year = moment().year();
-                               if ( n_week < 36 ) {
-                                   if ( now.month() > 7 ) {
-                                       year++;
-                                   }
-                               } else {
-                                   if ( now.month() < 7 ) {
-                                       year--;
-                                   }
+                               if ( ( n_week < 36 ) && ( now.month() > 7 ) ) {
+                                   year++;
+                               } else if ( now.month() < 7 ) {
+                                   year--;
                                }
-                               return moment( new Date( year ) ).isoWeek( n_week ).month();
+                               return moment( year ).isoWeek( n_week ).month();
                            };
 
-                           var tmp_overlay_semainier = _.range(1, 52).map( function( s ) { return { semaine: s,
-                                                                                                    mois: what_month( s ) }; } );
-
-                           $scope.overlay_semainier = tmp_overlay_semainier;
+                           $scope.overlay_semainier = _.range(1, 52).map( function( s ) { return { semaine: s,
+                                                                                                   mois: what_month( s ) }; } );
                            $scope.overlay_semainier = _.chain($scope.overlay_semainier)
                                .groupBy( function( s ) { return s.mois; } )
                                .toArray()
+                               .map( function( semaines, i ) {
+                                   return { index: i > 7 ? i - 8 : i + 4,
+                                            label: $scope.annee[ i ],
+                                            semaines: semaines };
+                               } )
                                .value();
 
                            var fixnum_to_bitfield = function( fixnum ) {
