@@ -185,7 +185,7 @@ angular.module( 'cahierDeTextesClientApp' )
                        })
                        .state('enseignant.cahier_de_textes', {
                            parent: 'enseignant',
-                           url: '/cahier_de_textes/:date',
+                           url: '/cahier_de_textes/:date/:regroupements',
                            resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ENS', 'DOC' ] ); } ] },
                            views: {
                                'content': {

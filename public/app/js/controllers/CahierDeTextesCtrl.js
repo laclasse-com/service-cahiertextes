@@ -18,6 +18,11 @@ angular.module( 'cahierDeTextesClientApp' )
                       $scope.selected_creneau_vide = null;
                       $scope.complet = false;
 
+                      $scope.update_regroupements_in_url = function() {
+                          $stateParams.regroupements = _($scope.selected_regroupements).pluck('libelle');
+                          $state.go( $state.current, $stateParams, { notify: false, reload: false } );
+                      };
+
                       $scope.select_all_regroupements = function() {
                           $scope.selected_regroupements = $scope.current_user.profil_actif.regroupements;
                       };
