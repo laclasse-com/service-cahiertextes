@@ -87,7 +87,7 @@ angular.module( 'cahierDeTextesClientApp' )
                        })
                        .state('principal.emploi_du_temps', {
                            parent: 'principal',
-                           url: '/emploi_du_temps/:date',
+                           url: '/emploi_du_temps/:date/:regroupements',
                            resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } ] },
                            views: {
                                'content': {
@@ -109,7 +109,7 @@ angular.module( 'cahierDeTextesClientApp' )
                        .state('vie_scolaire.emploi_du_temps', {
                            resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'EVS' ] ); } ] },
                            parent: 'vie_scolaire',
-                           url: '/emploi_du_temps/:date',
+                           url: '/emploi_du_temps/:date/:regroupements',
                            views: {
                                'content': {
                                    templateUrl: 'views/emploi_du_temps.html',
@@ -174,7 +174,7 @@ angular.module( 'cahierDeTextesClientApp' )
                        })
                        .state('enseignant.emploi_du_temps', {
                            parent: 'enseignant',
-                           url: '/emploi_du_temps/:date',
+                           url: '/emploi_du_temps/:date/:regroupements',
                            resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ENS', 'DOC' ] ); } ] },
                            views: {
                                'content': {

@@ -13,18 +13,18 @@ angular.module( 'cahierDeTextesClientApp' )
                       var first_load = true;
 
                       $scope.emploi_du_temps = angular.element('#emploi_du_temps');
-                      console.log($scope.emploi_du_temps)
-                      if ( moment( $stateParams.date ).isValid() ) {
-                          console.log('trying ' + $stateParams.date);
-                          if ( moment( $stateParams.date ).isBefore( Utils.school_year_start() ) ) {
-                              $stateParams.date = Utils.school_year_start();
-                          } else if ( moment( $stateParams.date ).isAfter( Utils.school_year_end() ) ) {
-                              $stateParams.date = Utils.school_year_end();
-                          }
-                          console.log('finally going to ' + $stateParams.date);
+                      // console.log($scope.emploi_du_temps)
+                      // if ( moment( $stateParams.date ).isValid() ) {
+                      //     console.log('trying ' + $stateParams.date);
+                      //     if ( moment( $stateParams.date ).isBefore( Utils.school_year_start() ) ) {
+                      //         $stateParams.date = Utils.school_year_start();
+                      //     } else if ( moment( $stateParams.date ).isAfter( Utils.school_year_end() ) ) {
+                      //         $stateParams.date = Utils.school_year_end();
+                      //     }
+                      //     console.log('finally going to ' + $stateParams.date);
 
-                          $scope.emploi_du_temps.fullCalendar( 'gotoDate', $stateParams.date );
-                      }
+                      //     $scope.emploi_du_temps.fullCalendar( 'gotoDate', $stateParams.date );
+                      // }
 
                       var popup_ouverte = false;
                       $scope.filter_data = angular.identity;
@@ -113,6 +113,9 @@ angular.module( 'cahierDeTextesClientApp' )
 
                       $scope.refresh_calendar = function() {
                           $scope.calendar.events[ 0 ] = to_fullcalendar_events( $scope.filter_data( $scope.raw_data ) );
+
+                          $stateParams.regroupements = _($scope.selected_regroupements).pluck('libelle');
+                          $state.go( $state.current, $stateParams, { notify: false, reload: false } );
                       };
 
                       var retrieve_data = function( from_date, to_date ) {
@@ -123,6 +126,9 @@ angular.module( 'cahierDeTextesClientApp' )
                                                       uid: $scope.current_user.profil_actif.profil_id == 'TUT' ? $scope.current_user.enfant_actif.enfant.id_ent : null } )
                                   .$promise
                                   .then( function success( response ) {
+                                      $stateParams.date = moment( from_date ).toDate().toISOString().split('T')[0];
+                                      $state.go( $state.current, $stateParams, { notify: false, reload: false } );
+
                                       $scope.raw_data = response;
                                       $scope.refresh_calendar();
                                   });
@@ -144,13 +150,6 @@ angular.module( 'cahierDeTextesClientApp' )
                       $scope.calendar.options.weekends = $scope.current_user.parametrage_cahier_de_textes.affichage_week_ends;
 
                       $scope.calendar.options.viewRender = function( view, element ) {
-                          console.log('in viewRender, trying to go to ' + moment($stateParams.date).toDate().toISOString().split('T')[0]);
-                          $stateParams.date = $scope.emploi_du_temps.fullCalendar('getDate').toDate().toISOString().split('T')[0];
-                          $state.go( $state.current, $stateParams, { notify: false, reload: false } );
-
-                          console.log('in viewRender, trying to go to ' + moment($stateParams.date).toDate().toISOString().split('T')[0]);
-                          console.log('in viewRender, going to ' + view.start.toDate().toISOString().split('T')[0]);
-
                           $scope.current_user.date = view.start;
                           $scope.n_week = view.start.week();
                           $scope.c_est_les_vacances = $scope.sont_ce_les_vacances( $scope.n_week, $scope.zone );
@@ -189,9 +188,9 @@ angular.module( 'cahierDeTextesClientApp' )
 
                       $scope.calendar.options.weekends = $scope.current_user.parametrage_cahier_de_textes.affichage_week_ends;
 
-                      var filter_by_regroupement = function( raw_data, selected_regroupements_ids ) {
+                      var filter_by_regroupement = function( raw_data, selected_regroupements ) {
                           return _( raw_data ).filter( function( creneau ) {
-                              return _(selected_regroupements_ids).contains( parseInt( creneau.regroupement_id ) );
+                              return _.chain(selected_regroupements).pluck('id').contains( parseInt( creneau.regroupement_id ) ).value();
                           } );
                       };
                       var filter_by_enseignant_id = function( raw_data, uid, active ) {
@@ -207,7 +206,7 @@ angular.module( 'cahierDeTextesClientApp' )
                           $scope.uniquement_mes_creneaux = false;
 
                           $scope.filter_data = function( raw_data ) {
-                              return filter_by_regroupement( raw_data, _($scope.selected_regroupements).pluck( 'id' ) );
+                              return filter_by_regroupement( raw_data, $scope.selected_regroupements );
                           };
 
                           $scope.selected_regroupements = [ $scope.current_user.profil_actif.regroupements[0] ];
@@ -244,11 +243,10 @@ angular.module( 'cahierDeTextesClientApp' )
                           $scope.calendar.options.editable = true;
 
                           $scope.filter_data = function( raw_data ) {
-                              var filtered_data = filter_by_regroupement( raw_data, _($scope.selected_regroupements).pluck( 'id' ) );
-
-                              filtered_data = filter_by_enseignant_id( filtered_data, $scope.current_user.uid, $scope.uniquement_mes_creneaux );
-
-                              return filtered_data;
+                              return filter_by_enseignant_id( filter_by_regroupement( raw_data,
+                                                                                      $scope.selected_regroupements ),
+                                                              $scope.current_user.uid,
+                                                              $scope.uniquement_mes_creneaux );
                           };
 
                           // édition d'un créneau existant
