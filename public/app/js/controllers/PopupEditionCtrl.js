@@ -524,10 +524,11 @@ angular.module( 'cahierDeTextesClientApp' )
                                        if ( !_(response.error).isEmpty() ) {
                                            $scope.erreurs.push( { message: response.error } );
                                        } else {
+                                           var _item = _( response.added ).first();
                                            item.ressources.push( {
-                                               name: _( response.added ).first().name,
-                                               hash: _( response.added ).first().hash,
-                                               url: $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + _( response.added ).first().hash )
+                                               name: _item.name,
+                                               hash: _item.hash,
+                                               url: $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + _item.hash )
                                            } );
                                            $scope.is_dirty();
                                        }
