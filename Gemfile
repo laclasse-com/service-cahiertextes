@@ -9,6 +9,7 @@ gem 'mysql2'
 gem 'nokogiri'
 gem 'omniauth-cas'
 gem 'puma'
+gem 'pry'
 gem 'rack'
 gem 'rack-rewrite'
 gem 'rake'
@@ -20,10 +21,8 @@ gem 'sinatra'
 gem 'uglifier'
 
 gem 'laclasse-common', git: 'https://github.com/laclasse-com/laclasse-common.git'
-# gem 'laclasse-common', path: '/home/cycojesus/projets/Erasme/laclasse-common'
 
 group :development do
-  gem 'pry'
   gem 'rack-test'
   gem 'rspec'
   gem 'show_me_the_cookies'
