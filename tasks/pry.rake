@@ -10,6 +10,7 @@ namespace :pry do
     require 'json'
     require 'yaml'
     require 'sequel'
+    require 'pry'
 
     Bundler.require( :default, ENV['RACK_ENV'].to_sym )     # require tout les gems définis dans Gemfile
 
