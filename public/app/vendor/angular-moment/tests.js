@@ -41,6 +41,31 @@ describe('module angularMoment', function () {
 
 
 	describe('am-time-ago directive', function () {
+
+		it('should be change output format after time through attributes amFullDateThreshold and amFullDateThresholdUnit', function () {
+			$rootScope.testFormat = 'HH:mm';
+			$rootScope.testDate = new Date(new Date().getTime() - 5 * 60 * 1000);
+
+			// after 5 min
+			var element = angular.element('<span am-time-ago="testDate" am-full-date-threshold="5" am-full-date-threshold-unit="minute" am-full-date-format="{{ testFormat }}"></span>');
+			element = $compile(element)($rootScope);
+			$rootScope.$digest();
+
+			expect(element.text()).toBe(moment($rootScope.testDate).format($rootScope.testFormat));
+		});
+
+		it('should not change output format after time through attributes amFullDateThreshold and amFullDateThresholdUnit', function () {
+			$rootScope.testFormat = 'HH:mm';
+			$rootScope.testDate = new Date(new Date().getTime() - 4 * 60 * 1000);
+
+			// after 4 min
+			var element = angular.element('<span am-time-ago="testDate" am-full-date-threshold="5" am-full-date-threshold-unit="minute" am-full-date-format="{{ testFormat }}"></span>');
+			element = $compile(element)($rootScope);
+			$rootScope.$digest();
+
+			expect(element.text()).toBe('4 minutes ago');
+		});
+
 		it('should change the text of the element to "a few seconds ago" when given current time', function () {
 			$rootScope.testDate = new Date();
 			var element = angular.element('<span am-time-ago="testDate"></span>');
@@ -536,6 +561,10 @@ describe('module angularMoment', function () {
 
 		it('should return an empty string for invalid input', function () {
 			expect(amCalendar('blah blah')).toBe('');
+		});
+
+		it('should take advanced arguments referenceTime and formats', function () {
+			expect(amCalendar(new Date(2012, 0, 22, 4, 46, 54), new Date(2012, 0, 23, 4, 46, 54), {lastDay: '[Yesterday at] H:m'})).toBe('Yesterday at 4:46');
 		});
 	});
 

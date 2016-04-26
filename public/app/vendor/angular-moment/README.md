@@ -16,12 +16,27 @@ Installation
 ------------
 
 You can choose your preferred method of installation:
-* Through bower: `bower install angular-moment moment --save`
+* Through bower: `bower install angular-moment --save`
 * Through npm: `npm install angular-moment moment --save`
 * Through NuGet: `Install-Package angular-moment Moment.js`
-* From a CDN: [jsDelivr](https://cdn.jsdelivr.net/angular.moment/1.0.0-beta.5/angular-moment.min.js) or [CDNJS](https://cdnjs.cloudflare.com/ajax/libs/angular-moment/1.0.0-beta.5/angular-moment.min.js)
+* From a CDN: [jsDelivr](https://cdn.jsdelivr.net/angular.moment/1.0.0-beta.6/angular-moment.min.js) or [CDNJS](https://cdnjs.cloudflare.com/ajax/libs/angular-moment/1.0.0-beta.6/angular-moment.min.js)
 * Download from github: [angular-moment.min.js](https://raw.github.com/urish/angular-moment/master/angular-moment.min.js)
 
+
+Instructions for using moment-timezone with webpack
+----------
+
+ Even if you have `moment-timezone` in your `package.json`, `angular-moment` will not be able to use it unless you override
+  moment using Angular's dependency injection [See Resolved Issue](https://github.com/urish/angular-moment/pull/234)
+ 
+ ```javascript
+ var angular = require('angular');
+ require('angular-moment');
+ var ngModule = angular.module('ngApp',['angularMoment']);
+ ngModule.constant('moment', require('moment-timezone'));
+ ```
+ 
+ 
 Usage
 -----
 Include both **moment.js** and **angular-moment.js** in your application.
@@ -37,10 +52,12 @@ Add the module `angularMoment` as a dependency to your app module:
 var myapp = angular.module('myapp', ['angularMoment']);
 ```
 
-If you need internationalization support, load specified moment.js locale file first:
+If you need internationalization support, load specified moment.js locale file right after moment.js:
 
 ```html
+<script src="components/moment/moment.js"></script>
 <script src="components/moment/locale/de.js"></script>
+<script src="components/angular-moment/angular-moment.js"></script>
 ```
 
 Then call the `amMoment.changeLocale()` method (e.g. inside your app's run() callback):
@@ -154,7 +171,7 @@ For more information about Moment.JS formatting options, see the
 Format dates using moment.js calendar() method. Example:
 
 ```html
-<span>{{message.time | amCalendar}}</span>
+<span>{{message.time | amCalendar:referenceTime:formats}}</span>
 ```
 
 This snippet will format the given time as e.g. "Today 2:30 AM" or "Last Monday 2:30 AM" etc..
@@ -255,7 +272,7 @@ angular.module('myapp').constant('angularMomentConfig', {
 
 Remember to include `moment-timezone.js` v0.3.0 or greater in your project, otherwise the custom timezone
 functionality will not be available. You will also need to include a timezone data file that
-you can create using the [Timezone Data Builder](http://momentjs.com/timezone/data/)
+you can create using the [Timezone Data Builder](http://momentjs.com/timezone/)
 or simply download from [here](https://rawgithub.com/qw4n7y/7282780/raw/6ae3b334b295f93047e8f3ad300db6bc4387e235/moment-timezone-data.js).
 
 ### Accessing `moment()` in your javascript
