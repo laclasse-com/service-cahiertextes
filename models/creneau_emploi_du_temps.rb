@@ -8,13 +8,18 @@ module SemainesDePresenceMixin
   def pretty_print_semainier
     semainier = semaines_de_presence.to_s( 2 )
                                     .reverse
-                                    .rjust( 52, '0' )
+                                    .rjust( 53, '0' )
     semainier = "#{semainier}#{semainier[semainier.length - 1]}"
     semainier[0] = ''
     semainier.split( '' )
              .map
-             .with_index { |w, i| { week: i, presence: w} }
+             .with_index { |w, i| { week: i + 1, presence: w} }
              .group_by { |w| Date::MONTHNAMES[ Date.commercial( w[:week] < 30 ? 2016 : 2015, w[:week] ).month ] }
+  end
+
+  def all_school_year_semainier( zone, year_rentree )
+    holidays_weeks = CahierDeTextesApp::Utils::Holidays.get( zone, year_rentree )
+    (1..53).to_a.map { |i| holidays_weeks.include?( i ) ? '0' : '1' }.join.reverse.to_i( 2 )
   end
 end
 
