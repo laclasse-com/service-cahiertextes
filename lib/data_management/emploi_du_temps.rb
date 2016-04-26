@@ -44,8 +44,9 @@ module DataManagement
               hcours
             end
                           .first,
-            devoirs: creneau.devoirs.select { |devoir| devoir[:deleted] == false && devoir.date_due == jour }
-                                    .map do |devoir|
+            devoirs: creneau.devoirs
+                            .select { |devoir| devoir[:deleted] == false && devoir.date_due == jour }
+                            .map do |devoir|
               hdevoir = devoir.to_hash
               hdevoir[:ressources] = devoir.ressources.map(&:to_hash)
               hdevoir[:type_devoir_description] = devoir.type_devoir.description
