@@ -4,6 +4,18 @@ module SemainesDePresenceMixin
   def present_pour_la_semaine?( n )
     semaines_de_presence[n] == 1
   end
+
+  def pretty_print_semainier
+    semainier = semaines_de_presence.to_s( 2 )
+                                    .reverse
+                                    .rjust( 52, '0' )
+    semainier = "#{semainier}#{semainier[semainier.length - 1]}"
+    semainier[0] = ''
+    semainier.split( '' )
+             .map
+             .with_index { |w, i| { week: i, presence: w} }
+             .group_by { |w| Date::MONTHNAMES[ Date.commercial( w[:week] < 30 ? 2016 : 2015, w[:week] ).month ] }
+  end
 end
 
 class CreneauEmploiDuTempsSalle < Sequel::Model( :creneaux_emploi_du_temps_salles )
