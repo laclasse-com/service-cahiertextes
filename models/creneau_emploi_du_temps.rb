@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+require_relative '../lib/utils/holidays'
+
 module SemainesDePresenceMixin
   def present_pour_la_semaine?( n )
     semaines_de_presence[n] == 1
