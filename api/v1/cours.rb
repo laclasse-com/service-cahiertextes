@@ -43,12 +43,8 @@ module CahierDeTextesAPI
 
         error!( 'Créneau invalide', 409 ) if CreneauEmploiDuTemps[ params[:creneau_emploi_du_temps_id] ].nil?
 
-        # FIXME: do away with this, pass :regroupement_id to Cours and let it deal with it
-        cahier_de_textes = CahierDeTextes.where( regroupement_id: params[:regroupement_id] ).first
-        cahier_de_textes = CahierDeTextes.create( date_creation: Time.now,
-                                                  regroupement_id: params[:regroupement_id] ) if cahier_de_textes.nil?
         cours = Cours.create( enseignant_id: user[:uid],
-                              cahier_de_textes_id: cahier_de_textes.id,
+                              cahier_de_textes_id: DataManagement::Accessors.create_or_get( CahierDeTextes, regroupement_id: params[:regroupement_id] ).id,
                               creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
                               date_cours: params[:date_cours].to_s,
                               date_creation: Time.now,
