@@ -124,9 +124,10 @@ namespace :preprocess_assets do
                                                           'public/app/vendor/textAngular/src/textAngularSetup.js',
                                                           'public/app/vendor/textAngular/dist/textAngular.js',
                                                           'public/app/vendor/angular-toastr/dist/angular-toastr.tpls.js',
-                                                          'public/app/vendor/ui-select/dist/select.js' ] )
+                                                          'public/app/vendor/ui-select/dist/select.js',
+                                                          'public/app/vendor/angular-cancel-on-navigate/src/angularCancelOnNavigateModule.js' ] )
     File.open( './public/app/vendor/vendor.min.js', 'w' )
-      .write( uglified )
+        .write( uglified )
     File.open( './public/app/vendor/vendor.min.js.map', 'w' )
       .write( source_map )
   end

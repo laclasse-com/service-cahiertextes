@@ -17,4 +17,5 @@ angular.module( 'cahierDeTextesClientApp', [ 'angularMoment',
                                              'ui.calendar',
                                              'ui.checkbox',
                                              'ui.router',
-                                             'ui.select' ] );
+                                             'ui.select',
+                                             'angularCancelOnNavigateModule' ] );
