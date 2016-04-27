@@ -65,6 +65,7 @@ module ProNote
     semainier
   end
 
+  # FIXME: might be wrong ?!
   def corrige_semainiers( semainier, decalage )
     semainier = semainier.to_i if semainier.is_a? String
     semainier = pad_semainier( semainier.to_s( 2 ) )
