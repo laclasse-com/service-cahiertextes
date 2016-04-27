@@ -6,25 +6,22 @@ module DataManagement
 
     def get( debut, fin, regroupements_ids, profil_type, eleve_id )
       # Nota Bene: semainiers callés sur l'année civile
-      emploi_du_temps = CreneauEmploiDuTemps .association_join( :regroupements, :enseignants )
-                                             .select_append( :regroupements__semaines_de_presence___semainier_regroupement )
-                                             .select_append( :enseignants__semaines_de_presence___semainier_enseignant )
-                                             .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{1.year.ago}'" )
-                                             .where( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{fin}')" )
-                                             .where( regroupement_id: regroupements_ids )
-                                             .all
-                                             .map do |creneau|
+      emploi_du_temps = CreneauEmploiDuTemps.association_join( :regroupements, :enseignants )
+                                            .select_append( :regroupements__semaines_de_presence___semainier_regroupement )
+                                            .select_append( :enseignants__semaines_de_presence___semainier_enseignant )
+                                            .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{1.year.ago}'" )
+                                            .where( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{fin}')" )
+                                            .where( regroupement_id: regroupements_ids )
+                                            .all
+                                            .map do |creneau|
         ( debut .. fin ).select { |day| day.wday == creneau.jour_de_la_semaine } # only the same weekday as the creneau
                         .map do |jour|
           next unless creneau[:semainier_regroupement][ jour.cweek ] == 1 # && creneau[:semainier_enseignant][ jour.cweek ] == 1
-
-          cahier_de_textes = Accessors.create_or_get( CahierDeTextes, regroupement_id: creneau[:regroupement_id] )
 
           { regroupement_id: creneau[ :regroupement_id ],
             enseignant_id: creneau[ :enseignant_id ],
             creneau_emploi_du_temps_id: creneau.id,
             matiere_id: creneau.matiere_id,
-            cahier_de_textes_id: cahier_de_textes.id, # utilisé lors de la création d'un cours côté client
             start: Time.new( jour.year,
                              jour.month,
                              jour.mday,
@@ -58,8 +55,8 @@ module DataManagement
           }
         end
       end
-                                             .flatten
-                                             .compact
+                                            .flatten
+                                            .compact
 
       emploi_du_temps = emploi_du_temps.each { |c| c.delete :enseignant_id }.uniq if %w(ELV TUT).include? profil_type
 
