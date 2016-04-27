@@ -14,26 +14,16 @@ module DataManagement
                                             .where( regroupement_id: regroupements_ids )
                                             .all
                                             .map do |creneau|
-        ( debut .. fin ).select { |day| day.wday == creneau.jour_de_la_semaine } # only the same weekday as the creneau
-                        .map do |jour|
-          next unless creneau[:semainier_regroupement][ jour.cweek ] == 1 # && creneau[:semainier_enseignant][ jour.cweek ] == 1
-
+        ( debut .. fin ).select { |day| day.wday == creneau.jour_de_la_semaine && creneau[:semainier_regroupement][ day.cweek ] == 1 } # only the same weekday as the creneau
+                        .map do |day|
           { regroupement_id: creneau[ :regroupement_id ],
             enseignant_id: creneau[ :enseignant_id ],
             creneau_emploi_du_temps_id: creneau.id,
             matiere_id: creneau.matiere_id,
-            start: Time.new( jour.year,
-                             jour.month,
-                             jour.mday,
-                             creneau.plage_horaire_debut.debut.hour,
-                             creneau.plage_horaire_debut.debut.min ).iso8601,
-            end: Time.new( jour.year,
-                           jour.month,
-                           jour.mday,
-                           creneau.plage_horaire_fin.fin.hour,
-                           creneau.plage_horaire_fin.fin.min ).iso8601,
+            start: Time.new( day.year, day.month, day.mday, creneau.plage_horaire_debut.debut.hour, creneau.plage_horaire_debut.debut.min ).iso8601,
+            end: Time.new( day.year, day.month, day.mday, creneau.plage_horaire_fin.fin.hour, creneau.plage_horaire_fin.fin.min ).iso8601,
             cours: creneau.cours
-                          .select { |cours| cours[:deleted] == false && cours.date_cours == jour }
+                          .select { |cours| cours[:deleted] == false && cours.date_cours == day }
                           .map do |cours|
               hcours = cours.to_hash
               hcours[:ressources] = cours.ressources.map(&:to_hash)
@@ -42,7 +32,7 @@ module DataManagement
             end
                           .first,
             devoirs: creneau.devoirs
-                            .select { |devoir| devoir[:deleted] == false && devoir.date_due == jour }
+                            .select { |devoir| devoir[:deleted] == false && devoir.date_due == day }
                             .map do |devoir|
               hdevoir = devoir.to_hash
               hdevoir[:ressources] = devoir.ressources.map(&:to_hash)
