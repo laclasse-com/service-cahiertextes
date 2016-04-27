@@ -132,7 +132,6 @@ angular.module( 'cahierDeTextesClientApp' )
                               } else {
                                   $scope.current_user.date = moment().subtract( $scope.period_offset, 'months' ).toDate();
                               }
-                              console.log($scope.current_user.date)
 
                               $scope.from_date = moment( $scope.current_user.date ).subtract( 2, 'weeks' ).startOf( 'week' ).toDate();
                               $scope.to_date = moment( $scope.current_user.date ).add( 2, 'weeks' ).endOf( 'week' ).toDate();
