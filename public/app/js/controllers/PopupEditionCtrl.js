@@ -84,9 +84,10 @@ angular.module( 'cahierDeTextesClientApp' )
                                return moment( year ).isoWeek( n_week ).month();
                            };
 
-                           $scope.overlay_semainier = _.range(1, 52).map( function( s ) { return { semaine: s,
-                                                                                                   mois: what_month( s ) }; } );
-                           $scope.overlay_semainier = _.chain($scope.overlay_semainier)
+                           $scope.overlay_semainier = _.chain
+                               .range(1, 52)
+                               .map( function( s ) { return { semaine: s,
+                                                              mois: what_month( s ) }; } )
                                .groupBy( function( s ) { return s.mois; } )
                                .toArray()
                                .map( function( semaines, i ) {
