@@ -118,8 +118,6 @@ angular.module( 'cahierDeTextesClientApp' )
                               $scope.to_date = $scope.to_date.toDate();
                           } else {
                               if ( first_load && moment( $stateParams.date ).isValid() ) {
-                                  console.log('using date from $stateParams')
-                                  console.log($stateParams.date)
                                   if ( moment( $stateParams.date ).isBefore( Utils.school_year_start() ) ) {
                                       $stateParams.date = Utils.school_year_start();
                                   } else if ( moment( $stateParams.date ).isAfter( Utils.school_year_end() ) ) {
