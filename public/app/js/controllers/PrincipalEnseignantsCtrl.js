@@ -24,8 +24,8 @@ angular.module( 'cahierDeTextesClientApp' )
                       $scope.filter_data = function(  ) {
                           _($scope.individualCharts.enseignants)
                               .each( function( chart ) {
-                                  chart.display = !_.chain(chart.enseignant.details.classes)
-                                      .pluck( 'classe_id' )
+                                  chart.display = !_.chain(chart.enseignant.details.regroupements)
+                                      .pluck( 'id' )
                                       .intersection( _($scope.selected_regroupements).pluck( 'id' ) )
                                       .isEmpty()
                                       .value();
