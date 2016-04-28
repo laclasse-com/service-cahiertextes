@@ -14,7 +14,7 @@ module DataManagement
                                             .where( regroupement_id: regroupements_ids )
                                             .all
                                             .map do |creneau|
-        ( debut .. fin ).select { |day| day.wday == creneau.jour_de_la_semaine && creneau[:semainier_regroupement][ day.cweek ] == 1 } # only the same weekday as the creneau
+        ( debut .. fin ).select { |day| day.wday == creneau.jour_de_la_semaine && creneau[:semainier_regroupement][ day.cweek ] == 1 }
                         .map do |day|
           { regroupement_id: creneau[ :regroupement_id ],
             enseignant_id: creneau[ :enseignant_id ],
