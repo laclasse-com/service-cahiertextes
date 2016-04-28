@@ -21,6 +21,13 @@ module AnnuaireWrapper
                                                       expand: 'true' )
     end
 
+    # Service Utilisateur : init de la session et de son environnement
+    def bulk_get( uids_array )
+      Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_user_liste,
+                                                      "#{uids_array.split(',').join('_')}",
+                                                      expand: 'true' )
+    end
+
     # Liste des regroupements de l'utilisateur connecté
     def get_regroupements( uid )
       Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_user,

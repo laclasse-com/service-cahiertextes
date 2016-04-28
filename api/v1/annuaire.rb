@@ -68,6 +68,16 @@ module CahierDeTextesAPI
       get '/users/:id' do
         AnnuaireWrapper::User.get( params[:id] )
       end
+
+      desc 'Renvoi le détail d\'une liste d\'utilisateur'
+      params do
+        requires :ids, desc: 'tableau d\'ids des utilisateurs'# , type: Array do
+        #   requires :id, type: String
+        # end
+      end
+      get '/users/bulk/:ids' do
+        AnnuaireWrapper::User.bulk_get( params[:ids] )
+      end
     end
   end
 end

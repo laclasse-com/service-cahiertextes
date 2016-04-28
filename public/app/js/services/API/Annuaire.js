@@ -21,8 +21,13 @@ angular.module( 'cahierDeTextesClientApp' )
              [ '$resource', 'APP_PATH', 'API_VERSION',
                function( $resource, APP_PATH, API_VERSION ) {
                    return $resource( APP_PATH + '/api/' + API_VERSION + '/annuaire/users/:user_id',
-                                     { user_id: '@user_id' } );
-              } ] );
+                                     { user_id: '@user_id' },
+                                     { bulk: { method: 'GET',
+                                               url: APP_PATH + '/api/' + API_VERSION + '/annuaire/users/bulk/:uids',
+                                               params: { uids: '@uids' },
+                                               isArray: true }
+                                     } );
+               } ] );
 
 angular.module( 'cahierDeTextesClientApp' )
     .service('Annuaire',
@@ -54,6 +59,10 @@ angular.module( 'cahierDeTextesClientApp' )
 
                    this.get_user = _.memoize( function( user_id ) {
                        return Users.get({ user_id: user_id });
+                   });
+
+                   this.get_users_bulk = _.memoize( function( uids ) {
+                       return Users.bulk({ uids: uids });
                    });
                }
              ] );

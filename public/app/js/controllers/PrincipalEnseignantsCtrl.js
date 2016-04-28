@@ -23,10 +23,6 @@ angular.module( 'cahierDeTextesClientApp' )
                           return '<p>Classes : <ul><li>' + _(classes).map( function( classe ) { return classe.classe_libelle; } ).join( '</li><li>' ) + '</li></ul></p>';
                       };
 
-                      var htmlify_matieres_list = function( matieres ) {
-                          return '<p>Matières : <ul><li>' + matieres.join( '</li><li>' ) + '</li></ul></p>';
-                      };
-
                       $scope.filter_data = function(  ) {
                           _($scope.individualCharts.enseignants)
                               .each( function( chart ) {
@@ -44,7 +40,7 @@ angular.module( 'cahierDeTextesClientApp' )
                               var chart = { enseignant: enseignant,
                                             display: true,
                                             html_classes: htmlify_classes_list( enseignant.classes ),
-                                            html_matieres: htmlify_matieres_list( enseignant.matieres ),
+                                            // html_matieres: htmlify_matieres_list( enseignant.matieres ),
                                             pieChart: angular.copy( PIECHART_DEFINITION ) };
 
                               chart.pieChart.data = [ { label: 'saisies',
@@ -64,16 +60,20 @@ angular.module( 'cahierDeTextesClientApp' )
                                   return enseignant.enseignant_id === '';
                               });
 
-                              _($scope.raw_data).each( function( enseignant ) {
-                                  Annuaire.get_user( enseignant.enseignant_id ).$promise
-                                      .then( function( enseignant_annuaire ) {
-                                          enseignant.details = enseignant_annuaire;
+                              Annuaire.get_users_bulk( _($scope.raw_data).pluck( 'enseignant_id' ) ).$promise
+                                  .then( function( response ) {
+                                      var enseignants_details = _(response).indexBy( 'id_ent' );
 
-                                          enseignant.matieres = _.chain(enseignant_annuaire.classes)
-                                              .pluck( 'matiere_libelle' )
-                                              .uniq()
-                                              .compact()
-                                              .value();
+                                      $scope.regroupements = _.chain(response).pluck( 'regroupements' ).flatten().map( function( regroupement ) {
+                                          return { id: regroupement.id,
+                                                   libelle: regroupement.libelle,
+                                                   type: regroupement.type == 'CLS' ? 'classe' : 'groupe' };
+                                      } ).uniq( function( regroupement ) { return regroupement.id; } ).value();
+
+                                      $scope.selected_regroupements = $scope.regroupements;
+
+                                      _($scope.raw_data).each( function( enseignant ) {
+                                          enseignant.details = enseignants_details[ enseignant.enseignant_id ];
 
                                           var stats_enseignant = _(enseignant.classes).reduce( function( totaux, classe ) {
                                               var stats_classe = _(classe.statistiques).reduce( function( totaux, mois ) {
@@ -89,24 +89,11 @@ angular.module( 'cahierDeTextesClientApp' )
                                           enseignant.filled = stats_enseignant.filled;
                                           enseignant.validated = stats_enseignant.validated;
 
-                                          $scope.regroupements = $scope.regroupements.concat( _(enseignant_annuaire.classes)
-                                                                                              .map( function( regroupement ) {
-                                                                                                  return { id: regroupement.classe_id,
-                                                                                                           libelle: regroupement.classe_libelle,
-                                                                                                           type: 'classe' };
-                                                                                              } ) );
-                                          $scope.regroupements = $scope.regroupements.concat( _(enseignant_annuaire.groupes_eleves)
-                                                                                              .map( function( regroupement ) {
-                                                                                                  return { id: regroupement.groupe_id,
-                                                                                                           libelle: regroupement.groupe_libelle,
-                                                                                                           type: 'groupe' };
-                                                                                              } ) );
-
-                                          $scope.regroupements = _($scope.regroupements).uniq( function( regroupement ) { return regroupement.id; } );
-                                          $scope.selected_regroupements = $scope.regroupements;
-
                                           $scope.individualCharts.add( enseignant );
                                       } );
-                              } );
+                                  } );
+
+
+
                           } );
                   } ] );
