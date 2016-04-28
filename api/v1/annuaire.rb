@@ -71,7 +71,7 @@ module CahierDeTextesAPI
 
       desc 'Renvoi le détail d\'une liste d\'utilisateur'
       params do
-        requires :ids, desc: 'tableau d\'ids des utilisateurs'# , type: Array do
+        requires :ids, desc: 'tableau d\'ids des utilisateurs' # , type: Array do
         #   requires :id, type: String
         # end
       end
