@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-def load_test_data( dbdump = 'spec/fixtures/db_dump3.sql' )
+def load_test_data( dbdump = 'spec/fixtures/db_dump.sql' )
   system "mysql -u #{DB_CONFIG[:user]} #{DB_CONFIG[:password].empty? ? '' : '-p' + DB_CONFIG[:password]} #{DB_CONFIG[:name]} < #{dbdump}"
 end
 
