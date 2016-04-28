@@ -5,8 +5,6 @@ angular.module( 'cahierDeTextesClientApp' )
                 [ '$scope', '$locale', '$q', 'API', 'Annuaire', 'current_user', 'PIECHART_DEFINITION',
                   function( $scope, $locale, $q, API, Annuaire, current_user, PIECHART_DEFINITION ) {
                       $scope.scope = $scope;
-                      // $scope.annee = _($locale.DATETIME_FORMATS.MONTH).toArray();
-                      // $scope.selected_mois = null;
                       $scope.regroupements = [ ];
 
                       $scope.select_all_regroupements = function() {
@@ -40,7 +38,6 @@ angular.module( 'cahierDeTextesClientApp' )
                               var chart = { enseignant: enseignant,
                                             display: true,
                                             html_classes: htmlify_classes_list( enseignant.classes ),
-                                            // html_matieres: htmlify_matieres_list( enseignant.matieres ),
                                             pieChart: angular.copy( PIECHART_DEFINITION ) };
 
                               chart.pieChart.data = [ { label: 'saisies',
