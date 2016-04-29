@@ -122,6 +122,7 @@ module CahierDeTextesAPI
         optional :semaines_de_presence_regroupement, type: Fixnum
         optional :semaines_de_presence_enseignant, type: Fixnum
         optional :semaines_de_presence_salle, type: Fixnum
+        optional :jour_de_la_semaine, type: Integer
       end
       put '/:id'  do
         user_needs_to_be( %w( ENS DOC ), true )

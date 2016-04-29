@@ -11,7 +11,8 @@ angular.module( 'cahierDeTextesClientApp' )
                               Documents, API, CreneauxEmploiDuTemps, Cours, Devoirs, User,
                               cours, devoirs, creneau, raw_data, classes, matieres )
                    {
-                       $scope.annee = _($locale.DATETIME_FORMATS.MONTH).toArray();
+                       $scope.annee = $locale.DATETIME_FORMATS.MONTH;
+                       $scope.jours = _($locale.DATETIME_FORMATS.DAY).indexBy( function( jour ) { return _($locale.DATETIME_FORMATS.DAY).indexOf( jour ); } );
                        $scope.app_path = APP_PATH;
                        $scope.ZONE = ZONE;
 
@@ -49,6 +50,7 @@ angular.module( 'cahierDeTextesClientApp' )
                            $scope.matieres = _(matieres).sortBy( 'libelle_long' );
 
                            $scope.creneau = creneau;
+                           $scope.creneau.jour_de_la_semaine = '' + $scope.creneau.jour_de_la_semaine;
                            $scope.mode_edition_creneau = $scope.creneau.en_creation;
                            $scope.creneau.regroupement_id = parseInt( $scope.creneau.regroupement_id );
                            $scope.creneau.mine = $scope.creneau.en_creation || _.chain( $scope.creneau.enseignants ).pluck( 'enseignant_id' ).include( $scope.current_user.uid ).value();
