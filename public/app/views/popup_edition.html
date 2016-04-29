@@ -1,23 +1,18 @@
 <div class="modal-header"
      data-ng-class="{'not-yours': !creneau.mine}">
 
-    <h3>{{creneau.heure_debut | amDateFormat : 'dddd D MMMM YYYY' }}, semaine {{creneau.n_week}}</h3>
-    <!-- {{{ Lecture seule -->
-    <h4>
-        <span data-ng-if="!mode_edition_creneau || !creneau.vierge">
+    <span data-ng-if="!mode_edition_creneau">
+        <h3>{{creneau.heure_debut | amDateFormat : 'dddd D MMMM YYYY' }}, semaine {{creneau.n_week}}</h3>
+        <!-- {{{ Lecture seule -->
+        <h4>
             {{selected_regroupement.libelle}} - {{selected_matiere.libelle_long}} ({{creneau.heure_debut | amDateFormat: 'HH:mm'}} - {{creneau.heure_fin | amDateFormat: 'HH:mm'}})
-        </span>
-    </h4>
+        </h4>
+    </span>
     <!-- }}} -->
 
     <!-- {{{ Édition -->
     <div class="edition-creneau" data-ng-if="mode_edition_creneau">
-        <h3>
-            <select data-ng-options="index as jour for (index, jour) in jours"
-                    data-ng-model="creneau.jour_de_la_semaine">
-            </select>
-        </h3>
-        <div class="row" data-ng-if="creneau.vierge">
+        <div class="row">
             <div class="col-md-6">
                 <label>Choisir la classe :</label>
                 <select data-ng-model="scope.selected_regroupement"
@@ -38,6 +33,9 @@
         <div class="row">
             <div class="col-md-12 horaire">
                 <label>Choisir l'horaire :</label>
+                <select data-ng-options="index as jour for (index, jour) in jours"
+                        data-ng-model="creneau.jour_de_la_semaine">
+                </select>
                 de
                 <div uib-dropdown class="uib-dropdown horaire">
                     <a uib-dropdown-toggle class="uib-dropdown-toggle" role="button" data-toggle="uib-dropdown" data-target="#" href="">{{creneau.tmp_heure_debut | amDateFormat: 'HH:mm'}}</a>

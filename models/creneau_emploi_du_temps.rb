@@ -152,46 +152,28 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
   end
 
   def update_semaines_de_presence_enseignant( enseignant_id, semaines_de_presence_enseignant )
-    ce = CreneauEmploiDuTempsEnseignant
-         .where( enseignant_id: enseignant_id )
-         .where( creneau_emploi_du_temps_id: id )
-    ce.update( semaines_de_presence: semaines_de_presence_enseignant )
+    CreneauEmploiDuTempsEnseignant.where( enseignant_id: enseignant_id, creneau_emploi_du_temps_id: id )
+                                  .update( semaines_de_presence: semaines_de_presence_enseignant )
   end
 
   def update_semaines_de_presence_regroupement( regroupement_id, semaines_de_presence_regroupement )
-    cr = CreneauEmploiDuTempsRegroupement
-         .where( creneau_emploi_du_temps_id: id )
-         .where( regroupement_id: regroupement_id)
-    cr.update( semaines_de_presence: semaines_de_presence_regroupement ) unless cr.nil?
+    CreneauEmploiDuTempsRegroupement.where( creneau_emploi_du_temps_id: id, regroupement_id: regroupement_id)
+                                    .update( semaines_de_presence: semaines_de_presence_regroupement )
   end
 
   def update_regroupement( regroupement_id, previous_regroupement_id, semaines_de_presence_regroupement )
-    regroupement_id = regroupement_id
-
-    if CreneauEmploiDuTempsRegroupement.where( creneau_emploi_du_temps_id: id ).where( regroupement_id: regroupement_id ).count < 1
-      # 1. first remove previous créneau-regroupement association
-      previous_creneau_regroupement = CreneauEmploiDuTemps.last.regroupements.find do |cr|
-        cr.regroupement_id == previous_regroupement_id
-      end
-      previous_creneau_regroupement.destroy unless previous_creneau_regroupement.nil?
-
-      # 2. create the new one
+    if CreneauEmploiDuTempsRegroupement.where( creneau_emploi_du_temps_id: id, regroupement_id: regroupement_id ).count < 1
       CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
-      cr = add_regroupement( regroupement_id: regroupement_id )
+      add_regroupement( regroupement_id: regroupement_id, semaines_de_presence: semaines_de_presence_regroupement )
       CreneauEmploiDuTempsRegroupement.restrict_primary_key
 
-      cr.update( semaines_de_presence: semaines_de_presence_regroupement ) if semaines_de_presence_regroupement
+      CreneauEmploiDuTempsRegroupement.where( creneau_emploi_du_temps_id: id, regroupement_id: previous_regroupement_id ).destroy
     end
-
-    update_semaines_de_presence_regroupement( regroupement_id, semaines_de_presence_regroupement ) if semaines_de_presence_regroupement
   end
 
   def update_salle( salle_id, semaines_de_presence_salle )
-    creneau_salle = CreneauEmploiDuTempsSalle
-                    .where( creneau_emploi_du_temps_id: id )
-                    .where( salle_id: salle_id )
+    creneau_salle = CreneauEmploiDuTempsSalle.where( creneau_emploi_du_temps_id: id, salle_id: salle_id )
     if creneau_salle.nil?
-      p 'Adding salle'
       salle = Salle[salle_id]
       return nil if salle.nil?
 
