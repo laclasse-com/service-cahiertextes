@@ -188,8 +188,8 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
   # rubocop:disable Metrics/PerceivedComplexity
   # rubocop:disable Metrics/CyclomaticComplexity
   def modifie( params )
-    params[:heure_debut] = Time.parse( params[:heure_debut] ) unless params[:heure_debut].is_a? Time
-    params[:heure_fin] = Time.parse( params[:heure_fin] ) unless params[:heure_fin].is_a? Time
+    params[:heure_debut] = Time.parse( params[:heure_debut] ) unless params[:heure_debut].is_a?( Time ) || !params.key?( :heure_debut )
+    params[:heure_fin] = Time.parse( params[:heure_fin] ) unless params[:heure_fin].is_a?( Time ) || !params.key?( :heure_fin )
 
     update_heure_debut( params[:heure_debut] ) if params.key?( :heure_debut )
     update_heure_fin( params[:heure_fin] ) if params.key?( :heure_fin )

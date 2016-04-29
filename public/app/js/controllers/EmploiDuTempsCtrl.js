@@ -241,6 +241,8 @@ angular.module( 'cahierDeTextesClientApp' )
                           $scope.uniquement_mes_creneaux = false;
                           $scope.calendar.options.selectable = true;
                           $scope.calendar.options.editable = true;
+                          $scope.calendar.options.eventDurationEditable = true;
+                          $scope.calendar.options.eventStartEditable = true;
 
                           $scope.filter_data = function( raw_data ) {
                               return filter_by_enseignant_id( filter_by_regroupement( raw_data,
@@ -302,6 +304,18 @@ angular.module( 'cahierDeTextesClientApp' )
                                           $scope.emploi_du_temps.fullCalendar( 'unselect' );
                                       } );
                               }
+                          };
+
+                          $scope.calendar.options.eventDrop = function( event, delta, revertFunc, jsEvent, ui, view ) {
+                              CreneauxEmploiDuTemps.update( { id: event.details.creneau_emploi_du_temps_id,
+                                                              heure_debut: event.start.toDate(),
+                                                              heure_fin: event.end.toDate(),
+                                                              jour_de_la_semaine: event.end.day() } );
+                          };
+                          $scope.calendar.options.eventResize = function( event, delta, revertFunc, jsEvent, ui, view ) {
+                              CreneauxEmploiDuTemps.update( { id: event.details.creneau_emploi_du_temps_id,
+                                                              heure_debut: event.start.toDate(),
+                                                              heure_fin: event.end.toDate() } );
                           };
                       }
 
