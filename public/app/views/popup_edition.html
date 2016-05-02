@@ -211,14 +211,14 @@
 
                                     <div class="col-md-12">
                                         <label>Temps de travail estimé : </label>
-                                        <rating data-ng-model="devoir.temps_estime"
-                                                max="15"
-                                                readonly="false"
-                                                ng-click="is_dirty( null )"
-                                                on-hover="estimation_over(devoir, value)"
-                                                on-leave="estimation_leave(devoir)"
-                                                state-on="'temps-est-on'"
-                                                state-off="'temps-est-off'"></rating>
+                                        <uib-rating data-ng-model="devoir.temps_estime"
+                                                    max="15"
+                                                    readonly="false"
+                                                    ng-click="is_dirty( null )"
+                                                    on-hover="estimation_over(devoir, value)"
+                                                    on-leave="estimation_leave(devoir)"
+                                                    state-on="'temps-est-on'"
+                                                    state-off="'temps-est-off'"></uib-rating>
                                         <span class="label pull-right" data-ng-class="{'label-success': devoir.overValue<4, 'label-info': devoir.overValue>=4 && devoir.overValue<8 , 'label-warning': devoir.overValue>=8 && devoir.overValue<12, 'label-danger': devoir.overValue>=12}" data-ng-if="devoir.overValue > 0 || devoir.temps_estime > 0">{{devoir.minutes || devoir.temps_estime * 5}} min</span>
                                     </div>
                                     <div class="clearfix"></div>
@@ -310,14 +310,14 @@
 
                             <div class="col-md-12">
                                 <label>Temps de travail estimé : </label>
-                                <rating data-ng-model="devoir.temps_estime"
-                                        max="15"
-                                        readonly="false"
-                                        ng-click="is_dirty( null )"
-                                        on-hover="estimation_over(devoir, value)"
-                                        on-leave="estimation_leave(devoir)"
-                                        state-on="'temps-est-on'"
-                                        state-off="'temps-est-off'"></rating>
+                                <uib-rating data-ng-model="devoir.temps_estime"
+                                            max="15"
+                                            readonly="false"
+                                            ng-click="is_dirty( null )"
+                                            on-hover="estimation_over(devoir, value)"
+                                            on-leave="estimation_leave(devoir)"
+                                            state-on="'temps-est-on'"
+                                            state-off="'temps-est-off'"></uib-rating>
                                 <span class="label pull-right" data-ng-class="{'label-success': devoir.overValue<4, 'label-info': devoir.overValue>=4 && devoir.overValue<8 , 'label-warning': devoir.overValue>=8 && devoir.overValue<12, 'label-danger': devoir.overValue>=12}" data-ng-if="devoir.overValue > 0 || devoir.temps_estime > 0">{{devoir.minutes || devoir.temps_estime * 5}} min</span>
                             </div>
                             <div class="clearfix"></div>
