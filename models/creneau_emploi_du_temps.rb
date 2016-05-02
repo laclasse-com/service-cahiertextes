@@ -162,13 +162,14 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
   end
 
   def update_regroupement( regroupement_id, previous_regroupement_id, semaines_de_presence_regroupement )
-    if CreneauEmploiDuTempsRegroupement.where( creneau_emploi_du_temps_id: id, regroupement_id: regroupement_id ).count < 1
-      CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
-      add_regroupement( regroupement_id: regroupement_id, semaines_de_presence: semaines_de_presence_regroupement )
-      CreneauEmploiDuTempsRegroupement.restrict_primary_key
+    return unless CreneauEmploiDuTempsRegroupement.where( creneau_emploi_du_temps_id: id, regroupement_id: regroupement_id ).count < 1
 
-      CreneauEmploiDuTempsRegroupement.where( creneau_emploi_du_temps_id: id, regroupement_id: previous_regroupement_id ).destroy
-    end
+    CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
+    cr = add_regroupement( regroupement_id: regroupement_id )
+    cr.update( semaines_de_presence: semaines_de_presence_regroupement ) unless semaines_de_presence_regroupement.nil?
+    CreneauEmploiDuTempsRegroupement.restrict_primary_key
+
+    CreneauEmploiDuTempsRegroupement.where( creneau_emploi_du_temps_id: id, regroupement_id: previous_regroupement_id ).destroy
   end
 
   def update_salle( salle_id, semaines_de_presence_salle )
