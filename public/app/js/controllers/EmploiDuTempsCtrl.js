@@ -283,7 +283,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                   end = new Date( end );
                                   var regroupement_id = $scope.selected_regroupements.length == 1 ? '' + $scope.selected_regroupements[0].id : null;
                                   var new_creneau = new CreneauxEmploiDuTemps( { regroupement_id: regroupement_id,
-                                                                                 jour_de_la_semaine: start.getDay() + 1,
+                                                                                 jour_de_la_semaine: start.getDay(),
                                                                                  heure_debut: moment(start).toISOString(),
                                                                                  heure_fin: moment(end).toISOString(),
                                                                                  matiere_id: '' } );
