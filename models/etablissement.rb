@@ -57,13 +57,4 @@ class Etablissement < Sequel::Model( :etablissements )
       end
     }
   end
-
-  def valide_enseignant!( enseignant_id )
-    Cours
-      .where(enseignant_id: enseignant_id)
-      .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{Utils.date_rentree}'" )
-      .where('date_validation IS NULL')
-      .where( deleted: false )
-      .update( date_validation: Time.now )
-  end
 end
