@@ -3,8 +3,126 @@
 require 'spec_helper'
 
 describe CreneauEmploiDuTemps do
-  it 'is still to be done' do
-    STDERR.puts 'FIXME'
+  before :each do
+    @etablissement = Etablissement.create( UAI: 'test012345Z' )
+    @plage_horaire = PlageHoraire.create( label: 'test', debut: Time.now, fin: Time.now )
+    @jour_de_la_semaine = rand( 1..5 )
+    @creneau = CreneauEmploiDuTemps.create( date_creation: Time.now,
+                                            debut: @plage_horaire.id,
+                                            fin: @plage_horaire.id,
+                                            jour_de_la_semaine: @jour_de_la_semaine,
+                                            matiere_id: '',
+                                            etablissement_id: @etablissement.id )
+    @salle = Salle.create( etablissement_id: @etablissement.id,
+                           identifiant: 'test' )
+  end
+  after :each do
+    @creneau.enseignants.map( &:destroy )
+    @creneau.regroupements.map( &:destroy )
+    @creneau.remove_all_salles
+    @creneau.destroy
+    @plage_horaire.destroy
+    @salle.destroy
+    @etablissement.destroy
+  end
+
+  it 'creates a placeholder creneau' do
+    expect( @creneau ).to_not be_nil
+    expect( @creneau.regroupements ).to be_empty
+    expect( @creneau.enseignants ).to be_empty
+    expect( @creneau.salles ).to be_empty
+    expect( @creneau.cours ).to be_empty
+    expect( @creneau.devoirs ).to be_empty
+    expect( @creneau.debut ).to eq @plage_horaire.id
+    expect( @creneau.fin ).to eq @plage_horaire.id
+    expect( @creneau.jour_de_la_semaine ).to eq @jour_de_la_semaine
+    expect( @creneau.matiere_id ).to be_empty
+    expect( @creneau.etablissement_id ).to eq @etablissement.id
+  end
+
+  it 'def toggle_deleted( date_suppression )' do
+    date_suppression = Time.now
+
+    @creneau.toggle_deleted( date_suppression )
+
+    expect( @creneau.deleted ).to be true
+    expect( @creneau.date_suppression ).to eq date_suppression
+
+    @creneau.toggle_deleted( date_suppression )
+
+    expect( @creneau.deleted ).to be false
+    expect( @creneau.date_suppression ).to be nil
+  end
+
+  it 'def similaires( debut, fin, user )' do
     expect( 1 ).to eq 1
+    STDERR.puts 'FIXME'
+  end
+
+  it 'def modifie( params )' do
+    # hours as string
+    @creneau.modifie( heure_debut: '12:34',
+                      heure_fin: '23:45' )
+    expect( PlageHoraire[ @creneau.debut ].debut.iso8601 ).to eq '2000-01-01T12:34:00+01:00'
+    expect( PlageHoraire[ @creneau.fin ].fin.iso8601 ).to eq '2000-01-01T23:45:00+01:00'
+
+    # hours as Time
+    @creneau.modifie( heure_debut: Time.parse( '10:02' ),
+                      heure_fin: Time.parse( '21:09' ) )
+    expect( PlageHoraire[ @creneau.debut ].debut.iso8601 ).to eq '2000-01-01T10:02:00+01:00'
+    expect( PlageHoraire[ @creneau.fin ].fin.iso8601 ).to eq '2000-01-01T21:09:00+01:00'
+
+    # change/add matiere
+    @creneau.modifie( matiere_id: 'dummy_matiere_id' )
+    expect( @creneau.matiere_id ).to eq 'dummy_matiere_id'
+
+    # change day
+    @creneau.modifie( jour_de_la_semaine: @jour_de_la_semaine + 1 )
+    expect( @creneau.jour_de_la_semaine ).to eq @jour_de_la_semaine + 1
+
+    # change/add enseignant
+    @creneau.modifie( enseignant_id: 'VZZ99999' )
+    expect( @creneau.enseignants.count ).to eq 1
+    expect( CreneauEmploiDuTempsEnseignant[ creneau_emploi_du_temps_id: @creneau.id,
+                                            enseignant_id: 'VZZ99999' ] ).to_not be nil
+    expect( CreneauEmploiDuTempsEnseignant[ creneau_emploi_du_temps_id: @creneau.id,
+                                            enseignant_id: 'VZZ99999' ].semaines_de_presence ).to eq 9_007_199_254_740_991
+    @creneau.modifie( enseignant_id: 'VZZ99999',
+                      semaines_de_presence_enseignant: 123 )
+    expect( @creneau.enseignants.count ).to eq 1
+    expect( CreneauEmploiDuTempsEnseignant[ creneau_emploi_du_temps_id: @creneau.id,
+                                            enseignant_id: 'VZZ99999' ] ).to_not be nil
+    expect( CreneauEmploiDuTempsEnseignant[ creneau_emploi_du_temps_id: @creneau.id,
+                                            enseignant_id: 'VZZ99999' ].semaines_de_presence ).to eq 123
+
+    # change/add regroupement
+    @creneau.modifie( regroupement_id: 999_999 )
+    expect( @creneau.regroupements.count ).to eq 1
+    expect( CreneauEmploiDuTempsRegroupement[ creneau_emploi_du_temps_id: @creneau.id,
+                                              regroupement_id: 999_999 ] ).to_not be nil
+    expect( CreneauEmploiDuTempsRegroupement[ creneau_emploi_du_temps_id: @creneau.id,
+                                              regroupement_id: 999_999 ].semaines_de_presence ).to eq 9_007_199_254_740_991
+    @creneau.modifie( regroupement_id: 999_999,
+                      semaines_de_presence_regroupement: 123)
+    expect( @creneau.regroupements.count ).to eq 1
+    expect( CreneauEmploiDuTempsRegroupement[ creneau_emploi_du_temps_id: @creneau.id,
+                                              regroupement_id: 999_999 ] ).to_not be nil
+    expect( CreneauEmploiDuTempsRegroupement[ creneau_emploi_du_temps_id: @creneau.id,
+                                              regroupement_id: 999_999 ].semaines_de_presence ).to eq 123
+
+    # change/add salle
+    @creneau.modifie( salle_id: @salle.id )
+    expect( @creneau.salles.count ).to eq 1
+    expect( CreneauEmploiDuTempsSalle[ creneau_emploi_du_temps_id: @creneau.id,
+                                       salle_id: @salle.id ] ).to_not be nil
+    expect( CreneauEmploiDuTempsSalle[ creneau_emploi_du_temps_id: @creneau.id,
+                                       salle_id: @salle.id ].semaines_de_presence ).to eq 9_007_199_254_740_991
+    @creneau.modifie( salle_id: @salle.id,
+                      semaines_de_presence_salle: 123)
+    expect( @creneau.salles.count ).to eq 1
+    expect( CreneauEmploiDuTempsSalle[ creneau_emploi_du_temps_id: @creneau.id,
+                                       salle_id: @salle.id ] ).to_not be nil
+    expect( CreneauEmploiDuTempsSalle[ creneau_emploi_du_temps_id: @creneau.id,
+                                       salle_id: @salle.id ].semaines_de_presence ).to eq 123
   end
 end
