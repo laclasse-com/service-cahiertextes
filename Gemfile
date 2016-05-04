@@ -25,8 +25,6 @@ gem 'laclasse-common', git: 'https://github.com/laclasse-com/laclasse-common.git
 group :development do
   gem 'rack-test'
   gem 'rspec'
-  gem 'show_me_the_cookies'
   gem 'rubocop'
-  gem 'rubocop-rspec'
   gem 'equivalent-xml'
 end
