@@ -1,6 +1,10 @@
 'use strict';
 
 angular.module( 'cahierDeTextesClientApp' )
+    .config( [ '$compileProvider',
+               function( $compileProvider ) {
+                   $compileProvider.debugInfoEnabled( false );
+               } ] )
 // Loading Bar
     .config( [ 'cfpLoadingBarProvider',
                function( cfpLoadingBarProvider ) {
