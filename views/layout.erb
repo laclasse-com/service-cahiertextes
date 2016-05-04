@@ -148,7 +148,11 @@
             .constant( 'DOCS_URL', '<%=DOCS_URL%>' )
             .constant( 'SEMAINES_VACANCES', { A: <%=CahierDeTextesApp::Utils::Holidays.get( 'A', DateTime.now.month > 7 ? DateTime.now.year : DateTime.now.year - 1 )%>,
                                               B: <%=CahierDeTextesApp::Utils::Holidays.get( 'B', DateTime.now.month > 7 ? DateTime.now.year : DateTime.now.year - 1 )%>,
-                                              C: <%=CahierDeTextesApp::Utils::Holidays.get( 'C', DateTime.now.month > 7 ? DateTime.now.year : DateTime.now.year - 1 )%> } );
+                                              C: <%=CahierDeTextesApp::Utils::Holidays.get( 'C', DateTime.now.month > 7 ? DateTime.now.year : DateTime.now.year - 1 )%> } )
+            .config( [ '$compileProvider',
+                       function( $compileProvider ) {
+                           $compileProvider.debugInfoEnabled( <%= ENV['RACK_ENV'] == 'development' %> );
+                       } ] );
     </script>
 
   </body>
