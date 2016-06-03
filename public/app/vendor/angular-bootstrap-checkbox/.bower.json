@@ -1,6 +1,6 @@
 {
   "name": "angular-bootstrap-checkbox",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "authors": [
     "Sebastian Hammerl, Getslash GmbH"
   ],
@@ -30,13 +30,13 @@
     "angular-scenario": ">= 1.2.0"
   },
   "homepage": "https://github.com/sebastianha/angular-bootstrap-checkbox",
-  "_release": "0.4.0",
+  "_release": "0.5.0",
   "_resolution": {
     "type": "version",
-    "tag": "0.4.0",
-    "commit": "8e46e84e00e784d42a745886e66e2e3335aca0b8"
+    "tag": "0.5.0",
+    "commit": "e50c9426caa73c86b8f831052cbf8daf8cd853d1"
   },
-  "_source": "git://github.com/sebastianha/angular-bootstrap-checkbox.git",
+  "_source": "https://github.com/sebastianha/angular-bootstrap-checkbox.git",
   "_target": "*",
   "_originalSource": "angular-bootstrap-checkbox"
 }
