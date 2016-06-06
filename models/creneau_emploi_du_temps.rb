@@ -212,4 +212,12 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
   end
   # rubocop:enable Metrics/PerceivedComplexity
   # rubocop:enable Metrics/CyclomaticComplexity
+
+  def deep_destroy
+    enseignants.each(&:destroy)
+    regroupements.each(&:destroy)
+    salles.each(&:destroy)
+
+    destroy
+  end
 end

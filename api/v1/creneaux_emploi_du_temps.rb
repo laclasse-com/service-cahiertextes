@@ -149,7 +149,11 @@ module CahierDeTextesAPI
 
         error!( 'Créneau inconnu', 404 ) if creneau.nil?
 
-        creneau.toggle_deleted( params[:date_creneau] )
+        if creneau.matiere_id.empty? && creneau.cours.empty? && creneau.devoirs.empty?
+          creneau.deep_destroy
+        else
+          creneau.toggle_deleted( params[:date_creneau] )
+        end
 
         creneau
       end
