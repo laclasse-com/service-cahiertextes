@@ -185,15 +185,19 @@ angular.module( 'cahierDeTextesClientApp' )
                           _($scope.matcheable_data).each( function( dataset ) {
                               switch( dataset.title ) {
                               case 'Matières':
+                                  dataset.nb_total = $scope.pronote.Matieres[0].Matiere.length;
                                   dataset.nb_unmatched = _($scope.pronote.Matieres[0].Matiere).where( { laclasse: undefined } ).length;
                                   break;
                               case 'Enseignants':
+                                  dataset.nb_total = $scope.pronote.Professeurs[0].Professeur.length;
                                   dataset.nb_unmatched = _($scope.pronote.Professeurs[0].Professeur).where( { laclasse: undefined } ).length;
                                   break;
                               case 'Classes':
+                                  dataset.nb_total = $scope.pronote.Classes[0].Classe.length;
                                   dataset.nb_unmatched = _($scope.pronote.Classes[0].Classe).where( { laclasse: undefined } ).length;
                                   break;
                               case 'Groupes d\'élèves':
+                                  dataset.nb_total = $scope.pronote.Groupes[0].Groupe.length;
                                   dataset.nb_unmatched = _($scope.pronote.Groupes[0].Groupe).where( { laclasse: undefined } ).length;
                                   break;
                               }
