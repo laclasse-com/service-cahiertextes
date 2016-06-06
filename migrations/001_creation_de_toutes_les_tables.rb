@@ -108,8 +108,7 @@ Sequel.migration do
       [ 'Leçon', 'Leçon à apprendre' ],
       [ 'Exposé', 'Exposé à préparer' ],
       [ 'Recherche', 'Recherche à faire' ],
-      [ 'Travail', 'Travail à faire' ]
-    ].each do |type_devoir|
+      [ 'Travail', 'Travail à faire' ] ].each do |type_devoir|
       self[:types_devoir].insert( [ :label, :description ], type_devoir )
     end
 

@@ -41,8 +41,7 @@ module DataManagement
               hdevoir[:fait] = devoir.fait_par?( eleve_id ) unless eleve_id.nil?
 
               hdevoir
-            end
-          }
+            end }
         end
       end
                                             .flatten

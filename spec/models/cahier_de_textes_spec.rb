@@ -11,8 +11,7 @@ describe CahierDeTextes do
       [ 'Leçon', 'Leçon à apprendre' ],
       [ 'Exposé', 'Exposé à préparer' ],
       [ 'Recherche', 'Recherche à faire' ],
-      [ 'Travail', 'Travail à faire' ]
-    ].each do |type_devoir|
+      [ 'Travail', 'Travail à faire' ] ].each do |type_devoir|
       TypeDevoir.create( label: type_devoir.first,
                          description: type_devoir.last )
     end

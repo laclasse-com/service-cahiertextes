@@ -54,7 +54,6 @@ class Etablissement < Sequel::Model( :etablissements )
           cours: cours,
           devoirs: devoirs,
           valide: !cours.date_validation.nil? }
-      end
-    }
+      end }
   end
 end

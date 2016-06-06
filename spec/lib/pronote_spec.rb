@@ -116,8 +116,7 @@ describe ProNote do
                                'classe_id' => 1 } ],
               'groupes_eleves' => [ { 'etablissement_code' => '0134567A',
                                       'groupe_id' => 2 } ],
-              'groupes_libres' => []
-            }
+              'groupes_libres' => [] }
           end
         end
       end

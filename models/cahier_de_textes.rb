@@ -27,9 +27,7 @@ class CahierDeTextes < Sequel::Model( :cahiers_de_textes )
             { mois: month,
               filled: tmp_cours.count,
               validated: tmp_cours.where( :date_validation ).count }
-          end
-        }
-      end
-    }
+          end }
+      end }
   end
 end

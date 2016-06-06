@@ -38,8 +38,7 @@ module CahierDeTextesApp
             nb_devoirs_faits: DevoirTodoItem.count,
             nb_ressources: Ressource.count,
             nb_utilisateurs_actifs: UserParameters.count,
-            nb_creneaux_emploi_du_temps: CreneauEmploiDuTemps.count
-          }.to_json
+            nb_creneaux_emploi_du_temps: CreneauEmploiDuTemps.count }.to_json
         end
       end
     end
