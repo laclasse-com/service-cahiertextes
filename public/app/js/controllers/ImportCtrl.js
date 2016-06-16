@@ -20,6 +20,7 @@ angular.module( 'cahierDeTextesClientApp' )
                       $scope.loading_file = false;
                       $scope.processing = false;
                       $scope.matcheable_data = [];
+                      $scope.problems_only = false;
 
                       Annuaire.get_matieres()
                           .then( function( response ) {

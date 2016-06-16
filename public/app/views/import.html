@@ -10,9 +10,9 @@
             <span class="glyphicon glyphicon-log-in"></span> <span data-ng-if="pronote">Re-</span>Charger les données
         </button>
 
-        <div class="alert alert-info" role="alert" data-ng-if="loading_file && !pronote"><i class="fa fa-spinner fa-pulse"></i> Décryptage des données EDT</div>
-        <div class="alert alert-info" role="alert" data-ng-if="loading_file && !etablissement"><i class="fa fa-spinner fa-pulse"></i> Chargement des données de l'établissement</div>
-        <div class="alert alert-info" role="alert" data-ng-if="!matieres"><i class="fa fa-spinner fa-pulse"></i> Chargement de la liste des matières officielles</div>
+        <div class="alert alert-info" role="alert" data-ng-if="loading_file && !pronote"><i class="fa fa-spinner fa-pulse"></i> 1/3 Décryptage des données EDT</div>
+        <div class="alert alert-info" role="alert" data-ng-if="loading_file && !etablissement"><i class="fa fa-spinner fa-pulse"></i> 2/3 Chargement des données de l'établissement</div>
+        <div class="alert alert-info" role="alert" data-ng-if="!matieres"><i class="fa fa-spinner fa-pulse"></i> 3/3 Chargement de la liste des matières officielles</div>
 
         <div class="clearfix"></div>
     </li>
@@ -54,7 +54,9 @@
 
         <div class="panel panel-default import row" data-ng-if="pronote && !loading_file" style="color: #333;">
             <h2>Année scolaire du {{pronote.AnneeScolaire[0].DateDebut | date:'fullDate'}} au {{pronote.AnneeScolaire[0].DateFin | date:'fullDate'}}</h2>
-
+            <div class="col-md-12">
+                <label class="pull-right"><checkbox data-ng-model="problems_only"></checkbox> N'afficher que les données à traiter manuellement.</label>
+            </div>
             <uib-tabset justified="true">
                 <uib-tab>
                     <uib-tab-heading>
@@ -79,7 +81,8 @@
                         </thead>
                         <tbody>
                             <tr data-ng-repeat="creneau in pronote.Cours[0].Cours | orderBy:sortCreneauxBy"
-                                data-ng-class="{'danger': !creneau.ready }">
+                                data-ng-class="{'danger': !creneau.ready }"
+                                data-ng-if="!problems_only || !creneau.ready">
                                 <td>{{jours_de_la_semaine[ creneau.Jour ]}}</td>
                                 <td>{{pronote.plages_horaires[ creneau.NumeroPlaceDebut ].LibelleHeureDebut}}</td>
                                 <td>{{creneau.NombrePlaces * pronote.GrilleHoraire[0].DureePlace}} minutes</td>
@@ -132,7 +135,8 @@
                             <!-- <tr data-ng-repeat="node in dataset.pronote | orderBy:['-edit','displayed_label']"
                                  data-ng-class="{'warning': node.edit}"> -->
                             <tr data-ng-repeat="node in dataset.pronote"
-                                data-ng-class="{'warning': node.edit}">
+                                data-ng-class="{'warning': node.edit}"
+                                data-ng-if="!problems_only || node.edit">
                                 <td>
                                     <span>
                                         {{node.displayed_label}}
@@ -155,7 +159,6 @@
                             </tr>
                         </tbody>
                     </table>
-                    {{dataset.pronote}}
                 </uib-tab>
             </uib-tabset>
         </div>
