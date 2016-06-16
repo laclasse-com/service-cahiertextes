@@ -81,23 +81,23 @@
                         </thead>
                         <tbody>
                             <tr data-ng-repeat="creneau in pronote.Cours[0].Cours | orderBy:sortCreneauxBy"
-                                data-ng-class="{'danger': !creneau.ready }"
+                                data-ng-class="{'ok': creneau.ready, 'ko': !creneau.ready}"
                                 data-ng-if="!problems_only || !creneau.ready">
                                 <td>{{jours_de_la_semaine[ creneau.Jour ]}}</td>
                                 <td>{{pronote.plages_horaires[ creneau.NumeroPlaceDebut ].LibelleHeureDebut}}</td>
                                 <td>{{creneau.NombrePlaces * pronote.GrilleHoraire[0].DureePlace}} minutes</td>
-                                <td>{{pronote.matieres[ creneau.Matiere[0].Ident ].laclasse.libelle_long}}</td>
-                                <td>
+                                <td data-ng-class="{'rouge ko': !creneau.readiness.matiere }">{{pronote.matieres[ creneau.Matiere[0].Ident ].laclasse.libelle_long}}</td>
+                                <td data-ng-class="{'rouge ko': !creneau.readiness.enseignant }">
                                     <div data-ng-repeat="node in creneau.Professeur">
                                         {{pronote.enseignants[ node.Ident ].laclasse.lastname}} <sup>({{node.Semaines}})</sup>
                                     </div>
                                 </td>
-                                <td>
-                                    <div data-ng-repeat="node in creneau.Classe" data-ng-style="{'background-color': '{{pronote.classes[ node.Ident ].Couleur}}' }">
-                                        {{pronote.classes[ node.Ident ].laclasse.libelle_aaf}} <sup>({{node.Semaines}})</sup>
+                                <td data-ng-class="{'rouge ko': !creneau.readiness.classe && !creneau.readiness.groupe_eleve }">
+                                    <div data-ng-repeat="node in creneau.Classe">
+                                        {{pronote.classes[ node.Ident ].Nom}} <sup>({{node.Semaines}})</sup>
                                     </div>
-                                    <div data-ng-repeat="node in creneau.Groupe" data-ng-style="{'background-color': '{{pronote.groupes[ node.Ident ].Couleur}}' }">
-                                        {{pronote.groupes[ node.Ident ].laclasse.libelle_aaf}} <sup>({{node.Semaines}})</sup>
+                                    <div data-ng-repeat="node in creneau.Groupe">
+                                        {{pronote.groupes[ node.Ident ].Nom}} <sup>({{node.Semaines}})</sup>
                                     </div>
                                 </td>
                                 <td>
@@ -105,10 +105,13 @@
                                         {{pronote.salles[ node.Ident ].Nom}} <sup>({{node.Semaines}})</sup>
                                     </div>
                                 </td>
-                                <td>
+                                <td class="import-readiness"
+                                    data-ng-class="{'vert': creneau.ready, 'rouge': !creneau.ready}">
+                                    <span data-ng-if="creneau.ready"> <i class="glyphicon glyphicon-ok" title="Aucun problème"></i> </span>
+
                                     <span data-ng-if="!creneau.readiness.matiere"> <i class="glyphicon glyphicon-book" title="Matière inconnue"></i> </span>
                                     <span data-ng-if="!creneau.readiness.enseignant"> <i class="glyphicon glyphicon-user" title="Enseignant inconnu"></i> </span>
-                                    <span data-ng-if="!creneau.readiness.classe || !creneau.readiness.groupe_eleve"> <i class="glyphicon glyphicon-education" title="Classe ou Groupe inconnu"></i> </span>
+                                    <span data-ng-if="!creneau.readiness.classe && !creneau.readiness.groupe_eleve"> <i class="glyphicon glyphicon-education" title="Classe/Groupe inconnu"></i> </span>
                                 </td>
                             </tr>
                         </tbody>
@@ -135,7 +138,7 @@
                             <!-- <tr data-ng-repeat="node in dataset.pronote | orderBy:['-edit','displayed_label']"
                                  data-ng-class="{'warning': node.edit}"> -->
                             <tr data-ng-repeat="node in dataset.pronote"
-                                data-ng-class="{'warning': node.edit}"
+                                data-ng-class="{'ok': !node.edit, 'rouge ko': node.edit}"
                                 data-ng-if="!problems_only || node.edit">
                                 <td>
                                     <span>

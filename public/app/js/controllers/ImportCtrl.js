@@ -156,11 +156,10 @@ angular.module( 'cahierDeTextesClientApp' )
                           _($scope.pronote.Cours[0].Cours).each( function( creneau ) {
                               creneau.readiness = { matiere: !_($scope.pronote.matieres[ creneau.Matiere[0].Ident ].laclasse).isUndefined(),
                                                     enseignant: _(creneau.Professeur).reduce( function( memo, enseignant ) { return memo && !_($scope.pronote.enseignants[ enseignant.Ident ].laclasse).isUndefined(); }, true ),
-                                                    classe: _(creneau.Classe).reduce( function( memo, classe ) { return memo && !_($scope.pronote.classes[ classe.Ident ].laclasse).isUndefined(); }, true ),
-                                                    groupe_eleve: _(creneau.Groupe).reduce( function( memo, groupe ) { return memo && !_($scope.pronote.groupes_eleves[ groupe.Ident ].laclasse).isUndefined(); }, true ) };
+                                                    classe: _(creneau.Classe).reduce( function( memo, classe ) { return memo && !_($scope.pronote.classes[ classe.Ident ].laclasse).isUndefined(); }, !_(creneau.Classe).isUndefined() ),
+                                                    groupe_eleve: _(creneau.Groupe).reduce( function( memo, groupe ) { return memo && !_($scope.pronote.groupes_eleves[ groupe.Ident ].laclasse).isUndefined(); }, !_(creneau.Groupe).isUndefined() ) };
 
                               creneau.ready = creneau.readiness.matiere && creneau.readiness.enseignant && ( creneau.readiness.classe || creneau.readiness.groupe_eleve );
-
                           } );
 
                           var count_expected_creneaux = function( creneaux ) {

@@ -944,7 +944,6 @@ fieldset {
     }
 }
 
-
 legend {
     .email {
         font-size: 18px;
@@ -967,4 +966,23 @@ legend {
 .progress-bar-container {
     height: 12px;
     width: 100%;
+}
+
+.import {
+    tr.ok {
+        border-left: 6px solid #80ba66;
+    }
+    tr.ko {
+        border-left: 6px solid #eb5454;
+        .rouge {
+            color: #fff;
+            font-weight: bold;
+        }
+    }
+    .import-readiness {
+        text-align: center;
+        .glyphicon {
+            color: #fff;
+        }
+    }
 }
