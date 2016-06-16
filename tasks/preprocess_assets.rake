@@ -24,7 +24,7 @@ namespace :preprocess_assets do
   task templates: :load_config do
     STDERR.puts 'Compilation of angular templates into javascript files'
     Dir.glob( 'public/app/views/*.html' )
-      .each do |fichier|
+       .each do |fichier|
       target = "#{fichier.gsub( /views/, 'js/templates' )}.js"
       template_name = fichier.gsub( %r{public/app/}, '' )
       template = File.read( fichier )
@@ -61,22 +61,21 @@ namespace :preprocess_assets do
                                'public/app/vendor/ng-color-picker/color-picker.css',
                                'public/app/vendor/sweetalert/dist/sweetalert.css',
                                'public/app/vendor/angular-toastr/dist/angular-toastr.css',
+                               'public/app/vendor/laclasse-common-client/css/main.css',
                                'public/app/vendor/laclasse-common-client/css/bootstrap-theme.css',
                                'public/app/vendor/ui-select/dist/select.css' ]
-                             .map { |fichier| File.read( fichier ) }.join,
+                               .map { |fichier| File.read( fichier ) }.join,
                              syntax: :scss,
                              style: :compressed )
-    File.open( './public/app/vendor/vendor.min.css', 'w' )
-      .write( uglified )
+    File.open( './public/app/vendor/vendor.min.css', 'w' ).write( uglified )
 
     STDERR.puts 'Sassification of application CSS'
     uglified = Sass.compile( [ 'public/app/css/main.scss',
                                'public/app/css/other_media.css' ]
-                             .map { |fichier| File.read( fichier ) }.join,
+                               .map { |fichier| File.read( fichier ) }.join,
                              syntax: :scss,
                              style: :compressed )
-    File.open( './public/app/css/cdt.min.css', 'w' )
-      .write( uglified )
+    File.open( './public/app/css/cdt.min.css', 'w' ).write( uglified )
   end
 
   desc 'Minify JS using Uglifier'
@@ -86,9 +85,9 @@ namespace :preprocess_assets do
                                                            .reject { |fichier| /min\.js$/.match fichier }
                                                            .sort )
     File.open( './public/app/js/cdt.min.js', 'w' )
-      .write( uglified )
+        .write( uglified )
     File.open( './public/app/js/cdt.min.js.map', 'w' )
-      .write( source_map )
+        .write( source_map )
 
     STDERR.puts 'Uglification of vendor Javascript'
     uglified, source_map = Uglify.those_files_with_map( [ 'public/app/vendor/jquery/dist/jquery.js',
@@ -129,6 +128,6 @@ namespace :preprocess_assets do
     File.open( './public/app/vendor/vendor.min.js', 'w' )
         .write( uglified )
     File.open( './public/app/vendor/vendor.min.js.map', 'w' )
-      .write( source_map )
+        .write( source_map )
   end
 end

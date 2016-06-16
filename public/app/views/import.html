@@ -60,6 +60,9 @@
                     <uib-tab-heading>
                         <h4>Créneaux</h4>
                         ({{nb_expected_creneaux_ready}} seront créés sur {{nb_expected_creneaux}})
+                        <div class="progress-bar-container vert-moins">
+                            <div class="progress-bar rouge" data-ng-style="{ width: ( ( nb_expected_creneaux_ready / nb_expected_creneaux ) * 100 ) + '%' }"></div>
+                        </div>
                     </uib-tab-heading>
                     <table class="table table-striped table-bordered table-hover table-condensed">
                         <thead>
@@ -113,6 +116,9 @@
                     <uib-tab-heading>
                         <h4>{{dataset.title}}</h4>
                         ({{dataset.nb_unmatched}} à traiter sur {{dataset.nb_total}})
+                        <div class="progress-bar-container vert-moins">
+                            <div class="progress-bar rouge" data-ng-style="{ width: ( ( dataset.nb_unmatched / dataset.nb_total ) * 100 ) + '%' }"></div>
+                        </div>
                     </uib-tab-heading>
                     <table class="table table-striped table-bordered table-hover table-condensed">
                         <thead>
