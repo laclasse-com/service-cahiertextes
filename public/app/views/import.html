@@ -30,7 +30,7 @@
         <div class="alert" role="alert"
              data-ng-if="processing && nb_expected_salles"
              data-ng-class="{'alert-success': nb_salles_created == nb_expected_salles, 'alert-danger': nb_salles_created == 0 || nb_expected_salles == 0, 'alert-warning': nb_salles_created < nb_expected_salles}">
-        {{nb_salles_created}} salles créées sur {{nb_expected_salles}} attendues.
+            {{nb_salles_created}} salles créées sur {{nb_expected_salles}} attendues.
             <div class="progress-bar-container">
                 <div class="progress-bar" data-ng-style="{ width: ( ( nb_salles_created / nb_expected_salles ) * 100 ) + '%'}"></div>
             </div>
@@ -38,7 +38,7 @@
         <div class="alert" role="alert"
              data-ng-if="processing && nb_expected_cahiers_de_textes"
              data-ng-class="{'alert-success': nb_cahiers_de_textes_created == nb_expected_cahiers_de_textes, 'alert-danger': nb_cahiers_de_textes_created == 0 || nb_expected_cahiers_de_textes == 0, 'alert-warning': nb_cahiers_de_textes_created < nb_expected_cahiers_de_textes}">
-        {{nb_cahiers_de_textes_created}} cahiers_de_textes créés sur les {{nb_expected_cahiers_de_textes}} attendus.
+            {{nb_cahiers_de_textes_created}} cahiers_de_textes créés sur les {{nb_expected_cahiers_de_textes}} attendus.
             <div class="progress-bar-container">
                 <div class="progress-bar" data-ng-style="{ width: ( ( nb_cahiers_de_textes_created / nb_expected_cahiers_de_textes ) * 100 ) + '%' }"></div>
             </div>
@@ -46,7 +46,7 @@
         <div class="alert" role="alert"
              data-ng-if="processing && nb_expected_creneaux"
              data-ng-class="{'alert-success': nb_creneaux_created == nb_expected_creneaux, 'alert-danger': nb_creneaux_created == 0 || nb_expected_creneaux == 0, 'alert-warning': nb_creneaux_created < nb_expected_creneaux}">
-        {{nb_creneaux_created}} creneaux créés sur {{nb_expected_creneaux_ready}} attendus.
+            {{nb_creneaux_created}} creneaux créés sur {{nb_expected_creneaux_ready}} attendus.
             <div class="progress-bar-container">
                 <div class="progress-bar" data-ng-style="{ width: ( ( nb_creneaux_created / nb_expected_creneaux ) * 100 ) + '%' }"></div>
             </div>
@@ -58,7 +58,7 @@
             <uib-tabset justified="true">
                 <uib-tab>
                     <uib-tab-heading>
-                        <h4>Créneaux d'emploi du temps</h4>
+                        <h4>Créneaux</h4>
                         ({{nb_expected_creneaux_ready}} seront créés sur {{nb_expected_creneaux}})
                     </uib-tab-heading>
                     <table class="table table-striped table-bordered table-hover table-condensed">
@@ -71,6 +71,7 @@
                                 <th> <a data-ng-click="sortCreneauxBy='Professeur'">enseignant(s)</a> </th>
                                 <th> <a data-ng-click="sortCreneauxBy=['Classe','Groupe']">regroupement(s)</a> </th>
                                 <th> <a data-ng-click="sortCreneauxBy='Salle'">salle(s)</a> </th>
+                                <th> <i class="glyphicon glyphicon-warning-sign" title="Problème(s) identifié(s)"></i> </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -97,6 +98,11 @@
                                     <div data-ng-repeat="node in creneau.Salle">
                                         {{pronote.salles[ node.Ident ].Nom}} <sup>({{node.Semaines}})</sup>
                                     </div>
+                                </td>
+                                <td>
+                                    <span data-ng-if="!creneau.readiness.matiere"> <i class="glyphicon glyphicon-book" title="Matière inconnue"></i> </span>
+                                    <span data-ng-if="!creneau.readiness.enseignant"> <i class="glyphicon glyphicon-user" title="Enseignant inconnu"></i> </span>
+                                    <span data-ng-if="!creneau.readiness.classe || !creneau.readiness.groupe_eleve"> <i class="glyphicon glyphicon-education" title="Classe ou Groupe inconnu"></i> </span>
                                 </td>
                             </tr>
                         </tbody>
