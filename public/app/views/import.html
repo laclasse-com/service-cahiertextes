@@ -1,7 +1,7 @@
 <ol class="list-group">
     <li class="list-group-item"
         data-ng-class="{'active': !pronote}">
-        <h1>Charger un fichier Pronote :</h1>
+        <h1>Charger un fichier EDT :</h1>
         <input type="file" file-model="fichier" />
 
         <button class="btn pull-right btn-default"
@@ -10,7 +10,7 @@
             <span class="glyphicon glyphicon-log-in"></span> <span data-ng-if="pronote">Re-</span>Charger les données
         </button>
 
-        <div class="alert alert-info" role="alert" data-ng-if="loading_file && !pronote"><i class="fa fa-spinner fa-pulse"></i> Décryptage des données Pronote</div>
+        <div class="alert alert-info" role="alert" data-ng-if="loading_file && !pronote"><i class="fa fa-spinner fa-pulse"></i> Décryptage des données EDT</div>
         <div class="alert alert-info" role="alert" data-ng-if="loading_file && !etablissement"><i class="fa fa-spinner fa-pulse"></i> Chargement des données de l'établissement</div>
         <div class="alert alert-info" role="alert" data-ng-if="!matieres"><i class="fa fa-spinner fa-pulse"></i> Chargement de la liste des matières officielles</div>
 

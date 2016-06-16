@@ -20,7 +20,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                       //   uisref: 'principal.oldimport',
                                       //   css_class: 'glyphicon glyphicon-import',
                                       //   active: false },
-                                      { heading: 'Import Pronote',
+                                      { heading: 'Import EDT',
                                         uisref: 'principal.import',
                                         css_class: 'glyphicon glyphicon-import',
                                         active: false } ];
