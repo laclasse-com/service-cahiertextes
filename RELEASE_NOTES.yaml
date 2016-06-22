@@ -1,0 +1,7 @@
+1:
+  11:
+    0:
+      - Refonte de l'interface d'import EDT,
+      - Création de note de version et intégration de celles-ci dans l'interface
+      - Mise à jour des composants tierces serveurs et clients,
+      - Amélioration de la couverture de test.
