@@ -2,12 +2,14 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller('ImportCtrl',
-                [ '$scope', '$http', '$locale', 'toastr', 'APP_PATH', 'Annuaire', 'fileUpload',
+                [ '$scope', '$http', '$locale', '$sce', 'toastr', 'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'Annuaire', 'fileUpload', 'moment',
                   'Etablissements', 'PlagesHoraires', 'Salles', 'CreneauxEmploiDuTemps', 'CahiersDeTextes',
                   'current_user',
-                  function ( $scope, $http, $locale, toastr, APP_PATH, Annuaire, fileUpload,
+                  function ( $scope, $http, $locale, $sce, toastr, APP_PATH, SEMAINES_VACANCES, ZONE, Annuaire, fileUpload, moment,
                              Etablissements, PlagesHoraires, Salles, CreneauxEmploiDuTemps, CahiersDeTextes,
                              current_user ) {
+                      $scope.scope = $scope;
+
                       var groupByKey = function( array, key ) {
                           return _.chain( array ).map( function( i ) { return i[ key ]; } ).object( array ).value();
                       };
@@ -32,6 +34,76 @@ angular.module( 'cahierDeTextesClientApp' )
                               } );
                           } );
 
+                      // ********** semainiers
+                      $scope.annee = $locale.DATETIME_FORMATS.MONTH;
+                      $scope.jours = _($locale.DATETIME_FORMATS.DAY).indexBy( function( jour ) { return _($locale.DATETIME_FORMATS.DAY).indexOf( jour ); } );
+
+                      var padEnd = function( string, target_length, filler ) {
+                          if ( string.length >= target_length ) {
+                              return string;
+                          } else {
+                              var pad = '';
+                              _( (target_length - string.length) / filler.length ).times( function() { pad += filler; } );
+
+                              return (string + pad).substr( 0, target_length );
+                          }
+                      };
+                      var what_month = function( n_week ) {
+                          var now = moment();
+                          var year = now.year();
+                          if ( ( n_week < 36 ) && ( now.month() > 7 ) ) {
+                              year++;
+                          } else if ( now.month() < 7 ) {
+                              year--;
+                          }
+                          return moment( year ).isoWeek( n_week ).month();
+                      };
+                      var sont_ce_les_vacances = function( i_semaine, zone ) {
+                          return SEMAINES_VACANCES[ zone ].indexOf( i_semaine ) != -1;
+                      };
+
+                      var overlay_semainier = _.chain( _.range(1, 52) )
+                          .map( function( s ) { return { semaine: s,
+                                                         mois: what_month( s ) }; } )
+                          .groupBy( function( s ) { return s.mois; } )
+                          .toArray()
+                          .map( function( semaines, i ) {
+                              return { index: i > 7 ? i - 8 : i + 4,
+                                       label: $scope.annee[ i ],
+                                       semaines: semaines };
+                          } )
+                          .value();
+
+                      var beautify_semainier = function( semainier ) {
+                          var bsemainier = padEnd( semainier.toString( 2 ), 53, '0' );
+                          var fixed_bsemainier = bsemainier.substr( 17 ) + bsemainier.substr( 0, 17 );
+
+                          var html = '<div class="semainier-tooltip gris1">';
+                          html += _.chain(overlay_semainier)
+                              .sortBy( function( month ) { return month.index; } )
+                              .map( function( month ) {
+                                  var month_html = '<div class="month blanc"><h5 class="month-name gris4">' + month.label + '</h5>';
+
+                                  month_html += _(month.semaines).map( function( week ) {
+                                      var week_html = '<span class="week';
+                                      if ( sont_ce_les_vacances( week.semaine, ZONE ) ) { week_html += ' gris1'; }
+                                      if ( fixed_bsemainier[ week.semaine ] === '1' ) { week_html += ' orange-moins'; }
+                                      week_html += '">' + week.semaine + '</span>';
+
+                                      return week_html;
+                                  } ).join('');
+
+                                  month_html += '</div>';
+
+                                  return month_html;
+                              } )
+                              .value()
+                              .join('');
+                          html += '<div class="clearfix"></div></div>';
+
+                          return html; // $sce.trustAsHtml( html );
+                      };
+                      // ********** /semainiers
                       $scope.identifie_objet = function( mrpni ) {
                           if ( _(mrpni).has('id_annuaire')
                                && !_(mrpni.id_annuaire).isNull()
@@ -124,6 +196,18 @@ angular.module( 'cahierDeTextesClientApp' )
                                                       regroupement.laclasse.displayed_label = regroupement.laclasse.libelle_aaf;
                                                   }
                                               } );
+
+                                          // 4. assemble semainiers' HTML
+                                          _($scope.pronote.Cours[0].Cours).each( function( creneau ) {
+                                              _(creneau.Salle).each( function( node ) { node.displayed_semainier = beautify_semainier( node.Semaines ); } );
+                                              _(creneau.Professeur).each( function( node ) { node.displayed_semainier = beautify_semainier( node.Semaines ); } );
+                                              if ( _(creneau).has( 'Classe' ) ) {
+                                                  _(creneau.Classe).each( function( node ) { node.displayed_semainier = beautify_semainier( node.Semaines ); } );
+                                              }
+                                              if ( _(creneau).has( 'Groupe' ) ) {
+                                                  _(creneau.Groupe).each( function( node ) { node.displayed_semainier = beautify_semainier( node.Semaines ); } );
+                                              }
+                                          } );
 
                                           $scope.pronote.matieres = groupByKey( $scope.pronote.Matieres[0].Matiere, 'Ident' );
                                           $scope.pronote.enseignants = groupByKey( $scope.pronote.Professeurs[0].Professeur, 'Ident' );

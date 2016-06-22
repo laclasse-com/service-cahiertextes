@@ -985,4 +985,33 @@ legend {
             color: #fff;
         }
     }
+    .tooltip-inner {
+        border: 0;
+        padding: 0;
+        max-width: 800px;
+    }
+    .semainier-tooltip {
+        width: 512px;
+        .month {
+            height: 7em;
+            width: 7em;
+            float: left;
+            margin: 1px 0 0 1px;
+            .month-name {
+                margin: 0;
+                width: 100%;
+                height: 1em;
+                text-align: center;
+                font-weight: bold;
+                color: #fff;
+            }
+            .week {
+                height: 2em;
+                width: 50%;
+                float: left;
+                text-align: center;
+                line-height: 2;
+            }
+        }
+    }
 }

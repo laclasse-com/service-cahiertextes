@@ -89,20 +89,20 @@
                                 <td data-ng-class="{'rouge ko': !creneau.readiness.matiere }">{{pronote.matieres[ creneau.Matiere[0].Ident ].laclasse.libelle_long}}</td>
                                 <td data-ng-class="{'rouge ko': !creneau.readiness.enseignant }">
                                     <div data-ng-repeat="node in creneau.Professeur">
-                                        {{pronote.enseignants[ node.Ident ].laclasse.lastname}} <sup>({{node.Semaines}})</sup>
+                                        {{pronote.enseignants[ node.Ident ].laclasse.lastname}} <sup uib-tooltip-html="node.displayed_semainier" tooltip-trigger="click">({{node.Semaines}})</sup>
                                     </div>
                                 </td>
                                 <td data-ng-class="{'rouge ko': !creneau.readiness.classe && !creneau.readiness.groupe_eleve }">
                                     <div data-ng-repeat="node in creneau.Classe">
-                                        {{pronote.classes[ node.Ident ].Nom}} <sup>({{node.Semaines}})</sup>
+                                        {{pronote.classes[ node.Ident ].Nom}} <sup uib-tooltip-html="node.displayed_semainier" tooltip-trigger="click">({{node.Semaines}})</sup>
                                     </div>
                                     <div data-ng-repeat="node in creneau.Groupe">
-                                        {{pronote.groupes[ node.Ident ].Nom}} <sup>({{node.Semaines}})</sup>
+                                        {{pronote.groupes[ node.Ident ].Nom}} <sup uib-tooltip-html="node.displayed_semainier" tooltip-trigger="click">({{node.Semaines}})</sup>
                                     </div>
                                 </td>
                                 <td>
                                     <div data-ng-repeat="node in creneau.Salle">
-                                        {{pronote.salles[ node.Ident ].Nom}} <sup>({{node.Semaines}})</sup>
+                                        {{pronote.salles[ node.Ident ].Nom}} <sup uib-tooltip-html="node.displayed_semainier" tooltip-trigger="click">({{node.Semaines}})</sup>
                                     </div>
                                 </td>
                                 <td class="import-readiness"
