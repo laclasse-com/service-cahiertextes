@@ -66,6 +66,40 @@
                             <div class="progress-bar rouge" data-ng-style="{ width: ( ( nb_expected_creneaux_ready / nb_expected_creneaux ) * 100 ) + '%' }"></div>
                         </div>
                     </uib-tab-heading>
+
+                    <div class="col-md-6">
+                        <div class="ui-select-wrapper">
+                            <ui-select multiple class="pull-left" theme="bootstrap"
+                                       append-to-body="true"
+                                       data-ng-model="scope.selected_classes">
+                                <ui-select-match placeholder="Classe(s)...">{{$item.Nom}}</ui-select-match>
+                                <ui-select-choices repeat="classe in pronote.Classes[0].Classe | orderBy:['Ident','Nom']">
+                                    {{classe.Nom}}
+                                </ui-select-choices>
+                            </ui-select>
+                            <button class="btn btn-xs btn-primary"
+                                    data-ng-click="scope.selected_classes = pronote.Classes[0].Classe"><span class="glyphicon glyphicon-certificate"></span></button>
+                            <button class="btn btn-xs btn-default"
+                                    data-ng-click="scope.selected_classes = []"><span class="glyphicon glyphicon-erase"></span></button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="ui-select-wrapper">
+                            <ui-select multiple class="pull-left" theme="bootstrap"
+                                       append-to-body="true"
+                                       data-ng-model="scope.selected_groupes">
+                                <ui-select-match placeholder="Groupe(s)...">{{$item.Nom}}</ui-select-match>
+                                <ui-select-choices repeat="groupe in pronote.Groupes[0].Groupe | orderBy:['Ident','Nom']">
+                                    {{groupe.Nom}}
+                                </ui-select-choices>
+                            </ui-select>
+                            <button class="btn btn-xs btn-primary"
+                                    data-ng-click="scope.selected_groupes = pronote.Groupes[0].Groupe"><span class="glyphicon glyphicon-certificate"></span></button>
+                            <button class="btn btn-xs btn-default"
+                                    data-ng-click="scope.selected_groupes = []"><span class="glyphicon glyphicon-erase"></span></button>
+                        </div>
+                    </div>
+
                     <table class="table table-striped table-bordered table-hover table-condensed">
                         <thead>
                             <tr>
@@ -80,7 +114,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr data-ng-repeat="creneau in pronote.Cours[0].Cours | orderBy:sortCreneauxBy"
+                            <tr data-ng-repeat="creneau in pronote.Cours[0].Cours | orderBy:sortCreneauxBy | filter:filter_creneau( scope.selected_classes, scope.selected_groupes )"
                                 data-ng-class="{'ok': creneau.ready, 'ko': !creneau.ready}"
                                 data-ng-if="!problems_only || !creneau.ready">
                                 <td>{{jours_de_la_semaine[ creneau.Jour ]}}</td>

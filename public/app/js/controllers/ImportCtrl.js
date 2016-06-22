@@ -104,6 +104,24 @@ angular.module( 'cahierDeTextesClientApp' )
                           return html; // $sce.trustAsHtml( html );
                       };
                       // ********** /semainiers
+                      // ********** filtrage tableau créneaux
+                      $scope.filter_creneau = function( selected_classes, selected_groupes ) {
+                          return function( creneau ) {
+                              if ( _(selected_classes).isEmpty() && _(selected_groupes).isEmpty() ) {
+                                  return true;
+                              } else if ( _(creneau).has( 'Classe' ) ) {
+                                  return _.intersection( _(creneau.Classe).map( function( classe ) { return classe.Ident; } ),
+                                                         _(selected_classes).map( function( classe ) { return classe.Ident; } ) ).length > 0;
+                              } else if ( _(creneau).has( 'Groupe' ) ) {
+                                  return _.intersection( _(creneau.Groupe).map( function( groupe ) { return groupe.Ident; } ),
+                                                         _(selected_groupes).map( function( groupe ) { return groupe.Ident; } ) ).length > 0;
+                              } else {
+                                  return false;
+                              }
+                          };
+                      };
+                      // ********** /filtrage tableau créneaux
+
                       $scope.identifie_objet = function( mrpni ) {
                           if ( _(mrpni).has('id_annuaire')
                                && !_(mrpni.id_annuaire).isNull()
