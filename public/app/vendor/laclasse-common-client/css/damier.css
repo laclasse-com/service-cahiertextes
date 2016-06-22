@@ -10,7 +10,10 @@
 .damier .case {
     list-style: none;
     padding: 0;
+    word-wrap: break-word;
 }
 .damier .petite.case {
     height: 25%;
+    min-height: 200px;
+    min-width: 180px;
 }

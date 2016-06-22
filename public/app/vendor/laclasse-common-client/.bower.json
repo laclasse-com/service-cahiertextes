@@ -6,11 +6,11 @@
   "dependencies": {},
   "devDependencies": {},
   "homepage": "https://github.com/laclasse-com/laclasse-common-client",
-  "_release": "a294c38c87",
+  "_release": "4b26496856",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "a294c38c878001fd98474489a38925f185683207"
+    "commit": "4b26496856994e3cfcf54abf2e3539d5ee2be385"
   },
   "_source": "https://github.com/laclasse-com/laclasse-common-client.git",
   "_target": "master",
