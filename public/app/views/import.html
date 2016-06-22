@@ -53,10 +53,7 @@
         </div>
 
         <div class="panel panel-default import row" data-ng-if="pronote && !loading_file" style="color: #333;">
-            <h2>Année scolaire du {{pronote.AnneeScolaire[0].DateDebut | date:'fullDate'}} au {{pronote.AnneeScolaire[0].DateFin | date:'fullDate'}}</h2>
-            <div class="col-md-12">
-                <label class="pull-right"><checkbox data-ng-model="problems_only"></checkbox> N'afficher que les données à traiter manuellement.</label>
-            </div>
+            <h2 class="school-year">Année scolaire du {{pronote.AnneeScolaire[0].DateDebut | date:'fullDate'}} au {{pronote.AnneeScolaire[0].DateFin | date:'fullDate'}}</h2>
             <uib-tabset justified="true">
                 <uib-tab>
                     <uib-tab-heading>
@@ -67,38 +64,89 @@
                         </div>
                     </uib-tab-heading>
 
-                    <div class="col-md-6">
-                        <div class="ui-select-wrapper">
-                            <ui-select multiple class="pull-left" theme="bootstrap"
-                                       append-to-body="true"
-                                       data-ng-model="scope.selected_classes">
-                                <ui-select-match placeholder="Classe(s)...">{{$item.Nom}}</ui-select-match>
-                                <ui-select-choices repeat="classe in pronote.Classes[0].Classe | orderBy:['Ident','Nom']">
-                                    {{classe.Nom}}
-                                </ui-select-choices>
-                            </ui-select>
-                            <button class="btn btn-xs btn-primary"
-                                    data-ng-click="scope.selected_classes = pronote.Classes[0].Classe"><span class="glyphicon glyphicon-certificate"></span></button>
-                            <button class="btn btn-xs btn-default"
-                                    data-ng-click="scope.selected_classes = []"><span class="glyphicon glyphicon-erase"></span></button>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="ui-select-wrapper">
-                            <ui-select multiple class="pull-left" theme="bootstrap"
-                                       append-to-body="true"
-                                       data-ng-model="scope.selected_groupes">
-                                <ui-select-match placeholder="Groupe(s)...">{{$item.Nom}}</ui-select-match>
-                                <ui-select-choices repeat="groupe in pronote.Groupes[0].Groupe | orderBy:['Ident','Nom']">
-                                    {{groupe.Nom}}
-                                </ui-select-choices>
-                            </ui-select>
-                            <button class="btn btn-xs btn-primary"
-                                    data-ng-click="scope.selected_groupes = pronote.Groupes[0].Groupe"><span class="glyphicon glyphicon-certificate"></span></button>
-                            <button class="btn btn-xs btn-default"
-                                    data-ng-click="scope.selected_groupes = []"><span class="glyphicon glyphicon-erase"></span></button>
-                        </div>
-                    </div>
+                    <!-- Critères de filtrage -->
+                    <uib-accordion>
+                        <uib-accordion-group is-open="ui.is_accordion_open">
+                            <uib-accordion-heading>
+                                Filtrage <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': ui.is_accordion_open, 'glyphicon-chevron-right': !ui.is_accordion_open}"></i>
+                            </uib-accordion-heading>
+                            <div class="col-md-12">
+                                <label class="pull-right"><checkbox data-ng-model="problems_only"></checkbox> N'afficher que les données à traiter manuellement.</label>
+                            </div>
+
+                            <!-- par regroupements -->
+                            <div class="col-md-3">
+                                <div class="ui-select-wrapper">
+                                    <ui-select multiple class="pull-left" theme="bootstrap"
+                                               append-to-body="true"
+                                               data-ng-model="scope.selected_classes">
+                                        <ui-select-match placeholder="Classe(s)...">{{$item.Nom}}</ui-select-match>
+                                        <ui-select-choices repeat="classe in pronote.Classes[0].Classe | orderBy:['Ident','Nom']">
+                                            {{classe.Nom}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <button class="btn btn-xs btn-primary"
+                                            data-ng-click="scope.selected_classes = pronote.Classes[0].Classe"><span class="glyphicon glyphicon-certificate"></span></button>
+                                    <button class="btn btn-xs btn-default"
+                                            data-ng-click="scope.selected_classes = []"><span class="glyphicon glyphicon-erase"></span></button>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="ui-select-wrapper">
+                                    <ui-select multiple class="pull-left" theme="bootstrap"
+                                               append-to-body="true"
+                                               data-ng-model="scope.selected_groupes">
+                                        <ui-select-match placeholder="Groupe(s) d'élèves...">{{$item.Nom}}</ui-select-match>
+                                        <ui-select-choices repeat="groupe in pronote.Groupes[0].Groupe | orderBy:['Ident','Nom']">
+                                            {{groupe.Nom}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <button class="btn btn-xs btn-primary"
+                                            data-ng-click="scope.selected_groupes = pronote.Groupes[0].Groupe"><span class="glyphicon glyphicon-certificate"></span></button>
+                                    <button class="btn btn-xs btn-default"
+                                            data-ng-click="scope.selected_groupes = []"><span class="glyphicon glyphicon-erase"></span></button>
+                                </div>
+                            </div>
+
+                            <!-- par enseignants -->
+                            <div class="col-md-3">
+                                <div class="ui-select-wrapper">
+                                    <ui-select multiple class="pull-left" theme="bootstrap"
+                                               append-to-body="true"
+                                               data-ng-model="scope.selected_enseignants">
+                                        <ui-select-match placeholder="Enseignant(s)...">{{$item.Nom}}</ui-select-match>
+                                        <ui-select-choices repeat="enseignant in pronote.Professeurs[0].Professeur | orderBy:['Ident','Nom']">
+                                            {{enseignant.Nom}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <button class="btn btn-xs btn-primary"
+                                            data-ng-click="scope.selected_enseignants = pronote.Professeurs[0].Professeur"><span class="glyphicon glyphicon-certificate"></span></button>
+                                    <button class="btn btn-xs btn-default"
+                                            data-ng-click="scope.selected_enseignants = []"><span class="glyphicon glyphicon-erase"></span></button>
+                                </div>
+                            </div>
+
+                            <!-- par matières -->
+                            <div class="col-md-3">
+                                <div class="ui-select-wrapper">
+                                    <ui-select multiple class="pull-left" theme="bootstrap"
+                                               append-to-body="true"
+                                               data-ng-model="scope.selected_matieres">
+                                        <ui-select-match placeholder="Matière(s)...">{{$item.Libelle}}</ui-select-match>
+                                        <ui-select-choices repeat="matiere in pronote.Matieres[0].Matiere | orderBy:['Ident','Nom']">
+                                            {{matiere.Libelle}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <button class="btn btn-xs btn-primary"
+                                            data-ng-click="scope.selected_matieres = pronote.Matieres[0].Matiere"><span class="glyphicon glyphicon-certificate"></span></button>
+                                    <button class="btn btn-xs btn-default"
+                                            data-ng-click="scope.selected_matieres = []"><span class="glyphicon glyphicon-erase"></span></button>
+                                </div>
+                            </div>
+                        </uib-accordion-group>
+                    </uib-accordion>
+
+                    <!-- /Critères de filtrage -->
 
                     <table class="table table-striped table-bordered table-hover table-condensed">
                         <thead>
@@ -114,7 +162,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr data-ng-repeat="creneau in pronote.Cours[0].Cours | orderBy:sortCreneauxBy | filter:filter_creneau( scope.selected_classes, scope.selected_groupes )"
+                            <tr data-ng-repeat="creneau in pronote.Cours[0].Cours | orderBy:sortCreneauxBy | filter:filter_creneau( scope.selected_classes, scope.selected_groupes, scope.selected_enseignants, scope.selected_matieres )"
                                 data-ng-class="{'ok': creneau.ready, 'ko': !creneau.ready}"
                                 data-ng-if="!problems_only || !creneau.ready">
                                 <td>{{jours_de_la_semaine[ creneau.Jour ]}}</td>
@@ -123,20 +171,20 @@
                                 <td data-ng-class="{'rouge ko': !creneau.readiness.matiere }">{{pronote.matieres[ creneau.Matiere[0].Ident ].laclasse.libelle_long}}</td>
                                 <td data-ng-class="{'rouge ko': !creneau.readiness.enseignant }">
                                     <div data-ng-repeat="node in creneau.Professeur">
-                                        {{pronote.enseignants[ node.Ident ].laclasse.lastname}} <sup uib-tooltip-html="node.displayed_semainier" tooltip-trigger="click">({{node.Semaines}})</sup>
+                                        {{pronote.enseignants[ node.Ident ].laclasse.lastname}} <sup uib-tooltip-html="node.displayed_semainier" tooltip-trigger="mouseenter">({{node.Semaines}})</sup>
                                     </div>
                                 </td>
                                 <td data-ng-class="{'rouge ko': !creneau.readiness.classe && !creneau.readiness.groupe_eleve }">
                                     <div data-ng-repeat="node in creneau.Classe">
-                                        {{pronote.classes[ node.Ident ].Nom}} <sup uib-tooltip-html="node.displayed_semainier" tooltip-trigger="click">({{node.Semaines}})</sup>
+                                        {{pronote.classes[ node.Ident ].Nom}} <sup uib-tooltip-html="node.displayed_semainier" tooltip-trigger="mouseenter">({{node.Semaines}})</sup>
                                     </div>
                                     <div data-ng-repeat="node in creneau.Groupe">
-                                        {{pronote.groupes[ node.Ident ].Nom}} <sup uib-tooltip-html="node.displayed_semainier" tooltip-trigger="click">({{node.Semaines}})</sup>
+                                        {{pronote.groupes[ node.Ident ].Nom}} <sup uib-tooltip-html="node.displayed_semainier" tooltip-trigger="mouseenter">({{node.Semaines}})</sup>
                                     </div>
                                 </td>
                                 <td>
                                     <div data-ng-repeat="node in creneau.Salle">
-                                        {{pronote.salles[ node.Ident ].Nom}} <sup uib-tooltip-html="node.displayed_semainier" tooltip-trigger="click">({{node.Semaines}})</sup>
+                                        {{pronote.salles[ node.Ident ].Nom}} <sup uib-tooltip-html="node.displayed_semainier" tooltip-trigger="mouseenter">({{node.Semaines}})</sup>
                                     </div>
                                 </td>
                                 <td class="import-readiness"

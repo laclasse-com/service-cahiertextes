@@ -23,6 +23,7 @@ angular.module( 'cahierDeTextesClientApp' )
                       $scope.processing = false;
                       $scope.matcheable_data = [];
                       $scope.problems_only = false;
+                      $scope.ui = { is_accordion_open: false };
 
                       Annuaire.get_matieres()
                           .then( function( response ) {
@@ -105,19 +106,29 @@ angular.module( 'cahierDeTextesClientApp' )
                       };
                       // ********** /semainiers
                       // ********** filtrage tableau créneaux
-                      $scope.filter_creneau = function( selected_classes, selected_groupes ) {
+                      $scope.filter_creneau = function( selected_classes, selected_groupes, selected_enseignants, selected_matieres ) {
                           return function( creneau ) {
-                              if ( _(selected_classes).isEmpty() && _(selected_groupes).isEmpty() ) {
-                                  return true;
-                              } else if ( _(creneau).has( 'Classe' ) ) {
-                                  return _.intersection( _(creneau.Classe).map( function( classe ) { return classe.Ident; } ),
-                                                         _(selected_classes).map( function( classe ) { return classe.Ident; } ) ).length > 0;
-                              } else if ( _(creneau).has( 'Groupe' ) ) {
-                                  return _.intersection( _(creneau.Groupe).map( function( groupe ) { return groupe.Ident; } ),
-                                                         _(selected_groupes).map( function( groupe ) { return groupe.Ident; } ) ).length > 0;
-                              } else {
-                                  return false;
+                              var is_displayed = true;
+                              var extract_Ident = function( item ) { return item.Ident; };
+
+                              if ( _(creneau).has( 'Classe' ) && !_(selected_classes).isEmpty() ) {
+                                  is_displayed = is_displayed && _.intersection( _(creneau.Classe).map( extract_Ident ),
+                                                                                 _(selected_classes).map( extract_Ident ) ).length > 0;
                               }
+                              if ( _(creneau).has( 'Groupe' ) && !_(selected_groupes).isEmpty() ) {
+                                  is_displayed = is_displayed && _.intersection( _(creneau.Groupe).map( extract_Ident ),
+                                                                                 _(selected_groupes).map( extract_Ident ) ).length > 0;
+                              }
+                              if ( _(creneau).has( 'Professeur' ) && !_(selected_enseignants).isEmpty() ) {
+                                  is_displayed = is_displayed && _.intersection( _(creneau.Professeur).map( extract_Ident ),
+                                                                                 _(selected_enseignants).map( extract_Ident ) ).length > 0;
+                              }
+                              if ( _(creneau).has( 'Matiere' ) && !_(selected_matieres).isEmpty() ) {
+                                  is_displayed = is_displayed && _.intersection( _(creneau.Matiere).map( extract_Ident ),
+                                                                                 _(selected_matieres).map( extract_Ident ) ).length > 0;
+                              }
+
+                              return is_displayed;
                           };
                       };
                       // ********** /filtrage tableau créneaux
