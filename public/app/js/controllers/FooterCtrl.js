@@ -15,6 +15,7 @@ angular.module( 'cahierDeTextesClientApp' )
                           } ).join('');
                           html += '</ul>';
                           html += '</div>';
+                          html += '<sub>(<a href="https://github.com/laclasse-com/service-cahiertextes/blob/' + VERSION + '/RELEASE_NOTES.yaml">voir l\'historique complet</a>)</sub>';
 
                           return html;
                       };
