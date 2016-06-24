@@ -5,3 +5,6 @@
       - Création de note de version et intégration de celles-ci dans l'interface
       - Mise à jour des composants tierces serveurs et clients,
       - Amélioration de la couverture de test.
+    1:
+      - simplification de la gestion des notes de version
+      - Mise à jour des composants tierces serveurs et clients,
