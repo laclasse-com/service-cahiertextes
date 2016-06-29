@@ -95,22 +95,35 @@ module AnnuaireWrapper
                                                                  '',
                                                                  expand: 'true' )
       matieres << { 'id' => 'documentation', 'libelle_court' => nil, 'libelle_long' => 'CDI' }
+      matieres << { 'id' => 'primaire', 'libelle_court' => nil, 'libelle_long' => 'TOUTES LES MATIÈRES' }
+
+      matieres
     end
 
     def get( id )
-      return { 'id' => 'documentation', 'libelle_court' => nil, 'libelle_long' => 'CDI' } if id == 'documentation'
-
-      Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_matiere,
-                                                      "#{CGI.escape( id )}",
-                                                      expand: 'false' )
+      case id
+      when 'documentation'
+        return { 'id' => 'documentation', 'libelle_court' => nil, 'libelle_long' => 'CDI' }
+      when 'primaire'
+        return { 'id' => 'primaire', 'libelle_court' => nil, 'libelle_long' => 'TOUTES LES MATIÈRES' }
+      else
+        return Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_matiere,
+                                                               "#{CGI.escape( id )}",
+                                                               expand: 'false' )
+      end
     end
 
     def search( label )
-      return { 'id' => 'documentation', 'libelle_court' => nil, 'libelle_long' => 'CDI' } if label == 'CDI'
-
-      Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_matiere,
-                                                      "libelle/#{CGI.escape( label )}",
-                                                      expand: 'false' )
+      case label
+      when 'CDI'
+        return { 'id' => 'documentation', 'libelle_court' => nil, 'libelle_long' => 'CDI' }
+      when 'TOUTES LES MATIÈRES'
+        return { 'id' => 'primaire', 'libelle_court' => nil, 'libelle_long' => 'TOUTES LES MATIÈRES' }
+      else
+        return Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_matiere,
+                                                               "libelle/#{CGI.escape( label )}",
+                                                               expand: 'false' )
+      end
     end
   end
 
