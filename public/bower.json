@@ -29,7 +29,7 @@
       "sizzle": "~2",
       "sweetalert": "~1",
       "textAngular": "~1.5",
-      "ui-select": "angular-ui-select#latest",
+      "ui-select": "angular-ui-select#0.17.1",
       "underscore": "~1.8",
       "webfont-opensans": "~0.0",
       "webfont-opensans-condensed": "~0.1"
