@@ -8,3 +8,6 @@
     1:
       - simplification de la gestion des notes de version
       - Mise à jour des composants tierces serveurs et clients,
+    2:
+      - correction de la liste de sélection des classes/groupes
+      - ajout d'une matière générique
