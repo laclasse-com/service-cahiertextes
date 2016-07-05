@@ -106,11 +106,14 @@ angular.module( 'cahierDeTextesClientApp' )
                       };
                       // ********** /semainiers
                       // ********** filtrage tableau créneaux
-                      $scope.filter_creneau = function( selected_classes, selected_groupes, selected_enseignants, selected_matieres ) {
+                      $scope.filter_creneau = function( problems_only, selected_classes, selected_groupes, selected_enseignants, selected_matieres ) {
                           return function( creneau ) {
                               var is_displayed = true;
                               var extract_Ident = function( item ) { return item.Ident; };
 
+                              if ( problems_only ) {
+                                  is_displayed = is_displayed && !creneau.ready;
+                              }
                               if ( _(creneau).has( 'Classe' ) && !_(selected_classes).isEmpty() ) {
                                   is_displayed = is_displayed && _.intersection( _(creneau.Classe).map( extract_Ident ),
                                                                                  _(selected_classes).map( extract_Ident ) ).length > 0;

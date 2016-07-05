@@ -71,7 +71,7 @@
                                 Filtrage <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': ui.is_accordion_open, 'glyphicon-chevron-right': !ui.is_accordion_open}"></i>
                             </uib-accordion-heading>
                             <div class="col-md-12">
-                                <label class="pull-right"><checkbox data-ng-model="problems_only"></checkbox> N'afficher que les données à traiter manuellement.</label>
+                                <label class="pull-right"><checkbox data-ng-model="scope.problems_only"></checkbox> N'afficher que les données à traiter manuellement.</label>
                             </div>
 
                             <!-- par regroupements -->
@@ -162,7 +162,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr data-ng-repeat="creneau in pronote.Cours[0].Cours | orderBy:sortCreneauxBy | filter:filter_creneau( scope.selected_classes, scope.selected_groupes, scope.selected_enseignants, scope.selected_matieres )"
+                            <tr data-ng-repeat="creneau in pronote.Cours[0].Cours | orderBy:sortCreneauxBy | filter:filter_creneau( problems_only, scope.selected_classes, scope.selected_groupes, scope.selected_enseignants, scope.selected_matieres )"
                                 data-ng-class="{'ok': creneau.ready, 'ko': !creneau.ready}"
                                 data-ng-if="!problems_only || !creneau.ready">
                                 <td>{{jours_de_la_semaine[ creneau.Jour ]}}</td>
