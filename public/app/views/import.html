@@ -79,32 +79,32 @@
                                 <div class="ui-select-wrapper">
                                     <ui-select multiple class="pull-left" theme="bootstrap"
                                                append-to-body="true"
-                                               data-ng-model="scope.selected_classes">
+                                               data-ng-model="scope.selected.classes">
                                         <ui-select-match placeholder="Classe(s)...">{{$item.Nom}}</ui-select-match>
-                                        <ui-select-choices repeat="classe in pronote.Classes[0].Classe | orderBy:['Ident','Nom']">
+                                        <ui-select-choices repeat="classe in pronote.Classes[0].Classe | orderBy:['Nom']">
                                             {{classe.Nom}}
                                         </ui-select-choices>
                                     </ui-select>
                                     <button class="btn btn-xs btn-primary"
-                                            data-ng-click="scope.selected_classes = pronote.Classes[0].Classe"><span class="glyphicon glyphicon-certificate"></span></button>
+                                            data-ng-click="scope.selected.classes = pronote.Classes[0].Classe"><span class="glyphicon glyphicon-certificate"></span></button>
                                     <button class="btn btn-xs btn-default"
-                                            data-ng-click="scope.selected_classes = []"><span class="glyphicon glyphicon-erase"></span></button>
+                                            data-ng-click="scope.selected.classes = []"><span class="glyphicon glyphicon-erase"></span></button>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="ui-select-wrapper">
                                     <ui-select multiple class="pull-left" theme="bootstrap"
                                                append-to-body="true"
-                                               data-ng-model="scope.selected_groupes">
+                                               data-ng-model="scope.selected.groupes">
                                         <ui-select-match placeholder="Groupe(s) d'élèves...">{{$item.Nom}}</ui-select-match>
-                                        <ui-select-choices repeat="groupe in pronote.Groupes[0].Groupe | orderBy:['Ident','Nom']">
+                                        <ui-select-choices repeat="groupe in pronote.Groupes[0].Groupe | orderBy:['Nom']">
                                             {{groupe.Nom}}
                                         </ui-select-choices>
                                     </ui-select>
                                     <button class="btn btn-xs btn-primary"
-                                            data-ng-click="scope.selected_groupes = pronote.Groupes[0].Groupe"><span class="glyphicon glyphicon-certificate"></span></button>
+                                            data-ng-click="scope.selected.groupes = pronote.Groupes[0].Groupe"><span class="glyphicon glyphicon-certificate"></span></button>
                                     <button class="btn btn-xs btn-default"
-                                            data-ng-click="scope.selected_groupes = []"><span class="glyphicon glyphicon-erase"></span></button>
+                                            data-ng-click="scope.selected.groupes = []"><span class="glyphicon glyphicon-erase"></span></button>
                                 </div>
                             </div>
 
@@ -113,16 +113,16 @@
                                 <div class="ui-select-wrapper">
                                     <ui-select multiple class="pull-left" theme="bootstrap"
                                                append-to-body="true"
-                                               data-ng-model="scope.selected_enseignants">
+                                               data-ng-model="scope.selected.enseignants">
                                         <ui-select-match placeholder="Enseignant(s)...">{{$item.Nom}}</ui-select-match>
-                                        <ui-select-choices repeat="enseignant in pronote.Professeurs[0].Professeur | orderBy:['Ident','Nom']">
+                                        <ui-select-choices repeat="enseignant in pronote.Professeurs[0].Professeur | orderBy:['Nom']">
                                             {{enseignant.Nom}}
                                         </ui-select-choices>
                                     </ui-select>
                                     <button class="btn btn-xs btn-primary"
-                                            data-ng-click="scope.selected_enseignants = pronote.Professeurs[0].Professeur"><span class="glyphicon glyphicon-certificate"></span></button>
+                                            data-ng-click="scope.selected.enseignants = pronote.Professeurs[0].Professeur"><span class="glyphicon glyphicon-certificate"></span></button>
                                     <button class="btn btn-xs btn-default"
-                                            data-ng-click="scope.selected_enseignants = []"><span class="glyphicon glyphicon-erase"></span></button>
+                                            data-ng-click="scope.selected.enseignants = []"><span class="glyphicon glyphicon-erase"></span></button>
                                 </div>
                             </div>
 
@@ -131,18 +131,23 @@
                                 <div class="ui-select-wrapper">
                                     <ui-select multiple class="pull-left" theme="bootstrap"
                                                append-to-body="true"
-                                               data-ng-model="scope.selected_matieres">
+                                               data-ng-model="scope.selected.matieres">
                                         <ui-select-match placeholder="Matière(s)...">{{$item.Libelle}}</ui-select-match>
-                                        <ui-select-choices repeat="matiere in pronote.Matieres[0].Matiere | orderBy:['Ident','Nom']">
+                                        <ui-select-choices repeat="matiere in pronote.Matieres[0].Matiere | orderBy:['Nom']">
                                             {{matiere.Libelle}}
                                         </ui-select-choices>
                                     </ui-select>
                                     <button class="btn btn-xs btn-primary"
-                                            data-ng-click="scope.selected_matieres = pronote.Matieres[0].Matiere"><span class="glyphicon glyphicon-certificate"></span></button>
+                                            data-ng-click="scope.selected.matieres = pronote.Matieres[0].Matiere"><span class="glyphicon glyphicon-certificate"></span></button>
                                     <button class="btn btn-xs btn-default"
-                                            data-ng-click="scope.selected_matieres = []"><span class="glyphicon glyphicon-erase"></span></button>
+                                            data-ng-click="scope.selected.matieres = []"><span class="glyphicon glyphicon-erase"></span></button>
                                 </div>
                             </div>
+
+                            <div class="col-md-12">
+                                <label class="pull-right"><checkbox data-ng-model="scope.filtered_import"></checkbox> N'importer que les créneaux affichés</label>
+                            </div>
+
                         </uib-accordion-group>
                     </uib-accordion>
 
@@ -162,7 +167,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr data-ng-repeat="creneau in pronote.Cours[0].Cours | orderBy:sortCreneauxBy | filter:filter_creneau( problems_only, scope.selected_classes, scope.selected_groupes, scope.selected_enseignants, scope.selected_matieres )"
+                            <tr data-ng-repeat="creneau in pronote.Cours[0].Cours | orderBy:sortCreneauxBy | filter:filter_creneau( problems_only, scope.selected )"
                                 data-ng-class="{'ok': creneau.ready, 'ko': !creneau.ready}"
                                 data-ng-if="!problems_only || !creneau.ready">
                                 <td>{{jours_de_la_semaine[ creneau.Jour ]}}</td>
