@@ -12,16 +12,13 @@ module DataManagement
       else
         user[:user_detailed]['etablissements']
           .each do |etab|
-          LOGGER.debug "Provisionning Etablissement #{etab[ 'code_uai' ]}"
           etablissement = AnnuaireWrapper::Etablissement.get( etab[ 'code_uai' ], 2 )
-
           next if etablissement == 'Not Found' || etablissement.key?( 'error' ) || etablissement.key?( :error )
 
           Accessors.create_or_get( Etablissement, UAI: etab[ 'code_uai' ] )
 
           etablissement['groups']
             .each do |regroupement|
-            LOGGER.debug "Provisionning Regroupement #{regroupement['id']}"
             Accessors.create_or_get( CahierDeTextes,
                                      regroupement_id: regroupement['id'] )
           end
