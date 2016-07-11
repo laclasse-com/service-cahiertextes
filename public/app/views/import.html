@@ -173,10 +173,10 @@
                                 <td>{{jours_de_la_semaine[ creneau.Jour ]}}</td>
                                 <td>{{pronote.plages_horaires[ creneau.NumeroPlaceDebut ].LibelleHeureDebut}}</td>
                                 <td>{{creneau.NombrePlaces * pronote.GrilleHoraire[0].DureePlace}} minutes</td>
-                                <td data-ng-class="{'rouge ko': !creneau.readiness.matiere }">{{pronote.matieres[ creneau.Matiere[0].Ident ].laclasse.libelle_long}}</td>
+                                <td data-ng-class="{'rouge ko': !creneau.readiness.matiere }">{{pronote.matieres[ creneau.Matiere[0].Ident ].displayed_label}}</td>
                                 <td data-ng-class="{'rouge ko': !creneau.readiness.enseignant }">
                                     <div data-ng-repeat="node in creneau.Professeur">
-                                        {{pronote.enseignants[ node.Ident ].laclasse.lastname}} <sup uib-tooltip-html="node.displayed_semainier" tooltip-trigger="mouseenter">({{node.Semaines}})</sup>
+                                        {{pronote.enseignants[ node.Ident ].displayed_label}} <sup uib-tooltip-html="node.displayed_semainier" tooltip-trigger="mouseenter">({{node.Semaines}})</sup>
                                     </div>
                                 </td>
                                 <td data-ng-class="{'rouge ko': !creneau.readiness.classe && !creneau.readiness.groupe_eleve }">
@@ -184,7 +184,7 @@
                                         {{pronote.classes[ node.Ident ].Nom}} <sup uib-tooltip-html="node.displayed_semainier" tooltip-trigger="mouseenter">({{node.Semaines}})</sup>
                                     </div>
                                     <div data-ng-repeat="node in creneau.Groupe">
-                                        {{pronote.groupes[ node.Ident ].Nom}} <sup uib-tooltip-html="node.displayed_semainier" tooltip-trigger="mouseenter">({{node.Semaines}})</sup>
+                                        {{pronote.groupes_eleves[ node.Ident ].Nom}} <sup uib-tooltip-html="node.displayed_semainier" tooltip-trigger="mouseenter">({{node.Semaines}})</sup>
                                     </div>
                                 </td>
                                 <td>
