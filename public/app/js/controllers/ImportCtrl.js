@@ -115,27 +115,43 @@ angular.module( 'cahierDeTextesClientApp' )
                               if ( problems_only && !creneau.ready ) { return false; }
 
                               if ( _(criteria.classes).isEmpty() && _(criteria.groupes).isEmpty() ) {
-                                  is_displayed = is_displayed && !_(creneau).has( 'Classe' ) && !_(creneau).has( 'Groupe' );
+                                  is_displayed = is_displayed &&
+                                      !_(creneau).has( 'Classe' ) &&
+                                      !_(creneau).has( 'Groupe' );
                               } else if ( _(criteria.classes).isEmpty() && !_(criteria.groupes).isEmpty() ) {
-                                  is_displayed = is_displayed && !_(creneau).has( 'Classe' ) && _(creneau).has( 'Groupe' ) && _.intersection( _(creneau.Groupe).map( extract_Ident ), _(criteria.groupes).map( extract_Ident ) ).length > 0;
+                                  is_displayed = is_displayed &&
+                                      !_(creneau).has( 'Classe' ) &&
+                                      _(creneau).has( 'Groupe' ) &&
+                                      _.intersection( _(creneau.Groupe).map( extract_Ident ), _(criteria.groupes).map( extract_Ident ) ).length > 0;
                               } else if ( !_(criteria.classes).isEmpty() && _(criteria.groupes).isEmpty() ) {
-                                  is_displayed = is_displayed && _(creneau).has( 'Classe' ) && !_(creneau).has( 'Groupe' ) && _.intersection( _(creneau.Classe).map( extract_Ident ), _(criteria.classes).map( extract_Ident ) ).length > 0;
+                                  is_displayed = is_displayed &&
+                                      _(creneau).has( 'Classe' ) &&
+                                      !_(creneau).has( 'Groupe' ) &&
+                                      _.intersection( _(creneau.Classe).map( extract_Ident ), _(criteria.classes).map( extract_Ident ) ).length > 0;
                               } else {
-                                  is_displayed = is_displayed && ( (_(creneau).has( 'Groupe' ) && _.intersection( _(creneau.Groupe).map( extract_Ident ), _(criteria.groupes).map( extract_Ident ) ).length > 0) || (_(creneau).has( 'Classe' ) && _.intersection( _(creneau.Classe).map( extract_Ident ), _(criteria.classes).map( extract_Ident ) ).length > 0 ) );
+                                  is_displayed = is_displayed &&
+                                      ( (_(creneau).has( 'Groupe' ) && _.intersection( _(creneau.Groupe).map( extract_Ident ), _(criteria.groupes).map( extract_Ident ) ).length > 0) ||
+                                        (_(creneau).has( 'Classe' ) && _.intersection( _(creneau.Classe).map( extract_Ident ), _(criteria.classes).map( extract_Ident ) ).length > 0 ) );
                               }
                               if ( !is_displayed ) { return false; }
 
                               if ( _(criteria.matieres).isEmpty() ) {
-                                  is_displayed = is_displayed && !_(creneau).has( 'Matiere' );
+                                  is_displayed = is_displayed &&
+                                      !_(creneau).has( 'Matiere' );
                               } else {
-                                  is_displayed = is_displayed && _(creneau).has( 'Matiere' ) && _.intersection( _(creneau.Matiere).map( extract_Ident ), _(criteria.matieres).map( extract_Ident ) ).length > 0;
+                                  is_displayed = is_displayed &&
+                                      _(creneau).has( 'Matiere' ) &&
+                                      _.intersection( _(creneau.Matiere).map( extract_Ident ), _(criteria.matieres).map( extract_Ident ) ).length > 0;
                               }
                               if ( !is_displayed ) { return false; }
 
                               if ( _(criteria.enseignants).isEmpty() ) {
-                                  is_displayed = is_displayed && !_(creneau).has( 'Professeur' );
+                                  is_displayed = is_displayed &&
+                                      !_(creneau).has( 'Professeur' );
                               } else {
-                                  is_displayed = is_displayed && _(creneau).has( 'Professeur' ) && _.intersection( _(creneau.Professeur).map( extract_Ident ), _(criteria.enseignants).map( extract_Ident ) ).length > 0;
+                                  is_displayed = is_displayed &&
+                                      _(creneau).has( 'Professeur' ) &&
+                                      _.intersection( _(creneau.Professeur).map( extract_Ident ), _(criteria.enseignants).map( extract_Ident ) ).length > 0;
                               }
 
                               return is_displayed;
