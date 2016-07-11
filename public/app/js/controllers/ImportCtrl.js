@@ -112,25 +112,17 @@ angular.module( 'cahierDeTextesClientApp' )
                               var is_displayed = true;
                               var extract_Ident = function( item ) { return item.Ident; };
 
-                              if ( problems_only ) {
-                                  is_displayed = is_displayed && !creneau.ready;
-                              }
-                              if ( !is_displayed ) { return false; }
+                              if ( problems_only && !creneau.ready ) { return false; }
 
-                              var classe_filter = true;
-                              if ( _(criteria.classes).isEmpty() ) {
-                                  classe_filter =  !_(creneau).has( 'Classe' );
+                              if ( _(criteria.classes).isEmpty() && _(criteria.groupes).isEmpty() ) {
+                                  is_displayed = is_displayed && !_(creneau).has( 'Classe' ) && !_(creneau).has( 'Groupe' );
+                              } else if ( _(criteria.classes).isEmpty() && !_(criteria.groupes).isEmpty() ) {
+                                  is_displayed = is_displayed && !_(creneau).has( 'Classe' ) && _(creneau).has( 'Groupe' ) && _.intersection( _(creneau.Groupe).map( extract_Ident ), _(criteria.groupes).map( extract_Ident ) ).length > 0;
+                              } else if ( !_(criteria.classes).isEmpty() && _(criteria.groupes).isEmpty() ) {
+                                  is_displayed = is_displayed && _(creneau).has( 'Classe' ) && !_(creneau).has( 'Groupe' ) && _.intersection( _(creneau.Classe).map( extract_Ident ), _(criteria.classes).map( extract_Ident ) ).length > 0;
                               } else {
-                                  classe_filter = _(creneau).has( 'Classe' ) && _.intersection( _(creneau.Classe).map( extract_Ident ), _(criteria.classes).map( extract_Ident ) ).length > 0;
+                                  is_displayed = is_displayed && ( (_(creneau).has( 'Groupe' ) && _.intersection( _(creneau.Groupe).map( extract_Ident ), _(criteria.groupes).map( extract_Ident ) ).length > 0) || (_(creneau).has( 'Classe' ) && _.intersection( _(creneau.Classe).map( extract_Ident ), _(criteria.classes).map( extract_Ident ) ).length > 0 ) );
                               }
-
-                              var groupe_filter = true;
-                              if ( _(criteria.groupes).isEmpty() ) {
-                                  groupe_filter = !_(creneau).has( 'Groupe' );
-                              } else {
-                                  groupe_filter = _(creneau).has( 'Groupe' ) && _.intersection( _(creneau.Groupe).map( extract_Ident ), _(criteria.groupes).map( extract_Ident ) ).length > 0;
-                              }
-                              is_displayed = is_displayed && ( classe_filter || groupe_filter );
                               if ( !is_displayed ) { return false; }
 
                               if ( _(criteria.matieres).isEmpty() ) {
@@ -145,7 +137,6 @@ angular.module( 'cahierDeTextesClientApp' )
                               } else {
                                   is_displayed = is_displayed && _(creneau).has( 'Professeur' ) && _.intersection( _(creneau.Professeur).map( extract_Ident ), _(criteria.enseignants).map( extract_Ident ) ).length > 0;
                               }
-                              if ( !is_displayed ) { return false; }
 
                               return is_displayed;
                           };
