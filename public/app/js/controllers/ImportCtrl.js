@@ -115,41 +115,37 @@ angular.module( 'cahierDeTextesClientApp' )
                               if ( problems_only ) {
                                   is_displayed = is_displayed && !creneau.ready;
                               }
-                              if ( !is_displayed ) { console.log('problems_only'); return false; }
+                              if ( !is_displayed ) { return false; }
 
                               var classe_filter = true;
                               if ( _(criteria.classes).isEmpty() ) {
                                   classe_filter =  !_(creneau).has( 'Classe' );
                               } else {
-                                  classe_filter = _(creneau).has( 'Classe' ) && _.intersection( _(creneau.Classe).map( extract_Ident ),
-                                                                                                _(criteria.classes).map( extract_Ident ) ).length > 0;
+                                  classe_filter = _(creneau).has( 'Classe' ) && _.intersection( _(creneau.Classe).map( extract_Ident ), _(criteria.classes).map( extract_Ident ) ).length > 0;
                               }
 
                               var groupe_filter = true;
                               if ( _(criteria.groupes).isEmpty() ) {
                                   groupe_filter = !_(creneau).has( 'Groupe' );
                               } else {
-                                  groupe_filter = _(creneau).has( 'Groupe' ) && _.intersection( _(creneau.Groupe).map( extract_Ident ),
-                                                                                                _(criteria.groupes).map( extract_Ident ) ).length > 0;
+                                  groupe_filter = _(creneau).has( 'Groupe' ) && _.intersection( _(creneau.Groupe).map( extract_Ident ), _(criteria.groupes).map( extract_Ident ) ).length > 0;
                               }
                               is_displayed = is_displayed && ( classe_filter || groupe_filter );
-                              if ( !is_displayed ) { console.log('Groupe'); return false; }
+                              if ( !is_displayed ) { return false; }
 
                               if ( _(criteria.matieres).isEmpty() ) {
                                   is_displayed = is_displayed && !_(creneau).has( 'Matiere' );
                               } else {
-                                  is_displayed = is_displayed && _(creneau).has( 'Matiere' ) && _.intersection( _(creneau.Matiere).map( extract_Ident ),
-                                                                                                                _(criteria.matieres).map( extract_Ident ) ).length > 0;
+                                  is_displayed = is_displayed && _(creneau).has( 'Matiere' ) && _.intersection( _(creneau.Matiere).map( extract_Ident ), _(criteria.matieres).map( extract_Ident ) ).length > 0;
                               }
-                              if ( !is_displayed ) { console.log('Matiere'); return false; }
+                              if ( !is_displayed ) { return false; }
 
                               if ( _(criteria.enseignants).isEmpty() ) {
                                   is_displayed = is_displayed && !_(creneau).has( 'Professeur' );
                               } else {
-                                  is_displayed = is_displayed && _(creneau).has( 'Professeur' ) && _.intersection( _(creneau.Professeur).map( extract_Ident ),
-                                                                                                                   _(criteria.enseignants).map( extract_Ident ) ).length > 0;
+                                  is_displayed = is_displayed && _(creneau).has( 'Professeur' ) && _.intersection( _(creneau.Professeur).map( extract_Ident ), _(criteria.enseignants).map( extract_Ident ) ).length > 0;
                               }
-                              if ( !is_displayed ) { console.log('Professeur'); return false; }
+                              if ( !is_displayed ) { return false; }
 
                               return is_displayed;
                           };
