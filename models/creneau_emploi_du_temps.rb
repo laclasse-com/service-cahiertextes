@@ -178,7 +178,9 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
       salle = Salle[ salle_id ]
       return nil if salle.nil?
 
-      creneau_salle = add_salle( salle )
+      add_salle( salle )
+
+      creneau_salle = CreneauEmploiDuTempsSalle[ creneau_emploi_du_temps_id: id, salle_id: salle_id ]
     end
 
     creneau_salle.update( semaines_de_presence: semaines_de_presence_salle ) unless semaines_de_presence_salle.nil?
@@ -193,7 +195,6 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
     update_heure_debut( params[:heure_debut] ) if params.key?( :heure_debut )
     update_heure_fin( params[:heure_fin] ) if params.key?( :heure_fin )
     update( matiere_id: params[:matiere_id] ) if params.key?( :matiere_id )
-
     update( jour_de_la_semaine: params[:jour_de_la_semaine] ) if params.key?( :jour_de_la_semaine )
 
     save
