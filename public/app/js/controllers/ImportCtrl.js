@@ -447,7 +447,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                                    creneau.created = [];
 
                                                    creneau.heure_debut = libelleHeure_to_Date( $scope.pronote.plages_horaires[ creneau.NumeroPlaceDebut ].LibelleHeureDebut );
-                                                   creneau.heure_fin = moment( creneau.heure_debut.setMinutes( creneau.heure_debut.getMinutes() + parseInt( $scope.pronote.GrilleHoraire[0].DureePlace ) ) ).toDate();
+                                                   creneau.heure_fin = moment( creneau.heure_debut ).add( parseInt( creneau.NombrePlaces ) * parseInt( $scope.pronote.GrilleHoraire[0].DureePlace ), 'minutes' ).toDate();
 
                                                    // Aujourd'hui: 1 créneau = 1 enseignant, 1 regroupement, 1 salle, 1 matière
                                                    return _(creneau.Matiere).map( function( matiere_pronote ) {
