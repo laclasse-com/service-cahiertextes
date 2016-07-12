@@ -109,10 +109,10 @@ angular.module( 'cahierDeTextesClientApp' )
                       // ********** filtrage tableau créneaux
                       $scope.filter_creneau = function( problems_only, criteria ) {
                           return function( creneau ) {
+                              if ( problems_only && !creneau.ready ) { return false; }
+
                               var is_displayed = true;
                               var extract_Ident = function( item ) { return item.Ident; };
-
-                              if ( problems_only && !creneau.ready ) { return false; }
 
                               if ( _(criteria.classes).isEmpty() && _(criteria.groupes).isEmpty() ) {
                                   is_displayed = is_displayed &&
@@ -432,15 +432,22 @@ angular.module( 'cahierDeTextesClientApp' )
                                            $scope.salles_created = response;
                                            $scope.nb_salles_created = _($scope.salles_created).size();
 
+                                           var creneaux_filter = $scope.filter_creneau( true, $scope.selected );
+
                                            // Create Creneaux
                                            var creneaux_emploi_du_temps = _.chain($scope.pronote.Cours[0].Cours)
-                                               .select( function( creneau ) { return creneau.ready; } )
+                                               .select( function( creneau ) {
+                                                   if ( $scope.filtered_import ) {
+                                                       return creneaux_filter( creneau );
+                                                   } else {
+                                                       return creneau.ready;
+                                                   }
+                                               } )
                                                .map( function( creneau ) {
                                                    creneau.created = [];
 
                                                    creneau.heure_debut = libelleHeure_to_Date( $scope.pronote.plages_horaires[ creneau.NumeroPlaceDebut ].LibelleHeureDebut );
-                                                   creneau.heure_fin = creneau.heure_debut;
-                                                   creneau.heure_fin.setMinutes( creneau.heure_fin.getMinutes() + parseInt( $scope.pronote.GrilleHoraire[0].DureePlace ) );
+                                                   creneau.heure_fin = moment( creneau.heure_debut.setMinutes( creneau.heure_debut.getMinutes() + parseInt( $scope.pronote.GrilleHoraire[0].DureePlace ) ) ).toDate();
 
                                                    // Aujourd'hui: 1 créneau = 1 enseignant, 1 regroupement, 1 salle, 1 matière
                                                    return _(creneau.Matiere).map( function( matiere_pronote ) {
@@ -450,53 +457,38 @@ angular.module( 'cahierDeTextesClientApp' )
                                                            var enseignant_laclasse = $scope.pronote.enseignants[ enseignant_pronote.Ident ].laclasse;
 
                                                            return _(creneau.Salle).map( function( salle_pronote ) {
-                                                               if ( $scope.filtered_import &&
-                                                                    ( _.chain( $scope.selected.matieres ).findWhere({ Ident: matiere_pronote.Ident }).isUndefined().value() ||
-                                                                      _.chain( $scope.selected.enseignants ).findWhere({ Ident: enseignant_pronote.Ident }).isUndefined().value() ) ) {
-                                                                   return [];
-                                                               } else {
-                                                                   var salle_laclasse = _($scope.salles_created).find( { identifiant: salle_pronote.Ident } );
-                                                                   var creneaux_classes = _(creneau.Classe).map( function( classe_pronote ) {
-                                                                       if ( $scope.filtered_import && _.chain( $scope.selected.classes ).findWhere({ Ident: classe_pronote.Ident }).isUndefined().value() ) {
-                                                                           return [];
-                                                                       } else {
-                                                                           return { jour_de_la_semaine: parseInt( creneau.Jour ),
-                                                                                    heure_debut: creneau.heure_debut,
-                                                                                    heure_fin: creneau.heure_fin,
-                                                                                    matiere_id: matiere.id,
-                                                                                    regroupement_id: $scope.pronote.classes[ classe_pronote.Ident ].laclasse.id,
-                                                                                    semaines_de_presence_regroupement: classe_pronote.Semaines,
-                                                                                    salle_id: salle_laclasse.id,
-                                                                                    semaines_de_presence_salle: salle_pronote.Semaines,
-                                                                                    enseignant_id: enseignant_laclasse.ent_id,
-                                                                                    semaines_de_presence_enseignant: enseignant_pronote.Semaines };
-                                                                       }
-                                                                   } );
-                                                                   var creneaux_groupes = _(creneau.Groupe).map( function( groupe_pronote ) {
-                                                                       if ( $scope.filtered_import && _.chain( $scope.selected.groupes ).findWhere({ Ident: groupe_pronote.Ident }).isUndefined().value() ) {
-                                                                           return [];
-                                                                       } else {
-                                                                           return { jour_de_la_semaine: parseInt( creneau.Jour ),
-                                                                                    heure_debut: creneau.heure_debut,
-                                                                                    heure_fin: creneau.heure_fin,
-                                                                                    matiere_id: matiere.id,
-                                                                                    regroupement_id: $scope.pronote.groupes_eleves[ groupe_pronote.Ident ].laclasse.id,
-                                                                                    semaines_de_presence_regroupement: groupe_pronote.Semaines,
-                                                                                    salle_id: salle_laclasse.id,
-                                                                                    semaines_de_presence_salle: salle_pronote.Semaines,
-                                                                                    enseignant_id: enseignant_laclasse.ent_id,
-                                                                                    semaines_de_presence_enseignant: enseignant_pronote.Semaines };
-                                                                       }
-                                                                   } );
-                                                                   return [ creneaux_classes, creneaux_groupes ];
-                                                               }
+                                                               var salle_laclasse = _($scope.salles_created).find( { identifiant: salle_pronote.Ident } );
+                                                               var creneaux_classes = _(creneau.Classe).map( function( classe_pronote ) {
+                                                                   return { jour_de_la_semaine: parseInt( creneau.Jour ),
+                                                                            heure_debut: creneau.heure_debut,
+                                                                            heure_fin: creneau.heure_fin,
+                                                                            matiere_id: matiere.id,
+                                                                            regroupement_id: $scope.pronote.classes[ classe_pronote.Ident ].laclasse.id,
+                                                                            semaines_de_presence_regroupement: parseInt( classe_pronote.Semaines ),
+                                                                            salle_id: salle_laclasse.id,
+                                                                            semaines_de_presence_salle: parseInt( salle_pronote.Semaines ),
+                                                                            enseignant_id: enseignant_laclasse.ent_id,
+                                                                            semaines_de_presence_enseignant: parseInt( enseignant_pronote.Semaines ) };
+                                                               } );
+                                                               var creneaux_groupes = _(creneau.Groupe).map( function( groupe_pronote ) {
+                                                                   return { jour_de_la_semaine: parseInt( creneau.Jour ),
+                                                                            heure_debut: creneau.heure_debut,
+                                                                            heure_fin: creneau.heure_fin,
+                                                                            matiere_id: matiere.id,
+                                                                            regroupement_id: $scope.pronote.groupes_eleves[ groupe_pronote.Ident ].laclasse.id,
+                                                                            semaines_de_presence_regroupement: parseInt( groupe_pronote.Semaines ),
+                                                                            salle_id: salle_laclasse.id,
+                                                                            semaines_de_presence_salle: parseInt( salle_pronote.Semaines ),
+                                                                            enseignant_id: enseignant_laclasse.ent_id,
+                                                                            semaines_de_presence_enseignant: parseInt( enseignant_pronote.Semaines ) };
+                                                               } );
+                                                               return [ creneaux_classes, creneaux_groupes ];
                                                            } );
                                                        } );
                                                    } );
                                                } )
                                                .flatten()
                                                .value();
-                                           console.log(creneaux_emploi_du_temps)
 
                                            $scope.creneaux_created = [];
                                            $scope.nb_creneaux_created = 0;
