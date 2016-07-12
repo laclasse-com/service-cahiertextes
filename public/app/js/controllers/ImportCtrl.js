@@ -494,10 +494,9 @@ angular.module( 'cahierDeTextesClientApp' )
                                            $scope.nb_creneaux_created = 0;
 
                                            while ( creneaux_emploi_du_temps.length > 0 ) {
-                                               var slice_of_creneaux_emploi_du_temps = creneaux_emploi_du_temps.splice( 0, bulk_package_size );
                                                CreneauxEmploiDuTemps.bulk( {
                                                    uai: $scope.pronote.UAI,
-                                                   creneaux_emploi_du_temps: slice_of_creneaux_emploi_du_temps
+                                                   creneaux_emploi_du_temps: creneaux_emploi_du_temps.splice( 0, bulk_package_size )
                                                } ).$promise
                                                    .then( function( response ) {
                                                        $scope.creneaux_created.push( response );
