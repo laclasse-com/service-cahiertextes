@@ -10,8 +10,8 @@
             <span class="glyphicon glyphicon-log-in"></span> <span data-ng-if="pronote">Re-</span>Charger les données
         </button>
 
-        <div class="alert alert-info" role="alert" data-ng-if="loading_file && !pronote"><i class="fa fa-spinner fa-pulse"></i> 1/3 Décryptage des données EDT</div>
-        <div class="alert alert-info" role="alert" data-ng-if="loading_file && !etablissement"><i class="fa fa-spinner fa-pulse"></i> 2/3 Chargement des données de l'établissement</div>
+        <div class="alert alert-info" role="alert" data-ng-if="ui.loading_file && !pronote"><i class="fa fa-spinner fa-pulse"></i> 1/3 Décryptage des données EDT</div>
+        <div class="alert alert-info" role="alert" data-ng-if="ui.loading_file && !etablissement"><i class="fa fa-spinner fa-pulse"></i> 2/3 Chargement des données de l'établissement</div>
         <div class="alert alert-info" role="alert" data-ng-if="!matieres"><i class="fa fa-spinner fa-pulse"></i> 3/3 Chargement de la liste des matières officielles</div>
 
         <div class="clearfix"></div>
@@ -28,7 +28,7 @@
         </h1>
 
         <div class="alert" role="alert"
-             data-ng-if="processing && nb_expected_salles"
+             data-ng-if="ui.processing && nb_expected_salles"
              data-ng-class="{'alert-success': nb_salles_created == nb_expected_salles, 'alert-danger': nb_salles_created == 0 || nb_expected_salles == 0, 'alert-warning': nb_salles_created < nb_expected_salles}">
             {{nb_salles_created}} salles créées sur {{nb_expected_salles}} attendues.
             <div class="progress-bar-container">
@@ -36,7 +36,7 @@
             </div>
         </div>
         <div class="alert" role="alert"
-             data-ng-if="processing && nb_expected_cahiers_de_textes"
+             data-ng-if="ui.processing && nb_expected_cahiers_de_textes"
              data-ng-class="{'alert-success': nb_cahiers_de_textes_created == nb_expected_cahiers_de_textes, 'alert-danger': nb_cahiers_de_textes_created == 0 || nb_expected_cahiers_de_textes == 0, 'alert-warning': nb_cahiers_de_textes_created < nb_expected_cahiers_de_textes}">
             {{nb_cahiers_de_textes_created}} cahiers_de_textes créés sur les {{nb_expected_cahiers_de_textes}} attendus.
             <div class="progress-bar-container">
@@ -44,7 +44,7 @@
             </div>
         </div>
         <div class="alert" role="alert"
-             data-ng-if="processing && nb_expected_creneaux"
+             data-ng-if="ui.processing && nb_expected_creneaux"
              data-ng-class="{'alert-success': nb_creneaux_created == nb_expected_creneaux, 'alert-danger': nb_creneaux_created == 0 || nb_expected_creneaux == 0, 'alert-warning': nb_creneaux_created < nb_expected_creneaux}">
             {{nb_creneaux_created}} creneaux créés sur {{nb_expected_creneaux_ready}} attendus.
             <div class="progress-bar-container">
@@ -52,7 +52,7 @@
             </div>
         </div>
 
-        <div class="panel panel-default import row" data-ng-if="pronote && !loading_file" style="color: #333;">
+        <div class="panel panel-default import row" data-ng-if="pronote && !ui.loading_file" style="color: #333;">
             <h2 class="school-year">Année scolaire du {{pronote.AnneeScolaire[0].DateDebut | date:'fullDate'}} au {{pronote.AnneeScolaire[0].DateFin | date:'fullDate'}}</h2>
             <uib-tabset justified="true">
                 <uib-tab>
@@ -71,7 +71,9 @@
                                 Filtrage <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': ui.is_accordion_open, 'glyphicon-chevron-right': !ui.is_accordion_open}"></i>
                             </uib-accordion-heading>
                             <div class="col-md-12">
-                                <label class="pull-right"><checkbox data-ng-model="scope.problems_only"></checkbox> N'afficher que les données à traiter manuellement.</label>
+                                <label class="pull-right"><checkbox data-ng-model="ui.display_ready"></checkbox> Créneau(x) prêts.</label>
+                                <label class="pull-right"><checkbox data-ng-model="ui.display_problems"></checkbox> Créneaux à traiter.</label>
+                                <label class="pull-right"><checkbox data-ng-model="ui.display_broken"></checkbox> Créneaux invalides.</label>
                             </div>
 
                             <!-- par regroupements -->
@@ -114,9 +116,9 @@
                                     <ui-select multiple class="pull-left" theme="bootstrap"
                                                append-to-body="true"
                                                data-ng-model="scope.selected.enseignants">
-                                        <ui-select-match placeholder="Enseignant(s)...">{{$item.Nom}}</ui-select-match>
+                                        <ui-select-match placeholder="Enseignant(s)...">{{$item.displayed_label}}</ui-select-match>
                                         <ui-select-choices repeat="enseignant in pronote.Professeurs[0].Professeur | orderBy:['Nom']">
-                                            {{enseignant.Nom}}
+                                            {{enseignant.displayed_label}}
                                         </ui-select-choices>
                                     </ui-select>
                                     <button class="btn btn-xs btn-primary"
@@ -152,36 +154,36 @@
                     </uib-accordion>
 
                     <!-- /Critères de filtrage -->
-
+                    {{ui.sortCreneauxBy}}
                     <table class="table table-striped table-bordered table-hover table-condensed">
                         <thead>
                             <tr>
                                 <th></th>
-                                <th> <a data-ng-click="sortCreneauxBy='Jour'">Jour</a> </th>
-                                <th> <a data-ng-click="sortCreneauxBy='NumeroPlaceDebut'">à</a> </th>
-                                <th> pendant </th>
-                                <th> <a data-ng-click="sortCreneauxBy='Matiere'">matière</a> </th>
-                                <th> <a data-ng-click="sortCreneauxBy='Professeur'">enseignant(s)</a> </th>
-                                <th> <a data-ng-click="sortCreneauxBy=['Classe','Groupe']">regroupement(s)</a> </th>
-                                <th> <a data-ng-click="sortCreneauxBy='Salle'">salle(s)</a> </th>
-                                <th> <i class="glyphicon glyphicon-warning-sign" title="Problème(s) identifié(s)"></i> </th>
+                                <th> <a data-ng-click="ui.sortCreneauxBy='Jour'">Jour</a> <span data-ng-if="ui.sortCreneauxBy == 'Jour'">▲</span></th>
+                                <th> <a data-ng-click="ui.sortCreneauxBy='NumeroPlaceDebut'">à</a> <span data-ng-if="ui.sortCreneauxBy == 'NumeroPlaceDebut'">▲</span></th>
+                                <th> <a data-ng-click="ui.sortCreneauxBy='NombrePlaces'">pendant</a> <span data-ng-if="ui.sortCreneauxBy == 'NombrePlaces'">▲</span></th>
+                                <th> <a data-ng-click="ui.sortCreneauxBy='Matiere'">matière</a> <span data-ng-if="ui.sortCreneauxBy == 'Matiere'">▲</span></th>
+                                <th> <a data-ng-click="ui.sortCreneauxBy='Professeur'">enseignant(s)</a> <span data-ng-if="ui.sortCreneauxBy == 'Professeur'">▲</span></th>
+                                <th> <a data-ng-click="ui.sortCreneauxBy=['Classe','Groupe']">regroupement(s)</a> <span data-ng-if="ui.sortCreneauxBy == ['Classe','Groupe']">▲</span></th>
+                                <th> <a data-ng-click="ui.sortCreneauxBy='Salle'">salle(s)</a> <span data-ng-if="ui.sortCreneauxBy == 'Salle'">▲</span></th>
+                                <th> <a data-ng-click="ui.sortCreneauxBy='ready'"><i class="glyphicon glyphicon-warning-sign" title="Problème(s) identifié(s)"></i></a> <span data-ng-if="ui.sortCreneauxBy == 'ready'">▲</span></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr data-ng-repeat="creneau in pronote.Cours[0].Cours | orderBy:sortCreneauxBy | filter:filter_creneau( problems_only, scope.selected )"
-                                data-ng-class="{'ok': creneau.ready, 'ko': !creneau.ready}"
-                                data-ng-if="!problems_only || !creneau.ready">
+                            <tr data-ng-repeat="creneau in pronote.Cours[0].Cours | orderBy:ui.sortCreneauxBy | filter:filter_creneau( ui, scope.selected )"
+                                data-ng-class="{'ok': creneau.ready, 'ko': !creneau.ready, 'broken': creneau.broken}">
+                                <!-- data-ng-if="(ui.display_broken || !creneau.broken) || (!ui.problems_only || !creneau.ready)"> -->
                                 <td>{{$index}}</td>
                                 <td>{{jours_de_la_semaine[ creneau.Jour ]}}</td>
                                 <td>{{pronote.plages_horaires[ creneau.NumeroPlaceDebut ].LibelleHeureDebut}}</td>
                                 <td>{{creneau.NombrePlaces * pronote.GrilleHoraire[0].DureePlace}} minutes</td>
-                                <td data-ng-class="{'rouge ko': !creneau.readiness.matiere }">{{pronote.matieres[ creneau.Matiere[0].Ident ].displayed_label}}</td>
-                                <td data-ng-class="{'rouge ko': !creneau.readiness.enseignant }">
+                                <td data-ng-class="{'ko': !creneau.readiness.matiere, 'noir': creneau.broken && !creneau.readiness.matiere }">{{pronote.matieres[ creneau.Matiere[0].Ident ].displayed_label}}</td>
+                                <td data-ng-class="{'ko': !creneau.readiness.enseignant, 'noir': creneau.broken && !creneau.readiness.enseignant }">
                                     <div data-ng-repeat="node in creneau.Professeur">
                                         {{pronote.enseignants[ node.Ident ].displayed_label}} <sup uib-tooltip-html="node.displayed_semainier" tooltip-trigger="mouseenter">({{node.Semaines}})</sup>
                                     </div>
                                 </td>
-                                <td data-ng-class="{'rouge ko': !creneau.readiness.classe && !creneau.readiness.groupe_eleve }">
+                                <td data-ng-class="{'ko': !creneau.readiness.classe && !creneau.readiness.groupe_eleve, 'noir': creneau.broken && !creneau.readiness.classe && !creneau.readiness.groupe_eleve }">
                                     <div data-ng-repeat="node in creneau.Classe">
                                         {{pronote.classes[ node.Ident ].Nom}} <sup uib-tooltip-html="node.displayed_semainier" tooltip-trigger="mouseenter">({{node.Semaines}})</sup>
                                     </div>
@@ -195,7 +197,7 @@
                                     </div>
                                 </td>
                                 <td class="import-readiness"
-                                    data-ng-class="{'vert': creneau.ready, 'rouge': !creneau.ready}">
+                                    data-ng-class="{'vert': creneau.ready, 'rouge': !creneau.ready && !creneau.broken, 'noir': creneau.broken}">
                                     <span data-ng-if="creneau.ready"> <i class="glyphicon glyphicon-ok" title="Aucun problème"></i> </span>
 
                                     <span data-ng-if="!creneau.readiness.matiere"> <i class="glyphicon glyphicon-book" title="Matière inconnue"></i> </span>
@@ -224,11 +226,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- <tr data-ng-repeat="node in dataset.pronote | orderBy:['-edit','displayed_label']"
-                                 data-ng-class="{'warning': node.edit}"> -->
                             <tr data-ng-repeat="node in dataset.pronote"
-                                data-ng-class="{'ok': !node.edit, 'rouge ko': node.edit}"
-                                data-ng-if="!problems_only || node.edit">
+                                data-ng-class="{'ok': !node.edit, 'rouge ko': node.edit}">
                                 <td>
                                     <span>
                                         {{node.displayed_label}}

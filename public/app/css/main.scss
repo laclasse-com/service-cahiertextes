@@ -5,6 +5,10 @@ body {
     overflow-x: hidden;
 }
 
+a {
+    cursor: pointer;
+}
+
 .hero-unit {
     margin: 50px auto 0 auto;
     width: 300px;
@@ -975,11 +979,17 @@ legend {
     tr.ok {
         border-left: 6px solid #80ba66;
     }
-    tr.ko {
+    tr.ko,
+    tr.broken {
         border-left: 6px solid #eb5454;
-        .rouge {
+        td.ko{
             color: #fff;
             font-weight: bold;
+        }
+    }
+    tr.broken {
+        td.ko {
+            background: #252525;
         }
     }
     .import-readiness {
