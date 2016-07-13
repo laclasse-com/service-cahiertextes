@@ -156,6 +156,7 @@
                     <table class="table table-striped table-bordered table-hover table-condensed">
                         <thead>
                             <tr>
+                                <th></th>
                                 <th> <a data-ng-click="sortCreneauxBy='Jour'">Jour</a> </th>
                                 <th> <a data-ng-click="sortCreneauxBy='NumeroPlaceDebut'">à</a> </th>
                                 <th> pendant </th>
@@ -170,6 +171,7 @@
                             <tr data-ng-repeat="creneau in pronote.Cours[0].Cours | orderBy:sortCreneauxBy | filter:filter_creneau( problems_only, scope.selected )"
                                 data-ng-class="{'ok': creneau.ready, 'ko': !creneau.ready}"
                                 data-ng-if="!problems_only || !creneau.ready">
+                                <td>{{$index}}</td>
                                 <td>{{jours_de_la_semaine[ creneau.Jour ]}}</td>
                                 <td>{{pronote.plages_horaires[ creneau.NumeroPlaceDebut ].LibelleHeureDebut}}</td>
                                 <td>{{creneau.NombrePlaces * pronote.GrilleHoraire[0].DureePlace}} minutes</td>
