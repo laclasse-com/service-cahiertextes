@@ -81,6 +81,7 @@
                                 <div class="ui-select-wrapper">
                                     <ui-select multiple class="pull-left" theme="bootstrap"
                                                append-to-body="true"
+                                               data-ng-disabled="!ui.display_problems && !ui.display_ready"
                                                data-ng-model="scope.selected.classes">
                                         <ui-select-match placeholder="Classe(s)...">{{$item.Nom}}</ui-select-match>
                                         <ui-select-choices repeat="classe in pronote.Classes[0].Classe | orderBy:['Nom']">
@@ -88,8 +89,10 @@
                                         </ui-select-choices>
                                     </ui-select>
                                     <button class="btn btn-xs btn-primary"
+                                            data-ng-disabled="!ui.display_problems && !ui.display_ready"
                                             data-ng-click="scope.selected.classes = pronote.Classes[0].Classe"><span class="glyphicon glyphicon-certificate"></span></button>
                                     <button class="btn btn-xs btn-default"
+                                            data-ng-disabled="!ui.display_problems && !ui.display_ready"
                                             data-ng-click="scope.selected.classes = []"><span class="glyphicon glyphicon-erase"></span></button>
                                 </div>
                             </div>
@@ -97,6 +100,7 @@
                                 <div class="ui-select-wrapper">
                                     <ui-select multiple class="pull-left" theme="bootstrap"
                                                append-to-body="true"
+                                               data-ng-disabled="!ui.display_problems && !ui.display_ready"
                                                data-ng-model="scope.selected.groupes">
                                         <ui-select-match placeholder="Groupe(s) d'élèves...">{{$item.Nom}}</ui-select-match>
                                         <ui-select-choices repeat="groupe in pronote.Groupes[0].Groupe | orderBy:['Nom']">
@@ -104,8 +108,10 @@
                                         </ui-select-choices>
                                     </ui-select>
                                     <button class="btn btn-xs btn-primary"
+                                            data-ng-disabled="!ui.display_problems && !ui.display_ready"
                                             data-ng-click="scope.selected.groupes = pronote.Groupes[0].Groupe"><span class="glyphicon glyphicon-certificate"></span></button>
                                     <button class="btn btn-xs btn-default"
+                                            data-ng-disabled="!ui.display_problems && !ui.display_ready"
                                             data-ng-click="scope.selected.groupes = []"><span class="glyphicon glyphicon-erase"></span></button>
                                 </div>
                             </div>
@@ -115,6 +121,7 @@
                                 <div class="ui-select-wrapper">
                                     <ui-select multiple class="pull-left" theme="bootstrap"
                                                append-to-body="true"
+                                               data-ng-disabled="!ui.display_problems && !ui.display_ready"
                                                data-ng-model="scope.selected.enseignants">
                                         <ui-select-match placeholder="Enseignant(s)...">{{$item.displayed_label}}</ui-select-match>
                                         <ui-select-choices repeat="enseignant in pronote.Professeurs[0].Professeur | orderBy:['Nom']">
@@ -122,8 +129,10 @@
                                         </ui-select-choices>
                                     </ui-select>
                                     <button class="btn btn-xs btn-primary"
+                                            data-ng-disabled="!ui.display_problems && !ui.display_ready"
                                             data-ng-click="scope.selected.enseignants = pronote.Professeurs[0].Professeur"><span class="glyphicon glyphicon-certificate"></span></button>
                                     <button class="btn btn-xs btn-default"
+                                            data-ng-disabled="!ui.display_problems && !ui.display_ready"
                                             data-ng-click="scope.selected.enseignants = []"><span class="glyphicon glyphicon-erase"></span></button>
                                 </div>
                             </div>
@@ -133,6 +142,7 @@
                                 <div class="ui-select-wrapper">
                                     <ui-select multiple class="pull-left" theme="bootstrap"
                                                append-to-body="true"
+                                               data-ng-disabled="!ui.display_problems && !ui.display_ready"
                                                data-ng-model="scope.selected.matieres">
                                         <ui-select-match placeholder="Matière(s)...">{{$item.Libelle}}</ui-select-match>
                                         <ui-select-choices repeat="matiere in pronote.Matieres[0].Matiere | orderBy:['Nom']">
@@ -140,14 +150,17 @@
                                         </ui-select-choices>
                                     </ui-select>
                                     <button class="btn btn-xs btn-primary"
+                                            data-ng-disabled="!ui.display_problems && !ui.display_ready"
                                             data-ng-click="scope.selected.matieres = pronote.Matieres[0].Matiere"><span class="glyphicon glyphicon-certificate"></span></button>
                                     <button class="btn btn-xs btn-default"
+                                            data-ng-disabled="!ui.display_problems && !ui.display_ready"
                                             data-ng-click="scope.selected.matieres = []"><span class="glyphicon glyphicon-erase"></span></button>
                                 </div>
                             </div>
 
                             <div class="col-md-12">
-                                <label class="pull-right"><checkbox data-ng-model="scope.filtered_import"></checkbox> N'importer que les créneaux affichés</label>
+                                <label class="pull-right"><checkbox data-ng-model="scope.filtered_import"
+                                                                    data-ng-disabled="!ui.display_ready"></checkbox> N'importer que les créneaux affichés</label>
                             </div>
 
                         </uib-accordion-group>
@@ -173,7 +186,7 @@
                             <tr data-ng-repeat="creneau in pronote.Cours[0].Cours | orderBy:ui.sortCreneauxBy | filter:filter_creneau( ui, scope.selected )"
                                 data-ng-class="{'ok': creneau.ready, 'ko': !creneau.ready, 'broken': creneau.broken}">
                                 <!-- data-ng-if="(ui.display_broken || !creneau.broken) || (!ui.problems_only || !creneau.ready)"> -->
-                                <td>{{$index}}</td>
+                                <td>{{$index + 1}}</td>
                                 <td>{{jours_de_la_semaine[ creneau.Jour ]}}</td>
                                 <td>{{pronote.plages_horaires[ creneau.NumeroPlaceDebut ].LibelleHeureDebut}}</td>
                                 <td>{{creneau.NombrePlaces * pronote.GrilleHoraire[0].DureePlace}} minutes</td>

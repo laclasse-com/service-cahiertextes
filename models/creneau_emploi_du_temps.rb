@@ -193,23 +193,33 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
     params[:heure_fin] = Time.parse( params[:heure_fin] ) unless params[:heure_fin].is_a?( Time ) || !params.key?( :heure_fin )
 
     update_heure_debut( params[:heure_debut] ) if params.key?( :heure_debut )
+    p ' updated heure_debut'
     update_heure_fin( params[:heure_fin] ) if params.key?( :heure_fin )
+    p ' updated heure_fin'
     update( matiere_id: params[:matiere_id] ) if params.key?( :matiere_id )
+    p ' updated matiere'
     update( jour_de_la_semaine: params[:jour_de_la_semaine] ) if params.key?( :jour_de_la_semaine )
+    p ' updated jour_de_la_semaine'
 
     save
+    p 'saved'
 
     if params.key?( :enseignant_id ) && enseignants.count { |e| e[:enseignant_id] == params[:enseignant_id] } == 0
       CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
       add_enseignant( enseignant_id: params[:enseignant_id] )
       CreneauEmploiDuTempsEnseignant.restrict_primary_key
+      p ' added enseignant'
     end
     update_semaines_de_presence_enseignant( params[:enseignant_id], params[:semaines_de_presence_enseignant] ) if params.key?( :semaines_de_presence_enseignant )
+    p '    updated enseignant semainier'
 
     update_regroupement( params[:regroupement_id], params[:previous_regroupement_id], params[:semaines_de_presence_regroupement] ) if params.key?( :regroupement_id ) && !params[:regroupement_id].nil? && params[:regroupement_id] != -1
+    p ' updated regroupement'
     update_semaines_de_presence_regroupement( params[:regroupement_id], params[:semaines_de_presence_regroupement] ) if params.key?( :semaines_de_presence_regroupement )
+    p '    updated regroupement semainier'
 
     update_salle( params[:salle_id], params[:semaines_de_presence_salle] ) if params.key?( :salle_id )
+    p ' updated salle'
   end
   # rubocop:enable Metrics/PerceivedComplexity
   # rubocop:enable Metrics/CyclomaticComplexity

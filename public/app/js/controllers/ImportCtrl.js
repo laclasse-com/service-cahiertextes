@@ -194,7 +194,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
                           var count_expected_creneaux = function( creneaux ) {
                               var broken_creneaux = 0;
-                              var expected_creneaux = _(creneaux).reduce( function( memo, creneau ) {
+                              return _(creneaux).reduce( function( memo, creneau ) {
                                   creneau.broken = false;
                                   var what_s_broken = '';
                                   var n_creneaux =  1;
@@ -206,17 +206,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                   if ( !_(creneau.Groupe).isUndefined() ) { n_creneaux *= creneau.Groupe.length; }
                                   if ( _(creneau.Classe).isUndefined() && _(creneau.Groupe).isUndefined() ) { what_s_broken += 'Classe _and_ Groupe ; '; creneau.broken = true; }
 
-                                  if ( creneau.broken ) { console.log( '*******************************************'); console.log( creneau ); console.log( what_s_broken ); }
-
                                   return memo + n_creneaux; }, 0 );
-
-                              var nb_creneaux_broken = _(creneaux).where( { broken: true } ).length;
-                              if ( nb_creneaux_broken > 0 ) {
-                                  console.log( nb_creneaux_broken + ' broken créneaux :(' );
-                                  console.log( '# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #');
-                              }
-
-                              return expected_creneaux;
                           };
                           $scope.nb_expected_creneaux = count_expected_creneaux( $scope.pronote.Cours[0].Cours );
                           $scope.nb_expected_creneaux_ready = count_expected_creneaux( _($scope.pronote.Cours[0].Cours).where( { ready: true } ) );
