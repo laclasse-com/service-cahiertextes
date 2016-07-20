@@ -14,7 +14,7 @@ module CahierDeTextesApp
 
         uri = "http://www.education.gouv.fr/download.php?file=http://cache.media.education.gouv.fr/ics/Calendrier_Scolaire_Zone_#{zone}.ics"
 
-        ics = Icalendar.parse( open( uri ) ).first
+        ics = Icalendar::Calendar.parse( open( uri ) ).first
         description_rentrée_enseignants = ics.events.first.description
         this_year = false
 
