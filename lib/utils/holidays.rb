@@ -32,6 +32,10 @@ module CahierDeTextesApp
 
         holidays_weeks.sort.uniq
       end
+
+      def year_rentree
+        DateTime.now.month > 6 ? DateTime.now.year : DateTime.now.year - 1
+      end
     end
   end
 end
