@@ -823,6 +823,12 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 								}
 							}
 							var val = _compileHtml();
+							/* istanbul ignore next: FF specific bug fix */
+							if (val==='<br>') {
+								// on Firefox this comes back sometimes as <br> which is strange, so we remove this here
+								//console.log('*************BAD****');
+								val='';
+							}
 							if(_defaultVal !== '' && val.trim() === ''){
 								_setInnerHTML(_defaultVal);
 								taSelection.setSelectionToElementStart(element.children()[0]);
@@ -1052,12 +1058,6 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 					element.find(selector).on('click', selectorClickHandler);
 				});
 				element.on('drop', fileDropHandler);
-				element.on('blur', function(){
-					/* istanbul ignore next: webkit fix */
-					if(_browserDetect.webkit) { // detect webkit
-						globalContentEditableBlur = true;
-					}
-				});
 			}
 		}
 	};
