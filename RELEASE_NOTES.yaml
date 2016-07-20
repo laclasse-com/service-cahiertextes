@@ -11,3 +11,7 @@
     2:
       - correction de la liste de sélection des classes/groupes
       - ajout d'une matière générique
+    4:
+      - amélioration de l'import
+      - correction de la récupération des vacances pendant les vacances
+      
