@@ -9,6 +9,9 @@ AllCops:
 Style/UnneededInterpolation:
   Enabled: false
 
+Style/SpaceInsidePercentLiteralDelimiters:
+  Enabled: false
+
 Style/AsciiIdentifiers:
   Enabled: false
 
