@@ -28,6 +28,14 @@ angular.module( 'cahierDeTextesClientApp' )
                                     loading_file: false,
                                     processing: false,
                                     sortCreneauxBy: 'Jour' };
+                      $scope.sort_creneaux_by = function( criteria ) {
+                          if ( _(criteria).isArray() ) {
+                              $scope.ui.sortCreneauxBy = $scope.ui.sortCreneauxBy[0] === criteria[0] ?  _(criteria).map( function( sub_criteria ) { return '-' + sub_criteria; } ) : criteria;
+                          } else {
+                              $scope.ui.sortCreneauxBy = $scope.ui.sortCreneauxBy === criteria ? '-' + criteria : criteria;
+                          }
+                          console.log( criteria + ' → ' + $scope.ui.sortCreneauxBy );
+                      };
 
                       Annuaire.get_matieres()
                           .then( function( response ) {

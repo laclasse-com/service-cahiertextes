@@ -172,14 +172,46 @@
                         <thead>
                             <tr>
                                 <th></th>
-                                <th> <a data-ng-click="ui.sortCreneauxBy='Jour'">Jour</a> <span data-ng-if="ui.sortCreneauxBy == 'Jour'">▲</span></th>
-                                <th> <a data-ng-click="ui.sortCreneauxBy='NumeroPlaceDebut'">à</a> <span data-ng-if="ui.sortCreneauxBy == 'NumeroPlaceDebut'">▲</span></th>
-                                <th> <a data-ng-click="ui.sortCreneauxBy='NombrePlaces'">pendant</a> <span data-ng-if="ui.sortCreneauxBy == 'NombrePlaces'">▲</span></th>
-                                <th> <a data-ng-click="ui.sortCreneauxBy='Matiere'">matière</a> <span data-ng-if="ui.sortCreneauxBy == 'Matiere'">▲</span></th>
-                                <th> <a data-ng-click="ui.sortCreneauxBy='Professeur'">enseignant(s)</a> <span data-ng-if="ui.sortCreneauxBy == 'Professeur'">▲</span></th>
-                                <th> <a data-ng-click="ui.sortCreneauxBy=['Classe','Groupe']">regroupement(s)</a> <span data-ng-if="ui.sortCreneauxBy == ['Classe','Groupe']">▲</span></th>
-                                <th> <a data-ng-click="ui.sortCreneauxBy='Salle'">salle(s)</a> <span data-ng-if="ui.sortCreneauxBy == 'Salle'">▲</span></th>
-                                <th> <a data-ng-click="ui.sortCreneauxBy='ready'"><i class="glyphicon glyphicon-warning-sign" title="Problème(s) identifié(s)"></i></a> <span data-ng-if="ui.sortCreneauxBy == 'ready'">▲</span></th>
+                                <th>
+                                    <a data-ng-click="sort_creneaux_by( 'Jour' )">Jour</a>
+                                    <span data-ng-if="ui.sortCreneauxBy == 'Jour'">↑</span>
+                                    <span data-ng-if="ui.sortCreneauxBy == '-Jour'">↓</span>
+                                </th>
+                                <th>
+                                    <a data-ng-click="sort_creneaux_by( 'NumeroPlaceDebut' )">à</a>
+                                    <span data-ng-if="ui.sortCreneauxBy == 'NumeroPlaceDebut'">↑</span>
+                                    <span data-ng-if="ui.sortCreneauxBy == '-NumeroPlaceDebut'">↓</span>
+                                </th>
+                                <th>
+                                    <a data-ng-click="sort_creneaux_by( 'NombrePlaces' )">pendant</a>
+                                    <span data-ng-if="ui.sortCreneauxBy == 'NombrePlaces'">↑</span>
+                                    <span data-ng-if="ui.sortCreneauxBy == '-NombrePlaces'">↓</span>
+                                </th>
+                                <th>
+                                    <a data-ng-click="sort_creneaux_by( 'Matiere' )">matière</a>
+                                    <span data-ng-if="ui.sortCreneauxBy == 'Matiere'">↑</span>
+                                    <span data-ng-if="ui.sortCreneauxBy == '-Matiere'">↓</span>
+                                </th>
+                                <th>
+                                    <a data-ng-click="sort_creneaux_by( 'Professeur' )">enseignant(s)</a>
+                                    <span data-ng-if="ui.sortCreneauxBy == 'Professeur'">↑</span>
+                                    <span data-ng-if="ui.sortCreneauxBy == '-Professeur'">↓</span>
+                                </th>
+                                <th>
+                                    <a data-ng-click="sort_creneaux_by( ['Classe','Groupe'] )">regroupement(s)</a>
+                                    <span data-ng-if="ui.sortCreneauxBy == ['Classe','Groupe']">↑</span>
+                                    <span data-ng-if="ui.sortCreneauxBy == ['-Classe','-Groupe']">↓</span>
+                                </th>
+                                <th>
+                                    <a data-ng-click="sort_creneaux_by( 'Salle' )">salle(s)</a>
+                                    <span data-ng-if="ui.sortCreneauxBy == 'Salle'">↑</span>
+                                    <span data-ng-if="ui.sortCreneauxBy == '-Salle'">↓</span>
+                                </th>
+                                <th>
+                                    <a data-ng-click="sort_creneaux_by( 'ready' )"><i class="glyphicon glyphicon-warning-sign" title="Problème(s) identifié(s)"></i></a>
+                                    <span data-ng-if="ui.sortCreneauxBy == 'ready'">↑</span>
+                                    <span data-ng-if="ui.sortCreneauxBy == '-ready'">↓</span>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -190,13 +222,13 @@
                                 <td>{{jours_de_la_semaine[ creneau.Jour ]}}</td>
                                 <td>{{pronote.plages_horaires[ creneau.NumeroPlaceDebut ].LibelleHeureDebut}}</td>
                                 <td>{{creneau.NombrePlaces * pronote.GrilleHoraire[0].DureePlace}} minutes</td>
-                                <td data-ng-class="{'ko': !creneau.readiness.matiere, 'noir': creneau.broken && !creneau.readiness.matiere }">{{pronote.matieres[ creneau.Matiere[0].Ident ].displayed_label}}</td>
-                                <td data-ng-class="{'ko': !creneau.readiness.enseignant, 'noir': creneau.broken && !creneau.readiness.enseignant }">
+                                <td data-ng-class="{'ko': !creneau.readiness.matiere, 'rouge': !creneau.broken && !creneau.readiness.matiere, 'noir': creneau.broken && !creneau.readiness.matiere }">{{pronote.matieres[ creneau.Matiere[0].Ident ].displayed_label}}</td>
+                                <td data-ng-class="{'ko': !creneau.readiness.enseignant, 'rouge': !creneau.broken && !creneau.readiness.enseignant, 'noir': creneau.broken && !creneau.readiness.enseignant }">
                                     <div data-ng-repeat="node in creneau.Professeur">
                                         {{pronote.enseignants[ node.Ident ].displayed_label}} <sup uib-tooltip-html="node.displayed_semainier" tooltip-trigger="mouseenter">({{node.Semaines}})</sup>
                                     </div>
                                 </td>
-                                <td data-ng-class="{'ko': !creneau.readiness.classe && !creneau.readiness.groupe_eleve, 'noir': creneau.broken && !creneau.readiness.classe && !creneau.readiness.groupe_eleve }">
+                                <td data-ng-class="{'ko': !creneau.readiness.classe && !creneau.readiness.groupe_eleve, 'rouge': !creneau.broken && !creneau.readiness.classe && !creneau.readiness.groupe_eleve, 'noir': creneau.broken && !creneau.readiness.classe && !creneau.readiness.groupe_eleve }">
                                     <div data-ng-repeat="node in creneau.Classe">
                                         {{pronote.classes[ node.Ident ].Nom}} <sup uib-tooltip-html="node.displayed_semainier" tooltip-trigger="mouseenter">({{node.Semaines}})</sup>
                                     </div>
