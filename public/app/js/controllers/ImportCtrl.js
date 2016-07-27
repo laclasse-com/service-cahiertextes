@@ -34,7 +34,6 @@ angular.module( 'cahierDeTextesClientApp' )
                           } else {
                               $scope.ui.sortCreneauxBy = $scope.ui.sortCreneauxBy === criteria ? '-' + criteria : criteria;
                           }
-                          console.log( criteria + ' → ' + $scope.ui.sortCreneauxBy );
                       };
 
                       Annuaire.get_matieres()
