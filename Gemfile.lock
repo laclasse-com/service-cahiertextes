@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/laclasse-com/laclasse-common.git
-  revision: 472789cfcf3fc276d67c78e2cee63a50b64c614e
+  revision: 28c6dc078d7e529a0b1a80248fcce063626da97f
   specs:
-    laclasse-common (0.2.27)
+    laclasse-common (0.2.28)
       logstash-logger
       redis-rack (~> 1.5.0)
       rest-client
@@ -55,7 +55,7 @@ GEM
     icalendar (2.4.0)
     ice_nine (0.11.2)
     logstash-event (1.2.02)
-    logstash-logger (0.16.0)
+    logstash-logger (0.17.0)
       logstash-event (~> 1.2)
       stud
     method_source (0.8.2)
@@ -88,7 +88,7 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
-    puma (3.5.0)
+    puma (3.6.0)
     rack (1.6.4)
     rack-accept (0.4.5)
       rack (>= 0.4)
@@ -122,7 +122,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.5.0)
     rspec-support (3.5.0)
-    rubocop (0.41.2)
+    rubocop (0.42.0)
       parser (>= 2.3.1.1, < 3.0)
       powerpack (~> 0.1)
       rainbow (>= 1.99.1, < 3.0)
