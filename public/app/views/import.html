@@ -59,14 +59,14 @@
                     <uib-tab-heading>
                         <h4>Créneaux</h4>
                         ({{nb_expected_creneaux_ready}} seront créés sur {{nb_expected_creneaux}})
-                        <div class="progress-bar-container vert-moins">
-                            <div class="progress-bar rouge" data-ng-style="{ width: ( ( nb_expected_creneaux_ready / nb_expected_creneaux ) * 100 ) + '%' }"></div>
+                        <div class="progress-bar-container rouge">
+                            <div class="progress-bar vert-moins" data-ng-style="{ width: ( ( nb_expected_creneaux_ready / nb_expected_creneaux ) * 100 ) + '%' }"></div>
                         </div>
                     </uib-tab-heading>
 
                     <!-- Critères de filtrage -->
                     <uib-accordion>
-                        <uib-accordion-group is-open="ui.is_accordion_open">
+                        <div uib-accordion-group is-open="ui.is_accordion_open">
                             <uib-accordion-heading>
                                 Filtrage <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': ui.is_accordion_open, 'glyphicon-chevron-right': !ui.is_accordion_open}"></i>
                             </uib-accordion-heading>
@@ -163,7 +163,7 @@
                                                                     data-ng-disabled="!ui.display_ready"></checkbox> N'importer que les créneaux affichés</label>
                             </div>
 
-                        </uib-accordion-group>
+                        </div>
                     </uib-accordion>
 
                     <!-- /Critères de filtrage -->
@@ -257,8 +257,8 @@
                     <uib-tab-heading>
                         <h4>{{dataset.title}}</h4>
                         ({{dataset.nb_unmatched}} à traiter sur {{dataset.nb_total}})
-                        <div class="progress-bar-container vert-moins">
-                            <div class="progress-bar rouge" data-ng-style="{ width: ( ( dataset.nb_unmatched / dataset.nb_total ) * 100 ) + '%' }"></div>
+                        <div class="progress-bar-container rouge">
+                            <div class="progress-bar vert-moins" data-ng-style="{ width: ( ( ( dataset.nb_total - dataset.nb_unmatched ) / dataset.nb_total ) * 100 ) + '%' }"></div>
                         </div>
                     </uib-tab-heading>
                     <table class="table table-striped table-bordered table-hover table-condensed">
