@@ -73,7 +73,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
     h[:regroupements] = regroupements
     h[:enseignants] = enseignants
     h[:salles] = salles
-    h[:vierge] = cours.count == 0 && devoirs.count == 0
+    h[:vierge] = cours.count.zero? && devoirs.count.zero?
     if expand
       h[:cours] = Cours.where( creneau_emploi_du_temps_id: id ).where( deleted: false ).where( date_cours: debut .. fin )
       h[:devoirs] = Devoir.where( creneau_emploi_du_temps_id: id ).where( date_due: debut .. fin )
@@ -123,7 +123,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
             matiere_id: c.matiere_id,
             regroupement_id: regroupement.regroupement_id,
             semaines_de_presence: regroupement.semaines_de_presence,
-            vierge: c.cours.count == 0 && c.devoirs.count == 0 }
+            vierge: cours.count.zero? && devoirs.count.zero? }
         end
       end
     end
@@ -199,7 +199,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
 
     save
 
-    if params.key?( :enseignant_id ) && enseignants.count { |e| e[:enseignant_id] == params[:enseignant_id] } == 0
+    if params.key?( :enseignant_id ) && enseignants.count { |e| e[:enseignant_id] == params[:enseignant_id] }.zero?
       CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
       add_enseignant( enseignant_id: params[:enseignant_id] )
       CreneauEmploiDuTempsEnseignant.restrict_primary_key
@@ -210,6 +210,10 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
     update_semaines_de_presence_regroupement( params[:regroupement_id], params[:semaines_de_presence_regroupement] ) if params.key?( :semaines_de_presence_regroupement )
 
     update_salle( params[:salle_id], params[:semaines_de_presence_salle] ) if params.key?( :salle_id )
+  rescue e
+    puts "Can't do that with #{self}"
+    puts e.message
+    puts e.backtrace
   end
   # rubocop:enable Metrics/PerceivedComplexity
   # rubocop:enable Metrics/CyclomaticComplexity
