@@ -4,17 +4,16 @@ angular.module( 'cahierDeTextesClientApp' )
     .controller( 'PopupEditionCtrl',
                  [ '$scope', '$filter', '$q', '$sce', '$uibModalInstance', '$locale', 'toastr', 'moment',
                    'APP_PATH', 'DOCS_URL', 'SEMAINES_VACANCES', 'ZONE', 'POPUP_ACTIONS', 'LOCALHOST',
-                   'Documents', 'API', 'CreneauxEmploiDuTemps', 'Cours', 'Devoirs', 'User',
+                   'Documents', 'API', 'CreneauxEmploiDuTemps', 'Cours', 'Devoirs', 'User', 'Utils',
                    'cours', 'devoirs', 'creneau', 'raw_data', 'classes', 'matieres',
                    function ( $scope, $filter, $q, $sce, $uibModalInstance, $locale, toastr, moment,
                               APP_PATH, DOCS_URL, SEMAINES_VACANCES, ZONE, POPUP_ACTIONS, LOCALHOST,
-                              Documents, API, CreneauxEmploiDuTemps, Cours, Devoirs, User,
+                              Documents, API, CreneauxEmploiDuTemps, Cours, Devoirs, User, Utils,
                               cours, devoirs, creneau, raw_data, classes, matieres )
                    {
-                       $scope.annee = $locale.DATETIME_FORMATS.MONTH;
-                       $scope.jours = _($locale.DATETIME_FORMATS.DAY).indexBy( function( jour ) { return _($locale.DATETIME_FORMATS.DAY).indexOf( jour ); } );
                        $scope.app_path = APP_PATH;
                        $scope.ZONE = ZONE;
+                       $scope.jours = _($locale.DATETIME_FORMATS.DAY).indexBy( function( jour ) { return _($locale.DATETIME_FORMATS.DAY).indexOf( jour ); } );
 
                        $scope.faulty_docs_app = false;
 
@@ -75,28 +74,7 @@ angular.module( 'cahierDeTextesClientApp' )
                            $scope.creneau.n_week = moment($scope.creneau.tmp_heure_debut).week();
 
                            // Gestion des semaines actives
-                           var what_month = function( n_week ) {
-                               var now = moment();
-                               var year = moment().year();
-                               if ( ( n_week < 36 ) && ( now.month() > 7 ) ) {
-                                   year++;
-                               } else if ( now.month() < 7 ) {
-                                   year--;
-                               }
-                               return moment( year ).isoWeek( n_week ).month();
-                           };
-
-                           $scope.overlay_semainier = _.chain( _.range(1, 52) )
-                               .map( function( s ) { return { semaine: s,
-                                                              mois: what_month( s ) }; } )
-                               .groupBy( function( s ) { return s.mois; } )
-                               .toArray()
-                               .map( function( semaines, i ) {
-                                   return { index: i > 7 ? i - 8 : i + 4,
-                                            label: $scope.annee[ i ],
-                                            semaines: semaines };
-                               } )
-                               .value();
+                           $scope.overlay_semainier = Utils.overlay_semainier();
 
                            var fixnum_to_bitfield = function( fixnum ) {
                                var string = fixnum.toString(2);
@@ -111,13 +89,12 @@ angular.module( 'cahierDeTextesClientApp' )
                            var bitfield_to_fixnum = function( bitfield ) {
                                return parseInt( bitfield.reverse().join('') + '0', 2 );
                            };
-                           $scope.sont_ce_les_vacances = function( i_semaine, zone ) {
-                               return SEMAINES_VACANCES[ zone ].indexOf( i_semaine ) != -1;
-                           };
+                           $scope.sont_ce_les_vacances = Utils.sont_ce_les_vacances;
+
                            var semaines_toutes_actives = function() {
                                var semainier = [];
                                _(52).times( function( i ) {
-                                   if ( !$scope.sont_ce_les_vacances( i + 1, ZONE ) ) {
+                                   if ( !Utils.sont_ce_les_vacances( i + 1, ZONE ) ) {
                                        semainier.push( 1 );
                                    } else {
                                        semainier.push( 0 );
@@ -139,7 +116,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                      var template = [];
                                      var semaines_depuis_les_vacances = 0;
                                      _(52).times( function( i ) {
-                                         if ( $scope.sont_ce_les_vacances( i + 1, ZONE ) ) {
+                                         if ( Utils.sont_ce_les_vacances( i + 1, ZONE ) ) {
                                              semaines_depuis_les_vacances = 0;
                                          } else {
                                              semaines_depuis_les_vacances++;
@@ -154,7 +131,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                      var template = [];
                                      var semaines_depuis_les_vacances = 0;
                                      _(52).times( function( i ) {
-                                         if ( $scope.sont_ce_les_vacances( i + 1, ZONE ) ) {
+                                         if ( Utils.sont_ce_les_vacances( i + 1, ZONE ) ) {
                                              semaines_depuis_les_vacances = 0;
                                          } else {
                                              semaines_depuis_les_vacances++;
@@ -176,7 +153,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                { label: 'Inverser',
                                  apply: function() {
                                      $scope.semaines_actives.regroupement = _($scope.semaines_actives.regroupement).map( function( w, i ) {
-                                         return ( ( w == 0 ) && !$scope.sont_ce_les_vacances( i + 1, ZONE ) ) ? 1 : 0;
+                                         return ( ( w == 0 ) && !Utils.sont_ce_les_vacances( i + 1, ZONE ) ) ? 1 : 0;
                                      } );
                                  }
                                },

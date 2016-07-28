@@ -2,8 +2,9 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .service( 'Utils',
-              [ 'moment',
-                function( moment ) {
+              [ '$locale', 'moment', 'SEMAINES_VACANCES',
+                function( $locale, moment, SEMAINES_VACANCES ) {
+                    var _this = this;
                     this.school_year_start = function() {
                         var now = moment();
                         var school_year_start = moment();
@@ -38,5 +39,50 @@ angular.module( 'cahierDeTextesClientApp' )
                         date = moment( date );
                         return date.isAfter( this.school_year_start() ) && date.isBefore( this.school_year_end() );
                     };
+
+                    this.sont_ce_les_vacances = function( i_semaine, zone ) {
+                        return SEMAINES_VACANCES[ zone ].indexOf( i_semaine ) != -1;
+                    };
+
+                    this.what_month = function( n_week ) {
+                        var now = moment();
+                        var year = now.year();
+                        if ( ( n_week < 36 ) && ( now.month() > 7 ) ) {
+                            year++;
+                        } else if ( now.month() < 7 ) {
+                            year--;
+                        }
+                        return moment( year ).isoWeek( n_week ).month();
+                    };
+
+                    this.overlay_semainier = function() {
+                        return _.chain( _.range(1, 52) )
+                            .map( function( s ) { return { semaine: s,
+                                                           mois: _this.what_month( s ) }; } )
+                            .groupBy( function( s ) { return s.mois; } )
+                            .toArray()
+                            .map( function( semaines, i ) {
+                                return { index: i > 7 ? i - 8 : i + 4,
+                                         label: $locale.DATETIME_FORMATS.MONTH[ i ],
+                                         semaines: semaines };
+                            } )
+                            .value();
+                    };
+
+                    this.groupByKey = function( array, key ) {
+                        return _.chain( array ).map( function( i ) { return i[ key ]; } ).object( array ).value();
+                    };
+
+                    this.padEnd = function( string, target_length, filler ) {
+                        if ( string.length >= target_length ) {
+                            return string;
+                        } else {
+                            var pad = '';
+                            _( (target_length - string.length) / filler.length ).times( function() { pad += filler; } );
+
+                            return (string + pad).substr( 0, target_length );
+                        }
+                    };
+
                 }
               ] );

@@ -135,10 +135,6 @@ angular.module( 'cahierDeTextesClientApp' )
                           }
                       };
 
-                      $scope.sont_ce_les_vacances = function( i_semaine, zone ) {
-                          return SEMAINES_VACANCES[ zone ].indexOf( i_semaine ) != -1;
-                      };
-
                       // configuration du composant calendrier
                       $scope.extraEventSignature = function(event) {
                           return '' + event.matiere;
@@ -152,7 +148,7 @@ angular.module( 'cahierDeTextesClientApp' )
                       $scope.calendar.options.viewRender = function( view, element ) {
                           $scope.current_user.date = view.start;
                           $scope.n_week = view.start.week();
-                          $scope.c_est_les_vacances = $scope.sont_ce_les_vacances( $scope.n_week, $scope.zone );
+                          $scope.c_est_les_vacances = Utils.sont_ce_les_vacances( $scope.n_week, $scope.zone );
 
                           retrieve_data( view.start.toDate(), view.end.toDate() );
                       };
