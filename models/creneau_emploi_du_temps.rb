@@ -132,23 +132,15 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
   end
 
   def update_heure_debut( value )
-    plage_horaire_debut = PlageHoraire.where( debut: value ).first
-    if plage_horaire_debut.nil?
-      plage_horaire_debut = PlageHoraire.create( label: '',
-                                                 debut: value,
-                                                 fin: value + 1800 )
-    end
-    update( debut: plage_horaire_debut.id )
+    update( debut: DataManagement::Accessors.create_or_get( PlageHoraire,
+                                                            debut: value,
+                                                            fin: value + 1800 ) )
   end
 
   def update_heure_fin( value )
-    plage_horaire_fin = PlageHoraire.where( fin: value ).first
-    if plage_horaire_fin.nil?
-      plage_horaire_fin = PlageHoraire.create( label: '',
-                                               debut: value - 1800,
-                                               fin: value )
-    end
-    update( fin: plage_horaire_fin.id )
+    update( fin: DataManagement::Accessors.create_or_get( PlageHoraire,
+                                                          debut: value - 1800,
+                                                          fin: value ) )
   end
 
   def update_semaines_de_presence_enseignant( enseignant_id, semaines_de_presence_enseignant )

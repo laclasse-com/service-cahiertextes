@@ -26,13 +26,10 @@ module CahierDeTextesAPI
         requires :fin
       end
       post '/' do
-        ph = DataManagement::Accessors.create_or_get( PlageHoraire,
-                                                      label: params[:label] )
-        ph.update( debut: params[:debut],
-                   fin: params[:fin] )
-        ph.save
-
-        ph
+        DataManagement::Accessors.create_or_get( PlageHoraire,
+                                                 label: params[:label],
+                                                 debut: params[:debut],
+                                                 fin: params[:fin] )
       end
 
       desc 'update the plage horaire'
