@@ -378,7 +378,7 @@ angular.module( 'cahierDeTextesClientApp' )
                               fin_annee_scolaire: new Date( $scope.pronote.AnneeScolaire[0].DateFin )
                           } );
                           ct_etablissement.$save();
-                          toastr.info( 'Etablissement created', 'Import en cours' );
+                          toastr.info( 'Etablissement mis à jour', 'Import en cours' );
 
                           // // Create CahierDeTextes
                           $scope.expected_cahiers_de_textes = _($scope.pronote.classes).size() + _($scope.pronote.groupes_eleves).size();
@@ -406,11 +406,10 @@ angular.module( 'cahierDeTextesClientApp' )
                               var slice_of_regroupements = regroupements.splice( 0, bulk_package_size );
                               CahiersDeTextes.bulk( { cahiers_de_textes: slice_of_regroupements } ).$promise
                                   .then( function( response ) {
-                                      $scope.cahiers_de_textes_created.push( response );
-                                      $scope.cahiers_de_textes_created += _(response).size();
+                                      $scope.cahiers_de_textes_created += response;
+                                      toastr.info( _($scope.cahiers_de_textes_created).size() + ' CahierDeTextes', 'Import en cours' );
                                   } );
                           }
-                          toastr.info(  $scope.cahiers_de_textes_created + ' CahierDeTextes created', 'Import en cours' );
 
                           // Create Salle
                           $scope.expected_salles = _($scope.pronote.salles).size();
@@ -426,14 +425,13 @@ angular.module( 'cahierDeTextesClientApp' )
                                          } )
                                        } ).$promise.then( function( response ) {
                                            $scope.salles_created = response;
-                                           $scope.salles_created = _($scope.salles_created).size();
 
-                                           toastr.info(  $scope.salles_created + ' Salle created', 'Import en cours' );
+                                           toastr.info( _($scope.salles_created).size() + ' Salles', 'Import en cours' );
 
                                            var creneaux_filter = $scope.filter_creneau( true, $scope.selected );
 
                                            // Create Creneaux
-                                           var creneaux_emploi_du_temps = _.chain($scope.pronote.Cours[0].Cours)
+                                           var creneaux_emploi_du_temps = _.chain($scope.creneaux)
                                                .select( function( creneau ) {
                                                    return creneau.ready && ( !$scope.filtered_import || ( $scope.filtered_import && creneau.is_displayed ) );
                                                } )
@@ -462,7 +460,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                            $scope.creneaux_created = [];
                                            $scope.counters.creneaux_created = 0;
 
-                                           toastr.info( 'About to create ' + creneaux_emploi_du_temps.length + ' CreneauEmploiDuTemps', 'Import en cours' );
                                            while ( creneaux_emploi_du_temps.length > 0 ) {
                                                CreneauxEmploiDuTemps.bulk( {
                                                    uai: $scope.pronote.UAI,
@@ -470,8 +467,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                                } ).$promise
                                                    .then( function( response ) {
                                                        $scope.creneaux_created.push( response );
-                                                       $scope.counters.creneaux_created += _(response).size();
-                                                       toastr.info( $scope.counters.creneaux_created + ' CreneauEmploiDuTemps created', 'Import en cours' );
+                                                       toastr.info( _($scope.creneaux_created).size() + ' Créneaux', 'Import en cours' );
                                                    } );
                                            }
                                        } );

@@ -69,18 +69,21 @@ header.embedded {
 
 /* Tooltip */
 .tooltip-inner {
-    background-color: #fff;
-    color: #000;
-    border: 1px solid #000;
-    border-radius: 0;
-    font-weight: normal;
+    padding: 2px;
 }
+// .tooltip-inner {
+//     // background-color: #fff;
+//     // color: #000;
+//     border: 1px solid #000;
+//     border-radius: 0;
+//     font-weight: normal;
+// }
 
-.infos .tooltip-inner hr {
-    border-color: #333;
-    color: #333;
-    margin: 0;
-}
+// .infos .tooltip-inner hr {
+//     border-color: #333;
+//     color: #333;
+//     margin: 0;
+// }
 
 /* Cahier de Textes */
 /* Calendrier */
@@ -970,6 +973,10 @@ legend {
 .progress-bar-container {
     height: 12px;
     width: 100%;
+    position: relative;
+    .progress-bar {
+        position: absolute;
+    }
 }
 
 .import {

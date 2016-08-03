@@ -76,7 +76,7 @@
 
                     <!-- Critères de filtrage -->
                     <fieldset>
-                        <legend> <h3>Filtrage</h3>  </legend>
+                        <legend> <h4>Filtrage</h4>  </legend>
 
                         <!-- par regroupements -->
                         <div class="col-md-3">
@@ -162,6 +162,30 @@
                     </fieldset>
                     <!-- /Critères de filtrage -->
 
+                    <fieldset class="summary">
+                        <legend> <h4>Statistiques</h4>  </legend>
+
+                        <label>Totalité des créneaux : </label>
+                        <div class="progress-bar-container noir"
+                             uib-tooltip="{{counters.creneaux_broken}} créneaux incomplets">
+                            <div class="progress-bar rouge"
+                                 ng:style="{ width: ( counters.creneaux / (counters.creneaux + counters.creneaux_broken) * 100 ) + '%' }"
+                                 uib-tooltip="{{counters.creneaux_not_ready}} créneaux invalides"></div>
+                            <div class="progress-bar vert-moins"
+                                 ng:style="{ width: ( counters.creneaux_ready / (counters.creneaux + counters.creneaux_broken) * 100 ) + '%' }"
+                                 uib-tooltip="{{counters.creneaux_ready}} créneaux valides"></div>
+                        </div>
+
+                        <label>Créneaux filtrés : </label>
+                        <div class="progress-bar-container transparent" style="background-color: transparent;">
+                            <div class="progress-bar rouge"
+                                 ng:style="{ width: ( counters.filtered_creneaux / (counters.creneaux + counters.creneaux_broken) * 100 ) + '%' }"
+                                 uib-tooltip="{{counters.filtered_creneaux_not_ready}} créneaux filtrés invalides"></div>
+                            <div class="progress-bar vert-moins"
+                                 ng:style="{ width: ( counters.filtered_creneaux_ready / (counters.creneaux + counters.creneaux_broken) * 100 ) + '%' }"
+                                 uib-tooltip="{{counters.filtered_creneaux_ready}} créneaux filtrés valides"></div>
+                        </div>
+                    </fieldset>
                     <ul>
                         <li ng:repeat="(counter, value) in counters">
                             {{counter}}: {{value}}
