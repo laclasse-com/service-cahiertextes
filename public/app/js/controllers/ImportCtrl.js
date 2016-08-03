@@ -440,10 +440,13 @@ angular.module( 'cahierDeTextesClientApp' )
                                                                        heure_debut: libelleHeure_to_Date( $scope.pronote.plages_horaires[ creneau.NumeroPlaceDebut ].LibelleHeureDebut ),
                                                                        heure_fin: moment( creneau.heure_debut ).add( parseInt( creneau.NombrePlaces ) * parseInt( $scope.pronote.GrilleHoraire[0].DureePlace ), 'minutes' ).toDate(),
                                                                        matiere_id: $scope.pronote.matieres[ creneau.Matiere.Ident ].laclasse.id,
-                                                                       salle_id: _($scope.salles_created).find( { identifiant: creneau.Salle.Ident } ).id,
-                                                                       semaines_de_presence_salle: parseInt( creneau.Salle.Semaines ),
                                                                        enseignant_id: $scope.pronote.enseignants[ creneau.Professeur.Ident ].laclasse.ent_id,
                                                                        semaines_de_presence_enseignant: parseInt( creneau.Professeur.Semaines ) };
+
+                                                   if ( _(creneau).has('Salle') ) {
+                                                       pre_creneau.salle_id = _($scope.salles_created).find( { identifiant: creneau.Salle.Ident } ).id;
+                                                       pre_creneau.semaines_de_presence_salle = parseInt( creneau.Salle.Semaines );
+                                                   }
 
                                                    if ( _(creneau).has('Classe') ) {
                                                        pre_creneau.regroupement_id = $scope.pronote.classes[ creneau.Classe.Ident ].laclasse.id;
