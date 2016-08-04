@@ -133,14 +133,14 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
 
   def update_heure_debut( value )
     update( debut: DataManagement::Accessors.create_or_get( PlageHoraire,
-                                                            debut: value,
-                                                            fin: value + 1800 ).id )
+                                                            debut: Sequel::SQLTime.parse( value ),
+                                                            fin: Sequel::SQLTime.parse( value + 1800 ) ).id )
   end
 
   def update_heure_fin( value )
     update( fin: DataManagement::Accessors.create_or_get( PlageHoraire,
-                                                          debut: value - 1800,
-                                                          fin: value ).id )
+                                                          debut: Sequel::SQLTime.parse( value - 1800 ),
+                                                          fin: Sequel::SQLTime.parse( value ) ).id )
   end
 
   def update_semaines_de_presence_enseignant( enseignant_id, semaines_de_presence_enseignant )
@@ -181,8 +181,8 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
   # rubocop:disable Metrics/PerceivedComplexity
   # rubocop:disable Metrics/CyclomaticComplexity
   def modifie( params )
-    params[:heure_debut] = Time.parse( params[:heure_debut] ) unless params[:heure_debut].is_a?( Time ) || !params.key?( :heure_debut )
-    params[:heure_fin] = Time.parse( params[:heure_fin] ) unless params[:heure_fin].is_a?( Time ) || !params.key?( :heure_fin )
+    params[:heure_debut] = Sequel::SQLTime.parse( params[:heure_debut] ) unless params[:heure_debut].is_a?( Time ) || !params.key?( :heure_debut )
+    params[:heure_fin] = Sequel::SQLTime.parse( params[:heure_fin] ) unless params[:heure_fin].is_a?( Time ) || !params.key?( :heure_fin )
 
     update_heure_debut( params[:heure_debut] ) if params.key?( :heure_debut )
     update_heure_fin( params[:heure_fin] ) if params.key?( :heure_fin )
