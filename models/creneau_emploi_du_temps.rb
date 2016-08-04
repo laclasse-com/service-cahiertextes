@@ -134,13 +134,13 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
   def update_heure_debut( value )
     update( debut: DataManagement::Accessors.create_or_get( PlageHoraire,
                                                             debut: value,
-                                                            fin: value + 1800 ) )
+                                                            fin: value + 1800 ).id )
   end
 
   def update_heure_fin( value )
     update( fin: DataManagement::Accessors.create_or_get( PlageHoraire,
                                                           debut: value - 1800,
-                                                          fin: value ) )
+                                                          fin: value ).id )
   end
 
   def update_semaines_de_presence_enseignant( enseignant_id, semaines_de_presence_enseignant )
