@@ -96,12 +96,15 @@ module CahierDeTextesAPI
         uai = params.key?( :uai ) ? params[:uai] : user[:user_detailed]['profil_actif']['etablissement_code_uai']
 
         etablissement_id = Etablissement[ UAI: uai ].id
+        dummy_plage_horaire = PlageHoraire.first
 
         params[:creneaux_emploi_du_temps].map do |creneau|
-          new_creneau = DataManagement::Accessors.create_or_get( CreneauEmploiDuTemps,
-                                                                 jour_de_la_semaine: creneau[:jour_de_la_semaine] - 1,
-                                                                 matiere_id: creneau[:matiere_id],
-                                                                 etablissement_id: etablissement_id )
+          new_creneau = CreneauEmploiDuTemps.create( date_creation: Time.now,
+                                                     jour_de_la_semaine: creneau[:jour_de_la_semaine] - 1,
+                                                     matiere_id: creneau[:matiere_id],
+                                                     debut: dummy_plage_horaire.id,
+                                                     fin: dummy_plage_horaire.id,
+                                                     etablissement_id: etablissement_id )
           new_creneau.modifie( creneau )
 
           new_creneau
