@@ -86,8 +86,9 @@ module CahierDeTextesAPI
           requires :semaines_de_presence_regroupement, type: Fixnum
           requires :enseignant_id, type: String
           requires :semaines_de_presence_enseignant, type: Fixnum
-          requires :salle_id, type: Fixnum
-          requires :semaines_de_presence_salle, type: Fixnum
+
+          optional :salle_id, type: Fixnum
+          optional :semaines_de_presence_salle, type: Fixnum
         end
         requires :uai, type: String, desc: 'UAI de l\'établissement'
       end
