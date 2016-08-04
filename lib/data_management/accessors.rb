@@ -5,11 +5,11 @@ module DataManagement
   module Accessors
     module_function
 
-    def create_or_get( classe, params )
-      objet = classe.where( params ).first
+    def create_or_get( model_class, params )
+      objet = model_class.where( params ).first
 
-      objet = classe.create( params ) if objet.nil?
-      objet.update( date_creation: Time.now ) if classe.method_defined? :date_creation
+      objet = model_class.create( params ) if objet.nil?
+      objet.update( date_creation: Sequel::SQLTime.now ) if model_class.method_defined?( :date_creation )
 
       objet
     end
