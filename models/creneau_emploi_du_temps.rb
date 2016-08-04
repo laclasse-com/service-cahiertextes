@@ -202,7 +202,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
     update_semaines_de_presence_regroupement( params[:regroupement_id], params[:semaines_de_presence_regroupement] ) if params.key?( :semaines_de_presence_regroupement )
 
     update_salle( params[:salle_id], params[:semaines_de_presence_salle] ) if params.key?( :salle_id )
-  rescue e
+  rescue StandardError => e
     puts "Can't do that with #{self}"
     puts e.message
     puts e.backtrace
