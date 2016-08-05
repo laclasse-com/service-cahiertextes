@@ -14,4 +14,7 @@
     4:
       - amélioration de l'import
       - correction de la récupération des vacances pendant les vacances
-      
+
+  12:
+    1:
+      - Finalisation de la refonte de l'interface d'import Pronote
