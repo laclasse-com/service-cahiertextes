@@ -2,10 +2,10 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller('ImportCtrl',
-                [ '$scope', '$http', '$locale', '$sce', '$filter', 'toastr', 'fileUpload', 'moment', 'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'Annuaire', 'Utils',
+                [ '$scope', '$http', '$locale', '$sce', '$filter', 'toastr', 'fileUpload', 'moment', 'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'VERSION', 'Annuaire', 'Utils',
                   'Etablissements', 'PlagesHoraires', 'Salles', 'CreneauxEmploiDuTemps', 'CahiersDeTextes',
                   'current_user',
-                  function ( $scope, $http, $locale, $sce, $filter, toastr, fileUpload, moment, APP_PATH, SEMAINES_VACANCES, ZONE, Annuaire, Utils,
+                  function ( $scope, $http, $locale, $sce, $filter, toastr, fileUpload, moment, APP_PATH, SEMAINES_VACANCES, ZONE, VERSION, Annuaire, Utils,
                              Etablissements, PlagesHoraires, Salles, CreneauxEmploiDuTemps, CahiersDeTextes,
                              current_user ) {
                       var toastr_config = { autoDismiss: false,
@@ -33,6 +33,14 @@ angular.module( 'cahierDeTextesClientApp' )
                                     sort_creneaux_by: function( criteria ) {
                                         $scope.ui.sortCreneauxBy = $scope.ui.sortCreneauxBy[0] === criteria[0] ?  _(criteria).map( function( sub_criteria ) { return '-' + sub_criteria; } ) : criteria;
                                     } };
+
+                      var get_etablissement_summary = function() {
+                          Etablissements.get( { uai: current_user.profil_actif.etablissement_code_uai } ).$promise.then( function( response ) {
+                              $scope.etablissement_summary = response;
+                              _($scope.etablissement_summary.imports).each( function( i ) { i.date_import = new Date( i.date_import ); } );
+                          } );
+                      };
+                      get_etablissement_summary();
 
                       $scope.filter_creneau = function( options, criteria ) {
                           return function( creneau ) {
@@ -136,6 +144,7 @@ angular.module( 'cahierDeTextesClientApp' )
                           var started_at = moment();
                           $scope.pronote = false;
                           $scope.ui.loading_file = true;
+                          $scope.matcheable_data = [];
 
                           fileUpload.uploadFileToUrl( fichier, APP_PATH + '/api/v1/import/pronote/decrypt' )
                               .success( function( data, status, headers, config ) {
@@ -212,7 +221,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                           console.log( ( ( moment() - started_at ) / 1000.0 ) + 's : matched Groupes' )
 
                                           // 4. treating Cours
-                                          var beautify_semainier = function( semainier ) {
+                                          $scope.beautify_semainier = function( semainier ) {
                                               var bsemainier = Utils.padEnd( semainier.toString( 2 ), 53, '0' );
                                               var fixed_bsemainier = bsemainier.substr( 17 ) + bsemainier.substr( 0, 17 );
 
@@ -247,6 +256,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                                           var compute_cours = function( type_regroupement ) {
                                                               return function( regroupement ) {
                                                                   var this_cours = angular.copy( cours );
+                                                                  this_cours.is_displayed = true;
                                                                   this_cours.Matiere = matiere;
                                                                   this_cours.Professeur = enseignant;
                                                                   if ( type_regroupement === 'Classe' ) {
@@ -277,22 +287,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                                       .value();
                                               } )
                                               .flatten()
-                                              .each( function( creneau, index ) {
-                                                  creneau.index = index;
-                                                  creneau.is_displayed = true;
-                                                  if ( _(creneau).has( 'Salle' ) ) {
-                                                      creneau.Salle.displayed_semainier = beautify_semainier( creneau.Salle.Semaines );
-                                                  }
-                                                  if ( _(creneau).has( 'Professeur' ) ) {
-                                                      creneau.Professeur.displayed_semainier = beautify_semainier( creneau.Professeur.Semaines );
-                                                  }
-                                                  if ( _(creneau).has( 'Classe' ) ) {
-                                                      creneau.Classe.displayed_semainier = beautify_semainier( creneau.Classe.Semaines );
-                                                  }
-                                                  if ( _(creneau).has( 'Groupe' ) ) {
-                                                      creneau.Groupe.displayed_semainier = beautify_semainier( creneau.Groupe.Semaines );
-                                                  }
-                                              } )
                                               .value();
                                           console.log( ( ( moment() - started_at ) / 1000.0 ) + 's : Cours treated' )
 
@@ -370,6 +364,15 @@ angular.module( 'cahierDeTextesClientApp' )
                           var bulk_package_size = 15;
                           $scope.ui.processing = true;
 
+                          var creneaux_emploi_du_temps = _($scope.creneaux).select( function( creneau ) {
+                              return creneau.ready && ( !$scope.filtered_import || ( $scope.filtered_import && creneau.is_displayed ) );
+                          } );
+
+                          // Log import
+                          $http.post(  APP_PATH + '/api/v1/import/log/start', { uai: $scope.pronote.UAI,
+                                                                                type: 'client ' + VERSION,
+                                                                                comment: 'nan rien' } );
+
                           // Create Etablissement
                           var ct_etablissement = new Etablissements( {
                               uai: $scope.pronote.UAI,
@@ -431,46 +434,43 @@ angular.module( 'cahierDeTextesClientApp' )
                                            var creneaux_filter = $scope.filter_creneau( true, $scope.selected );
 
                                            // Create Creneaux
-                                           var creneaux_emploi_du_temps = _.chain($scope.creneaux)
-                                               .select( function( creneau ) {
-                                                   return creneau.ready && ( !$scope.filtered_import || ( $scope.filtered_import && creneau.is_displayed ) );
-                                               } )
-                                               .map( function( creneau ) {
-                                                   var pre_creneau = { jour_de_la_semaine: parseInt( creneau.Jour ),
-                                                                       heure_debut: libelleHeure_to_Date( $scope.pronote.plages_horaires[ creneau.NumeroPlaceDebut ].LibelleHeureDebut ),
-                                                                       heure_fin: moment( creneau.heure_debut ).add( parseInt( creneau.NombrePlaces ) * parseInt( $scope.pronote.GrilleHoraire[0].DureePlace ), 'minutes' ).toDate(),
-                                                                       matiere_id: $scope.pronote.matieres[ creneau.Matiere.Ident ].laclasse.id,
-                                                                       enseignant_id: $scope.pronote.enseignants[ creneau.Professeur.Ident ].laclasse.ent_id,
-                                                                       semaines_de_presence_enseignant: parseInt( creneau.Professeur.Semaines ) };
+                                           var creneaux_to_import = creneaux_emploi_du_temps.map( function( creneau ) {
+                                               var pre_creneau = { jour_de_la_semaine: parseInt( creneau.Jour ),
+                                                                   heure_debut: libelleHeure_to_Date( $scope.pronote.plages_horaires[ creneau.NumeroPlaceDebut ].LibelleHeureDebut ),
+                                                                   heure_fin: moment( creneau.heure_debut ).add( parseInt( creneau.NombrePlaces ) * parseInt( $scope.pronote.GrilleHoraire[0].DureePlace ), 'minutes' ).toDate(),
+                                                                   matiere_id: $scope.pronote.matieres[ creneau.Matiere.Ident ].laclasse.id,
+                                                                   enseignant_id: $scope.pronote.enseignants[ creneau.Professeur.Ident ].laclasse.ent_id,
+                                                                   semaines_de_presence_enseignant: parseInt( creneau.Professeur.Semaines ) };
 
-                                                   if ( _(creneau).has('Salle') ) {
-                                                       pre_creneau.salle_id = _($scope.salles_created).find( { identifiant: creneau.Salle.Ident } ).id;
-                                                       pre_creneau.semaines_de_presence_salle = parseInt( creneau.Salle.Semaines );
-                                                   }
+                                               if ( _(creneau).has('Salle') ) {
+                                                   pre_creneau.salle_id = _($scope.salles_created).find( { identifiant: creneau.Salle.Ident } ).id;
+                                                   pre_creneau.semaines_de_presence_salle = parseInt( creneau.Salle.Semaines );
+                                               }
 
-                                                   if ( _(creneau).has('Classe') ) {
-                                                       pre_creneau.regroupement_id = $scope.pronote.classes[ creneau.Classe.Ident ].laclasse.id;
-                                                       pre_creneau.semaines_de_presence_regroupement = parseInt( creneau.Classe.Semaines );
-                                                   } else {
-                                                       pre_creneau.regroupement_id = $scope.pronote.groupes_eleves[ creneau.Groupe.Ident ].laclasse.id;
-                                                       pre_creneau.semaines_de_presence_regroupement = parseInt( creneau.Groupe.Semaines );
-                                                   }
+                                               if ( _(creneau).has('Classe') ) {
+                                                   pre_creneau.regroupement_id = $scope.pronote.classes[ creneau.Classe.Ident ].laclasse.id;
+                                                   pre_creneau.semaines_de_presence_regroupement = parseInt( creneau.Classe.Semaines );
+                                               } else {
+                                                   pre_creneau.regroupement_id = $scope.pronote.groupes_eleves[ creneau.Groupe.Ident ].laclasse.id;
+                                                   pre_creneau.semaines_de_presence_regroupement = parseInt( creneau.Groupe.Semaines );
+                                               }
 
-                                                   return pre_creneau;
-                                               } )
-                                               .value();
+                                               return pre_creneau;
+                                           } );
 
                                            $scope.creneaux_created = [];
                                            $scope.counters.creneaux_created = 0;
 
-                                           while ( creneaux_emploi_du_temps.length > 0 ) {
+                                           while ( creneaux_to_import.length > 0 ) {
                                                CreneauxEmploiDuTemps.bulk( {
                                                    uai: $scope.pronote.UAI,
-                                                   creneaux_emploi_du_temps: creneaux_emploi_du_temps.splice( 0, bulk_package_size )
+                                                   creneaux_emploi_du_temps: creneaux_to_import.splice( 0, bulk_package_size )
                                                } ).$promise
                                                    .then( function( response ) {
                                                        $scope.creneaux_created.push( response );
                                                        toastr.info( _($scope.creneaux_created).size() + ' Créneaux', 'Import en cours' );
+
+                                                       get_etablissement_summary(); // not ideal placement
                                                    } );
                                            }
                                        } );

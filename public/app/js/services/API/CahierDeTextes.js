@@ -178,8 +178,12 @@ angular.module( 'cahierDeTextesClientApp' )
 
 angular.module( 'cahierDeTextesClientApp' )
     .service('API',
-             [ '$http', 'APP_PATH', 'API_VERSION', 'Classes', 'Cours', 'CreneauxEmploiDuTemps', 'Devoirs', 'EmploisDuTemps', 'Enseignants', 'TypesDeDevoir', 'PlagesHoraires',
-               function( $http, APP_PATH, API_VERSION, Classes, Cours, CreneauxEmploiDuTemps, Devoirs, EmploisDuTemps, Enseignants, TypesDeDevoir, PlagesHoraires ) {
+             [ '$http', 'APP_PATH', 'API_VERSION', 'Classes', 'Cours', 'CreneauxEmploiDuTemps', 'Devoirs', 'EmploisDuTemps', 'Enseignants', 'Etablissements', 'TypesDeDevoir', 'PlagesHoraires',
+               function( $http, APP_PATH, API_VERSION, Classes, Cours, CreneauxEmploiDuTemps, Devoirs, EmploisDuTemps, Enseignants, Etablissements, TypesDeDevoir, PlagesHoraires ) {
+                   this.get_etablissement = function( params ) {
+                       return Etablissements.get( params );
+                   };
+
                    this.query_classes = function( params ) {
                        return Classes.query( params );
                    };

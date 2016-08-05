@@ -17,7 +17,7 @@ describe ProNote do
   end
 
   it 'extract the UAI from the XML file' do
-    uai = ProNote.extract_uai_from_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ) )
+    uai = ProNote.extract_from_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ), 'UAI' )
 
     expect( uai ).to eq '0134567A'
   end

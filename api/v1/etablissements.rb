@@ -14,11 +14,17 @@ module CahierDeTextesAPI
         requires :uai, desc: 'Code UAI de l\'établissement'
       end
       get '/:uai' do
-        etablissement = Etablissement.where(uai: params[:uai]).first
+        etablissement = Etablissement[uai: params[:uai]]
 
         error!( "Établissement #{params[:uai]} inconnu", 404 ) if etablissement.nil?
 
-        etablissement
+        hetablissement = etablissement.to_hash
+        hetablissement[:nb_creneaux] = CreneauEmploiDuTemps.where( etablissement_id: etablissement.id )
+                                                           .where { date_creation >= 1.year.ago }
+                                                           .count
+        hetablissement[:imports] = etablissement.imports
+
+        hetablissement
       end
 
       desc 'création d\'un établissement'
@@ -50,7 +56,7 @@ module CahierDeTextesAPI
         optional :date_premier_jour_premiere_semaine, desc: 'Date du premier jour de la semaine de commencement de l\'année scolaire'
       end
       put '/:uai' do
-        etablissement = Etablissement.where(uai: params[:uai]).first
+        etablissement = Etablissement[ uai: params[:uai] ]
 
         error!( "Établissement #{params[:uai]} inconnu", 404 ) if etablissement.nil?
 
@@ -66,7 +72,7 @@ module CahierDeTextesAPI
         requires :uai, desc: 'Code UAI de l\'établissement'
       end
       get '/:uai/statistiques/classes' do
-        etablissement = Etablissement.where(uai: params[:uai]).first
+        etablissement = Etablissement[ uai: params[:uai] ]
 
         error!( "Établissement #{params[:uai]} inconnu", 404 ) if etablissement.nil?
 
@@ -91,7 +97,7 @@ module CahierDeTextesAPI
         requires :uai, desc: 'Code UAI de l\'établissement'
       end
       get '/:uai/statistiques/enseignants' do
-        etablissement = Etablissement.where(UAI: params[:uai]).first
+        etablissement = Etablissement[ uai: params[:uai] ]
 
         error!( "Établissement #{params[:uai]} inconnu", 404 ) if etablissement.nil?
 
@@ -104,7 +110,7 @@ module CahierDeTextesAPI
         requires :enseignant_id, desc: 'identifiant annuaire de l\'enseignant'
       end
       get '/:uai/statistiques/enseignants/:enseignant_id' do
-        etablissement = Etablissement.where(uai: params[:uai]).first
+        etablissement = Etablissement[ uai: params[:uai] ]
 
         error!( "Établissement #{params[:uai]} inconnu", 404 ) if etablissement.nil?
 
@@ -114,11 +120,21 @@ module CahierDeTextesAPI
       # Salles
       desc 'renvoi toutes les salles'
       get '/:uai/salles' do
-        etablissement = Etablissement.where(uai: params[:uai]).first
+        etablissement = Etablissement[ uai: params[:uai] ]
 
         error!( "Établissement #{params[:uai]} inconnu", 404 ) if etablissement.nil?
 
         etablissement.salles
+      end
+
+      # Imports
+      desc 'renvoi tous les imports liés à l\'établissement'
+      get '/:uai/imports' do
+        etablissement = Etablissement[ uai: params[:uai] ]
+
+        error!( "Établissement #{params[:uai]} inconnu", 404 ) if etablissement.nil?
+
+        etablissement.imports
       end
     end
   end

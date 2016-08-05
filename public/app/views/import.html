@@ -165,32 +165,55 @@
                     <fieldset class="summary">
                         <legend> <h4>Statistiques</h4>  </legend>
 
-                        <label>Totalité des créneaux : </label>
-                        <div class="progress-bar-container noir"
-                             uib-tooltip="{{counters.creneaux_broken}} créneaux incomplets">
-                            <div class="progress-bar rouge"
-                                 ng:style="{ width: ( counters.creneaux / (counters.creneaux + counters.creneaux_broken) * 100 ) + '%' }"
-                                 uib-tooltip="{{counters.creneaux_not_ready}} créneaux invalides"></div>
-                            <div class="progress-bar vert-moins"
-                                 ng:style="{ width: ( counters.creneaux_ready / (counters.creneaux + counters.creneaux_broken) * 100 ) + '%' }"
-                                 uib-tooltip="{{counters.creneaux_ready}} créneaux valides"></div>
-                        </div>
+                        <fieldset class="summary">
+                            <legend> <h5>Établissement</h5>  </legend>
+                            <ul>
+                                <li>{{etablissement_summary.nb_creneaux}} créneaux existants</li>
+                                <li>Dernier import le {{etablissement_summary.imports[ etablissement_summary.imports.length - 1 ].date_import | date}}</li>
+                            </ul>
+                        </fieldset>
+                        <fieldset class="summary">
+                            <legend> <h5>Fichier Pronote</h5>  </legend>
+                            <label>
+                                Totalité des créneaux :
+                                <ul>
+                                    <li>{{counters.creneaux_ready}} créneaux valides</li>
+                                    <li>{{counters.creneaux_not_ready}} créneaux invalides (données associées non recollées)</li>
+                                    <li>{{counters.creneaux_broken}} créneaux non importables (données manquantes)</li>
+                                </ul>
+                            </label>
+                            <div class="progress-bar-container noir"
+                                 uib-tooltip="{{counters.creneaux_broken}} créneaux incomplets">
+                                <div class="progress-bar rouge"
+                                     ng:style="{ width: ( counters.creneaux / (counters.creneaux + counters.creneaux_broken) * 100 ) + '%' }"
+                                     uib-tooltip="{{counters.creneaux_not_ready}} créneaux invalides"></div>
+                                <div class="progress-bar vert-moins"
+                                     ng:style="{ width: ( counters.creneaux_ready / (counters.creneaux + counters.creneaux_broken) * 100 ) + '%' }"
+                                     uib-tooltip="{{counters.creneaux_ready}} créneaux valides"></div>
+                            </div>
 
-                        <label>Créneaux filtrés : </label>
-                        <div class="progress-bar-container transparent" style="background-color: transparent;">
-                            <div class="progress-bar rouge"
-                                 ng:style="{ width: ( counters.filtered_creneaux / (counters.creneaux + counters.creneaux_broken) * 100 ) + '%' }"
-                                 uib-tooltip="{{counters.filtered_creneaux_not_ready}} créneaux filtrés invalides"></div>
-                            <div class="progress-bar vert-moins"
-                                 ng:style="{ width: ( counters.filtered_creneaux_ready / (counters.creneaux + counters.creneaux_broken) * 100 ) + '%' }"
-                                 uib-tooltip="{{counters.filtered_creneaux_ready}} créneaux filtrés valides"></div>
-                        </div>
+                            <label>
+                                Créneaux filtrés :
+                                <ul>
+                                    <li>{{counters.filtered_creneaux_ready}} créneaux valides</li>
+                                    <li>{{counters.filtered_creneaux_not_ready}} créneaux invalides (données associées non recollées)</li>
+                                </ul>
+                            </label>
+                            <div class="progress-bar-container transparent" style="background-color: transparent;">
+                                <div class="progress-bar rouge"
+                                     ng:style="{ width: ( counters.filtered_creneaux / (counters.creneaux + counters.creneaux_broken) * 100 ) + '%' }"
+                                     uib-tooltip="{{counters.filtered_creneaux_not_ready}} créneaux filtrés invalides"></div>
+                                <div class="progress-bar vert-moins"
+                                     ng:style="{ width: ( counters.filtered_creneaux_ready / (counters.creneaux + counters.creneaux_broken) * 100 ) + '%' }"
+                                     uib-tooltip="{{counters.filtered_creneaux_ready}} créneaux filtrés valides"></div>
+                            </div>
+                        </fieldset>
                     </fieldset>
-                    <ul>
-                        <li ng:repeat="(counter, value) in counters">
-                            {{counter}}: {{value}}
-                        </li>
-                    </ul>
+                    <!-- <ul>
+                         <li ng:repeat="(counter, value) in counters">
+                         {{counter}}: {{value}}
+                         </li>
+                         </ul> -->
 
                     <uib-accordion>
                         <div uib-accordion-group is-open="ui.show_detailed_creneaux">
@@ -280,14 +303,14 @@
                                             <span ng:if="creneau.Matiere">{{pronote.matieres[ creneau.Matiere.Ident ].displayed_label}}</span>
                                         </td>
                                         <td ng:class="{'ko rouge': !creneau.readiness.enseignant }">
-                                            <span ng:if="creneau.Professeur">{{pronote.enseignants[ creneau.Professeur.Ident ].displayed_label}} <sup uib-tooltip-html="creneau.Professeur.displayed_semainier" tooltip-trigger="mouseenter">({{creneau.Professeur.Semaines}})</sup></span>
+                                            <span ng:if="creneau.Professeur">{{pronote.enseignants[ creneau.Professeur.Ident ].displayed_label}} <sup uib-tooltip-html="beautify_semainier( creneau.Professeur.Semaines )" tooltip-trigger="mouseenter">({{creneau.Professeur.Semaines}})</sup></span>
                                         </td>
                                         <td ng:class="{'ko rouge': !creneau.readiness.classe && !creneau.readiness.groupe_eleve }">
-                                            <span ng:if="creneau.Classe">{{pronote.classes[ creneau.Classe.Ident ].Nom}} <sup uib-tooltip-html="creneau.Classe.displayed_semainier" tooltip-trigger="mouseenter">({{creneau.Classe.Semaines}})</sup></span>
-                                            <span ng:if="creneau.Groupe">{{pronote.groupes_eleves[ creneau.Groupe.Ident ].Nom}} <sup uib-tooltip-html="creneau.Groupe.displayed_semainier" tooltip-trigger="mouseenter">({{creneau.Groupe.Semaines}})</sup></span>
+                                            <span ng:if="creneau.Classe">{{pronote.classes[ creneau.Classe.Ident ].Nom}} <sup uib-tooltip-html="beautify_semainier( creneau.Classe.Semaines )" tooltip-trigger="mouseenter">({{creneau.Classe.Semaines}})</sup></span>
+                                            <span ng:if="creneau.Groupe">{{pronote.groupes_eleves[ creneau.Groupe.Ident ].Nom}} <sup uib-tooltip-html="beautify_semainier( creneau.Groupe.Semaines )" tooltip-trigger="mouseenter">({{creneau.Groupe.Semaines}})</sup></span>
                                         </td>
                                         <td>
-                                            <span ng:if="creneau.Salle">{{pronote.salles[ creneau.Salle.Ident ].Nom}} <sup uib-tooltip-html="creneau.Salle.displayed_semainier" tooltip-trigger="mouseenter">({{creneau.Salle.Semaines}})</sup></span>
+                                            <span ng:if="creneau.Salle">{{pronote.salles[ creneau.Salle.Ident ].Nom}} <sup uib-tooltip-html="beautify_semainier( creneau.Salle.Semaines )" tooltip-trigger="mouseenter">({{creneau.Salle.Semaines}})</sup></span>
                                         </td>
                                         <td class="import-readiness"
                                             ng:class="{'vert': creneau.ready, 'rouge': !creneau.ready }">

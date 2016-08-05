@@ -40,11 +40,10 @@ class Etablissement < Sequel::Model( :etablissements )
 
   def saisies_enseignant( enseignant_id )
     { enseignant_id: enseignant_id,
-      saisies: Cours
-        .where( enseignant_id: enseignant_id )
-        .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{Utils.date_rentree}'" )
-        .where( deleted: false )
-        .map do |cours|
+      saisies: Cours.where( enseignant_id: enseignant_id )
+                    .where( deleted: false )
+                    .where { date_creation >= Utils.date_rentree }
+                    .map do |cours|
         devoirs = Devoir.where(cours_id: cours.id)
         creneau = CreneauEmploiDuTemps[ cours.creneau_emploi_du_temps_id ]
 

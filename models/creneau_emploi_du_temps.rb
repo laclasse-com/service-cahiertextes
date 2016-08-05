@@ -87,8 +87,8 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
       .association_join( :enseignants )
       .where( enseignant_id: user[:uid] )
       .where( matiere_id: matiere_id )
-      .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{1.year.ago}'" )
-      .where( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{fin}')" )
+      .where { date_creation >= 1.year.ago }
+      .where { !deleted || date_suppression >= fin }
       .all
       .map do |c|
       ( debut .. fin )
