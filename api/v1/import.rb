@@ -67,11 +67,11 @@ module CahierDeTextesAPI
           %w( Eleves Etiquettes MotifsAbsence Absences ) .each { |key| hash.delete key.to_sym }
 
           # FIXME: fugly
-          File.open( params[:file][:tempfile] ) do |xml|
-            hash[:DateHeureImport] = ProNote.extract_from_xml( xml, 'DATEHEURE' )
+          File.open( params[:file][:tempfile] ) do |xmlagain|
+            hash[:DateHeureImport] = ProNote.extract_from_xml( xmlagain, 'DATEHEURE' )
           end
-          File.open( params[:file][:tempfile] ) do |xml|
-            hash[:Hash] = ProNote.extract_from_xml( xml, 'VERIFICATION' )
+          File.open( params[:file][:tempfile] ) do |xmlagain|
+            hash[:Hash] = ProNote.extract_from_xml( xmlagain, 'VERIFICATION' )
           end
 
           hash
