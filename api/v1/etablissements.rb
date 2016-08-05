@@ -19,8 +19,9 @@ module CahierDeTextesAPI
         error!( "Établissement #{params[:uai]} inconnu", 404 ) if etablissement.nil?
 
         hetablissement = etablissement.to_hash
+        # .where { date_creation >= 1.year.ago }
         hetablissement[:nb_creneaux] = CreneauEmploiDuTemps.where( etablissement_id: etablissement.id )
-                                                           .where { date_creation >= 1.year.ago }
+                                                           .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{1.year.ago}'" )
                                                            .count
         hetablissement[:imports] = etablissement.imports
 

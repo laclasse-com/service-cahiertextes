@@ -28,8 +28,9 @@ module CahierDeTextesAPI
       get '/:id/creneaux' do
         import = Import[ params[:id] ]
 
+        # .where { ( date_creation >= import.date_import ) && ( date_creation < ( import.date_import + 10.minutes ) ) }
         CreneauEmploiDuTemps.where( etablissement_id: import.etablissement_id )
-                            .where { ( date_creation >= import.date_import ) && ( date_creation < ( import.date_import + 10.minutes ) ) }
+                            .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= DATE_FORMAT( import.date_import, '%Y-%m-%d') AND DATE_FORMAT( date_creation, '%Y-%m-%d') < '#{import.date_import + 10.minutes}'" )
                             .all
       end
 

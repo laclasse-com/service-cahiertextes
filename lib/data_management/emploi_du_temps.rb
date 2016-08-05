@@ -6,11 +6,13 @@ module DataManagement
 
     def get( debut, fin, regroupements_ids, profil_type, eleve_id )
       # Nota Bene: semainiers callés sur l'année civile
+      # .where { date_creation >= 1.year.ago }
+      # .where { !creneaux_emploi_du_temps__deleted || creneaux_emploi_du_temps__date_suppression >= fin }
       emploi_du_temps = CreneauEmploiDuTemps.association_join( :regroupements, :enseignants )
                                             .select_append( :regroupements__semaines_de_presence___semainier_regroupement )
                                             .select_append( :enseignants__semaines_de_presence___semainier_enseignant )
-                                            .where { date_creation >= 1.year.ago }
-                                            .where { !creneaux_emploi_du_temps__deleted || creneaux_emploi_du_temps__date_suppression >= fin }
+                                            .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{1.year.ago}'" )
+                                            .where( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{fin}')" )
                                             .where( regroupement_id: regroupements_ids )
                                             .all
                                             .map do |creneau|
