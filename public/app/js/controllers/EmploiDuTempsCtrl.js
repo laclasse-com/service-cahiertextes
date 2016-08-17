@@ -226,7 +226,12 @@ angular.module( 'cahierDeTextesClientApp' )
                       if ( $scope.current_user.profil_actif.profil_id != 'ENS' || $scope.current_user.profil_actif.profil_id != 'DOC' ) {
                           $scope.calendar.options.eventClick = function( event ) {
                               if ( !popup_ouverte && ( ( event.details.devoirs.length > 0 ) || ( ! _(event.details.cours).isNull() && _(event.details.cours).has( 'contenu' ) ) ) ) {
-                                  PopupsCreneau.display( event.title, event.details.cours, event.details.devoirs, popup_callback, popup_ouverte );
+                                  PopupsCreneau.display( event.regroupement.libelle,
+                                                         event.matiere.libelle_long,
+                                                         event.details.cours,
+                                                         event.details.devoirs,
+                                                         popup_callback,
+                                                         popup_ouverte );
                               }
                           };
                       }
