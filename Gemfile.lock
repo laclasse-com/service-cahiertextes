@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/laclasse-com/laclasse-common.git
-  revision: ee63ede715c5edaae741351882817ab66c63b271
+  revision: 094056c4819ebb4e59d4905d2705475872ec34ca
   specs:
     laclasse-common (0.2.29)
       logstash-logger
@@ -10,7 +10,7 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (5.0.0)
+    activesupport (5.0.0.1)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (~> 0.7)
       minitest (~> 5.1)
@@ -57,7 +57,7 @@ GEM
     icalendar (2.4.0)
     ice_nine (0.11.2)
     logstash-event (1.2.02)
-    logstash-logger (0.18.1)
+    logstash-logger (0.19.0)
       logstash-event (~> 1.2)
     method_source (0.8.2)
     mime-types (3.1)
