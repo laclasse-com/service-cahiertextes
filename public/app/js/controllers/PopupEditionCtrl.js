@@ -247,13 +247,16 @@ angular.module( 'cahierDeTextesClientApp' )
                                    // Gestion des Cours et Devoirs
                                    var valider_devoirs = function( devoirs, cours ) {
                                        _( devoirs ).each( function ( devoir ) {
-                                           if ( _( devoir ).has( 'contenu' ) && ( devoir.contenu.length > 0 ) ) {
+                                           if ( ( _( devoir ).has( 'contenu' ) && ( devoir.contenu.length > 0 ) ) || devoir.ressources.length > 0 ) {
                                                // FIXME: on $save() ou $update() tous les devoirs qu'ils aient été modifiés ou non
                                                var prom = $q.defer();
                                                if ( devoir.create ) {
                                                    devoir.regroupement_id = $scope.selected_regroupement.id;
                                                    if ( ! _(cours).isNull() ) {
                                                        devoir.cours_id = cours.id;
+                                                   }
+                                                   if ( !_( devoir ).has( 'contenu' ) ) {
+                                                       devoir.contenu = '';
                                                    }
                                                    devoir.$save().then( function success( result ) {
                                                        devoir.id = result.id;
@@ -286,7 +289,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                    };
 
                                    // Séquence Pédogogique du créneau
-                                   if ( ( _($scope.cours).has('contenu') && $scope.cours.contenu.length > 0 ) || ( $scope.cours.devoirs.length > 0 ) ) {
+                                   if ( ( $scope.cours.contenu.length > 0 || $scope.cours.ressources.length > 0 ) || ( $scope.cours.devoirs.length > 0 ) ) {
                                        var cours_devoirs = _($scope.cours.devoirs).map( function( devoir ) {
                                            return new Devoirs( devoir );
                                        });
