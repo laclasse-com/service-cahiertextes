@@ -18,8 +18,8 @@ angular.module( 'cahierDeTextesClientApp' )
 
                       $scope.popup_display = function( devoir ) {
                           PopupsCreneau.display( devoir.matiere.libelle_long,
-                                                 devoir.cours.id,
-                                                 [ devoir.id ],
+                                                 devoir.cours,
+                                                 [ devoir ],
                                                  popup_callback,
                                                  popup_ouverte );
                       };
