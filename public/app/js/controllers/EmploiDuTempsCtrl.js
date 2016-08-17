@@ -79,23 +79,25 @@ angular.module( 'cahierDeTextesClientApp' )
                                   }
                               } );
 
+                              // couleur de la case
                               if ( event.devoirs.length > 0 ) {
-                                  this.className = _( _(event.devoirs).pluck( 'fait' ) ).contains( true ) ? 'edt-devoir-fait' : 'edt-devoir-a-faire';
-                                  if ( this.className == 'edt-devoir-a-faire' ) {
-                                      var types_de_devoirs_a_faire = _(event.devoirs).pluck( 'type_devoir_id' );
-                                      if ( _(types_de_devoirs_a_faire).contains( 2 ) ) { // TypeDevoir[2] est un DM
-                                          this.className = 'edt-devoir-note-maison';
-                                      } else if ( _(types_de_devoirs_a_faire).contains( 1 ) ) { // TypeDevoir[1] est un DS
-                                          this.className = 'edt-devoir-note-surveille';
-                                      }
+                                  var highest_type_de_devoir = _.chain(event.devoirs).pluck( 'type_devoir_id' ).sort().first().value();
+                                  switch( highest_type_de_devoir ) {
+                                  case 1:
+                                      this.className = 'edt-devoir-note-surveille';
+                                      break;
+                                  case 2:
+                                      this.className = 'edt-devoir-note-maison';
+                                      break;
+                                  default:
+                                      this.className = _.chain(event.devoirs).pluck( 'fait' ).contains( true ).value() ? 'edt-devoir-fait' : 'edt-devoir-a-faire';
                                   }
                               } else {
                                   this.className = 'edt-cours';
-                                  if ( !_(event.cours).isNull() ) {
+                                  if ( !_(event.cours).isNull() && !_(event.cours.date_validation).isNull() && ( $scope.current_user.profil_actif.profil_id === 'ENS' && $scope.current_user.profil_actif.profil_id === 'DOC' ) ) {
+                                      this.className += '-valide';
+                                  } else if ( !_(event.cours).isNull() ) {
                                       this.className += '-saisie';
-                                      if ( !_(event.cours.date_validation).isNull() && ( $scope.current_user.profil_actif.profil_id === 'ENS' && $scope.current_user.profil_actif.profil_id === 'DOC' ) ) {
-                                          this.className += '-valide';
-                                      }
                                   }
                               }
 
@@ -107,53 +109,53 @@ angular.module( 'cahierDeTextesClientApp' )
                           };
 
                           return _( filtered_data ).map( function( event ) {
-                              return new CalendarEvent( event );
-                          } );
-                      };
+                          return new CalendarEvent( event );
+                      } );
+                  };
 
-                      $scope.refresh_calendar = function() {
-                          $scope.calendar.events[ 0 ] = to_fullcalendar_events( $scope.filter_data( $scope.raw_data ) );
+                  $scope.refresh_calendar = function() {
+                      $scope.calendar.events[ 0 ] = to_fullcalendar_events( $scope.filter_data( $scope.raw_data ) );
 
-                          $stateParams.regroupements = _($scope.selected_regroupements).pluck('libelle');
-                          $state.go( $state.current, $stateParams, { notify: false, reload: false } );
-                      };
+                      $stateParams.regroupements = _($scope.selected_regroupements).pluck('libelle');
+                      $state.go( $state.current, $stateParams, { notify: false, reload: false } );
+                  };
 
-                      var retrieve_data = function( from_date, to_date ) {
-                          if ( $scope.current_user.profil_actif.profil_id != 'TUT' || $scope.current_user.enfant_actif ) {
-                              EmploisDuTemps.query( { debut: from_date,
-                                                      fin: to_date,
-                                                      uai: $scope.current_user.profil_actif.etablissement_code_uai,
-                                                      uid: $scope.current_user.profil_actif.profil_id == 'TUT' ? $scope.current_user.enfant_actif.enfant.id_ent : null } )
-                                  .$promise
-                                  .then( function success( response ) {
-                                      $stateParams.date = moment( from_date ).toDate().toISOString().split('T')[0];
-                                      $state.go( $state.current, $stateParams, { notify: false, reload: false } );
+                  var retrieve_data = function( from_date, to_date ) {
+                      if ( $scope.current_user.profil_actif.profil_id != 'TUT' || $scope.current_user.enfant_actif ) {
+                          EmploisDuTemps.query( { debut: from_date,
+                                                  fin: to_date,
+                                                  uai: $scope.current_user.profil_actif.etablissement_code_uai,
+                                                  uid: $scope.current_user.profil_actif.profil_id == 'TUT' ? $scope.current_user.enfant_actif.enfant.id_ent : null } )
+                              .$promise
+                              .then( function success( response ) {
+                                  $stateParams.date = moment( from_date ).toDate().toISOString().split('T')[0];
+                                  $state.go( $state.current, $stateParams, { notify: false, reload: false } );
 
-                                      $scope.raw_data = response;
-                                      $scope.refresh_calendar();
-                                  });
-                          }
-                      };
+                                  $scope.raw_data = response;
+                                  $scope.refresh_calendar();
+                              });
+                      }
+                  };
 
-                      // configuration du composant calendrier
-                      $scope.extraEventSignature = function(event) {
-                          return '' + event.matiere;
-                      };
+                  // configuration du composant calendrier
+                  $scope.extraEventSignature = function(event) {
+                      return '' + event.matiere;
+                  };
 
-                      $scope.calendar = { options: CALENDAR_OPTIONS,
-                                          events: [  ] };
+                  $scope.calendar = { options: CALENDAR_OPTIONS,
+                                      events: [  ] };
 
-                      $scope.calendar.options.weekends = $scope.current_user.parametrage_cahier_de_textes.affichage_week_ends;
+                  $scope.calendar.options.weekends = $scope.current_user.parametrage_cahier_de_textes.affichage_week_ends;
 
-                      $scope.calendar.options.viewRender = function( view, element ) {
-                          $scope.current_user.date = view.start;
-                          $scope.n_week = view.start.week();
-                          $scope.c_est_les_vacances = Utils.sont_ce_les_vacances( $scope.n_week, $scope.zone );
+                  $scope.calendar.options.viewRender = function( view, element ) {
+                      $scope.current_user.date = view.start;
+                      $scope.n_week = view.start.week();
+                      $scope.c_est_les_vacances = Utils.sont_ce_les_vacances( $scope.n_week, $scope.zone );
 
-                          retrieve_data( view.start.toDate(), view.end.toDate() );
-                      };
+                      retrieve_data( view.start.toDate(), view.end.toDate() );
+                  };
 
-                      $scope.calendar.options.eventRender = function ( event, element ) {
+                  $scope.calendar.options.eventRender = function ( event, element ) {
                           // FIXME: manipulation du DOM dans le contrôleur, sale, mais obligé pour l'interprétation du HTML ?
                           var elt_fc_content_title = element.find( '.fc-title' );
                           var elt_fc_content = element.find( '.fc-content' );
