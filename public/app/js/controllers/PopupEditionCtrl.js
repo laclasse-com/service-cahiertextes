@@ -287,26 +287,31 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                    // Séquence Pédogogique du créneau
                                    if ( ( _($scope.cours).has('contenu') && $scope.cours.contenu.length > 0 ) || ( $scope.cours.devoirs.length > 0 ) ) {
-                                       var promesse = $q.when( true );
                                        var cours_devoirs = _($scope.cours.devoirs).map( function( devoir ) {
                                            return new Devoirs( devoir );
                                        });
 
-                                       if ( $scope.cours.create ) {
-                                           $scope.cours.regroupement_id = $scope.selected_regroupement.id;
-                                           $scope.cours.creneau_emploi_du_temps_id = $scope.creneau.id;
-                                           promesse = $scope.cours.$save();
-                                           $scope.actions_done.push( POPUP_ACTIONS.SEQUENCE_PEDAGOGIQUE_CREATED );
-                                       } else {
-                                           promesse = $scope.cours.$update();
-                                           $scope.actions_done.push( POPUP_ACTIONS.SEQUENCE_PEDAGOGIQUE_MODIFIED );
-                                       }
+                                       if ( $scope.cours.editable ) {
+                                           var promesse = $q.when( true );
 
-                                       // Devoirs liés au cours
-                                       if ( cours_devoirs.length > 0 ) {
-                                           promesse.then( function ( cours_from_DB ) {
-                                               valider_devoirs( cours_devoirs, cours_from_DB );
-                                           } );
+                                           if ( $scope.cours.create ) {
+                                               $scope.cours.regroupement_id = $scope.selected_regroupement.id;
+                                               $scope.cours.creneau_emploi_du_temps_id = $scope.creneau.id;
+                                               promesse = $scope.cours.$save();
+                                               $scope.actions_done.push( POPUP_ACTIONS.SEQUENCE_PEDAGOGIQUE_CREATED );
+                                           } else {
+                                               promesse = $scope.cours.$update();
+                                               $scope.actions_done.push( POPUP_ACTIONS.SEQUENCE_PEDAGOGIQUE_MODIFIED );
+                                           }
+
+                                           // Devoirs liés au cours
+                                           if ( cours_devoirs.length > 0 ) {
+                                               promesse.then( function ( cours_from_DB ) {
+                                                   valider_devoirs( cours_devoirs, cours_from_DB );
+                                               } );
+                                           }
+                                       } else {
+                                           valider_devoirs( cours_devoirs, $scope.cours );
                                        }
                                    }
 
