@@ -25,6 +25,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                   if ( devoir.temps_estime > 0 ) {
                                       devoir.tooltip = '<span><i class="picto temps"></i>' + devoir.temps_estime * 5 + ' minutes</span><hr>' + devoir.tooltip;
                                   }
+                                  devoir.tooltip = $sce.trustAsHtml( devoir.tooltip );
                               } );
                           } );
                       }
@@ -34,6 +35,7 @@ angular.module( 'cahierDeTextesClientApp' )
                       } );
                       _($scope.devoirs).each( function( devoir ) {
                           devoir.$promise.then( function() {
+                              devoir.cours.contenu = $sce.trustAsHtml( devoir.cours.contenu );
                               _(devoir.ressources).each( function( ressource ) {
                                   ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
                               } );
