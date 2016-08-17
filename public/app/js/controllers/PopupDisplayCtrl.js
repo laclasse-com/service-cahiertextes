@@ -5,9 +5,8 @@ angular.module( 'cahierDeTextesClientApp' )
                 [ '$scope', '$sce', '$uibModalInstance', 'toastr', 'APP_PATH', 'DOCS_URL', 'Cours', 'Devoirs', 'User',
                   'titre', 'cours', 'devoirs',
                   function( $scope, $sce, $uibModalInstance, toastr, APP_PATH, DOCS_URL, Cours, Devoirs, User,
-                            regroupement, matiere, cours, devoirs ) {
+                            matiere, cours, devoirs ) {
                       $scope.app_path = APP_PATH;
-                      $scope.regroupement = regroupement;
                       $scope.matiere = matiere;
                       $scope.date = null;
 

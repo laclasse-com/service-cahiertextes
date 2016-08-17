@@ -151,12 +151,11 @@ angular.module( 'cahierDeTextesClientApp' )
                        })
                        .state('eleve.devoirs.popup', {
                            parent: 'eleve.devoirs',
-                           url: '/popup/:regroupement/:matiere/:cours_id/:devoirs_ids',
+                           url: '/popup/:matiere/:cours_id/:devoirs_ids',
                            onEnter: [ '$stateParams', '$state', 'PopupsCreneau',
                                       function( $stateParams, $state, PopupsCreneau ) {
                                           var dummy = false;
-                                          PopupsCreneau.display( $stateParams.regroupement,
-                                                                 $stateParams.matiere,
+                                          PopupsCreneau.display( $stateParams.matiere,
                                                                  { id: parseInt( $stateParams.cours_id ) },
                                                                  JSON.parse( $stateParams.devoirs_ids ).map( function( id ) { return { id: id }; } ),
                                                                  function() { return $state.go( 'eleve.devoirs', $state.params, { reload: true, inherit: true, notify: true } ); },
