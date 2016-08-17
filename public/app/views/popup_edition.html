@@ -170,7 +170,7 @@
                 <div class="col-md-3" data-ng-if="cours.id">
                     <button type="button" class="btn btn-xs btn-default pull-right supprimer"
                             data-ng-click="effacer_cours(  )"
-                            data-ng-if="cours.deleted || ( !creneau.etranger && cours.editable )" >
+                            data-ng-if="cours.id && ( cours.deleted || ( !creneau.etranger && cours.editable ) )" >
                         <span data-ng-if="!cours.deleted"><span class="glyphicon glyphicon-trash"></span> Supprimer</span>
                         <span data-ng-if="cours.deleted"><span class="glyphicon glyphicon-trash"></span> Annuler la suppression</span>
                     </button>
@@ -271,7 +271,7 @@
                             <div class="col-md-3">
                                 <button type="button" class="btn btn-xs btn-default pull-right supprimer"
                                         data-ng-click="effacer_devoir( devoir )"
-                                        data-ng-if="!creneau.etranger && !devoir.cours.deleted">
+                                        data-ng-if="devoir.id && !creneau.etranger && !devoir.cours.deleted">
                                     <span data-ng-if="!devoir.deleted"><span class="glyphicon glyphicon-trash"></span> Supprimer</span>
                                     <span data-ng-if="devoir.deleted"><span class="glyphicon glyphicon-trash"></span> Annuler la suppression</span>
                                 </button>
@@ -381,7 +381,8 @@
 
                     <div class="col-md-3">
                         <button type="button" class="btn btn-xs btn-default pull-right supprimer"
-                                data-ng-click="effacer_devoir( devoir )" data-ng-if="!creneau.etranger && !devoir.cours.deleted">
+                                data-ng-click="effacer_devoir( devoir )"
+                                data-ng-if="devoir.id && !creneau.etranger && !devoir.cours.deleted">
                             <span data-ng-if="!devoir.deleted"><span class="glyphicon glyphicon-trash"></span> Supprimer</span>
                             <span data-ng-if="devoir.deleted"><span class="glyphicon glyphicon-trash"></span> Annuler la suppression</span>
                         </button>
