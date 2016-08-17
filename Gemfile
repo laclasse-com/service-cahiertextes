@@ -3,6 +3,7 @@
 source 'https://rubygems.org'
 
 gem 'grape'
+gem 'grape-cache_control'
 gem 'grape-swagger'
 gem 'icalendar'
 gem 'mysql2'

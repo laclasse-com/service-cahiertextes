@@ -11,6 +11,8 @@ module CahierDeTextesAPI
         optional :uid
       end
       get '/du/:debut/au/:fin' do
+        cache_control :no_cache
+
         DataManagement::EmploiDuTemps.get( Date.parse( params[:debut].iso8601 ),
                                            Date.parse( params[:fin].iso8601 ),
                                            user_regroupements_ids( params[:uid] ),
@@ -26,6 +28,8 @@ module CahierDeTextesAPI
         optional :uid
       end
       get  do
+        cache_control :no_cache
+
         DataManagement::EmploiDuTemps.get( Date.parse( params[:debut].iso8601 ),
                                            Date.parse( params[:fin].iso8601 ),
                                            user_regroupements_ids( params[:uid] ),
