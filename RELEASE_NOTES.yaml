@@ -20,3 +20,6 @@
       - Finalisation de la refonte de l'interface d'import Pronote
     2:
       - bugfix
+  13:
+    0:
+      - corrections mineures (téléversement de document, saisies vides, affichage)
