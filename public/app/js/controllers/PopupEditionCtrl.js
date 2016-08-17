@@ -338,7 +338,12 @@ angular.module( 'cahierDeTextesClientApp' )
                                };
 
                                $scope.devoirs = devoirs.map( function( devoir ) {
-                                   return Devoirs.get( { id: devoir.id } );
+                                   var devoir_from_DB = Devoirs.get( { id: devoir.id } );
+                                   devoir_from_DB.$promise.then( function( d ) {
+                                       d.cours.tooltip = $sce.trustAsHtml( "<div><em>" + $filter('amDateFormat')( d.cours.date_cours, 'dddd D MMMM YYYY' ) + "</em><hr />" + d.cours.contenu + "</div>" );
+                                   } );
+
+                                   return devoir_from_DB;
                                } );
 
                                $scope.types_de_devoir = API.query_types_de_devoir();
@@ -358,10 +363,12 @@ angular.module( 'cahierDeTextesClientApp' )
                                        _(cours.devoirs).each( function( devoir ) {
                                            devoir.$promise.then( function( d ) {
                                                $scope.estimation_leave( d );
-                                               d.tooltip = d.contenu;
+                                               d.tooltip = '<em>' + $filter('amDateFormat')( d.date_due, 'dddd D MMMM YYYY' ) + '</em><hr />' + d.contenu;
                                                if ( d.temps_estime > 0 ) {
-                                                   d.tooltip = '<span><i class="picto temps"></i>' + d.temps_estime * 5 + ' minutes</span><hr>' + d.tooltip;
+                                                   d.tooltip = '<span><i class="picto temps"></i>' + d.temps_estime * 5 + ' minutes</span><hr />' + d.tooltip;
                                                }
+                                               d.tooltip = $sce.trustAsHtml( '<div>' + d.tooltip + '</div>' );
+
                                                if ( $scope.creneau.etranger ) {
                                                    d.contenu = $sce.trustAsHtml( d.contenu );
                                                }

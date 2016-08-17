@@ -159,9 +159,9 @@
                         <li class="clickable"
                             data-ng-repeat="devoir in cours.devoirs"
                             data-ng-if="!devoir.deleted"
-                            data-uib-tooltip-trigger="click"
-                            data-uib-tooltip-placement="bottom"
-                            data-uib-tooltip-html-unsafe="{{devoir.tooltip}}"
+                            uib-tooltip-html="devoir.tooltip"
+                            tooltip-trigger="'click'"
+                            tooltip-placement="bottom"
                             data-ng-class="{ 'type1': devoir.type_devoir_id == 1, 'type2': devoir.type_devoir_id == 2, 'type3': devoir.type_devoir_id == 3, 'type4': devoir.type_devoir_id == 4, 'type5': devoir.type_devoir_id == 5, 'type6': devoir.type_devoir_id >= 6, 'fait': devoir.fait }" >
                             <span><i class="picto" data-ng-style="{'background-image':'url(' + app_path + '/app/vendor/laclasse-common-client/images/picto_devoir.svg)'}"></i> Devoir associé : <em>{{devoir.date_due | date : 'dd/MM'}}</em></span>
                         </li>
@@ -368,9 +368,9 @@
                         <ul class="pull-left">
                             <li class="clickable"
                                 data-ng-if="devoir.cours.contenu"
-                                data-uib-tooltip-trigger="click"
-                                data-uib-tooltip-placement="bottom"
-                                data-uib-tooltip-html-unsafe="<em>{{devoir.cours.date_cours | amDateFormat : 'dddd D MMMM YYYY'}}</em><hr />{{devoir.cours.contenu}}">
+                                uib-tooltip-html="devoir.cours.tooltip"
+                                tooltip-trigger="'click'"
+                                tooltip-placement="bottom">
                                 <span class="glyphicon glyphicon-briefcase"></span> Séquence Pédagogique
                             </li>
                         </ul>
