@@ -1,32 +1,31 @@
-1:
-  11:
-    0:
-      - Refonte de l'interface d'import EDT,
-      - Création de note de version et intégration de celles-ci dans l'interface
-      - Mise à jour des composants tierces serveurs et clients,
-      - Amélioration de la couverture de test.
-    1:
-      - simplification de la gestion des notes de version
-      - Mise à jour des composants tierces serveurs et clients,
-    2:
-      - correction de la liste de sélection des classes/groupes
-      - ajout d'une matière générique
-    4:
-      - amélioration de l'import
-      - correction de la récupération des vacances pendant les vacances
-
-  12:
-    1:
-      - Finalisation de la refonte de l'interface d'import Pronote
-    2:
-      - bugfix
-  13:
-    0:
-      - corrections mineures (téléversement de document, saisies vides, affichage)
-  14:
-    0:
-      - coloration des créneaux correcte en fonction des saisies
-      - [ENS] non duplication des devoirs entre les onglets de la fenêtre de saisie
-      - [ENS] filtrage des matières proposées à celles attachées à l'enseignant
-      - correction du défaut occasionnel de rafraichissement de l'emploi du temps
-      - corrections mineures
+  1:
+    11:
+      0:
+        - Refonte de l'interface d'import EDT,
+        - Création de note de version et intégration de celles-ci dans l'interface
+        - Mise à jour des composants tierces serveurs et clients,
+        - Amélioration de la couverture de test.
+      1:
+        - simplification de la gestion des notes de version
+        - Mise à jour des composants tierces serveurs et clients,
+      2:
+        - correction de la liste de sélection des classes/groupes
+        - ajout d'une matière générique
+      4:
+        - amélioration de l'import
+        - correction de la récupération des vacances pendant les vacances
+    12:
+      1:
+        - Finalisation de la refonte de l'interface d'import Pronote
+      2:
+        - bugfix
+    13:
+      0:
+        - corrections mineures (téléversement de document, saisies vides, affichage)
+    14:
+      0:
+        - coloration des créneaux correcte en fonction des saisies
+        - non duplication des devoirs entre les onglets de la fenêtre de saisie
+        - filtrage des matières proposées à celles attachées à l'enseignant
+        - correction du défaut occasionnel de rafraichissement de l'emploi du temps
+        - corrections mineures
