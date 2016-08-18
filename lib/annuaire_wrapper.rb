@@ -91,61 +91,37 @@ module AnnuaireWrapper
     module_function
 
     def query
-      matieres = Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_matiere,
-                                                                 '',
-                                                                 expand: 'true' )
-      matieres << { 'id' => 'documentation', 'libelle_court' => nil, 'libelle_long' => 'CDI' }
-      matieres << { 'id' => 'primaire', 'libelle_court' => nil, 'libelle_long' => 'TOUTES LES MATIÈRES' }
-
-      matieres
+      Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_matiere, '', expand: 'true' )
     end
 
     def get( id )
-      case id
-      when 'documentation'
-        return { 'id' => 'documentation', 'libelle_court' => nil, 'libelle_long' => 'CDI' }
-      when 'primaire'
-        return { 'id' => 'primaire', 'libelle_court' => nil, 'libelle_long' => 'TOUTES LES MATIÈRES' }
-      else
-        return Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_matiere,
-                                                               "#{CGI.escape( id )}",
-                                                               expand: 'false' )
-      end
+      Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_matiere, "#{CGI.escape( id )}", expand: 'false' )
     end
 
     def search( label )
-      case label
-      when 'CDI'
-        return { 'id' => 'documentation', 'libelle_court' => nil, 'libelle_long' => 'CDI' }
-      when 'TOUTES LES MATIÈRES'
-        return { 'id' => 'primaire', 'libelle_court' => nil, 'libelle_long' => 'TOUTES LES MATIÈRES' }
-      else
-        return Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_matiere,
-                                                               "libelle/#{CGI.escape( label )}",
-                                                               expand: 'false' )
-      end
+      Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_matiere, "libelle/#{CGI.escape( label )}", expand: 'false' )
     end
   end
 
   module Regroupement
     module_function
 
-    def get( id )
-      regroupement = Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_regroupement,
-                                                                     "#{CGI.escape( id )}",
-                                                                     expand: 'false' )
-      regroupement['libelle'] = regroupement['libelle_aaf'] if regroupement['libelle'].nil?
-      regroupement['libelle_aaf'] = regroupement['libelle'] if regroupement['libelle_aaf'].nil?
+  def get( id )
+    regroupement = Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_regroupement,
+                                                                   "#{CGI.escape( id )}",
+                                                                   expand: 'false' )
+    regroupement['libelle'] = regroupement['libelle_aaf'] if regroupement['libelle'].nil?
+    regroupement['libelle_aaf'] = regroupement['libelle'] if regroupement['libelle_aaf'].nil?
 
-      regroupement
-    end
+    regroupement
   end
+end
 
-  module Log
-    module_function
+module Log
+  module_function
 
-    def add( entry )
-      Laclasse::CrossApp::Sender.post_request_signed( :service_annuaire_v2_logs, '', entry, {} )
-    end
+  def add( entry )
+    Laclasse::CrossApp::Sender.post_request_signed( :service_annuaire_v2_logs, '', entry, {} )
   end
+end
 end
