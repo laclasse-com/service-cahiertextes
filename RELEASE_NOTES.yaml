@@ -23,3 +23,10 @@
   13:
     0:
       - corrections mineures (téléversement de document, saisies vides, affichage)
+  14:
+    0:
+      - coloration des créneaux correcte en fonction des saisies
+      - [ENS] non duplication des devoirs entre les onglets de la fenêtre de saisie
+      - [ENS] filtrage des matières proposées à celles attachées à l'enseignant
+      - correction du défaut occasionnel de rafraichissement de l'emploi du temps
+      - corrections mineures
