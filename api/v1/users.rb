@@ -16,12 +16,24 @@ module CahierDeTextesAPI
 
         utilisateur[ 'parametrage_cahier_de_textes' ] = JSON.parse( parametres[:parameters] )
 
-        matieres = AnnuaireWrapper::Matiere.query
+        all_matieres = AnnuaireWrapper::Matiere.query
 
         utilisateur[ 'profils' ].each do |profil|
-          profil['matieres'] = matieres
-        end
+          if !profil['admin'] && %w(ENS).include?( profil['profil_id'] )
+            profil['matieres'] = utilisateur['regroupements'].map do |regroupement|
+              next if regroupement['etablissement_code'] != profil['etablissement_code_uai']
+              next unless regroupement.key?( 'matiere_enseignee_id' )
 
+              { id: regroupement['matiere_enseignee_id'],
+                libelle_court: regroupement['matiere_libelle'],
+                libelle_long: regroupement['matiere_libelle'] }
+            end.flatten.compact
+
+            profil['matieres'] = all_matieres if profil['matieres'].empty?
+          elsif %w(DIR).include?( profil['profil_id'] ) || profil['admin']
+            profil['matieres'] = all_matieres
+          end
+        end
         utilisateur
       end
 
