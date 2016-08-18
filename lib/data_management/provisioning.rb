@@ -10,12 +10,12 @@ module DataManagement
         LOGGER.warn 'user has no etablissements defined'
         LOGGER.warn user.to_s
       else
-        user[:user_detailed]['etablissements']
-          .each do |etab|
-          etablissement = AnnuaireWrapper::Etablissement.get( etab[ 'code_uai' ], 2 )
+        user[:user_detailed]['profils']
+          .each do |profil|
+          etablissement = AnnuaireWrapper::Etablissement.get( profil[ 'etablissement_code_uai' ], 2 )
           next if etablissement == 'Not Found' || etablissement.key?( 'error' ) || etablissement.key?( :error )
 
-          Accessors.create_or_get( Etablissement, UAI: etab[ 'code_uai' ] )
+          Accessors.create_or_get( Etablissement, UAI: etablissement[ 'uai' ] )
 
           etablissement['groups']
             .each do |regroupement|
