@@ -28,6 +28,11 @@ angular.module( 'cahierDeTextesClientApp' )
                        User.get_user().then( function( response ) {
                            $scope.current_user = response.data;
 
+                           if ( !$scope.current_user.parametrage_cahier_de_textes.affichage_week_ends ) {
+                               delete $scope.jours[0]; // sunday
+                               delete $scope.jours[6]; // saturday
+                           }
+
                            var create_cours = function( creneau ) {
                                var cours = new Cours( { creneau_emploi_du_temps_id: creneau.id,
                                                         date_cours: new Date(creneau.heure_debut).toISOString(),
