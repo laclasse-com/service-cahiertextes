@@ -45,8 +45,11 @@ angular.module( 'cahierDeTextesClientApp' )
                                return cours;
                            };
                            $scope.is_dirty = function( item ) {
-                               item = typeof item !== 'undefined' ? item : null;
-                               $scope.dirty = $scope.dirty || ( item === null || ( item !== null && item.contenu.length > 0 ) );
+                               item = _(item).isUndefined() || _(item).isNull() ? null : item;
+                               $scope.dirty = $scope.dirty || ( _(item).isNull() || ( !_(item).isNull() && item.contenu.length > 0 ) );
+                               if ( !_(item).isNull() ) {
+                                   item.dirty = true;
+                               }
                            };
 
                            // Initialisations {{{
@@ -251,46 +254,37 @@ angular.module( 'cahierDeTextesClientApp' )
                                } else {
                                    // Gestion des Cours et Devoirs
                                    var valider_devoirs = function( devoirs, cours ) {
-                                       _( devoirs ).each( function ( devoir ) {
-                                           if ( ( _( devoir ).has( 'contenu' ) && ( devoir.contenu.length > 0 ) ) || devoir.ressources.length > 0 ) {
-                                               // FIXME: on $save() ou $update() tous les devoirs qu'ils aient été modifiés ou non
+                                       _.chain( devoirs )
+                                           .where( { dirty: true } )
+                                           .each( function ( devoir ) {
                                                var prom = $q.defer();
+                                               var treat_error = function error( response ) {
+                                                   $scope.erreurs.unshift( { status: response.status,
+                                                                             message: response.data.error } );
+                                                   prom.reject( response );
+                                               };
+                                               var treat_success = function( action ) {
+                                                   return function success( result ) {
+                                                       devoir.id = result.id;
+                                                       prom.resolve( result );
+                                                       $scope.actions_done.push( action );
+                                                   };
+                                               };
+
                                                if ( devoir.create ) {
                                                    devoir.regroupement_id = $scope.selected_regroupement.id;
-                                                   if ( ! _(cours).isNull() ) {
-                                                       devoir.cours_id = cours.id;
-                                                   }
-                                                   if ( !_( devoir ).has( 'contenu' ) ) {
-                                                       devoir.contenu = '';
-                                                   }
-                                                   devoir.$save().then( function success( result ) {
-                                                       devoir.id = result.id;
-                                                       prom.resolve( result );
-                                                       $scope.actions_done.push( POPUP_ACTIONS.DEVOIR_CREATED );
-                                                   }, function ( response ) {
-                                                       $scope.erreurs.unshift( {
-                                                           status: response.status,
-                                                           message: response.data.error
-                                                       } );
-                                                       prom.reject( response );
-                                                   } );
+                                                   if ( ! _(cours).isNull() ) { devoir.cours_id = cours.id; }
+                                                   if ( !_( devoir ).has( 'contenu' ) ) { devoir.contenu = ''; }
+
+                                                   devoir.$save().then( treat_success( POPUP_ACTIONS.DEVOIR_CREATED ),
+                                                                        treat_error );
                                                } else {
-                                                   devoir.$update().then( function success( result ) {
-                                                       devoir.id = result.id;
-                                                       prom.resolve( result );
-                                                       $scope.actions_done.push( POPUP_ACTIONS.DEVOIR_MODIFIED );
-                                                   }, function ( response ) {
-                                                       $scope.erreurs.unshift( {
-                                                           status: response.status,
-                                                           message: response.data.error
-                                                       } );
-                                                       prom.reject( response );
-                                                   } );
+                                                   devoir.$update().then( treat_success( POPUP_ACTIONS.DEVOIR_MODIFIED ),
+                                                                          treat_error );
                                                }
 
                                                promesses.push( prom.promise );
-                                           }
-                                       } );
+                                           } );
                                    };
 
                                    // Séquence Pédogogique du créneau
@@ -335,7 +329,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
 
                            // Gestion des Cours et Devoirs ///////////////////////////////////////////////////////////////////////////
-                           if ( ! $scope.creneau.en_creation ) {
+                           if ( !$scope.creneau.en_creation ) {
                                // fonctions UI pour le temps estimé
                                $scope.estimation_over = function ( d, value ) {
                                    d.overValue = value;
@@ -344,15 +338,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                $scope.estimation_leave = function ( d ) {
                                    $scope.estimation_over( d, d.temps_estime );
                                };
-
-                               $scope.devoirs = devoirs.map( function( devoir ) {
-                                   var devoir_from_DB = Devoirs.get( { id: devoir.id } );
-                                   devoir_from_DB.$promise.then( function( d ) {
-                                       d.cours.tooltip = $sce.trustAsHtml( "<div><em>" + $filter('amDateFormat')( d.cours.date_cours, 'dddd D MMMM YYYY' ) + "</em><hr />" + d.cours.contenu + "</div>" );
-                                   } );
-
-                                   return devoir_from_DB;
-                               } );
 
                                $scope.types_de_devoir = API.query_types_de_devoir();
 
@@ -364,9 +349,14 @@ angular.module( 'cahierDeTextesClientApp' )
                                            $scope.cours.contenu = $sce.trustAsHtml( $scope.cours.contenu );
                                        }
 
-                                       cours.devoirs = _(cours.devoirs).map( function( devoir ) {
-                                           return Devoirs.get( { id: devoir.id } );
-                                       } );
+                                       cours.devoirs = _.chain(cours.devoirs)
+                                           .select( function( devoir ) {
+                                               return _.chain(devoirs).findWhere({ id: devoir.id }).isUndefined().value();
+                                           } )
+                                           .map( function( devoir ) {
+                                               return Devoirs.get( { id: devoir.id } );
+                                           } )
+                                           .value();
 
                                        _(cours.devoirs).each( function( devoir ) {
                                            devoir.$promise.then( function( d ) {
@@ -415,18 +405,26 @@ angular.module( 'cahierDeTextesClientApp' )
                                    init_cours_existant( cours );
                                }
 
-                               _( $scope.devoirs )
-                                   .each( function ( devoir ) {
-                                       devoir.$promise.then( function() {
-                                           $scope.estimation_leave( devoir );
-                                           _(devoir.ressources).each( function( ressource ) {
-                                               ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
-                                           } );
-                                           if ( $scope.creneau.etranger ) {
-                                               devoir.contenu = $sce.trustAsHtml( devoir.contenu );
-                                           }
-                                       } );
+                               $scope.devoirs = devoirs.map( function( devoir ) {
+                                   var devoir_from_DB = Devoirs.get( { id: devoir.id } );
+                                   devoir_from_DB.$promise.then( function( d ) {
+                                       d.cours.tooltip = $sce.trustAsHtml( "<div><em>" + $filter('amDateFormat')( d.cours.date_cours, 'dddd D MMMM YYYY' ) + "</em><hr />" + d.cours.contenu + "</div>" );
                                    } );
+
+                                   return devoir_from_DB;
+                               } );
+
+                               _( $scope.devoirs ).each( function ( devoir ) {
+                                   devoir.$promise.then( function() {
+                                       $scope.estimation_leave( devoir );
+                                       _(devoir.ressources).each( function( ressource ) {
+                                           ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+                                       } );
+                                       if ( $scope.creneau.etranger ) {
+                                           devoir.contenu = $sce.trustAsHtml( devoir.contenu );
+                                       }
+                                   } );
+                               } );
 
                                // Fonction UI pour fixer l'id du créneau en fct du choix dans la sbox des créneaux possibles.
                                $scope.set_creneau_date_due = function ( devoir ) {
@@ -435,7 +433,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                        date_due: devoir.date_due
                                    } );
                                    devoir.creneau_emploi_du_temps_id = creneau_choisi.creneau_emploi_du_temps_id;
-                                   $scope.is_dirty();
+                                   $scope.is_dirty( devoir );
                                };
 
                                var liste_créneaux_similaires = function( creneau, n_semaines_before, n_semaines_after ) {
@@ -529,7 +527,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                                hash: _item.hash,
                                                url: $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + _item.hash )
                                            } );
-                                           $scope.is_dirty();
+                                           $scope.is_dirty( item );
                                        }
                                    };
                                };
@@ -552,7 +550,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                    item.ressources = _( item.ressources ).reject( function ( ressource ) {
                                        return ressource.hash == hash;
                                    } );
-                                   $scope.is_dirty();
+                                   $scope.is_dirty( item );
                                };
                                // }}}
 
@@ -572,13 +570,12 @@ angular.module( 'cahierDeTextesClientApp' )
                                            creneau_cible = _($scope.creneaux_devoirs_possibles).first();
                                        }
                                    }
-                                   var devoir = new Devoirs( {
-                                       cours_id: $scope.cours.id,
-                                       date_due: $filter( 'date' )( creneau_cible.heure_debut, 'yyyy-MM-dd' ),
-                                       type_devoir_id: _($scope.types_de_devoir).last().id,
-                                       creneau_emploi_du_temps_id: creneau_cible.id
-                                   } );
+                                   var devoir = new Devoirs( { cours_id: $scope.cours.id,
+                                                               date_due: $filter( 'date' )( creneau_cible.heure_debut, 'yyyy-MM-dd' ),
+                                                               type_devoir_id: _($scope.types_de_devoir).last().id,
+                                                               creneau_emploi_du_temps_id: creneau_cible.id } );
                                    devoir.create = true;
+                                   devoir.dirty = true;
                                    where.unshift( devoir );
                                };
 
