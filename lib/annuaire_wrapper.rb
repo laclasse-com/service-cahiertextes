@@ -106,22 +106,22 @@ module AnnuaireWrapper
   module Regroupement
     module_function
 
-  def get( id )
-    regroupement = Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_regroupement,
-                                                                   "#{CGI.escape( id )}",
-                                                                   expand: 'false' )
-    regroupement['libelle'] = regroupement['libelle_aaf'] if regroupement['libelle'].nil?
-    regroupement['libelle_aaf'] = regroupement['libelle'] if regroupement['libelle_aaf'].nil?
+    def get( id )
+      regroupement = Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_regroupement,
+                                                                     "#{CGI.escape( id )}",
+                                                                     expand: 'false' )
+      regroupement['libelle'] = regroupement['libelle_aaf'] if regroupement['libelle'].nil?
+      regroupement['libelle_aaf'] = regroupement['libelle'] if regroupement['libelle_aaf'].nil?
 
-    regroupement
+      regroupement
+    end
   end
-end
 
-module Log
-  module_function
+  module Log
+    module_function
 
-  def add( entry )
-    Laclasse::CrossApp::Sender.post_request_signed( :service_annuaire_v2_logs, '', entry, {} )
+    def add( entry )
+      Laclasse::CrossApp::Sender.post_request_signed( :service_annuaire_v2_logs, '', entry, {} )
+    end
   end
-end
 end
