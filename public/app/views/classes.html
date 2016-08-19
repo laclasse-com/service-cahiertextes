@@ -5,48 +5,62 @@
 <div class="panel panel-default" data-ng-if="!empty">
     <div class="panel-body">
 
-	    <div class="ui-select-wrapper">
-		    <ui-select multiple class="pull-left" theme="bootstrap"
-			    append-to-body="true"
-			    data-ng-change="process_data()"
-			    data-ng-model="scope.selected_regroupements">
-			    <ui-select-match placeholder="Regroupement(s)...">{{$item.libelle}}</ui-select-match>
-			    <ui-select-choices repeat="classe in classes | orderBy:['type','libelle']"
-				    group-by="'type'">
-				    {{classe.libelle}}
-			    </ui-select-choices>
-		    </ui-select>
-		    <button class="btn btn-xs btn-primary"
-			    data-ng-click="select_all_regroupements()"><span class="glyphicon glyphicon-certificate"></span></button>
-		    <button class="btn btn-xs btn-default"
-			    data-ng-click="select_no_regroupements()"><span class="glyphicon glyphicon-erase"></span></button>
-	    </div>
+        <div class="ui-select-wrapper">
+            <ui-select multiple class="pull-left" theme="bootstrap"
+                       append-to-body="true"
+                       data-ng-change="process_data()"
+                       data-ng-model="scope.selected_regroupements">
+                <ui-select-match placeholder="Regroupement(s)...">{{$item.libelle}}</ui-select-match>
+                <ui-select-choices repeat="classe in classes | orderBy:['type','libelle']"
+                                   group-by="'type'">
+                    {{classe.libelle}}
+                </ui-select-choices>
+            </ui-select>
+            <button class="btn btn-xs btn-primary"
+                    data-ng-click="select_all_regroupements()"><span class="glyphicon glyphicon-certificate"></span></button>
+            <button class="btn btn-xs btn-default"
+                    data-ng-click="select_no_regroupements()"><span class="glyphicon glyphicon-erase"></span></button>
+        </div>
 
-	    <select class="col-md-3" data-ng-model="scope.selected_mois" data-ng-change="process_data()" data-ng-options="annee.indexOf(m)+1 as m for m in annee">
-		    <option value="">Toute l'année</option>
-	    </select>
+        <select class="col-md-3" data-ng-model="scope.selected_mois" data-ng-change="process_data()" data-ng-options="annee.indexOf(m)+1 as m for m in annee">
+            <option value="">Toute l'année</option>
+        </select>
 
-	    <select class="col-md-3" data-ng-model="scope.selected_matiere" data-ng-change="process_data()" data-ng-options="m.id as m.libelle_long for m in matieres">
-		    <option value="">Toute les matières</option>
-	    </select>
+        <select class="col-md-3" data-ng-model="scope.selected_matiere" data-ng-change="process_data()" data-ng-options="m.id as m.libelle_long for m in matieres">
+            <option value="">Toute les matières</option>
+        </select>
     </div>
 </div>
 
 <div class="panel panel-default">
-	<div class="panel-body row">
-		<nvd3 class="col-md-4" data="pieChart.data" options="pieChart.options"></nvd3>
-		<nvd3 class="col-md-8" data="multiBarChart.data" options="multiBarChart.options"></nvd3>
-	</div>
+    <div class="panel-body row">
+        <nvd3 class="col-md-4" data="pieChart.data" options="pieChart.options"></nvd3>
+        <nvd3 class="col-md-8" data="multiBarChart.data" options="multiBarChart.options"></nvd3>
+    </div>
 </div>
 
 <div class="col-md-12" data-ng-if="!classe">
-	<div class="col-md-3"
-		data-ng-repeat="classe in individualCharts.classes | orderBy:'regroupement.libelle'">
-		<div class="panel panel-default">
-			<div class="panel-heading"><h3 class="panel-title">{{classe.regroupement.libelle}}</h3></div>
-			<div class="panel-body">
-				<nvd3 data="classe.pieChart.data" options="classe.pieChart.options"></nvd3>
-			</div>
-		</div>
-	</div>
+    <div class="col-md-3"
+data-ng-repeat="classe in individualCharts.classes | orderBy:'regroupement.libelle'">
+        <div class="panel panel-default">
+            <div class="panel-heading"><h3 class="panel-title">{{classe.regroupement.libelle}}</h3></div>
+            <div class="panel-body">
+                <nvd3 data="classe.pieChart.data" options="classe.pieChart.options"></nvd3>
+                <ul>
+                    <li>{{classe.classe.creneaux_emploi_du_temps.vides.length}} créneaux vierges
+                        <button class="btn btn-danger btn-xs pull-right"
+                                ng:click="delete_creneaux( classe.classe.creneaux_emploi_du_temps.vides )">
+                            <i class="glyphicon glyphicon-trash"></i>
+                        </button>
+                    </li>
+                    <li>{{classe.classe.creneaux_emploi_du_temps.pleins.length}} créneaux avec saisies
+                        <button class="btn btn-danger btn-xs pull-right"
+                                ng:click="delete_creneaux( classe.classe.creneaux_emploi_du_temps.pleins )">
+                            <i class="glyphicon glyphicon-trash"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>

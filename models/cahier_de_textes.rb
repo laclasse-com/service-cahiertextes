@@ -11,12 +11,15 @@ class CahierDeTextes < Sequel::Model( :cahiers_de_textes )
                  .where( "DATE_FORMAT( cours.date_creation, '%Y-%m-%d') >= '#{Utils.date_rentree}'" )
     # .where { cours__date_creation >= Utils.date_rentree }
 
+    creneaux = creneaux_emploi_du_temps
+
     { regroupement_id: regroupement_id,
-      matieres: cours
-        .association_join( :creneau_emploi_du_temps )
-        .select( :matiere_id )
-        .group_by( :matiere_id )
-        .map do |record|
+      creneaux_emploi_du_temps: { vides: creneaux.select { |c| c.cours.empty? && c.devoirs.empty? }.map( &:id ),
+                                  pleins: creneaux.select { |c| !c.cours.empty? || !c.devoirs.empty? }.map( &:id ) },
+      matieres: cours.association_join( :creneau_emploi_du_temps )
+                     .select( :matiere_id )
+                     .group_by( :matiere_id )
+                     .map do |record|
         { matiere_id: record.values[ :matiere_id ],
           mois: (1..12).map do |month|
             tmp_cours = cours.association_join( :creneau_emploi_du_temps )
@@ -29,5 +32,12 @@ class CahierDeTextes < Sequel::Model( :cahiers_de_textes )
               validated: tmp_cours.where( :date_validation ).count }
           end }
       end }
+  end
+
+  def creneaux_emploi_du_temps
+    CreneauEmploiDuTemps.association_join( :regroupements )
+                        .where( regroupement_id: regroupement_id )
+                        .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{Utils.date_rentree}'" )
+                        .all
   end
 end
