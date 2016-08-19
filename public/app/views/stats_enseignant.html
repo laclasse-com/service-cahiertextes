@@ -1,126 +1,127 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-            <div class="row">
-                    <a class="btn btn-info pull-left" data-ui-sref="principal.enseignants" data-ng-if="current_user.profil_actif.profil_id === 'DIR'" >← Retour à la liste des enseignants</a>
-            </div>
-            <div class="row">
+        <div class="row">
+            <a class="btn btn-info pull-left" data-ui-sref="principal.enseignants" ng:if="current_user.profil_actif.profil_id === 'DIR'" >← Retour à la liste des enseignants</a>
+        </div>
+        <div class="row">
 
-                    <div class="ui-select-wrapper">
-                            <ui-select multiple class="pull-left" theme="bootstrap"
-                                    append-to-body="true"
-                                    data-ng-change="process_data()"
-                                    data-ng-model="scope.selected_regroupements">
-                                    <ui-select-match placeholder="Regroupement(s)...">{{$item.libelle}}</ui-select-match>
-                                    <ui-select-choices repeat="classe in classes | orderBy:['type','libelle']"
-                                            group-by="'type'">
-                                            {{classe.libelle}}
-                                    </ui-select-choices>
-                            </ui-select>
-                            <button class="btn btn-xs btn-primary"
-                                    data-ng-click="select_all_regroupements()"><span class="glyphicon glyphicon-certificate"></span></button>
-                            <button class="btn btn-xs btn-default"
-                                    data-ng-click="select_no_regroupements()"><span class="glyphicon glyphicon-erase"></span></button>
-                    </div>
-
-                    <select class="col-md-3 pull-right" data-ng-model="moisCourant" data-ng-change="process_data()" data-ng-options="mois.indexOf(m)+1 as m for m in mois">
-                            <option value="">Toute l'année</option>
-                    </select>
+            <div class="ui-select-wrapper">
+                <ui-select multiple class="pull-left" theme="bootstrap"
+                           append-to-body="true"
+                           ng:change="process_data()"
+                           ng:model="scope.selected_regroupements">
+                    <ui-select-match placeholder="Regroupement(s)...">{{$item.libelle}}</ui-select-match>
+                    <ui-select-choices repeat="classe in classes | orderBy:['type','libelle']"
+                                       group-by="'type'">
+                        {{classe.libelle}}
+                    </ui-select-choices>
+                </ui-select>
+                <button class="btn btn-xs btn-primary"
+                        ng:click="select_all_regroupements()"><span class="glyphicon glyphicon-certificate"></span></button>
+                <button class="btn btn-xs btn-default"
+                        ng:click="select_no_regroupements()"><span class="glyphicon glyphicon-erase"></span></button>
             </div>
+
+            <select class="col-md-3 pull-right" ng:model="moisCourant" ng:change="process_data()" ng:options="mois.indexOf(m)+1 as m for m in mois">
+                <option value="">Toute l'année</option>
+            </select>
+        </div>
     </div>
 
     <div class="panel-body">
-            <h4 class="col-md-12 pull-left">{{enseignant.prenom}} {{enseignant.nom}}</h4>
-            <div class="col-md-4">
-                    <div class="panel panel-default">
-                            <div class="panel-body">
-                                    <legend><span class="glyphicon glyphicon-envelope"></span> <a class="email" href="mailto:{{enseignant.email_principal.adresse}}">{{enseignant.email_principal.adresse}}</a></legend>
+        <h4 class="col-md-12 pull-left">{{enseignant.prenom}} {{enseignant.nom}}</h4>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <legend><span class="glyphicon glyphicon-envelope"></span> <a class="email" href="mailto:{{enseignant.email_principal.adresse}}">{{enseignant.email_principal.adresse}}</a></legend>
 
-                                    <fieldset>
-                                            <legend><span class="glyphicon glyphicon-briefcase"></span> Matières enseignées</legend>
-                                            <span class="label label-primary pull-left" data-ng-repeat="matiere in enseignant.liste_matieres">{{matiere}}</span>
-                                    </fieldset>
+                    <fieldset>
+                        <legend><span class="glyphicon glyphicon-briefcase"></span> Matières enseignées</legend>
+                        <span class="label label-primary pull-left" ng:repeat="matiere in enseignant.liste_matieres">{{matiere}}</span>
+                    </fieldset>
 
-                                    <fieldset>
-                                            <legend><span class="glyphicon glyphicon-envelope"></span> Classes</legend>
-                                            <span class="label label-info pull-left" data-ng-repeat="classe in enseignant.liste_classes">{{classe.classe_libelle}}</span>
-                                    </fieldset>
+                    <fieldset>
+                        <legend><span class="glyphicon glyphicon-envelope"></span> Classes</legend>
+                        <span class="label label-info pull-left" ng:repeat="classe in enseignant.liste_classes">{{classe.classe_libelle}}</span>
+                    </fieldset>
 
-                                    <fieldset data-ng-if="enseignant.prof_principal.length > 0">
-                                            <legend><span class="glyphicon glyphicon-bell"></span> Professeur principal de</legend>
-                                            <span class="label label-info pull-left" data-ng-repeat="classe in enseignant.prof_principal">{{classe}}</span>
-                                    </fieldset>
-                            </div>
-                    </div>
+                    <fieldset ng:if="enseignant.prof_principal.length > 0">
+                        <legend><span class="glyphicon glyphicon-bell"></span> Professeur principal de</legend>
+                        <span class="label label-info pull-left" ng:repeat="classe in enseignant.prof_principal">{{classe}}</span>
+                    </fieldset>
+                </div>
             </div>
-            <div class="col-md-8">
-                    <div class="panel panel-default">
-                            <div class="panel-body row">
-                                    <nvd3 data="graphiques.pieChart.data" options="graphiques.pieChart.options"></nvd3>
-                                    <nvd3 data="graphiques.multiBarChart.data" options="graphiques.multiBarChart.options"></nvd3>
-                            </div>
-                    </div>
+        </div>
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-body row">
+                    <nvd3 data="graphiques.pieChart.data" options="graphiques.pieChart.options"></nvd3>
+                    <nvd3 data="graphiques.multiBarChart.data" options="graphiques.multiBarChart.options"></nvd3>
+                </div>
             </div>
+        </div>
     </div>
 </div>
 
 <div class="panel panel-default">
-        <div class="panel-heading">
-                <button class="btn btn-primary pull-right"
-                        data-ng-click="valide_all()"
-                        data-ng-if="current_user.profil_actif.profil_id === 'DIR' && nb_saisies_visables > 0">
-                        <span class="glyphicon glyphicon-check"></span> Viser la totalité
-                </button>
+    <div class="panel-heading">
+        <button class="btn btn-warning pull-right"
+                ng:class="{'disabled': nb_saisies_visables < 1 }"
+                ng:if="current_user.profil_actif.profil_id === 'DIR'"
+                ng:click="valide_all()">
+            <span class="glyphicon glyphicon-check"></span> Viser la totalité
+        </button>
 
 
-                <label>
-                        <checkbox class="btn-success"
-                                data-ng-model="scope.montre_valides"
-                                data-ng-change="process_data()"></checkbox>
-                        afficher les saisies visées
-                </label>
+        <label>
+            <checkbox class="btn-success"
+                      ng:model="scope.montre_valides"
+                      ng:change="process_data()"></checkbox>
+            afficher les saisies visées
+        </label>
 
-                <div class="clearfix"></div>
-        </div>
-        <div class="panel-body">
-                <table class="table">
-                        <thead>
-                                <tr>
-                                        <th style="width:12em;">Date</th>
-                                        <th style="width:12em;">Classe</th>
-                                        <th style="width:12em;">Matière</th>
-                                        <th>Cours</th>
-                                        <th>Travail à faire</th>
-                                        <th>Visée</th>
-                                </tr>
-                        </thead>
-                        <tbody>
-                                <tr data-ng-repeat="saisie in raw_data | orderBy:'cours.date_cours' | selectedRegroupements:selected_regroupements"
-                                        data-ng-class="{'even': $even, 'odd': $odd, 'recent': saisie.recent && current_user.profil_actif.profil_id === 'DIR' }"
-                                        data-ng-if="(scope.montre_valides || saisie.cours.date_validation == null) && (scope.moisCourant == null || saisie.mois == scope.moisCourant)">
-                                        <td>{{saisie.cours.date_cours | amDateFormat:'Do MMMM YYYY'}}</td>
-                                        <td data-ng-bind="detail_regroupement( saisie.regroupement_id ).libelle"></td>
-                                        <td data-ng-bind="matieres[ saisie.matiere_id ].libelle_long"></td>
-                                        <td>
-                                            <div class="alert alert-default" data-ng-bind-html="saisie.cours.contenu"></div>
-                                        </td>
-                                        <td>
-                                            <div class="alert alert-default" data-ng-repeat="devoir in saisie.devoirs" data-ng-bind-html="devoir.contenu"></div>
-                                        </td>
-                                        <td>
-                                            <div data-ng-switcher
-                                                 data-ng-if="current_user.profil_actif.profil_id === 'DIR' && !saisie.recent"
-                                                 data-ng-model="saisie.valide"
-                                                 data-ng-change="valide( saisie )" >
-                                            </div>
-                                            <div data-ng-if="current_user.profil_actif.profil_id !== 'DIR' || saisie.recent">
-                                                <div class="switch disabled"
-                                                     ng-class="{'switch-left': !saisie.valide, 'switch-right': saisie.valide}">
-                                                    <div class="switch-button"> </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                </tr>
-                        </tbody>
-                </table>
-        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width:12em;">Date</th>
+                    <th style="width:12em;">Classe</th>
+                    <th style="width:12em;">Matière</th>
+                    <th>Cours</th>
+                    <th>Travail à faire</th>
+                    <th>Visée</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng:repeat="saisie in raw_data | orderBy:'cours.date_cours' | selectedRegroupements:selected_regroupements"
+                    ng:class="{'even': $even, 'odd': $odd, 'recent': saisie.recent && current_user.profil_actif.profil_id === 'DIR' }"
+                    ng:if="(scope.montre_valides || saisie.cours.date_validation == null) && (scope.moisCourant == null || saisie.mois == scope.moisCourant)">
+                    <td>{{saisie.cours.date_cours | amDateFormat:'Do MMMM YYYY'}}</td>
+                    <td ng:bind="detail_regroupement( saisie.regroupement_id ).libelle"></td>
+                    <td ng:bind="matieres[ saisie.matiere_id ].libelle_long"></td>
+                    <td>
+                        <div class="alert alert-default" ng:bind-html="saisie.cours.contenu"></div>
+                    </td>
+                    <td>
+                        <div class="alert alert-default" ng:repeat="devoir in saisie.devoirs" ng:bind-html="devoir.contenu"></div>
+                    </td>
+                    <td>
+                        <div ng:switcher
+                             ng:if="current_user.profil_actif.profil_id === 'DIR' && !saisie.recent"
+                             ng:model="saisie.valide"
+                             ng:change="valide( saisie )" >
+                        </div>
+                        <div ng:if="current_user.profil_actif.profil_id !== 'DIR' || saisie.recent">
+                            <div class="switch disabled"
+                                 ng-class="{'switch-left': !saisie.valide, 'switch-right': saisie.valide}">
+                                <div class="switch-button"> </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
