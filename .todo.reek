@@ -117,6 +117,7 @@ NestedIterators:
 TooManyStatements:
   exclude:
   - initialize
+  - CahierDeTextes#statistiques
   - DataManagement::Cleansing::Creneaux#deleted_and_unused
   - DataManagement::EmploiDuTemps#get
   - DataManagement::EmploiDuTemps#ical
@@ -173,6 +174,7 @@ UncommunicativeVariableName:
   - TableCleaner#tsort_each_node
 FeatureEnvy:
   exclude:
+  - CahierDeTextes#statistiques
   - DataManagement::EmploiDuTemps#ical
   - ProNote#corrige_semainiers
   - ProNote#load_creneaux

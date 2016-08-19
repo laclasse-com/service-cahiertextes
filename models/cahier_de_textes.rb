@@ -14,8 +14,8 @@ class CahierDeTextes < Sequel::Model( :cahiers_de_textes )
     creneaux = creneaux_emploi_du_temps
 
     { regroupement_id: regroupement_id,
-      creneaux_emploi_du_temps: { vides: creneaux.select { |c| c.cours.empty? && c.devoirs.empty? }.map( &:id ),
-                                  pleins: creneaux.select { |c| !c.cours.empty? || !c.devoirs.empty? }.map( &:id ) },
+      creneaux_emploi_du_temps: { vides: creneaux.select { |creneau| creneau.cours.empty? && creneau.devoirs.empty? }.map( &:id ),
+                                  pleins: creneaux.select { |creneau| !creneau.cours.empty? || !creneau.devoirs.empty? }.map( &:id ) },
       matieres: cours.association_join( :creneau_emploi_du_temps )
                      .select( :matiere_id )
                      .group_by( :matiere_id )
