@@ -3,29 +3,6 @@
         <div class="row">
             <a class="btn btn-info pull-left" data-ui-sref="principal.enseignants" ng:if="current_user.profil_actif.profil_id === 'DIR'" >← Retour à la liste des enseignants</a>
         </div>
-        <div class="row">
-
-            <div class="ui-select-wrapper">
-                <ui-select multiple class="pull-left" theme="bootstrap"
-                           append-to-body="true"
-                           ng:change="process_data()"
-                           ng:model="scope.selected_regroupements">
-                    <ui-select-match placeholder="Regroupement(s)...">{{$item.libelle}}</ui-select-match>
-                    <ui-select-choices repeat="classe in classes | orderBy:['type','libelle']"
-                                       group-by="'type'">
-                        {{classe.libelle}}
-                    </ui-select-choices>
-                </ui-select>
-                <button class="btn btn-xs btn-primary"
-                        ng:click="select_all_regroupements()"><span class="glyphicon glyphicon-certificate"></span></button>
-                <button class="btn btn-xs btn-default"
-                        ng:click="select_no_regroupements()"><span class="glyphicon glyphicon-erase"></span></button>
-            </div>
-
-            <select class="col-md-3 pull-right" ng:model="moisCourant" ng:change="process_data()" ng:options="mois.indexOf(m)+1 as m for m in mois">
-                <option value="">Toute l'année</option>
-            </select>
-        </div>
     </div>
 
     <div class="panel-body">
@@ -65,18 +42,37 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <button class="btn btn-warning pull-right"
-                ng:class="{'disabled': nb_saisies_visables < 1 }"
-                ng:if="current_user.profil_actif.profil_id === 'DIR'"
-                ng:click="valide_all()">
-            <span class="glyphicon glyphicon-check"></span> Viser la totalité
-        </button>
-
+        <div class="row">
+            <div class="col-md-9">
+                <div class="ui-select-wrapper">
+                    <ui-select multiple class="pull-left" theme="bootstrap"
+                               append-to-body="true"
+                               ng:if="classes.length > 0 && classes[ classes.length - 1 ].id"
+                               ng:change="graphiques.populate( raw_data )"
+                               ng:model="scope.selected_regroupements">
+                        <ui-select-match placeholder="Regroupement(s)...">{{$item.libelle}}</ui-select-match>
+                        <ui-select-choices repeat="classe in classes track by $index | orderBy:['type_regroupement_id','libelle']"
+                                           group-by="'type_regroupement_id'">
+                            {{classe.libelle}}
+                        </ui-select-choices>
+                    </ui-select>
+                    <button class="btn btn-xs btn-primary"
+                            ng:click="select_all_regroupements()"><span class="glyphicon glyphicon-certificate"></span></button>
+                    <button class="btn btn-xs btn-default"
+                            ng:click="select_no_regroupements()"><span class="glyphicon glyphicon-erase"></span></button>
+                </div>
+            </div>
+            <select class="col-md-3"
+                    ng:model="moisCourant"
+                    ng:change="graphiques.populate( raw_data )"
+                    ng:options="mois.indexOf(m)+1 as m for m in mois">
+                <option value="">Toute l'année</option>
+            </select>
+        </div>
 
         <label>
             <checkbox class="btn-success"
-                      ng:model="scope.montre_valides"
-                      ng:change="process_data()"></checkbox>
+                      ng:model="scope.montre_valides"></checkbox>
             afficher les saisies visées
         </label>
 
@@ -91,13 +87,19 @@
                     <th style="width:12em;">Matière</th>
                     <th>Cours</th>
                     <th>Travail à faire</th>
-                    <th>Visée</th>
+                    <th>
+                        <button class="btn btn-warning pull-right"
+                                ng:class="{'disabled': nb_saisies_visables < 1 }"
+                                ng:if="current_user.profil_actif.profil_id === 'DIR'"
+                                ng:click="valide_all()">
+                            <span class="glyphicon glyphicon-check"></span> Viser la totalité
+                        </button>
+                    </th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng:repeat="saisie in raw_data | orderBy:'cours.date_cours' | selectedRegroupements:selected_regroupements"
-                    ng:class="{'even': $even, 'odd': $odd, 'recent': saisie.recent && current_user.profil_actif.profil_id === 'DIR' }"
-                    ng:if="(scope.montre_valides || saisie.cours.date_validation == null) && (scope.moisCourant == null || saisie.mois == scope.moisCourant)">
+                <tr ng:repeat="saisie in raw_data | filter:filter_saisie( montre_valides, moisCourant, selected_regroupements ) | orderBy:'cours.date_cours'"
+                    ng:class="{'even': $even, 'odd': $odd, 'recent': saisie.recent && current_user.profil_actif.profil_id === 'DIR' }">
                     <td>{{saisie.cours.date_cours | amDateFormat:'Do MMMM YYYY'}}</td>
                     <td ng:bind="detail_regroupement( saisie.regroupement_id ).libelle"></td>
                     <td ng:bind="matieres[ saisie.matiere_id ].libelle_long"></td>

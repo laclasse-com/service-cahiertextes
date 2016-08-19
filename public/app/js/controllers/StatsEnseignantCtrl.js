@@ -9,8 +9,6 @@ angular.module( 'cahierDeTextesClientApp' )
                        $scope.mois = _($locale.DATETIME_FORMATS.MONTH).toArray();
                        $scope.scope = $scope;
                        $scope.moisCourant = null;
-                       $scope.matieres = {};
-                       $scope.classes = [];
                        $scope.montre_valides = current_user.profil_actif.profil_id !== 'DIR';
                        $scope.nb_saisies_visables = 0;
                        $scope.current_user = current_user;
@@ -21,7 +19,66 @@ angular.module( 'cahierDeTextesClientApp' )
                        };
 
                        $scope.detail_regroupement = function( id ) {
-                           return _($scope.classes).findWhere( { id: id } );
+                           return Annuaire.get_regroupement( parseInt( id ) )
+                           // .$promise.then( function( response ) {
+                           //     delete response.etablissement;
+                           //     delete response.niveau;
+                           //     delete response.profs;
+                           //     delete response.eleves;
+
+                           //     return response;
+                           // } );
+                       };
+
+                       $scope.filter_saisie = function( montre_valides, mois, selected_regroupements ) {
+                           return function( saisie ) {
+                               return ( montre_valides || _(saisie.cours.date_validation).isNull() )
+                                   && ( _(mois).isNull() || saisie.mois == mois )
+                                   && ( _.chain(selected_regroupements).pluck('id').contains( saisie.regroupement_id ).value() );
+                           };
+                       };
+
+                       // Graphiques
+                       $scope.graphiques = { pieChart: angular.copy( PIECHART_DEFINITION ),
+                                             multiBarChart: angular.copy( MULTIBARCHART_DEFINITION ),
+                                             populate: function ( data ) {
+                                                 $scope.graphiques.multiBarChart.data = [ { key: 'saisies',
+                                                                                            values: [] },
+                                                                                          { key: 'visas',
+                                                                                            values: [] }];
+                                                 $scope.graphiques.pieChart.data = [ { label: 'saisies',
+                                                                                       value: 0 },
+                                                                                     { label: 'visas',
+                                                                                       value: 0 } ];
+
+                                                 _.chain( data )
+                                                     .groupBy( 'regroupement_id' )
+                                                     .each( function ( regroupement ) {
+                                                         var filled = regroupement.length;
+                                                         var validated = _( regroupement ).where( { valide: true } ).length;
+                                                         var nom_regroupement = $scope.detail_regroupement( regroupement[ 0 ].regroupement_id ).libelle;
+
+                                                         $scope.graphiques.multiBarChart.data[0].values.push( { key: nom_regroupement,
+                                                                                                                x: nom_regroupement,
+                                                                                                                y: filled } );
+                                                         $scope.graphiques.multiBarChart.data[1].values.push( { key: nom_regroupement,
+                                                                                                                x: nom_regroupement,
+                                                                                                                y: validated } );
+
+                                                         $scope.graphiques.pieChart.data[ 0 ].value += filled - validated;
+                                                         $scope.graphiques.pieChart.data[ 1 ].value += validated;
+                                                     } );
+                                             }
+                                           };
+
+                       $scope.select_all_regroupements = function() {
+                           $scope.selected_regroupements = $scope.classes;
+                           $scope.graphiques.populate( $scope.raw_data );
+                       };
+
+                       $scope.select_no_regroupements = function() {
+                           $scope.selected_regroupements = [];
+                           $scope.graphiques.populate( $scope.raw_data );
                        };
 
                        $scope.valide = function( saisie ) {
@@ -38,15 +95,11 @@ angular.module( 'cahierDeTextesClientApp' )
                                    }
 
                                    $scope.nb_saisies_visables = calc_nb_saisies_visables( $scope.raw_data );
+                                   $scope.graphiques.populate( $scope.raw_data );
 
                                    if ( !disable_toastr ) {
-                                       if ( saisie.valide ) {
-                                           toastr.success( 'Séquence pédagogique visée.',
-                                                           'Opération réussie' );
-                                       } else {
-                                           toastr.info( 'Séquence pédagogique dé-visée.',
-                                                        'Opération réussie' );
-                                       }
+                                       toastr.success( 'Séquence pédagogique ' + (saisie.valide ? '' : 'dé-') + 'visée.',
+                                                       'Opération réussie' );
                                    }
                                } );
                            }
@@ -63,9 +116,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                  function () {
                                      var counter = 0;
                                      _.chain($scope.raw_data)
-                                         .reject( function( saisie ) {
-                                             return saisie.valide || saisie.recent;
-                                         } )
+                                         .reject( function( saisie ) { return saisie.valide || saisie.recent; } )
                                          .each( function( saisie ) {
                                              saisie.disable_toastr = true;
                                              $scope.valide( saisie );
@@ -78,65 +129,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                          toastr.success( message, 'Opération réussie' );
                                      }
                                  } );
-                       };
-
-                       // Graphiques
-                       $scope.graphiques = {
-                           pieChart: angular.copy( PIECHART_DEFINITION ),
-                           multiBarChart: angular.copy( MULTIBARCHART_DEFINITION ),
-                           populate: function ( data ) {
-                               $scope.graphiques.multiBarChart.data = [ { key: "saisies",
-                                                                          values: [] },
-                                                                        { key: "visas",
-                                                                          values: [] }];
-                               $scope.graphiques.pieChart.data = [ { label: 'saisies',
-                                                                     value: 0 },
-                                                                   { label: 'visas',
-                                                                     value: 0 } ];
-
-                               _.chain( data )
-                                   .select( function( saisie ) {
-                                       return ( _($scope.moisCourant).isNull() || saisie.mois === $scope.moisCourant ) && _.chain($scope.selected_regroupements).pluck( 'id' ).contains( saisie.regroupement_id ).value();
-                                   } )
-                                   .groupBy( 'regroupement_id' )
-                                   .each( function ( classe ) {
-                                       var filled = classe.length;
-                                       var validated = _( classe ).where( { valide: true } ).length;
-                                       var nom_regroupement = $scope.detail_regroupement( classe[ 0 ].regroupement_id ).libelle;
-
-                                       $scope.graphiques.multiBarChart.data[0].values.push( { key: nom_regroupement,
-                                                                                              x: nom_regroupement,
-                                                                                              y: filled } );
-                                       $scope.graphiques.multiBarChart.data[1].values.push( { key: nom_regroupement,
-                                                                                              x: nom_regroupement,
-                                                                                              y: validated } );
-
-                                       $scope.graphiques.pieChart.data[ 0 ].value += filled - validated;
-                                       $scope.graphiques.pieChart.data[ 1 ].value += validated;
-                                   } );
-                           }
-                       };
-
-                       $scope.process_data = function () {
-                           if ( !_($scope.raw_data).isUndefined() ) {
-                               var _2_semaines_avant = moment().subtract( 2, 'weeks' );
-                               $scope.raw_data = _( $scope.raw_data )
-                                   .map( function ( saisie, index ) {
-                                       // on référence l'index d'origine dans chaque élément pour propager la validation
-                                       saisie.index = index;
-                                       saisie.cours = new Cours( saisie.cours );
-                                       saisie.regroupement_id = parseInt( saisie.regroupement_id );
-                                       saisie.month = moment( saisie.cours.date_cours ).month();
-                                       saisie.recent = moment( saisie.cours.date_cours ).isAfter( _2_semaines_avant );
-                                       // saisie.devoir = new Devoirs( saisie.devoir );
-                                       return saisie;
-                                   } );
-
-                               $scope.nb_saisies_visables = calc_nb_saisies_visables( $scope.raw_data );
-
-                               // consommation des données par les graphiques
-                               $scope.graphiques.populate( $scope.raw_data );
-                           }
                        };
 
                        // Récupération et consommation des données
@@ -161,65 +153,61 @@ angular.module( 'cahierDeTextesClientApp' )
                                        .uniq( function ( classe ) {
                                            return classe.classe_id;
                                        } )
+                                       .compact()
                                        .value();
 
-                                   $scope.enseignant.liste_matieres = _.chain( $scope.enseignant.classes ).pluck('matiere_libelle').uniq().value();
+                                   $scope.enseignant.liste_matieres = _.chain( $scope.enseignant.classes ).pluck('matiere_libelle').uniq().compact().value();
 
                                    $scope.enseignant.prof_principal = _.chain( $scope.enseignant.classes )
                                        .filter( function ( matiere ) { return matiere.prof_principal == 'O'; } )
                                        .pluck( 'classe_libelle' )
-                                       .value();
-                               } );
-
-                       API.get_enseignant( { enseignant_id: $scope.enseignant_id,
-                                             uai: $scope.current_user.profil_actif.etablissement_code_uai } )
-                           .$promise.then( function success( response ) {
-                               var extract = function( saisies, id_name, traitement ) {
-                                   return _.chain( saisies )
-                                       .flatten()
-                                       .pluck( id_name )
                                        .uniq()
                                        .compact()
-                                       .reject( function( item_id ) { return _(item_id).isUndefined(); } )
-                                       .map( function( item_id ) { return traitement( item_id ); } )
-                                       .object()
                                        .value();
-                               };
 
-                               $scope.raw_data = response.saisies;
+                                   API.get_enseignant( { enseignant_id: $scope.enseignant_id,
+                                                         uai: $scope.current_user.profil_actif.etablissement_code_uai } )
+                                       .$promise.then( function success( response ) {
+                                           var _2_semaines_avant = moment().subtract( 2, 'weeks' );
 
-                               $scope.matieres = extract( $scope.raw_data, 'matiere_id',
-                                                          function( matiere_id ) {
-                                                              var matiere = _($scope.current_user.profil_actif.matieres).findWhere({ id: matiere_id });
-                                                              if ( _(matiere).isUndefined() ) {
-                                                                  matiere = Annuaire.get_matiere( matiere_id );
-                                                              }
+                                           $scope.raw_data = _(response.saisies).map( function ( saisie, index ) {
+                                               // on référence l'index d'origine dans chaque élément pour propager la validation
+                                               saisie.index = index;
+                                               saisie.cours = new Cours( saisie.cours );
+                                               saisie.regroupement_id = parseInt( saisie.regroupement_id );
+                                               saisie.month = moment( saisie.cours.date_cours ).month();
+                                               saisie.recent = moment( saisie.cours.date_cours ).isAfter( _2_semaines_avant );
 
-                                                              return [ matiere_id, matiere ];
-                                                          } );
+                                               return saisie;
+                                           } );
 
-                               $scope.classes = _( extract( $scope.raw_data, 'regroupement_id',
-                                                            function( regroupement_id ) {
-                                                                regroupement_id = parseInt( regroupement_id );
-                                                                var regroupement = _($scope.current_user.profil_actif.regroupements).findWhere({ id: regroupement_id });
-                                                                if ( _(regroupement).isUndefined() ) {
-                                                                    regroupement = Annuaire.get_regroupement( regroupement_id );
-                                                                }
-                                                                return [ regroupement_id, regroupement ];
-                                                            } ) ).toArray();
+                                           $scope.matieres = _.chain( $scope.raw_data)
+                                               .pluck('matiere_id')
+                                               .map( function( matiere_id ) {
+                                                   var matiere = _($scope.current_user.profil_actif.matieres).findWhere({ id: matiere_id });
+                                                   if ( _(matiere).isUndefined() ) {
+                                                       matiere = Annuaire.get_matiere( matiere_id );
+                                                   }
 
-                               $scope.select_all_regroupements = function() {
-                                   $scope.selected_regroupements = $scope.classes;
-                                   $scope.process_data();
-                               };
+                                                   return [ matiere_id, matiere ];
+                                               } )
+                                               .object()
+                                               .value();
 
-                               $scope.select_no_regroupements = function() {
-                                   $scope.selected_regroupements = [];
-                                   $scope.process_data();
-                               };
+                                           var promesses_classes = _.chain( $scope.raw_data)
+                                               .pluck('regroupement_id')
+                                               .uniq()
+                                               .map( function( regroupement_id ) {
+                                                   return $scope.detail_regroupement( regroupement_id );
+                                               } )
+                                               .value();
 
-                               $q.all( $scope.classes ).then( function() {
-                                   $scope.select_all_regroupements();
+                                           $scope.nb_saisies_visables = calc_nb_saisies_visables( $scope.raw_data );
+
+                                           $q.all( promesses_classes ).then( function( response ) {
+                                               $scope.classes = response;
+                                               $scope.select_all_regroupements();
+                                           } );
+                                       } );
                                } );
-                           } );
                    } ] );
