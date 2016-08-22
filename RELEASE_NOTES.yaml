@@ -31,3 +31,6 @@
         - corrections mineures
       1:
         - correction mineure
+      2:
+        - refonte de l'écran 'Statistique enseignant'
+        - Ajout de la fonction de suppression en masse de créneaux dans l'écran 'Tableau de bord par classes'
