@@ -28,7 +28,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                // Voir quel est le profil
                                response.is = function( profil_id ) {
-                                   return this.profil_actif['profil_id'] == profil_id;
+                                   return this.profil_actif.profil_id == profil_id;
                                };
 
                                return response;
