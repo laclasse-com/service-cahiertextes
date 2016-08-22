@@ -21,12 +21,8 @@ angular.module( 'cahierDeTextesClientApp' )
                           while ( end_of_last_august.month() !== 7 ) {
                               end_of_last_august.subtract( 1, 'month' );
                           }
-                          var do_it = function () {
-                              _(creneaux_id).each( function( id ) {
-                                  CreneauxEmploiDuTemps.delete( { id: id,
-                                                                  date_creneau: end_of_last_august.toDate() } );
-                              } );
-                          };
+                          end_of_last_august = end_of_last_august.toDate();
+
                           swal( { title: 'ATTENTION',
                                   text: 'Ceci supprimera les ' + creneaux_id.length + 'créneaux',
                                   type: 'warning',
@@ -34,7 +30,12 @@ angular.module( 'cahierDeTextesClientApp' )
                                   confirmButtonColor: '#ff6b55',
                                   confirmButtonText: 'Confirmer',
                                   cancelButtonText: 'Annuler' },
-                                do_it );
+                                function () {
+                                    _(creneaux_id).each( function( id ) {
+                                        CreneauxEmploiDuTemps.delete( { id: id,
+                                                                        date_creneau: end_of_last_august } );
+                                    } );
+                                } );
                       };
 
                       $scope.select_all_regroupements = function() {
