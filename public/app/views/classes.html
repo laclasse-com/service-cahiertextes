@@ -49,13 +49,15 @@ data-ng-repeat="classe in individualCharts.classes | orderBy:'regroupement.libel
                 <ul>
                     <li>{{classe.classe.creneaux_emploi_du_temps.vides.length}} créneaux vierges
                         <button class="btn btn-danger btn-xs pull-right"
-                                ng:click="delete_creneaux( classe.classe.creneaux_emploi_du_temps.vides )">
+                                ng:click="delete_creneaux( classe.classe.creneaux_emploi_du_temps.vides )"
+                                ng:if="classe.classe.creneaux_emploi_du_temps.vides.length > 0">
                             <i class="glyphicon glyphicon-trash"></i>
                         </button>
                     </li>
                     <li>{{classe.classe.creneaux_emploi_du_temps.pleins.length}} créneaux avec saisies
                         <button class="btn btn-danger btn-xs pull-right"
-                                ng:click="delete_creneaux( classe.classe.creneaux_emploi_du_temps.pleins )">
+                                ng:click="delete_creneaux( classe.classe.creneaux_emploi_du_temps.pleins )"
+                                ng:if="classe.classe.creneaux_emploi_du_temps.pleins.length > 0">
                             <i class="glyphicon glyphicon-trash"></i>
                         </button>
                     </li>
