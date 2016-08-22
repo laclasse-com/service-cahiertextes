@@ -33,15 +33,35 @@
 </div>
 
 <div class="panel panel-default">
-    <div class="panel-body row">
-        <nvd3 class="col-md-4" data="pieChart.data" options="pieChart.options"></nvd3>
-        <nvd3 class="col-md-8" data="multiBarChart.data" options="multiBarChart.options"></nvd3>
+    <div class="panel-body">
+        <div class="row">
+            <nvd3 class="col-md-4" data="pieChart.data" options="pieChart.options"></nvd3>
+            <nvd3 class="col-md-8" data="multiBarChart.data" options="multiBarChart.options"></nvd3>
+        </div>
+        <div class="row">
+            <ul class="col-md-12">
+                <li class="label label-primary">{{creneaux_emploi_du_temps.vides.length}} créneaux vierges
+                    <button class="btn btn-danger btn-xs"
+                            ng:click="delete_creneaux( classe.classe.creneaux_emploi_du_temps.vides )"
+                            ng:if="creneaux_emploi_du_temps.vides.length > 0">
+                        <i class="glyphicon glyphicon-trash"></i>
+                    </button>
+                </li>
+                <li class="label label-success">{{creneaux_emploi_du_temps.pleins.length}} créneaux avec saisies
+                    <button class="btn btn-danger btn-xs"
+                            ng:click="delete_creneaux( classe.classe.creneaux_emploi_du_temps.pleins )"
+                            ng:if="creneaux_emploi_du_temps.pleins.length > 0">
+                        <i class="glyphicon glyphicon-trash"></i>
+                    </button>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 
 <div class="col-md-12" data-ng-if="!classe">
     <div class="col-md-3"
-data-ng-repeat="classe in individualCharts.classes | orderBy:'regroupement.libelle'">
+         data-ng-repeat="classe in individualCharts.classes | orderBy:'regroupement.libelle'">
         <div class="panel panel-default">
             <div class="panel-heading"><h3 class="panel-title">{{classe.regroupement.libelle}}</h3></div>
             <div class="panel-body">
