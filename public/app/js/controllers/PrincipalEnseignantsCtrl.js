@@ -17,10 +17,6 @@ angular.module( 'cahierDeTextesClientApp' )
                           $scope.filter_data();
                       };
 
-                      var htmlify_classes_list = function( classes ) {
-                          return '<p>Classes : <ul><li>' + _(classes).map( function( classe ) { return classe.classe_libelle; } ).join( '</li><li>' ) + '</li></ul></p>';
-                      };
-
                       $scope.filter_data = function(  ) {
                           _($scope.individualCharts.enseignants)
                               .each( function( chart ) {
@@ -37,7 +33,6 @@ angular.module( 'cahierDeTextesClientApp' )
                           add: function( enseignant ) {
                               var chart = { enseignant: enseignant,
                                             display: true,
-                                            html_classes: htmlify_classes_list( enseignant.classes ),
                                             pieChart: angular.copy( PIECHART_DEFINITION ) };
 
                               chart.pieChart.data = [ { label: 'saisies',
