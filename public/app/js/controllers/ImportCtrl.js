@@ -98,7 +98,6 @@ angular.module( 'cahierDeTextesClientApp' )
 
                       // ********** counters
                       $scope.update_counters = function() {
-                          console.log('$scope.update_counters()')
                           var filtered_creneaux = $filter('filter')( $scope.creneaux, $scope.filter_creneau( $scope.ui, $scope.selected ) );
                           $scope.counters = {};
 
@@ -117,7 +116,6 @@ angular.module( 'cahierDeTextesClientApp' )
 
                       // ********** readiness
                       $scope.update_creneaux_readiness = function() {
-                          console.log('$scope.update_creneaux_readiness()')
                           _($scope.creneaux).each( function( creneau ) {
                               creneau.readiness = { matiere: !_($scope.pronote.matieres[ creneau.Matiere.Ident ].laclasse).isUndefined(),
                                                     salle: !_(creneau.Salle).isUndefined(),
@@ -136,7 +134,6 @@ angular.module( 'cahierDeTextesClientApp' )
 
                       // ACTIONS
                       $scope.load_data = function( fichier ) {
-                          console.log('$scope.load_data()')
                           var toasts = {
                               file_loading: toastr.info( '', '<i class="fa fa-spinner fa-pulse"></i> Chargement du fichier', toastr_config )
                           };
@@ -377,7 +374,6 @@ angular.module( 'cahierDeTextesClientApp' )
                       };
 
                       $scope.process_import = function() {
-                          console.log('$scope.process_import()')
                           var bulk_package_size = 15;
                           $scope.ui.processing = true;
 
