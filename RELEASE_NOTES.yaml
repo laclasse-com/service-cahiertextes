@@ -40,3 +40,7 @@
         - Corrections mineures
       5:
         - correction de la prise en compte des semaines actives lors de l'import Pronote
+      6:
+        - améliorations visuelles des semainiers
+        - inversion des actions sur glissement dans l'emploi du temps
+        - correction des contrôles horaires dans la fenêtre de modification de créneau
