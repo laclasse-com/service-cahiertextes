@@ -38,3 +38,5 @@
         - Ajout de la fonction de suppression en masse globale de créneaux dans l'écran 'Tableau de bord par classes'
       4:
         - Corrections mineures
+      5:
+        - correction de la prise en compte des semaines actives lors de l'import Pronote
