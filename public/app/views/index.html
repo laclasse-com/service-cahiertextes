@@ -1,8 +1,8 @@
-<header data-ng-controller="HeaderCtrl"
-        data-ng-class="{'embedded': embedded}">
-    <iframe data-ng-src="{{DOCS_URL_login}}" style="display:none;"></iframe>
+<header ng:controller="HeaderCtrl"
+        ng:class="{'embedded': embedded}">
+    <iframe ng:src="{{DOCS_URL_login}}" style="display:none;"></iframe>
 
-    <div class="col-md-12 user" data-ng-if="!embedded" data-ng-cloak>
+    <div class="col-md-12 user" ng:if="!embedded" ng:cloak>
         <div class="pull-right">
             {{current_user['prenom']}} {{current_user['nom']}}
             <a class="btn btn-danger" href="logout" uib-tooltip="Déconnexion" tooltip-placement="bottom"><i class="glyphicon glyphicon-log-out"></i></a>
@@ -11,39 +11,39 @@
 
     <div class="onglets">
         <a class="btn"
-           data-ng-repeat="tab in tabs"
+           ng:repeat="tab in tabs"
            data-ui-sref="{{tab.uisref}}"
-           data-ng-class="{'btn-warning': tab.active, 'btn-default': !tab.active}"
-           data-ng-click="set_active_tab( tab.uisref )">
+           ng:class="{'btn-warning': tab.active, 'btn-default': !tab.active}"
+           ng:click="set_active_tab( tab.uisref )">
             <span class="{{tab.css_class}}"></span> {{tab.heading}}
         </a>
 
         <select class="pull-right choix-enfant"
-                data-ng-if="current_user && current_user.profil_actif.profil_id === 'TUT'"
-                data-ng-options="enfant as enfant.enfant.prenom+' '+enfant.enfant.nom for enfant in current_user.enfants track by enfant.enfant.id"
-                data-ng-model="current_user.enfant_actif"
-                data-ng-change="reload()"></select>
+                ng:if="current_user && current_user.profil_actif.profil_id === 'TUT'"
+                ng:options="enfant as enfant.enfant.prenom+' '+enfant.enfant.nom for enfant in current_user.enfants track by enfant.enfant.id"
+                ng:model="current_user.enfant_actif"
+                ng:change="reload()"></select>
     </div>
 </header>
 
 
 <div id="ui-view-content"
      ui-view="content"
-     data-ng-class="{'embedded': embedded}"></div>
+     ng:class="{'embedded': embedded}"></div>
 
 <footer class="col-md-12"
-        data-ng-controller="FooterCtrl" data-ng-cloak>
+        ng:controller="FooterCtrl" ng:cloak>
     <div class="pull-left">
         <div class="btn-group" uib-dropdown>
             <button uib-dropdown-toggle type="button" class="btn btn-xs btn-default uib-dropdown-toggle">
                 <span class="glyphicon glyphicon-cog"></span> Préférences
             </button>
             <ul uib-dropdown-menu class="uib-dropdown-menu user-preferences" role="menu">
-                <li><label><checkbox data-ng-model="current_user.parametrage_cahier_de_textes.affichage_week_ends"
-                                     data-ng-change="save_and_reload()"></checkbox> Afficher les week-ends</label></li>
+                <li><label><checkbox ng:model="current_user.parametrage_cahier_de_textes.affichage_week_ends"
+                                     ng:change="save_and_reload()"></checkbox> Afficher les week-ends</label></li>
                 <li class="divider"></li>
-                <li><label><checkbox data-ng-model="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir"
-                                     data-ng-change="save_and_reload()"></checkbox> Afficher les types de devoirs</label></li
+                <li><label><checkbox ng:model="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir"
+                                     ng:change="save_and_reload()"></checkbox> Afficher les types de devoirs</label></li
             </ul>
         </div>
     </div>

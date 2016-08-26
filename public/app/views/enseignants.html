@@ -4,8 +4,8 @@
             <div class="ui-select-wrapper">
                 <ui-select multiple class="pull-left" theme="bootstrap"
                            append-to-body="true"
-                           data-ng-change="filter_data()"
-                           data-ng-model="scope.selected_regroupements">
+                           ng:change="filter_data()"
+                           ng:model="scope.selected_regroupements">
                     <ui-select-match placeholder="Regroupement(s)...">{{$item.libelle}}</ui-select-match>
                     <ui-select-choices repeat="regroupement in regroupements | orderBy:['type','libelle']"
                                        group-by="'type'">
@@ -13,9 +13,9 @@
                     </ui-select-choices>
                 </ui-select>
                 <button class="btn btn-xs btn-primary pull-left"
-                        data-ng-click="select_all_regroupements()"><span class="glyphicon glyphicon-certificate"></span></button>
+                        ng:click="select_all_regroupements()"><span class="glyphicon glyphicon-certificate"></span></button>
                 <button class="btn btn-xs btn-default pull-left"
-                        data-ng-click="select_no_regroupements()"><span class="glyphicon glyphicon-erase"></span></button>
+                        ng:click="select_no_regroupements()"><span class="glyphicon glyphicon-erase"></span></button>
             </div>
         </div>
 
@@ -23,8 +23,8 @@
 </div>
 
 <div class="col-md-3 bloc-enseignant"
-     data-ng-repeat="chart in individualCharts.enseignants | orderBy:'enseignant.details.full_name'"
-     data-ng-if="chart.display">
+     ng:repeat="chart in individualCharts.enseignants | orderBy:'enseignant.details.full_name'"
+     ng:if="chart.display">
     <div class="panel panel-default">
         <div class="panel-heading">
             <span class="glyphicon glyphicon-home pull-right"
@@ -40,11 +40,11 @@
             </h4>
         </div>
         <div class="panel-body">
-            <span data-ng-if="chart.pieChart.data[0].value + chart.pieChart.data[1].value == 0">
+            <span ng:if="chart.pieChart.data[0].value + chart.pieChart.data[1].value == 0">
                 Aucune saisie à ce jour.
             </span>
             <nvd3 data="chart.pieChart.data" options="chart.pieChart.options"
-                  data-ng-if="chart.pieChart.data[0].value + chart.pieChart.data[1].value > 0">
+                  ng:if="chart.pieChart.data[0].value + chart.pieChart.data[1].value > 0">
             </nvd3>
         </div>
     </div>

@@ -1,64 +1,64 @@
 <div class="panel panel-default cahier-de-textes"
-     data-ng-swipe-left="decr_offset()"
-     data-ng-swipe-right="incr_offset()">
+     ng:swipe-left="decr_offset()"
+     ng:swipe-right="incr_offset()">
     <div class="panel-heading">
-            <div class="col-md-12" data-ng-if="current_user.profil_actif.profil_id === 'ENS' || current_user.profil_actif.profil_id === 'DOC'">
+        <div class="col-md-12" ng:if="current_user.profil_actif.profil_id === 'ENS' || current_user.profil_actif.profil_id === 'DOC'">
 
-                    <div class="ui-select-wrapper">
-                            <ui-select multiple class="pull-left" theme="bootstrap"
-                                    append-to-body="true"
-                                       data-ng-model="scope.selected_regroupements"
-                                       data-ng-change="update_regroupements_in_url">
-                                <ui-select-match placeholder="Regroupement(s)...">{{$item.libelle}}</ui-select-match>
-                                <ui-select-choices repeat="classe in current_user.profil_actif.regroupements | orderBy:['type','libelle']"
-                                                   group-by="'type'">
-                                    {{classe.libelle}}
-                                </ui-select-choices>
-                            </ui-select>
-                            <button class="btn btn-xs btn-primary"
-                                    data-ng-click="select_all_regroupements()"><span class="glyphicon glyphicon-certificate"></span></button>
-                            <button class="btn btn-xs btn-default"
-                                    data-ng-click="select_no_regroupements()"><span class="glyphicon glyphicon-erase"></span></button>
-                    </div>
+            <div class="ui-select-wrapper">
+                <ui-select multiple class="pull-left" theme="bootstrap"
+                           append-to-body="true"
+                           ng:model="scope.selected_regroupements"
+                           ng:change="update_regroupements_in_url">
+                    <ui-select-match placeholder="Regroupement(s)...">{{$item.libelle}}</ui-select-match>
+                    <ui-select-choices repeat="classe in current_user.profil_actif.regroupements | orderBy:['type','libelle']"
+                                       group-by="'type'">
+                        {{classe.libelle}}
+                    </ui-select-choices>
+                </ui-select>
+                <button class="btn btn-xs btn-primary"
+                        ng:click="select_all_regroupements()"><span class="glyphicon glyphicon-certificate"></span></button>
+                <button class="btn btn-xs btn-default"
+                        ng:click="select_no_regroupements()"><span class="glyphicon glyphicon-erase"></span></button>
+            </div>
 
-                    <select data-ng-model="scope.period_offset"
-                            data-ng-options="period.offset as period.label for period in period_offsets_list">
+            <select ng:model="scope.period_offset"
+                    ng:options="period.offset as period.label for period in period_offsets_list">
+            </select>
+            <button class="btn btn-default" ng:click="incr_offset()"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></button>
+            <button class="btn btn-default" ng:click="decr_offset()"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
+
+            <div class="pull-right" ng:if="!complet">
+                <label style="line-height: 34px;"><span class="new-SP-or-devoir">Nouvelle séquence pédagogique ou devoir pour le :</span>
+                    <select class="pull-right"
+                            ng:model="selected_creneau_vide"
+                            ng:options="creneau as ( creneau | formateCreneau ) group by creneau.regroupement.libelle for creneau in creneaux_vides | orderBy:['creneau.regroupement.libelle', 'start'] | filter:selected_regroupement_id" >
+                        <option value="" selected>Sélectionnez un créneau...</option>
                     </select>
-                    <button class="btn btn-default" data-ng-click="incr_offset()"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></button>
-                    <button class="btn btn-default" data-ng-click="decr_offset()"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
-
-                    <div class="pull-right" data-ng-if="!complet">
-                        <label style="line-height: 34px;"><span class="new-SP-or-devoir">Nouvelle séquence pédagogique ou devoir pour le :</span>
-                            <select class="pull-right"
-                                    data-ng-model="selected_creneau_vide"
-                                    data-ng-options="creneau as ( creneau | formateCreneau ) group by creneau.regroupement.libelle for creneau in creneaux_vides | orderBy:['creneau.regroupement.libelle', 'start'] | filter:selected_regroupement_id" >
-                                <option value="" selected>Sélectionnez un créneau...</option>
-                            </select>
-                        </label>
-                        <button class="btn btn-primary pull-right"
-                                data-ng-if="selected_creneau_vide"
-                                data-ng-click="edition_creneau( selected_creneau_vide )" >
-                            <span class="glyphicon glyphicon-pencil"></span>
-                        </button>
-                    </div>
+                </label>
+                <button class="btn btn-primary pull-right"
+                        ng:if="selected_creneau_vide"
+                        ng:click="edition_creneau( selected_creneau_vide )" >
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </button>
             </div>
-            <div class="col-md-12">
-                <h2>
-                    Du {{from_date | amDateFormat:'Do MMMM YYYY'}} au {{to_date | amDateFormat:'Do MMMM YYYY'}}
-                </h2>
-            </div>
-            <div class="clearfix"></div>
+        </div>
+        <div class="col-md-12">
+            <h2>
+                Du {{from_date | amDateFormat:'Do MMMM YYYY'}} au {{to_date | amDateFormat:'Do MMMM YYYY'}}
+            </h2>
+        </div>
+        <div class="clearfix"></div>
     </div>
     <div class="panel-body">
         <ul class="list-group">
-            <li data-ng-repeat="creneau in creneaux_saisies | orderBy:'start':true | selectedRegroupements:selected_regroupements"
+            <li ng:repeat="creneau in creneaux_saisies | orderBy:'start':true | selectedRegroupements:selected_regroupements"
                 class="creneau list-group-item">
 
                 <div class="row date">
                     <h3>{{creneau.start | amDateFormat: 'dddd D MMMM'}}</h3>
                 </div>
                 <div class="row detail"
-                     data-ng-class="{'vise': creneau.cours !== null && creneau.cours.date_validation !== null}">
+                     ng:class="{'vise': creneau.cours !== null && creneau.cours.date_validation !== null}">
                     <div class="col-md-2 infos">
                         <span class="regroupement">{{creneau.regroupement.libelle}}</span>
                         <span class="matiere">{{creneau.matiere.libelle_long}}</span>
@@ -66,27 +66,27 @@
                     </div>
 
                     <div class="col-md-4 sequence-pedagogique">
-                        <span data-ng-bind-html="creneau.cours.contenu"></span>
+                        <span ng:bind-html="creneau.cours.contenu"></span>
 
                         <div class="row col-md-12 ressources">
-                            <div class="attached-document" data-ng-repeat="ressource in creneau.cours.ressources">
+                            <div class="attached-document" ng:repeat="ressource in creneau.cours.ressources">
                                 <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
                             </div>
                         </div>
                     </div>
 
                     <ul class="col-md-4 devoirs">
-                        <li data-ng-repeat="devoir in creneau.devoirs | orderBy:'date_due':true"
+                        <li ng:repeat="devoir in creneau.devoirs | orderBy:'date_due':true"
                             class="devoir"
-                            data-ng-class="{ 'type1': devoir.type_devoir_id == 1, 'type2': devoir.type_devoir_id == 2, 'type3': devoir.type_devoir_id == 3, 'type4': devoir.type_devoir_id == 4, 'type5': devoir.type_devoir_id == 5, 'type6': devoir.type_devoir_id == 6 }" >
+                            ng:class="{ 'type1': devoir.type_devoir_id == 1, 'type2': devoir.type_devoir_id == 2, 'type3': devoir.type_devoir_id == 3, 'type4': devoir.type_devoir_id == 4, 'type5': devoir.type_devoir_id == 5, 'type6': devoir.type_devoir_id == 6 }" >
 
                             <span class="type">{{devoir.type_devoir_description}}</span>
-                            <span class="temps-estime" data-ng-if="devoir.temps_estime">{{devoir.temps_estime * 5}} minutes</span>
+                            <span class="temps-estime" ng:if="devoir.temps_estime">{{devoir.temps_estime * 5}} minutes</span>
 
-                            <span class="contenu" data-ng-bind-html="devoir.contenu"></span>
+                            <span class="contenu" ng:bind-html="devoir.contenu"></span>
 
                             <div class="col-md-12 ressources">
-                                <div class="attached-document" data-ng-repeat="ressource in devoir.ressources">
+                                <div class="attached-document" ng:repeat="ressource in devoir.ressources">
                                     <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
                                 </div>
                             </div>
@@ -95,7 +95,7 @@
 
                     <div class="col-md-2 actions">
                         <button class="btn btn-default"
-                                data-ng-click="edition_creneau( creneau )" >Accéder</button>
+                                ng:click="edition_creneau( creneau )" >Accéder</button>
                     </div>
                 </div>
 

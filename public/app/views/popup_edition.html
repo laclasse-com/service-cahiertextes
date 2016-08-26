@@ -39,7 +39,7 @@
                 de
                 <div uib-dropdown class="uib-dropdown horaire">
                     <a uib-dropdown-toggle class="uib-dropdown-toggle" role="button" data-toggle="uib-dropdown" data-target="#" href="">{{creneau.tmp_heure_debut | amDateFormat: 'HH:mm'}}</a>
-                    <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng-click="$event.stopPropagation()">
+                    <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng:click="$event.stopPropagation()">
                         <uib-timepicker class="uib-timepicker"
                                         ng:model="creneau.tmp_heure_debut"
                                         data-show-meridian="false"
@@ -50,7 +50,7 @@
                 à
                 <div uib-dropdown class="uib-dropdown horaire">
                     <a uib-dropdown-toggle class="uib-dropdown-toggle" role="button" data-toggle="uib-dropdown" data-target="#" href="">{{creneau.tmp_heure_fin | amDateFormat: 'HH:mm'}}</a>
-                    <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng-click="$event.stopPropagation()">
+                    <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng:click="$event.stopPropagation()">
                         <uib-timepicker class="uib-timepicker"
                                         ng:model="creneau.tmp_heure_fin"
                                         data-show-meridian="false"
@@ -135,7 +135,7 @@
                                         ng:class="{'disabled': faulty_docs_app}">
                                     <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
                                 </button>
-                                <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng-click="$event.stopPropagation()">
+                                <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng:click="$event.stopPropagation()">
                                     <div cartable
                                          class="treecontrol-container"
                                          data-racine="cartable.files"
@@ -215,7 +215,7 @@
                                               ng:model="devoir.temps_estime"
                                               max="15"
                                               readonly="false"
-                                              ng-click="is_dirty( devoir )"
+                                              ng:click="is_dirty( devoir )"
                                               on-hover="estimation_over(devoir, value)"
                                               on-leave="estimation_leave(devoir)"
                                               state-on="'temps-est-on'"
@@ -245,7 +245,7 @@
                                                 ng:class="{'disabled': faulty_docs_app}">
                                             <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
                                         </button>
-                                        <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng-click="$event.stopPropagation()">
+                                        <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng:click="$event.stopPropagation()">
                                             <div cartable
                                                  class="treecontrol-container"
                                                  data-racine="cartable.files"
@@ -318,7 +318,7 @@
                                       ng:model="devoir.temps_estime"
                                       max="15"
                                       readonly="false"
-                                      ng-click="is_dirty( devoir )"
+                                      ng:click="is_dirty( devoir )"
                                       on-hover="estimation_over(devoir, value)"
                                       on-leave="estimation_leave(devoir)"
                                       state-on="'temps-est-on'"
@@ -353,7 +353,7 @@
                                         ng:class="{'disabled': faulty_docs_app}">
                                     <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
                                 </button>
-                                <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng-click="$event.stopPropagation()">
+                                <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng:click="$event.stopPropagation()">
                                     <div cartable
                                          class="treecontrol-container"
                                          data-racine="cartable.files"
