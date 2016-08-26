@@ -862,6 +862,9 @@ fieldset {
         background-color: #b2b2b2;
         border-color: transparent;
         box-shadow: 0;
+        &.active {
+            background-color: #b59021;
+        }
     }
     .this-week {
         font-weight: bold;
