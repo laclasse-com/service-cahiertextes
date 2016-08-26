@@ -222,8 +222,9 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                           // 4. treating Cours
                                           $scope.beautify_semainier = function( semainier ) {
+                                              // var pivot = 17;
                                               var bsemainier = Utils.padEnd( semainier.toString( 2 ), 53, '0' );
-                                              var fixed_bsemainier = bsemainier.substr( 17 ) + bsemainier.substr( 0, 17 );
+                                              // var fixed_bsemainier = bsemainier.slice( pivot, bsemainier.length ) + bsemainier.substr( 0, pivot );
 
                                               return '<div class="semainier-tooltip gris1">' +
                                                   _.chain(Utils.overlay_semainier())
@@ -234,7 +235,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                                       month_html += _(month.semaines).map( function( week ) {
                                                           var week_html = '<span class="week';
                                                           if ( Utils.sont_ce_les_vacances( week.semaine, ZONE ) ) { week_html += ' gris1'; }
-                                                          if ( fixed_bsemainier[ week.semaine ] === '1' ) { week_html += ' orange-moins'; }
+                                                          if ( bsemainier[ week.semaine ] === '1' ) { week_html += ' orange-moins'; }
                                                           week_html += '">' + week.semaine + '</span>';
 
                                                           return week_html;
@@ -255,19 +256,35 @@ angular.module( 'cahierDeTextesClientApp' )
                                                       return _(cours.Professeur).map( function( enseignant ) {
                                                           var compute_cours = function( type_regroupement ) {
                                                               return function( regroupement ) {
+                                                                  var fix_semainier = function( semainier_pronote ) {
+                                                                      var pivot = 17;
+                                                                      var bsemainier = parseInt( semainier_pronote ).toString( 2 );
+                                                                      bsemainier = Utils.padEnd( bsemainier, 53, '0' );
+
+                                                                      var fixed_bsemainier = bsemainier.slice( pivot, bsemainier.length ) + bsemainier.substr( 0, pivot );
+                                                                      var fixed_semainier = parseInt( fixed_bsemainier, 2 );
+
+                                                                      return fixed_semainier;
+                                                                  };
+
                                                                   var this_cours = angular.copy( cours );
                                                                   this_cours.is_displayed = true;
                                                                   this_cours.Matiere = matiere;
                                                                   this_cours.Professeur = enseignant;
+                                                                  this_cours.Professeur.Semaines = fix_semainier( this_cours.Professeur.Semaines );
+
                                                                   if ( type_regroupement === 'Classe' ) {
                                                                       this_cours.Classe = regroupement;
+                                                                      this_cours.Classe.Semaines = fix_semainier( this_cours.Classe.Semaines );
                                                                   } else {
                                                                       this_cours.Groupe = regroupement;
+                                                                      this_cours.Groupe.Semaines = fix_semainier( this_cours.Groupe.Semaines );
                                                                   }
 
                                                                   if ( _(cours).has('Salle') ) {
                                                                       return _(cours.Salle).map( function( salle ) {
                                                                           this_cours.Salle = salle;
+                                                                          this_cours.Salle.Semaines = fix_semainier( this_cours.Salle.Semaines );
 
                                                                           return this_cours;
                                                                       } );
