@@ -40,22 +40,24 @@
                 <div uib-dropdown class="uib-dropdown horaire">
                     <a uib-dropdown-toggle class="uib-dropdown-toggle" role="button" data-toggle="uib-dropdown" data-target="#" href="">{{creneau.tmp_heure_debut | amDateFormat: 'HH:mm'}}</a>
                     <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng:click="$event.stopPropagation()">
-                        <uib-timepicker class="uib-timepicker"
-                                        ng:model="creneau.tmp_heure_debut"
-                                        data-show-meridian="false"
-                                        data-minute-step="5"
-                                        ng:required="true"></uib-timepicker>
+                        <div uib-timepicker
+                             class="uib-timepicker"
+                             ng:model="creneau.tmp_heure_debut"
+                             data-show-meridian="false"
+                             data-minute-step="5"
+                             ng:required="true"></div>
                     </div>
                 </div>
                 à
                 <div uib-dropdown class="uib-dropdown horaire">
                     <a uib-dropdown-toggle class="uib-dropdown-toggle" role="button" data-toggle="uib-dropdown" data-target="#" href="">{{creneau.tmp_heure_fin | amDateFormat: 'HH:mm'}}</a>
                     <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng:click="$event.stopPropagation()">
-                        <uib-timepicker class="uib-timepicker"
-                                        ng:model="creneau.tmp_heure_fin"
-                                        data-show-meridian="false"
-                                        data-minute-step="5"
-                                        ng:required="true"></uib-timepicker>
+                        <div uib-timepicker
+                             class="uib-timepicker"
+                             ng:model="creneau.tmp_heure_fin"
+                             data-show-meridian="false"
+                             data-minute-step="5"
+                             ng:required="true"></div>
                     </div>
                 </div>
             </div>
