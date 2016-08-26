@@ -1031,6 +1031,14 @@ legend {
                 float: left;
                 text-align: center;
                 line-height: 2;
+                color: #333;
+                font-weight: bold;
+                &.active {
+                    color: #fff;
+                }
+                &.vacances {
+                    color: #444;
+                }
             }
         }
     }

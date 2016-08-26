@@ -231,8 +231,8 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                                       month_html += _(month.semaines).map( function( week ) {
                                                           var week_html = '<span class="week';
-                                                          if ( Utils.sont_ce_les_vacances( week.semaine, ZONE ) ) { week_html += ' gris1'; }
-                                                          if ( bsemainier[ week.semaine ] === '1' ) { week_html += ' orange-moins'; }
+                                                          if ( Utils.sont_ce_les_vacances( week.semaine, ZONE ) ) { week_html += ' vacances gris2'; }
+                                                          if ( bsemainier[ week.semaine ] === '1' ) { week_html += ' active orange-moins'; }
                                                           week_html += '">' + week.semaine + '</span>';
 
                                                           return week_html;
