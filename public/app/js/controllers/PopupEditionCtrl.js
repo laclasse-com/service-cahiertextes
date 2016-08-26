@@ -288,7 +288,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                    };
 
                                    // Séquence Pédogogique du créneau
-                                   if ( ( $scope.cours.contenu.length > 0 || $scope.cours.ressources.length > 0 ) || ( $scope.cours.devoirs.length > 0 ) ) {
+                                   if ( ( $scope.cours.contenu.length > 0 || ( _($scope.cours).has('ressources') && $scope.cours.ressources.length > 0 ) ) || ( $scope.cours.devoirs.length > 0 ) ) {
                                        var cours_devoirs = _($scope.cours.devoirs).map( function( devoir ) {
                                            return new Devoirs( devoir );
                                        });

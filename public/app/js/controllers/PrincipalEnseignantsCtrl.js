@@ -61,11 +61,17 @@ angular.module( 'cahierDeTextesClientApp' )
                                   .then( function( response ) {
                                       var enseignants_details = _(response).indexBy( 'id_ent' );
 
-                                      $scope.regroupements = _.chain(response).pluck( 'regroupements' ).flatten().map( function( regroupement ) {
-                                          return { id: regroupement.id,
-                                                   libelle: regroupement.libelle,
-                                                   type: regroupement.type == 'CLS' ? 'classe' : 'groupe' };
-                                      } ).uniq( function( regroupement ) { return regroupement.id; } ).value();
+                                      $scope.regroupements = _.chain(response)
+                                          .pluck( 'regroupements' )
+                                          .flatten()
+                                          .where({ etablissement_code: current_user.profil_actif.etablissement_code_uai })
+                                          .map( function( regroupement ) {
+                                              return { id: regroupement.id,
+                                                       libelle: regroupement.libelle,
+                                                       type: regroupement.type == 'CLS' ? 'classe' : 'groupe' };
+                                          } )
+                                          .uniq( function( regroupement ) { return regroupement.id; } )
+                                          .value();
 
                                       $scope.selected_regroupements = $scope.regroupements;
 
