@@ -303,14 +303,14 @@
                                             <span ng:if="creneau.Matiere">{{pronote.matieres[ creneau.Matiere.Ident ].displayed_label}}</span>
                                         </td>
                                         <td ng:class="{'ko rouge': !creneau.readiness.enseignant }">
-                                            <span ng:if="creneau.Professeur">{{pronote.enseignants[ creneau.Professeur.Ident ].displayed_label}} <sup uib-tooltip-html="beautify_semainier( creneau.Professeur.Semaines )" tooltip-trigger="mouseenter">({{creneau.Professeur.Semaines}})</sup></span>
+                                            <span ng:if="creneau.Professeur">{{pronote.enseignants[ creneau.Professeur.Ident ].displayed_label}} <sup uib-tooltip-html="beautify_semainier( creneau.Professeur.Semaines )" tooltip-trigger="'click'">({{creneau.Professeur.Semaines}})</sup></span>
                                         </td>
                                         <td ng:class="{'ko rouge': !creneau.readiness.classe && !creneau.readiness.groupe_eleve }">
-                                            <span ng:if="creneau.Classe">{{pronote.classes[ creneau.Classe.Ident ].Nom}} <sup uib-tooltip-html="beautify_semainier( creneau.Classe.Semaines )" tooltip-trigger="mouseenter">({{creneau.Classe.Semaines}})</sup></span>
-                                            <span ng:if="creneau.Groupe">{{pronote.groupes_eleves[ creneau.Groupe.Ident ].Nom}} <sup uib-tooltip-html="beautify_semainier( creneau.Groupe.Semaines )" tooltip-trigger="mouseenter">({{creneau.Groupe.Semaines}})</sup></span>
+                                            <span ng:if="creneau.Classe">{{pronote.classes[ creneau.Classe.Ident ].Nom}} <sup uib-tooltip-html="beautify_semainier( creneau.Classe.Semaines )" tooltip-trigger="'click'">({{creneau.Classe.Semaines}})</sup></span>
+                                            <span ng:if="creneau.Groupe">{{pronote.groupes_eleves[ creneau.Groupe.Ident ].Nom}} <sup uib-tooltip-html="beautify_semainier( creneau.Groupe.Semaines )" tooltip-trigger="'click'">({{creneau.Groupe.Semaines}})</sup></span>
                                         </td>
                                         <td>
-                                            <span ng:if="creneau.Salle">{{pronote.salles[ creneau.Salle.Ident ].Nom}} <sup uib-tooltip-html="beautify_semainier( creneau.Salle.Semaines )" tooltip-trigger="mouseenter">({{creneau.Salle.Semaines}})</sup></span>
+                                            <span ng:if="creneau.Salle">{{pronote.salles[ creneau.Salle.Ident ].Nom}} <sup uib-tooltip-html="beautify_semainier( creneau.Salle.Semaines )" tooltip-trigger="'click'">({{creneau.Salle.Semaines}})</sup></span>
                                         </td>
                                         <td class="import-readiness"
                                             ng:class="{'vert': creneau.ready, 'rouge': !creneau.ready }">
