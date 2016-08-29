@@ -11,6 +11,6 @@ module Utils
 
     release_notes[ version[0] ][ version[1] ][ version[2] ].to_json
   rescue StandardError
-    []
+    ['']
   end
 end
