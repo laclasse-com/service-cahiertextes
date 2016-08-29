@@ -33,7 +33,6 @@ header {
     background: none repeat scroll 0 0 #fff;
     width: 100%;
     z-index: 1;
-    height: 112px;
     .user {
         padding: 1em;
     }
@@ -286,7 +285,7 @@ h2 {
 
 .bloc-enseignant {
     .panel {
-        height: 11em;
+        min-height: 11em;
     }
     .panel-heading {
         padding-top: 0;
