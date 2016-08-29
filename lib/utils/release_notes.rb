@@ -10,5 +10,7 @@ module Utils
     release_notes = YAML.load( File.read( File.expand_path( '../../../RELEASE_NOTES.yaml', __FILE__ ) ) )
 
     release_notes[ version[0] ][ version[1] ][ version[2] ].to_json
+  rescue StandardError
+    []
   end
 end
