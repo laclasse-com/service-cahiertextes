@@ -16,7 +16,7 @@ module CahierDeTextesApp
         end
 
         app.get "#{APP_PATH}/logout" do
-          protocol = CASAUTH::CONFIG[:ssl] ? 'https://' : 'http://'
+          protocol = CASAUTH::CONFIG[:ssl] ? 'https' : 'http'
           logout! "#{protocol}://#{env['HTTP_HOST']}#{APP_PATH}/"
         end
 
