@@ -16,7 +16,8 @@ module CahierDeTextesApp
         end
 
         app.get "#{APP_PATH}/logout" do
-          logout! "#{env['rack.url_scheme']}://#{env['HTTP_HOST']}#{APP_PATH}/"
+          protocol = CASAUTH::CONFIG[:ssl] ? 'https://' : 'http://'
+          logout! "#{protocol}://#{env['HTTP_HOST']}#{APP_PATH}/"
         end
 
         # Personne ne devrait jamais arriver sur les 2 routes suivantes...

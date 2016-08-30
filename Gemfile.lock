@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/laclasse-com/laclasse-common.git
-  revision: 094056c4819ebb4e59d4905d2705475872ec34ca
+  revision: ee03388536b820c6c4600c17cf2b5774115cfbe2
   specs:
-    laclasse-common (0.2.29)
+    laclasse-common (0.2.30)
       logstash-logger
       redis-rack (~> 1.5.0)
       rest-client
@@ -59,7 +59,7 @@ GEM
     icalendar (2.4.0)
     ice_nine (0.11.2)
     logstash-event (1.2.02)
-    logstash-logger (0.19.0)
+    logstash-logger (0.19.1)
       logstash-event (~> 1.2)
     method_source (0.8.2)
     mime-types (3.1)
