@@ -21,7 +21,7 @@ module CahierDeTextesAPI
         hetablissement = etablissement.to_hash
         # .where { date_creation >= 1.year.ago }
         hetablissement[:nb_creneaux] = CreneauEmploiDuTemps.where( etablissement_id: etablissement.id )
-                                                           .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{1.year.ago}'" )
+                                                           .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{Utils.date_rentree}'" )
                                                            .count
         hetablissement[:imports] = etablissement.imports
 

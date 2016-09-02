@@ -11,7 +11,7 @@ module DataManagement
       emploi_du_temps = CreneauEmploiDuTemps.association_join( :regroupements, :enseignants )
                                             .select_append( :regroupements__semaines_de_presence___semainier_regroupement )
                                             .select_append( :enseignants__semaines_de_presence___semainier_enseignant )
-                                            .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{1.year.ago}'" )
+                                            .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{Utils.date_rentree}'" )
                                             .where( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{fin}')" )
                                             .where( regroupement_id: regroupements_ids )
                                             .all
