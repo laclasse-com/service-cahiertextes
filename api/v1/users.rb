@@ -27,7 +27,7 @@ module CahierDeTextesAPI
               { id: regroupement['matiere_enseignee_id'],
                 libelle_court: regroupement['matiere_libelle'],
                 libelle_long: regroupement['matiere_libelle'] }
-            end.flatten.compact
+            end.flatten.compact.uniq
 
             profil['matieres'] = all_matieres if profil['matieres'].empty?
           elsif %w(DIR).include?( profil['profil_id'] ) || profil['admin']
