@@ -12,15 +12,13 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
     <!-- Ces CSS là référencent de manière relative des ressources -->
-    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/webfont-opensans/css/stylesheet.css?v=<%=APP_VERSION%>" />
-    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/webfont-opensans-condensed/regular/stylesheet.css?v=<%=APP_VERSION%>" />
-    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/webfont-opensans-condensed/italic/stylesheet.css?v=<%=APP_VERSION%>" />
-    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/webfont-opensans-condensed/bold/stylesheet.css?v=<%=APP_VERSION%>" />
-    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/font-awesome/css/font-awesome.min.css?v=<%=APP_VERSION%>" />
-    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/bootstrap/dist/css/bootstrap.min.css?v=<%=APP_VERSION%>" />
-    <link rel='stylesheet' type="text/css" href="<%=APP_PATH%>/app/vendor/textAngular/src/textAngular.css?v=<%=APP_VERSION%>">
+    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/node_modules/opensans-npm-webfont/style.css?v=<%=APP_VERSION%>" />
+    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/node_modules/npm-font-open-sans-condensed/open-sans-condensed.css?v=<%=APP_VERSION%>" />
+    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/node_modules/font-awesome/css/font-awesome.min.css?v=<%=APP_VERSION%>" />
+    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/node_modules/bootstrap/dist/css/bootstrap.min.css?v=<%=APP_VERSION%>" />
+    <link rel='stylesheet' type="text/css" href="<%=APP_PATH%>/app/node_modules/textangular/src/textAngular.css?v=<%=APP_VERSION%>">
 
-    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/vendor/vendor.min.css?v=<%=APP_VERSION%>" />
+    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/node_modules/node_modules.min.css?v=<%=APP_VERSION%>" />
     <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/css/cdt.min.css?v=<%=APP_VERSION%>" />
   </head>
   <body>
@@ -29,8 +27,8 @@
       <![endif]-->
 
       <!--[if lt IE 9]>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/es5-shim/es5-shim.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/json3/lib/json3.min.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/es5-shim/es5-shim.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/json3/lib/json3.min.js?v=<%=APP_VERSION%>"></script>
       <![endif]-->
 
 
@@ -40,45 +38,44 @@
 
 
       <% if ENV['RACK_ENV'] == 'production' %>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/vendor.min.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/node_modules.min.js?v=<%=APP_VERSION%>"></script>
           <script type="text/javascript" src="<%=APP_PATH%>/app/js/cdt.min.js?v=<%=APP_VERSION%>"></script>
       <% else %>
-          <!-- Vendor Javascript -->
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/jquery/dist/jquery.min.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/underscore/underscore-min.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/moment/min/moment-with-locales.min.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/moment-timezone/moment-timezone.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/sweetalert/dist/sweetalert.min.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/rangy/rangy-core.min.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/rangy/rangy-classapplier.min.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/rangy/rangy-selectionsaverestore.min.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/rangy/rangy-serializer.min.js?v=<%=APP_VERSION%>"></script>
+          <!-- Node_Modules Javascript -->
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/jquery/dist/jquery.min.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/underscore/underscore-min.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/moment/min/moment-with-locales.min.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/moment-timezone/moment-timezone.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/sweetalert/dist/sweetalert.min.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/rangy/lib/rangy-core.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/rangy/lib/rangy-classapplier.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/rangy/lib/rangy-selectionsaverestore.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/rangy/lib/rangy-serializer.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/d3/d3.min.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/nvd3/build/nv.d3.min.js?v=<%=APP_VERSION%>"></script>
 
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular/angular.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-touch/angular-touch.min.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-animate/angular-animate.min.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-bootstrap-checkbox/angular-bootstrap-checkbox.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-bootstrap/ui-bootstrap-tpls.min.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-cookies/angular-cookies.min.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-i18n/angular-locale_fr-fr.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-loading-bar/build/loading-bar.min.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-moment/angular-moment.min.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-resource/angular-resource.min.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-sanitize/angular-sanitize.min.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-ui-calendar/src/calendar.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-ui-router/release/angular-ui-router.min.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-nvd3/dist/angular-nvd3.min.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/d3/d3.min.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/fullcalendar/dist/fullcalendar.min.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/fullcalendar/dist/lang-all.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/ng-color-picker/color-picker.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/ng-switcher/dist/ng-switcher.min.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/nvd3/build/nv.d3.min.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/textAngular/dist/textAngular-sanitize.min.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/textAngular/dist/textAngular.min.js?v=<%=APP_VERSION%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-toastr/dist/angular-toastr.tpls.min.js"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/ui-select/dist/select.min.js"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/vendor/angular-cancel-on-navigate/src/angularCancelOnNavigateModule.js"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular/angular.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-touch/angular-touch.min.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-animate/angular-animate.min.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-bootstrap-checkbox/angular-bootstrap-checkbox.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-cookies/angular-cookies.min.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-i18n/angular-locale_fr-fr.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-loading-bar/build/loading-bar.min.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-moment/angular-moment.min.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-resource/angular-resource.min.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-sanitize/angular-sanitize.min.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-ui-calendar/src/calendar.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-ui-router/release/angular-ui-router.min.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-nvd3/dist/angular-nvd3.min.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/fullcalendar/dist/fullcalendar.min.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/fullcalendar/dist/locale-all.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/ng-color-picker/color-picker.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-ui-switch/angular-ui-switch.min.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/textangular/dist/textAngular-sanitize.min.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/textangular/dist/textAngular.min.js?v=<%=APP_VERSION%>"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-toastr/dist/angular-toastr.tpls.min.js"></script>
+          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/ui-select/dist/select.min.js"></script>
 
           <!-- Application Javascript -->
           <script type="text/javascript" src="<%=APP_PATH%>/app/js/app.js?v=<%=APP_VERSION%>"></script>

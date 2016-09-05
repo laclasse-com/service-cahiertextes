@@ -53,21 +53,21 @@ namespace :preprocess_assets do
 
   desc 'Minify CSS using Sass'
   task css: :load_config do
-    STDERR.puts 'Sassification of vendor CSS'
-    uglified = Sass.compile( [ 'public/app/vendor/fullcalendar/dist/fullcalendar.css',
-                               'public/app/vendor/angular-loading-bar/build/loading-bar.min.css',
-                               'public/app/vendor/nvd3/build/nv.d3.min.css',
-                               'public/app/vendor/ng-switcher/dist/ng-switcher.min.css',
-                               'public/app/vendor/ng-color-picker/color-picker.css',
-                               'public/app/vendor/sweetalert/dist/sweetalert.css',
-                               'public/app/vendor/angular-toastr/dist/angular-toastr.css',
-                               'public/app/vendor/laclasse-common-client/css/main.css',
-                               'public/app/vendor/laclasse-common-client/css/bootstrap-theme.css',
-                               'public/app/vendor/ui-select/dist/select.css' ]
+    STDERR.puts 'Sassification of node_modules CSS'
+    uglified = Sass.compile( [ 'public/app/node_modules/fullcalendar/dist/fullcalendar.css',
+                               'public/app/node_modules/angular-loading-bar/build/loading-bar.min.css',
+                               'public/app/node_modules/nvd3/build/nv.d3.min.css',
+                               'public/app/node_modules/angular-ui-switch/angular-ui-switch.min.css',
+                               'public/app/node_modules/ng-color-picker/color-picker.css',
+                               'public/app/node_modules/sweetalert/dist/sweetalert.css',
+                               'public/app/node_modules/angular-toastr/dist/angular-toastr.css',
+                               'public/app/node_modules/laclasse-common-client/css/main.css',
+                               'public/app/node_modules/laclasse-common-client/css/bootstrap-theme.css',
+                               'public/app/node_modules/ui-select/dist/select.css' ]
                                .map { |fichier| File.read( fichier ) }.join,
                              syntax: :scss,
                              style: :compressed )
-    File.open( './public/app/vendor/vendor.min.css', 'w' ).write( uglified )
+    File.open( './public/app/node_modules/node_modules.min.css', 'w' ).write( uglified )
 
     STDERR.puts 'Sassification of application CSS'
     uglified = Sass.compile( [ 'public/app/css/main.scss',
@@ -89,45 +89,44 @@ namespace :preprocess_assets do
     File.open( './public/app/js/cdt.min.js.map', 'w' )
         .write( source_map )
 
-    STDERR.puts 'Uglification of vendor Javascript'
-    uglified, source_map = Uglify.those_files_with_map( [ 'public/app/vendor/jquery/dist/jquery.js',
-                                                          'public/app/vendor/underscore/underscore.js',
-                                                          'public/app/vendor/moment/min/moment-with-locales.js',
-                                                          'public/app/vendor/moment-timezone/moment-timezone.js',
-                                                          'public/app/vendor/sweetalert/dist/sweetalert.min.js',
-                                                          'public/app/vendor/rangy/rangy-core.js',
-                                                          'public/app/vendor/rangy/rangy-classapplier.js',
-                                                          'public/app/vendor/rangy/rangy-selectionsaverestore.js',
-                                                          'public/app/vendor/rangy/rangy-serializer.js',
-                                                          'public/app/vendor/angular/angular.js',
-                                                          'public/app/vendor/angular-touch/angular-touch.js',
-                                                          'public/app/vendor/angular-animate/angular-animate.js',
-                                                          'public/app/vendor/angular-bootstrap-checkbox/angular-bootstrap-checkbox.js',
-                                                          'public/app/vendor/angular-bootstrap/ui-bootstrap-tpls.js',
-                                                          'public/app/vendor/angular-cookies/angular-cookies.js',
-                                                          'public/app/vendor/angular-i18n/angular-locale_fr-fr.js',
-                                                          'public/app/vendor/angular-loading-bar/build/loading-bar.js',
-                                                          'public/app/vendor/angular-moment/angular-moment.js',
-                                                          'public/app/vendor/angular-resource/angular-resource.js',
-                                                          'public/app/vendor/angular-sanitize/angular-sanitize.js',
-                                                          'public/app/vendor/angular-ui-calendar/src/calendar.js',
-                                                          'public/app/vendor/angular-ui-router/release/angular-ui-router.js',
-                                                          'public/app/vendor/angular-nvd3/dist/angular-nvd3.js',
-                                                          'public/app/vendor/d3/d3.js',
-                                                          'public/app/vendor/fullcalendar/dist/fullcalendar.js',
-                                                          'public/app/vendor/fullcalendar/dist/lang-all.js',
-                                                          'public/app/vendor/ng-color-picker/color-picker.js',
-                                                          'public/app/vendor/ng-switcher/dist/ng-switcher.js',
-                                                          'public/app/vendor/nvd3/build/nv.d3.js',
-                                                          'public/app/vendor/textAngular/src/textAngular-sanitize.js',
-                                                          'public/app/vendor/textAngular/src/textAngularSetup.js',
-                                                          'public/app/vendor/textAngular/dist/textAngular.js',
-                                                          'public/app/vendor/angular-toastr/dist/angular-toastr.tpls.js',
-                                                          'public/app/vendor/ui-select/dist/select.js',
-                                                          'public/app/vendor/angular-cancel-on-navigate/src/angularCancelOnNavigateModule.js' ] )
-    File.open( './public/app/vendor/vendor.min.js', 'w' )
+    STDERR.puts 'Uglification of node_modules Javascript'
+    uglified, source_map = Uglify.those_files_with_map( [ 'public/app/node_modules/jquery/dist/jquery.js',
+                                                          'public/app/node_modules/underscore/underscore.js',
+                                                          'public/app/node_modules/moment/min/moment-with-locales.js',
+                                                          'public/app/node_modules/moment-timezone/moment-timezone.js',
+                                                          'public/app/node_modules/sweetalert/dist/sweetalert.min.js',
+                                                          'public/app/node_modules/rangy/lib/rangy-core.js',
+                                                          'public/app/node_modules/rangy/lib/rangy-classapplier.js',
+                                                          'public/app/node_modules/rangy/lib/rangy-selectionsaverestore.js',
+                                                          'public/app/node_modules/rangy/lib/rangy-serializer.js',
+                                                          'public/app/node_modules/angular/angular.js',
+                                                          'public/app/node_modules/angular-touch/angular-touch.js',
+                                                          'public/app/node_modules/angular-animate/angular-animate.js',
+                                                          'public/app/node_modules/angular-bootstrap-checkbox/angular-bootstrap-checkbox.js',
+                                                          'public/app/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
+                                                          'public/app/node_modules/angular-cookies/angular-cookies.js',
+                                                          'public/app/node_modules/angular-i18n/angular-locale_fr-fr.js',
+                                                          'public/app/node_modules/angular-loading-bar/build/loading-bar.js',
+                                                          'public/app/node_modules/angular-moment/angular-moment.js',
+                                                          'public/app/node_modules/angular-resource/angular-resource.js',
+                                                          'public/app/node_modules/angular-sanitize/angular-sanitize.js',
+                                                          'public/app/node_modules/angular-ui-calendar/src/calendar.js',
+                                                          'public/app/node_modules/angular-ui-router/release/angular-ui-router.js',
+                                                          'public/app/node_modules/angular-nvd3/dist/angular-nvd3.js',
+                                                          'public/app/node_modules/d3/d3.js',
+                                                          'public/app/node_modules/fullcalendar/dist/fullcalendar.js',
+                                                          'public/app/node_modules/fullcalendar/dist/locale-all.js',
+                                                          'public/app/node_modules/ng-color-picker/color-picker.js',
+                                                          'public/app/node_modules/angular-ui-switch/angular-ui-switch.js',
+                                                          'public/app/node_modules/nvd3/build/nv.d3.js',
+                                                          'public/app/node_modules/textangular/src/textAngular-sanitize.js',
+                                                          'public/app/node_modules/textangular/src/textAngularSetup.js',
+                                                          'public/app/node_modules/textangular/dist/textAngular.js',
+                                                          'public/app/node_modules/angular-toastr/dist/angular-toastr.tpls.js',
+                                                          'public/app/node_modules/ui-select/dist/select.js' ] )
+    File.open( './public/app/node_modules/node_modules.min.js', 'w' )
         .write( uglified )
-    File.open( './public/app/vendor/vendor.min.js.map', 'w' )
+    File.open( './public/app/node_modules/node_modules.min.js.map', 'w' )
         .write( source_map )
   end
 end

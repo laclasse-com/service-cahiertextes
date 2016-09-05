@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=8" />
+    <meta name="fragment" content="!">
+    <meta name="author" content="Austin Anderson">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="contact" content="austin@rarebreedstudios.com">
+    <meta name="keywords" content="angularjs,angular.js,texteditor,text editor,Wysiwyg,javascript text editor,javascript Wysiwyg">
+    <meta name="copyright" content="Austin Anderson. All rights reserved">
+    <meta charset="utf-8">
+    <title>textAngular :: Lightweight Angular.js, Javascript Wysiwyg/Text-Editor</title>
+    <link rel="shortcut icon" href="images/favicon.png">
+    <link rel="author" href="http://www.twitter.com/codeandwaffles">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,300">
+    <link rel="stylesheet" href="http://textangular.com/css/style.css" type="text/css">
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular.min.js" type="text/javascript"></script>
+    <% js.forEach(function(each){ %>
+        <script src='../<%= each %>'></script>
+    <% }); %>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js" type="text/javascript"></script>
+    <script src="http://resources.infolinks.com/js/infolinks_main.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <div id="ng-app" ng-app="textAngularDemo" ng-controller="demoController" class="ng-scope">
+        <br>
+        <div class="container">
+            <a href="http://github.com/fraywing/textAngular"> <img src="http://textangular.com/images/textAngularLogo.png" style="max-width:500%;" class="lighter"></a>
+            <span text-angular-version style="font-size:20px; position:relative; top:26px;">
+        </div>
+        <br>
+        <div class="container border-around text-center lighter">
+            <span class="text-xlg roboto">A Lightweight, Two-Way-Bound &amp; Totally <b class="text-red">Awesome</b> Angular.js Text-Editor</span>
+        </div>
+        <div class="container lighter">
+            <div text-angular ng-model="htmlContent" name="demo-editor" ta-text-editor-class="border-around container" ta-html-editor-class="border-around"></div>
+        </div>
+        <br>
+        <div class="container text-center lighter border-around">
+            <div class="lighter roboto">
+                <p ng-bind="htmlContent" class="text-left text-med text-gray"></p>
+            </div>
+        </div>
+        <br>
+        <div class="container text-right">
+            <span class="well btn-md"><b>//cdnjs.cloudflare.com/ajax/libs/textAngular/{{versionNumber}}/textAngular.min.js</b></span>&nbsp;&nbsp;&nbsp;
+            <a href="https://github.com/fraywing/textAngular/archive/{{version}}.zip" class="btn btn-danger btn-lg">
+                <div><i class="icon-arrow-down"> </i><span>Download {{version}}</span></div>
+            </a>
+        </div>
+        <br>
+        <div class="container border-around text-center lighter">
+            <iframe src="http://ghbtns.com/github-btn.html?user=fraywing&amp;repo=textAngular&amp;type=watch&amp;size=large&amp;count=true" allowtransparency="true" frameborder="0" scrolling="0" width="220" height="30"></iframe>
+            <iframe src="http://ghbtns.com/github-btn.html?user=fraywing&amp;repo=textAngular&amp;type=fork&amp;size=large" allowtransparency="true" frameborder="0" scrolling="0" width="180" height="30"></iframe>
+            <iframe src="http://ghbtns.com/github-btn.html?user=fraywing&amp;repo=textAngular&amp;type=follow&amp;size=large" allowtransparency="true" frameborder="0" scrolling="0" width="180" height="30"></iframe>
+        </div>
+        <br>
+        <div class="container">
+            <div class="text-center">Create by fraywing</div>
+            <div class="text-center">2015 Licensed under <a href="http://opensource.org/licenses/MIT">MIT</a></div>
+        </div>
+        <br>
+    </div>
+    <script type="text/javascript">
+    angular.module("textAngularDemo", ['textAngular'])
+    .controller("demoController", ['$scope', 'textAngularManager', function demoController($scope, textAngularManager) {
+      $scope.version = textAngularManager.getVersion();
+      $scope.versionNumber = $scope.version.substring(1);
+      $scope.htmlContent = '<h2>Try me!</h2><p>textAngular is a super cool WYSIWYG Text Editor directive for AngularJS for Fredd.</p><p><b>Features:</b></p><ol><li>Automatic Seamless Two-Way-Binding</li><li style="color: blue;">Super Easy <b>Theming</b> Options</li><li>Simple Editor Instance Creation</li><li>Safely Parses Html for Custom Toolbar Icons</li><li>Doesn&apos;t Use an iFrame</li><li>Works with Firefox, Chrome, and IE9+</li></ol><p><b>Code at GitHub:</b> <a href="https://github.com/fraywing/textAngular">Here</a> </p>';
+      $scope.htmlContent +=
+'<p><span id="selectionBoundary_1472160349930_2331670260931804" class="rangySelectionBoundary">﻿</span><span id="selectionBoundary_1472160352526_8679622859691412" class="rangySelectionBoundary">﻿</span><span id="selectionBoundary_1472160357183_9507766760307597" class="rangySelectionBoundary">﻿</span><span id="selectionBoundary_1472160407565_9134692299843388" class="rangySelectionBoundary">﻿</span>Try me !</p>\
+<ul>\
+<li>line 1</li>\
+<li>line 2</li>\
+<li>line 3 bad spelling Parker</li>\
+<li>line 4</li>\
+<li>line 5</li>\
+</ul>\
+<p>Hello textAngular<span id="selectionBoundary_1472160407565_6985582215519601" class="rangySelectionBoundary">﻿</span></p>\
+<p><br></p>\
+<p><span id="selectionBoundary_1472160571632_10183995194983853" class="rangySelectionBoundary"><span id="selectionBoundary_1472162491113_27490201326976593" class="rangySelectionBoundary">﻿</span>﻿</span><span id="selectionBoundary_1472161308717_6820751076296319" class="rangySelectionBoundary">﻿</span><span id="selectionBoundary_1472161517672_615688018765733" class="rangySelectionBoundary">﻿</span><br></p>\
+<pre class="ng-binding" style="font-size: 13px;"><span id="selectionBoundary_1472161925415_6140431243849034" class="rangySelectionBoundary"><span class="rangySelectionBoundary" id="selectionBoundary_1472232529782_5439441648425172">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472233174335_1704929286438357">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472233416686_16854165113353548">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472234541408_9583713989853478">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472234551345_479072730035647">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472234968223_547621142411234">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472235167464_9890739120986379">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472235169224_73319837010572">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472235184604_9221957699833614">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472237044471_3972738985946307">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472237045166_6165421933533772">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472237056090_06838175810170322">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472237156593_20078591106134924">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472237158051_34738440068511656">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472237161125_007152841104176688">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472237205857_16632778467886977">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472237353533_9133812869860728">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472237361847_202074742856453">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472238437491_3846352147499542">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472240182528_23871074820056115">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472240183953_13640169416015857">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472240185762_8576320417466105">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472240196906_36323771216723233">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472243716360_9503621899991322">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472243718281_6150133376422925">﻿</span>﻿</span>&lt;p&gt;Try me !&lt;/p&gt;&lt;ul&gt;&lt;li&gt;line 1&lt;/li&gt;&lt;li&gt;line 2&lt;/li&gt;&lt;li&gt;line 3&lt;/li&gt;&lt;li&gt;line 4&lt;/li&gt;&lt;li&gt;line 5&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Hello textAngular&lt;/p&gt;<span id="selectionBoundary_1472161517672_24131322667829536" class="rangySelectionBoundary">﻿</span><span id="selectionBoundary_1472161308717_5133610076705961" class="rangySelectionBoundary">﻿</span><span id="selectionBoundary_1472160571632_3607993458173573" class="rangySelectionBoundary">﻿</span><span id="selectionBoundary_1472160539539_8260203778569508" class="rangySelectionBoundary">﻿<span class="rangySelectionBoundary" id="selectionBoundary_1472243718281_5599215020783209">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472243716360_582014065061588">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472240196905_2302555506840771">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472240185762_15302794825670463">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472240183952_21754941081798518">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472240182528_579401186628104">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472238437491_5391686838644301">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472237361847_558996517769702">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472237353533_6270499720713236">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472237205857_30752322528324616">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472237161125_05300016384446571">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472237158051_7793691770226416">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472237156593_0333049133144544">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472237056090_9405967262781696">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472237045166_013578501749996641">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472237044470_3949249966556946">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472235184604_3625160197737368">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472235169224_022600164169093384">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472235167464_3753979996083402">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472234968222_614689401435297">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472234551345_4747705926491398">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472234541408_4068367677126441">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472233416686_6910345611948875">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472233174335_33859426315412133">﻿</span><span class="rangySelectionBoundary" id="selectionBoundary_1472232529781_7803645676477854">﻿</span><span id="selectionBoundary_1472161925415_08405290836592894" class="rangySelectionBoundary">﻿<span id="selectionBoundary_1472162491110_5309621575892272" class="rangySelectionBoundary">﻿</span></span></span></pre>\
+<p><span id="selectionBoundary_1472160484525_9814185119652927" class="rangySelectionBoundary">﻿</span></p>\
+<p><span id="selectionBoundary_1472160479958_9777615946030045" class="rangySelectionBoundary">﻿</span></p>'
+    }]);
+    </script>
+</body>
+
+</html>

@@ -23,7 +23,7 @@ Laclasse::Helpers::Rack.configure_rake self
 
 use Rack::Rewrite do
   rewrite %r{^/logout/?$}, "#{APP_PATH}/logout"
-  rewrite %r{^#{APP_PATH}(/app/(js|css|vendor)/.*(map|css|js|ttf|woff|html|png|jpg|jpeg|gif|svg)[?v=0-9a-zA-Z\-.]*$)}, '$1'
+  rewrite %r{^#{APP_PATH}(/app/(js|css|node_modules)/.*(map|css|js|ttf|woff|html|png|jpg|jpeg|gif|svg)[?v=0-9a-zA-Z\-.]*$)}, '$1'
 end
 
 use OmniAuth::Builder do

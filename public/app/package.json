@@ -1,0 +1,53 @@
+{
+  "name": "service-cahiertextes",
+  "version": "1.15.1",
+  "description": "Service Cahier de Textes de laclasse.com",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/laclasse-com/service-cahiertextes/"
+  },
+  "keywords": [
+    "laclasse.com"
+  ],
+  "author": "Métropole de Lyon",
+  "license": "AGPL-3.0",
+  "dependencies": {
+    "angular": "^1.5.8",
+    "angular-animate": "^1.5.8",
+    "angular-bootstrap-checkbox": "^1.0.0",
+    "angular-cookies": "^1.5.8",
+    "angular-i18n": "^1.5.8",
+    "angular-loading-bar": "^0.9.0",
+    "angular-mocks": "^1.5.8",
+    "angular-moment": "^0.10.3",
+    "angular-nvd3": "^1.0.9",
+    "angular-resource": "^1.5.8",
+    "angular-sanitize": "^1.5.8",
+    "angular-scenario": "^1.5.8",
+    "angular-toastr": "^2.1.1",
+    "angular-touch": "^1.5.8",
+    "angular-ui-bootstrap": "^2.1.3",
+    "angular-ui-calendar": "^1.0.2",
+    "angular-ui-router": "^0.3.1",
+    "angular-ui-switch": "^0.1.1",
+    "bootstrap": "^3.3.7",
+    "es5-shim": "^4.5.9",
+    "font-awesome": "^4.6.3",
+    "fullcalendar": "^3.0.0",
+    "jquery": "^3.1.0",
+    "laclasse-common-client": "git+https://github.com/laclasse-com/laclasse-common-client.git",
+    "moment-timezone": "^0.5.5",
+    "ng-color-picker": "git+https://github.com/cycojesus/ng-color-picker.git",
+    "npm-font-open-sans-condensed": "0.0.2",
+    "opensans-npm-webfont": "0.0.2",
+    "sizzle": "^2.3.3",
+    "sweetalert": "^1.1.3",
+    "textangular": "^1.5.9",
+    "ui-select": "^0.19.4",
+    "underscore": "^1.8.3"
+  }
+}

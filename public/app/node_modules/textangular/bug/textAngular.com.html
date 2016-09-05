@@ -1,0 +1,39 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+<head>
+    <head>
+        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+
+        <script src="https://code.jquery.com/jquery-2.1.4.js" data-semver="2.1.4" data-require="jquery@2.1.4"></script>
+        <script data-require="angular.js@1.5.6" data-semver="1.5.6" src="https://code.angularjs.org/1.5.6/angular.min.js"></script>
+        <link href="style.css" rel="stylesheet" />
+        <script src="script.js"></script>
+
+        <!--
+        <script src='http://cdnjs.cloudflare.com/ajax/libs/textAngular/1.5.7/textAngular-rangy.min.js'></script>
+        <script src='http://cdnjs.cloudflare.com/ajax/libs/textAngular/1.5.7/textAngular-sanitize.min.js'></script>
+        <script src='http://cdnjs.cloudflare.com/ajax/libs/textAngular/1.5.7/textAngular.min.js'></script>
+        -->
+
+        <script src='../dist/textAngular-rangy.min.js'></script>
+        <script src='../dist/textAngular-sanitize.min.js'></script>
+        <script src='../dist/textAngular.min.js'></script>
+
+</head>
+
+<body ng-app="mainApp">
+    <div id="details" ng-controller="taCtrl">
+        <p>Click in this input field first, and then tab to put focus into the textangular box.</p>
+        <input type="text"/>
+        <br/>
+        <br/>
+        <p>When this textangular box gets focus it's supposed to cause the toolbar to show up. That only happens when you click inside the box but doesn't work when you tab into it.</p>
+        <div text-angular ng-model="summary" name="summaryEditor" ta-target-toolbars='toolbar-textareafield' ></div>
+        <text-angular-toolbar name='toolbar-textareafield' ta-toolbar="{{textEditConfig}}"></text-angular-toolbar>
+    </div>
+
+</body>
+
+</html>

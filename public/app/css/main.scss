@@ -741,33 +741,6 @@ h3, .h3 {
     }
 }
 
-/* Pour ngSwitcher */
-
-.switch {
-    border-radius: 13px;
-    &.switch-left {
-        background-color: #ae8ab8;
-        border-color: #ae8ab8;
-    }
-    &.switch-right {
-        background-color: #8dc47c;
-        border-color: #8dc47c;
-        color: #8dc47c;
-    }
-    .switch-button {
-        height: 26px;
-        width: 26px;
-        margin-top: 1px;
-        border: 0;
-    }
-    &.switch-left .switch-button {
-        left: 1px;
-    }
-    &.switch-right .switch-button {
-        left: 21px;
-    }
-}
-
 .btn.supprimer {
     width: 100%;
     font-size: 80%;

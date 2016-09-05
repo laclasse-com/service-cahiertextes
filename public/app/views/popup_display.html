@@ -22,11 +22,11 @@
                         </li>
                     </ul>
 
-                    <div ng:switcher
-                         class="toggle-fait"
-                         ng:if="!(devoir.type_devoir_id == 1) && current_user.profil_actif.profil_id === 'ELV'"
-                         ng:model="devoir.fait"
-                         ng:change="fait( devoir )" ></div>
+                    <span switch
+                          class="toggle-fait violet"
+                          ng:if="!(devoir.type_devoir_id == 1) && current_user.profil_actif.profil_id === 'ELV'"
+                          ng:model="devoir.fait"
+                          ng:change="fait( devoir )" ></span>
 
                 </div>
                 <div class="col-md-6 contenu">
