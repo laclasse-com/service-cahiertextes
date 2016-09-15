@@ -24,6 +24,7 @@ namespace :preprocess_assets do
   task templates: :load_config do
     STDERR.puts 'Compilation of angular templates into javascript files'
     Dir.glob( 'public/app/views/*.html' )
+       .sort
        .each do |fichier|
       target = "#{fichier.gsub( /views/, 'js/templates' )}.js"
       template_name = fichier.gsub( %r{public/app/}, '' )
@@ -82,6 +83,7 @@ namespace :preprocess_assets do
   task js: :load_config do
     STDERR.puts 'Uglification of application Javascript'
     uglified, source_map = Uglify.those_files_with_map( Dir.glob( 'public/app/js/**/*.js' )
+                                                           .sort
                                                            .reject { |fichier| /min\.js$/.match fichier }
                                                            .sort )
     File.open( './public/app/js/cdt.min.js', 'w' )
