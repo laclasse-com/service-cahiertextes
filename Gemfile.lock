@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/laclasse-com/laclasse-common.git
-  revision: 074b0536c1cd3f1e898697f81a913c2846afcad2
+  revision: 9d7253db812ff1950551ace0b912061aec89e2d3
   specs:
-    laclasse-common (0.2.32)
+    laclasse-common (0.2.33)
       redis-rack (~> 1.5.0)
       rest-client
 
@@ -30,7 +30,7 @@ GEM
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.2.5)
-    domain_name (0.5.20160615)
+    domain_name (0.5.20160826)
       unf (>= 0.0.5, < 1.0.0)
     enumerable-lazy (0.0.1)
     equalizer (0.0.11)
@@ -55,7 +55,7 @@ GEM
     http-cookie (1.0.2)
       domain_name (~> 0.5)
     i18n (0.7.0)
-    icalendar (2.4.0)
+    icalendar (2.4.1)
     ice_nine (0.11.2)
     method_source (0.8.2)
     mime-types (3.1)
@@ -104,7 +104,7 @@ GEM
       redis-store (~> 1.1.0)
     redis-store (1.1.7)
       redis (>= 2.2)
-    reek (4.2.3)
+    reek (4.4.0)
       codeclimate-engine-rb (~> 0.3.1)
       parser (~> 2.3.1, >= 2.3.1.2)
       rainbow (~> 2.0)
@@ -116,7 +116,7 @@ GEM
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
       rspec-mocks (~> 3.5.0)
-    rspec-core (3.5.2)
+    rspec-core (3.5.3)
       rspec-support (~> 3.5.0)
     rspec-expectations (3.5.0)
       diff-lcs (>= 1.2.0, < 2.0)
@@ -134,7 +134,7 @@ GEM
     ruby-progressbar (1.8.1)
     rubyzip (1.2.0)
     sass (3.4.22)
-    sequel (4.37.0)
+    sequel (4.38.0)
     sinatra (1.4.7)
       rack (~> 1.5)
       rack-protection (~> 1.4)
@@ -144,7 +144,7 @@ GEM
     tilt (2.0.5)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
-    uglifier (3.0.1)
+    uglifier (3.0.2)
       execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
