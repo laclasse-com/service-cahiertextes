@@ -136,6 +136,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
   def update_heure_debut( value )
     time = Sequel::SQLTime.parse( value.to_s )
     update( debut: DataManagement::Accessors.create_or_get( PlageHoraire,
+                                                            label: value,
                                                             debut: time,
                                                             fin: time + 1800 ).id )
   end
@@ -143,6 +144,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
   def update_heure_fin( value )
     time = Sequel::SQLTime.parse( value.to_s )
     update( fin: DataManagement::Accessors.create_or_get( PlageHoraire,
+                                                          label: value,
                                                           debut: time - 1800,
                                                           fin: time ).id )
   end
