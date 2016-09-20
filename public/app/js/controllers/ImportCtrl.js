@@ -26,7 +26,6 @@ angular.module( 'cahierDeTextesClientApp' )
                       $scope.ui = { show_detailed_creneaux: false,
                                     display_ready: true,
                                     display_problems: true,
-                                    // display_broken: false,
                                     loading_file: false,
                                     processing: false,
                                     sortCreneauxBy: [ 'Jour' ],
@@ -44,8 +43,6 @@ angular.module( 'cahierDeTextesClientApp' )
 
                       $scope.filter_creneau = function( options, criteria ) {
                           return function( creneau ) {
-                              // if ( options.display_broken && creneau.broken ) { return true; }
-
                               if ( !options.display_problems && !creneau.ready ) { return false; }
                               if ( !options.display_ready && creneau.ready ) { return false; }
 
@@ -124,8 +121,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                                     groupe_eleve: _(creneau).has('Groupe') && !_($scope.pronote.groupes_eleves[ creneau.Groupe.Ident ].laclasse).isUndefined() };
 
                               creneau.ready = creneau.readiness.matiere && creneau.readiness.enseignant && ( creneau.readiness.classe || creneau.readiness.groupe_eleve );
-                              // creneau.broken = _(creneau.Matiere).isUndefined() || _(creneau.Professeur).isUndefined() || _(creneau.Salle).isUndefined() || ( _(creneau.Classe).isUndefined() && _(creneau.Groupe).isUndefined() );
-                              // creneau.broken = _(creneau.Matiere).isUndefined() || _(creneau.Professeur).isUndefined() || ( _(creneau.Classe).isUndefined() && _(creneau.Groupe).isUndefined() );
                           } );
 
                           $scope.update_counters();
@@ -219,9 +214,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                           // 4. treating Cours
                                           $scope.beautify_semainier = function( semainier ) {
-                                              // var pivot = 17;
                                               var bsemainier = Utils.padEnd( semainier.toString( 2 ), 53, '0' );
-                                              // var fixed_bsemainier = bsemainier.slice( pivot, bsemainier.length ) + bsemainier.substr( 0, pivot );
 
                                               return '<div class="semainier-tooltip gris1">' +
                                                   _.chain(Utils.overlay_semainier())
