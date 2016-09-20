@@ -441,9 +441,10 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                            // Create Creneaux
                                            var creneaux_to_import = creneaux_emploi_du_temps.map( function( creneau ) {
+                                               var heure_debut = libelleHeure_to_Date( $scope.pronote.plages_horaires[ creneau.NumeroPlaceDebut ].LibelleHeureDebut );
                                                var pre_creneau = { jour_de_la_semaine: parseInt( creneau.Jour ),
-                                                                   heure_debut: libelleHeure_to_Date( $scope.pronote.plages_horaires[ creneau.NumeroPlaceDebut ].LibelleHeureDebut ),
-                                                                   heure_fin: moment( creneau.heure_debut ).add( parseInt( creneau.NombrePlaces ) * parseInt( $scope.pronote.GrilleHoraire[0].DureePlace ), 'minutes' ).toDate(),
+                                                                   heure_debut: heure_debut,
+                                                                   heure_fin: moment( heure_debut ).add( parseInt( creneau.NombrePlaces ) * parseInt( $scope.pronote.GrilleHoraire[0].DureePlace ), 'minutes' ).toDate(),
                                                                    matiere_id: $scope.pronote.matieres[ creneau.Matiere.Ident ].laclasse.id,
                                                                    enseignant_id: $scope.pronote.enseignants[ creneau.Professeur.Ident ].laclasse.ent_id,
                                                                    semaines_de_presence_enseignant: parseInt( creneau.Professeur.Semaines ) };
