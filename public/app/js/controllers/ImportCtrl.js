@@ -477,7 +477,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                                        $scope.creneaux_created.push( response );
                                                        toastr.info( _($scope.creneaux_created).size() + ' Créneaux', 'Import en cours' );
 
-                                                       get_etablissement_summary(); // not ideal placement
+                                                       // get_etablissement_summary(); // not ideal placement
                                                    } );
                                            }
                                        } );
