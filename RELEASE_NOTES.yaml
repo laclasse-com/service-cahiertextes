@@ -52,3 +52,5 @@
     16:
       0:
         - corrections relatives à l'import Pronote
+      1:
+        - amélioration des performances de l'import Pronote
