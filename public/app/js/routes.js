@@ -30,17 +30,6 @@ angular.module( 'cahierDeTextesClientApp' )
                            templateUrl: 'views/index.html',
                            controller: 'PrincipalCtrl'
                        })
-                       .state('principal.oldimport', {
-                           parent: 'principal',
-                           url: '/oldimport',
-                           resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } ] },
-                           views: {
-                               'content': {
-                                   controller: 'OldImportCtrl',
-                                   templateUrl: 'views/oldimport.html'
-                               }
-                           }
-                       })
                        .state('principal.import', {
                            parent: 'principal',
                            url: '/import',
