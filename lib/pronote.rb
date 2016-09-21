@@ -13,9 +13,7 @@ module ProNote
   module_function
 
   def decrypt_wrapped_data( data, rsa_key_filename )
-    pk = OpenSSL::PKey::RSA.new( File.read( rsa_key_filename ) )
-
-    pk.private_decrypt( data )
+    OpenSSL::PKey::RSA.new( File.read( rsa_key_filename ) ).private_decrypt( data )
   end
 
   def decrypt_payload( data, aes_secret_key, aes_iv )
@@ -44,6 +42,7 @@ module ProNote
                                               part.attributes[ 'NOM' ].value == PRONOTE[:nom_integrateur]
                                             end
                                                                      .text )
+
     decrypted_wrapped_data = decrypt_wrapped_data( crypted_wrapped_data, PRONOTE[:cle_integrateur] )
     aes_secret_key = decrypted_wrapped_data[ 0..16 ]
     aes_iv = decrypted_wrapped_data[ 16..32 ]
@@ -52,10 +51,10 @@ module ProNote
 
     decrypted_payload = decrypt_payload( crypted_payload, aes_secret_key, aes_iv )
 
-    inflate decrypted_payload
+    inflate( decrypted_payload )
   end
 
-  def extract_from_xml( xml, field, _xsd = nil )
+  def extract_from_xml( xml, field )
     Nokogiri::XML( xml ).search( field ).children.text
   end
 end
