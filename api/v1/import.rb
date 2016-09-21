@@ -21,7 +21,7 @@ module CahierDeTextesAPI
         Import[ params[:id] ]
       end
 
-      desc 'returns an Import record'
+      desc 'returns CreneauxEmploiDuTemps related to an Import'
       params do
         requires :id, type: Fixnum
       end
