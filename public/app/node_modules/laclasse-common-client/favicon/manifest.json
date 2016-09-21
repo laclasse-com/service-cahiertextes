@@ -2,7 +2,7 @@
   "short_name": "laclasse.com",
   "start_url": "/",
   "display": "standalone",
-  "orientation": "portrait",
+  "orientation": "any",
   "background_color": "#1aaacc",
   "theme_color": "#1aaacc",
   "description": "Espace Numérique de Travail des collèges et écoles de la Métropole de Lyon.",

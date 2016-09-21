@@ -121,8 +121,8 @@ namespace :preprocess_assets do
                                                           'public/app/node_modules/ng-color-picker/color-picker.js',
                                                           'public/app/node_modules/angular-ui-switch/angular-ui-switch.js',
                                                           'public/app/node_modules/nvd3/build/nv.d3.js',
-                                                          'public/app/node_modules/textangular/src/textAngular-sanitize.js',
-                                                          'public/app/node_modules/textangular/src/textAngularSetup.js',
+                                                          'public/app/node_modules/textangular/dist/textAngular-sanitize.js',
+                                                          'public/app/node_modules/textangular/dist/textAngularSetup.js',
                                                           'public/app/node_modules/textangular/dist/textAngular.js',
                                                           'public/app/node_modules/angular-toastr/dist/angular-toastr.tpls.js',
                                                           'public/app/node_modules/ui-select/dist/select.js' ] )
