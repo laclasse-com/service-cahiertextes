@@ -54,3 +54,5 @@
         - corrections relatives à l'import Pronote
       1:
         - amélioration des performances de l'import Pronote
+      2:
+        - correction de la cause du message d'erreur affiché à certains utilisateurs
