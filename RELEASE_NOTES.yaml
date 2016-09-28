@@ -56,3 +56,5 @@
         - amélioration des performances de l'import Pronote
       2:
         - correction de la cause du message d'erreur affiché à certains utilisateurs
+      3:
+        - correction des horaires des créneaux lors de l'import Pronote
