@@ -11,10 +11,14 @@ angular.module( 'cahierDeTextesClientApp' )
                       var toastr_config = { autoDismiss: false,
                                             allowHtml: true };
 
-                      var libelleHeure_to_Date = function( libelle ) {
-                          var heure = libelle.split(':').map( function( i ) { return parseInt( i ); } );
+                      var libelleHeure_to_Moment = function( libelle ) {
+                          var horaire = libelle.split(':').map( function( i ) { return parseInt( i ); } );
+                          var utc_offset = (new Date()).getTimezoneOffset() / 60 * -1;
+                          var date = moment().set({ hour: horaire[0] + utc_offset,
+                                                    minute: horaire[1],
+                                                    second: horaire[2] });
 
-                          return new Date( 2001, 0, 1, heure[0], heure[1], heure[2] );
+                          return date;
                       };
 
                       $scope.scope = $scope;
@@ -247,7 +251,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                                           var compute_cours = function( type_regroupement ) {
                                                               return function( regroupement ) {
                                                                   var fix_semainier = function( semainier_pronote ) {
-                                                                      var pivot = 17;
+                                                                      var pivot = 17; // FIXME: semaine de la rentrée
                                                                       var bsemainier = parseInt( semainier_pronote ).toString( 2 );
                                                                       bsemainier = Utils.padEnd( bsemainier, 53, '0' );
 
@@ -441,10 +445,11 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                            // Create Creneaux
                                            var creneaux_to_import = creneaux_emploi_du_temps.map( function( creneau ) {
-                                               var heure_debut = libelleHeure_to_Date( $scope.pronote.plages_horaires[ creneau.NumeroPlaceDebut ].LibelleHeureDebut );
+                                               var heure_debut = libelleHeure_to_Moment( $scope.pronote.plages_horaires[ creneau.NumeroPlaceDebut ].LibelleHeureDebut );
+
                                                var pre_creneau = { jour_de_la_semaine: parseInt( creneau.Jour ),
-                                                                   heure_debut: heure_debut,
-                                                                   heure_fin: moment( heure_debut ).add( parseInt( creneau.NombrePlaces ) * parseInt( $scope.pronote.GrilleHoraire[0].DureePlace ), 'minutes' ).toDate(),
+                                                                   heure_debut: heure_debut.toISOString(),
+                                                                   heure_fin: heure_debut.add( parseInt( creneau.NombrePlaces ) * parseInt( $scope.pronote.GrilleHoraire[0].DureePlace ), 'minutes' ).toISOString(),
                                                                    matiere_id: $scope.pronote.matieres[ creneau.Matiere.Ident ].laclasse.id,
                                                                    enseignant_id: $scope.pronote.enseignants[ creneau.Professeur.Ident ].laclasse.ent_id,
                                                                    semaines_de_presence_enseignant: parseInt( creneau.Professeur.Semaines ) };
@@ -476,8 +481,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                                    .then( function( response ) {
                                                        $scope.creneaux_created.push( response );
                                                        toastr.info( _($scope.creneaux_created).size() + ' Créneaux', 'Import en cours' );
-
-                                                       // get_etablissement_summary(); // not ideal placement
                                                    } );
                                            }
                                        } );
