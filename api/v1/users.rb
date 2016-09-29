@@ -30,7 +30,7 @@ module CahierDeTextesAPI
             end.flatten.compact.uniq
 
             profil['matieres'] = all_matieres if profil['matieres'].empty?
-          elsif %w(DIR).include?( profil['profil_id'] ) || profil['admin']
+          elsif %w(DIR ELV).include?( profil['profil_id'] ) || profil['admin']
             profil['matieres'] = all_matieres
           end
         end
