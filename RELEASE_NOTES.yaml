@@ -60,3 +60,5 @@
         - correction des horaires des créneaux lors de l'import Pronote
       4:
         - correction de la consultation de l'emploi du temps pour les élèves
+      5:
+        - correction d'un problème d'affichage des listes déroulantes
