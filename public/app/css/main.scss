@@ -1018,3 +1018,8 @@ legend {
         }
     }
 }
+
+// bugfix ui-select https://github.com/angular-ui/ui-select/issues/1652
+.ui-select-dropdown {
+    opacity: 1 !important;
+}
