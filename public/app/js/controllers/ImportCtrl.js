@@ -26,7 +26,7 @@ angular.module( 'cahierDeTextesClientApp' )
                       $scope.annee = $locale.DATETIME_FORMATS.MONTH;
                       $scope.fichier = null;
                       $scope.matcheable_data = [];
-                      $scope.filtered_import = false;
+                      $scope.filtered_import = true;
                       $scope.ui = { show_detailed_creneaux: false,
                                     display_ready: true,
                                     display_problems: true,
