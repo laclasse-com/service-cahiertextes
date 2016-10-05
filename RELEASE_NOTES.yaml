@@ -62,3 +62,5 @@
         - correction de la consultation de l'emploi du temps pour les élèves
       5:
         - correction d'un problème d'affichage des listes déroulantes
+      6:
+        - import Pronote: filtrage de l'import par défaut
