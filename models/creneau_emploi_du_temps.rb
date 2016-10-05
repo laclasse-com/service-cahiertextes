@@ -82,6 +82,28 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
     h
   end
 
+  def duplicates
+    CreneauEmploiDuTemps
+      .select_append( :creneaux_emploi_du_temps__id___id )
+      .where( Sequel.~( creneaux_emploi_du_temps__id: id ) )
+      .association_join( :regroupements )
+      .select_append( :regroupements__semaines_de_presence___semainier_regroupement )
+      .association_join( :enseignants )
+      .select_append( :enseignants__semaines_de_presence___semainier_enseignant )
+      .association_join( :plage_horaire_debut )
+      .select_append( :plage_horaire_debut__debut___debut )
+      .association_join( :plage_horaire_fin )
+      .select_append( :plage_horaire_fin__fin___fin )
+      .where( matiere_id: matiere_id )
+      .where( jour_de_la_semaine: jour_de_la_semaine )
+      .where( regroupements__regroupement_id: regroupements.map( &:regroupement_id ) )
+      .where( enseignants__enseignant_id: enseignants.map( &:enseignant_id ) )
+      .where( regroupements__semaines_de_presence: regroupements.map( &:semaines_de_presence ) )
+      .where( enseignants__semaines_de_presence: enseignants.map( &:semaines_de_presence ) )
+      .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{Utils.date_rentree}'" )
+      .where( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{fin}')" )
+  end
+
   def similaires( debut, fin, user )
     # .where { date_creation >= 1.year.ago }
     # .where { !deleted || date_suppression >= fin }
