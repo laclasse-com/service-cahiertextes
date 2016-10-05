@@ -57,3 +57,4 @@ config/constants.rb
 /config/options.rb.legacy-master
 /config/options.rb.prod_v2
 /config/options.rb.v3
+/config/puma.rb
