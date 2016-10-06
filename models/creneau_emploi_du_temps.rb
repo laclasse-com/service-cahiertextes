@@ -101,7 +101,8 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
       .where( regroupements__semaines_de_presence: regroupements.map( &:semaines_de_presence ) )
       .where( enseignants__semaines_de_presence: enseignants.map( &:semaines_de_presence ) )
       .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{Utils.date_rentree}'" )
-      .where( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{fin}')" )
+      .where( deleted: false )
+  end
   end
 
   def similaires( debut, fin, user )
