@@ -48,8 +48,8 @@ class CreneauEmploiDuTempsRegroupement < Sequel::Model( :creneaux_emploi_du_temp
 end
 
 class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
-  one_to_many :regroupements, class: :CreneauEmploiDuTempsRegroupement
-  one_to_many :enseignants, class: :CreneauEmploiDuTempsEnseignant
+  one_to_many :regroupements, class: :CreneauEmploiDuTempsRegroupement, table: :creneaux_emploi_du_temps_regroupements
+  one_to_many :enseignants, class: :CreneauEmploiDuTempsEnseignant, table: :creneaux_emploi_du_temps_enseignants
   many_to_many :salles, class: :Salle, join_table: :creneaux_emploi_du_temps_salles
 
   one_to_many :cours, class: :Cours
