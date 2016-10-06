@@ -103,6 +103,21 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
       .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{Utils.date_rentree}'" )
       .where( deleted: false )
   end
+  # attach cours and devoirs to this creneau and destroy other_creneau
+  def merge( creneau_id )
+    other_creneau = CreneauEmploiDuTemps[ creneau_id ]
+    return false if other_creneau.nil?
+
+    other_creneau.cours.each do |cours|
+      cours.update( creneau_emploi_du_temps_id: id )
+      cours.save
+    end
+    other_creneau.devoirs.each do |devoir|
+      devoir.update( creneau_emploi_du_temps_id: id )
+      devoir.save
+    end
+  end
+
   end
 
   def similaires( debut, fin, user )
