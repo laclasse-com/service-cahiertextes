@@ -103,6 +103,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
       .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{Utils.date_rentree}'" )
       .where( deleted: false )
   end
+
   # attach cours and devoirs to this creneau and destroy other_creneau
   def merge( creneau_id )
     other_creneau = CreneauEmploiDuTemps[ creneau_id ]
@@ -118,6 +119,34 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
     end
   end
 
+  def merge_twins
+    return [] if deleted
+
+    duplicates.select(:creneaux_emploi_du_temps__id)
+              .naked
+              .all
+              .map do |twin_id|
+      twin = CreneauEmploiDuTemps[ twin_id[:id] ]
+
+      next if twin.deleted
+      puts "#{id} gonna eat #{twin_id[:id]}"
+
+      merge( twin.id )
+
+      twin.id
+    end
+  end
+
+  def merge_and_destroy_twins( hard = false )
+    merge_twins.map do |twin_id|
+      if hard
+        CreneauEmploiDuTemps[twin_id].deep_destroy
+      else
+        CreneauEmploiDuTemps[twin_id].toggle_deleted( Time.now )
+      end
+
+      twin_id
+    end
   end
 
   def similaires( debut, fin, user )
