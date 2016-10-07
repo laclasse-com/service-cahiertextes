@@ -59,7 +59,7 @@ class Etablissement < Sequel::Model( :etablissements )
 
   def merge_all_twin_creneaux( truly_destroy = false )
     merged_twins = []
-    creneaux_emploi_du_temps_dataset.where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{Date.new( 2016, 8, 31 )}'" )
+    creneaux_emploi_du_temps_dataset.where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{Utils.date_rentree}'" )
                                     .all
                                     .each do |creneau|
       next if merged_twins.include?( creneau.id )
