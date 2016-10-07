@@ -135,9 +135,9 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
     end
   end
 
-  def merge_and_destroy_twins( hard = false )
+  def merge_and_destroy_twins( truly_destroy = false )
     merge_twins.map do |twin_id|
-      if hard
+      if truly_destroy
         CreneauEmploiDuTemps[twin_id].deep_destroy
       else
         CreneauEmploiDuTemps[twin_id].toggle_deleted( Time.now )
