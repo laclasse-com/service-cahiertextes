@@ -1,9 +1,9 @@
 <div class="modal-header"
      ng:class="{'not-yours': !creneau.mine}">
 
+    <!-- {{{ Lecture seule -->
     <span ng:if="!mode_edition_creneau">
         <h3>{{creneau.heure_debut | amDateFormat : 'dddd D MMMM YYYY' }}, semaine {{creneau.n_week}}</h3>
-        <!-- {{{ Lecture seule -->
         <h4>
             {{selected_regroupement.libelle}} - {{selected_matiere.libelle_long}} ({{creneau.heure_debut | amDateFormat: 'HH:mm'}} - {{creneau.heure_fin | amDateFormat: 'HH:mm'}})
         </h4>
@@ -11,91 +11,85 @@
     <!-- }}} -->
 
     <!-- {{{ Édition -->
-    <div class="edition-creneau" ng:if="mode_edition_creneau">
-        <div class="row">
-            <div class="col-md-6">
-                <label>Choisir la classe :</label>
-                <select ng:model="scope.selected_regroupement"
-                        ng:options="classe as classe.libelle group by classe.type for classe in classes | orderBy:['type','libelle']"
-                        ng:required="true">
-                </select>
-            </div>
-
-            <div class="col-md-6">
-                <label>Choisir la matière :</label>
-                <select ng:model="scope.selected_matiere"
-                        ng:options="matiere as matiere.libelle_long for matiere in matieres | orderBy:['libelle_long']"
-                        ng:required="true">
-                </select>
-            </div>
+    <div class="edition-creneau"
+         ng:if="mode_edition_creneau">
+        <div class="col-md-6">
+            <label>Choisir la classe/le groupe :</label>
+            <select ng:model="scope.selected_regroupement"
+                    ng:options="classe as classe.libelle group by classe.type for classe in classes | orderBy:['type','libelle']"
+                    ng:required="true">
+            </select>
         </div>
 
-        <div class="row">
-            <div class="col-md-12 horaire">
-                <label>Choisir l'horaire :</label>
-                <select ng:options="index as jour for (index, jour) in jours"
-                        ng:model="creneau.jour_de_la_semaine">
-                </select>
-                de
-                <div uib-dropdown class="uib-dropdown horaire">
-                    <a uib-dropdown-toggle class="uib-dropdown-toggle" role="button" data-toggle="uib-dropdown" data-target="#" href="">{{creneau.tmp_heure_debut | amDateFormat: 'HH:mm'}}</a>
-                    <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng:click="$event.stopPropagation()">
-                        <div uib-timepicker
-                             class="uib-timepicker"
-                             ng:model="creneau.tmp_heure_debut"
-                             data-show-meridian="false"
-                             data-minute-step="5"
-                             ng:required="true"></div>
-                    </div>
+        <div class="col-md-6">
+            <label>Choisir la matière :</label>
+            <select ng:model="scope.selected_matiere"
+                    ng:options="matiere as matiere.libelle_long for matiere in matieres | orderBy:['libelle_long']"
+                    ng:required="true">
+            </select>
+        </div>
+
+        <div class="col-md-12 horaire">
+            <label>Choisir l'horaire :</label>
+            <select ng:options="index as jour for (index, jour) in jours"
+                    ng:model="creneau.jour_de_la_semaine">
+            </select>
+            de
+            <div uib-dropdown class="uib-dropdown horaire">
+                <a uib-dropdown-toggle class="uib-dropdown-toggle" role="button" data-toggle="uib-dropdown" data-target="#" href="">{{creneau.tmp_heure_debut | amDateFormat: 'HH:mm'}}</a>
+                <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng:click="$event.stopPropagation()">
+                    <div uib-timepicker
+                         class="uib-timepicker"
+                         ng:model="creneau.tmp_heure_debut"
+                         data-show-meridian="false"
+                         data-minute-step="5"
+                         ng:required="true"></div>
                 </div>
-                à
-                <div uib-dropdown class="uib-dropdown horaire">
-                    <a uib-dropdown-toggle class="uib-dropdown-toggle" role="button" data-toggle="uib-dropdown" data-target="#" href="">{{creneau.tmp_heure_fin | amDateFormat: 'HH:mm'}}</a>
-                    <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng:click="$event.stopPropagation()">
-                        <div uib-timepicker
-                             class="uib-timepicker"
-                             ng:model="creneau.tmp_heure_fin"
-                             data-show-meridian="false"
-                             data-minute-step="5"
-                             ng:required="true"></div>
-                    </div>
+            </div>
+            à
+            <div uib-dropdown class="uib-dropdown horaire">
+                <a uib-dropdown-toggle class="uib-dropdown-toggle" role="button" data-toggle="uib-dropdown" data-target="#" href="">{{creneau.tmp_heure_fin | amDateFormat: 'HH:mm'}}</a>
+                <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng:click="$event.stopPropagation()">
+                    <div uib-timepicker
+                         class="uib-timepicker"
+                         ng:model="creneau.tmp_heure_fin"
+                         data-show-meridian="false"
+                         data-minute-step="5"
+                         ng:required="true"></div>
                 </div>
             </div>
         </div>
-
-        <div class="row">
-            <div class="col-md-12">
-                <label>Choisir les semaines actives :</label>
-                <div class="btn-group templates-semainier">
-                    <button class="btn btn-xs"
-                            ng:repeat="template in templates_semainier"
-                            ng:click="template.apply()">{{template.label}}</button>
-                </div>
-                <div class="semainier">
-                    <fieldset ng:repeat="mois in overlay_semainier | orderBy:'index'">
-                        <legend>{{mois.label}}</legend>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-xs btn-default"
-                                    ng:repeat="semaine in mois.semaines track by $index"
-                                    ng:class="{'active': semaines_actives.regroupement[ semaine.semaine - 1 ], 'vacances': sont_ce_les_vacances( semaine.semaine, ZONE ), 'this-week': semaine.semaine === creneau.n_week}"
-                                    ng:model="semaines_actives.regroupement[ semaine.semaine - 1 ]"
-                                    uib-btn-checkbox
-                                    btn-checkbox-true="1"
-                                    btn-checkbox-false="0" >
-                                {{semaine.semaine}}
-                            </button>
-                        </div>
-                    </fieldset>
-                </div>
-
-                <div class="pull-right legende">
-                    <label>Légende :</label>
-                    <span class="btn btn-xs btn-default" title="Créneau absent de cette semaine"> </span> Créneau absent de cette semaine
-                    <span class="btn btn-xs btn-default active" title="Créneau présent cette semaine"> </span> Créneau présent cette semaine
-                    <span class="btn btn-xs btn-default vacances" title="Vacances scolaires"> </span> Vacances scolaires
-                </div>
-
+        <div class="col-md-12">
+            <label>Choisir les semaines actives :</label>
+            <div class="btn-group templates-semainier">
+                <button class="btn btn-xs"
+                        ng:repeat="template in templates_semainier"
+                        ng:click="template.apply()">{{template.label}}</button>
             </div>
+            <div class="semainier">
+                <fieldset ng:repeat="mois in overlay_semainier | orderBy:'index'">
+                    <legend>{{mois.label}}</legend>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-xs btn-default"
+                                ng:repeat="semaine in mois.semaines track by $index"
+                                ng:class="{'active': semaines_actives.regroupement[ semaine.semaine - 1 ], 'vacances': sont_ce_les_vacances( semaine.semaine, ZONE ), 'this-week': semaine.semaine === creneau.n_week}"
+                                ng:model="semaines_actives.regroupement[ semaine.semaine - 1 ]"
+                                uib-btn-checkbox
+                                btn-checkbox-true="1"
+                                btn-checkbox-false="0" >
+                            {{semaine.semaine}}
+                        </button>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="pull-right legende">
+                <label>Légende :</label>
+                <span class="btn btn-xs btn-default" title="Créneau absent de cette semaine"> </span> Créneau absent de cette semaine
+                <span class="btn btn-xs btn-default active" title="Créneau présent cette semaine"> </span> Créneau présent cette semaine
+                <span class="btn btn-xs btn-default vacances" title="Vacances scolaires"> </span> Vacances scolaires
+            </div>
+
         </div>
     </div>
     <!-- }}} -->
