@@ -127,9 +127,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
               .all
               .map do |twin_id|
       twin = CreneauEmploiDuTemps[ twin_id[:id] ]
-
       next if twin.deleted
-      puts "#{id} gonna eat #{twin_id[:id]}"
 
       merge( twin.id )
 

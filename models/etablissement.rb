@@ -63,6 +63,7 @@ class Etablissement < Sequel::Model( :etablissements )
                                     .all
                                     .each do |creneau|
       next if merged_twins.include?( creneau.id )
+
       merged_twins += creneau.merge_and_destroy_twins( hard )
       merged_twins.flatten!
     end
