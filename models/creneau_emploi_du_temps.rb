@@ -8,6 +8,7 @@ module SemainesDePresenceMixin
   end
 
   def pretty_print_semainier
+    vacances = CahierDeTextesApp::Utils::Holidays.get( 'A', CahierDeTextesApp::Utils::Holidays.year_rentree ) # FIXME: hardcoded zone A
     semainier = semaines_de_presence.to_s( 2 )
                                     .reverse
                                     .rjust( 53, '0' )
@@ -15,7 +16,7 @@ module SemainesDePresenceMixin
     semainier[0] = ''
     semainier.split( '' )
              .map
-             .with_index { |w, i| { week: i + 1, presence: w} }
+             .with_index { |w, i| { week: i + 1, presence: w, holidays: vacances.include?( i + 1 ) } }
              .group_by { |w| Date::MONTHNAMES[ Date.commercial( w[:week] < 30 ? 2016 : 2015, w[:week] ).month ] }
   end
 
