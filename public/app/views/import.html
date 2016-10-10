@@ -165,11 +165,12 @@
                     <fieldset class="summary">
                         <legend> <h4>Statistiques</h4>  </legend>
 
-                        <fieldset class="summary">
-                            <legend> <h5>Établissement</h5>  </legend>
+                        <fieldset class="summary"
+                                  ng:if="etablissement_summary">
+                            <legend> <h5>Établissement</h5> </legend>
                             <ul>
                                 <li>{{etablissement_summary.nb_creneaux}} créneaux existants</li>
-                                <li>Dernier import le {{etablissement_summary.imports[ etablissement_summary.imports.length - 1 ].date_import | date}}</li>
+                                <li ng:if="etablissement_summary.imports.length > 0">Dernier import le {{etablissement_summary.imports[ etablissement_summary.imports.length - 1 ].date_import | date}}</li>
                             </ul>
                         </fieldset>
                         <fieldset class="summary">
@@ -209,11 +210,6 @@
                             </div>
                         </fieldset>
                     </fieldset>
-                    <!-- <ul>
-                         <li ng:repeat="(counter, value) in counters">
-                         {{counter}}: {{value}}
-                         </li>
-                         </ul> -->
 
                     <uib-accordion>
                         <div uib-accordion-group is-open="ui.show_detailed_creneaux">
@@ -237,7 +233,8 @@
                             </div>
 
                             <table class="table table-striped table-bordered table-hover table-condensed"
-                                   ng:class="{'hidden': !ui.show_detailed_creneaux}">
+                                   ng:class="{'hidden': !ui.show_detailed_creneaux}"
+                                   ng:if="ui.show_detailed_creneaux">
                                 <thead>
                                     <tr>
                                         <th></th>
