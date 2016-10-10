@@ -3,8 +3,12 @@
 require_relative '../lib/utils/holidays'
 
 module SemainesDePresenceMixin
-  def present_pour_la_semaine?( n )
-    semaines_de_presence[n] == 1
+  def present_pour_la_semaine?( semaine )
+    semaines_de_presence[ semaine ] == 1
+  end
+
+  def present_pour_la_semaine( semaine )
+    semaines_de_presence |= 2**semaine
   end
 
   def pretty_print_semainier
