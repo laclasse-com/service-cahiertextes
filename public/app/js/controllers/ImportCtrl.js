@@ -251,7 +251,8 @@ angular.module( 'cahierDeTextesClientApp' )
                                                           var compute_cours = function( type_regroupement ) {
                                                               return function( regroupement ) {
                                                                   var fix_semainier = function( semainier_pronote ) {
-                                                                      var pivot = 17; // FIXME: semaine de la rentrée
+                                                                      var nb_week_in_year = 53;
+                                                                      var pivot = nb_week_in_year - moment( new Date( $scope.pronote.AnneeScolaire[0].DateDebut ) ).week();
                                                                       var bsemainier = parseInt( semainier_pronote ).toString( 2 );
                                                                       bsemainier = Utils.padEnd( bsemainier, 53, '0' );
 
