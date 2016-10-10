@@ -16,7 +16,7 @@ module SemainesDePresenceMixin
     semainier[0] = ''
     semainier.split( '' )
              .map
-             .with_index { |w, i| { week: i + 1, presence: w, holidays: vacances.include?( i + 1 ) } }
+             .with_index { |w, i| { week: i + 1, presence: w == '1', holidays: vacances.include?( i + 1 ) } }
              .group_by { |w| Date::MONTHNAMES[ Date.commercial( w[:week] < 30 ? 2016 : 2015, w[:week] ).month ] }
   end
 
