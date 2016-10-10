@@ -2,7 +2,7 @@
 ControlParameter:
   exclude:
   - AnnuaireWrapper::Etablissement#get
-  - ProNote#load_xml
+  - CreneauEmploiDuTemps#merge_and_destroy_twins
   - CreneauEmploiDuTemps#to_deep_hash
 DuplicateMethodCall:
   exclude:
@@ -11,13 +11,6 @@ DuplicateMethodCall:
   - DataManagement::EmploiDuTemps#ical
   - DataManagement::Provisioning#provision
   - DataManagement::User#delete
-  - ProNote#load_creneaux
-  - ProNote#load_enseignants
-  - ProNote#load_matieres
-  - ProNote#load_plages_horaires
-  - ProNote#load_regroupements
-  - ProNote#load_salles
-  - ProNote#load_xml
   - Uglify#those_files
   - Uglify#those_files_with_map
   - Utils#date_rentree
@@ -29,6 +22,8 @@ DuplicateMethodCall:
   - Cours#copie
   - Cours#modifie
   - Cours#toggle_deleted
+  - CreneauEmploiDuTemps#merge_and_destroy_twins
+  - CreneauEmploiDuTemps#merge_twins
   - CreneauEmploiDuTemps#modifie
   - CreneauEmploiDuTemps#similaires
   - CreneauEmploiDuTemps#update_salle
@@ -78,21 +73,14 @@ NilCheck:
   - DataManagement::EmploiDuTemps#get
   - DataManagement::EmploiDuTemps#ical
   - DataManagement::Provisioning#provision
-  - ProNote#load_creneaux
-  - ProNote#load_enseignants
-  - ProNote#load_matieres
-  - ProNote#load_plages_horaires
-  - ProNote#load_regroupements
-  - ProNote#load_salles
   - Uglify#those_files
   - Uglify#those_files_with_map
   - CahierDeTextesApp::Utils::Holidays#get
   - Utils#release_notes_to_json
   - Cours#copie
   - Cours#toggle_validated
+  - CreneauEmploiDuTemps#merge
   - CreneauEmploiDuTemps#modifie
-  - CreneauEmploiDuTemps#update_heure_debut
-  - CreneauEmploiDuTemps#update_heure_fin
   - CreneauEmploiDuTemps#update_regroupement
   - CreneauEmploiDuTemps#update_salle
   - Devoir#modifie
@@ -107,9 +95,6 @@ NestedIterators:
   - DataManagement::EmploiDuTemps#get
   - DataManagement::EmploiDuTemps#ical
   - DataManagement::Provisioning#provision
-  - ProNote#load_creneaux
-  - ProNote#load_enseignants
-  - ProNote#load_regroupements
   - CahierDeTextes#statistiques
   - CreneauEmploiDuTemps#similaires
   - Etablissement#statistiques_enseignants
@@ -117,28 +102,22 @@ NestedIterators:
 TooManyStatements:
   exclude:
   - initialize
-  - CahierDeTextes#statistiques
   - DataManagement::Cleansing::Creneaux#deleted_and_unused
   - DataManagement::EmploiDuTemps#get
   - DataManagement::EmploiDuTemps#ical
   - DataManagement::Provisioning#provision
   - DataManagement::User#delete
-  - ProNote#corrige_semainiers
   - ProNote#decrypt_xml
-  - ProNote#load_creneaux
-  - ProNote#load_enseignants
-  - ProNote#load_etablissement
-  - ProNote#load_matieres
-  - ProNote#load_plages_horaires
-  - ProNote#load_regroupements
-  - ProNote#load_salles
-  - ProNote#load_xml
   - CahierDeTextesApp::Utils::Holidays#get
   - Hash#xml_node_to_hash
+  - CahierDeTextes#statistiques
   - Cours#copie
   - Cours#modifie
   - Cours#to_deep_hash
   - Cours#toggle_deleted
+  - CreneauEmploiDuTemps#deep_destroy
+  - CreneauEmploiDuTemps#merge
+  - CreneauEmploiDuTemps#merge_twins
   - CreneauEmploiDuTemps#modifie
   - CreneauEmploiDuTemps#similaires
   - CreneauEmploiDuTemps#to_deep_hash
@@ -147,6 +126,7 @@ TooManyStatements:
   - SemainesDePresenceMixin#pretty_print_semainier
   - Devoir#modifie
   - Devoir#to_deep_hash
+  - Etablissement#merge_all_twin_creneaux
   - Etablissement#statistiques_enseignants
   - CahierDeTextesApp::Routes::Auth#self.registered
   - CahierDeTextesApp::Routes::Status#self.registered
@@ -158,10 +138,6 @@ UncommunicativeVariableName:
   - DataManagement::Cleansing::Creneaux#unfinished
   - DataManagement::EmploiDuTemps#get
   - DataManagement::EmploiDuTemps#ical
-  - ProNote#load_creneaux
-  - ProNote#load_enseignants
-  - ProNote#load_matieres
-  - ProNote#load_regroupements
   - CahierDeTextesApp::Utils::Holidays#get
   - CreneauEmploiDuTemps#modifie
   - CreneauEmploiDuTemps#similaires
@@ -174,30 +150,25 @@ UncommunicativeVariableName:
   - TableCleaner#tsort_each_node
 FeatureEnvy:
   exclude:
-  - CahierDeTextes#statistiques
   - DataManagement::EmploiDuTemps#ical
-  - ProNote#corrige_semainiers
-  - ProNote#load_creneaux
   - CahierDeTextesApp::Utils::Holidays#get
   - Hash#from_xml
   - Hash#xml_node_to_hash
+  - CahierDeTextes#statistiques
+  - CreneauEmploiDuTemps#merge
   - CreneauEmploiDuTemps#modifie
   - CreneauEmploiDuTemps#similaires
-  - CreneauEmploiDuTemps#update_heure_debut
-  - CreneauEmploiDuTemps#update_heure_fin
   - SemainesDePresenceMixin#pretty_print_semainier
+  - Etablissement#merge_all_twin_creneaux
   - Etablissement#statistiques_classes
 LongParameterList:
   exclude:
   - DataManagement::EmploiDuTemps#get
   - DataManagement::EmploiDuTemps#ical
-  - ProNote#load_creneaux
 BooleanParameter:
   exclude:
-  - ProNote#decrypt_and_load_xml
-DataClump:
-  exclude:
-  - ProNote
+  - CreneauEmploiDuTemps#merge_and_destroy_twins
+  - Etablissement#merge_all_twin_creneaux
 UncommunicativeParameterName:
   exclude:
   - SemainesDePresenceMixin#present_pour_la_semaine?
