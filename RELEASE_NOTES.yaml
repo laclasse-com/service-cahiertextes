@@ -66,3 +66,5 @@
         - import Pronote: filtrage de l'import par défaut
       7:
         - gestion des créneaux d'emploi du temps: fusion
+      8:
+        - correction du traitement des semainiers lors de l'import Pronote
