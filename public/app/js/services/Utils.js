@@ -84,5 +84,16 @@ angular.module( 'cahierDeTextesClientApp' )
                         }
                     };
 
+                    this.padStart = function( string, target_length, filler ) {
+                        if ( string.length >= target_length ) {
+                            return string;
+                        } else {
+                            var pad = '';
+                            _( (target_length - string.length) / filler.length ).times( function() { pad += filler; } );
+
+                            return (pad + string).substr( target_length * -1 );
+                        }
+                    };
+
                 }
               ] );

@@ -244,9 +244,10 @@ angular.module( 'cahierDeTextesClientApp' )
                                                               return function( regroupement ) {
                                                                   var fix_semainier = function( semainier_pronote ) {
                                                                       var nb_week_in_year = 53;
-                                                                      var pivot = nb_week_in_year - moment( new Date( $scope.pronote.AnneeScolaire[0].DateDebut ) ).week();
+                                                                      var pivot = nb_week_in_year - moment( new Date( $scope.pronote.AnneeScolaire[0].DateDebut ) ).week() + 1;
                                                                       var bsemainier = parseInt( semainier_pronote ).toString( 2 );
-                                                                      bsemainier = Utils.padEnd( bsemainier, 53, '0' );
+                                                                      bsemainier = bsemainier.substr( 0, bsemainier.length - 1 );
+                                                                      bsemainier = Utils.padStart( bsemainier, 52, '0' );
 
                                                                       var fixed_bsemainier = bsemainier.slice( pivot, bsemainier.length ) + bsemainier.substr( 0, pivot );
                                                                       var fixed_semainier = parseInt( fixed_bsemainier, 2 );
