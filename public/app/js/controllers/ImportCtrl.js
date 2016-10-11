@@ -137,7 +137,6 @@ angular.module( 'cahierDeTextesClientApp' )
                               file_loading: toastr.info( '', '<i class="fa fa-spinner fa-pulse"></i> Chargement du fichier', toastr_config )
                           };
 
-                          var started_at = moment();
                           $scope.pronote = false;
                           $scope.ui.loading_file = true;
                           $scope.matcheable_data = [];
@@ -145,7 +144,6 @@ angular.module( 'cahierDeTextesClientApp' )
                           fileUpload.uploadFileToUrl( fichier, APP_PATH + '/api/v1/import/pronote/decrypt' )
                               .success( function( data, status, headers, config ) {
                                   toastr.clear( toasts.file_loading );
-                                  console.log( ( ( moment() - started_at ) / 1000.0 ) + 's : decrypted data received' )
 
                                   // 1. Récupérer le fichier Pronote décrypté
                                   $scope.pronote = data;
@@ -157,8 +155,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                   Annuaire.get_etablissement( $scope.pronote.UAI )
                                       .then( function( response ) {
                                           toastr.clear( toasts.load_etab_data );
-
-                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's : etablissement\'s data received' )
 
                                           $scope.etablissement = { teachers: _(response.data.users).select( function( user ) { return _(user.profils).includes( 'ENS' ) || _(user.profils).includes( 'DOC' ); } ),
                                                                    classes: _(response.data.groups).where( { type_regroupement_id: 'CLS' } ),
@@ -178,7 +174,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                               regroupement.libelle_aaf = regroupement.libelle_aaf.toUpperCase();
                                               regroupement.displayed_label = regroupement.libelle_aaf;
                                           } );
-                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's : all things UPPERCASED!' )
 
                                           // 3.2 Enseignants
                                           _($scope.pronote.Professeurs[0].Professeur)
@@ -191,7 +186,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                                       enseignant.laclasse.displayed_label = enseignant.laclasse.lastname + ' ' + enseignant.laclasse.firstname.toLocaleLowerCase();
                                                   }
                                               } );
-                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's : matched Enseignants' )
 
                                           // 3.3 Classes et Groupes
                                           _($scope.pronote.Classes[0].Classe)
@@ -203,7 +197,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                                       regroupement.laclasse.displayed_label = regroupement.laclasse.libelle_aaf;
                                                   }
                                               } );
-                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's : matched Classes' )
 
                                           _($scope.pronote.Groupes[0].Groupe)
                                               .each( function( regroupement ) {
@@ -214,7 +207,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                                       regroupement.laclasse.displayed_label = regroupement.laclasse.libelle_aaf;
                                                   }
                                               } );
-                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's : matched Groupes' )
 
                                           // 4. treating Cours
                                           $scope.beautify_semainier = function( semainier ) {
@@ -300,7 +292,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                               } )
                                               .flatten()
                                               .value();
-                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's : Cours treated' )
 
                                           $scope.pronote.enseignants = Utils.groupByKey( $scope.pronote.Professeurs[0].Professeur, 'Ident' );
                                           $scope.pronote.classes = Utils.groupByKey( $scope.pronote.Classes[0].Classe, 'Ident' );
@@ -341,10 +332,8 @@ angular.module( 'cahierDeTextesClientApp' )
                                                               matiere.laclasse.displayed_label = matiere.laclasse.libelle_long;
                                                           }
                                                       } );
-                                                  console.log( ( ( moment() - started_at ) / 1000.0 ) + 's : matched Matieres' )
 
                                                   $scope.pronote.matieres = Utils.groupByKey( $scope.pronote.Matieres[0].Matiere, 'Ident' );
-                                                  console.log( ( ( moment() - started_at ) / 1000.0 ) + 's : $scope.pronote populated' )
                                                   $scope.matcheable_data.push( { title: 'Matières',
                                                                                  pronote: $scope.pronote.matieres,
                                                                                  annuaire: $scope.matieres } );
@@ -365,7 +354,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                                   $scope.$watchCollection( 'selected', $scope.update_counters );
 
                                                   $scope.ui.loading_file = false;
-                                                  console.log( ( ( moment() - started_at ) / 1000.0 ) + 's : finished!' )
                                               } );
                                       } );
                               } );
