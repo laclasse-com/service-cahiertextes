@@ -68,3 +68,4 @@
         - gestion des créneaux d'emploi du temps: fusion
       8:
         - correction du traitement des semainiers lors de l'import Pronote
+        - optimisation de la page d'import Pronote
