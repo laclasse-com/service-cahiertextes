@@ -21,6 +21,19 @@ angular.module( 'cahierDeTextesClientApp' )
                           return date;
                       };
 
+                      var fix_semainier_pronote = function( semainier_pronote ) {
+                          var nb_week_in_year = 52;
+                          var bsemainier_pronote = parseInt( semainier_pronote ).toString( 2 );
+                          bsemainier_pronote = Utils.padStart( bsemainier_pronote, nb_week_in_year + 1, '0' );
+                          bsemainier_pronote = bsemainier_pronote.substr( 0, nb_week_in_year ).split('').reverse().join('');
+
+                          var pivot = nb_week_in_year - moment( new Date( $scope.pronote.AnneeScolaire[0].DateDebut ) ).week();
+                          var bsemainier_laclasse = bsemainier_pronote.slice( pivot, nb_week_in_year ) + bsemainier_pronote.substr( 0, pivot );
+                          bsemainier_laclasse = bsemainier_laclasse.split('').reverse().join('');
+
+                          return parseInt( bsemainier_laclasse, 2 );
+                      };
+
                       $scope.scope = $scope;
                       $scope.jours_de_la_semaine = $locale.DATETIME_FORMATS.DAY;
                       $scope.annee = $locale.DATETIME_FORMATS.MONTH;
@@ -242,37 +255,24 @@ angular.module( 'cahierDeTextesClientApp' )
                                                       return _(cours.Professeur).map( function( enseignant ) {
                                                           var compute_cours = function( type_regroupement ) {
                                                               return function( regroupement ) {
-                                                                  var fix_semainier = function( semainier_pronote ) {
-                                                                      var nb_week_in_year = 53;
-                                                                      var pivot = nb_week_in_year - moment( new Date( $scope.pronote.AnneeScolaire[0].DateDebut ) ).week() + 1;
-                                                                      var bsemainier = parseInt( semainier_pronote ).toString( 2 );
-                                                                      bsemainier = bsemainier.substr( 0, bsemainier.length - 1 );
-                                                                      bsemainier = Utils.padStart( bsemainier, 52, '0' );
-
-                                                                      var fixed_bsemainier = bsemainier.slice( pivot, bsemainier.length ) + bsemainier.substr( 0, pivot );
-                                                                      var fixed_semainier = parseInt( fixed_bsemainier, 2 );
-
-                                                                      return fixed_semainier;
-                                                                  };
-
                                                                   var this_cours = angular.copy( cours );
                                                                   this_cours.is_displayed = true;
                                                                   this_cours.Matiere = matiere;
                                                                   this_cours.Professeur = enseignant;
-                                                                  this_cours.Professeur.Semaines = fix_semainier( this_cours.Professeur.Semaines );
+                                                                  this_cours.Professeur.Semaines = fix_semainier_pronote( this_cours.Professeur.Semaines );
 
                                                                   if ( type_regroupement === 'Classe' ) {
                                                                       this_cours.Classe = regroupement;
-                                                                      this_cours.Classe.Semaines = fix_semainier( this_cours.Classe.Semaines );
+                                                                      this_cours.Classe.Semaines = fix_semainier_pronote( this_cours.Classe.Semaines );
                                                                   } else {
                                                                       this_cours.Groupe = regroupement;
-                                                                      this_cours.Groupe.Semaines = fix_semainier( this_cours.Groupe.Semaines );
+                                                                      this_cours.Groupe.Semaines = fix_semainier_pronote( this_cours.Groupe.Semaines );
                                                                   }
 
                                                                   if ( _(cours).has('Salle') ) {
                                                                       return _(cours.Salle).map( function( salle ) {
                                                                           this_cours.Salle = salle;
-                                                                          this_cours.Salle.Semaines = fix_semainier( this_cours.Salle.Semaines );
+                                                                          this_cours.Salle.Semaines = fix_semainier_pronote( this_cours.Salle.Semaines );
 
                                                                           return this_cours;
                                                                       } );
