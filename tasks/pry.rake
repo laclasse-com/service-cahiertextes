@@ -19,6 +19,7 @@ task :load_config do
   require_relative '../lib/pronote'
   require_relative '../config/database'
   require_relative '../models/models'
+  require_relative '../lib/utils/semainier'
 end
 
 desc 'Open pry with app environment'
