@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-require_relative '../../lib/annuaire_wrapper'
-
 module CahierDeTextesAPI
   module V1
     # API d'interfaçage avec l'annuaire
@@ -10,7 +8,7 @@ module CahierDeTextesAPI
 
       desc 'Renvoi la liste de toutes les matières'
       get '/matieres' do
-        AnnuaireWrapper::Matiere.query
+        Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_matiere, '', expand: 'true' )
       end
 
       desc 'Renvoi le détail d\'une matière'
@@ -18,7 +16,7 @@ module CahierDeTextesAPI
         requires :id, desc: 'id de la matière'
       end
       get '/matieres/:id' do
-        AnnuaireWrapper::Matiere.get( params[:id] )
+        Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_matiere, "#{CGI.escape( params[:id] )}", expand: 'false' )
       end
 
       desc 'retourne un établissement'
@@ -26,7 +24,7 @@ module CahierDeTextesAPI
         requires :uai, desc: 'Code UAI de l\'établissement'
       end
       get '/etablissements/:uai' do
-        AnnuaireWrapper::Etablissement.get( params[:uai], 2 )
+        Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_v2_etablissements, "#{params[:uai]}", {} )
       end
 
       desc 'retourne la liste des enseignants de l\'établissement'
@@ -34,7 +32,7 @@ module CahierDeTextesAPI
         requires :uai, desc: 'Code UAI de l\'établissement'
       end
       get '/etablissements/:uai/enseignants' do
-        AnnuaireWrapper::Etablissement.get_enseignants( params[:uai] )
+        Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_etablissement, "#{params[:uai]}/enseignants", expand: 'true' )
       end
 
       desc 'retourne la liste des regroupements de l\'établissement'
@@ -42,7 +40,9 @@ module CahierDeTextesAPI
         requires :uai, desc: 'Code UAI de l\'établissement'
       end
       get '/etablissements/:uai/regroupements' do
-        regroupements = AnnuaireWrapper::Etablissement.get_regroupements( params[:uai] )
+        regroupements = Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_etablissement,
+                                                                        "#{params[:uai]}/regroupements",
+                                                                        expand: 'true' )
 
         regroupements.keys.each do |type|
           regroupements[ type ].each do |regroupement|
@@ -58,7 +58,13 @@ module CahierDeTextesAPI
         requires :id, desc: 'id du regroupement'
       end
       get '/regroupements/:id' do
-        AnnuaireWrapper::Regroupement.get( params[:id] )
+        regroupement = Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_regroupement,
+                                                                       "#{CGI.escape( params[:id] )}",
+                                                                       expand: 'false' )
+        regroupement['libelle'] = regroupement['libelle_aaf'] if regroupement['libelle'].nil?
+        regroupement['libelle_aaf'] = regroupement['libelle'] if regroupement['libelle_aaf'].nil?
+
+        regroupement
       end
 
       desc 'Renvoi le détail d\'un utilisateur'
@@ -66,7 +72,9 @@ module CahierDeTextesAPI
         requires :id, desc: 'id de l\'utilisateur'
       end
       get '/users/:id' do
-        AnnuaireWrapper::User.get( params[:id] )
+        Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_user,
+                                                        "#{params[:id]}",
+                                                        expand: 'true' )
       end
 
       desc 'Renvoi le détail d\'une liste d\'utilisateur'
@@ -76,7 +84,9 @@ module CahierDeTextesAPI
         # end
       end
       get '/users/bulk/:ids' do
-        AnnuaireWrapper::User.bulk_get( params[:ids] )
+        Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_user_liste,
+                                                        "#{params[:ids].split(',').join('_')}",
+                                                        expand: 'true' )
       end
     end
   end

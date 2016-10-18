@@ -16,7 +16,7 @@ module CahierDeTextesAPI
 
         utilisateur[ 'parametrage_cahier_de_textes' ] = JSON.parse( parametres[:parameters] )
 
-        all_matieres = AnnuaireWrapper::Matiere.query
+        all_matieres = Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_matiere, '', expand: 'true' )
 
         utilisateur[ 'profils' ].each do |profil|
           if !profil['admin'] && %w(ENS).include?( profil['profil_id'] )

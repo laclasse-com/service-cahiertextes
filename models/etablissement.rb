@@ -8,8 +8,8 @@ class Etablissement < Sequel::Model( :etablissements )
   one_to_many :salles
 
   def statistiques_classes
-    AnnuaireWrapper::Etablissement
-      .get_regroupements( values[:UAI] )['classes']
+    Laclasse::CrossApp::Sender
+      .send_request_signed( :service_annuaire_etablissement, "#{values[:UAI]}/regroupements", expand: 'true' )['classes']
       .map do |classe|
       cdt = CahierDeTextes.where( regroupement_id: classe['id'] ).first
       cdt = CahierDeTextes.create( date_creation: Time.now,
@@ -19,8 +19,8 @@ class Etablissement < Sequel::Model( :etablissements )
   end
 
   def statistiques_enseignants
-    AnnuaireWrapper::Etablissement
-      .get_enseignants( values[:UAI] )
+    Laclasse::CrossApp::Sender
+      .send_request_signed( :service_annuaire_etablissement, "#{values[:UAI]}/enseignants", expand: 'true' )
       .map do |enseignant|
       { enseignant_id: enseignant['id_ent'],
         classes: saisies_enseignant( enseignant['id_ent'] )[:saisies]

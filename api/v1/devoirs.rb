@@ -18,12 +18,12 @@ module CahierDeTextesAPI
       end
       get '/' do
         if params[:uid]
-          user_annuaire = AnnuaireWrapper::User.get( user[:uid] )
+          user_annuaire = Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_user, "#{user[:uid]}", expand: 'true' )
           error!( '401 Unauthorized', 401 ) unless user_annuaire['profils'].find { |p| p['actif'] }['profil_id'] == 'TUT' && !user_annuaire['enfants'].find { |e| e['enfant']['id_ent'] == params[:uid] }.nil?
 
-          regroupements_annuaire = AnnuaireWrapper::User.get_regroupements( params[:uid] )
+          regroupements_annuaire = Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_user, "#{params[:uid]}/regroupements", expand: 'true' )
         else
-          regroupements_annuaire = AnnuaireWrapper::User.get_regroupements( user[:uid] )
+          regroupements_annuaire = Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_user, "#{user[:uid]}/regroupements", expand: 'true' )
         end
 
         regroupements_ids = regroupements_annuaire['classes'].concat( regroupements_annuaire['groupes_eleves'] )
