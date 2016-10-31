@@ -22,6 +22,7 @@ angular.module( 'cahierDeTextesClientApp' )
     .factory( 'CALENDAR_OPTIONS', [ '$locale',
                                     function( $locale ) {
                                         return { lang: 'fr',
+                                                 locale: 'fr',
                                                  height: 600,
                                                  header: { left: '',
                                                            center: 'title',
