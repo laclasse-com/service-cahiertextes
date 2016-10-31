@@ -23,6 +23,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                     function( $locale ) {
                                         return { lang: 'fr',
                                                  height: 600,
+                                                 locale: 'fr',
                                                  header: { left: '',
                                                            center: 'title',
                                                            right: 'today prev,next' },
