@@ -44,6 +44,11 @@
     <div class="panel-heading">
         <div class="row">
             <div class="col-md-9">
+                <multiSelect ms-data="scope.classes"
+                             ms-model="scope.selected_regroupements"
+                             order-by="['type_regroupement_id','libelle']"
+                             group-by="'type_regroupement_id'"
+                             on-change="scope.graphiques.populate( raw_data )"></multiSelect>
                 <div class="ui-select-wrapper">
                     <ui-select multiple class="pull-left" theme="bootstrap"
                                append-to-body="true"

@@ -714,7 +714,8 @@ angular.module('textAngularSetup', [])
 			// check if in list. If not in list then use formatBlock option
 			if(possibleNodes[0] && possibleNodes[0].tagName.toLowerCase() !== 'li' &&
 				possibleNodes[0].tagName.toLowerCase() !== 'ol' &&
-				possibleNodes[0].tagName.toLowerCase() !== 'ul') {
+				possibleNodes[0].tagName.toLowerCase() !== 'ul' &&
+				possibleNodes[0].getAttribute("contenteditable") !== "true") {
 				this.$editor().wrapSelection("formatBlock", "default");
 			}
 			restoreSelection();
@@ -829,7 +830,7 @@ angular.module('textAngularSetup', [])
 				/* istanbul ignore next: don't know how to test this... since it needs a dialogPrompt */
 				// block javascript here
 				if (!blockJavascript(imageLink)) {
-					if (taSelection.getSelectionElement().tagName.toLowerCase() === 'a') {
+					if (taSelection.getSelectionElement().tagName && taSelection.getSelectionElement().tagName.toLowerCase() === 'a') {
 						// due to differences in implementation between FireFox and Chrome, we must move the
 						// insertion point past the <a> element, otherwise FireFox inserts inside the <a>
 						// With this change, both FireFox and Chrome behave the same way!
@@ -876,7 +877,7 @@ angular.module('textAngularSetup', [])
 						// maxresdefault.jpg seems to be undefined on some.
 						var embed = '<img class="ta-insert-video" src="https://img.youtube.com/vi/' + videoId + '/hqdefault.jpg" ta-insert-video="' + urlLink + '" contenteditable="false" allowfullscreen="true" frameborder="0" />';
 						/* istanbul ignore next: don't know how to test this... since it needs a dialogPrompt */
-						if (taSelection.getSelectionElement().tagName.toLowerCase() === 'a') {
+						if (taSelection.getSelectionElement().tagName && taSelection.getSelectionElement().tagName.toLowerCase() === 'a') {
 							// due to differences in implementation between FireFox and Chrome, we must move the
 							// insertion point past the <a> element, otherwise FireFox inserts inside the <a>
 							// With this change, both FireFox and Chrome behave the same way!
@@ -901,7 +902,7 @@ angular.module('textAngularSetup', [])
 			var urlLink;
 			// if this link has already been set, we need to just edit the existing link
 			/* istanbul ignore if: we do not test this */
-			if (taSelection.getSelectionElement().tagName.toLowerCase() === 'a') {
+			if (taSelection.getSelectionElement().tagName && taSelection.getSelectionElement().tagName.toLowerCase() === 'a') {
 				urlLink = $window.prompt(taTranslations.insertLink.dialogPrompt, taSelection.getSelectionElement().href);
 			} else {
 				urlLink = $window.prompt(taTranslations.insertLink.dialogPrompt, 'http://');
