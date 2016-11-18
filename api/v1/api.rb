@@ -10,7 +10,6 @@ require_relative './types_de_devoir'
 require_relative './emplois_du_temps'
 require_relative './annuaire'
 require_relative './creneaux_emploi_du_temps'
-require_relative './plages_horaires'
 require_relative './salles'
 require_relative './cahiers_de_textes'
 
@@ -35,7 +34,6 @@ module CahierDeTextesAPI
       resource( :types_de_devoir          ) { mount ::CahierDeTextesAPI::V1::TypesDeDevoirAPI }
       resource( :emplois_du_temps         ) { mount ::CahierDeTextesAPI::V1::EmploisDuTempsAPI }
       resource( :creneaux_emploi_du_temps ) { mount ::CahierDeTextesAPI::V1::CreneauxEmploiDuTempsAPI }
-      resource( :plages_horaires          ) { mount ::CahierDeTextesAPI::V1::PlagesHorairesAPI }
       resource( :salles                   ) { mount ::CahierDeTextesAPI::V1::SallesAPI }
       resource( :cahiers_de_textes        ) { mount ::CahierDeTextesAPI::V1::CahiersDeTextesAPI }
 

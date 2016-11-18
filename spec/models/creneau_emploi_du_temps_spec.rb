@@ -5,11 +5,10 @@ require 'spec_helper'
 describe CreneauEmploiDuTemps do
   before :each do
     @etablissement = Etablissement.create( UAI: 'test012345Z' )
-    @plage_horaire = PlageHoraire.create( label: 'test', debut: Time.now, fin: Time.now )
     @jour_de_la_semaine = rand( 1..5 )
     @creneau = CreneauEmploiDuTemps.create( date_creation: Time.now,
-                                            debut: @plage_horaire.id,
-                                            fin: @plage_horaire.id,
+                                            debut: Time.parse( '14:00' ),
+                                            fin: Time.parse( '15:00' ),
                                             jour_de_la_semaine: @jour_de_la_semaine,
                                             matiere_id: '',
                                             etablissement_id: @etablissement.id )
@@ -21,7 +20,6 @@ describe CreneauEmploiDuTemps do
     @creneau.regroupements.map( &:destroy )
     @creneau.remove_all_salles
     @creneau.destroy
-    @plage_horaire.destroy
     @salle.destroy
     @etablissement.destroy
   end
@@ -33,8 +31,8 @@ describe CreneauEmploiDuTemps do
     expect( @creneau.salles ).to be_empty
     expect( @creneau.cours ).to be_empty
     expect( @creneau.devoirs ).to be_empty
-    expect( @creneau.debut ).to eq @plage_horaire.id
-    expect( @creneau.fin ).to eq @plage_horaire.id
+    expect( @creneau.debut.iso8601.split('+').first.split('T').last ).to eq '14:00:00'
+    expect( @creneau.fin.iso8601.split('+').first.split('T').last ).to eq '15:00:00'
     expect( @creneau.jour_de_la_semaine ).to eq @jour_de_la_semaine
     expect( @creneau.matiere_id ).to be_empty
     expect( @creneau.etablissement_id ).to eq @etablissement.id
@@ -62,15 +60,15 @@ describe CreneauEmploiDuTemps do
   it 'def modifie( params ) # hours as string' do
     @creneau.modifie( heure_debut: '12:34',
                       heure_fin: '23:45' )
-    expect( PlageHoraire[ @creneau.debut ].debut.iso8601.split('+').first ).to eq '2000-01-01T12:34:00'
-    expect( PlageHoraire[ @creneau.fin ].fin.iso8601.split('+').first ).to eq '2000-01-01T23:45:00'
+    expect( @creneau.debut.iso8601.split('+').first.split('T').last ).to eq '12:34:00'
+    expect( @creneau.fin.iso8601.split('+').first.split('T').last ).to eq '23:45:00'
   end
 
   it 'def modifie( params ) # hours as Time' do
     @creneau.modifie( heure_debut: Time.parse( '10:02' ),
                       heure_fin: Time.parse( '21:09' ) )
-    expect( PlageHoraire[ @creneau.debut ].debut.iso8601.split('+').first ).to eq '2000-01-01T10:02:00'
-    expect( PlageHoraire[ @creneau.fin ].fin.iso8601.split('+').first ).to eq '2000-01-01T21:09:00'
+    expect( @creneau.debut.iso8601.split('+').first.split('T').last ).to eq '10:02:00'
+    expect( @creneau.fin.iso8601.split('+').first.split('T').last ).to eq '21:09:00'
   end
 
   it 'def modifie( params ) # change matiere' do

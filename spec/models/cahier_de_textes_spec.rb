@@ -16,15 +16,11 @@ describe CahierDeTextes do
                          description: type_devoir.last )
     end
 
-    ph = PlageHoraire.create( label: 'dummy_PH',
-                              debut: Time.parse( '14:00' ),
-                              fin: Time.parse( '15:00' ))
-
     etab = Etablissement.create( UAI: '012345Z' )
 
     5.times do |i|
-      cedt = CreneauEmploiDuTemps.create( debut: ph.id,
-                                          fin: ph.id,
+      cedt = CreneauEmploiDuTemps.create( debut: Time.parse( '14:00' ),
+                                          fin: Time.parse( '15:00' ),
                                           jour_de_la_semaine: i + 1,
                                           etablissement_id: etab.id,
                                           matiere_id: '001122',

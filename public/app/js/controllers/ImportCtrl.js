@@ -3,10 +3,10 @@
 angular.module( 'cahierDeTextesClientApp' )
     .controller('ImportCtrl',
                 [ '$scope', '$http', '$locale', '$sce', '$filter', 'toastr', 'fileUpload', 'moment', 'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'VERSION', 'Annuaire', 'Utils',
-                  'Etablissements', 'PlagesHoraires', 'Salles', 'CreneauxEmploiDuTemps', 'CahiersDeTextes',
+                  'Etablissements', 'Salles', 'CreneauxEmploiDuTemps', 'CahiersDeTextes',
                   'current_user',
                   function ( $scope, $http, $locale, $sce, $filter, toastr, fileUpload, moment, APP_PATH, SEMAINES_VACANCES, ZONE, VERSION, Annuaire, Utils,
-                             Etablissements, PlagesHoraires, Salles, CreneauxEmploiDuTemps, CahiersDeTextes,
+                             Etablissements, Salles, CreneauxEmploiDuTemps, CahiersDeTextes,
                              current_user ) {
                       var toastr_config = { autoDismiss: false,
                                             allowHtml: true };
