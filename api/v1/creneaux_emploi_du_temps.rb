@@ -8,7 +8,7 @@ module CahierDeTextesAPI
       #--------------------------------------------------------------------
       desc 'renvoi un créneau'
       params do
-        requires :id, type: Fixnum
+        requires :id, type: Integer
 
         optional :expand, type: Boolean
         optional :debut, type: Date
@@ -27,7 +27,7 @@ module CahierDeTextesAPI
       #--------------------------------------------------------------------
       desc 'renvoi les créneaux similaires à ce créneau'
       params do
-        requires :id, type: Fixnum
+        requires :id, type: Integer
         requires :debut, type: Date
         requires :fin, type: Date
       end
@@ -48,11 +48,11 @@ module CahierDeTextesAPI
         requires :matiere_id, type: String
 
         optional :regroupement_id, type: String
-        optional :salle_id, type: Fixnum
+        optional :salle_id, type: Integer
         optional :enseignant_id, type: String
-        optional :semaines_de_presence_regroupement, type: Fixnum
-        optional :semaines_de_presence_enseignant, type: Fixnum
-        optional :semaines_de_presence_salle, type: Fixnum
+        optional :semaines_de_presence_regroupement, type: Integer
+        optional :semaines_de_presence_enseignant, type: Integer
+        optional :semaines_de_presence_salle, type: Integer
       end
       post  do
         user_needs_to_be( %w( ENS DOC ), true )
@@ -81,13 +81,13 @@ module CahierDeTextesAPI
           requires :heure_debut, type: Time
           requires :heure_fin, type: Time
           requires :matiere_id, type: String
-          requires :regroupement_id, type: Fixnum
-          requires :semaines_de_presence_regroupement, type: Fixnum
+          requires :regroupement_id, type: Integer
+          requires :semaines_de_presence_regroupement, type: Integer
           requires :enseignant_id, type: String
-          requires :semaines_de_presence_enseignant, type: Fixnum
+          requires :semaines_de_presence_enseignant, type: Integer
 
-          optional :salle_id, type: Fixnum
-          optional :semaines_de_presence_salle, type: Fixnum
+          optional :salle_id, type: Integer
+          optional :semaines_de_presence_salle, type: Integer
         end
       end
       post '/bulk' do
@@ -112,15 +112,15 @@ module CahierDeTextesAPI
         requires :id, type: Integer
 
         optional :matiere_id, type: String
-        optional :regroupement_id, type: Fixnum
-        optional :previous_regroupement_id, type: Fixnum
+        optional :regroupement_id, type: Integer
+        optional :previous_regroupement_id, type: Integer
         optional :heure_debut, type: Time
         optional :heure_fin, type: Time
-        optional :salle_id, type: Fixnum
+        optional :salle_id, type: Integer
         optional :enseignant_id, type: String
-        optional :semaines_de_presence_regroupement, type: Fixnum
-        optional :semaines_de_presence_enseignant, type: Fixnum
-        optional :semaines_de_presence_salle, type: Fixnum
+        optional :semaines_de_presence_regroupement, type: Integer
+        optional :semaines_de_presence_enseignant, type: Integer
+        optional :semaines_de_presence_salle, type: Integer
         optional :jour_de_la_semaine, type: Integer
       end
       put '/:id'  do
