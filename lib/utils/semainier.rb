@@ -15,17 +15,17 @@ module CahierDeTextesApp
         semainier[0] = ''
         semainier.split( '' )
                  .map
-                 .with_index { |w, i| { week: i + 1, presence: w == '1', holidays: vacances.include?( i + 1 ) } }
-                 .group_by { |w| Date::MONTHNAMES[ Date.commercial( w[:week] < 30 ? 2016 : 2015, w[:week] ).month ] }
+                 .with_index { |week, i| { week: i + 1, presence: week == '1', holidays: vacances.include?( i + 1 ) } }
+                 .group_by { |week| Date::MONTHNAMES[ Date.commercial( week[:week] < 30 ? 2016 : 2015, week[:week] ).month ] }
       end
 
       def pretty_print_semainier( semainier )
         jsonified_semainier = jsonify_semainier( semainier )
         semaine_to_s = lambda do |semaine|
           return '  ' if semaine.nil?
-          v1 = semaine[:holidays] ? '[' : ' '
-          v2 = semaine[:holidays] ? ']' : ' '
-          "#{v1}#{semaine[:presence] ? '1' : '0'}#{v2}"
+          prefix = semaine[:holidays] ? '[' : ' '
+          suffix = semaine[:holidays] ? ']' : ' '
+          "#{prefix}#{semaine[:presence] ? '1' : '0'}#{suffix}"
         end
 
         month_name_length = jsonified_semainier.keys.map(&:length).max

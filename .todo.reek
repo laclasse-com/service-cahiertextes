@@ -1,82 +1,13 @@
 ---
-ControlParameter:
-  exclude:
-  - AnnuaireWrapper::Etablissement#get
-  - CreneauEmploiDuTemps#merge_and_destroy_twins
-  - CreneauEmploiDuTemps#to_deep_hash
-DuplicateMethodCall:
-  exclude:
-  - AnnuaireWrapper::Regroupement#get
-  - DataManagement::EmploiDuTemps#get
-  - DataManagement::EmploiDuTemps#ical
-  - DataManagement::Provisioning#provision
-  - DataManagement::User#delete
-  - Uglify#those_files
-  - Uglify#those_files_with_map
-  - Utils#date_rentree
-  - CahierDeTextesApp::Utils::Holidays#get
-  - CahierDeTextesApp::Utils::Holidays#year_rentree
-  - Hash#from_xml
-  - Hash#xml_node_to_hash
-  - CahierDeTextes#statistiques
-  - Cours#copie
-  - Cours#modifie
-  - Cours#toggle_deleted
-  - CreneauEmploiDuTemps#merge_and_destroy_twins
-  - CreneauEmploiDuTemps#merge_twins
-  - CreneauEmploiDuTemps#modifie
-  - CreneauEmploiDuTemps#similaires
-  - CreneauEmploiDuTemps#update_salle
-  - SemainesDePresenceMixin#pretty_print_semainier
-  - Devoir#modifie
-  - Devoir#to_deep_hash
-  - Devoir#toggle_fait
-  - Etablissement#statistiques_classes
-  - Etablissement#statistiques_enseignants
-  - CahierDeTextesApp::Routes::Auth#self.registered
-  - CahierDeTextesApp::Routes::Status#self.registered
-  - TableCleaner#tsort_each_child
-  - generate_test_data
-  - load_test_data
-IrresponsibleModule:
-  exclude:
-  - AnnuaireWrapper::Etablissement::Regroupement
-  - AnnuaireWrapper::Etablissement::User
-  - AnnuaireWrapper::Log
-  - AnnuaireWrapper::Matiere
-  - AnnuaireWrapper::Regroupement
-  - AnnuaireWrapper::User
-  - DataManagement::Cleansing::Creneaux
-  - DataManagement::EmploiDuTemps
-  - Uglify
-  - Utils
-  - CahierDeTextesApp::Utils::Holidays
-  - CahierDeTextes
-  - Cours
-  - CoursRessource
-  - CreneauEmploiDuTemps
-  - SemainesDePresenceMixin
-  - Devoir
-  - DevoirRessource
-  - Etablissement
-  - PlageHoraire
-  - UserParameters
-  - CahierDeTextesApp::Routes::Auth
-  - CahierDeTextesApp::Routes::Index
-  - CahierDeTextesApp::Routes::Status
-  - AnnuaireWrapper
-  - Laclasse::Helpers::Authentication
 NilCheck:
   exclude:
-  - AnnuaireWrapper::Regroupement#get
   - DataManagement::Accessors#create_or_get
   - DataManagement::EmploiDuTemps#get
   - DataManagement::EmploiDuTemps#ical
   - DataManagement::Provisioning#provision
-  - Uglify#those_files
-  - Uglify#those_files_with_map
   - CahierDeTextesApp::Utils::Holidays#get
   - Utils#release_notes_to_json
+  - CahierDeTextesApp::Utils::Semainier#pretty_print_semainier
   - Cours#copie
   - Cours#toggle_validated
   - CreneauEmploiDuTemps#merge
@@ -89,6 +20,27 @@ NilCheck:
   - Etablissement#statistiques_classes
   - CahierDeTextesApp::Routes::Status#self.registered
   - generate_test_data
+IrresponsibleModule:
+  exclude:
+  - DataManagement::Cleansing::Creneaux
+  - DataManagement::EmploiDuTemps
+  - Uglify
+  - Utils
+  - CahierDeTextesApp::Utils::Holidays
+  - CahierDeTextesApp::Utils::Semainier
+  - CahierDeTextes
+  - Cours
+  - CoursRessource
+  - CreneauEmploiDuTemps
+  - SemainesDePresenceMixin
+  - Devoir
+  - DevoirRessource
+  - Etablissement
+  - UserParameters
+  - CahierDeTextesApp::Routes::Auth
+  - CahierDeTextesApp::Routes::Index
+  - CahierDeTextesApp::Routes::Status
+  - Laclasse::Helpers::Authentication
 NestedIterators:
   exclude:
   - DataManagement::Cleansing::Creneaux#deleted_and_unused
@@ -109,6 +61,8 @@ TooManyStatements:
   - DataManagement::User#delete
   - ProNote#decrypt_xml
   - CahierDeTextesApp::Utils::Holidays#get
+  - CahierDeTextesApp::Utils::Semainier#jsonify_semainier
+  - CahierDeTextesApp::Utils::Semainier#pretty_print_semainier
   - Hash#xml_node_to_hash
   - CahierDeTextes#statistiques
   - Cours#copie
@@ -123,7 +77,6 @@ TooManyStatements:
   - CreneauEmploiDuTemps#to_deep_hash
   - CreneauEmploiDuTemps#update_regroupement
   - CreneauEmploiDuTemps#update_salle
-  - SemainesDePresenceMixin#pretty_print_semainier
   - Devoir#modifie
   - Devoir#to_deep_hash
   - Etablissement#merge_all_twin_creneaux
@@ -139,44 +92,75 @@ UncommunicativeVariableName:
   - DataManagement::EmploiDuTemps#get
   - DataManagement::EmploiDuTemps#ical
   - CahierDeTextesApp::Utils::Holidays#get
+  - CahierDeTextesApp::Utils::Semainier#all_school_year_semainier
+  - CahierDeTextesApp::Utils::Semainier#jsonify_semainier
   - CreneauEmploiDuTemps#modifie
   - CreneauEmploiDuTemps#similaires
   - CreneauEmploiDuTemps#to_deep_hash
-  - SemainesDePresenceMixin#all_school_year_semainier
-  - SemainesDePresenceMixin#pretty_print_semainier
   - Etablissement#statistiques_enseignants
   - CahierDeTextesAPI::V1::DevoirsAPI
   - TableCleaner#clean
   - TableCleaner#tsort_each_node
+DuplicateMethodCall:
+  exclude:
+  - DataManagement::EmploiDuTemps#get
+  - DataManagement::EmploiDuTemps#ical
+  - DataManagement::Provisioning#provision
+  - DataManagement::User#delete
+  - Utils#date_rentree
+  - CahierDeTextesApp::Utils::Holidays#get
+  - CahierDeTextesApp::Utils::Holidays#year_rentree
+  - CahierDeTextesApp::Utils::Semainier#jsonify_semainier
+  - CahierDeTextesApp::Utils::Semainier#pretty_print_semainier
+  - Hash#from_xml
+  - Hash#xml_node_to_hash
+  - CahierDeTextes#statistiques
+  - Cours#copie
+  - Cours#modifie
+  - Cours#toggle_deleted
+  - CreneauEmploiDuTemps#merge_and_destroy_twins
+  - CreneauEmploiDuTemps#merge_twins
+  - CreneauEmploiDuTemps#modifie
+  - CreneauEmploiDuTemps#similaires
+  - CreneauEmploiDuTemps#update_salle
+  - Devoir#modifie
+  - Devoir#to_deep_hash
+  - Devoir#toggle_fait
+  - Etablissement#statistiques_classes
+  - Etablissement#statistiques_enseignants
+  - CahierDeTextesApp::Routes::Auth#self.registered
+  - CahierDeTextesApp::Routes::Status#self.registered
+  - TableCleaner#tsort_each_child
+  - generate_test_data
+  - load_test_data
 FeatureEnvy:
   exclude:
   - DataManagement::EmploiDuTemps#ical
   - CahierDeTextesApp::Utils::Holidays#get
+  - CahierDeTextesApp::Utils::Semainier#pretty_print_semainier
   - Hash#from_xml
   - Hash#xml_node_to_hash
   - CahierDeTextes#statistiques
   - CreneauEmploiDuTemps#merge
   - CreneauEmploiDuTemps#modifie
   - CreneauEmploiDuTemps#similaires
-  - SemainesDePresenceMixin#pretty_print_semainier
   - Etablissement#merge_all_twin_creneaux
   - Etablissement#statistiques_classes
 LongParameterList:
   exclude:
   - DataManagement::EmploiDuTemps#get
   - DataManagement::EmploiDuTemps#ical
+UncommunicativeParameterName:
+  exclude:
+  - CahierDeTextesApp::Utils::Semainier#activate_semaine
 BooleanParameter:
   exclude:
   - CreneauEmploiDuTemps#merge_and_destroy_twins
   - Etablissement#merge_all_twin_creneaux
-UncommunicativeParameterName:
+ControlParameter:
   exclude:
-  - SemainesDePresenceMixin#present_pour_la_semaine?
-UtilityFunction:
-  exclude:
-  - SemainesDePresenceMixin#all_school_year_semainier
-  - Etablissement#saisies_enseignant
-  - Laclasse::Helpers::Authentication#logged?
+  - CreneauEmploiDuTemps#merge_and_destroy_twins
+  - CreneauEmploiDuTemps#to_deep_hash
 PrimaDonnaMethod:
   exclude:
   - Devoir
@@ -187,8 +171,11 @@ RepeatedConditional:
   - CahierDeTextesAPI::V1::CreneauxEmploiDuTempsAPI
   - CahierDeTextesAPI::V1::DevoirsAPI
   - CahierDeTextesAPI::V1::EtablissementsAPI
-  - CahierDeTextesAPI::V1::PlagesHorairesAPI
   - CahierDeTextesAPI::V1::SallesAPI
+UtilityFunction:
+  exclude:
+  - Etablissement#saisies_enseignant
+  - Laclasse::Helpers::Authentication#logged?
 UncommunicativeModuleName:
   exclude:
   - CahierDeTextesAPI::V1
