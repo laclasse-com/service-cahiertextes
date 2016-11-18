@@ -23,13 +23,14 @@ def generate_test_data
                                                       .join(:creneaux_emploi_du_temps_enseignants, creneau_emploi_du_temps_id: :id)
                                                       .where(enseignant_id: cours.enseignant_id)
                                                       .first
-
-        Devoir.create(cours_id: cours.id,
-                      type_devoir_id: TypeDevoir.all.sample.id,
-                      creneau_emploi_du_temps_id: creneau_emploi_du_temps.id,
-                      date_due: Date.tomorrow,
-                      contenu: 'Exemple de devoir.',
-                      temps_estime: rand(0..120) ) unless creneau_emploi_du_temps.nil?
+        unless creneau_emploi_du_temps.nil?
+          Devoir.create(cours_id: cours.id,
+                        type_devoir_id: TypeDevoir.all.sample.id,
+                        creneau_emploi_du_temps_id: creneau_emploi_du_temps.id,
+                        date_due: Date.tomorrow,
+                        contenu: 'Exemple de devoir.',
+                        temps_estime: rand(0..120) )
+        end
         STDERR.putc '.'
       end
     end

@@ -12,8 +12,7 @@ class Etablissement < Sequel::Model( :etablissements )
       .send_request_signed( :service_annuaire_etablissement, "#{values[:UAI]}/regroupements", expand: 'true' )['classes']
       .map do |classe|
       cdt = CahierDeTextes.where( regroupement_id: classe['id'] ).first
-      cdt = CahierDeTextes.create( date_creation: Time.now,
-                                   regroupement_id: classe[ 'id' ] ) if cdt.nil?
+      cdt = CahierDeTextes.create( date_creation: Time.now, regroupement_id: classe[ 'id' ] ) if cdt.nil?
       cdt.statistiques
     end
   end
