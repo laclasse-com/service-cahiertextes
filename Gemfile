@@ -20,6 +20,7 @@ gem 'sass'
 gem 'sequel'
 gem 'sinatra'
 gem 'uglifier'
+gem 'xml-simple'
 
 gem 'laclasse-common', git: 'https://github.com/laclasse-com/laclasse-common.git'
 

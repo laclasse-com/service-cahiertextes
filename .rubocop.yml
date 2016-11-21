@@ -45,6 +45,9 @@ Style/ExtraSpacing:
 Metrics/ClassLength:
   Max: 300
 
+Metrics/BlockLength:
+  Max: 300
+
 Metrics/LineLength:
   Enabled: false
 

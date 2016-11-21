@@ -6,10 +6,6 @@ module SemainesDePresenceMixin
   def present_pour_la_semaine?( semaine )
     semaines_de_presence[ semaine ] == 1
   end
-
-  # def present_pour_la_semaine( semaine )
-  #   semaines_de_presence |= 2**semaine
-  # end
 end
 
 class CreneauEmploiDuTempsSalle < Sequel::Model( :creneaux_emploi_du_temps_salles )
@@ -43,8 +39,6 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
   one_to_many :devoirs
 
   many_to_one :etablissement, class: :Etablissement, key: :etablissement_id
-  many_to_one :plage_horaire_debut, class: :PlageHoraire, key: :debut
-  many_to_one :plage_horaire_fin, class: :PlageHoraire, key: :fin
 
   def toggle_deleted( date_suppression )
     if deleted
@@ -77,10 +71,6 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
       .select_append( :regroupements__semaines_de_presence___semainier_regroupement )
       .association_join( :enseignants )
       .select_append( :enseignants__semaines_de_presence___semainier_enseignant )
-      .association_join( :plage_horaire_debut )
-      .select_append( :plage_horaire_debut__debut___debut )
-      .association_join( :plage_horaire_fin )
-      .select_append( :plage_horaire_fin__fin___fin )
       .where( matiere_id: matiere_id )
       .where( jour_de_la_semaine: jour_de_la_semaine )
       .where( regroupements__regroupement_id: regroupements.map( &:regroupement_id ) )
@@ -134,7 +124,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
     end
   end
 
-  def similaires( debut, fin, user )
+  def similaires( date_debut, date_fin, user )
     # .where { date_creation >= 1.year.ago }
     # .where { !deleted || date_suppression >= fin }
     CreneauEmploiDuTemps
@@ -145,7 +135,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
       .where( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{fin}')" )
       .all
       .map do |c|
-      ( debut .. fin )
+      ( date_debut .. date_fin )
         .reject { |day| day.wday != c.jour_de_la_semaine }
         .map do |jour|
         c.regroupements.map do |regroupement|
@@ -155,23 +145,23 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
             start: Time.new( jour.year,
                              jour.month,
                              jour.mday,
-                             c.plage_horaire_debut.debut.hour,
-                             c.plage_horaire_debut.debut.min ).iso8601,
+                             c.debut.hour,
+                             c.debut.min ).iso8601,
             end: Time.new( jour.year,
                            jour.month,
                            jour.mday,
-                           c.plage_horaire_fin.fin.hour,
-                           c.plage_horaire_fin.fin.min ).iso8601,
+                           c.fin.hour,
+                           c.fin.min ).iso8601,
             heure_debut: Time.new( jour.year,
                                    jour.month,
                                    jour.mday,
-                                   c.plage_horaire_debut.debut.hour,
-                                   c.plage_horaire_debut.debut.min ).iso8601,
+                                   c.debut.hour,
+                                   c.debut.min ).iso8601,
             heure_fin: Time.new( jour.year,
                                  jour.month,
                                  jour.mday,
-                                 c.plage_horaire_fin.fin.hour,
-                                 c.plage_horaire_fin.fin.min ).iso8601,
+                                 c.fin.hour,
+                                 c.fin.min ).iso8601,
             has_cours: c.cours.count { |cours| cours.date_cours == jour } > 0,
             jour_de_la_semaine: c.jour_de_la_semaine,
             matiere_id: c.matiere_id,
@@ -183,22 +173,6 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
     end
       .flatten
       .compact
-  end
-
-  def update_heure_debut( value )
-    time = Sequel::SQLTime.parse( value.to_s )
-    update( debut: DataManagement::Accessors.create_or_get( PlageHoraire,
-                                                            label: value,
-                                                            debut: time,
-                                                            fin: time + 1800 ).id )
-  end
-
-  def update_heure_fin( value )
-    time = Sequel::SQLTime.parse( value.to_s )
-    update( fin: DataManagement::Accessors.create_or_get( PlageHoraire,
-                                                          label: value,
-                                                          debut: time - 1800,
-                                                          fin: time ).id )
   end
 
   def update_semaines_de_presence_enseignant( enseignant_id, semaines_de_presence_enseignant )
@@ -239,11 +213,8 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
   # rubocop:disable Metrics/PerceivedComplexity
   # rubocop:disable Metrics/CyclomaticComplexity
   def modifie( params )
-    params[:heure_debut] = Sequel::SQLTime.parse( params[:heure_debut] ) unless params[:heure_debut].is_a?( Time ) || !params.key?( :heure_debut )
-    params[:heure_fin] = Sequel::SQLTime.parse( params[:heure_fin] ) unless params[:heure_fin].is_a?( Time ) || !params.key?( :heure_fin )
-
-    update_heure_debut( params[:heure_debut] ) if params.key?( :heure_debut )
-    update_heure_fin( params[:heure_fin] ) if params.key?( :heure_fin )
+    update( debut: params[:heure_debut] ) if params.key?( :heure_debut )
+    update( fin: params[:heure_fin] ) if params.key?( :heure_fin )
     update( matiere_id: params[:matiere_id] ) if params.key?( :matiere_id )
     update( jour_de_la_semaine: params[:jour_de_la_semaine] ) if params.key?( :jour_de_la_semaine )
 

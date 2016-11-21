@@ -15,11 +15,11 @@ task :load_config do
   Bundler.require( :default, ENV['RACK_ENV'].to_sym )     # require tout les gems définis dans Gemfile
 
   require_relative '../config/constants'
-  require_relative '../lib/annuaire_wrapper'
   require_relative '../lib/pronote'
   require_relative '../config/database'
   require_relative '../models/models'
   require_relative '../lib/utils/semainier'
+  require 'laclasse/laclasse_logger'
 end
 
 desc 'Open pry with app environment'

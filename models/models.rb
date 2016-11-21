@@ -8,7 +8,6 @@ require_relative '../config/database'
 Sequel::Model.plugin :json_serializer
 
 # Emploi du temps
-require_relative './plage_horaire'
 require_relative './etablissement'
 require_relative './salle'
 require_relative './creneau_emploi_du_temps'

@@ -22,8 +22,8 @@ module DataManagement
             enseignant_id: creneau[ :enseignant_id ],
             creneau_emploi_du_temps_id: creneau.id,
             matiere_id: creneau.matiere_id,
-            start: Time.new( day.year, day.month, day.mday, creneau.plage_horaire_debut.debut.hour, creneau.plage_horaire_debut.debut.min ).iso8601,
-            end: Time.new( day.year, day.month, day.mday, creneau.plage_horaire_fin.fin.hour, creneau.plage_horaire_fin.fin.min ).iso8601,
+            start: Time.new( day.year, day.month, day.mday, creneau.debut.hour, creneau.debut.min ).iso8601,
+            end: Time.new( day.year, day.month, day.mday, creneau.fin.hour, creneau.fin.min ).iso8601,
             cours: creneau.cours
                           .select { |cours| cours[:deleted] == false && cours.date_cours == day }
                           .map do |cours|

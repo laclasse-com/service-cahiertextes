@@ -4,10 +4,6 @@ require 'base64'
 require 'openssl'
 require 'zlib'
 
-require_relative './data_management'
-require_relative './annuaire_wrapper'
-require_relative '../models/models'
-
 # Consomme le fichier Emploi du temps exporté par Pronote
 module ProNote
   module_function

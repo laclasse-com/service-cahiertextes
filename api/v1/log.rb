@@ -13,7 +13,7 @@ module CahierDeTextesAPI
       end
       post do
         params[:ip] = env[ 'HTTP_X_FORWARDED_FOR' ]
-        AnnuaireWrapper::Log.add( params )
+        Laclasse::CrossApp::Sender.post_request_signed( :service_annuaire_v2_logs, '', params, {} )
       end
     end
   end

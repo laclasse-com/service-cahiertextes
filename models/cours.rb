@@ -55,8 +55,7 @@ class Cours < Sequel::Model( :cours )
 
   def copie( regroupement_id, creneau_emploi_du_temps_id, date_cours )
     cahier_de_textes = CahierDeTextes.where( regroupement_id: regroupement_id ).first
-    cahier_de_textes = CahierDeTextes.create( date_creation: Time.now,
-                                              regroupement_id: regroupement_id ) if cahier_de_textes.nil?
+    cahier_de_textes = CahierDeTextes.create( date_creation: Time.now, regroupement_id: regroupement_id ) if cahier_de_textes.nil?
 
     target_cours = Cours.where( cahier_de_textes_id: cahier_de_textes.id,
                                 creneau_emploi_du_temps_id: creneau_emploi_du_temps_id,
