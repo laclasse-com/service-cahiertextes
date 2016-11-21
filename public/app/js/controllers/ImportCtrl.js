@@ -405,19 +405,16 @@ angular.module( 'cahierDeTextesClientApp' )
                           $scope.cahiers_de_textes_created = [];
                           $scope.cahiers_de_textes_created = 0;
 
+                          toastr.info( 'CahierDeTextes', 'Import en cours' );
                           while ( regroupements.length > 0 ) {
-                              var slice_of_regroupements = regroupements.splice( 0, bulk_package_size );
-                              CahiersDeTextes.bulk( { cahiers_de_textes: slice_of_regroupements } ).$promise
-                                  .then( function( response ) {
-                                      $scope.cahiers_de_textes_created += response;
-                                      toastr.info( _($scope.cahiers_de_textes_created).size() + ' CahierDeTextes', 'Import en cours' );
-                                  } );
+                              CahiersDeTextes.bulk( { cahiers_de_textes: regroupements.splice( 0, bulk_package_size ) } );
                           }
 
                           // Create Salle
                           $scope.expected_salles = _($scope.pronote.salles).size();
 
                           // FIXME: Hoping that it doesn't exceed Puma's POST size limit...
+                          toastr.info( 'Salles', 'Import en cours' );
                           Salles.bulk( { salles: _($scope.pronote.salles)
                                          .map( function( salle ) {
                                              return {
@@ -428,8 +425,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                          } )
                                        } ).$promise.then( function( response ) {
                                            $scope.salles_created = response;
-
-                                           toastr.info( _($scope.salles_created).size() + ' Salles', 'Import en cours' );
 
                                            var creneaux_filter = $scope.filter_creneau( true, $scope.selected );
 
@@ -463,15 +458,16 @@ angular.module( 'cahierDeTextesClientApp' )
                                            $scope.creneaux_created = [];
                                            $scope.counters.creneaux_created = 0;
 
+                                           var toastrs = [ toastr.info( 'Créneaux', 'Import en cours', { autoDismiss: false, tapToDismiss: false, timeOut: 0 } ) ];
                                            while ( creneaux_to_import.length > 0 ) {
                                                CreneauxEmploiDuTemps.bulk( {
                                                    uai: $scope.pronote.UAI,
                                                    creneaux_emploi_du_temps: creneaux_to_import.splice( 0, bulk_package_size )
-                                               } ).$promise
-                                                   .then( function( response ) {
-                                                       $scope.creneaux_created.push( response );
-                                                       toastr.info( _($scope.creneaux_created).size() + ' Créneaux', 'Import en cours' );
-                                                   } );
+                                               } ).$promise.then( function() {
+                                                   if ( _(creneaux_to_import).isEmpty() ) {
+                                                       toastr.clear( toastrs );
+                                                   }
+                                               } );
                                            }
                                        } );
 
