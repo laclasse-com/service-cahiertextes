@@ -2,15 +2,12 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller('ImportCtrl',
-                [ '$scope', '$http', '$locale', '$sce', '$filter', 'toastr', 'fileUpload', 'moment', 'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'VERSION', 'Annuaire', 'Utils',
-                  'Etablissements', 'Salles', 'CreneauxEmploiDuTemps', 'CahiersDeTextes',
+                [ '$scope', '$http', '$locale', '$sce', '$filter', 'fileUpload', 'moment', 'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'VERSION',
+                  'Annuaire', 'Utils', 'Etablissements', 'Salles', 'CreneauxEmploiDuTemps', 'CahiersDeTextes',
                   'current_user',
-                  function ( $scope, $http, $locale, $sce, $filter, toastr, fileUpload, moment, APP_PATH, SEMAINES_VACANCES, ZONE, VERSION, Annuaire, Utils,
-                             Etablissements, Salles, CreneauxEmploiDuTemps, CahiersDeTextes,
+                  function ( $scope, $http, $locale, $sce, $filter, fileUpload, moment, APP_PATH, SEMAINES_VACANCES, ZONE, VERSION,
+                             Annuaire, Utils, Etablissements, Salles, CreneauxEmploiDuTemps, CahiersDeTextes,
                              current_user ) {
-                      var toastr_config = { autoDismiss: false,
-                                            allowHtml: true };
-
                       var libelleHeure_to_Moment = function( libelle ) {
                           var horaire = libelle.split(':').map( function( i ) { return parseInt( i ); } );
                           var utc_offset = (new Date()).getTimezoneOffset() / 60 * -1;
@@ -146,29 +143,19 @@ angular.module( 'cahierDeTextesClientApp' )
 
                       // ACTIONS
                       $scope.load_data = function( fichier ) {
-                          var toasts = {
-                              file_loading: toastr.info( '', '<i class="fa fa-spinner fa-pulse"></i> Chargement du fichier', toastr_config )
-                          };
-
                           $scope.pronote = false;
                           $scope.ui.loading_file = true;
                           $scope.matcheable_data = [];
 
                           fileUpload.uploadFileToUrl( fichier, APP_PATH + '/api/v1/import/pronote/decrypt' )
                               .success( function( data, status, headers, config ) {
-                                  toastr.clear( toasts.file_loading );
-
                                   // 1. Récupérer le fichier Pronote décrypté
                                   $scope.pronote = data;
                                   $scope.pronote.GrilleHoraire[0].DureePlace = parseInt( $scope.pronote.GrilleHoraire[0].DureePlace );
 
-                                  toasts.load_etab_data = toastr.info( '', '<i class="fa fa-spinner fa-pulse"></i> Chargement des informations de l\'établissement', toastr_config );
-
                                   // 2. Récupérer toutes les infos de l'établissement et toutes les matières
                                   Annuaire.get_etablissement( $scope.pronote.UAI )
                                       .then( function( response ) {
-                                          toastr.clear( toasts.load_etab_data );
-
                                           $scope.etablissement = { teachers: _(response.data.users).select( function( user ) { return _(user.profils).includes( 'ENS' ) || _(user.profils).includes( 'DOC' ); } ),
                                                                    classes: _(response.data.groups).where( { type_regroupement_id: 'CLS' } ),
                                                                    groupes_eleves: _(response.data.groups).select( { type_regroupement_id: 'GRP' } ) };
@@ -310,11 +297,8 @@ angular.module( 'cahierDeTextesClientApp' )
                                                                          pronote: $scope.pronote.enseignants,
                                                                          annuaire: $scope.etablissement.teachers } );
 
-                                          toasts.load_matieres = toastr.info( '', '<i class="fa fa-spinner fa-pulse"></i> Chargement des matières officielles', toastr_config );
-
                                           Annuaire.get_matieres()
                                               .then( function( response ) {
-                                                  toastr.clear( toasts.load_matieres );
                                                   $scope.matieres = _(response.data).map( function( matiere ) {
                                                       matiere.libelle_long = matiere.libelle_long.toUpperCase();
                                                       matiere.displayed_label = matiere.libelle_long;
@@ -381,7 +365,6 @@ angular.module( 'cahierDeTextesClientApp' )
                               fin_annee_scolaire: new Date( $scope.pronote.AnneeScolaire[0].DateFin )
                           } );
                           ct_etablissement.$save();
-                          toastr.info( 'Etablissement mis à jour', 'Import en cours' );
 
                           // // Create CahierDeTextes
                           $scope.expected_cahiers_de_textes = _($scope.pronote.classes).size() + _($scope.pronote.groupes_eleves).size();
@@ -405,7 +388,6 @@ angular.module( 'cahierDeTextesClientApp' )
                           $scope.cahiers_de_textes_created = [];
                           $scope.cahiers_de_textes_created = 0;
 
-                          toastr.info( 'CahierDeTextes', 'Import en cours' );
                           while ( regroupements.length > 0 ) {
                               CahiersDeTextes.bulk( { cahiers_de_textes: regroupements.splice( 0, bulk_package_size ) } );
                           }
@@ -414,7 +396,6 @@ angular.module( 'cahierDeTextesClientApp' )
                           $scope.expected_salles = _($scope.pronote.salles).size();
 
                           // FIXME: Hoping that it doesn't exceed Puma's POST size limit...
-                          toastr.info( 'Salles', 'Import en cours' );
                           Salles.bulk( { salles: _($scope.pronote.salles)
                                          .map( function( salle ) {
                                              return {
@@ -458,15 +439,10 @@ angular.module( 'cahierDeTextesClientApp' )
                                            $scope.creneaux_created = [];
                                            $scope.counters.creneaux_created = 0;
 
-                                           var toastrs = [ toastr.info( 'Créneaux', 'Import en cours', { autoDismiss: false, tapToDismiss: false, timeOut: 0 } ) ];
                                            while ( creneaux_to_import.length > 0 ) {
                                                CreneauxEmploiDuTemps.bulk( {
                                                    uai: $scope.pronote.UAI,
                                                    creneaux_emploi_du_temps: creneaux_to_import.splice( 0, bulk_package_size )
-                                               } ).$promise.then( function() {
-                                                   if ( _(creneaux_to_import).isEmpty() ) {
-                                                       toastr.clear( toastrs );
-                                                   }
                                                } );
                                            }
                                        } );
