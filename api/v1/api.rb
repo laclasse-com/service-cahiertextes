@@ -13,8 +13,6 @@ require_relative './creneaux_emploi_du_temps'
 require_relative './salles'
 require_relative './cahiers_de_textes'
 
-require_relative './log'
-
 module CahierDeTextesAPI
   module V1
     class API < Grape::API
@@ -36,8 +34,6 @@ module CahierDeTextesAPI
       resource( :creneaux_emploi_du_temps ) { mount ::CahierDeTextesAPI::V1::CreneauxEmploiDuTempsAPI }
       resource( :salles                   ) { mount ::CahierDeTextesAPI::V1::SallesAPI }
       resource( :cahiers_de_textes        ) { mount ::CahierDeTextesAPI::V1::CahiersDeTextesAPI }
-
-      resource( :log                      ) { mount ::CahierDeTextesAPI::V1::LogAPI }
 
       add_swagger_documentation base_path: "#{APP_PATH}/api",
                                 api_version: 'v1',
