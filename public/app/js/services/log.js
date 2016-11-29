@@ -6,7 +6,7 @@ angular.module( 'cahierDeTextesClientApp' )
                         User.get_user(  )
                             .then( function( response ) {
                                 var user = response.data;
-                                $http.post( APP_PATH + '/api/v1/log',
+                                $http.post( '/api/app/v2/log',
                                             { app: app,
                                               uid: user.uid,
                                               uai: user.profil_actif.etablissement_code_uai,
