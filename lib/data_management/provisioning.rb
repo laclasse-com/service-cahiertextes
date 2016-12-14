@@ -6,24 +6,11 @@ module DataManagement
     module_function
 
     def provision( user )
-      if user[:user_detailed].nil? || user[:user_detailed]['etablissements'].nil?
-        LOGGER.warn 'user has no etablissements defined'
-        LOGGER.warn user.to_s
-      else
-        user[:user_detailed]['profils']
-          .each do |profil|
-          etablissement = Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_v2_etablissements, "#{profil[ 'etablissement_code_uai' ]}", {} )
-          next if etablissement == 'Not Found' || etablissement.key?( 'error' ) || etablissement.key?( :error )
+      user[:user_detailed]['etablissements'].each {  |etablissement| Accessors.create_or_get( Etablissement, UAI: etablissement[ 'code_uai' ] ) } unless user[:user_detailed]['etablissements'].nil?
 
-          Accessors.create_or_get( Etablissement, UAI: etablissement[ 'uai' ] )
+      user[:user_detailed]['classes'].each { |regroupement| Accessors.create_or_get( CahierDeTextes, regroupement_id: regroupement['classe_id'] )  } unless user[:user_detailed]['classes'].nil?
 
-          etablissement['groups']
-            .each do |regroupement|
-            Accessors.create_or_get( CahierDeTextes,
-                                     regroupement_id: regroupement['id'] )
-          end
-        end
-      end
+      user[:user_detailed]['groupes_eleves'].each { |regroupement| Accessors.create_or_get( CahierDeTextes, regroupement_id: regroupement['groupe_id'] )  } unless user[:user_detailed]['groupes_eleves'].nil?
     end
   end
 end

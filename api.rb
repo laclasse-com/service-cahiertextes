@@ -26,6 +26,8 @@ module CahierDeTextesAPI
 
     before do
       error!( '401 Unauthorized', 401 ) unless logged? || !request.env['PATH_INFO'].match(/.*swagger.*\.json$/).nil?
+
+      DataManagement::Provisioning.provision( user )
     end
 
     mount ::CahierDeTextesAPI::V1::API
