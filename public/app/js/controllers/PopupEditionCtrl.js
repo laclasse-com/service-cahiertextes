@@ -344,7 +344,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                var init_cours_existant = function( cours ) {
                                    $scope.cours = Cours.get( { id: cours.id } );
                                    $scope.cours.$promise.then( function( cours ) {
-                                       $scope.cours.editable = _($scope.cours.date_validation).isNull() && $scope.cours.enseignant_id === $scope.current_user.uid;
+                                       $scope.cours.editable = _($scope.cours.date_validation).isNull() && _(['ENS', 'DOC']).includes( $scope.current_user.profil_actif.profil_id ) && $scope.cours.enseignant_id === $scope.current_user.uid;
                                        if ( !$scope.cours.editable ) {
                                            $scope.cours.contenu = $sce.trustAsHtml( $scope.cours.contenu );
                                        }
