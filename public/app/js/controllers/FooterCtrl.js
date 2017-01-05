@@ -23,7 +23,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
                     $scope.save_and_reload = function() {
                         User.update_parameters( $scope.current_user.parametrage_cahier_de_textes )
-                            .success( function() {
+                            .then( function() {
                                 $state.transitionTo( $state.current, $stateParams, { reload: true, inherit: true, notify: true } );
                             } );
                     };

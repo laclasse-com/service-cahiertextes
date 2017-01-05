@@ -148,7 +148,7 @@ angular.module( 'cahierDeTextesClientApp' )
                           $scope.matcheable_data = [];
 
                           fileUpload.uploadFileToUrl( fichier, APP_PATH + '/api/v1/import/pronote/decrypt' )
-                              .success( function( data, status, headers, config ) {
+                              .then( function( data, status, headers, config ) {
                                   // 1. Récupérer le fichier Pronote décrypté
                                   $scope.pronote = data;
                                   $scope.pronote.GrilleHoraire[0].DureePlace = parseInt( $scope.pronote.GrilleHoraire[0].DureePlace );

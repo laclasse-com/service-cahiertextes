@@ -6,10 +6,10 @@ angular.module( 'cahierDeTextesClientApp' )
                function( $http, APP_PATH, API_VERSION ) {
                    this.get_user = _.memoize( function() {
                        return $http.get( APP_PATH + '/api/' + API_VERSION + '/users/current' )
-                           .success( function( response ) {
-                               _(response.profils).each( function( profil ) {
+                           .then( function( response ) {
+                               _(response.data.profils).each( function( profil ) {
                                    // Liste des regroupements liées au profil
-                                   profil.regroupements = _.chain(response.regroupements)
+                                   profil.regroupements = _.chain(response.data.regroupements)
                                        .filter( function( classe ) { return classe.etablissement_code == profil.etablissement_code_uai; } )
                                        .map( function( classe ) {
                                            return { id: classe.id,
@@ -20,14 +20,14 @@ angular.module( 'cahierDeTextesClientApp' )
                                        .reject( function( item ) { return _.isUndefined( item.id ); } )
                                        .value();
                                } );
-                               response.profil_actif = _(response.profils).findWhere( { actif: true } );
+                               response.data.profil_actif = _(response.data.profils).findWhere( { actif: true } );
 
-                               if ( response.enfants.length > 0 ) {
-                                   response.enfant_actif = response.enfants[ 0 ];
+                               if ( response.data.enfants.length > 0 ) {
+                                   response.data.enfant_actif = response.data.enfants[ 0 ];
                                }
 
                                // Voir quel est le profil
-                               response.is = function( profil_id ) {
+                               response.data.is = function( profil_id ) {
                                    return this.profil_actif.profil_id == profil_id;
                                };
 

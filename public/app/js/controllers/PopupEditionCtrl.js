@@ -501,7 +501,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                    $scope.faulty_docs_app = true;
                                } else {
                                    Documents.list_files()
-                                       .success( function ( response ) {
+                                       .then( function ( response ) {
                                            if ( _(response.error).isEmpty() && _(response).has( 'files' ) ) {
                                                $scope.cartable = response;
                                                $scope.cartable.files = _( response.files ).reject( function( file ) {
@@ -511,8 +511,8 @@ angular.module( 'cahierDeTextesClientApp' )
                                            } else {
                                                dead_Documents();
                                            }
-                                       } )
-                                       .error( dead_Documents );
+                                       },
+                                              dead_Documents );
                                }
 
                                $scope.consume_Documents_response_callback = function( item ) {
@@ -539,10 +539,10 @@ angular.module( 'cahierDeTextesClientApp' )
                                    var responses = Documents.upload_dans_cahier_de_textes( $scope.selected_regroupement, fichiers );
                                    for ( var i = 0; i < responses.length; i++ ) {
                                        responses[ i ]
-                                           .success( $scope.consume_Documents_response_callback( item ) )
-                                           .error( function ( response ) {
-                                               console.debug( response.error );
-                                           } );
+                                           .then( $scope.consume_Documents_response_callback( item ),
+                                                  function ( response ) {
+                                                      console.debug( response.error );
+                                                  } );
                                    }
                                };
 
