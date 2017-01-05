@@ -95,5 +95,14 @@ angular.module( 'cahierDeTextesClientApp' )
                         }
                     };
 
+                    this.libelleHeure_to_Moment = function( libelle ) {
+                        var horaire = libelle.split(':').map( function( i ) { return parseInt( i ); } );
+                        var utc_offset = (new Date()).getTimezoneOffset() / 60 * -1;
+                        var date = moment().set({ hour: horaire[0] + utc_offset,
+                                                  minute: horaire[1],
+                                                  second: horaire[2] });
+
+                        return date;
+                    };
                 }
               ] );

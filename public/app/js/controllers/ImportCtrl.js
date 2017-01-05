@@ -8,29 +8,6 @@ angular.module( 'cahierDeTextesClientApp' )
                   function ( $scope, $http, $locale, $sce, $filter, fileUpload, moment, APP_PATH, SEMAINES_VACANCES, ZONE, VERSION,
                              Annuaire, Utils, Etablissements, Salles, CreneauxEmploiDuTemps, CahiersDeTextes,
                              current_user ) {
-                      var libelleHeure_to_Moment = function( libelle ) {
-                          var horaire = libelle.split(':').map( function( i ) { return parseInt( i ); } );
-                          var utc_offset = (new Date()).getTimezoneOffset() / 60 * -1;
-                          var date = moment().set({ hour: horaire[0] + utc_offset,
-                                                    minute: horaire[1],
-                                                    second: horaire[2] });
-
-                          return date;
-                      };
-
-                      var fix_semainier_pronote = function( semainier_pronote ) {
-                          var nb_week_in_year = 52;
-                          var bsemainier_pronote = parseInt( semainier_pronote ).toString( 2 );
-                          bsemainier_pronote = Utils.padStart( bsemainier_pronote, nb_week_in_year + 1, '0' );
-                          bsemainier_pronote = bsemainier_pronote.substr( 0, nb_week_in_year ).split('').reverse().join('');
-
-                          var pivot = nb_week_in_year - moment( new Date( $scope.pronote.AnneeScolaire[0].DateDebut ) ).week();
-                          var bsemainier_laclasse = bsemainier_pronote.slice( pivot, nb_week_in_year ) + bsemainier_pronote.substr( 0, pivot );
-                          bsemainier_laclasse = bsemainier_laclasse.split('').reverse().join('');
-
-                          return parseInt( bsemainier_laclasse, 2 );
-                      };
-
                       $scope.scope = $scope;
                       $scope.jours_de_la_semaine = $locale.DATETIME_FORMATS.DAY;
                       $scope.annee = $locale.DATETIME_FORMATS.MONTH;
@@ -46,6 +23,19 @@ angular.module( 'cahierDeTextesClientApp' )
                                     sort_creneaux_by: function( criteria ) {
                                         $scope.ui.sortCreneauxBy = $scope.ui.sortCreneauxBy[0] === criteria[0] ?  _(criteria).map( function( sub_criteria ) { return '-' + sub_criteria; } ) : criteria;
                                     } };
+
+                      var fix_semainier_pronote = function( semainier_pronote ) {
+                          var nb_week_in_year = 52;
+                          var bsemainier_pronote = parseInt( semainier_pronote ).toString( 2 );
+                          bsemainier_pronote = Utils.padStart( bsemainier_pronote, nb_week_in_year + 1, '0' );
+                          bsemainier_pronote = bsemainier_pronote.substr( 0, nb_week_in_year ).split('').reverse().join('');
+
+                          var pivot = nb_week_in_year - moment( new Date( $scope.pronote.AnneeScolaire[0].DateDebut ) ).week();
+                          var bsemainier_laclasse = bsemainier_pronote.slice( pivot, nb_week_in_year ) + bsemainier_pronote.substr( 0, pivot );
+                          bsemainier_laclasse = bsemainier_laclasse.split('').reverse().join('');
+
+                          return parseInt( bsemainier_laclasse, 2 );
+                      };
 
                       var get_etablissement_summary = function() {
                           Etablissements.get( { uai: current_user.profil_actif.etablissement_code_uai } ).$promise.then( function( response ) {
@@ -146,20 +136,28 @@ angular.module( 'cahierDeTextesClientApp' )
                           $scope.pronote = false;
                           $scope.ui.loading_file = true;
                           $scope.matcheable_data = [];
+                          var started_at = moment();
 
+                          console.log('uploading file for decryption')
                           fileUpload.uploadFileToUrl( fichier, APP_PATH + '/api/v1/import/pronote/decrypt' )
                               .then( function( data, status, headers, config ) {
+                                  console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
                                   // 1. Récupérer le fichier Pronote décrypté
                                   $scope.pronote = data;
                                   $scope.pronote.GrilleHoraire[0].DureePlace = parseInt( $scope.pronote.GrilleHoraire[0].DureePlace );
 
+                                  started_at = moment();
+                                  console.log('retrieving Etablissement data')
                                   // 2. Récupérer toutes les infos de l'établissement et toutes les matières
                                   Annuaire.get_etablissement( $scope.pronote.UAI )
                                       .then( function( response ) {
+                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
                                           $scope.etablissement = { teachers: _(response.data.users).select( function( user ) { return _(user.profils).includes( 'ENS' ) || _(user.profils).includes( 'DOC' ); } ),
                                                                    classes: _(response.data.groups).where( { type_regroupement_id: 'CLS' } ),
                                                                    groupes_eleves: _(response.data.groups).select( { type_regroupement_id: 'GRP' } ) };
 
+                                          started_at = moment();
+                                          console.log('UPPERCASE ALL THE THINGS!!!!!')
                                           // UPPERCASE ALL THE THINGS!!!!!
                                           _($scope.etablissement.teachers).each( function( user ) {
                                               user.firstname = user.firstname.toUpperCase();
@@ -174,7 +172,10 @@ angular.module( 'cahierDeTextesClientApp' )
                                               regroupement.libelle_aaf = regroupement.libelle_aaf.toUpperCase();
                                               regroupement.displayed_label = regroupement.libelle_aaf;
                                           } );
+                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
+                                          started_at = moment();
+                                          console.log('treating enseignants')
                                           // 3.2 Enseignants
                                           _($scope.pronote.Professeurs[0].Professeur)
                                               .each( function( enseignant ) {
@@ -186,7 +187,10 @@ angular.module( 'cahierDeTextesClientApp' )
                                                       enseignant.laclasse.displayed_label = enseignant.laclasse.lastname + ' ' + enseignant.laclasse.firstname.toLocaleLowerCase();
                                                   }
                                               } );
+                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
+                                          started_at = moment();
+                                          console.log('treating regroupements')
                                           // 3.3 Classes et Groupes
                                           _($scope.pronote.Classes[0].Classe)
                                               .each( function( regroupement ) {
@@ -207,7 +211,10 @@ angular.module( 'cahierDeTextesClientApp' )
                                                       regroupement.laclasse.displayed_label = regroupement.laclasse.libelle_aaf;
                                                   }
                                               } );
+                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
+                                          started_at = moment();
+                                          console.log('treating cours')
                                           // 4. treating Cours
                                           $scope.beautify_semainier = function( semainier ) {
                                               var bsemainier = Utils.padEnd( semainier.toString( 2 ), 53, '0' );
@@ -268,10 +275,9 @@ angular.module( 'cahierDeTextesClientApp' )
                                                                   }
                                                               };
                                                           };
-                                                          return [
-                                                              _(cours.Classe).map( compute_cours( 'Classe' ) ),
-                                                              _(cours.Groupe).map( compute_cours( 'Groupe' ) )
-                                                          ];
+
+                                                          return [ _(cours.Classe).map( compute_cours( 'Classe' ) ),
+                                                                   _(cours.Groupe).map( compute_cours( 'Groupe' ) ) ];
                                                       } );
                                                   } )
                                                       .flatten()
@@ -280,7 +286,10 @@ angular.module( 'cahierDeTextesClientApp' )
                                               } )
                                               .flatten()
                                               .value();
+                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
+                                          started_at = moment();
+                                          console.log('building matcheable_data')
                                           $scope.pronote.enseignants = Utils.groupByKey( $scope.pronote.Professeurs[0].Professeur, 'Ident' );
                                           $scope.pronote.classes = Utils.groupByKey( $scope.pronote.Classes[0].Classe, 'Ident' );
                                           $scope.pronote.salles = Utils.groupByKey( $scope.pronote.Salles[0].Salle, 'Ident' );
@@ -296,16 +305,26 @@ angular.module( 'cahierDeTextesClientApp' )
                                           $scope.matcheable_data.push( { title: 'Enseignants',
                                                                          pronote: $scope.pronote.enseignants,
                                                                          annuaire: $scope.etablissement.teachers } );
+                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
+                                          started_at = moment();
+                                          console.log('retrieving matieres')
                                           Annuaire.get_matieres()
                                               .then( function( response ) {
+                                                  console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
+
+                                                  started_at = moment();
+                                                  console.log('massage matieres')
                                                   $scope.matieres = _(response.data).map( function( matiere ) {
                                                       matiere.libelle_long = matiere.libelle_long.toUpperCase();
                                                       matiere.displayed_label = matiere.libelle_long;
 
                                                       return matiere;
                                                   } );
+                                                  console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
+                                                  started_at = moment();
+                                                  console.log('match matieres')
                                                   // 3. Matcher les 2
                                                   // 3.1 Matières
                                                   _($scope.pronote.Matieres[0].Matiere)
@@ -317,24 +336,34 @@ angular.module( 'cahierDeTextesClientApp' )
                                                               matiere.laclasse.displayed_label = matiere.laclasse.libelle_long;
                                                           }
                                                       } );
+                                                  console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
+                                                  started_at = moment();
+                                                  console.log('add matieres to matcheable_data')
                                                   $scope.pronote.matieres = Utils.groupByKey( $scope.pronote.Matieres[0].Matiere, 'Ident' );
                                                   $scope.matcheable_data.push( { title: 'Matières',
                                                                                  pronote: $scope.pronote.matieres,
                                                                                  annuaire: $scope.matieres } );
+                                                  console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
+                                                  started_at = moment();
+                                                  console.log('update match stats')
                                                   _($scope.matcheable_data).each( function( dataset ) {
                                                       dataset.total = function() { return _(dataset.pronote).size(); };
                                                       dataset.unmatched = function() { return _(dataset.pronote).where( { laclasse: undefined } ).length; };
                                                       dataset.percent_valid = function() { return ( dataset.total() - dataset.unmatched() ) / dataset.total(); };
                                                   } );
+                                                  console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
                                                   $scope.selected = { matieres: $scope.pronote.Matieres[0].Matiere,
                                                                       enseignants: $scope.pronote.Professeurs[0].Professeur,
                                                                       classes: $scope.pronote.Classes[0].Classe,
                                                                       groupes: $scope.pronote.Groupes[0].Groupe };
 
+                                                  started_at = moment();
+                                                  console.log('update_creneaux_readiness')
                                                   $scope.update_creneaux_readiness();
+                                                  console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
                                                   $scope.$watchCollection( 'selected', $scope.update_counters );
 
@@ -347,10 +376,13 @@ angular.module( 'cahierDeTextesClientApp' )
                       $scope.process_import = function() {
                           var bulk_package_size = 15;
                           $scope.ui.processing = true;
+                          var started_at = moment();
 
+                          console.log('filtering creneaux')
                           var creneaux_emploi_du_temps = _($scope.creneaux).select( function( creneau ) {
                               return creneau.ready && ( !$scope.filtered_import || ( $scope.filtered_import && creneau.is_displayed ) );
                           } );
+                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
                           // Log import
                           $http.post(  APP_PATH + '/api/v1/import/log/start', { uai: $scope.pronote.UAI,
@@ -358,6 +390,8 @@ angular.module( 'cahierDeTextesClientApp' )
                                                                                 comment: 'nan rien' } );
 
                           // Create Etablissement
+                          started_at = moment();
+                          console.log('creating Etablissement')
                           var ct_etablissement = new Etablissements( {
                               uai: $scope.pronote.UAI,
                               date_premier_jour_premiere_semaine: new Date( $scope.pronote.AnneeScolaire[0].DatePremierJourSemaine1 ),
@@ -365,8 +399,11 @@ angular.module( 'cahierDeTextesClientApp' )
                               fin_annee_scolaire: new Date( $scope.pronote.AnneeScolaire[0].DateFin )
                           } );
                           ct_etablissement.$save();
+                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
                           // // Create CahierDeTextes
+                          started_at = moment();
+                          console.log('creating CahierDeTextes')
                           $scope.expected_cahiers_de_textes = _($scope.pronote.classes).size() + _($scope.pronote.groupes_eleves).size();
 
                           var preprocess_cahiers_de_textes = function( liste_regroupements ) {
@@ -391,11 +428,14 @@ angular.module( 'cahierDeTextesClientApp' )
                           while ( regroupements.length > 0 ) {
                               CahiersDeTextes.bulk( { cahiers_de_textes: regroupements.splice( 0, bulk_package_size ) } );
                           }
+                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
                           // Create Salle
                           $scope.expected_salles = _($scope.pronote.salles).size();
 
                           // FIXME: Hoping that it doesn't exceed Puma's POST size limit...
+                          started_at = moment();
+                          console.log('creating Salles')
                           Salles.bulk( { salles: _($scope.pronote.salles)
                                          .map( function( salle ) {
                                              return {
@@ -405,13 +445,14 @@ angular.module( 'cahierDeTextesClientApp' )
                                              };
                                          } )
                                        } ).$promise.then( function( response ) {
+                                           console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
                                            $scope.salles_created = response;
 
-                                           var creneaux_filter = $scope.filter_creneau( true, $scope.selected );
-
                                            // Create Creneaux
+                                           started_at = moment();
+                                           console.log('filtering creneaux')
                                            var creneaux_to_import = creneaux_emploi_du_temps.map( function( creneau ) {
-                                               var heure_debut = libelleHeure_to_Moment( $scope.pronote.plages_horaires[ creneau.NumeroPlaceDebut ].LibelleHeureDebut );
+                                               var heure_debut = Utils.libelleHeure_to_Moment( $scope.pronote.plages_horaires[ creneau.NumeroPlaceDebut ].LibelleHeureDebut );
 
                                                var pre_creneau = { jour_de_la_semaine: parseInt( creneau.Jour ),
                                                                    heure_debut: heure_debut.toISOString(),
@@ -435,16 +476,20 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                                return pre_creneau;
                                            } );
+                                           console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
                                            $scope.creneaux_created = [];
                                            $scope.counters.creneaux_created = 0;
 
+                                           started_at = moment();
+                                           console.log('importing creneaux')
                                            while ( creneaux_to_import.length > 0 ) {
                                                CreneauxEmploiDuTemps.bulk( {
                                                    uai: $scope.pronote.UAI,
                                                    creneaux_emploi_du_temps: creneaux_to_import.splice( 0, bulk_package_size )
                                                } );
                                            }
+                                           console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
                                        } );
 
                           $scope.ui.processing = false;
