@@ -1,14 +1,6 @@
 'use strict';
 
 angular.module( 'cahierDeTextesClientApp' )
-    .factory('Matieres',
-             [ '$resource', 'APP_PATH', 'API_VERSION',
-               function( $resource, APP_PATH, API_VERSION ) {
-                   return $resource( APP_PATH + '/api/' + API_VERSION + '/annuaire/matieres/:matiere_id',
-                                     { matiere_id: '@matiere_id' } );
-               } ] );
-
-angular.module( 'cahierDeTextesClientApp' )
     .factory('Regroupements',
              [ '$resource', 'APP_PATH', 'API_VERSION',
                function( $resource, APP_PATH, API_VERSION ) {
@@ -31,10 +23,14 @@ angular.module( 'cahierDeTextesClientApp' )
 
 angular.module( 'cahierDeTextesClientApp' )
     .service('Annuaire',
-             [ '$http', 'Matieres', 'Regroupements', 'Users', 'APP_PATH', 'API_VERSION',
-               function( $http, Matieres, Regroupements, Users, APP_PATH, API_VERSION ) {
+             [ '$http', 'Regroupements', 'Users', 'APP_PATH', 'API_VERSION', 'URL_ENT',
+               function( $http, Regroupements, Users, APP_PATH, API_VERSION, URL_ENT ) {
                    this.get_matieres = _.memoize( function(  ) {
-                       return $http.get( APP_PATH + '/api/' + API_VERSION + '/annuaire/matieres' );
+                       return $http.get( URL_ENT + 'api/app/matieres' );
+                   });
+
+                   this.get_matiere = _.memoize( function( matiere_id ) {
+                       return $http.get( URL_ENT + 'api/app/matieres/' + matiere_id );
                    });
 
                    this.get_etablissement = _.memoize( function( uai ) {
@@ -47,10 +43,6 @@ angular.module( 'cahierDeTextesClientApp' )
 
                    this.get_etablissement_regroupements = _.memoize( function( uai ) {
                        return $http.get( APP_PATH + '/api/' + API_VERSION + '/annuaire/etablissements/' + uai + '/regroupements' );
-                   });
-
-                   this.get_matiere = _.memoize( function( matiere_id ) {
-                       return Matieres.get({ matiere_id: matiere_id });
                    });
 
                    this.get_regroupement = _.memoize( function( regroupement_id ) {

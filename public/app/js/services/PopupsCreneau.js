@@ -62,7 +62,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                                 matieres : function () { return matieres; },
                                                 classes  : function () { return classes; },
                                                 creneau  : function () { return creneau; },
-                                                cours	: function () { return cours; },
+                                                cours    : function () { return cours; },
                                                 devoirs  : function () { return devoirs; } },
                                      backdrop: 'static' },
                                    popup_callback,

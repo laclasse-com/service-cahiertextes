@@ -140,6 +140,7 @@
        angular.module( 'cahierDeTextesClientApp' )
               .constant( 'VERSION', '<%=APP_VERSION%>' )
               .constant( 'APP_PATH', '<%=APP_PATH%>' )
+              .constant( 'URL_ENT', '<%=URL_ENT%>' )
               .constant( 'DOCS_URL', '<%=DOCS_URL%>' )
               .constant( 'SEMAINES_VACANCES', { A: <%=CahierDeTextesApp::Utils::Holidays.get( 'A', CahierDeTextesApp::Utils::Holidays.year_rentree )%>,
                                                 B: <%=CahierDeTextesApp::Utils::Holidays.get( 'B', CahierDeTextesApp::Utils::Holidays.year_rentree )%>,

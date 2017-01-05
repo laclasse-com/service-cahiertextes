@@ -140,10 +140,11 @@ angular.module( 'cahierDeTextesClientApp' )
 
                           console.log('uploading file for decryption')
                           fileUpload.uploadFileToUrl( fichier, APP_PATH + '/api/v1/import/pronote/decrypt' )
-                              .then( function( data, status, headers, config ) {
+                              .then( function( response, status, headers, config ) {
                                   console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
                                   // 1. Récupérer le fichier Pronote décrypté
-                                  $scope.pronote = data;
+                                  $scope.pronote = response.data;
+                                  console.log($scope.pronote)
                                   $scope.pronote.GrilleHoraire[0].DureePlace = parseInt( $scope.pronote.GrilleHoraire[0].DureePlace );
 
                                   started_at = moment();

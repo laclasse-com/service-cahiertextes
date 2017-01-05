@@ -1,6 +1,10 @@
 'use strict';
 
 angular.module( 'cahierDeTextesClientApp' )
+    .config( [ '$httpProvider',
+               function( $httpProvider ) {
+                   $httpProvider.defaults.withCredentials = true;
+               }] )
 // Loading Bar
     .config( [ 'cfpLoadingBarProvider',
                function( cfpLoadingBarProvider ) {
