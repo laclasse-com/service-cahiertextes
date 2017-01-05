@@ -321,8 +321,9 @@ angular.module( 'cahierDeTextesClientApp' )
                           };
                       }
 
-                      $scope.uniquement_mes_creneaux = ( $scope.current_user.profil_actif.profil_id == 'ENS' || $scope.current_user.profil_actif.profil_id == 'DOC' );
-                      if ( $scope.current_user.profil_actif.profil_id == 'ENS' || $scope.current_user.profil_actif.profil_id == 'DOC' ) {
+                      $scope.uniquement_mes_creneaux = _(['ENS', 'DOC']).includes( $scope.current_user.profil_actif.profil_id );
+
+                      if ( $scope.uniquement_mes_creneaux ) {
                           $scope.selected_regroupements = $scope.current_user.profil_actif.regroupements;
                       }
 
