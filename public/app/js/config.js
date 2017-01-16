@@ -17,7 +17,7 @@ angular.module( 'cahierDeTextesClientApp' )
                 amMoment.changeLocale( 'fr' );
             } ] )
     .constant( 'angularMomentConfig',
-               { timezone: 'Europe/Paris' } )
+               { timezone: 'Europe/Brussels' } )
 // textAngular
     .config( [ '$provide',
                function( $provide ) {
