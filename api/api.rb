@@ -16,7 +16,7 @@ require_relative './cahiers_de_textes'
 module CahierDeTextesAPI
   module V1
     class API < Grape::API
-      version 'v1', using: :path, vendor: 'laclasse.com'
+      version 'v1', using: :param, vendor: 'laclasse.com'
       format :json
       rescue_from :all
 

@@ -12,7 +12,6 @@ require 'laclasse/helpers/user'
 require 'laclasse/helpers/app_infos'
 
 require_relative './lib/utils/holidays'
-require_relative './lib/utils/release_notes'
 
 require_relative './routes/index'
 require_relative './routes/auth'

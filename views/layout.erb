@@ -145,7 +145,6 @@
               .constant( 'SEMAINES_VACANCES', { A: <%=CahierDeTextesApp::Utils::Holidays.get( 'A', CahierDeTextesApp::Utils::Holidays.year_rentree )%>,
                                                 B: <%=CahierDeTextesApp::Utils::Holidays.get( 'B', CahierDeTextesApp::Utils::Holidays.year_rentree )%>,
                                                 C: <%=CahierDeTextesApp::Utils::Holidays.get( 'C', CahierDeTextesApp::Utils::Holidays.year_rentree )%> } )
-              .constant( 'RELEASE_NOTES', <%=Utils.release_notes_to_json( APP_VERSION )%>)
        /* .config( [ '$compileProvider',
         *            function( $compileProvider ) {
         *                $compileProvider.debugInfoEnabled( <%= ENV['RACK_ENV'] == 'development' %> );

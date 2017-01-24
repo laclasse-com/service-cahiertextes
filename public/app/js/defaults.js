@@ -4,7 +4,6 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .constant( 'LOCALHOST', false )
-    .constant( 'API_VERSION', 'v1' )
     .constant( 'ZONE', 'A' )
     .constant( 'POPUP_ACTIONS', { CANCELLED: 'CANCELLED',
                                   CRENEAU_DELETED: 'CRENEAU_DELETED',

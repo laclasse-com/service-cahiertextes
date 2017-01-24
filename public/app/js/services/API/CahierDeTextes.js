@@ -2,10 +2,10 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .service('User',
-             [ '$http', 'APP_PATH', 'API_VERSION',
-               function( $http, APP_PATH, API_VERSION ) {
+             [ '$http', 'APP_PATH',
+               function( $http, APP_PATH ) {
                    this.get_user = _.memoize( function() {
-                       return $http.get( APP_PATH + '/api/' + API_VERSION + '/users/current' )
+                       return $http.get( APP_PATH + '/api/users/current' )
                            .then( function( response ) {
                                _(response.data.profils).each( function( profil ) {
                                    // Liste des regroupements liées au profil
@@ -36,30 +36,30 @@ angular.module( 'cahierDeTextesClientApp' )
                    } );
 
                    this.update_parameters = function( parametres ) {
-                       return $http.put( APP_PATH + '/api/' + API_VERSION + '/users/current/parametres',
+                       return $http.put( APP_PATH + '/api/users/current/parametres',
                                          { parametres: JSON.stringify( parametres ) } );
                    };
                } ] );
 
 angular.module( 'cahierDeTextesClientApp' )
-    .factory('Classes', [ '$resource', 'APP_PATH', 'API_VERSION',
-                          function( $resource, APP_PATH, API_VERSION ) {
-                              return $resource( APP_PATH + '/api/' + API_VERSION + '/etablissements/:uai/statistiques/classes/:id',
+    .factory('Classes', [ '$resource', 'APP_PATH',
+                          function( $resource, APP_PATH ) {
+                              return $resource( APP_PATH + '/api/etablissements/:uai/statistiques/classes/:id',
                                                 { uai: '@uai',
                                                   id: '@id' } );
                           } ] );
 
 angular.module( 'cahierDeTextesClientApp' )
     .factory('Cours',
-             [ '$resource', 'APP_PATH', 'API_VERSION',
-               function( $resource, APP_PATH, API_VERSION ) {
-                   return $resource( APP_PATH + '/api/' + API_VERSION + '/cours/:id',
+             [ '$resource', 'APP_PATH',
+               function( $resource, APP_PATH ) {
+                   return $resource( APP_PATH + '/api/cours/:id',
                                      { id: '@id' },
                                      { update: { method: 'PUT' },
                                        valide: { method: 'PUT',
-                                                 url: APP_PATH + '/api/' + API_VERSION + '/cours/:id/valide' },
+                                                 url: APP_PATH + '/api/cours/:id/valide' },
                                        copie: { method: 'PUT',
-                                                url: APP_PATH + '/api/' + API_VERSION + '/cours/:id/copie/regroupement/:regroupement_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date/:date',
+                                                url: APP_PATH + '/api/cours/:id/copie/regroupement/:regroupement_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date/:date',
                                                 params: { id: '@id',
                                                           regroupement_id: '@regroupement_id',
                                                           creneau_emploi_du_temps_id: '@creneau_emploi_du_temps_id',
@@ -68,9 +68,9 @@ angular.module( 'cahierDeTextesClientApp' )
 
 angular.module( 'cahierDeTextesClientApp' )
     .factory('CreneauxEmploiDuTemps',
-             [ '$resource', 'APP_PATH', 'API_VERSION',
-               function( $resource, APP_PATH, API_VERSION ) {
-                   return $resource( APP_PATH + '/api/' + API_VERSION + '/creneaux_emploi_du_temps/:id',
+             [ '$resource', 'APP_PATH',
+               function( $resource, APP_PATH ) {
+                   return $resource( APP_PATH + '/api/creneaux_emploi_du_temps/:id',
                                      { id: '@id',
                                        regroupement_id: '@regroupement_id',
                                        previous_regroupement_id: '@previous_regroupement_id',
@@ -87,22 +87,22 @@ angular.module( 'cahierDeTextesClientApp' )
                                                            date_creneau: '@date_creneau' } },
                                        bulk: { method: 'POST',
                                                isArray: true,
-                                               url: APP_PATH + '/api/' + API_VERSION + '/creneaux_emploi_du_temps/bulk',
+                                               url: APP_PATH + '/api/creneaux_emploi_du_temps/bulk',
                                                params: { creneaux_emploi_du_temps: '@creneaux_emploi_du_temps' } } } );
                } ] );
 
 angular.module( 'cahierDeTextesClientApp' )
     .factory('Devoirs',
-             [ '$resource', 'APP_PATH', 'API_VERSION',
-               function( $resource, APP_PATH, API_VERSION ) {
-                   return $resource( APP_PATH + '/api/' + API_VERSION + '/devoirs/:id',
+             [ '$resource', 'APP_PATH',
+               function( $resource, APP_PATH ) {
+                   return $resource( APP_PATH + '/api/devoirs/:id',
                                      { id: '@id',
                                        uid: '@uid'},
                                      { update: { method: 'PUT' },
                                        fait: { method: 'PUT',
-                                               url: APP_PATH + '/api/' + API_VERSION + '/devoirs/:id/fait' },
+                                               url: APP_PATH + '/api/devoirs/:id/fait' },
                                        copie: { method: 'PUT',
-                                                url: APP_PATH + '/api/' + API_VERSION + '/devoirs/:id/copie/cours/:cours_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date_due/:date_due',
+                                                url: APP_PATH + '/api/devoirs/:id/copie/cours/:cours_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date_due/:date_due',
                                                 params: { id: '@id',
                                                           cours_id: '@cours_id',
                                                           creneau_emploi_du_temps_id: '@creneau_emploi_du_temps_id',
@@ -111,9 +111,9 @@ angular.module( 'cahierDeTextesClientApp' )
 
 angular.module( 'cahierDeTextesClientApp' )
     .factory('EmploisDuTemps',
-             [ '$resource', 'APP_PATH', 'API_VERSION',
-               function( $resource, APP_PATH, API_VERSION ) {
-                   return $resource( APP_PATH + '/api/' + API_VERSION + '/emplois_du_temps',
+             [ '$resource', 'APP_PATH',
+               function( $resource, APP_PATH ) {
+                   return $resource( APP_PATH + '/api/emplois_du_temps',
                                      { debut: '@debut',
                                        fin: '@fin',
                                        uid: '@uid' } );
@@ -121,57 +121,57 @@ angular.module( 'cahierDeTextesClientApp' )
 
 angular.module( 'cahierDeTextesClientApp' )
     .factory('Enseignants',
-             [ '$resource', 'APP_PATH', 'API_VERSION',
-               function( $resource, APP_PATH, API_VERSION ) {
-                   return $resource( APP_PATH + '/api/' + API_VERSION + '/etablissements/:uai/statistiques/enseignants/:enseignant_id',
+             [ '$resource', 'APP_PATH',
+               function( $resource, APP_PATH ) {
+                   return $resource( APP_PATH + '/api/etablissements/:uai/statistiques/enseignants/:enseignant_id',
                                      { uai: '@uai',
                                        enseignant_id: '@enseignant_id' } );
                } ] );
 
 angular.module( 'cahierDeTextesClientApp' )
     .factory('Etablissements',
-             [ '$resource', 'APP_PATH', 'API_VERSION',
-               function( $resource, APP_PATH, API_VERSION ) {
-                   return $resource( APP_PATH + '/api/' + API_VERSION + '/etablissements/:uai',
+             [ '$resource', 'APP_PATH',
+               function( $resource, APP_PATH ) {
+                   return $resource( APP_PATH + '/api/etablissements/:uai',
                                      { uai: '@uai' } );
                } ] );
 
 angular.module( 'cahierDeTextesClientApp' )
     .factory('Salles',
-             [ '$resource', 'APP_PATH', 'API_VERSION',
-               function( $resource, APP_PATH, API_VERSION ) {
-                   return $resource( APP_PATH + '/api/' + API_VERSION + '/salles/:id',
+             [ '$resource', 'APP_PATH',
+               function( $resource, APP_PATH ) {
+                   return $resource( APP_PATH + '/api/salles/:id',
                                      { id: '@id' },
                                      { bulk: { method: 'POST',
                                                isArray: true,
-                                               url: APP_PATH + '/api/' + API_VERSION + '/salles/bulk',
+                                               url: APP_PATH + '/api/salles/bulk',
                                                params: { salles: '@salles' } } } );
                } ] );
 
 angular.module( 'cahierDeTextesClientApp' )
     .factory('CahiersDeTextes',
-             [ '$resource', 'APP_PATH', 'API_VERSION',
-               function( $resource, APP_PATH, API_VERSION ) {
-                   return $resource( APP_PATH + '/api/' + API_VERSION + '/cahiers_de_textes/:id',
+             [ '$resource', 'APP_PATH',
+               function( $resource, APP_PATH ) {
+                   return $resource( APP_PATH + '/api/cahiers_de_textes/:id',
                                      { id: '@id' },
                                      { bulk: { method: 'POST',
                                                isArray: true,
-                                               url: APP_PATH + '/api/' + API_VERSION + '/cahiers_de_textes/bulk',
+                                               url: APP_PATH + '/api/cahiers_de_textes/bulk',
                                                params: { cahiers_de_textes: '@cahiers_de_textes' } } } );
                } ] );
 
 angular.module( 'cahierDeTextesClientApp' )
     .factory('TypesDeDevoir',
-             [ '$resource', 'APP_PATH', 'API_VERSION',
-               function( $resource, APP_PATH, API_VERSION ) {
-                   return $resource( APP_PATH + '/api/' + API_VERSION + '/types_de_devoir/:id',
+             [ '$resource', 'APP_PATH',
+               function( $resource, APP_PATH ) {
+                   return $resource( APP_PATH + '/api/types_de_devoir/:id',
                                      { id: '@id' });
                } ] );
 
 angular.module( 'cahierDeTextesClientApp' )
     .service('API',
-             [ '$http', 'APP_PATH', 'API_VERSION', 'Classes', 'Cours', 'CreneauxEmploiDuTemps', 'Devoirs', 'EmploisDuTemps', 'Enseignants', 'Etablissements', 'TypesDeDevoir',
-               function( $http, APP_PATH, API_VERSION, Classes, Cours, CreneauxEmploiDuTemps, Devoirs, EmploisDuTemps, Enseignants, Etablissements, TypesDeDevoir ) {
+             [ '$http', 'APP_PATH', 'Classes', 'Cours', 'CreneauxEmploiDuTemps', 'Devoirs', 'EmploisDuTemps', 'Enseignants', 'Etablissements', 'TypesDeDevoir',
+               function( $http, APP_PATH, Classes, Cours, CreneauxEmploiDuTemps, Devoirs, EmploisDuTemps, Enseignants, Etablissements, TypesDeDevoir ) {
                    this.get_etablissement = function( params ) {
                        return Etablissements.get( params );
                    };
@@ -195,7 +195,7 @@ angular.module( 'cahierDeTextesClientApp' )
                        return CreneauxEmploiDuTemps.get( params );
                    };
                    this.get_creneaux_emploi_du_temps_similaires = function( params ) {
-                       return $http.get( APP_PATH + '/api/' + API_VERSION + '/creneaux_emploi_du_temps/' + params.id + '/similaires?debut=' + params.debut.toISOString() + '&fin=' + params.fin.toISOString() );
+                       return $http.get( APP_PATH + '/api/creneaux_emploi_du_temps/' + params.id + '/similaires?debut=' + params.debut.toISOString() + '&fin=' + params.fin.toISOString() );
                    };
 
                    this.query_enseignants = function( params ) {

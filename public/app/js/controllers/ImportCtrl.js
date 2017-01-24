@@ -139,7 +139,7 @@ angular.module( 'cahierDeTextesClientApp' )
                           var started_at = moment();
 
                           console.log('uploading file for decryption')
-                          fileUpload.uploadFileToUrl( fichier, APP_PATH + '/api/v1/import/pronote/decrypt' )
+                          fileUpload.uploadFileToUrl( fichier, APP_PATH + '/api/import/pronote/decrypt' )
                               .then( function( response, status, headers, config ) {
                                   console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
                                   // 1. Récupérer le fichier Pronote décrypté
@@ -386,9 +386,9 @@ angular.module( 'cahierDeTextesClientApp' )
                           console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
                           // Log import
-                          $http.post(  APP_PATH + '/api/v1/import/log/start', { uai: $scope.pronote.UAI,
-                                                                                type: 'client ' + VERSION,
-                                                                                comment: 'nan rien' } );
+                          $http.post(  APP_PATH + '/api/import/log/start', { uai: $scope.pronote.UAI,
+                                                                             type: 'client ' + VERSION,
+                                                                             comment: 'nan rien' } );
 
                           // Create Etablissement
                           started_at = moment();

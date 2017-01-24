@@ -12,7 +12,7 @@ require_relative './models/models'
 require_relative './lib/data_management'
 require_relative './lib/pronote'
 
-require_relative './api/v1/api'
+require_relative './api/api'
 
 module CahierDeTextesAPI
   class API < Grape::API

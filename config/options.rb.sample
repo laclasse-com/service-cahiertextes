@@ -51,7 +51,7 @@ module CASAUTH
     port: 443,
     disable_ssl_verification: true,
     login_url: '/sso/login',
-    restmod_url: '/sso/api/v1/tickets',
+    restmod_url: '/sso/api/tickets',
     service_validate_url: '/sso/serviceValidate',
     logout_url: '/sso/logout',
     logout_saml_url: '/saml/saml2/idp/SingleLogoutService.php'

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-require_relative '../../lib/data_management'
+require_relative '../lib/data_management'
 
 module CahierDeTextesAPI
   module V1

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-require_relative '../../models/creneau_emploi_du_temps'
+require_relative '../models/creneau_emploi_du_temps'
 
 module CahierDeTextesAPI
   module V1

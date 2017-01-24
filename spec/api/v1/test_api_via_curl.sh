@@ -2,7 +2,7 @@
 #
 # Tester l'api du cahier de textes avec curl.
 #
-URL_SSO="http://www.dev.laclasse.com/sso/api/v1/tickets"
+URL_SSO="http://www.dev.laclasse.com/sso/api/tickets"
 URL_SSO_SRV_VALIDATE="http://www.dev.laclasse.com/sso/serviceValidate"
 URL_CT="http%3A%2F%2Fwww.dev.laclasse.com%2Fct%2F"
 USER="BAS14ELV11"
@@ -32,14 +32,14 @@ result=$(eval $curl_cmd)
 echo "Received Data : "$result;
 
 # Intérrogation de l'api cahier de textes
-curl_cmd='curl --cookie ./cookieCT.txt http://www.dev.laclasse.com:80/ct/api/v1/users/current.json'
+curl_cmd='curl --cookie ./cookieCT.txt http://www.dev.laclasse.com:80/ct/api/users/current.json'
 result=$(eval $curl_cmd)
 echo "Received Data : "$result;
 
-curl_cmd='curl --cookie ./cookieCT.txt http://www.dev.laclasse.com:80/ct/api/v1/annuaire/regroupements/31499.json'
+curl_cmd='curl --cookie ./cookieCT.txt http://www.dev.laclasse.com:80/ct/api/annuaire/regroupements/31499.json'
 result=$(eval $curl_cmd)
 echo "Received Data : "$result;
 
-curl_cmd='curl --cookie ./cookieCT.txt http://www.dev.laclasse.com:80/ct/api/v1/cahiers_de_textes/regroupement/31499.json'
+curl_cmd='curl --cookie ./cookieCT.txt http://www.dev.laclasse.com:80/ct/api/cahiers_de_textes/regroupement/31499.json'
 result=$(eval $curl_cmd)
 echo "Received Data : "$result;
