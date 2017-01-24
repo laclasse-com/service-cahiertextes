@@ -42,12 +42,10 @@
     "laclasse-common-client": "git+https://github.com/laclasse-com/laclasse-common-client.git",
     "moment-timezone": "^0.5.5",
     "ng-color-picker": "git+https://github.com/cycojesus/ng-color-picker.git",
-    "npm-font-open-sans-condensed": "0.0.2",
-    "opensans-npm-webfont": "0.0.2",
-    "sizzle": "^2.3.3",
-    "sweetalert": "^1.1.3",
-    "textangular": "^1.5.9",
-    "ui-select": "^0.19.4",
-    "underscore": "^1.8.3"
+      "sizzle": "^2.3.3",
+      "sweetalert": "^1.1.3",
+      "textangular": "^1.5.9",
+      "ui-select": "^0.19.4",
+      "underscore": "^1.8.3"
   }
 }
