@@ -21,7 +21,6 @@ require_relative './api/cours'
 require_relative './api/devoirs'
 require_relative './api/types_de_devoir'
 require_relative './api/emplois_du_temps'
-require_relative './api/annuaire'
 require_relative './api/creneaux_emploi_du_temps'
 require_relative './api/salles'
 require_relative './api/cahiers_de_textes'
@@ -48,8 +47,6 @@ module CahierDeTextesApp
       mount ::CahierDeTextesApp::ImportAPI
       resource( :matchable                ) { mount ::CahierDeTextesApp::MatchableAPI }
     end
-
-    resource( :annuaire                 ) { mount ::CahierDeTextesApp::AnnuaireAPI }
 
     resource( :etablissements           ) { mount ::CahierDeTextesApp::EtablissementsAPI }
     resource( :cours                    ) { mount ::CahierDeTextesApp::CoursAPI }

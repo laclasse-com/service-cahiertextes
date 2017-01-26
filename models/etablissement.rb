@@ -42,7 +42,7 @@ class Etablissement < Sequel::Model( :etablissements )
     { enseignant_id: enseignant_id,
       saisies: Cours.where( enseignant_id: enseignant_id )
                     .where( deleted: false )
-                    .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{Utils.date_rentree}'" )
+                    .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" )
                     .map do |cours|
         devoirs = Devoir.where(cours_id: cours.id)
         creneau = CreneauEmploiDuTemps[ cours.creneau_emploi_du_temps_id ]
@@ -58,7 +58,7 @@ class Etablissement < Sequel::Model( :etablissements )
 
   def merge_all_twin_creneaux( truly_destroy = false )
     merged_twins = []
-    creneaux_emploi_du_temps_dataset.where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{Utils.date_rentree}'" )
+    creneaux_emploi_du_temps_dataset.where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" )
                                     .all
                                     .each do |creneau|
       next if merged_twins.include?( creneau.id )
