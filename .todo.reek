@@ -6,7 +6,6 @@ NilCheck:
   - DataManagement::EmploiDuTemps#ical
   - DataManagement::Provisioning#provision
   - CahierDeTextesApp::Utils::Holidays#get
-  - Utils#release_notes_to_json
   - CahierDeTextesApp::Utils::Semainier#pretty_print_semainier
   - Cours#copie
   - Cours#toggle_validated
@@ -36,6 +35,7 @@ IrresponsibleModule:
   - Devoir
   - DevoirRessource
   - Etablissement
+  - Matchable
   - UserParameters
   - CahierDeTextesApp::Routes::Auth
   - CahierDeTextesApp::Routes::Index
@@ -46,7 +46,6 @@ NestedIterators:
   - DataManagement::Cleansing::Creneaux#deleted_and_unused
   - DataManagement::EmploiDuTemps#get
   - DataManagement::EmploiDuTemps#ical
-  - DataManagement::Provisioning#provision
   - CahierDeTextes#statistiques
   - CreneauEmploiDuTemps#similaires
   - Etablissement#statistiques_enseignants
@@ -98,7 +97,8 @@ UncommunicativeVariableName:
   - CreneauEmploiDuTemps#similaires
   - CreneauEmploiDuTemps#to_deep_hash
   - Etablissement#statistiques_enseignants
-  - CahierDeTextesAPI::V1::DevoirsAPI
+  - CahierDeTextesApp::API
+  - CahierDeTextesApp::DevoirsAPI
   - TableCleaner#clean
   - TableCleaner#tsort_each_node
 DuplicateMethodCall:
@@ -167,18 +167,16 @@ PrimaDonnaMethod:
 RepeatedConditional:
   exclude:
   - Devoir
-  - CahierDeTextesAPI::V1::CoursAPI
-  - CahierDeTextesAPI::V1::CreneauxEmploiDuTempsAPI
-  - CahierDeTextesAPI::V1::DevoirsAPI
-  - CahierDeTextesAPI::V1::EtablissementsAPI
-  - CahierDeTextesAPI::V1::SallesAPI
+  - CahierDeTextesApp::CoursAPI
+  - CahierDeTextesApp::CreneauxEmploiDuTempsAPI
+  - CahierDeTextesApp::DevoirsAPI
+  - CahierDeTextesApp::EtablissementsAPI
+  - CahierDeTextesApp::MatchableAPI
+  - CahierDeTextesApp::SallesAPI
 UtilityFunction:
   exclude:
   - Etablissement#saisies_enseignant
   - Laclasse::Helpers::Authentication#logged?
-UncommunicativeModuleName:
-  exclude:
-  - CahierDeTextesAPI::V1
 UncommunicativeMethodName:
   exclude:
   - __DIR__
