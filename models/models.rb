@@ -23,7 +23,7 @@ require_relative './cours'
 require_relative './devoir'
 
 # Données non identifiable par l'annuaire lors des imports (Pronote, UDT, ...)
-require_relative './failed_identification'
+require_relative './matchable'
 
 # Paramètres utilisateur
 require_relative './user_parameters'

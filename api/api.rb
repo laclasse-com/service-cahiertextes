@@ -3,6 +3,7 @@
 require_relative './users'
 
 require_relative './import'
+require_relative './matchable'
 require_relative './etablissements'
 require_relative './cours'
 require_relative './devoirs'
@@ -22,7 +23,10 @@ module CahierDeTextesAPI
 
       resource( :users                    ) { mount ::CahierDeTextesAPI::V1::UsersAPI }
 
-      resource( :import                   ) { mount ::CahierDeTextesAPI::V1::ImportAPI }
+      resource( :import                   ) do
+        mount ::CahierDeTextesAPI::V1::ImportAPI
+        resource( :matchable                ) { mount ::CahierDeTextesAPI::V1::MatchableAPI }
+      end
 
       resource( :annuaire                 ) { mount ::CahierDeTextesAPI::V1::AnnuaireAPI }
 

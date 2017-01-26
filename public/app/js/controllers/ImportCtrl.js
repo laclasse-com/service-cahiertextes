@@ -386,9 +386,9 @@ angular.module( 'cahierDeTextesClientApp' )
                           console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
                           // Log import
-                          $http.post(  APP_PATH + '/api/import/log/start', { uai: $scope.pronote.UAI,
-                                                                             type: 'client ' + VERSION,
-                                                                             comment: 'nan rien' } );
+                          $http.post( APP_PATH + '/api/import/log/start', { uai: $scope.pronote.UAI,
+                                                                            type: 'client ' + VERSION,
+                                                                            comment: 'nan rien' } );
 
                           // Create Etablissement
                           started_at = moment();

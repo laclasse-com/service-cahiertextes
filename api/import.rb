@@ -77,23 +77,6 @@ module CahierDeTextesAPI
           hash
         end
       end
-
-      desc 'Identifie une Matière/Regroupement/Personne-Non-Identifié en lui donnant un ID Annuaire manuellement'
-      params do
-        requires :sha256
-        requires :id_annuaire
-      end
-      put '/mrpni/:sha256/est/:id_annuaire' do
-        user_needs_to_be( %w( DIR ENS DOC ), true )
-
-        fi = FailedIdentification.where( sha256: params[:sha256] ).first
-        unless fi.nil?
-          fi.update( id_annuaire: params[:id_annuaire] )
-          fi.save
-        end
-
-        fi
-      end
     end
   end
 end
