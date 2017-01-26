@@ -2,7 +2,7 @@
 
 require_relative '../models/creneau_emploi_du_temps'
 
-module CahierDeTextesAPI
+module CahierDeTextesApp
   class CreneauxEmploiDuTempsAPI < Grape::API
     #--------------------------------------------------------------------
     desc 'renvoi un créneau'

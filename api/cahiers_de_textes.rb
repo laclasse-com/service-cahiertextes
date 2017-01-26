@@ -1,4 +1,4 @@
-module CahierDeTextesAPI
+module CahierDeTextesApp
   class CahiersDeTextesAPI < Grape::API
     desc 'renvoi le cahier de textes d\'un regroupement'
     params do

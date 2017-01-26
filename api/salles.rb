@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-module CahierDeTextesAPI
+module CahierDeTextesApp
   class SallesAPI < Grape::API
     desc 'renvoi toutes les salles'
     get '/' do

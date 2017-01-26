@@ -2,7 +2,7 @@
 
 require_relative '../models/models'
 
-module CahierDeTextesAPI
+module CahierDeTextesApp
   class MatchableAPI < Grape::API
     format :json
 

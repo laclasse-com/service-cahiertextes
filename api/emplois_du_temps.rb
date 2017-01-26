@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-module CahierDeTextesAPI
+module CahierDeTextesApp
   class EmploisDuTempsAPI < Grape::API
     desc 'emploi du temps de l\'utilisateur durant l\'intervalle de dates donné'
     params do

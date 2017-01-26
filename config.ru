@@ -36,7 +36,7 @@ end
 STDERR.puts "#{ENV['RACK_ENV']} environment"
 
 map "#{APP_PATH}/api" do
-  run CahierDeTextesAPI::API
+  run CahierDeTextesApp::API
 end
 
-run CahierDeTextesAPI::Web
+run CahierDeTextesApp::Web

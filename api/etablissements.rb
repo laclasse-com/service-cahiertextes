@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-module CahierDeTextesAPI
+module CahierDeTextesApp
   class EtablissementsAPI < Grape::API
     format :json
 

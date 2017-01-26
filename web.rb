@@ -18,7 +18,7 @@ require_relative './routes/auth'
 require_relative './routes/status'
 
 # Application Sinatra servant de base
-module CahierDeTextesAPI
+module CahierDeTextesApp
   class Web < Sinatra::Base
     helpers Laclasse::Helpers::Authentication
     helpers Laclasse::Helpers::User

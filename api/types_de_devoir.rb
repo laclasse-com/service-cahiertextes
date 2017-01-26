@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-module CahierDeTextesAPI
+module CahierDeTextesApp
   class TypesDeDevoirAPI < Grape::API
     desc 'renvoi tous les types de devoirs'
     get '/' do

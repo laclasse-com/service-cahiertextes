@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-module CahierDeTextesAPI
+module CahierDeTextesApp
   # API d'accès aux cours (séquences pédagogiques)
   # Utilisée par les :
   #   - élèves pour consultation

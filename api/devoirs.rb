@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-module CahierDeTextesAPI
+module CahierDeTextesApp
   # API d'accès aux devoirs
   # Utilisée par les :
   #   - élèves pour consultation et gestion todo-list

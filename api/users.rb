@@ -2,7 +2,7 @@
 
 require_relative '../lib/data_management'
 
-module CahierDeTextesAPI
+module CahierDeTextesApp
   class UsersAPI < Grape::API
     desc 'renvoi les infos de l\'utilisateur identifié'
     get '/current' do
