@@ -29,7 +29,13 @@
                             <div class="progress-bar vert-moins" ng:style="{ width: ( dataset.percent_valid() * 100 ) + '%' }"></div>
                         </div>
                     </uib-tab-heading>
-                    <table class="table table-striped table-bordered table-hover table-condensed">
+
+                    <label class="pull-right">
+                        <checkbox ng:model="scope.display_all"></checkbox>
+                        Afficher tout.
+                    </label>
+
+                    <table class="table table-striped table-bordered table-hover table-condensed" >
                         <thead>
                             <tr>
                                 <th>Pronote</th>
@@ -38,7 +44,13 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <tr ng:if="dataset.unmatched() == 0 && !scope.display_all">
+                                <td colspan=3>
+                                    <h3>Aucun recoupement à faire. </h3>
+                                </td>
+                            </tr>
                             <tr ng:repeat="node in dataset.pronote"
+                                ng:if="node.edit || scope.display_all"
                                 ng:class="{'ok': !node.edit, 'ko': node.edit}">
                                 <td>
                                     <span>
@@ -51,7 +63,7 @@
                                             ng:if="node.edit && matieres"
                                             ng:model="node.laclasse"
                                             ng:change="update_creneaux_readiness()"
-                                            ng:options="official as official.displayed_label for official in dataset.annuaire | orderBy:'displayed_label'">{{official.displayed_label}}</select>
+                                            ng:options="official as official.displayed_label for official in dataset.annuaire | orderBy:['displayed_label']">{{official.displayed_label}}</select>
                                     <span class="glyphicon glyphicon-erase" style="cursor: pointer" ng:click="node.laclasse = null" ng:if="node.edit"></span>
                                 </td>
                                 <td>
@@ -327,17 +339,17 @@
             </uib-tabset>
         </div>
 
-        <label class="pull-left" style="color:#fff;">
-            <checkbox ng:model="scope.filtered_import"></checkbox>
-            N'importer que les créneaux filtrés
-        </label>
+        <div class="pull-right col-md-4" style="text-align: right;">
+            <label style="color:#fff;">
+                N'importer que les créneaux filtrés <checkbox ng:model="scope.filtered_import"></checkbox>
+            </label>
 
-        <button class="btn pull-right btn-lg btn-warning"
-                ng:class="{'disabled': !pronote || !etablissement || !matieres}"
-                ng:click="process_import()">
-            <span class="glyphicon glyphicon-cogs"></span> Valider
-        </button>
-
+            <button class="btn btn-lg btn-warning"
+                    ng:class="{'disabled': !pronote || !etablissement || !matieres}"
+                    ng:click="process_import()">
+                <span class="glyphicon glyphicon-cogs"></span> Valider
+            </button>
+        </div>
         <div class="clearfix"></div>
     </li>
 </ol>

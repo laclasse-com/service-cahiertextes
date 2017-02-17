@@ -14,6 +14,8 @@ angular.module( 'cahierDeTextesClientApp' )
                       $scope.fichier = null;
                       $scope.matcheable_data = [];
                       $scope.filtered_import = true;
+                      $scope.display_all = false;
+
                       $scope.ui = { show_detailed_creneaux: false,
                                     display_ready: true,
                                     display_problems: true,
