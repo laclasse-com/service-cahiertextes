@@ -77,7 +77,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
       .where( enseignants__enseignant_id: enseignants.map( &:enseignant_id ) )
       .where( regroupements__semaines_de_presence: regroupements.map( &:semaines_de_presence ) )
       .where( enseignants__semaines_de_presence: enseignants.map( &:semaines_de_presence ) )
-      .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{Utils.date_rentree}'" )
+      .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" )
       .where( deleted: false )
   end
 
@@ -131,7 +131,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
       .association_join( :enseignants )
       .where( enseignant_id: user[:uid] )
       .where( matiere_id: matiere_id )
-      .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{Utils.date_rentree}'" )
+      .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" )
       .where( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{fin}')" )
       .all
       .map do |c|
