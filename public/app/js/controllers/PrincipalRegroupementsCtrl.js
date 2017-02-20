@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module( 'cahierDeTextesClientApp' )
-    .controller('PrincipalClassesCtrl',
+    .controller('PrincipalRegroupementsCtrl',
                 [ '$scope', '$locale', 'API', 'Annuaire', 'CreneauxEmploiDuTemps', 'current_user', 'PIECHART_DEFINITION', 'MULTIBARCHART_DEFINITION',
                   function ( $scope, $locale, API, Annuaire, CreneauxEmploiDuTemps, current_user, PIECHART_DEFINITION, MULTIBARCHART_DEFINITION ) {
                       $scope.empty = false;
@@ -210,7 +210,7 @@ angular.module( 'cahierDeTextesClientApp' )
                           }
                       };
 
-                      API.query_classes( { uai: current_user.profil_actif.etablissement_code_uai } )
+                      API.query_statistiques_regroupements( { uai: current_user.profil_actif.etablissement_code_uai } )
                           .$promise.then( function( response ) {
                               $scope.raw_data = response;
 

@@ -42,11 +42,11 @@ angular.module( 'cahierDeTextesClientApp' )
                } ] );
 
 angular.module( 'cahierDeTextesClientApp' )
-    .factory('Classes', [ '$resource', 'APP_PATH',
-                          function( $resource, APP_PATH ) {
-                              return $resource( APP_PATH + '/api/etablissements/:uai/statistiques/classes/:id',
-                                                { uai: '@uai',
-                                                  id: '@id' } );
+    .factory('StatistiquesRegroupements', [ '$resource', 'APP_PATH',
+                                            function( $resource, APP_PATH ) {
+                                                return $resource( APP_PATH + '/api/etablissements/:uai/statistiques/regroupements/:id',
+                                                                  { uai: '@uai',
+                                                                    id: '@id' } );
                           } ] );
 
 angular.module( 'cahierDeTextesClientApp' )
@@ -170,14 +170,14 @@ angular.module( 'cahierDeTextesClientApp' )
 
 angular.module( 'cahierDeTextesClientApp' )
     .service('API',
-             [ '$http', 'APP_PATH', 'Classes', 'Cours', 'CreneauxEmploiDuTemps', 'Devoirs', 'EmploisDuTemps', 'Enseignants', 'Etablissements', 'TypesDeDevoir',
-               function( $http, APP_PATH, Classes, Cours, CreneauxEmploiDuTemps, Devoirs, EmploisDuTemps, Enseignants, Etablissements, TypesDeDevoir ) {
+             [ '$http', 'APP_PATH', 'StatistiquesRegroupements', 'Cours', 'CreneauxEmploiDuTemps', 'Devoirs', 'EmploisDuTemps', 'Enseignants', 'Etablissements', 'TypesDeDevoir',
+               function( $http, APP_PATH, StatistiquesRegroupements, Cours, CreneauxEmploiDuTemps, Devoirs, EmploisDuTemps, Enseignants, Etablissements, TypesDeDevoir ) {
                    this.get_etablissement = function( params ) {
                        return Etablissements.get( params );
                    };
 
-                   this.query_classes = function( params ) {
-                       return Classes.query( params );
+                   this.query_statistiques_regroupements = function( params ) {
+                       return StatistiquesRegroupements.query( params );
                    };
 
                    this.query_types_de_devoir = _.memoize( function() {

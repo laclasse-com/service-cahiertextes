@@ -63,14 +63,14 @@ angular.module( 'cahierDeTextesClientApp' )
                                }
                            }
                        })
-                       .state('principal.classes', {
+                       .state('principal.regroupements', {
                            parent: 'principal',
-                           url: '/classes',
+                           url: '/regroupements',
                            resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } ] },
                            views: {
                                'content': {
-                                   templateUrl: 'views/classes.html',
-                                   controller: 'PrincipalClassesCtrl'
+                                   templateUrl: 'views/regroupements.html',
+                                   controller: 'PrincipalRegroupementsCtrl'
                                }
                            }
                        })

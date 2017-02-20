@@ -69,24 +69,24 @@ module CahierDeTextesApp
       etablissement
     end
 
-    desc 'statistiques des cahiers de textes par classes/mois/matières'
+    desc 'statistiques des cahiers de textes par regroupements/mois/matières'
     params do
       requires :uai, desc: 'Code UAI de l\'établissement'
     end
-    get '/:uai/statistiques/classes' do
+    get '/:uai/statistiques/regroupements' do
       etablissement = Etablissement[ uai: params[:uai] ]
 
       error!( "Établissement #{params[:uai]} inconnu", 404 ) if etablissement.nil?
 
-      etablissement.statistiques_classes
+      etablissement.statistiques_regroupements
     end
 
-    desc 'statistiques du cahier de textes d\'une classe'
+    desc 'statistiques du cahier de textes d\'un regroupement'
     params do
       requires :uai, desc: 'Code UAI de l\'établissement'
       requires :regroupement_id, desc: 'identifiant annuaire de la classe'
     end
-    get '/:uai/statistiques/classes/:regroupement_id' do
+    get '/:uai/statistiques/regroupements/:regroupement_id' do
       cahier_de_textes = CahierDeTextes[ regroupement_id: params[:regroupement_id] ]
 
       error!( "Classe #{params[:regroupement_id]} inconnue dans l'établissement #{params[:uai]}", 404 ) if cahier_de_textes.nil?

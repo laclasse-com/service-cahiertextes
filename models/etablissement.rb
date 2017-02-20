@@ -7,10 +7,12 @@ class Etablissement < Sequel::Model( :etablissements )
   one_to_many :imports
   one_to_many :salles
 
-  def statistiques_classes
-    Laclasse::CrossApp::Sender
-      .send_request_signed( :service_annuaire_etablissement, "#{values[:UAI]}/regroupements", expand: 'true' )['classes']
-      .map do |classe|
+  def statistiques_regroupements
+    etab = Laclasse::CrossApp::Sender
+             .send_request_signed( :service_annuaire_etablissement, "#{values[:UAI]}/regroupements", expand: 'true' )
+
+    etab['classes'].concat( etab['groupes_eleves'] )
+                   .map do |classe|
       cdt = CahierDeTextes.where( regroupement_id: classe['id'] ).first
       cdt = CahierDeTextes.create( date_creation: Time.now, regroupement_id: classe[ 'id' ] ) if cdt.nil?
       cdt.statistiques
