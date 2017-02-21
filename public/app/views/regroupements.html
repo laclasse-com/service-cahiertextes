@@ -41,18 +41,18 @@
         <div class="row">
             <ul class="col-md-12">
                 <li class="label label-primary">{{creneaux_emploi_du_temps.vides.length}} créneaux vierges
-                    <button class="btn btn-danger btn-xs"
-                            ng:click="delete_creneaux( creneaux_emploi_du_temps.vides )"
-                            ng:if="creneaux_emploi_du_temps.vides.length > 0">
-                        <i class="glyphicon glyphicon-trash"></i>
-                    </button>
+                    <!-- <button class="btn btn-danger btn-xs"
+                         ng:click="delete_creneaux( creneaux_emploi_du_temps.vides )"
+                         ng:if="creneaux_emploi_du_temps.vides.length > 0">
+                         <i class="glyphicon glyphicon-trash"></i>
+                         </button> -->
                 </li>
                 <li class="label label-success">{{creneaux_emploi_du_temps.pleins.length}} créneaux avec saisies
-                    <button class="btn btn-danger btn-xs"
-                            ng:click="delete_creneaux( creneaux_emploi_du_temps.pleins )"
-                            ng:if="creneaux_emploi_du_temps.pleins.length > 0">
-                        <i class="glyphicon glyphicon-trash"></i>
-                    </button>
+                    <!-- <button class="btn btn-danger btn-xs"
+                         ng:click="delete_creneaux( creneaux_emploi_du_temps.pleins )"
+                         ng:if="creneaux_emploi_du_temps.pleins.length > 0">
+                         <i class="glyphicon glyphicon-trash"></i>
+                         </button> -->
                 </li>
             </ul>
         </div>
@@ -68,18 +68,18 @@
                 <nvd3 data="classe.pieChart.data" options="classe.pieChart.options"></nvd3>
                 <ul>
                     <li class="label label-primary">{{classe.classe.creneaux_emploi_du_temps.vides.length}} créneaux vierges
-                        <button class="btn btn-danger btn-xs"
-                                ng:click="delete_creneaux( classe.classe.creneaux_emploi_du_temps.vides )"
-                                ng:if="classe.classe.creneaux_emploi_du_temps.vides.length > 0">
-                            <i class="glyphicon glyphicon-trash"></i>
-                        </button>
+                        <!-- <button class="btn btn-danger btn-xs"
+                             ng:click="delete_creneaux( classe.classe.creneaux_emploi_du_temps.vides )"
+                             ng:if="classe.classe.creneaux_emploi_du_temps.vides.length > 0">
+                             <i class="glyphicon glyphicon-trash"></i>
+                             </button> -->
                     </li>
                     <li class="label label-success">{{classe.classe.creneaux_emploi_du_temps.pleins.length}} créneaux avec saisies
-                        <button class="btn btn-danger btn-xs"
-                                ng:click="delete_creneaux( classe.classe.creneaux_emploi_du_temps.pleins )"
-                                ng:if="classe.classe.creneaux_emploi_du_temps.pleins.length > 0">
-                            <i class="glyphicon glyphicon-trash"></i>
-                        </button>
+                        <!-- <button class="btn btn-danger btn-xs"
+                             ng:click="delete_creneaux( classe.classe.creneaux_emploi_du_temps.pleins )"
+                             ng:if="classe.classe.creneaux_emploi_du_temps.pleins.length > 0">
+                             <i class="glyphicon glyphicon-trash"></i>
+                             </button> -->
                     </li>
                 </ul>
             </div>
