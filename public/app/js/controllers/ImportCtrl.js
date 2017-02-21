@@ -3,10 +3,10 @@
 angular.module( 'cahierDeTextesClientApp' )
     .controller('ImportCtrl',
                 [ '$scope', '$http', '$locale', '$sce', '$filter', 'fileUpload', 'moment', 'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'VERSION',
-                  'Annuaire', 'Utils', 'Etablissements', 'Salles', 'CreneauxEmploiDuTemps', 'CahiersDeTextes',
+                  'Annuaire', 'Utils', 'Etablissements', 'Salles', 'CreneauxEmploiDuTemps', 'CahiersDeTextes', 'API',
                   'current_user',
                   function ( $scope, $http, $locale, $sce, $filter, fileUpload, moment, APP_PATH, SEMAINES_VACANCES, ZONE, VERSION,
-                             Annuaire, Utils, Etablissements, Salles, CreneauxEmploiDuTemps, CahiersDeTextes,
+                             Annuaire, Utils, Etablissements, Salles, CreneauxEmploiDuTemps, CahiersDeTextes, API,
                              current_user ) {
                       $scope.scope = $scope;
                       $scope.jours_de_la_semaine = $locale.DATETIME_FORMATS.DAY;
@@ -37,6 +37,33 @@ angular.module( 'cahierDeTextesClientApp' )
                           bsemainier_laclasse = bsemainier_laclasse.split('').reverse().join('');
 
                           return parseInt( bsemainier_laclasse, 2 );
+                      };
+
+                      $scope.beautify_semainier = function( semainier ) {
+                          var bsemainier = Utils.padEnd( semainier.toString( 2 ), 53, '0' );
+
+                          return '<div class="semainier-tooltip gris1">' +
+                              _.chain(Utils.overlay_semainier())
+                              .sortBy( function( month ) { return month.index; } )
+                              .map( function( month ) {
+                                  var month_html = '<div class="month blanc"><h5 class="month-name gris4">' + month.label + '</h5>';
+
+                                  month_html += _(month.semaines).map( function( week ) {
+                                      var week_html = '<span class="week';
+                                      if ( Utils.sont_ce_les_vacances( week.semaine, ZONE ) ) { week_html += ' vacances gris2'; }
+                                      if ( bsemainier[ week.semaine ] === '1' ) { week_html += ' active orange-moins'; }
+                                      week_html += '">' + week.semaine + '</span>';
+
+                                      return week_html;
+                                  } ).join('');
+
+                                  month_html += '</div>';
+
+                                  return month_html;
+                              } )
+                              .value()
+                              .join('') +
+                              '<div class="clearfix"></div></div>';
                       };
 
                       var get_etablissement_summary = function() {
@@ -146,7 +173,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                   console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
                                   // 1. Récupérer le fichier Pronote décrypté
                                   $scope.pronote = response.data;
-                                  console.log($scope.pronote)
                                   $scope.pronote.GrilleHoraire[0].DureePlace = parseInt( $scope.pronote.GrilleHoraire[0].DureePlace );
 
                                   started_at = moment();
@@ -195,185 +221,171 @@ angular.module( 'cahierDeTextesClientApp' )
                                           started_at = moment();
                                           console.log('treating regroupements')
                                           // 3.3 Classes et Groupes
-                                          _($scope.pronote.Classes[0].Classe)
-                                              .each( function( regroupement ) {
-                                                  regroupement.displayed_label = regroupement.Nom;
-                                                  regroupement.laclasse = _($scope.etablissement.classes).findWhere( { libelle_aaf: regroupement.Nom.toUpperCase() } );
-                                                  regroupement.edit = _(regroupement.laclasse).isUndefined();
-                                                  if ( !regroupement.edit ) {
-                                                      regroupement.laclasse.displayed_label = regroupement.laclasse.libelle_aaf;
-                                                  }
-                                              } );
 
-                                          _($scope.pronote.Groupes[0].Groupe)
-                                              .each( function( regroupement ) {
-                                                  regroupement.displayed_label = regroupement.Nom;
-                                                  regroupement.laclasse = _($scope.etablissement.groupes_eleves).findWhere( { libelle_aaf: regroupement.Nom.toUpperCase() } );
-                                                  regroupement.edit = _(regroupement.laclasse).isUndefined();
-                                                  if ( !regroupement.edit ) {
-                                                      regroupement.laclasse.displayed_label = regroupement.laclasse.libelle_aaf;
-                                                  }
-                                              } );
-                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
+                                          API.query_statistiques_regroupements( { uai: current_user.profil_actif.etablissement_code_uai } )
+                                              .$promise.then( function( response ) {
+                                                  _($scope.pronote.Classes[0].Classe)
+                                                      .each( function( regroupement ) {
+                                                          regroupement.displayed_label = regroupement.Nom;
+                                                          regroupement.laclasse = _($scope.etablissement.classes).findWhere( { libelle_aaf: regroupement.Nom.toUpperCase() } );
+                                                          regroupement.edit = _(regroupement.laclasse).isUndefined();
 
-                                          started_at = moment();
-                                          console.log('treating cours')
-                                          // 4. treating Cours
-                                          $scope.beautify_semainier = function( semainier ) {
-                                              var bsemainier = Utils.padEnd( semainier.toString( 2 ), 53, '0' );
+                                                          var creneaux_laclasse = _(regroupement.laclasse).isUndefined() ? undefined : _(response).findWhere({ regroupement_id: "" + regroupement.laclasse.id });
+                                                          regroupement.existing_creneaux = _(creneaux_laclasse).isUndefined() ? 0 : creneaux_laclasse.creneaux_emploi_du_temps.vides.length + creneaux_laclasse.creneaux_emploi_du_temps.pleins.length;
 
-                                              return '<div class="semainier-tooltip gris1">' +
-                                                  _.chain(Utils.overlay_semainier())
-                                                  .sortBy( function( month ) { return month.index; } )
-                                                  .map( function( month ) {
-                                                      var month_html = '<div class="month blanc"><h5 class="month-name gris4">' + month.label + '</h5>';
-
-                                                      month_html += _(month.semaines).map( function( week ) {
-                                                          var week_html = '<span class="week';
-                                                          if ( Utils.sont_ce_les_vacances( week.semaine, ZONE ) ) { week_html += ' vacances gris2'; }
-                                                          if ( bsemainier[ week.semaine ] === '1' ) { week_html += ' active orange-moins'; }
-                                                          week_html += '">' + week.semaine + '</span>';
-
-                                                          return week_html;
-                                                      } ).join('');
-
-                                                      month_html += '</div>';
-
-                                                      return month_html;
-                                                  } )
-                                                  .value()
-                                                  .join('') +
-                                                  '<div class="clearfix"></div></div>';
-                                          };
-
-                                          $scope.creneaux = _.chain($scope.pronote.Cours[0].Cours)
-                                              .map( function( cours ) {
-                                                  return _.chain(cours.Matiere).map( function( matiere ) {
-                                                      return _(cours.Professeur).map( function( enseignant ) {
-                                                          var compute_cours = function( type_regroupement ) {
-                                                              return function( regroupement ) {
-                                                                  var this_cours = angular.copy( cours );
-                                                                  this_cours.is_displayed = true;
-                                                                  this_cours.Matiere = matiere;
-                                                                  this_cours.Professeur = enseignant;
-                                                                  this_cours.Professeur.Semaines = fix_semainier_pronote( this_cours.Professeur.Semaines );
-
-                                                                  if ( type_regroupement === 'Classe' ) {
-                                                                      this_cours.Classe = regroupement;
-                                                                      this_cours.Classe.Semaines = fix_semainier_pronote( this_cours.Classe.Semaines );
-                                                                  } else {
-                                                                      this_cours.Groupe = regroupement;
-                                                                      this_cours.Groupe.Semaines = fix_semainier_pronote( this_cours.Groupe.Semaines );
-                                                                  }
-
-                                                                  if ( _(cours).has('Salle') ) {
-                                                                      return _(cours.Salle).map( function( salle ) {
-                                                                          this_cours.Salle = salle;
-                                                                          this_cours.Salle.Semaines = fix_semainier_pronote( this_cours.Salle.Semaines );
-
-                                                                          return this_cours;
-                                                                      } );
-                                                                  } else {
-                                                                      return this_cours;
-                                                                  }
-                                                              };
-                                                          };
-
-                                                          return [ _(cours.Classe).map( compute_cours( 'Classe' ) ),
-                                                                   _(cours.Groupe).map( compute_cours( 'Groupe' ) ) ];
+                                                          if ( !regroupement.edit ) {
+                                                              regroupement.laclasse.displayed_label = regroupement.laclasse.libelle_aaf;
+                                                          }
                                                       } );
-                                                  } )
-                                                      .flatten()
-                                                      .uniq()
-                                                      .value();
-                                              } )
-                                              .flatten()
-                                              .value();
-                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
-                                          started_at = moment();
-                                          console.log('building matcheable_data')
-                                          $scope.pronote.enseignants = Utils.groupByKey( $scope.pronote.Professeurs[0].Professeur, 'Ident' );
-                                          $scope.pronote.classes = Utils.groupByKey( $scope.pronote.Classes[0].Classe, 'Ident' );
-                                          $scope.pronote.salles = Utils.groupByKey( $scope.pronote.Salles[0].Salle, 'Ident' );
-                                          $scope.pronote.plages_horaires = Utils.groupByKey( $scope.pronote.GrilleHoraire[0].PlacesParJour[0].Place, 'Numero' );
-                                          $scope.pronote.groupes_eleves = Utils.groupByKey( $scope.pronote.Groupes[0].Groupe, 'Ident' );
+                                                  _($scope.pronote.Groupes[0].Groupe)
+                                                      .each( function( regroupement ) {
+                                                          regroupement.displayed_label = regroupement.Nom;
+                                                          regroupement.laclasse = _($scope.etablissement.groupes_eleves).findWhere( { libelle_aaf: regroupement.Nom.toUpperCase() } );
+                                                          regroupement.edit = _(regroupement.laclasse).isUndefined();
 
-                                          $scope.matcheable_data.push( { title: 'Classes',
-                                                                         pronote: $scope.pronote.classes,
-                                                                         annuaire: $scope.etablissement.classes } );
-                                          $scope.matcheable_data.push( { title: 'Groupes d\'élèves',
-                                                                         pronote: $scope.pronote.groupes_eleves,
-                                                                         annuaire: $scope.etablissement.groupes_eleves } );
-                                          $scope.matcheable_data.push( { title: 'Enseignants',
-                                                                         pronote: $scope.pronote.enseignants,
-                                                                         annuaire: $scope.etablissement.teachers } );
-                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
+                                                          var creneaux_laclasse = _(regroupement.laclasse).isUndefined() ? undefined : _(response).findWhere({ regroupement_id: "" + regroupement.laclasse.id });
+                                                          regroupement.existing_creneaux = _(creneaux_laclasse).isUndefined() ? 0 : creneaux_laclasse.creneaux_emploi_du_temps.vides.length + creneaux_laclasse.creneaux_emploi_du_temps.pleins.length;
 
-                                          started_at = moment();
-                                          console.log('retrieving matieres')
-                                          Annuaire.get_matieres()
-                                              .then( function( response ) {
-                                                  console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
-
-                                                  started_at = moment();
-                                                  console.log('massage matieres')
-                                                  $scope.matieres = _(response.data).map( function( matiere ) {
-                                                      matiere.libelle_long = matiere.libelle_long.toUpperCase();
-                                                      matiere.displayed_label = matiere.libelle_long;
-
-                                                      return matiere;
-                                                  } );
-                                                  console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
-
-                                                  started_at = moment();
-                                                  console.log('match matieres')
-                                                  // 3. Matcher les 2
-                                                  // 3.1 Matières
-                                                  _($scope.pronote.Matieres[0].Matiere)
-                                                      .each( function( matiere ) {
-                                                          matiere.displayed_label = matiere.Libelle;
-                                                          matiere.laclasse = _($scope.matieres).findWhere( { libelle_long: matiere.Libelle.toUpperCase() } );
-                                                          matiere.edit = _(matiere.laclasse).isUndefined();
-                                                          if ( !matiere.edit ) {
-                                                              matiere.laclasse.displayed_label = matiere.laclasse.libelle_long;
+                                                          if ( !regroupement.edit ) {
+                                                              regroupement.laclasse.displayed_label = regroupement.laclasse.libelle_aaf;
                                                           }
                                                       } );
                                                   console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
                                                   started_at = moment();
-                                                  console.log('add matieres to matcheable_data')
-                                                  $scope.pronote.matieres = Utils.groupByKey( $scope.pronote.Matieres[0].Matiere, 'Ident' );
-                                                  $scope.matcheable_data.push( { title: 'Matières',
-                                                                                 pronote: $scope.pronote.matieres,
-                                                                                 annuaire: $scope.matieres } );
+                                                  console.log('treating cours')
+                                                  // 4. treating Cours
+                                                  $scope.creneaux = _.chain($scope.pronote.Cours[0].Cours)
+                                                      .map( function( cours ) {
+                                                          return _.chain(cours.Matiere).map( function( matiere ) {
+                                                              return _(cours.Professeur).map( function( enseignant ) {
+                                                                  var compute_cours = function( type_regroupement ) {
+                                                                      return function( regroupement ) {
+                                                                          var this_cours = angular.copy( cours );
+                                                                          this_cours.is_displayed = true;
+                                                                          this_cours.Matiere = matiere;
+                                                                          this_cours.Professeur = enseignant;
+                                                                          this_cours.Professeur.Semaines = fix_semainier_pronote( this_cours.Professeur.Semaines );
+
+                                                                          if ( type_regroupement === 'Classe' ) {
+                                                                              this_cours.Classe = regroupement;
+                                                                              this_cours.Classe.Semaines = fix_semainier_pronote( this_cours.Classe.Semaines );
+                                                                          } else {
+                                                                              this_cours.Groupe = regroupement;
+                                                                              this_cours.Groupe.Semaines = fix_semainier_pronote( this_cours.Groupe.Semaines );
+                                                                          }
+
+                                                                          if ( _(cours).has('Salle') ) {
+                                                                              return _(cours.Salle).map( function( salle ) {
+                                                                                  this_cours.Salle = salle;
+                                                                                  this_cours.Salle.Semaines = fix_semainier_pronote( this_cours.Salle.Semaines );
+
+                                                                                  return this_cours;
+                                                                              } );
+                                                                          } else {
+                                                                              return this_cours;
+                                                                          }
+                                                                      };
+                                                                  };
+
+                                                                  return [ _(cours.Classe).map( compute_cours( 'Classe' ) ),
+                                                                           _(cours.Groupe).map( compute_cours( 'Groupe' ) ) ];
+                                                              } );
+                                                          } )
+                                                              .flatten()
+                                                              .uniq()
+                                                              .value();
+                                                      } )
+                                                      .flatten()
+                                                      .value();
                                                   console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
                                                   started_at = moment();
-                                                  console.log('update match stats')
-                                                  _($scope.matcheable_data).each( function( dataset ) {
-                                                      dataset.total = function() { return _(dataset.pronote).size(); };
-                                                      dataset.unmatched = function() { return _(dataset.pronote).where( { laclasse: undefined } ).length; };
-                                                      dataset.percent_valid = function() { return ( dataset.total() - dataset.unmatched() ) / dataset.total(); };
-                                                  } );
-                                                  console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
+                                                  console.log('building matcheable_data')
+                                                  $scope.pronote.enseignants = Utils.groupByKey( $scope.pronote.Professeurs[0].Professeur, 'Ident' );
+                                                  $scope.pronote.classes = Utils.groupByKey( $scope.pronote.Classes[0].Classe, 'Ident' );
+                                                  $scope.pronote.salles = Utils.groupByKey( $scope.pronote.Salles[0].Salle, 'Ident' );
+                                                  $scope.pronote.plages_horaires = Utils.groupByKey( $scope.pronote.GrilleHoraire[0].PlacesParJour[0].Place, 'Numero' );
+                                                  $scope.pronote.groupes_eleves = Utils.groupByKey( $scope.pronote.Groupes[0].Groupe, 'Ident' );
 
-                                                  $scope.selected = { matieres: $scope.pronote.Matieres[0].Matiere,
-                                                                      enseignants: $scope.pronote.Professeurs[0].Professeur,
-                                                                      classes: $scope.pronote.Classes[0].Classe,
-                                                                      groupes: $scope.pronote.Groupes[0].Groupe };
+                                                  $scope.matcheable_data.push( { title: 'Classes',
+                                                                                 pronote: $scope.pronote.classes,
+                                                                                 annuaire: $scope.etablissement.classes } );
+                                                  $scope.matcheable_data.push( { title: 'Groupes d\'élèves',
+                                                                                 pronote: $scope.pronote.groupes_eleves,
+                                                                                 annuaire: $scope.etablissement.groupes_eleves } );
+                                                  $scope.matcheable_data.push( { title: 'Enseignants',
+                                                                                 pronote: $scope.pronote.enseignants,
+                                                                                 annuaire: $scope.etablissement.teachers } );
+                                                  console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
                                                   started_at = moment();
-                                                  console.log('update_creneaux_readiness')
-                                                  $scope.update_creneaux_readiness();
-                                                  console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
+                                                  console.log('retrieving matieres')
+                                                  Annuaire.get_matieres()
+                                                      .then( function( response ) {
+                                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
-                                                  $scope.$watchCollection( 'selected', $scope.update_counters );
+                                                          started_at = moment();
+                                                          console.log('massage matieres')
+                                                          $scope.matieres = _(response.data).map( function( matiere ) {
+                                                              matiere.libelle_long = matiere.libelle_long.toUpperCase();
+                                                              matiere.displayed_label = matiere.libelle_long;
 
-                                                  $scope.ui.loading_file = false;
+                                                              return matiere;
+                                                          } );
+                                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
+
+                                                          started_at = moment();
+                                                          console.log('match matieres')
+                                                          // 3. Matcher les 2
+                                                          // 3.1 Matières
+                                                          _($scope.pronote.Matieres[0].Matiere)
+                                                              .each( function( matiere ) {
+                                                                  matiere.displayed_label = matiere.Libelle;
+                                                                  matiere.laclasse = _($scope.matieres).findWhere( { libelle_long: matiere.Libelle.toUpperCase() } );
+                                                                  matiere.edit = _(matiere.laclasse).isUndefined();
+                                                                  if ( !matiere.edit ) {
+                                                                      matiere.laclasse.displayed_label = matiere.laclasse.libelle_long;
+                                                                  }
+                                                              } );
+                                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
+
+                                                          started_at = moment();
+                                                          console.log('add matieres to matcheable_data')
+                                                          $scope.pronote.matieres = Utils.groupByKey( $scope.pronote.Matieres[0].Matiere, 'Ident' );
+                                                          $scope.matcheable_data.push( { title: 'Matières',
+                                                                                         pronote: $scope.pronote.matieres,
+                                                                                         annuaire: $scope.matieres } );
+                                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
+
+                                                          started_at = moment();
+                                                          console.log('update match stats')
+                                                          _($scope.matcheable_data).each( function( dataset ) {
+                                                              dataset.total = function() { return _(dataset.pronote).size(); };
+                                                              dataset.unmatched = function() { return _(dataset.pronote).where( { laclasse: undefined } ).length; };
+                                                              dataset.percent_valid = function() { return ( dataset.total() - dataset.unmatched() ) / dataset.total(); };
+                                                          } );
+                                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
+
+                                                          // TODO: don't select if there's existing créneaux
+                                                          $scope.selected = { matieres: $scope.pronote.Matieres[0].Matiere,
+                                                                              enseignants: $scope.pronote.Professeurs[0].Professeur,
+                                                                              classes: _($scope.pronote.Classes[0].Classe).where({ existing_creneaux: 0 }),
+                                                                              groupes: _($scope.pronote.Groupes[0].Groupe).where({ existing_creneaux: 0 }) };
+
+                                                          started_at = moment();
+                                                          console.log('update_creneaux_readiness')
+                                                          $scope.update_creneaux_readiness();
+                                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
+
+                                                          $scope.$watchCollection( 'selected', $scope.update_counters );
+
+                                                          $scope.ui.loading_file = false;
+                                                      } );
                                               } );
                                       } );
-                              } );
+                              });
                       };
 
                       $scope.process_import = function() {
