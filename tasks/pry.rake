@@ -20,6 +20,7 @@ task :load_config do
   require_relative '../models/models'
   require_relative '../lib/utils/semainier'
   require 'laclasse/laclasse_logger'
+  require 'laclasse/cross_app/sender'
 end
 
 desc 'Open pry with app environment'
