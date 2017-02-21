@@ -8,11 +8,9 @@ class Etablissement < Sequel::Model( :etablissements )
   one_to_many :salles
 
   def statistiques_regroupements
-    etab = Laclasse::CrossApp::Sender
-             .send_request_signed( :service_annuaire_etablissement, "#{values[:UAI]}/regroupements", expand: 'true' )
+    etab = Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_v2_etablissements, values[:UAI], expand: 'true' )
 
-    etab['classes'].concat( etab['groupes_eleves'] )
-                   .map do |classe|
+    etab['groups'].map do |classe|
       cdt = CahierDeTextes.where( regroupement_id: classe['id'] ).first
       cdt = CahierDeTextes.create( date_creation: Time.now, regroupement_id: classe[ 'id' ] ) if cdt.nil?
       cdt.statistiques
@@ -21,10 +19,11 @@ class Etablissement < Sequel::Model( :etablissements )
 
   def statistiques_enseignants
     Laclasse::CrossApp::Sender
-      .send_request_signed( :service_annuaire_etablissement, "#{values[:UAI]}/enseignants", expand: 'true' )
+      .send_request_signed( :service_annuaire_v2_etablissements, values[:UAI], expand: 'true' )['users']
+      .select { |u| u['profils'].include?( 'ENS' ) }
       .map do |enseignant|
-      { enseignant_id: enseignant['id_ent'],
-        classes: saisies_enseignant( enseignant['id_ent'] )[:saisies]
+      { enseignant_id: enseignant['ent_id'],
+        classes: saisies_enseignant( enseignant['ent_id'] )[:saisies]
           .group_by { |s| s[:regroupement_id] }
           .map do |regroupement_id, regroupement_saisies|
           { regroupement_id: regroupement_id,
