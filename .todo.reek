@@ -16,7 +16,7 @@ NilCheck:
   - Devoir#modifie
   - Devoir#to_deep_hash
   - Etablissement#saisies_enseignant
-  - Etablissement#statistiques_classes
+  - Etablissement#statistiques_regroupements
   - CahierDeTextesApp::Routes::Status#self.registered
   - generate_test_data
 IrresponsibleModule:
@@ -24,6 +24,7 @@ IrresponsibleModule:
   - DataManagement::Cleansing::Creneaux
   - DataManagement::EmploiDuTemps
   - Uglify
+  - CahierDeTextesApp::Utils
   - Utils
   - CahierDeTextesApp::Utils::Holidays
   - CahierDeTextesApp::Utils::Semainier
@@ -107,7 +108,7 @@ DuplicateMethodCall:
   - DataManagement::EmploiDuTemps#ical
   - DataManagement::Provisioning#provision
   - DataManagement::User#delete
-  - Utils#date_rentree
+  - CahierDeTextesApp::Utils#date_rentree
   - CahierDeTextesApp::Utils::Holidays#get
   - CahierDeTextesApp::Utils::Holidays#year_rentree
   - CahierDeTextesApp::Utils::Semainier#jsonify_semainier
@@ -126,8 +127,8 @@ DuplicateMethodCall:
   - Devoir#modifie
   - Devoir#to_deep_hash
   - Devoir#toggle_fait
-  - Etablissement#statistiques_classes
   - Etablissement#statistiques_enseignants
+  - Etablissement#statistiques_regroupements
   - CahierDeTextesApp::Routes::Auth#self.registered
   - CahierDeTextesApp::Routes::Status#self.registered
   - TableCleaner#tsort_each_child
@@ -145,7 +146,7 @@ FeatureEnvy:
   - CreneauEmploiDuTemps#modifie
   - CreneauEmploiDuTemps#similaires
   - Etablissement#merge_all_twin_creneaux
-  - Etablissement#statistiques_classes
+  - Etablissement#statistiques_regroupements
 LongParameterList:
   exclude:
   - DataManagement::EmploiDuTemps#get
