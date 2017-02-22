@@ -28,7 +28,7 @@ SESSION_KEY = 'SomeKey'.freeze
 SESSION_TIME = 3600
 
 # Url de l'ENT
-URL_ENT = 'http://www.dev.laclasse.com'.freeze
+URL_ENT = 'http://v3dev.laclasse.com'.freeze
 
 # Url des Docs
 DOCS_URL = 'https://v3dev.laclasse.com/docs'.freeze
@@ -36,88 +36,31 @@ DOCS_URL = 'https://v3dev.laclasse.com/docs'.freeze
 # nom du serveur d'annuaire ENT (xml-aaf académiques)
 SERVICE_ANNUAIRE_ENT = 'http://www.dev.laclasse/com/annuaire/'.freeze
 
-# SSL verification mode
-## OpenSSL::SSL::VERIFY_PEER => check SSL server cert
-## OpenSSL::SSL::VERIFY_NONE => do not check SSL server cert
-SSL_VERIFY = OpenSSL::SSL::VERIFY_PEER
-
 #
 # Configuration du Serveur d'Authentification Central CAS
 #
 module CASAUTH
-  CONFIG = {
-    host: 'www.dev.laclasse.com',
-    ssl: true,
-    port: 443,
-    disable_ssl_verification: true,
-    login_url: '/sso/login',
-    restmod_url: '/sso/api/tickets',
-    service_validate_url: '/sso/serviceValidate',
-    logout_url: '/sso/logout',
-    logout_saml_url: '/saml/saml2/idp/SingleLogoutService.php'
-  }.freeze
+  CONFIG = { host: 'v3dev.laclasse.com',
+             ssl: true,
+             port: 443,
+             disable_ssl_verification: true,
+             login_url: '/sso/login',
+             restmod_url: '/sso/api/tickets',
+             service_validate_url: '/sso/serviceValidate',
+             logout_url: '/sso/logout',
+             logout_saml_url: '/saml/saml2/idp/SingleLogoutService.php' }.freeze
 end
 
 #
 # Configuration du service d'annuaire de l'ENT
 #
-ANNUAIRE = {
-  url: 'http://www.dev.laclasse.com/api/app',
-  app_id: 'Identifiant de l application dans l annuaire',
-  api_key: 'Clé secrete de signature des requetes REST',
-  # api_mode: 'v2',
-  api_mode: 'v3',
-  # service_annuaire_user: '/pls/public/!ajax_server.service?serviceName=serviceApiUser&uid=' pour l'annuaire v2
-  service_annuaire_user: '/api/app/users/'
-}.freeze
-
-#
-# Configuration du service Etherpad
-#
-# ETHERPAD = {
-#   url: 'http://www.dev.laclasse.com/pads',
-#   api_key: 'Clé secrete de signature des échanges',
-#   default_text: 'Vous etes a present sur etherpad. \n Celui-ci est un document collaboratif. \n'
-# }
-
-#
-# Configuration du service de quizs
-#
-# QUIZS = {
-#   url: 'http://www.dev.laclasse.com',
-#   uri_open: '/pls/education/quizz.lance_exercice?p_exo_id=',
-#   uri_modif: '/pls/education/!page.laclasse?contexte=DOCUMENTS&paction=modifier_element&ptype=',
-#   api_key: 'Clé secrete de signature des échanges'
-# }
-
-#
-# Configuration du service de notifications
-#
-
-# NOTIFICATIONS = {
-#      mount: '#{APP_PATH}/faye',
-#      timeout: 25,
-#      engine: {
-#          host: 'http://www.laclasse.com',
-#          type: Faye::Redis,
-#          port: 6379
-#      }
-# }
+ANNUAIRE = { url: 'http://www.dev.laclasse.com/api/app',
+             app_id: 'Identifiant de l application dans l annuaire',
+             api_key: 'Clé secrete de signature des requetes REST' }.freeze
 
 #
 # Configuration du service REDIS
 #
-REDIS = {
-  host: 'redis.dev.laclasse.lan',
-  port: 6379,
-  redis_root: 'com.laclasse.v3localhost'
-}.freeze
-
-#
-# Configuration du service de mail
-#
-# MAIL = {
-#   adress: 'smtp.laclasse.com',
-#   enable_starttls_auto: false,
-#   webmail_host: 'http://www.dev.laclasse.com/mail/'
-# }
+REDIS = { host: 'redis.dev.laclasse.lan',
+          port: 6379,
+          redis_root: 'com.laclasse.v3localhost' }.freeze
