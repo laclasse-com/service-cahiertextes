@@ -25,6 +25,8 @@ require_relative './api/creneaux_emploi_du_temps'
 require_relative './api/salles'
 require_relative './api/cahiers_de_textes'
 
+require_relative './api/stats'
+
 module CahierDeTextesApp
   class API < Grape::API
     format :json
@@ -56,5 +58,7 @@ module CahierDeTextesApp
     resource( :creneaux_emploi_du_temps ) { mount ::CahierDeTextesApp::CreneauxEmploiDuTempsAPI }
     resource( :salles                   ) { mount ::CahierDeTextesApp::SallesAPI }
     resource( :cahiers_de_textes        ) { mount ::CahierDeTextesApp::CahiersDeTextesAPI }
+
+    resource( :stats                    ) { mount ::CahierDeTextesApp::StatsAPI }
   end
 end
