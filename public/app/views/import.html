@@ -49,6 +49,8 @@
                                     <h3>Aucun recoupement à faire. </h3>
                                 </td>
                             </tr>
+
+                            <!-- matchablerow -->
                             <tr ng:repeat="node in dataset.pronote"
                                 ng:if="node.edit || scope.display_all"
                                 ng:class="{'ok': !node.edit, 'ko': node.edit}">
@@ -62,9 +64,9 @@
                                     <select class="select-annuaire"
                                             ng:if="node.edit && matieres"
                                             ng:model="node.laclasse"
-                                            ng:change="update_creneaux_readiness()"
+                                            ng:change="match_this( node )"
                                             ng:options="official as official.displayed_label for official in dataset.annuaire | orderBy:['displayed_label']">{{official.displayed_label}}</select>
-                                    <span class="glyphicon glyphicon-erase" style="cursor: pointer" ng:click="node.laclasse = null" ng:if="node.edit"></span>
+                                    <span class="glyphicon glyphicon-erase" style="cursor: pointer" ng:click="unmatch_this( node )" ng:if="node.edit"></span>
                                 </td>
                                 <td>
                                     <button class="btn btn-default"
@@ -73,6 +75,8 @@
                                     </button>
                                 </td>
                             </tr>
+                            <!-- /matchablerow -->
+
                         </tbody>
                     </table>
                 </uib-tab>
