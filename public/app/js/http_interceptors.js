@@ -21,16 +21,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                                                               timer: 3000
                                                                             } );
                                                                   }
-                                                                  // if ( rejection.status === 500 ) {
-                                                                  //     swal( { title: 'Erreur',
-                                                                  //             text: 'L\'application a rencontrée une erreur durant le traitement serveur.',
-                                                                  //             type: 'error',
-                                                                  //             showCancelButton: false,
-                                                                  //             confirmButtonColor: '#ff6b55',
-                                                                  //             confirmButtonText: 'Fermer',
-                                                                  //             timer: 3000
-                                                                  //           } );
-                                                                  // }
+
                                                                   return $q.reject( rejection );
                                                               }
                                                           };
