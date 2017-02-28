@@ -172,7 +172,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                   $scope.pronote = response.data;
                                   $scope.pronote.GrilleHoraire[0].DureePlace = parseInt( $scope.pronote.GrilleHoraire[0].DureePlace );
 
-                                  var hash_me = function( item ) { return item.displayed_label.replace(' ', '') + '@' +  $scope.pronote.UAI;};
+                                  var hash_me = function( item ) { return window.btoa( unescape( encodeURIComponent( item.displayed_label + '@' +  $scope.pronote.UAI ) ) ); };
 
                                   $scope.match_this = function( item ) {
                                       var laclasse_id = _(item.laclasse).has('ent_id') ? item.laclasse.ent_id : item.laclasse.id;
@@ -226,7 +226,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                                   enseignant.displayed_label = enseignant.Prenom + ' ' + enseignant.Nom;
                                                   enseignant.laclasse = _($scope.etablissement.teachers).findWhere( { lastname: enseignant.Nom.toUpperCase(),
                                                                                                                       firstname: enseignant.Prenom.toUpperCase() } );
-                                                  var post_laclasse = function() {
+                                                  var post_match_laclasse = function() {
                                                       enseignant.edit = _(enseignant.laclasse).isUndefined();
                                                       if ( !enseignant.edit ) {
                                                           enseignant.laclasse.displayed_label = enseignant.laclasse.lastname + ' ' + enseignant.laclasse.firstname.toLocaleLowerCase();
@@ -242,13 +242,13 @@ angular.module( 'cahierDeTextesClientApp' )
                                                                                               ent_id: response.id_ent,
                                                                                               firstname: response.prenom,
                                                                                               lastname: response.nom };
-                                                                      post_laclasse();
+                                                                      post_match_laclasse();
                                                                   },
-                                                                         function error( response ) { post_laclasse(); } );
+                                                                         function error( response ) { post_match_laclasse(); } );
                                                           },
-                                                                 function error( response ) { post_laclasse(); } );
+                                                                 function error( response ) { post_match_laclasse(); } );
                                                   } else {
-                                                      post_laclasse();
+                                                      post_match_laclasse();
                                                   }
                                               } );
                                           console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
@@ -263,13 +263,31 @@ angular.module( 'cahierDeTextesClientApp' )
                                                       .each( function( regroupement ) {
                                                           regroupement.displayed_label = regroupement.Nom;
                                                           regroupement.laclasse = _($scope.etablissement.classes).findWhere( { libelle_aaf: regroupement.Nom.toUpperCase() } );
-                                                          regroupement.edit = _(regroupement.laclasse).isUndefined();
 
-                                                          var creneaux_laclasse = _(regroupement.laclasse).isUndefined() ? undefined : _(response).findWhere({ regroupement_id: "" + regroupement.laclasse.id });
-                                                          regroupement.existing_creneaux = _(creneaux_laclasse).isUndefined() ? 0 : creneaux_laclasse.creneaux_emploi_du_temps.vides.length + creneaux_laclasse.creneaux_emploi_du_temps.pleins.length;
+                                                          var post_match_laclasse = function() {
+                                                              regroupement.edit = _(regroupement.laclasse).isUndefined();
+                                                              var creneaux_laclasse = _(regroupement.laclasse).isUndefined() ? undefined : _(response).findWhere({ regroupement_id: "" + regroupement.laclasse.id });
+                                                              regroupement.existing_creneaux = _(creneaux_laclasse).isUndefined() ? 0 : creneaux_laclasse.creneaux_emploi_du_temps.vides.length + creneaux_laclasse.creneaux_emploi_du_temps.pleins.length;
 
-                                                          if ( !regroupement.edit ) {
-                                                              regroupement.laclasse.displayed_label = regroupement.laclasse.libelle_aaf;
+                                                              if ( !regroupement.edit ) {
+                                                                  regroupement.laclasse.displayed_label = regroupement.laclasse.libelle_aaf;
+                                                              }
+                                                          };
+
+                                                          if ( _(regroupement.laclasse).isUndefined() ) {
+                                                              Matchable.get({ hash: hash_me( regroupement ) }).$promise
+                                                                  .then( function success( response ) {
+                                                                      Annuaire.get_regroupement( response.id_annuaire ).$promise
+                                                                          .then( function( response ) {
+                                                                              regroupement.laclasse = { id: response.id,
+                                                                                                        libelle_aaf: response.libelle_aaf };
+                                                                              post_match_laclasse();
+                                                                          },
+                                                                                 function error( response ) { post_match_laclasse(); } );
+                                                                  },
+                                                                         function error( response ) { post_match_laclasse(); } );
+                                                          } else {
+                                                              post_match_laclasse();
                                                           }
                                                       } );
 
@@ -277,13 +295,31 @@ angular.module( 'cahierDeTextesClientApp' )
                                                       .each( function( regroupement ) {
                                                           regroupement.displayed_label = regroupement.Nom;
                                                           regroupement.laclasse = _($scope.etablissement.groupes_eleves).findWhere( { libelle_aaf: regroupement.Nom.toUpperCase() } );
-                                                          regroupement.edit = _(regroupement.laclasse).isUndefined();
 
-                                                          var creneaux_laclasse = _(regroupement.laclasse).isUndefined() ? undefined : _(response).findWhere({ regroupement_id: "" + regroupement.laclasse.id });
-                                                          regroupement.existing_creneaux = _(creneaux_laclasse).isUndefined() ? 0 : creneaux_laclasse.creneaux_emploi_du_temps.vides.length + creneaux_laclasse.creneaux_emploi_du_temps.pleins.length;
+                                                          var post_match_laclasse = function() {
+                                                              regroupement.edit = _(regroupement.laclasse).isUndefined();
+                                                              var creneaux_laclasse = _(regroupement.laclasse).isUndefined() ? undefined : _(response).findWhere({ regroupement_id: "" + regroupement.laclasse.id });
+                                                              regroupement.existing_creneaux = _(creneaux_laclasse).isUndefined() ? 0 : creneaux_laclasse.creneaux_emploi_du_temps.vides.length + creneaux_laclasse.creneaux_emploi_du_temps.pleins.length;
 
-                                                          if ( !regroupement.edit ) {
-                                                              regroupement.laclasse.displayed_label = regroupement.laclasse.libelle_aaf;
+                                                              if ( !regroupement.edit ) {
+                                                                  regroupement.laclasse.displayed_label = regroupement.laclasse.libelle_aaf;
+                                                              }
+                                                          };
+
+                                                          if ( _(regroupement.laclasse).isUndefined() ) {
+                                                              Matchable.get({ hash: hash_me( regroupement ) }).$promise
+                                                                  .then( function success( response ) {
+                                                                      Annuaire.get_regroupement( response.id_annuaire ).$promise
+                                                                          .then( function( response ) {
+                                                                              regroupement.laclasse = { id: response.id,
+                                                                                                        libelle_aaf: response.libelle_aaf };
+                                                                              post_match_laclasse();
+                                                                          },
+                                                                                 function error( response ) { post_match_laclasse(); } );
+                                                                  },
+                                                                         function error( response ) { post_match_laclasse(); } );
+                                                          } else {
+                                                              post_match_laclasse();
                                                           }
                                                       } );
                                                   console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
@@ -379,9 +415,28 @@ angular.module( 'cahierDeTextesClientApp' )
                                                               .each( function( matiere ) {
                                                                   matiere.displayed_label = matiere.Libelle;
                                                                   matiere.laclasse = _($scope.matieres).findWhere( { libelle_long: matiere.Libelle.toUpperCase() } );
-                                                                  matiere.edit = _(matiere.laclasse).isUndefined();
-                                                                  if ( !matiere.edit ) {
-                                                                      matiere.laclasse.displayed_label = matiere.laclasse.libelle_long;
+
+                                                                  var post_match_laclasse = function() {
+                                                                      matiere.edit = _(matiere.laclasse).isUndefined();
+                                                                      if ( !matiere.edit ) {
+                                                                          matiere.laclasse.displayed_label = matiere.laclasse.libelle_long;
+                                                                      }
+                                                                  };
+
+                                                                  if ( _(matiere.laclasse).isUndefined() ) {
+                                                                      Matchable.get({ hash: hash_me( matiere ) }).$promise
+                                                                          .then( function success( response ) {
+                                                                              Annuaire.get_matiere( response.id_annuaire )
+                                                                                  .then( function( response ) {
+                                                                                      matiere.laclasse = { id: response.id,
+                                                                                                           libelle_long: response.libelle_long };
+                                                                                      post_match_laclasse();
+                                                                                  },
+                                                                                         function error( response ) { post_match_laclasse(); } );
+                                                                          },
+                                                                                 function error( response ) { post_match_laclasse(); } );
+                                                                  } else {
+                                                                      post_match_laclasse();
                                                                   }
                                                               } );
                                                           console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
