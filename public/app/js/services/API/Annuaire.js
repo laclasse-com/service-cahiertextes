@@ -6,9 +6,7 @@ angular.module( 'cahierDeTextesClientApp' )
                function( $resource, URL_ENT ) {
                    return $resource( URL_ENT + '/api/app/regroupements/:regroupement_id',
                                      { regroupement_id: '@regroupement_id' } );
-               } ] );
-
-angular.module( 'cahierDeTextesClientApp' )
+               } ] )
     .factory('Users',
              [ '$resource', 'URL_ENT',
                function( $resource, URL_ENT ) {
