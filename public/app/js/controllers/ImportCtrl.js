@@ -175,12 +175,14 @@ angular.module( 'cahierDeTextesClientApp' )
                                   var hash_me = function( item ) { return item.displayed_label.replace(' ', '') + '@' +  $scope.pronote.UAI;};
 
                                   $scope.match_this = function( item ) {
+                                      var laclasse_id = _(item.laclasse).has('ent_id') ? item.laclasse.ent_id : item.laclasse.id;
+
                                       var m = new Matchable({ hash: hash_me( item ),
-                                                              id_annuaire: item.laclasse.id });
-                                          m.$save().then( function() {
-                                              $scope.update_creneaux_readiness();
-                                          } );
-                                      };
+                                                              id_annuaire: laclasse_id });
+                                      m.$save().then( function() {
+                                          $scope.update_creneaux_readiness();
+                                      } );
+                                  };
                                   $scope.unmatch_this = function( item ) {
                                       Matchable.delete({ hash: hash_me( item ) })
                                           .then( function() {
@@ -193,214 +195,233 @@ angular.module( 'cahierDeTextesClientApp' )
                                   console.log('retrieving Etablissement data')
                                   // 2. Récupérer toutes les infos de l'établissement et toutes les matières
                                   Annuaire.get_etablissement( $scope.pronote.UAI )
-                                          .then( function( response ) {
-                                              console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
-                                              $scope.etablissement = { teachers: _(response.data.users).select( function( user ) { return _(user.profils).includes( 'ENS' ) || _(user.profils).includes( 'DOC' ); } ),
-                                                                       classes: _(response.data.groups).where( { type_regroupement_id: 'CLS' } ),
-                                                                       groupes_eleves: _(response.data.groups).select( { type_regroupement_id: 'GRP' } ) };
+                                      .then( function( response ) {
+                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
+                                          $scope.etablissement = { teachers: _(response.data.users).select( function( user ) { return _(user.profils).includes( 'ENS' ) || _(user.profils).includes( 'DOC' ); } ),
+                                                                   classes: _(response.data.groups).where( { type_regroupement_id: 'CLS' } ),
+                                                                   groupes_eleves: _(response.data.groups).select( { type_regroupement_id: 'GRP' } ) };
 
-                                              started_at = moment();
-                                              console.log('UPPERCASE ALL THE THINGS!!!!!')
-                                              // UPPERCASE ALL THE THINGS!!!!!
-                                              _($scope.etablissement.teachers).each( function( user ) {
-                                                  user.firstname = user.firstname.toUpperCase();
-                                                  user.lastname = user.lastname.toUpperCase();
-                                                  user.displayed_label = user.lastname + ' ' + user.firstname.toLocaleLowerCase();
-                                              } );
-                                              _($scope.etablissement.groupes_eleves).each( function( regroupement ) {
-                                                  regroupement.libelle_aaf = regroupement.libelle_aaf.toUpperCase();
-                                                  regroupement.displayed_label = regroupement.libelle_aaf;
-                                              } );
-                                              _($scope.etablissement.classes).each( function( regroupement ) {
-                                                  regroupement.libelle_aaf = regroupement.libelle_aaf.toUpperCase();
-                                                  regroupement.displayed_label = regroupement.libelle_aaf;
-                                              } );
-                                              console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
+                                          started_at = moment();
+                                          console.log('UPPERCASE ALL THE THINGS!!!!!')
+                                          _($scope.etablissement.teachers).each( function( user ) {
+                                              user.firstname = user.firstname.toUpperCase();
+                                              user.lastname = user.lastname.toUpperCase();
+                                              user.displayed_label = user.lastname + ' ' + user.firstname.toLocaleLowerCase();
+                                          } );
+                                          _($scope.etablissement.groupes_eleves).each( function( regroupement ) {
+                                              regroupement.libelle_aaf = regroupement.libelle_aaf.toUpperCase();
+                                              regroupement.displayed_label = regroupement.libelle_aaf;
+                                          } );
+                                          _($scope.etablissement.classes).each( function( regroupement ) {
+                                              regroupement.libelle_aaf = regroupement.libelle_aaf.toUpperCase();
+                                              regroupement.displayed_label = regroupement.libelle_aaf;
+                                          } );
+                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
-                                              started_at = moment();
-                                              console.log('treating enseignants')
-                                              // 3.2 Enseignants
-                                              _($scope.pronote.Professeurs[0].Professeur)
-                                                  .each( function( enseignant ) {
-                                                      enseignant.displayed_label = enseignant.Prenom + ' ' + enseignant.Nom;
-                                                      enseignant.laclasse = _($scope.etablissement.teachers).findWhere( { lastname: enseignant.Nom.toUpperCase(),
-                                                                                                                          firstname: enseignant.Prenom.toUpperCase() } );
+                                          started_at = moment();
+                                          console.log('treating enseignants')
+                                          // 3.2 Enseignants
+                                          _($scope.pronote.Professeurs[0].Professeur)
+                                              .each( function( enseignant ) {
+                                                  enseignant.displayed_label = enseignant.Prenom + ' ' + enseignant.Nom;
+                                                  enseignant.laclasse = _($scope.etablissement.teachers).findWhere( { lastname: enseignant.Nom.toUpperCase(),
+                                                                                                                      firstname: enseignant.Prenom.toUpperCase() } );
+                                                  var post_laclasse = function() {
                                                       enseignant.edit = _(enseignant.laclasse).isUndefined();
                                                       if ( !enseignant.edit ) {
                                                           enseignant.laclasse.displayed_label = enseignant.laclasse.lastname + ' ' + enseignant.laclasse.firstname.toLocaleLowerCase();
                                                       }
-                                                  } );
-                                              console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
+                                                  };
 
-                                              started_at = moment();
-                                              console.log('treating regroupements')
-                                              // 3.3 Classes et Groupes
+                                                  if ( _(enseignant.laclasse).isUndefined() ) {
+                                                      Matchable.get({ hash: hash_me( enseignant ) }).$promise
+                                                          .then( function success( response ) {
+                                                              Annuaire.get_user( response.id_annuaire ).$promise
+                                                                  .then( function( response ) {
+                                                                      enseignant.laclasse = { id: response.id,
+                                                                                              ent_id: response.id_ent,
+                                                                                              firstname: response.prenom,
+                                                                                              lastname: response.nom };
+                                                                      post_laclasse();
+                                                                  },
+                                                                         function error( response ) { post_laclasse(); } );
+                                                          },
+                                                                 function error( response ) { post_laclasse(); } );
+                                                  } else {
+                                                      post_laclasse();
+                                                  }
+                                              } );
+                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
-                                              API.query_statistiques_regroupements( { uai: current_user.profil_actif.etablissement_code_uai } )
-                                                  .$promise.then( function( response ) {
-                                                      _($scope.pronote.Classes[0].Classe)
-                                                          .each( function( regroupement ) {
-                                                              regroupement.displayed_label = regroupement.Nom;
-                                                              regroupement.laclasse = _($scope.etablissement.classes).findWhere( { libelle_aaf: regroupement.Nom.toUpperCase() } );
-                                                              regroupement.edit = _(regroupement.laclasse).isUndefined();
+                                          started_at = moment();
+                                          console.log('treating regroupements')
+                                          // 3.3 Classes et Groupes
 
-                                                              var creneaux_laclasse = _(regroupement.laclasse).isUndefined() ? undefined : _(response).findWhere({ regroupement_id: "" + regroupement.laclasse.id });
-                                                              regroupement.existing_creneaux = _(creneaux_laclasse).isUndefined() ? 0 : creneaux_laclasse.creneaux_emploi_du_temps.vides.length + creneaux_laclasse.creneaux_emploi_du_temps.pleins.length;
+                                          API.query_statistiques_regroupements( { uai: current_user.profil_actif.etablissement_code_uai } )
+                                              .$promise.then( function( response ) {
+                                                  _($scope.pronote.Classes[0].Classe)
+                                                      .each( function( regroupement ) {
+                                                          regroupement.displayed_label = regroupement.Nom;
+                                                          regroupement.laclasse = _($scope.etablissement.classes).findWhere( { libelle_aaf: regroupement.Nom.toUpperCase() } );
+                                                          regroupement.edit = _(regroupement.laclasse).isUndefined();
 
-                                                              if ( !regroupement.edit ) {
-                                                                  regroupement.laclasse.displayed_label = regroupement.laclasse.libelle_aaf;
-                                                              }
-                                                          } );
+                                                          var creneaux_laclasse = _(regroupement.laclasse).isUndefined() ? undefined : _(response).findWhere({ regroupement_id: "" + regroupement.laclasse.id });
+                                                          regroupement.existing_creneaux = _(creneaux_laclasse).isUndefined() ? 0 : creneaux_laclasse.creneaux_emploi_du_temps.vides.length + creneaux_laclasse.creneaux_emploi_du_temps.pleins.length;
 
-                                                      _($scope.pronote.Groupes[0].Groupe)
-                                                          .each( function( regroupement ) {
-                                                              regroupement.displayed_label = regroupement.Nom;
-                                                              regroupement.laclasse = _($scope.etablissement.groupes_eleves).findWhere( { libelle_aaf: regroupement.Nom.toUpperCase() } );
-                                                              regroupement.edit = _(regroupement.laclasse).isUndefined();
+                                                          if ( !regroupement.edit ) {
+                                                              regroupement.laclasse.displayed_label = regroupement.laclasse.libelle_aaf;
+                                                          }
+                                                      } );
 
-                                                              var creneaux_laclasse = _(regroupement.laclasse).isUndefined() ? undefined : _(response).findWhere({ regroupement_id: "" + regroupement.laclasse.id });
-                                                              regroupement.existing_creneaux = _(creneaux_laclasse).isUndefined() ? 0 : creneaux_laclasse.creneaux_emploi_du_temps.vides.length + creneaux_laclasse.creneaux_emploi_du_temps.pleins.length;
+                                                  _($scope.pronote.Groupes[0].Groupe)
+                                                      .each( function( regroupement ) {
+                                                          regroupement.displayed_label = regroupement.Nom;
+                                                          regroupement.laclasse = _($scope.etablissement.groupes_eleves).findWhere( { libelle_aaf: regroupement.Nom.toUpperCase() } );
+                                                          regroupement.edit = _(regroupement.laclasse).isUndefined();
 
-                                                              if ( !regroupement.edit ) {
-                                                                  regroupement.laclasse.displayed_label = regroupement.laclasse.libelle_aaf;
-                                                              }
-                                                          } );
-                                                      console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
+                                                          var creneaux_laclasse = _(regroupement.laclasse).isUndefined() ? undefined : _(response).findWhere({ regroupement_id: "" + regroupement.laclasse.id });
+                                                          regroupement.existing_creneaux = _(creneaux_laclasse).isUndefined() ? 0 : creneaux_laclasse.creneaux_emploi_du_temps.vides.length + creneaux_laclasse.creneaux_emploi_du_temps.pleins.length;
 
-                                                      started_at = moment();
-                                                      console.log('treating cours')
-                                                      // 4. treating Cours
-                                                      $scope.creneaux = _.chain($scope.pronote.Cours[0].Cours)
-                                                          .map( function( cours ) {
-                                                              return _.chain(cours.Matiere).map( function( matiere ) {
-                                                                  return _(cours.Professeur).map( function( enseignant ) {
-                                                                      var compute_cours = function( type_regroupement ) {
-                                                                          return function( regroupement ) {
-                                                                              var this_cours = angular.copy( cours );
-                                                                              this_cours.is_displayed = true;
-                                                                              this_cours.Matiere = matiere;
-                                                                              this_cours.Professeur = enseignant;
-                                                                              this_cours.Professeur.Semaines = fix_semainier_pronote( this_cours.Professeur.Semaines );
+                                                          if ( !regroupement.edit ) {
+                                                              regroupement.laclasse.displayed_label = regroupement.laclasse.libelle_aaf;
+                                                          }
+                                                      } );
+                                                  console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
-                                                                              if ( type_regroupement === 'Classe' ) {
-                                                                                  this_cours.Classe = regroupement;
-                                                                                  this_cours.Classe.Semaines = fix_semainier_pronote( this_cours.Classe.Semaines );
-                                                                              } else {
-                                                                                  this_cours.Groupe = regroupement;
-                                                                                  this_cours.Groupe.Semaines = fix_semainier_pronote( this_cours.Groupe.Semaines );
-                                                                              }
+                                                  started_at = moment();
+                                                  console.log('treating cours')
+                                                  // 4. treating Cours
+                                                  $scope.creneaux = _.chain($scope.pronote.Cours[0].Cours)
+                                                      .map( function( cours ) {
+                                                          return _.chain(cours.Matiere).map( function( matiere ) {
+                                                              return _(cours.Professeur).map( function( enseignant ) {
+                                                                  var compute_cours = function( type_regroupement ) {
+                                                                      return function( regroupement ) {
+                                                                          var this_cours = angular.copy( cours );
+                                                                          this_cours.is_displayed = true;
+                                                                          this_cours.Matiere = matiere;
+                                                                          this_cours.Professeur = enseignant;
+                                                                          this_cours.Professeur.Semaines = fix_semainier_pronote( this_cours.Professeur.Semaines );
 
-                                                                              if ( _(cours).has('Salle') ) {
-                                                                                  return _(cours.Salle).map( function( salle ) {
-                                                                                      this_cours.Salle = salle;
-                                                                                      this_cours.Salle.Semaines = fix_semainier_pronote( this_cours.Salle.Semaines );
+                                                                          if ( type_regroupement === 'Classe' ) {
+                                                                              this_cours.Classe = regroupement;
+                                                                              this_cours.Classe.Semaines = fix_semainier_pronote( this_cours.Classe.Semaines );
+                                                                          } else {
+                                                                              this_cours.Groupe = regroupement;
+                                                                              this_cours.Groupe.Semaines = fix_semainier_pronote( this_cours.Groupe.Semaines );
+                                                                          }
 
-                                                                                      return this_cours;
-                                                                                  } );
-                                                                              } else {
+                                                                          if ( _(cours).has('Salle') ) {
+                                                                              return _(cours.Salle).map( function( salle ) {
+                                                                                  this_cours.Salle = salle;
+                                                                                  this_cours.Salle.Semaines = fix_semainier_pronote( this_cours.Salle.Semaines );
+
                                                                                   return this_cours;
-                                                                              }
-                                                                          };
+                                                                              } );
+                                                                          } else {
+                                                                              return this_cours;
+                                                                          }
                                                                       };
+                                                                  };
 
-                                                                      return [ _(cours.Classe).map( compute_cours( 'Classe' ) ),
-                                                                               _(cours.Groupe).map( compute_cours( 'Groupe' ) ) ];
-                                                                  } );
-                                                              } )
-                                                                  .flatten()
-                                                                  .uniq()
-                                                                  .value();
+                                                                  return [ _(cours.Classe).map( compute_cours( 'Classe' ) ),
+                                                                           _(cours.Groupe).map( compute_cours( 'Groupe' ) ) ];
+                                                              } );
                                                           } )
-                                                          .flatten()
-                                                          .value();
-                                                      console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
+                                                              .flatten()
+                                                              .uniq()
+                                                              .value();
+                                                      } )
+                                                      .flatten()
+                                                      .value();
+                                                  console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
-                                                      started_at = moment();
-                                                      console.log('building matcheable_data')
-                                                      $scope.pronote.enseignants = Utils.groupByKey( $scope.pronote.Professeurs[0].Professeur, 'Ident' );
-                                                      $scope.pronote.classes = Utils.groupByKey( $scope.pronote.Classes[0].Classe, 'Ident' );
-                                                      $scope.pronote.salles = Utils.groupByKey( $scope.pronote.Salles[0].Salle, 'Ident' );
-                                                      $scope.pronote.plages_horaires = Utils.groupByKey( $scope.pronote.GrilleHoraire[0].PlacesParJour[0].Place, 'Numero' );
-                                                      $scope.pronote.groupes_eleves = Utils.groupByKey( $scope.pronote.Groupes[0].Groupe, 'Ident' );
+                                                  started_at = moment();
+                                                  console.log('building matcheable_data')
+                                                  $scope.pronote.enseignants = Utils.groupByKey( $scope.pronote.Professeurs[0].Professeur, 'Ident' );
+                                                  $scope.pronote.classes = Utils.groupByKey( $scope.pronote.Classes[0].Classe, 'Ident' );
+                                                  $scope.pronote.salles = Utils.groupByKey( $scope.pronote.Salles[0].Salle, 'Ident' );
+                                                  $scope.pronote.plages_horaires = Utils.groupByKey( $scope.pronote.GrilleHoraire[0].PlacesParJour[0].Place, 'Numero' );
+                                                  $scope.pronote.groupes_eleves = Utils.groupByKey( $scope.pronote.Groupes[0].Groupe, 'Ident' );
 
-                                                      $scope.matcheable_data.push( { title: 'Classes',
-                                                                                     pronote: $scope.pronote.classes,
-                                                                                     annuaire: $scope.etablissement.classes } );
-                                                      $scope.matcheable_data.push( { title: 'Groupes d\'élèves',
-                                                                                     pronote: $scope.pronote.groupes_eleves,
-                                                                                     annuaire: $scope.etablissement.groupes_eleves } );
-                                                      $scope.matcheable_data.push( { title: 'Enseignants',
-                                                                                     pronote: $scope.pronote.enseignants,
-                                                                                     annuaire: $scope.etablissement.teachers } );
-                                                      console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
+                                                  $scope.matcheable_data.push( { title: 'Classes',
+                                                                                 pronote: $scope.pronote.classes,
+                                                                                 annuaire: $scope.etablissement.classes } );
+                                                  $scope.matcheable_data.push( { title: 'Groupes d\'élèves',
+                                                                                 pronote: $scope.pronote.groupes_eleves,
+                                                                                 annuaire: $scope.etablissement.groupes_eleves } );
+                                                  $scope.matcheable_data.push( { title: 'Enseignants',
+                                                                                 pronote: $scope.pronote.enseignants,
+                                                                                 annuaire: $scope.etablissement.teachers } );
+                                                  console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
-                                                      started_at = moment();
-                                                      console.log('retrieving matieres')
-                                                      Annuaire.get_matieres()
-                                                          .then( function( response ) {
-                                                              console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
+                                                  started_at = moment();
+                                                  console.log('retrieving matieres')
+                                                  Annuaire.get_matieres()
+                                                      .then( function( response ) {
+                                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
-                                                              started_at = moment();
-                                                              console.log('massage matieres')
-                                                              $scope.matieres = _(response.data).map( function( matiere ) {
-                                                                  matiere.libelle_long = matiere.libelle_long.toUpperCase();
-                                                                  matiere.displayed_label = matiere.libelle_long;
+                                                          started_at = moment();
+                                                          console.log('massage matieres')
+                                                          $scope.matieres = _(response.data).map( function( matiere ) {
+                                                              matiere.libelle_long = matiere.libelle_long.toUpperCase();
+                                                              matiere.displayed_label = matiere.libelle_long;
 
-                                                                  return matiere;
-                                                              } );
-                                                              console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
-
-                                                              started_at = moment();
-                                                              console.log('match matieres')
-                                                              // 3. Matcher les 2
-                                                              // 3.1 Matières
-                                                              _($scope.pronote.Matieres[0].Matiere)
-                                                                  .each( function( matiere ) {
-                                                                      matiere.displayed_label = matiere.Libelle;
-                                                                      matiere.laclasse = _($scope.matieres).findWhere( { libelle_long: matiere.Libelle.toUpperCase() } );
-                                                                      matiere.edit = _(matiere.laclasse).isUndefined();
-                                                                      if ( !matiere.edit ) {
-                                                                          matiere.laclasse.displayed_label = matiere.laclasse.libelle_long;
-                                                                      }
-                                                                  } );
-                                                              console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
-
-                                                              started_at = moment();
-                                                              console.log('add matieres to matcheable_data')
-                                                              $scope.pronote.matieres = Utils.groupByKey( $scope.pronote.Matieres[0].Matiere, 'Ident' );
-                                                              $scope.matcheable_data.push( { title: 'Matières',
-                                                                                             pronote: $scope.pronote.matieres,
-                                                                                             annuaire: $scope.matieres } );
-                                                              console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
-
-                                                              started_at = moment();
-                                                              console.log('update match stats')
-                                                              _($scope.matcheable_data).each( function( dataset ) {
-                                                                  dataset.total = function() { return _(dataset.pronote).size(); };
-                                                                  dataset.unmatched = function() { return _(dataset.pronote).where( { laclasse: undefined } ).length; };
-                                                                  dataset.percent_valid = function() { return ( dataset.total() - dataset.unmatched() ) / dataset.total(); };
-                                                              } );
-                                                              console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
-
-                                                              // TODO: don't select if there's existing créneaux
-                                                              $scope.selected = { matieres: $scope.pronote.Matieres[0].Matiere,
-                                                                                  enseignants: $scope.pronote.Professeurs[0].Professeur,
-                                                                                  classes: _($scope.pronote.Classes[0].Classe).where({ existing_creneaux: 0 }),
-                                                                                  groupes: _($scope.pronote.Groupes[0].Groupe).where({ existing_creneaux: 0 }) };
-
-                                                              started_at = moment();
-                                                              console.log('update_creneaux_readiness')
-                                                              $scope.update_creneaux_readiness();
-                                                              console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
-
-                                                              $scope.$watchCollection( 'selected', $scope.update_counters );
-
-                                                              $scope.ui.loading_file = false;
+                                                              return matiere;
                                                           } );
-                                                  } );
-                                          } );
-                                  });
-                          };
+                                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
+
+                                                          started_at = moment();
+                                                          console.log('match matieres')
+                                                          // 3. Matcher les 2
+                                                          // 3.1 Matières
+                                                          _($scope.pronote.Matieres[0].Matiere)
+                                                              .each( function( matiere ) {
+                                                                  matiere.displayed_label = matiere.Libelle;
+                                                                  matiere.laclasse = _($scope.matieres).findWhere( { libelle_long: matiere.Libelle.toUpperCase() } );
+                                                                  matiere.edit = _(matiere.laclasse).isUndefined();
+                                                                  if ( !matiere.edit ) {
+                                                                      matiere.laclasse.displayed_label = matiere.laclasse.libelle_long;
+                                                                  }
+                                                              } );
+                                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
+
+                                                          started_at = moment();
+                                                          console.log('add matieres to matcheable_data')
+                                                          $scope.pronote.matieres = Utils.groupByKey( $scope.pronote.Matieres[0].Matiere, 'Ident' );
+                                                          $scope.matcheable_data.push( { title: 'Matières',
+                                                                                         pronote: $scope.pronote.matieres,
+                                                                                         annuaire: $scope.matieres } );
+                                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
+
+                                                          started_at = moment();
+                                                          console.log('update match stats')
+                                                          _($scope.matcheable_data).each( function( dataset ) {
+                                                              dataset.total = function() { return _(dataset.pronote).size(); };
+                                                              dataset.unmatched = function() { return _(dataset.pronote).where( { laclasse: undefined } ).length; };
+                                                              dataset.percent_valid = function() { return ( dataset.total() - dataset.unmatched() ) / dataset.total(); };
+                                                          } );
+                                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
+
+                                                          // TODO: don't select if there's existing créneaux
+                                                          $scope.selected = { matieres: $scope.pronote.Matieres[0].Matiere,
+                                                                              enseignants: $scope.pronote.Professeurs[0].Professeur,
+                                                                              classes: _($scope.pronote.Classes[0].Classe).where({ existing_creneaux: 0 }),
+                                                                              groupes: _($scope.pronote.Groupes[0].Groupe).where({ existing_creneaux: 0 }) };
+
+                                                          started_at = moment();
+                                                          console.log('update_creneaux_readiness')
+                                                          $scope.update_creneaux_readiness();
+                                                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
+
+                                                          $scope.$watchCollection( 'selected', $scope.update_counters );
+
+                                                          $scope.ui.loading_file = false;
+                                                      } );
+                                              } );
+                                      } );
+                              });
+                      };
 
                       $scope.process_import = function() {
                           var bulk_package_size = 15;
