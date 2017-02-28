@@ -13,7 +13,8 @@ angular.module( 'cahierDeTextesClientApp' )
                                               user_type: user.profil_actif.profil_id,
                                               timestamp: Date.now(),
                                               url: ( _(url).isNull() ? APP_PATH + $state.current.url: url ).substr( 0, 1023 ),
-                                              params: _(params).isNull() ? _($state.params).map( function( value, key ) { return key + '=' + value; } ).join( '&' ) : params } );
+                                              params: _(params).isNull() ? _($state.params).map( function( value, key ) { return key + '=' + value; } ).join( '&' ) : params } )
+                                    .then( function success() {}, function error() {} );
                             } );
                     };
                 }
