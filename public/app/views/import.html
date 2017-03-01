@@ -84,7 +84,7 @@
                 <uib-tab>
                     <uib-tab-heading>
                         <h4>Créneaux</h4>
-                        ({{filtered_import ? counters.filtered_creneaux_ready : counters.creneaux_ready}} seront créés sur {{filtered_import ? counters.filtered_creneaux : counters.creneaux}})
+                        ({{counters.filtered_creneaux_ready}} seront créés sur {{counters.filtered_creneaux}})
                         <div class="progress-bar-container rouge">
                             <div class="progress-bar vert-moins" ng:style="{ width: ( counters.percent_creneaux_ready * 100 ) + '%' }"></div>
                         </div>
@@ -348,10 +348,6 @@
         </div>
 
         <div class="pull-right col-md-4" style="text-align: right;">
-            <label style="color:#fff;">
-                N'importer que les créneaux filtrés <checkbox ng:model="scope.filtered_import"></checkbox>
-            </label>
-
             <button class="btn btn-lg btn-warning"
                     ng:class="{'disabled': !pronote || !etablissement || !matieres}"
                     ng:click="process_import()">

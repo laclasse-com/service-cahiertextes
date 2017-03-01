@@ -12,8 +12,6 @@ angular.module( 'cahierDeTextesClientApp' )
                       $scope.jours_de_la_semaine = $locale.DATETIME_FORMATS.DAY;
                       $scope.annee = $locale.DATETIME_FORMATS.MONTH;
                       $scope.fichier = null;
-                      $scope.matcheable_data = [];
-                      $scope.filtered_import = true;
                       $scope.display_all = false;
 
                       $scope.ui = { show_detailed_creneaux: false,
@@ -25,19 +23,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                     sort_creneaux_by: function( criteria ) {
                                         $scope.ui.sortCreneauxBy = $scope.ui.sortCreneauxBy[0] === criteria[0] ?  _(criteria).map( function( sub_criteria ) { return '-' + sub_criteria; } ) : criteria;
                                     } };
-
-                      var fix_semainier_pronote = function( semainier_pronote ) {
-                          var nb_week_in_year = 52;
-                          var bsemainier_pronote = parseInt( semainier_pronote ).toString( 2 );
-                          bsemainier_pronote = Utils.padStart( bsemainier_pronote, nb_week_in_year + 1, '0' );
-                          bsemainier_pronote = bsemainier_pronote.substr( 0, nb_week_in_year ).split('').reverse().join('');
-
-                          var pivot = nb_week_in_year - moment( new Date( $scope.pronote.AnneeScolaire[0].DateDebut ) ).week();
-                          var bsemainier_laclasse = bsemainier_pronote.slice( pivot, nb_week_in_year ) + bsemainier_pronote.substr( 0, pivot );
-                          bsemainier_laclasse = bsemainier_laclasse.split('').reverse().join('');
-
-                          return parseInt( bsemainier_laclasse, 2 );
-                      };
 
                       $scope.beautify_semainier = function( semainier ) {
                           var bsemainier = Utils.padEnd( semainier.toString( 2 ), 53, '0' );
@@ -137,7 +122,7 @@ angular.module( 'cahierDeTextesClientApp' )
                           $scope.counters.filtered_creneaux_not_ready = _(filtered_creneaux).where({ ready: false }).length;
                           $scope.counters.filtered_creneaux_ready = $scope.counters.filtered_creneaux - $scope.counters.filtered_creneaux_not_ready;
 
-                          $scope.counters.percent_creneaux_ready = $scope.filtered_import ? $scope.counters.filtered_creneaux_ready / $scope.counters.filtered_creneaux : $scope.counters.creneaux_ready / $scope.counters.creneaux;
+                          $scope.counters.percent_creneaux_ready = $scope.counters.filtered_creneaux_ready / $scope.counters.filtered_creneaux;
                       };
                       // ********** /counters
 
@@ -162,6 +147,20 @@ angular.module( 'cahierDeTextesClientApp' )
                           $scope.pronote = false;
                           $scope.ui.loading_file = true;
                           $scope.matcheable_data = [];
+
+                          var fix_semainier_pronote = function( semainier_pronote ) {
+                              var nb_week_in_year = 52;
+                              var bsemainier_pronote = parseInt( semainier_pronote ).toString( 2 );
+                              bsemainier_pronote = Utils.padStart( bsemainier_pronote, nb_week_in_year + 1, '0' );
+                              bsemainier_pronote = bsemainier_pronote.substr( 0, nb_week_in_year ).split('').reverse().join('');
+
+                              var pivot = nb_week_in_year - moment( new Date( $scope.pronote.AnneeScolaire[0].DateDebut ) ).week();
+                              var bsemainier_laclasse = bsemainier_pronote.slice( pivot, nb_week_in_year ) + bsemainier_pronote.substr( 0, pivot );
+                              bsemainier_laclasse = bsemainier_laclasse.split('').reverse().join('');
+
+                              return parseInt( bsemainier_laclasse, 2 );
+                          };
+
                           var started_at = moment();
 
                           console.log('uploading file for decryption')
@@ -485,7 +484,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
                           console.log('filtering creneaux')
                           var creneaux_emploi_du_temps = _($scope.creneaux).select( function( creneau ) {
-                              return creneau.ready && ( !$scope.filtered_import || ( $scope.filtered_import && creneau.is_displayed ) );
+                              return creneau.ready && creneau.is_displayed;
                           } );
                           console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
