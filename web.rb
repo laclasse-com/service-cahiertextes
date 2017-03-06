@@ -27,6 +27,7 @@ module CahierDeTextesApp
     configure :production, :development do
       set :protection, true
       set :protection, except: :frame_options
+      set :show_exceptions, false
     end
 
     before  do
