@@ -2,10 +2,12 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller('ImportCtrl',
-                [ '$scope', '$http', '$locale', '$sce', '$filter', 'fileUpload', 'moment', 'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'VERSION',
+                [ '$scope', '$http', '$locale', '$sce', '$filter', 'fileUpload', 'moment', 'toastr',
+                  'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'VERSION',
                   'Annuaire', 'Utils', 'Etablissements', 'Salles', 'CreneauxEmploiDuTemps', 'CahiersDeTextes', 'API', 'Matchable',
                   'current_user',
-                  function ( $scope, $http, $locale, $sce, $filter, fileUpload, moment, APP_PATH, SEMAINES_VACANCES, ZONE, VERSION,
+                  function ( $scope, $http, $locale, $sce, $filter, fileUpload, moment, toastr,
+                             APP_PATH, SEMAINES_VACANCES, ZONE, VERSION,
                              Annuaire, Utils, Etablissements, Salles, CreneauxEmploiDuTemps, CahiersDeTextes, API, Matchable,
                              current_user ) {
                       $scope.scope = $scope;
@@ -13,12 +15,11 @@ angular.module( 'cahierDeTextesClientApp' )
                       $scope.annee = $locale.DATETIME_FORMATS.MONTH;
                       $scope.fichier = null;
                       $scope.display_all = false;
+                      $scope.step = 0;
 
                       $scope.ui = { show_detailed_creneaux: false,
                                     display_ready: true,
                                     display_problems: true,
-                                    loading_file: false,
-                                    processing: false,
                                     sortCreneauxBy: [ 'Jour' ],
                                     sort_creneaux_by: function( criteria ) {
                                         $scope.ui.sortCreneauxBy = $scope.ui.sortCreneauxBy[0] === criteria[0] ?  _(criteria).map( function( sub_criteria ) { return '-' + sub_criteria; } ) : criteria;
@@ -145,7 +146,6 @@ angular.module( 'cahierDeTextesClientApp' )
                       // ACTIONS
                       $scope.load_data = function( fichier ) {
                           $scope.pronote = false;
-                          $scope.ui.loading_file = true;
                           $scope.matcheable_data = [];
 
                           var fix_semainier_pronote = function( semainier_pronote ) {
@@ -164,6 +164,7 @@ angular.module( 'cahierDeTextesClientApp' )
                           var started_at = moment();
 
                           console.log('uploading file for decryption')
+                          toastr.info('uploading file for decryption')
                           fileUpload.uploadFileToUrl( fichier, APP_PATH + '/api/import/pronote/decrypt' )
                               .then( function( response, status, headers, config ) {
                                   console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
@@ -171,19 +172,34 @@ angular.module( 'cahierDeTextesClientApp' )
                                   $scope.pronote = response.data;
                                   $scope.pronote.GrilleHoraire[0].DureePlace = parseInt( $scope.pronote.GrilleHoraire[0].DureePlace );
 
-                                  var hash_me = function( item ) { return window.btoa( unescape( encodeURIComponent( item.displayed_label + '@' +  $scope.pronote.UAI ) ) ); };
+                                  var hash_me = function( item ) {
+                                      var get_type = function( item ) {
+                                          if ( _(item).has('IDPN') ) {
+                                              return 'enseignant';
+                                          } else if ( _(item).has('PartieDeClass') ) {
+                                              return 'regroupement';
+                                          } else if ( _(item).has('Code') ) {
+                                              return 'matiere';
+                                          } else {
+                                              return 'unknown';
+                                          }
+                                      };
+
+                                      return window.btoa( unescape( encodeURIComponent( get_type( item ) + item.displayed_label ) ) );
+                                  };
 
                                   $scope.match_this = function( item ) {
+                                      console.log(item)
                                       var laclasse_id = _(item.laclasse).has('ent_id') ? item.laclasse.ent_id : item.laclasse.id;
 
-                                      var m = new Matchable({ hash: hash_me( item ),
+                                      var m = new Matchable({ hash_item: hash_me( item ),
                                                               id_annuaire: laclasse_id });
                                       m.$save().then( function() {
                                           $scope.update_creneaux_readiness();
                                       } );
                                   };
                                   $scope.unmatch_this = function( item ) {
-                                      Matchable.delete({ hash: hash_me( item ) })
+                                      Matchable.delete({ hash_item: hash_me( item ) })
                                           .then( function() {
                                               item.laclasse = null;
                                               $scope.update_creneaux_readiness();
@@ -192,6 +208,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                   started_at = moment();
                                   console.log('retrieving Etablissement data')
+                                  toastr.info('retrieving Etablissement data')
                                   // 2. Récupérer toutes les infos de l'établissement et toutes les matières
                                   Annuaire.get_etablissement( $scope.pronote.UAI )
                                       .then( function( response ) {
@@ -202,6 +219,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                           started_at = moment();
                                           console.log('UPPERCASE ALL THE THINGS!!!!!')
+                                          toastr.info('UPPERCASE ALL THE THINGS!!!!!')
                                           _($scope.etablissement.teachers).each( function( user ) {
                                               user.firstname = user.firstname.toUpperCase();
                                               user.lastname = user.lastname.toUpperCase();
@@ -219,6 +237,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                           started_at = moment();
                                           console.log('treating enseignants')
+                                          toastr.info('treating enseignants')
                                           // 3.2 Enseignants
                                           _($scope.pronote.Professeurs[0].Professeur)
                                               .each( function( enseignant ) {
@@ -233,10 +252,11 @@ angular.module( 'cahierDeTextesClientApp' )
                                                   };
 
                                                   if ( _(enseignant.laclasse).isUndefined() ) {
-                                                      Matchable.get({ hash: hash_me( enseignant ) }).$promise
+                                                      Matchable.get({ hash_item: hash_me( enseignant ) }).$promise
                                                           .then( function success( response ) {
                                                               Annuaire.get_user( response.id_annuaire ).$promise
                                                                   .then( function( response ) {
+                                                                      toastr.info('found recollement')
                                                                       enseignant.laclasse = { id: response.id,
                                                                                               ent_id: response.id_ent,
                                                                                               firstname: response.prenom,
@@ -254,6 +274,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                           started_at = moment();
                                           console.log('treating regroupements')
+                                          toastr.info('treating regroupements')
                                           // 3.3 Classes et Groupes
 
                                           API.query_statistiques_regroupements( { uai: current_user.profil_actif.etablissement_code_uai } )
@@ -274,12 +295,12 @@ angular.module( 'cahierDeTextesClientApp' )
                                                           };
 
                                                           if ( _(regroupement.laclasse).isUndefined() ) {
-                                                              Matchable.get({ hash: hash_me( regroupement ) }).$promise
+                                                              Matchable.get({ hash_item: hash_me( regroupement ) }).$promise
                                                                   .then( function success( response ) {
                                                                       Annuaire.get_regroupement( response.id_annuaire ).$promise
                                                                           .then( function( response ) {
-                                                                              regroupement.laclasse = { id: response.id,
-                                                                                                        libelle_aaf: response.libelle_aaf };
+                                                                              toastr.info('found recollement')
+                                                                              regroupement.laclasse = response;
                                                                               post_match_laclasse();
                                                                           },
                                                                                  function error( response ) { post_match_laclasse(); } );
@@ -306,12 +327,12 @@ angular.module( 'cahierDeTextesClientApp' )
                                                           };
 
                                                           if ( _(regroupement.laclasse).isUndefined() ) {
-                                                              Matchable.get({ hash: hash_me( regroupement ) }).$promise
+                                                              Matchable.get({ hash_item: hash_me( regroupement ) }).$promise
                                                                   .then( function success( response ) {
                                                                       Annuaire.get_regroupement( response.id_annuaire ).$promise
                                                                           .then( function( response ) {
-                                                                              regroupement.laclasse = { id: response.id,
-                                                                                                        libelle_aaf: response.libelle_aaf };
+                                                                              toastr.info('found recollement')
+                                                                              regroupement.laclasse = response;
                                                                               post_match_laclasse();
                                                                           },
                                                                                  function error( response ) { post_match_laclasse(); } );
@@ -325,6 +346,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                                   started_at = moment();
                                                   console.log('treating cours')
+                                                  toastr.info('treating cours')
                                                   // 4. treating Cours
                                                   $scope.creneaux = _.chain($scope.pronote.Cours[0].Cours)
                                                       .map( function( cours ) {
@@ -373,6 +395,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                                   started_at = moment();
                                                   console.log('building matcheable_data')
+                                                  toastr.info('building matcheable_data')
                                                   $scope.pronote.enseignants = Utils.groupByKey( $scope.pronote.Professeurs[0].Professeur, 'Ident' );
                                                   $scope.pronote.classes = Utils.groupByKey( $scope.pronote.Classes[0].Classe, 'Ident' );
                                                   $scope.pronote.salles = Utils.groupByKey( $scope.pronote.Salles[0].Salle, 'Ident' );
@@ -392,12 +415,14 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                                   started_at = moment();
                                                   console.log('retrieving matieres')
+                                                  toastr.info('retrieving matieres')
                                                   Annuaire.get_matieres()
                                                       .then( function( response ) {
                                                           console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
                                                           started_at = moment();
                                                           console.log('massage matieres')
+                                                          toastr.info('massage matieres')
                                                           $scope.matieres = _(response.data).map( function( matiere ) {
                                                               matiere.libelle_long = matiere.libelle_long.toUpperCase();
                                                               matiere.displayed_label = matiere.libelle_long;
@@ -408,6 +433,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                                           started_at = moment();
                                                           console.log('match matieres')
+                                                          toastr.info('match matieres')
                                                           // 3. Matcher les 2
                                                           // 3.1 Matières
                                                           _($scope.pronote.Matieres[0].Matiere)
@@ -423,17 +449,24 @@ angular.module( 'cahierDeTextesClientApp' )
                                                                   };
 
                                                                   if ( _(matiere.laclasse).isUndefined() ) {
-                                                                      Matchable.get({ hash: hash_me( matiere ) }).$promise
+                                                                      console.log('unmatched matiere')
+                                                                      Matchable.get({ hash_item: hash_me( matiere ) }).$promise
                                                                           .then( function success( response ) {
+                                                                              console.log('found recollement')
                                                                               Annuaire.get_matiere( response.id_annuaire )
                                                                                   .then( function( response ) {
-                                                                                      matiere.laclasse = { id: response.id,
-                                                                                                           libelle_long: response.libelle_long };
+                                                                                      matiere.laclasse = response.data;
                                                                                       post_match_laclasse();
                                                                                   },
-                                                                                         function error( response ) { post_match_laclasse(); } );
+                                                                                         function error( response ) {
+                                                                                             console.log('invalid recollement')
+                                                                                             post_match_laclasse();
+                                                                                         } );
                                                                           },
-                                                                                 function error( response ) { post_match_laclasse(); } );
+                                                                                 function error( response ) {
+                                                                                     console.log('no recollement found')
+                                                                                     post_match_laclasse();
+                                                                                 } );
                                                                   } else {
                                                                       post_match_laclasse();
                                                                   }
@@ -442,6 +475,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                                           started_at = moment();
                                                           console.log('add matieres to matcheable_data')
+                                                          toastr.info('add matieres to matcheable_data')
                                                           $scope.pronote.matieres = Utils.groupByKey( $scope.pronote.Matieres[0].Matiere, 'Ident' );
                                                           $scope.matcheable_data.push( { title: 'Matières',
                                                                                          pronote: $scope.pronote.matieres,
@@ -450,6 +484,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                                           started_at = moment();
                                                           console.log('update match stats')
+                                                          toastr.info('update match stats')
                                                           _($scope.matcheable_data).each( function( dataset ) {
                                                               dataset.total = function() { return _(dataset.pronote).size(); };
                                                               dataset.unmatched = function() { return _(dataset.pronote).where( { laclasse: undefined } ).length; };
@@ -465,24 +500,29 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                                           started_at = moment();
                                                           console.log('update_creneaux_readiness')
+                                                          toastr.info('update_creneaux_readiness')
                                                           $scope.update_creneaux_readiness();
                                                           console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
                                                           $scope.$watchCollection( 'selected', $scope.update_counters );
 
-                                                          $scope.ui.loading_file = false;
+                                                          $scope.step++;
                                                       } );
                                               } );
                                       } );
                               });
                       };
 
+                      $scope.validate_matches = function() {
+                          $scope.step++;
+                      };
+
                       $scope.process_import = function() {
                           var bulk_package_size = 15;
-                          $scope.ui.processing = true;
                           var started_at = moment();
 
                           console.log('filtering creneaux')
+                          toastr.info('filtering creneaux')
                           var creneaux_emploi_du_temps = _($scope.creneaux).select( function( creneau ) {
                               return creneau.ready && creneau.is_displayed;
                           } );
@@ -491,11 +531,12 @@ angular.module( 'cahierDeTextesClientApp' )
                           // Log import
                           $http.post( APP_PATH + '/api/import/log/start', { uai: $scope.pronote.UAI,
                                                                             type: 'client ' + VERSION,
-                                                                            comment: 'nan rien' } );
+                                                                            comment: '' } );
 
                           // Create Etablissement
                           started_at = moment();
                           console.log('creating Etablissement')
+                          toastr.info('creating Etablissement')
                           var ct_etablissement = new Etablissements( {
                               uai: $scope.pronote.UAI,
                               date_premier_jour_premiere_semaine: new Date( $scope.pronote.AnneeScolaire[0].DatePremierJourSemaine1 ),
@@ -508,6 +549,7 @@ angular.module( 'cahierDeTextesClientApp' )
                           // // Create CahierDeTextes
                           started_at = moment();
                           console.log('creating CahierDeTextes')
+                          toastr.info('creating CahierDeTextes')
                           $scope.expected_cahiers_de_textes = _($scope.pronote.classes).size() + _($scope.pronote.groupes_eleves).size();
 
                           var preprocess_cahiers_de_textes = function( liste_regroupements ) {
@@ -540,6 +582,7 @@ angular.module( 'cahierDeTextesClientApp' )
                           // FIXME: Hoping that it doesn't exceed Puma's POST size limit...
                           started_at = moment();
                           console.log('creating Salles')
+                          toastr.info('creating Salles')
                           Salles.bulk( { salles: _($scope.pronote.salles)
                                          .map( function( salle ) {
                                              return {
@@ -555,6 +598,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                            // Create Creneaux
                                            started_at = moment();
                                            console.log('filtering creneaux')
+                                           toastr.info('filtering creneaux')
                                            var creneaux_to_import = creneaux_emploi_du_temps.map( function( creneau ) {
                                                var heure_debut = Utils.libelleHeure_to_Moment( $scope.pronote.plages_horaires[ creneau.NumeroPlaceDebut ].LibelleHeureDebut );
 
@@ -586,7 +630,8 @@ angular.module( 'cahierDeTextesClientApp' )
                                            $scope.counters.creneaux_created = 0;
 
                                            started_at = moment();
-                                           console.log('importing creneaux')
+                                           console.log('importing ' + creneaux_to_import.length + ' creneaux')
+                                           toastr.info('importing ' + creneaux_to_import.length + ' creneaux')
                                            while ( creneaux_to_import.length > 0 ) {
                                                CreneauxEmploiDuTemps.bulk( {
                                                    uai: $scope.pronote.UAI,
@@ -595,7 +640,5 @@ angular.module( 'cahierDeTextesClientApp' )
                                            }
                                            console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
                                        } );
-
-                          $scope.ui.processing = false;
                       };
                   } ] );

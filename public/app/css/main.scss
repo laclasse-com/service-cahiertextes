@@ -891,10 +891,18 @@ fieldset {
 .ui-select-wrapper {
     width: 100%;
     .ui-select-container {
-        width: 95%;
+        float: left;
+        width: 100%;
+        min-height: 115px;
         max-height: 115px;
         overflow-x: hidden;
         overflow-y: auto; //scroll;
+        .btn {
+            float: left;
+        }
+    }
+    .btn {
+        float: right;
     }
 }
 
