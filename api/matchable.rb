@@ -12,23 +12,23 @@ module CahierDeTextesApp
 
     desc 'Get a match'
     params do
-      requires :hash
+      requires :hash_item
     end
-    get '/:hash' do
-      fi = Matchable[ hash: params[:hash] ]
-      error!( "No match for #{params[:hash]}", 404 ) if fi.nil?
+    get '/:hash_item' do
+      fi = Matchable[ hash_item: params[:hash_item] ]
+      error!( "No match for #{params[:hash_item]}", 404 ) if fi.nil?
 
       fi
     end
 
     desc 'Identifie une Matière/Regroupement/Personne-Non-Identifié en lui donnant un ID Annuaire manuellement'
     params do
-      requires :hash
+      requires :hash_item
       requires :id_annuaire
     end
-    post '/:hash' do
-      fi = Matchable[ hash: params[:hash] ]
-      fi = Matchable.create( hash: params[:hash] ) if fi.nil?
+    post '/:hash_item' do
+      fi = Matchable[ hash_item: params[:hash_item] ]
+      fi = Matchable.create( hash_item: params[:hash_item] ) if fi.nil?
 
       fi.update( id_annuaire: params[:id_annuaire] )
       fi.save
@@ -38,10 +38,10 @@ module CahierDeTextesApp
 
     desc 'Delete a match'
     params do
-      requires :hash
+      requires :hash_item
     end
-    delete '/:hash' do
-      fi = Matchable[ hash: params[:hash] ]
+    delete '/:hash_item' do
+      fi = Matchable[ hash_item: params[:hash_item] ]
       fi.destroy unless fi.nil?
 
       fi

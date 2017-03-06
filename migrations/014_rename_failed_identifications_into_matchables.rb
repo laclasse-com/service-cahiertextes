@@ -5,7 +5,7 @@ Sequel.migration do
     rename_table :failed_identifications, :matchables
 
     alter_table(:matchables) do
-      rename_column :sha256, :hash
+      rename_column :sha256, :hash_item
       drop_foreign_key :import_id
       drop_column :date_creation
     end
