@@ -60,7 +60,7 @@ namespace :preprocess_assets do
                                'public/app/node_modules/nvd3/build/nv.d3.min.css',
                                'public/app/node_modules/angular-ui-switch/angular-ui-switch.min.css',
                                'public/app/node_modules/ng-color-picker/color-picker.css',
-                               'public/app/node_modules/sweetalert/dist/sweetalert.css',
+                               'public/app/node_modules/sweetalert2/dist/sweetalert2.css',
                                'public/app/node_modules/angular-toastr/dist/angular-toastr.css',
                                'public/app/node_modules/laclasse-common-client/css/main.css',
                                'public/app/node_modules/laclasse-common-client/css/bootstrap-theme.css',
@@ -93,10 +93,11 @@ namespace :preprocess_assets do
 
     STDERR.puts 'Uglification of node_modules Javascript'
     uglified, source_map = Uglify.those_files_with_map( [ 'public/app/node_modules/jquery/dist/jquery.js',
+                                                          'public/app/node_modules/es6-promise/dist/es6-promise.auto.min.js',
                                                           'public/app/node_modules/underscore/underscore.js',
                                                           'public/app/node_modules/moment/min/moment-with-locales.js',
                                                           'public/app/node_modules/moment-timezone/moment-timezone.js',
-                                                          'public/app/node_modules/sweetalert/dist/sweetalert.min.js',
+                                                          'public/app/node_modules/sweetalert2/dist/sweetalert2.min.js',
                                                           'public/app/node_modules/rangy/lib/rangy-core.js',
                                                           'public/app/node_modules/rangy/lib/rangy-classapplier.js',
                                                           'public/app/node_modules/rangy/lib/rangy-selectionsaverestore.js',

@@ -10,12 +10,28 @@ module CahierDeTextesApp
       user_needs_to_be( %w( DIR ENS DOC ), true )
     end
 
+    desc 'Get all matches for a given UAI'
+    params do
+      requires :uai
+    end
+    get '/:uai' do
+      etab = Etablissement[ UAI: params[:uai] ]
+      error!( "Etablissement #{params[:uai]} unknown", 404 ) if etab.nil?
+
+      Matchable.where( etablissement_id: etab.id ).all
+    end
+
     desc 'Get a match'
     params do
+      requires :uai
       requires :hash_item
     end
-    get '/:hash_item' do
-      fi = Matchable[ hash_item: params[:hash_item] ]
+    get '/:uai/:hash_item' do
+      etab = Etablissement[ UAI: params[:uai] ]
+      error!( "Etablissement #{params[:uai]} unknown", 404 ) if etab.nil?
+
+      fi = Matchable[ etablissement_id: etab.id,
+                      hash_item: params[:hash_item] ]
       error!( "No match for #{params[:hash_item]}", 404 ) if fi.nil?
 
       fi
@@ -23,12 +39,18 @@ module CahierDeTextesApp
 
     desc 'Identifie une Matière/Regroupement/Personne-Non-Identifié en lui donnant un ID Annuaire manuellement'
     params do
+      requires :uai
       requires :hash_item
       requires :id_annuaire
     end
-    post '/:hash_item' do
-      fi = Matchable[ hash_item: params[:hash_item] ]
-      fi = Matchable.create( hash_item: params[:hash_item] ) if fi.nil?
+    post '/:uai/:hash_item' do
+      etab = Etablissement[ UAI: params[:uai] ]
+      error!( "Etablissement #{params[:uai]} unknown", 404 ) if etab.nil?
+
+      fi = Matchable[ etablissement_id: etab.id,
+                      hash_item: params[:hash_item] ]
+      fi = Matchable.create( etablissement_id: etab.id,
+                             hash_item: params[:hash_item] ) if fi.nil?
 
       fi.update( id_annuaire: params[:id_annuaire] )
       fi.save
@@ -38,10 +60,15 @@ module CahierDeTextesApp
 
     desc 'Delete a match'
     params do
+      requires :uai
       requires :hash_item
     end
-    delete '/:hash_item' do
-      fi = Matchable[ hash_item: params[:hash_item] ]
+    delete '/:uai/:hash_item' do
+      etab = Etablissement[ UAI: params[:uai] ]
+      error!( "Etablissement #{params[:uai]} unknown", 404 ) if etab.nil?
+
+      fi = Matchable[ etablissement_id: etab.id,
+                      hash_item: params[:hash_item] ]
       fi.destroy unless fi.nil?
 
       fi

@@ -55,6 +55,19 @@ angular.module( 'cahierDeTextesClientApp' )
                         return moment( year ).isoWeek( n_week ).month();
                     };
 
+                    this.fix_semainier_pronote = function( semainier_pronote, date_debut_annee_scolaire ) {
+                        var nb_week_in_year = 52;
+                        var bsemainier_pronote = parseInt( semainier_pronote ).toString( 2 );
+                        bsemainier_pronote = _this.padStart( bsemainier_pronote, nb_week_in_year + 1, '0' );
+                        bsemainier_pronote = bsemainier_pronote.substr( 0, nb_week_in_year ).split('').reverse().join('');
+
+                        var pivot = nb_week_in_year - moment( new Date( date_debut_annee_scolaire ) ).week();
+                        var bsemainier_laclasse = bsemainier_pronote.slice( pivot, nb_week_in_year ) + bsemainier_pronote.substr( 0, pivot );
+                        bsemainier_laclasse = bsemainier_laclasse.split('').reverse().join('');
+
+                        return parseInt( bsemainier_laclasse, 2 );
+                    };
+
                     this.overlay_semainier = function() {
                         return _.chain( _.range(1, 52) )
                             .map( function( s ) { return { semaine: s,

@@ -25,6 +25,7 @@ module CahierDeTextesApp
                                                          .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" )
                                                          .count
       hetablissement[:imports] = etablissement.imports
+      hetablissement[:matchables] = etablissement.matchables
 
       hetablissement
     end
@@ -119,24 +120,34 @@ module CahierDeTextesApp
       etablissement.saisies_enseignant( params[:enseignant_id] )
     end
 
-    # Salles
-    desc 'renvoi toutes les salles'
-    get '/:uai/salles' do
-      etablissement = Etablissement[ uai: params[:uai] ]
+    # # Salles
+    # desc 'renvoi toutes les salles'
+    # get '/:uai/salles' do
+    #   etablissement = Etablissement[ uai: params[:uai] ]
 
-      error!( "Établissement #{params[:uai]} inconnu", 404 ) if etablissement.nil?
+    #   error!( "Établissement #{params[:uai]} inconnu", 404 ) if etablissement.nil?
 
-      etablissement.salles
-    end
+    #   etablissement.salles
+    # end
 
-    # Imports
-    desc 'renvoi tous les imports liés à l\'établissement'
-    get '/:uai/imports' do
-      etablissement = Etablissement[ uai: params[:uai] ]
+    # # Imports
+    # desc 'renvoi tous les imports liés à l\'établissement'
+    # get '/:uai/imports' do
+    #   etablissement = Etablissement[ uai: params[:uai] ]
 
-      error!( "Établissement #{params[:uai]} inconnu", 404 ) if etablissement.nil?
+    #   error!( "Établissement #{params[:uai]} inconnu", 404 ) if etablissement.nil?
 
-      etablissement.imports
-    end
+    #   etablissement.imports
+    # end
+
+    # # Matchables
+    # desc 'renvoi tous les matchables liés à l\'établissement'
+    # get '/:uai/imports' do
+    #   etablissement = Etablissement[ uai: params[:uai] ]
+
+    #   error!( "Établissement #{params[:uai]} inconnu", 404 ) if etablissement.nil?
+
+    #   etablissement.matchables
+    # end
   end
 end

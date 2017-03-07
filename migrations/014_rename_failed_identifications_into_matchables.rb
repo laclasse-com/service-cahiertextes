@@ -8,6 +8,7 @@ Sequel.migration do
       rename_column :sha256, :hash_item
       drop_foreign_key :import_id
       drop_column :date_creation
+      add_foreign_key :etablissement_id, :etablissements, null: false
     end
   end
 end

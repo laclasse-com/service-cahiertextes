@@ -31,14 +31,11 @@
 
                 <button class="pull-right btn"
                         ng:class="{'disabled btn-default': !fichier, 'btn-primary': fichier}"
-                        ng:click="load_data( fichier )" >
+                        ng:click="process_load( fichier )" >
                     <span class="glyphicon glyphicon-log-in"></span> Charger les données et passer à l'étape 2.
                 </button>
             </div>
         </div>
-
-        <!-- <div class="clearfix"></div> -->
-
     </uib-tab>
 
     <uib-tab index="1" select="step = 1" disable="step < 1">
@@ -66,11 +63,10 @@
                 <uib-tabset justified="true" active="0">
                     <uib-tab ng:repeat="dataset in matcheable_data">
                         <uib-tab-heading>
-                            <h4>{{dataset.title}}</h4>
+                            <h4 ng:style="{'color': dataset.unmatched() > 0 ? '#eb5454' : 'inherit', 'font-weight': dataset.unmatched() > 0 ? 'bold' : 'normal'}">
+                                {{dataset.title}}
+                            </h4>
                             ({{dataset.unmatched()}} à traiter sur {{dataset.total()}})
-                            <div class="progress-bar-container rouge">
-                                <div class="progress-bar vert-moins" ng:style="{ width: ( dataset.percent_valid() * 100 ) + '%' }"></div>
-                            </div>
                         </uib-tab-heading>
                         <div class="panel">
                             <table class="table table-striped table-bordered table-hover table-condensed" >
@@ -101,13 +97,13 @@
                                             <select class="select-annuaire"
                                                     ng:if="node.edit && matieres"
                                                     ng:model="node.laclasse"
-                                                    ng:change="match_this( node )"
+                                                    ng:change="match_this( node, pronote.UAI )"
                                                     ng:options="official as official.displayed_label for official in dataset.annuaire | orderBy:['displayed_label']">{{official.displayed_label}}</select>
 
                                             <div class="pull-right">
                                                 <button class="btn btn-default"
                                                         ng:if="node.edit && node.laclasse"
-                                                        ng:click="unmatch_this( node )"><span class="glyphicon glyphicon-erase" aria-hidden="true"></span>
+                                                        ng:click="unmatch_this( node, pronote.UAI )"><span class="glyphicon glyphicon-erase" aria-hidden="true"></span>
                                                 </button>
 
                                                 <button class="btn btn-default"
@@ -136,10 +132,6 @@
     <uib-tab index="2" select="step = 2" disable="step < 1">
         <uib-tab-heading>
             <h1>➡ 3. Lancer l'import.</h1>
-            <!-- <span ng:if="step > 0">({{counters.filtered_creneaux_ready}} créneaux seront créés sur {{counters.filtered_creneaux}})</span>
-                 <div class="progress-bar-container rouge" ng:if="step > 0">
-                 <div class="progress-bar vert-moins" ng:style="{ width: ( counters.percent_creneaux_ready * 100 ) + '%' }"></div>
-                 </div> -->
         </uib-tab-heading>
 
         <div class="panel panel-default col-md-3">
@@ -253,37 +245,20 @@
                                 <!-- <li>{{counters.creneaux_broken}} créneaux non importables (données manquantes)</li> -->
                             </ul>
                         </label>
-                        <!-- <div class="progress-bar-container noir"
-                             uib-tooltip="{{counters.creneaux_broken}} créneaux incomplets"> -->
-                        <div class="progress-bar rouge"
-                             ng:style="{ width: ( counters.creneaux / (counters.creneaux + counters.creneaux_broken) * 100 ) + '%' }"
-                             uib-tooltip="{{counters.creneaux_not_ready}} créneaux invalides"></div>
-                        <div class="progress-bar vert-moins"
-                             ng:style="{ width: ( counters.creneaux_ready / (counters.creneaux + counters.creneaux_broken) * 100 ) + '%' }"
-                             uib-tooltip="{{counters.creneaux_ready}} créneaux valides"></div>
-                        <!-- </div> -->
 
                         <label>
-                            Créneaux filtrés :
+                            Créneaux sélectionnés :
                             <ul>
                                 <li>{{counters.filtered_creneaux_ready}} créneaux valides</li>
                                 <li>{{counters.filtered_creneaux_not_ready}} créneaux invalides (données associées non recollées)</li>
                             </ul>
                         </label>
-                        <div class="progress-bar-container transparent" style="background-color: transparent;">
-                            <div class="progress-bar rouge"
-                                 ng:style="{ width: ( counters.filtered_creneaux / (counters.creneaux + counters.creneaux_broken) * 100 ) + '%' }"
-                                 uib-tooltip="{{counters.filtered_creneaux_not_ready}} créneaux filtrés invalides"></div>
-                            <div class="progress-bar vert-moins"
-                                 ng:style="{ width: ( counters.filtered_creneaux_ready / (counters.creneaux + counters.creneaux_broken) * 100 ) + '%' }"
-                                 uib-tooltip="{{counters.filtered_creneaux_ready}} créneaux filtrés valides"></div>
-                        </div>
                     </fieldset>
 
                     <uib-accordion class="col-md-12">
                         <div uib-accordion-group is-open="ui.show_detailed_creneaux">
                             <uib-accordion-heading>
-                                Afficher le détail des {{counters.filtered_creneaux}} créneaux <i class="glyphicon" ng:class="{'glyphicon-chevron-down': ui.show_detailed_creneaux, 'glyphicon-chevron-right': !ui.show_detailed_creneaux}"></i>
+                                Afficher le détail des créneaux <i class="glyphicon" ng:class="{'glyphicon-chevron-down': ui.show_detailed_creneaux, 'glyphicon-chevron-right': !ui.show_detailed_creneaux}"></i>
                             </uib-accordion-heading>
                             <div class="col-md-12"
                                  ng:if="ui.show_detailed_creneaux">

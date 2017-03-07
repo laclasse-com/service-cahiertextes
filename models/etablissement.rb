@@ -6,6 +6,7 @@ class Etablissement < Sequel::Model( :etablissements )
   one_to_many :creneaux_emploi_du_temps, class: :CreneauEmploiDuTemps
   one_to_many :imports
   one_to_many :salles
+  one_to_many :matchables
 
   def statistiques_regroupements
     etab = Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_v2_etablissements, values[:UAI], expand: 'true' )
