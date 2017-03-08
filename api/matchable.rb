@@ -47,10 +47,8 @@ module CahierDeTextesApp
       etab = Etablissement[ UAI: params[:uai] ]
       error!( "Etablissement #{params[:uai]} unknown", 404 ) if etab.nil?
 
-      fi = Matchable[ etablissement_id: etab.id,
-                      hash_item: params[:hash_item] ]
-      fi = Matchable.create( etablissement_id: etab.id,
-                             hash_item: params[:hash_item] ) if fi.nil?
+      fi = Matchable[ etablissement_id: etab.id, hash_item: params[:hash_item] ]
+      fi = Matchable.create( etablissement_id: etab.id, hash_item: params[:hash_item] ) if fi.nil?
 
       fi.update( id_annuaire: params[:id_annuaire] )
       fi.save
