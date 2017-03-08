@@ -155,46 +155,58 @@ angular.module( 'cahierDeTextesClientApp' )
                       var load_data = function( fichier ) {
                           $scope.pronote = false;
                           $scope.matcheable_data = [];
+                          var handle_error = function( response ) {
+                              console.log( response );
+
+                              return $q.reject( response );
+                          };
 
                           toastr.info('Déchiffrage du fichier');
                           return fileUpload.uploadFileToUrl( fichier, APP_PATH + '/api/import/pronote/decrypt' )
-                              .then( function( response ) {
-                                  // 1. Récupérer le fichier Pronote décrypté
-                                  $scope.pronote = response.data;
-                                  $scope.pronote.GrilleHoraire[0].DureePlace = parseInt( $scope.pronote.GrilleHoraire[0].DureePlace );
+                              .then(
+                                  function success( response ) {
+                                      // 1. Récupérer le fichier Pronote décrypté
+                                      $scope.pronote = response.data;
+                                      $scope.pronote.GrilleHoraire[0].DureePlace = parseInt( $scope.pronote.GrilleHoraire[0].DureePlace );
 
-                                  toastr.info('récupération des données de l\'établissement');
-                                  // 2. Récupérer toutes les infos de l'établissement et toutes les matières
-                                  return Etablissements.get( { uai: $scope.pronote.UAI } ).$promise;
-                              } )
-                              .then( function( response ) {
-                                  $scope.etablissement_summary = response;
-                                  _($scope.etablissement_summary.imports).each( function( i ) { i.date_import = new Date( i.date_import ); } );
+                                      toastr.info('récupération des données de l\'établissement');
+                                      // 2. Récupérer toutes les infos de l'établissement et toutes les matières
+                                      return Etablissements.get( { uai: $scope.pronote.UAI } ).$promise;
+                                  },
+                                  handle_error
+                              )
+                              .then(
+                                  function success( response ) {
+                                      $scope.etablissement_summary = response;
+                                      _($scope.etablissement_summary.imports).each( function( i ) { i.date_import = new Date( i.date_import ); } );
 
-                                  return Annuaire.get_etablissement( $scope.pronote.UAI );
-                              } )
-                              .then( function( response ) {
-                                  $scope.etablissement = { teachers: _(response.data.users).select( function( user ) { return _(user.profils).includes( 'ENS' ) || _(user.profils).includes( 'DOC' ); } ),
-                                                           classes: _(response.data.groups).where( { type_regroupement_id: 'CLS' } ),
-                                                           groupes_eleves: _(response.data.groups).select( { type_regroupement_id: 'GRP' } ) };
+                                      return Annuaire.get_etablissement( $scope.pronote.UAI );
+                                  },
+                                  handle_error
+                              )
+                              .then(
+                                  function success( response ) {
+                                      $scope.etablissement = { teachers: _(response.data.users).select( function( user ) { return _(user.profils).includes( 'ENS' ) || _(user.profils).includes( 'DOC' ); } ),
+                                                               classes: _(response.data.groups).where( { type_regroupement_id: 'CLS' } ),
+                                                               groupes_eleves: _(response.data.groups).select( { type_regroupement_id: 'GRP' } ) };
 
-                                  _($scope.etablissement.teachers).each( function( user ) {
-                                      user.firstname = user.firstname.toUpperCase();
-                                      user.lastname = user.lastname.toUpperCase();
-                                      user.displayed_label = user.lastname + ' ' + user.firstname.toLocaleLowerCase();
-                                  } );
-                                  _($scope.etablissement.groupes_eleves).each( function( regroupement ) {
-                                      regroupement.libelle_aaf = regroupement.libelle_aaf.toUpperCase();
-                                      regroupement.displayed_label = regroupement.libelle_aaf;
-                                  } );
-                                  _($scope.etablissement.classes).each( function( regroupement ) {
-                                      regroupement.libelle_aaf = regroupement.libelle_aaf.toUpperCase();
-                                      regroupement.displayed_label = regroupement.libelle_aaf;
-                                  } );
+                                      _($scope.etablissement.teachers).each( function( user ) {
+                                          user.firstname = user.firstname.toUpperCase();
+                                          user.lastname = user.lastname.toUpperCase();
+                                          user.displayed_label = user.lastname + ' ' + user.firstname.toLocaleLowerCase();
+                                      } );
+                                      _($scope.etablissement.groupes_eleves).each( function( regroupement ) {
+                                          regroupement.libelle_aaf = regroupement.libelle_aaf.toUpperCase();
+                                          regroupement.displayed_label = regroupement.libelle_aaf;
+                                      } );
+                                      _($scope.etablissement.classes).each( function( regroupement ) {
+                                          regroupement.libelle_aaf = regroupement.libelle_aaf.toUpperCase();
+                                          regroupement.displayed_label = regroupement.libelle_aaf;
+                                      } );
 
-                                  toastr.info('traitement des données des enseignants');
-                                  // 3.2 Enseignants
-                                  _($scope.pronote.Professeurs[0].Professeur)
+                                      toastr.info('traitement des données des enseignants');
+                                      // 3.2 Enseignants
+                                      _($scope.pronote.Professeurs[0].Professeur)
                                       .each( function( enseignant ) {
                                           enseignant.displayed_label = enseignant.Prenom + ' ' + enseignant.Nom;
                                           enseignant.laclasse = _($scope.etablissement.teachers).findWhere( { lastname: enseignant.Nom.toUpperCase(),
@@ -216,9 +228,12 @@ angular.module( 'cahierDeTextesClientApp' )
                                   toastr.info('traitement des données des regroupements');
                                   // 3.3 Classes et Groupes
                                   return API.query_statistiques_regroupements( { uai: current_user.profil_actif.etablissement_code_uai } ).$promise;
-                              } )
-                              .then( function( response ) {
-                                  _($scope.pronote.Classes[0].Classe)
+                              },
+                                     handle_error
+                                   )
+                              .then(
+                                  function success( response ) {
+                                      _($scope.pronote.Classes[0].Classe)
                                       .each( function( regroupement ) {
                                           regroupement.displayed_label = regroupement.Nom;
                                           regroupement.laclasse = _($scope.etablissement.classes).findWhere( { libelle_aaf: regroupement.Nom.toUpperCase() } );
@@ -326,17 +341,20 @@ angular.module( 'cahierDeTextesClientApp' )
                                   toastr.info('Récupération des matieres');
                                   // 3.1 Matières
                                   return Annuaire.get_matieres();
-                              } )
-                              .then( function( response ) {
-                                  $scope.matieres = _(response.data).map( function( matiere ) {
-                                      matiere.libelle_long = matiere.libelle_long.toUpperCase();
-                                      matiere.displayed_label = matiere.libelle_long;
+                              },
+                                     handle_error
+                                   )
+                              .then(
+                                  function success( response ) {
+                                      $scope.matieres = _(response.data).map( function( matiere ) {
+                                          matiere.libelle_long = matiere.libelle_long.toUpperCase();
+                                          matiere.displayed_label = matiere.libelle_long;
 
-                                      return matiere;
-                                  } );
+                                          return matiere;
+                                      } );
 
-                                  // 3. Matcher les 2
-                                  _($scope.pronote.Matieres[0].Matiere)
+                                      // 3. Matcher les 2
+                                      _($scope.pronote.Matieres[0].Matiere)
                                       .each( function( matiere ) {
                                           matiere.displayed_label = matiere.Libelle;
                                           matiere.laclasse = _($scope.matieres).findWhere( { libelle_long: matiere.Libelle.toUpperCase() } );
@@ -376,7 +394,9 @@ angular.module( 'cahierDeTextesClientApp' )
                                   update_creneaux_readiness();
 
                                   $scope.$watchCollection( 'selected', function() { update_counters(); } );
-                              } )
+                              },
+                                     handle_error
+                                   )
                               .finally( function() {
                                   $scope.step++;
                                   return $q.resolve( true );
@@ -386,6 +406,12 @@ angular.module( 'cahierDeTextesClientApp' )
                       var import_data = function() {
                           var started_at = moment();
                           var bulk_package_size = 15;
+                          var handle_error = function( response ) {
+                              console.log( response );
+
+                              return $q.reject( response );
+                          };
+
                           $scope.import_done = false;
                           $scope.report = {};
 
@@ -395,20 +421,24 @@ angular.module( 'cahierDeTextesClientApp' )
 
                           // Log import
                           return $http.post( APP_PATH + '/api/import/log/start', { uai: $scope.pronote.UAI, type: 'client ' + VERSION, comment: '' } )
-                              .then( function() {
-                                  // Create Etablissement
-                                  var ct_etablissement = new Etablissements( { uai: $scope.pronote.UAI,
-                                                                               date_premier_jour_premiere_semaine: new Date( $scope.pronote.AnneeScolaire[0].DatePremierJourSemaine1 ),
-                                                                               debut_annee_scolaire: new Date( $scope.pronote.AnneeScolaire[0].DateDebut ),
-                                                                               fin_annee_scolaire: new Date( $scope.pronote.AnneeScolaire[0].DateFin )
-                                                                             } );
-                                  return ct_etablissement.$save();
-                              } )
-                              .then( function( response ) {
-                                  $scope.report.etablissement = response;
+                              .then(
+                                  function success() {
+                                      // Create Etablissement
+                                      var ct_etablissement = new Etablissements( { uai: $scope.pronote.UAI,
+                                                                                   date_premier_jour_premiere_semaine: new Date( $scope.pronote.AnneeScolaire[0].DatePremierJourSemaine1 ),
+                                                                                   debut_annee_scolaire: new Date( $scope.pronote.AnneeScolaire[0].DateDebut ),
+                                                                                   fin_annee_scolaire: new Date( $scope.pronote.AnneeScolaire[0].DateFin )
+                                                                                 } );
+                                      return ct_etablissement.$save();
+                              },
+                                     handle_error
+                                   )
+                              .then(
+                                  function success( response ) {
+                                      $scope.report.etablissement = response;
 
-                                  // Create CahierDeTextes
-                                  var preprocess_cahiers_de_textes = function( liste_regroupements ) {
+                                      // Create CahierDeTextes
+                                      var preprocess_cahiers_de_textes = function( liste_regroupements ) {
                                       return _.chain(liste_regroupements)
                                           .reject( function( regroupement ) { return _(regroupement.laclasse).isUndefined(); } )
                                           .map( function( regroupement ) {
@@ -431,12 +461,15 @@ angular.module( 'cahierDeTextesClientApp' )
                                   }
 
                                   return $q.all( promises );
-                              } )
-                              .then( function( response ) {
-                                  $scope.report.cahiers_de_textes = response;
+                              },
+                                     handle_error
+                                   )
+                              .then(
+                                  function success( response ) {
+                                      $scope.report.cahiers_de_textes = response;
 
-                                  // Create Salle
-                                  toastr.info('Création des salles');
+                                      // Create Salle
+                                      toastr.info('Création des salles');
                                   var promises = [];
                                   var salles_to_import = _($scope.pronote.salles)
                                       .map( function( salle ) {
@@ -450,10 +483,13 @@ angular.module( 'cahierDeTextesClientApp' )
                                   }
 
                                   return $q.all( promises );
-                              } )
-                              .then( function( response ) {
-                                  $scope.report.salles = response;
-                                  $scope.salles_created = response;
+                              },
+                                     handle_error
+                                   )
+                              .then(
+                                  function success( response ) {
+                                      $scope.report.salles = response;
+                                      $scope.salles_created = response;
 
                                   // Create Creneaux
                                   var creneaux_to_import = creneaux_emploi_du_temps.map( function( creneau ) {
@@ -474,12 +510,12 @@ angular.module( 'cahierDeTextesClientApp' )
                                       if ( _(creneau).has('Classe') ) {
                                           pre_creneau.regroupement_id = $scope.pronote.classes[ creneau.Classe.Ident ].laclasse.id;
                                           pre_creneau.semaines_de_presence_regroupement = parseInt( creneau.Classe.Semaines );
-                                              } else {
-                                                  pre_creneau.regroupement_id = $scope.pronote.groupes_eleves[ creneau.Groupe.Ident ].laclasse.id;
-                                                  pre_creneau.semaines_de_presence_regroupement = parseInt( creneau.Groupe.Semaines );
-                                              }
+                                      } else {
+                                          pre_creneau.regroupement_id = $scope.pronote.groupes_eleves[ creneau.Groupe.Ident ].laclasse.id;
+                                          pre_creneau.semaines_de_presence_regroupement = parseInt( creneau.Groupe.Semaines );
+                                      }
 
-                                              return pre_creneau;
+                                      return pre_creneau;
                                   } );
                                   var promises = [];
                                   toastr.info('Import de ' + creneaux_to_import.length + ' créneaux');
@@ -490,13 +526,18 @@ angular.module( 'cahierDeTextesClientApp' )
                                   }
 
                                   return $q.all( promises );
-                              } )
-                              .then( function( response ) {
-                                  $scope.report.creneaux = response;
-                                  $scope.import_done = true;
+                              },
+                                     handle_error
+                                   )
+                              .then(
+                                  function success( response ) {
+                                      $scope.report.creneaux = response;
+                                      $scope.import_done = true;
 
                                   return $q.resolve( $scope.report );
-                              } );
+                              },
+                                     handle_error
+                                   );
                       };
 
                       $scope.match_this = function( item, uai ) {
@@ -529,9 +570,14 @@ angular.module( 'cahierDeTextesClientApp' )
                                   },
                                   preConfirm: function() {
                                       return new Promise( function( resolve ) {
-                                          load_data( fichier ).then( function() {
-                                              swal.closeModal();
-                                          } );
+                                          load_data( fichier ).then(
+                                              function success() {
+                                                  swal.closeModal();
+                                              },
+                                              function error() {
+                                                  console.log('Ça a planté :(');
+                                              }
+                                          );
                                       } );
                                   },
                                   allowOutsideClick: false } );
@@ -551,9 +597,14 @@ angular.module( 'cahierDeTextesClientApp' )
                                   },
                                   preConfirm: function() {
                                       return new Promise( function( resolve ) {
-                                          import_data().then( function( response ) {
-                                              swal.closeModal();
-                                          } );
+                                          import_data().then(
+                                              function success( response ) {
+                                                  swal.closeModal();
+                                              },
+                                              function error() {
+                                                  console.log('Ça a planté :(');
+                                              }
+                                          );
                                       } );
                                   },
                                   allowOutsideClick: false } );

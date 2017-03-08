@@ -1,16 +1,3 @@
-<!-- <fieldset class="summary">
-     <legend> <h4>Statistiques</h4>  </legend>
-
-     <fieldset class="summary"
-     ng:if="etablissement_summary">
-     <legend> <h5>Établissement</h5> </legend>
-     <ul>
-     <li>{{etablissement_summary.nb_creneaux}} créneaux existants</li>
-     <li ng:if="etablissement_summary.imports.length > 0">Dernier import le {{etablissement_summary.imports[ etablissement_summary.imports.length - 1 ].date_import | date}}</li>
-     </ul>
-     </fieldset>
-     </fieldset> -->
-
 <uib-tabset justified="true" active="step">
     <uib-tab index="0" select="step = 0">
         <uib-tab-heading>
@@ -26,8 +13,8 @@
         <div class="panel panel-default col-md-9">
             <div class="panel-heading">action</div>
             <div class="panel-body">
-                <input class="btn" ng:class="{'btn-primary': !fichier, 'btn-default': fichier}"
-                       type="file" file-model="fichier" />
+                <input class="btn" type="file" accept=".xml"
+                       ng:class="{'btn-primary': !fichier, 'btn-default': fichier}" file-model="fichier" />
 
                 <button class="pull-right btn"
                         ng:class="{'disabled btn-default': !fichier, 'btn-primary': fichier}"
