@@ -1,15 +1,15 @@
-<fieldset class="summary">
-    <legend> <h4>Statistiques</h4>  </legend>
+<!-- <fieldset class="summary">
+     <legend> <h4>Statistiques</h4>  </legend>
 
-    <fieldset class="summary"
-              ng:if="etablissement_summary">
-        <legend> <h5>Établissement</h5> </legend>
-        <ul>
-            <li>{{etablissement_summary.nb_creneaux}} créneaux existants</li>
-            <li ng:if="etablissement_summary.imports.length > 0">Dernier import le {{etablissement_summary.imports[ etablissement_summary.imports.length - 1 ].date_import | date}}</li>
-        </ul>
-    </fieldset>
-</fieldset>
+     <fieldset class="summary"
+     ng:if="etablissement_summary">
+     <legend> <h5>Établissement</h5> </legend>
+     <ul>
+     <li>{{etablissement_summary.nb_creneaux}} créneaux existants</li>
+     <li ng:if="etablissement_summary.imports.length > 0">Dernier import le {{etablissement_summary.imports[ etablissement_summary.imports.length - 1 ].date_import | date}}</li>
+     </ul>
+     </fieldset>
+     </fieldset> -->
 
 <uib-tabset justified="true" active="step">
     <uib-tab index="0" select="step = 0">
@@ -140,7 +140,10 @@
                 D'abord il faut charger un fichier exporté depuis Pronote.
             </div>
         </div>
-        <div class="panel panel-default col-md-9">
+        <div class="panel panel-default col-md-9" ng:if="import_done">
+            {{report}}
+        </div>
+        <div class="panel panel-default col-md-9" ng:if="!import_done">
             <div class="panel-heading">action</div>
             <div class="panel-body">
                 <div class="panel panel-default import" style="color: #333;">
@@ -368,6 +371,6 @@
                     </uib-accordion>
                 </div>
             </div>
-        </div>
+            </div>
     </uib-tab>
 </uib-tabset>

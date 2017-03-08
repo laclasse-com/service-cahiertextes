@@ -16,6 +16,8 @@ angular.module( 'cahierDeTextesClientApp' )
                       $scope.fichier = null;
                       $scope.display_all = false;
                       $scope.step = 0;
+                      $scope.import_done = false;
+                      $scope.report = {};
 
                       $scope.ui = { show_detailed_creneaux: false,
                                     display_ready: false,
@@ -419,124 +421,145 @@ angular.module( 'cahierDeTextesClientApp' )
                                   console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
                                   $scope.$watchCollection( 'selected', update_counters );
-
-                                  $scope.step++;
                               } )
                               .finally( function() {
+                                  $scope.step++;
                                   return $q.resolve( true );
                               } );
                       };
 
                       var import_data = function() {
-                          var bulk_package_size = 15;
                           var started_at = moment();
+                          var bulk_package_size = 15;
+                          $scope.import_done = false;
+                          $scope.report = {};
 
-                          console.log('filtering creneaux')
                           var creneaux_emploi_du_temps = _($scope.creneaux).select( function( creneau ) {
                               return creneau.ready && creneau.is_displayed;
                           } );
-                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
                           // Log import
-                          $http.post( APP_PATH + '/api/import/log/start', { uai: $scope.pronote.UAI,
-                                                                            type: 'client ' + VERSION,
-                                                                            comment: '' } );
+                          return $http.post( APP_PATH + '/api/import/log/start', { uai: $scope.pronote.UAI, type: 'client ' + VERSION, comment: '' } )
+                              .then( function() {
+                                  // Create Etablissement
+                                  started_at = moment();
+                                  console.log('creating Etablissement')
+                                  var ct_etablissement = new Etablissements( { uai: $scope.pronote.UAI,
+                                                                               date_premier_jour_premiere_semaine: new Date( $scope.pronote.AnneeScolaire[0].DatePremierJourSemaine1 ),
+                                                                               debut_annee_scolaire: new Date( $scope.pronote.AnneeScolaire[0].DateDebut ),
+                                                                               fin_annee_scolaire: new Date( $scope.pronote.AnneeScolaire[0].DateFin )
+                                                                             } );
+                                  return ct_etablissement.$save();
+                              } )
+                              .then( function( response ) {
+                                  console.log( response )
+                                  $scope.report.etablissement = response;
+                                  console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
-                          // Create Etablissement
-                          started_at = moment();
-                          console.log('creating Etablissement')
-                          var ct_etablissement = new Etablissements( {
-                              uai: $scope.pronote.UAI,
-                              date_premier_jour_premiere_semaine: new Date( $scope.pronote.AnneeScolaire[0].DatePremierJourSemaine1 ),
-                              debut_annee_scolaire: new Date( $scope.pronote.AnneeScolaire[0].DateDebut ),
-                              fin_annee_scolaire: new Date( $scope.pronote.AnneeScolaire[0].DateFin )
-                          } );
-                          ct_etablissement.$save();
-                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
+                                  // // Create CahierDeTextes
+                                  started_at = moment();
+                                  console.log('creating CahierDeTextes')
+                                  var preprocess_cahiers_de_textes = function( liste_regroupements ) {
+                                      return _.chain(liste_regroupements)
+                                          .reject( function( regroupement ) { return _(regroupement.laclasse).isUndefined(); } )
+                                          .map( function( regroupement ) {
+                                              return {
+                                                  label: regroupement.laclasse.libelle_aaf,
+                                                  regroupement_id: regroupement.laclasse.id,
+                                                  debut_annee_scolaire: new Date( $scope.pronote.AnneeScolaire[0].DateDebut ),
+                                                  fin_annee_scolaire: new Date( $scope.pronote.AnneeScolaire[0].DateFin )
+                                              };
+                                          } )
+                                          .value();
+                                  };
+                                  var regroupements = preprocess_cahiers_de_textes( $scope.pronote.classes );
+                                  regroupements.push( preprocess_cahiers_de_textes( $scope.pronote.groupes_eleves ) );
+                                  regroupements = _(regroupements).flatten();
 
-                          // // Create CahierDeTextes
-                          started_at = moment();
-                          console.log('creating CahierDeTextes')
-                          var preprocess_cahiers_de_textes = function( liste_regroupements ) {
-                              return _.chain(liste_regroupements)
-                                  .reject( function( regroupement ) { return _(regroupement.laclasse).isUndefined(); } )
-                                  .map( function( regroupement ) {
-                                      return {
-                                          label: regroupement.laclasse.libelle_aaf,
-                                          regroupement_id: regroupement.laclasse.id,
-                                          debut_annee_scolaire: new Date( $scope.pronote.AnneeScolaire[0].DateDebut ),
-                                          fin_annee_scolaire: new Date( $scope.pronote.AnneeScolaire[0].DateFin )
-                                      };
-                                  } )
-                                  .value();
-                          };
-                          var regroupements = preprocess_cahiers_de_textes( $scope.pronote.classes );
-                          regroupements.push( preprocess_cahiers_de_textes( $scope.pronote.groupes_eleves ) );
-                          regroupements = _(regroupements).flatten();
+                                  var promises = [];
+                                  while ( regroupements.length > 0 ) {
+                                      promises.push( CahiersDeTextes.bulk( { cahiers_de_textes: regroupements.splice( 0, bulk_package_size ) } ).$promise );
+                                  }
 
-                          while ( regroupements.length > 0 ) {
-                              CahiersDeTextes.bulk( { cahiers_de_textes: regroupements.splice( 0, bulk_package_size ) } );
-                          }
-                          console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
+                                  return $q.all( promises );
+                              } )
+                              .then( function( response ) {
+                                  console.log( response )
+                                  $scope.report.cahiers_de_textes = response;
+                                  console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
 
-                          // Create Salle
-                          // FIXME: Hoping that it doesn't exceed Puma's POST size limit...
-                          started_at = moment();
-                          console.log('creating Salles')
-                          toastr.info('Création des salles')
-                          Salles.bulk( { salles: _($scope.pronote.salles)
-                                         .map( function( salle ) {
-                                             return {
-                                                 uai: $scope.pronote.UAI,
-                                                 identifiant: salle.Ident,
-                                                 nom: salle.Nom
-                                             };
-                                         } )
-                                       } ).$promise.then( function( response ) {
-                                           console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
-                                           $scope.salles_created = response;
+                                  // Create Salle
+                                  // FIXME: Hoping that it doesn't exceed Puma's POST size limit...
+                                  started_at = moment();
+                                  console.log('creating Salles')
+                                  toastr.info('Création des salles')
+                                  return Salles.bulk( { salles: _($scope.pronote.salles)
+                                                        .map( function( salle ) {
+                                                            return { uai: $scope.pronote.UAI,
+                                                                     identifiant: salle.Ident,
+                                                                     nom: salle.Nom };
+                                                        } )
+                                                      } ).$promise;
 
-                                           // Create Creneaux
-                                           started_at = moment();
-                                           console.log('filtering creneaux')
-                                           var creneaux_to_import = creneaux_emploi_du_temps.map( function( creneau ) {
-                                               var heure_debut = Utils.libelleHeure_to_Moment( $scope.pronote.plages_horaires[ creneau.NumeroPlaceDebut ].LibelleHeureDebut );
+                              } )
+                              .then( function( response ) {
+                                  console.log( response )
+                                  $scope.report.salles = response;
+                                  console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
+                                  $scope.salles_created = response;
 
-                                               var pre_creneau = { jour_de_la_semaine: parseInt( creneau.Jour ),
-                                                                   heure_debut: heure_debut.toISOString(),
-                                                                   heure_fin: heure_debut.add( parseInt( creneau.NombrePlaces ) * parseInt( $scope.pronote.GrilleHoraire[0].DureePlace ), 'minutes' ).toISOString(),
-                                                                   matiere_id: $scope.pronote.matieres[ creneau.Matiere.Ident ].laclasse.id,
-                                                                   enseignant_id: $scope.pronote.enseignants[ creneau.Professeur.Ident ].laclasse.ent_id,
-                                                                   semaines_de_presence_enseignant: parseInt( creneau.Professeur.Semaines ) };
+                                  // Create Creneaux
+                                  started_at = moment();
+                                  console.log('filtering creneaux')
+                                  var creneaux_to_import = creneaux_emploi_du_temps.map( function( creneau ) {
+                                              var heure_debut = Utils.libelleHeure_to_Moment( $scope.pronote.plages_horaires[ creneau.NumeroPlaceDebut ].LibelleHeureDebut );
 
-                                               if ( _(creneau).has('Salle') ) {
-                                                   pre_creneau.salle_id = _($scope.salles_created).find( { identifiant: creneau.Salle.Ident } ).id;
-                                                   pre_creneau.semaines_de_presence_salle = parseInt( creneau.Salle.Semaines );
-                                               }
+                                              var pre_creneau = { jour_de_la_semaine: parseInt( creneau.Jour ),
+                                                                  heure_debut: heure_debut.toISOString(),
+                                                                  heure_fin: heure_debut.add( parseInt( creneau.NombrePlaces ) * parseInt( $scope.pronote.GrilleHoraire[0].DureePlace ), 'minutes' ).toISOString(),
+                                                                  matiere_id: $scope.pronote.matieres[ creneau.Matiere.Ident ].laclasse.id,
+                                                                  enseignant_id: $scope.pronote.enseignants[ creneau.Professeur.Ident ].laclasse.ent_id,
+                                                                  semaines_de_presence_enseignant: parseInt( creneau.Professeur.Semaines ) };
 
-                                               if ( _(creneau).has('Classe') ) {
-                                                   pre_creneau.regroupement_id = $scope.pronote.classes[ creneau.Classe.Ident ].laclasse.id;
-                                                   pre_creneau.semaines_de_presence_regroupement = parseInt( creneau.Classe.Semaines );
-                                               } else {
-                                                   pre_creneau.regroupement_id = $scope.pronote.groupes_eleves[ creneau.Groupe.Ident ].laclasse.id;
-                                                   pre_creneau.semaines_de_presence_regroupement = parseInt( creneau.Groupe.Semaines );
-                                               }
+                                              if ( _(creneau).has('Salle') ) {
+                                                  pre_creneau.salle_id = _($scope.salles_created).find( { identifiant: creneau.Salle.Ident } ).id;
+                                                  pre_creneau.semaines_de_presence_salle = parseInt( creneau.Salle.Semaines );
+                                              }
 
-                                               return pre_creneau;
-                                           } );
-                                           console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
+                                              if ( _(creneau).has('Classe') ) {
+                                                  pre_creneau.regroupement_id = $scope.pronote.classes[ creneau.Classe.Ident ].laclasse.id;
+                                                  pre_creneau.semaines_de_presence_regroupement = parseInt( creneau.Classe.Semaines );
+                                              } else {
+                                                  pre_creneau.regroupement_id = $scope.pronote.groupes_eleves[ creneau.Groupe.Ident ].laclasse.id;
+                                                  pre_creneau.semaines_de_presence_regroupement = parseInt( creneau.Groupe.Semaines );
+                                              }
 
-                                           started_at = moment();
-                                           console.log('importing ' + creneaux_to_import.length + ' creneaux')
-                                           toastr.info('Import de ' + creneaux_to_import.length + ' créneaux')
-                                           while ( creneaux_to_import.length > 0 ) {
-                                               CreneauxEmploiDuTemps.bulk( {
-                                                   uai: $scope.pronote.UAI,
-                                                   creneaux_emploi_du_temps: creneaux_to_import.splice( 0, bulk_package_size )
-                                               } );
-                                           }
-                                           console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
-                                       } );
+                                              return pre_creneau;
+                                          } );
+                                  console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
+
+                                  started_at = moment();
+                                  console.log('importing ' + creneaux_to_import.length + ' creneaux')
+                                  toastr.info('Import de ' + creneaux_to_import.length + ' créneaux')
+
+                                  var promises = [];
+
+                                  while ( creneaux_to_import.length > 0 ) {
+                                      promises.push( CreneauxEmploiDuTemps.bulk( { uai: $scope.pronote.UAI,
+                                                                                   creneaux_emploi_du_temps: creneaux_to_import.splice( 0, bulk_package_size )
+                                                                                 } ).$promise );
+                                  }
+
+                                  return $q.all( promises );
+                              } )
+                              .then( function( response ) {
+                                  console.log( response )
+                                  $scope.report.creneaux = response;
+                                  console.log( ( ( moment() - started_at ) / 1000.0 ) + 's' )
+                                  $scope.import_done = true;
+
+                                  return $q.resolve( $scope.report );
+                              } );
                       };
 
                       $scope.match_this = function( item, uai ) {
@@ -582,22 +605,22 @@ angular.module( 'cahierDeTextesClientApp' )
                       };
 
                       $scope.process_import = function() {
-                          swal.queue([{
-                              title: 'Import',
-                              confirmButtonText: 'Importer',
-                              text: 'On va importer des tas de choses.',
-                              showLoaderOnConfirm: true,
-                              onOpen: function() {
-                                  swal.clickConfirm();
-                              },
-                              preConfirm: function () {
-                                  return new Promise(function (resolve) {
-                                      import_data();
-                                      swal.insertQueueStep('done!');
-                                      resolve();
-                                  });
-                              }
-                          }]);
-
+                          swal( { title: "Import des données....",
+                                  text: "traitement en cours",
+                                  type: "info",
+                                  showLoaderOnConfirm: true,
+                                  onOpen: function(){
+                                      swal.clickConfirm();
+                                  },
+                                  preConfirm: function() {
+                                      return new Promise( function( resolve ) {
+                                          import_data().then( function( response ) {
+                                              swal.closeModal();
+                                          } );
+                                      } );
+                                  },
+                                  allowOutsideClick: false } );
+                          console.log('Import done')
+                          console.log($scope.report)
                       };
                   } ] );
