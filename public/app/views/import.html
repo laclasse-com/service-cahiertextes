@@ -128,7 +128,9 @@
             </div>
         </div>
         <div class="panel panel-default col-md-9" ng:if="import_done">
-            {{report}}
+            <ul>
+                <li ng:repeat="(key, values) in report">{{key}} : {{values.length ? values.length : 1}}</li>
+            </ul>
         </div>
         <div class="panel panel-default col-md-9" ng:if="!import_done">
             <div class="panel-heading">action</div>
