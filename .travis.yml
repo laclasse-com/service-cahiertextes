@@ -1,12 +1,12 @@
 language: ruby
 
-sudo: false
+sudo: true
 
 rvm:
   - "2.2.5"
 
 before_install:
-  - apt-get install libmagic-dev
+  - sudo apt-get install libmagic-dev
   - gem update --system
   - gem --version
   - gem install rspec
