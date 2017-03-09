@@ -40,8 +40,6 @@
             <div class="panel-heading">action</div>
             <div class="panel-body">
 
-                <!-- <h2 class="school-year">Année scolaire du {{pronote.AnneeScolaire[0].DateDebut | date:'fullDate'}} au {{pronote.AnneeScolaire[0].DateFin | date:'fullDate'}}</h2> -->
-
                 <label>
                     <checkbox ng:model="scope.display_all"></checkbox>
                     Afficher tout.
@@ -127,12 +125,7 @@
                 D'abord il faut charger un fichier exporté depuis Pronote.
             </div>
         </div>
-        <div class="panel panel-default col-md-9" ng:if="import_done">
-            <ul>
-                <li ng:repeat="(key, values) in report">{{key}} : {{values.length ? values.length : 1}}</li>
-            </ul>
-        </div>
-        <div class="panel panel-default col-md-9" ng:if="!import_done">
+        <div class="panel panel-default col-md-9">
             <div class="panel-heading">action</div>
             <div class="panel-body">
                 <div class="panel panel-default import" style="color: #333;">

@@ -16,7 +16,6 @@ angular.module( 'cahierDeTextesClientApp' )
                       $scope.fichier = null;
                       $scope.display_all = false;
                       $scope.step = 0;
-                      $scope.import_done = false;
                       $scope.report = {};
 
                       $scope.ui = { show_detailed_creneaux: false,
@@ -411,7 +410,6 @@ angular.module( 'cahierDeTextesClientApp' )
                               return $q.reject( response );
                           };
 
-                          $scope.import_done = false;
                           $scope.report = {};
 
                           var creneaux_emploi_du_temps = _($scope.creneaux).select( function( creneau ) {
@@ -530,7 +528,6 @@ angular.module( 'cahierDeTextesClientApp' )
                               .then(
                                   function success( response ) {
                                       $scope.report.creneaux = _(response).flatten();
-                                      $scope.import_done = true;
 
                                       return $q.resolve( $scope.report );
                                   },
@@ -595,6 +592,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                   text: "traitement en cours",
                                   type: "info",
                                   showLoaderOnConfirm: true,
+                                  allowOutsideClick: false,
                                   onOpen: function(){
                                       swal.clickConfirm();
                                   },
@@ -603,6 +601,10 @@ angular.module( 'cahierDeTextesClientApp' )
                                           import_data().then(
                                               function success( response ) {
                                                   swal.closeModal();
+                                                  $scope.step = 0;
+                                                  swal({ title: "Import terminé",
+                                                         html: "",
+                                                         type: 'success' });
                                               },
                                               function error( response ) {
                                                   console.log( response );
@@ -613,7 +615,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                               }
                                           );
                                       } );
-                                  },
-                                  allowOutsideClick: false } );
+                                  }
+                                } );
                       };
                   } ] );
