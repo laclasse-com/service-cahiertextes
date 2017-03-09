@@ -6,16 +6,17 @@ rvm:
   - "2.2.5"
 
 before_install:
+  - apt install libmagic-dev
   - gem update --system
   - gem --version
-  - gem install rspec libmagic-dev
+  - gem install rspec
 
 before_script:
   - cp config/constants.rb.sample config/constants.rb
   - cp config/database.rb.sample config/database.rb
   - cp config/options.rb.sample config/options.rb
   - mysql -e 'create database CahierDeTextes;'
-  - bundle exec rake db:migrations
+  - bundle exec rake db:migrate
 
 script:
   - "bundle exec rspec ./spec/api ./spec/models ./spec/lib"
