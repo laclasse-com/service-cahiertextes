@@ -556,9 +556,9 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                // fonctions d'événements GUI {{{
                                $scope.ajout_devoir = function( where, creneau_cible ) {
-                                   if ( _(creneau_cible).isNull() ) {
+                                   if ( _(creneau_cible).isNull() || _(creneau_cible).isUndefined() ) {
                                        creneau_cible = $scope.creneau;
-                                   } else if ( creneau_cible == 'next' ) {
+                                   } else if ( creneau_cible === 'next' ) {
                                        if ( $scope.creneaux_devoirs_possibles.length > 1 ) {
                                            creneau_cible = _.chain($scope.creneaux_devoirs_possibles)
                                                .select( function( creneau ) {
@@ -570,6 +570,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                            creneau_cible = _($scope.creneaux_devoirs_possibles).first();
                                        }
                                    }
+
                                    var devoir = new Devoirs( { cours_id: $scope.cours.id,
                                                                date_due: $filter( 'date' )( creneau_cible.heure_debut, 'yyyy-MM-dd' ),
                                                                type_devoir_id: _($scope.types_de_devoir).last().id,
