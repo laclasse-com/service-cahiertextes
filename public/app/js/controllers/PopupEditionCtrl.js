@@ -60,7 +60,7 @@ angular.module( 'cahierDeTextesClientApp' )
                            $scope.creneau.jour_de_la_semaine = '' + $scope.creneau.jour_de_la_semaine;
                            $scope.mode_edition_creneau = $scope.creneau.en_creation;
                            $scope.creneau.regroupement_id = parseInt( $scope.creneau.regroupement_id );
-                           $scope.creneau.mine = $scope.creneau.en_creation || _.chain( $scope.creneau.enseignants ).pluck( 'enseignant_id' ).include( $scope.current_user.uid ).value();
+                           $scope.creneau.mine = $scope.creneau.en_creation || _.chain( $scope.current_user.profil_actif.matieres ).pluck( 'id' ).include( $scope.creneau.matiere_id ).value();
                            $scope.creneau.etranger = !$scope.current_user.profil_actif.admin && !$scope.creneau.en_creation && !$scope.creneau.mine;
                            $scope.creneau.previous_regroupement_id = $scope.creneau.regroupement_id;
                            $scope.creneau.vierge = _(creneau.vierge).isUndefined();

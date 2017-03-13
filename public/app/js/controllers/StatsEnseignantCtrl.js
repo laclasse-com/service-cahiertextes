@@ -19,15 +19,7 @@ angular.module( 'cahierDeTextesClientApp' )
                        };
 
                        $scope.detail_regroupement = function( id ) {
-                           return Annuaire.get_regroupement( parseInt( id ) )
-                           // .$promise.then( function( response ) {
-                           //     delete response.etablissement;
-                           //     delete response.niveau;
-                           //     delete response.profs;
-                           //     delete response.eleves;
-
-                           //     return response;
-                           // } );
+                           return Annuaire.get_regroupement( parseInt( id ) );
                        };
 
                        $scope.filter_saisie = function( montre_valides, mois, selected_regroupements ) {

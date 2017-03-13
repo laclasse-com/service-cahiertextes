@@ -191,9 +191,9 @@ angular.module( 'cahierDeTextesClientApp' )
                               return _.chain(selected_regroupements).pluck('id').contains( parseInt( creneau.regroupement_id ) ).value();
                           } );
                       };
-                      var filter_by_enseignant_id = function( raw_data, uid, active ) {
+                      var filter_by_matieres = function( raw_data, matieres, active ) {
                           return !active ? raw_data : _( raw_data ).filter( function( creneau ) {
-                              return creneau.enseignant_id == uid;
+                              return _(matieres).contains( creneau.matiere_id );
                           } );
                       };
 
@@ -247,10 +247,10 @@ angular.module( 'cahierDeTextesClientApp' )
                           $scope.calendar.options.eventStartEditable = true;
 
                           $scope.filter_data = function( raw_data ) {
-                              return filter_by_enseignant_id( filter_by_regroupement( raw_data,
-                                                                                      $scope.selected_regroupements ),
-                                                              $scope.current_user.uid,
-                                                              $scope.uniquement_mes_creneaux );
+                              return filter_by_matieres( filter_by_regroupement( raw_data,
+                                                                                 $scope.selected_regroupements ),
+                                                         _($scope.current_user.profil_actif.matieres).pluck('id'),
+                                                         $scope.uniquement_mes_creneaux );
                           };
 
                           // édition d'un créneau existant

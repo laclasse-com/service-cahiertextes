@@ -8,9 +8,8 @@ module DataManagement
       # Nota Bene: semainiers callés sur l'année civile
       # .where { date_creation >= 1.year.ago }
       # .where { !creneaux_emploi_du_temps__deleted || creneaux_emploi_du_temps__date_suppression >= fin }
-      emploi_du_temps = CreneauEmploiDuTemps.association_join( :regroupements, :enseignants )
+      emploi_du_temps = CreneauEmploiDuTemps.association_join( :regroupements )
                                             .select_append( :regroupements__semaines_de_presence___semainier_regroupement )
-                                            .select_append( :enseignants__semaines_de_presence___semainier_enseignant )
                                             .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" )
                                             .where( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{fin}')" )
                                             .where( regroupement_id: regroupements_ids )
@@ -19,7 +18,6 @@ module DataManagement
         ( debut .. fin ).select { |day| day.wday == creneau.jour_de_la_semaine && creneau[:semainier_regroupement][ day.cweek ] == 1 }
                         .map do |day|
           { regroupement_id: creneau[ :regroupement_id ],
-            enseignant_id: creneau[ :enseignant_id ],
             creneau_emploi_du_temps_id: creneau.id,
             matiere_id: creneau.matiere_id,
             start: Time.new( day.year, day.month, day.mday, creneau.debut.hour, creneau.debut.min ).iso8601,
@@ -49,30 +47,28 @@ module DataManagement
                                             .flatten
                                             .compact
 
-      emploi_du_temps = emploi_du_temps.each { |c| c.delete :enseignant_id }.uniq if %w(ELV TUT).include?( profil_type )
-
       emploi_du_temps
     end
 
-    def ical( debut, fin, regroupements_ids, profil_type, eleve_id )
-      ical = Icalendar::Calendar.new
+    # def ical( debut, fin, regroupements_ids, profil_type, eleve_id )
+    #   ical = Icalendar::Calendar.new
 
-      get( debut, fin, regroupements_ids, profil_type, eleve_id )
-        .each do |creneau|
-        ical.event do |e|
-          # [:regroupement_id, :enseignant_id, :creneau_emploi_du_temps_id, :matiere_id, :cahier_de_textes_id, :start, :end, :cours, :devoirs]
-          e.dtstart = DateTime.parse( creneau[:start] )
-          e.dtend = DateTime.parse( creneau[:end] )
-          e.summary = "#{creneau[:regroupement_id]} - #{creneau[:matiere_id]}"
-          e.description = creneau[:cours][:contenu] unless creneau[:cours].nil?
-          # e.created = DateTime.parse( creneau[:date_creation] )
-          # e.last_modified = DateTime.parse( creneau[:date_modification] )
-        end
-      end
+    #   get( debut, fin, regroupements_ids, profil_type, eleve_id )
+    #     .each do |creneau|
+    #     ical.event do |e|
+    #       # [:regroupement_id, :enseignant_id, :creneau_emploi_du_temps_id, :matiere_id, :cahier_de_textes_id, :start, :end, :cours, :devoirs]
+    #       e.dtstart = DateTime.parse( creneau[:start] )
+    #       e.dtend = DateTime.parse( creneau[:end] )
+    #       e.summary = "#{creneau[:regroupement_id]} - #{creneau[:matiere_id]}"
+    #       e.description = creneau[:cours][:contenu] unless creneau[:cours].nil?
+    #       # e.created = DateTime.parse( creneau[:date_creation] )
+    #       # e.last_modified = DateTime.parse( creneau[:date_modification] )
+    #     end
+    #   end
 
-      ical.publish
+    #   ical.publish
 
-      ical.to_ical
-    end
+    #   ical.to_ical
+    # end
   end
 end

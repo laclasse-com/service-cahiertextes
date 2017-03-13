@@ -93,14 +93,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                   return false;
                               }
 
-                              if ( _(criteria.enseignants).isEmpty() ) {
-                                  creneau.is_displayed = creneau.is_displayed && !_(creneau).has( 'Professeur' );
-                              } else {
-                                  creneau.is_displayed = creneau.is_displayed &&
-                                      _(creneau).has( 'Professeur' ) &&
-                                      _.chain(criteria.enseignants).pluck( 'Ident' ).includes( creneau.Professeur.Ident ).value();
-                              }
-
                               return creneau.is_displayed;
                           };
                       };
@@ -128,11 +120,10 @@ angular.module( 'cahierDeTextesClientApp' )
                           _($scope.creneaux).each( function( creneau ) {
                               creneau.readiness = { matiere: !_($scope.pronote.matieres[ creneau.Matiere.Ident ].laclasse).isUndefined(),
                                                     salle: !_(creneau.Salle).isUndefined(),
-                                                    enseignant: !_($scope.pronote.enseignants[ creneau.Professeur.Ident ].laclasse).isUndefined(),
                                                     classe: _(creneau).has('Classe') && !_($scope.pronote.classes[ creneau.Classe.Ident ].laclasse).isUndefined(),
                                                     groupe_eleve: _(creneau).has('Groupe') && !_($scope.pronote.groupes_eleves[ creneau.Groupe.Ident ].laclasse).isUndefined() };
 
-                              creneau.ready = creneau.readiness.matiere && creneau.readiness.enseignant && ( creneau.readiness.classe || creneau.readiness.groupe_eleve );
+                              creneau.ready = creneau.readiness.matiere && ( creneau.readiness.classe || creneau.readiness.groupe_eleve );
                           } );
 
                           update_counters();
@@ -141,8 +132,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
                       var hash_me = function( item ) {
                           var get_type = function( item ) {
-                              if ( _(item).has('IDPN') ) { return 'enseignant'; }
-                              else if ( _(item).has('PartieDeClass') ) { return 'regroupement'; }
+                              if ( _(item).has('PartieDeClass') ) { return 'regroupement'; }
                               else if ( _(item).has('Code') ) { return 'matiere'; }
                               else { return 'unknown'; }
                           };
@@ -201,27 +191,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                           regroupement.displayed_label = regroupement.libelle_aaf;
                                       } );
 
-                                      toastr.info('traitement des données des enseignants');
-                                      // 3.2 Enseignants
-                                      _($scope.pronote.Professeurs[0].Professeur)
-                                          .each( function( enseignant ) {
-                                              enseignant.displayed_label = enseignant.Prenom + ' ' + enseignant.Nom;
-                                              enseignant.laclasse = _($scope.etablissement.teachers).findWhere( { lastname: enseignant.Nom.toUpperCase(),
-                                                                                                                  firstname: enseignant.Prenom.toUpperCase() } );
-
-                                              if ( _(enseignant.laclasse).isUndefined() ) {
-                                                  var matched = _($scope.etablissement_summary.matchables).findWhere({ hash_item: hash_me( enseignant ) });
-                                                  if ( !_(matched).isUndefined() ) {
-                                                      enseignant.laclasse = _($scope.etablissement.teachers).findWhere({ ent_id: matched.id_annuaire });
-                                                  }
-                                              }
-
-                                              enseignant.edit = _(enseignant.laclasse).isUndefined();
-                                              if ( !enseignant.edit ) {
-                                                  enseignant.laclasse.displayed_label = enseignant.laclasse.lastname + ' ' + enseignant.laclasse.firstname.toLocaleLowerCase();
-                                              }
-                                          } );
-
                                       toastr.info('traitement des données des regroupements');
                                       // 3.3 Classes et Groupes
                                       return API.query_statistiques_regroupements( { uai: current_user.profil_actif.etablissement_code_uai } ).$promise;
@@ -277,39 +246,35 @@ angular.module( 'cahierDeTextesClientApp' )
                                       $scope.creneaux = _.chain($scope.pronote.Cours[0].Cours)
                                           .map( function( cours ) {
                                               return _.chain(cours.Matiere).map( function( matiere ) {
-                                                  return _(cours.Professeur).map( function( enseignant ) {
-                                                      var compute_cours = function( type_regroupement ) {
-                                                          return function( regroupement ) {
-                                                              var this_cours = angular.copy( cours );
-                                                              this_cours.is_displayed = true;
-                                                              this_cours.Matiere = matiere;
-                                                              this_cours.Professeur = enseignant;
-                                                              this_cours.Professeur.Semaines = Utils.fix_semainier_pronote( this_cours.Professeur.Semaines, $scope.pronote.AnneeScolaire[0].DateDebut );
+                                                  var compute_cours = function( type_regroupement ) {
+                                                      return function( regroupement ) {
+                                                          var this_cours = angular.copy( cours );
+                                                          this_cours.is_displayed = true;
+                                                          this_cours.Matiere = matiere;
 
-                                                              if ( type_regroupement === 'Classe' ) {
-                                                                  this_cours.Classe = regroupement;
-                                                                  this_cours.Classe.Semaines = Utils.fix_semainier_pronote( this_cours.Classe.Semaines, $scope.pronote.AnneeScolaire[0].DateDebut );
-                                                              } else {
-                                                                  this_cours.Groupe = regroupement;
-                                                                  this_cours.Groupe.Semaines = Utils.fix_semainier_pronote( this_cours.Groupe.Semaines,$scope.pronote.AnneeScolaire[0].DateDebut );
-                                                              }
+                                                          if ( type_regroupement === 'Classe' ) {
+                                                              this_cours.Classe = regroupement;
+                                                              this_cours.Classe.Semaines = Utils.fix_semainier_pronote( this_cours.Classe.Semaines, $scope.pronote.AnneeScolaire[0].DateDebut );
+                                                          } else {
+                                                              this_cours.Groupe = regroupement;
+                                                              this_cours.Groupe.Semaines = Utils.fix_semainier_pronote( this_cours.Groupe.Semaines,$scope.pronote.AnneeScolaire[0].DateDebut );
+                                                          }
 
-                                                              if ( _(cours).has('Salle') ) {
-                                                                  return _(cours.Salle).map( function( salle ) {
-                                                                      this_cours.Salle = salle;
-                                                                      this_cours.Salle.Semaines = Utils.fix_semainier_pronote( this_cours.Salle.Semaines, $scope.pronote.AnneeScolaire[0].DateDebut );
+                                                          if ( _(cours).has('Salle') ) {
+                                                              return _(cours.Salle).map( function( salle ) {
+                                                                  this_cours.Salle = salle;
+                                                                  this_cours.Salle.Semaines = Utils.fix_semainier_pronote( this_cours.Salle.Semaines, $scope.pronote.AnneeScolaire[0].DateDebut );
 
-                                                                      return this_cours;
-                                                                  } );
-                                                              } else {
                                                                   return this_cours;
-                                                              }
-                                                          };
+                                                              } );
+                                                          } else {
+                                                              return this_cours;
+                                                          }
                                                       };
+                                                  };
 
-                                                      return [ _(cours.Classe).map( compute_cours( 'Classe' ) ),
-                                                               _(cours.Groupe).map( compute_cours( 'Groupe' ) ) ];
-                                                  } );
+                                                  return [ _(cours.Classe).map( compute_cours( 'Classe' ) ),
+                                                           _(cours.Groupe).map( compute_cours( 'Groupe' ) ) ];
                                               } )
                                                   .flatten()
                                                   .uniq()
@@ -318,7 +283,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                           .flatten()
                                           .value();
 
-                                      $scope.pronote.enseignants = Utils.groupByKey( $scope.pronote.Professeurs[0].Professeur, 'Ident' );
                                       $scope.pronote.classes = Utils.groupByKey( $scope.pronote.Classes[0].Classe, 'Ident' );
                                       $scope.pronote.salles = Utils.groupByKey( $scope.pronote.Salles[0].Salle, 'Ident' );
                                       $scope.pronote.plages_horaires = Utils.groupByKey( $scope.pronote.GrilleHoraire[0].PlacesParJour[0].Place, 'Numero' );
@@ -330,10 +294,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                       $scope.matcheable_data.push( { title: 'Groupes d\'élèves',
                                                                      pronote: $scope.pronote.groupes_eleves,
                                                                      annuaire: $scope.etablissement.groupes_eleves } );
-                                      $scope.matcheable_data.push( { title: 'Enseignants',
-                                                                     pronote: $scope.pronote.enseignants,
-                                                                     annuaire: $scope.etablissement.teachers } );
-
 
                                       toastr.info('Récupération des matieres');
                                       // 3.1 Matières
@@ -384,7 +344,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                       } );
 
                                       $scope.selected = { matieres: $scope.pronote.Matieres[0].Matiere,
-                                                          enseignants: $scope.pronote.Professeurs[0].Professeur,
                                                           classes: _($scope.pronote.Classes[0].Classe).where({ existing_creneaux: 0 }),
                                                           groupes: _($scope.pronote.Groupes[0].Groupe).where({ existing_creneaux: 0 }) };
 
@@ -494,9 +453,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                           var pre_creneau = { jour_de_la_semaine: parseInt( creneau.Jour ),
                                                               heure_debut: heure_debut.toISOString(),
                                                               heure_fin: heure_debut.add( parseInt( creneau.NombrePlaces ) * parseInt( $scope.pronote.GrilleHoraire[0].DureePlace ), 'minutes' ).toISOString(),
-                                                              matiere_id: $scope.pronote.matieres[ creneau.Matiere.Ident ].laclasse.id,
-                                                              enseignant_id: $scope.pronote.enseignants[ creneau.Professeur.Ident ].laclasse.ent_id,
-                                                              semaines_de_presence_enseignant: parseInt( creneau.Professeur.Semaines ) };
+                                                              matiere_id: $scope.pronote.matieres[ creneau.Matiere.Ident ].laclasse.id };
 
                                           if ( _(creneau).has('Salle') ) {
                                               pre_creneau.salle_id = _($scope.report.salles).find( { identifiant: creneau.Salle.Ident } ).id;

@@ -16,13 +16,6 @@ class CreneauEmploiDuTempsSalle < Sequel::Model( :creneaux_emploi_du_temps_salle
   many_to_one :salle
 end
 
-class CreneauEmploiDuTempsEnseignant < Sequel::Model( :creneaux_emploi_du_temps_enseignants )
-  unrestrict_primary_key
-  include SemainesDePresenceMixin
-
-  many_to_one :creneau_emploi_du_temps
-end
-
 class CreneauEmploiDuTempsRegroupement < Sequel::Model( :creneaux_emploi_du_temps_regroupements )
   unrestrict_primary_key
   include SemainesDePresenceMixin
@@ -32,7 +25,6 @@ end
 
 class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
   one_to_many :regroupements, class: :CreneauEmploiDuTempsRegroupement, table: :creneaux_emploi_du_temps_regroupements
-  one_to_many :enseignants, class: :CreneauEmploiDuTempsEnseignant, table: :creneaux_emploi_du_temps_enseignants
   many_to_many :salles, class: :Salle, join_table: :creneaux_emploi_du_temps_salles
 
   one_to_many :cours, class: :Cours
@@ -52,7 +44,6 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
   def to_deep_hash( debut, fin, expand )
     h = to_hash
     h[:regroupements] = regroupements
-    h[:enseignants] = enseignants
     h[:salles] = salles
     h[:vierge] = cours.count.zero? && devoirs.count.zero?
     if expand
@@ -69,14 +60,10 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
       .where( Sequel.~( creneaux_emploi_du_temps__id: id ) )
       .association_join( :regroupements )
       .select_append( :regroupements__semaines_de_presence___semainier_regroupement )
-      .association_join( :enseignants )
-      .select_append( :enseignants__semaines_de_presence___semainier_enseignant )
       .where( matiere_id: matiere_id )
       .where( jour_de_la_semaine: jour_de_la_semaine )
       .where( regroupements__regroupement_id: regroupements.map( &:regroupement_id ) )
-      .where( enseignants__enseignant_id: enseignants.map( &:enseignant_id ) )
       .where( regroupements__semaines_de_presence: regroupements.map( &:semaines_de_presence ) )
-      .where( enseignants__semaines_de_presence: enseignants.map( &:semaines_de_presence ) )
       .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" )
       .where( deleted: false )
   end
@@ -128,8 +115,6 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
     # .where { date_creation >= 1.year.ago }
     # .where { !deleted || date_suppression >= fin }
     CreneauEmploiDuTemps
-      .association_join( :enseignants )
-      .where( enseignant_id: user[:uid] )
       .where( matiere_id: matiere_id )
       .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" )
       .where( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{fin}')" )
@@ -175,11 +160,6 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
       .compact
   end
 
-  def update_semaines_de_presence_enseignant( enseignant_id, semaines_de_presence_enseignant )
-    CreneauEmploiDuTempsEnseignant.where( enseignant_id: enseignant_id, creneau_emploi_du_temps_id: id )
-                                  .update( semaines_de_presence: semaines_de_presence_enseignant )
-  end
-
   def update_semaines_de_presence_regroupement( regroupement_id, semaines_de_presence_regroupement )
     CreneauEmploiDuTempsRegroupement.where( creneau_emploi_du_temps_id: id, regroupement_id: regroupement_id)
                                     .update( semaines_de_presence: semaines_de_presence_regroupement )
@@ -220,13 +200,6 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
 
     save
 
-    if params.key?( :enseignant_id ) && enseignants.count { |e| e[:enseignant_id] == params[:enseignant_id] }.zero?
-      CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
-      add_enseignant( enseignant_id: params[:enseignant_id] )
-      CreneauEmploiDuTempsEnseignant.restrict_primary_key
-    end
-    update_semaines_de_presence_enseignant( params[:enseignant_id], params[:semaines_de_presence_enseignant] ) if params.key?( :semaines_de_presence_enseignant )
-
     update_regroupement( params[:regroupement_id], params[:previous_regroupement_id], params[:semaines_de_presence_regroupement] ) if params.key?( :regroupement_id ) && !params[:regroupement_id].nil? && params[:regroupement_id] != -1
     update_semaines_de_presence_regroupement( params[:regroupement_id], params[:semaines_de_presence_regroupement] ) if params.key?( :semaines_de_presence_regroupement )
 
@@ -243,7 +216,6 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
     remove_all_cours
     remove_all_devoirs
     regroupements.map( &:destroy )
-    enseignants.map( &:destroy )
     remove_all_salles
 
     destroy

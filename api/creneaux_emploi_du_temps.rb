@@ -48,9 +48,7 @@ module CahierDeTextesApp
 
       optional :regroupement_id, type: String
       optional :salle_id, type: Integer
-      optional :enseignant_id, type: String
       optional :semaines_de_presence_regroupement, type: Integer
-      optional :semaines_de_presence_enseignant, type: Integer
       optional :semaines_de_presence_salle, type: Integer
     end
     post  do
@@ -64,8 +62,6 @@ module CahierDeTextesApp
                                              jour_de_la_semaine: params[:jour_de_la_semaine] - 1,
                                              matiere_id: params[:matiere_id],
                                              etablissement_id: etablissement_id )
-
-      params[:enseignant_id] = user[:uid] unless params.key? :enseignant_id
 
       creneau.modifie( params )
 
@@ -82,8 +78,6 @@ module CahierDeTextesApp
         requires :matiere_id, type: String
         requires :regroupement_id, type: Integer
         requires :semaines_de_presence_regroupement, type: Integer
-        requires :enseignant_id, type: String
-        requires :semaines_de_presence_enseignant, type: Integer
 
         optional :salle_id, type: Integer
         optional :semaines_de_presence_salle, type: Integer
@@ -116,9 +110,7 @@ module CahierDeTextesApp
       optional :heure_debut, type: Time
       optional :heure_fin, type: Time
       optional :salle_id, type: Integer
-      optional :enseignant_id, type: String
       optional :semaines_de_presence_regroupement, type: Integer
-      optional :semaines_de_presence_enseignant, type: Integer
       optional :semaines_de_presence_salle, type: Integer
       optional :jour_de_la_semaine, type: Integer
     end

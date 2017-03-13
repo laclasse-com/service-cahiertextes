@@ -4,6 +4,5 @@ require_relative '../models/models'
 
 require_relative './data_management/accessors'
 require_relative './data_management/cleansing'
-require_relative './data_management/user'
 require_relative './data_management/emploi_du_temps'
 require_relative './data_management/provisioning'

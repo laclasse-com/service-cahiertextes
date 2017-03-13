@@ -165,24 +165,6 @@
                             </div>
                         </div>
 
-                        <!-- par enseignants -->
-                        <div class="col-md-3">
-                            <div class="ui-select-wrapper">
-                                <ui-select multiple class="pull-left" theme="bootstrap"
-                                           append-to-body="true"
-                                           ng:model="scope.selected.enseignants">
-                                    <ui-select-match placeholder="Enseignant(s)...">{{$item.displayed_label}}</ui-select-match>
-                                    <ui-select-choices repeat="enseignant in pronote.Professeurs[0].Professeur | orderBy:['Nom']">
-                                        {{enseignant.displayed_label}}
-                                    </ui-select-choices>
-                                </ui-select>
-                                <button class="btn btn-xs btn-primary"
-                                        ng:click="scope.selected.enseignants = pronote.Professeurs[0].Professeur"><span class="glyphicon glyphicon-certificate"></span></button>
-                                <button class="btn btn-xs btn-default"
-                                        ng:click="scope.selected.enseignants = []"><span class="glyphicon glyphicon-erase"></span></button>
-                            </div>
-                        </div>
-
                         <!-- par matières -->
                         <div class="col-md-3">
                             <div class="ui-select-wrapper">
