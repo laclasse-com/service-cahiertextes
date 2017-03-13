@@ -2,6 +2,8 @@
 
 Sequel.migration do
   change do
+    DB[:failed_identifications].delete
+
     rename_table :failed_identifications, :matchables
 
     alter_table(:matchables) do
