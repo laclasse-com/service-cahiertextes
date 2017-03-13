@@ -28,10 +28,6 @@ describe CahierDeTextes do
                                           date_creation: Time.now,
                                           date_suppression: nil )
 
-      CreneauEmploiDuTempsEnseignant.unrestrict_primary_key
-      cedt.add_enseignant( enseignant_id: "enseignant_#{i + 1}" )
-      CreneauEmploiDuTempsEnseignant.restrict_primary_key
-
       CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
       cedt.add_regroupement( regroupement_id: i + 1 )
       CreneauEmploiDuTempsRegroupement.restrict_primary_key
