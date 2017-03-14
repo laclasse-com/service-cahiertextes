@@ -117,9 +117,10 @@
                     <td>
                         <span switch
                               class="violet"
+                              disabled="current_user.profil_actif.profil_id !== 'DIR' || saisie.recent"
                               ng:disabled="current_user.profil_actif.profil_id !== 'DIR' || saisie.recent"
                               ng:model="saisie.valide"
-                              ng:change="valide( saisie )" >
+                              ng:change="current_user.profil_actif.profil_id === 'DIR' && !saisie.recent && valide( saisie )" >
                         </span>
                     </td>
                 </tr>
