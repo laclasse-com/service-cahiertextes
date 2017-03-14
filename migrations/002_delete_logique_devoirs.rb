@@ -5,3 +5,4 @@ Sequel.migration do
     add_column :devoirs, :deleted, TrueClass, default: false
   end
 end
+puts 'applying 002_delete_logique_devoirs.rb'

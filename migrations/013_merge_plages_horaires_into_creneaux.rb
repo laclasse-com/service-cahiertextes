@@ -25,3 +25,4 @@ Sequel.migration do
     drop_table( :plages_horaires )
   end
 end
+puts 'applying 013_merge_plages_horaires_into_creneaux.rb'

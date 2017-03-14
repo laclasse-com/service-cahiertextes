@@ -7,3 +7,4 @@ Sequel.migration do
     end
   end
 end
+puts 'applying 012_add_comment_to_imports.rb'

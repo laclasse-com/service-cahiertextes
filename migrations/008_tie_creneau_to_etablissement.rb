@@ -19,3 +19,4 @@ Sequel.migration do
     end
   end
 end
+puts 'applying 008_tie_creneau_to_etablissement.rb'

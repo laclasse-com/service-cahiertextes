@@ -9,3 +9,4 @@ Sequel.migration do
     end
   end
 end
+puts 'applying 017_rename_semaines_de_presence_into_semainier.rb'

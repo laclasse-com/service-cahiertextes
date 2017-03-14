@@ -48,3 +48,4 @@ Sequel.migration do
     end
   end
 end
+puts 'applying 006_add_indexes.rb'

@@ -12,3 +12,4 @@ Sequel.migration do
     end
   end
 end
+puts 'applying 005_add_user_parameters_table.rb'

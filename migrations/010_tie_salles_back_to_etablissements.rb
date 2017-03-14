@@ -13,3 +13,4 @@ Sequel.migration do
     end
   end
 end
+puts 'applying 010_tie_salles_back_to_etablissements.rb'

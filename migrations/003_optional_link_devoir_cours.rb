@@ -7,3 +7,4 @@ Sequel.migration do
     end
   end
 end
+puts 'applying 003_optional_link_devoir_cours.rb'

@@ -25,3 +25,4 @@ Sequel.migration do
     drop_table!( :imports )
   end
 end
+puts 'applying 009_add_table_import.rb'

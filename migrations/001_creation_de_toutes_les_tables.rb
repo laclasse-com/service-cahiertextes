@@ -137,3 +137,4 @@ Sequel.migration do
     end
   end
 end
+puts 'applying 001_creation_de_toutes_les_tables.rb'

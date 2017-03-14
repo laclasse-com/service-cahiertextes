@@ -18,3 +18,4 @@ Sequel.migration do
     end
   end
 end
+puts 'applying 015_add_enseignant_id_to_devoirs.rb'

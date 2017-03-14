@@ -11,3 +11,4 @@ Sequel.migration do
     end
   end
 end
+puts 'applying 004_add_import_correction_table.rb'

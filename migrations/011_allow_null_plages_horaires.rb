@@ -15,3 +15,4 @@ Sequel.migration do
     end
   end
 end
+puts 'applying 011_allow_null_plages_horaires.rb'

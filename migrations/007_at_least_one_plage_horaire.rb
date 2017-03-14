@@ -10,3 +10,4 @@ Sequel.migration do
                                      Time.parse( '1:00' ) ] )
   end
 end
+puts 'applying 007_at_least_one_plage_horaire.rb'
