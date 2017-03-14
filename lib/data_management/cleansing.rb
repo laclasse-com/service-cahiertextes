@@ -11,8 +11,9 @@ module DataManagement
       def unfinished
         CreneauEmploiDuTemps
           .where( matiere_id: '' )
+          .where( regroupement_id: nil )
           .all
-          .select { |c| c.regroupements.empty? && c.date_creation < 1.week.ago }
+          .select { |c| c.date_creation < 1.week.ago }
           .each do |c|
           c.enseignants.each(&:destroy)
           c.destroy
@@ -20,14 +21,12 @@ module DataManagement
       end
 
       def deleted_and_unused
-        creneaux = CreneauEmploiDuTemps
-                   .where( deleted: true )
-                   .all
-                   .select { |c| c.cours.empty? && c.devoirs.empty? }
+        creneaux = CreneauEmploiDuTemps.where( deleted: true )
+                                       .all
+                                       .select { |c| c.cours.empty? && c.devoirs.empty? }
 
         creneaux.each do |c|
           c.enseignants.each(&:destroy)
-          c.regroupements.each(&:destroy)
           c.salles.each do |salle|
             c.remove_salle( salle )
           end
@@ -38,10 +37,9 @@ module DataManagement
     end
 
     def orphan_ressources
-      Ressource
-        .all
-        .select { |r| r.cours.empty? && r.devoirs.empty? }
-        .each(&:destroy)
+      Ressource.all
+               .select { |r| r.cours.empty? && r.devoirs.empty? }
+               .each(&:destroy)
     end
   end
 end

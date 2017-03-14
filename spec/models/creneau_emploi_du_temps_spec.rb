@@ -16,7 +16,6 @@ describe CreneauEmploiDuTemps do
                            identifiant: 'test' )
   end
   after :each do
-    @creneau.regroupements.map( &:destroy )
     @creneau.remove_all_salles
     @creneau.destroy
     @salle.destroy
@@ -25,7 +24,7 @@ describe CreneauEmploiDuTemps do
 
   it 'creates a placeholder creneau' do
     expect( @creneau ).to_not be_nil
-    expect( @creneau.regroupements ).to be_empty
+    expect( @creneau.regroupement_id ).to eq 0
     expect( @creneau.salles ).to be_empty
     expect( @creneau.cours ).to be_empty
     expect( @creneau.devoirs ).to be_empty
@@ -81,27 +80,18 @@ describe CreneauEmploiDuTemps do
 
   it 'def modifie( params ) # add regroupement' do
     @creneau.modifie( regroupement_id: 999_999 )
-    expect( @creneau.regroupements.count ).to eq 1
-    expect( CreneauEmploiDuTempsRegroupement[ creneau_emploi_du_temps_id: @creneau.id,
-                                              regroupement_id: 999_999 ] ).to_not be nil
-    expect( CreneauEmploiDuTempsRegroupement[ creneau_emploi_du_temps_id: @creneau.id,
-                                              regroupement_id: 999_999 ].semainier ).to eq 2**52 - 1
+    expect( @creneau.regroupement_id ).to eq 999_999
+    expect( @creneau.semainier ).to eq 2**52 - 1
   end
 
   it 'def modifie( params ) # change regroupement' do
     @creneau.modifie( regroupement_id: 999_999 )
-    expect( @creneau.regroupements.count ).to eq 1
-    expect( CreneauEmploiDuTempsRegroupement[ creneau_emploi_du_temps_id: @creneau.id,
-                                              regroupement_id: 999_999 ] ).to_not be nil
-    expect( CreneauEmploiDuTempsRegroupement[ creneau_emploi_du_temps_id: @creneau.id,
-                                              regroupement_id: 999_999 ].semainier ).to eq 2**52 - 1
+    expect( @creneau.regroupement_id ).to eq 999_999
+
     @creneau.modifie( regroupement_id: 999_999,
                       semainier_regroupement: 123)
-    expect( @creneau.regroupements.count ).to eq 1
-    expect( CreneauEmploiDuTempsRegroupement[ creneau_emploi_du_temps_id: @creneau.id,
-                                              regroupement_id: 999_999 ] ).to_not be nil
-    expect( CreneauEmploiDuTempsRegroupement[ creneau_emploi_du_temps_id: @creneau.id,
-                                              regroupement_id: 999_999 ].semainier ).to eq 123
+    expect( @creneau.regroupement_id ).to eq 999_999
+    expect( @creneau.semainier ).to eq 123
   end
 
   it 'def modifie( params ) # add salle' do

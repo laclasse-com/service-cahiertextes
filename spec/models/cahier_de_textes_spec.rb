@@ -24,13 +24,10 @@ describe CahierDeTextes do
                                           jour_de_la_semaine: i + 1,
                                           etablissement_id: etab.id,
                                           matiere_id: '001122',
+                                          regroupement_id: i + 1,
                                           deleted: false,
                                           date_creation: Time.now,
                                           date_suppression: nil )
-
-      CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
-      cedt.add_regroupement( regroupement_id: i + 1 )
-      CreneauEmploiDuTempsRegroupement.restrict_primary_key
 
       next unless (i + 1).even?
 

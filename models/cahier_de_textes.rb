@@ -33,8 +33,7 @@ class CahierDeTextes < Sequel::Model( :cahiers_de_textes )
   end
 
   def creneaux_emploi_du_temps
-    CreneauEmploiDuTemps.association_join( :regroupements )
-                        .where( regroupement_id: regroupement_id )
+    CreneauEmploiDuTemps.where( regroupement_id: regroupement_id )
                         .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" )
                         .all
   end

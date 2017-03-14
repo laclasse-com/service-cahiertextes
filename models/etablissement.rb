@@ -40,7 +40,6 @@ class Etablissement < Sequel::Model( :etablissements )
   end
 
   def saisies_enseignant( enseignant_id )
-    # .where { date_creation >= Utils.date_rentree }
     { enseignant_id: enseignant_id,
       saisies: Cours.where( enseignant_id: enseignant_id )
                     .where( deleted: false )
@@ -50,7 +49,7 @@ class Etablissement < Sequel::Model( :etablissements )
         creneau = CreneauEmploiDuTemps[ cours.creneau_emploi_du_temps_id ]
 
         { mois: cours.date_cours.month,
-          regroupement_id: creneau.regroupements.first.regroupement_id,
+          regroupement_id: creneau.regroupement_id,
           matiere_id: creneau.matiere_id,
           cours: cours,
           devoirs: devoirs,

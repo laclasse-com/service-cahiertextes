@@ -16,15 +16,7 @@ class CreneauEmploiDuTempsSalle < Sequel::Model( :creneaux_emploi_du_temps_salle
   many_to_one :salle
 end
 
-class CreneauEmploiDuTempsRegroupement < Sequel::Model( :creneaux_emploi_du_temps_regroupements )
-  unrestrict_primary_key
-  include SemainierMixin
-
-  many_to_one :creneau_emploi_du_temps
-end
-
 class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
-  one_to_many :regroupements, class: :CreneauEmploiDuTempsRegroupement, table: :creneaux_emploi_du_temps_regroupements
   many_to_many :salles, class: :Salle, join_table: :creneaux_emploi_du_temps_salles
 
   one_to_many :cours, class: :Cours
@@ -43,7 +35,6 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
 
   def to_deep_hash( debut, fin, expand )
     h = to_hash
-    h[:regroupements] = regroupements
     h[:salles] = salles
     h[:vierge] = cours.count.zero? && devoirs.count.zero?
     if expand
@@ -58,12 +49,10 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
     CreneauEmploiDuTemps
       .select_append( :creneaux_emploi_du_temps__id___id )
       .where( Sequel.~( creneaux_emploi_du_temps__id: id ) )
-      .association_join( :regroupements )
-      .select_append( :regroupements__semainier___semainier_regroupement )
       .where( matiere_id: matiere_id )
       .where( jour_de_la_semaine: jour_de_la_semaine )
-      .where( regroupements__regroupement_id: regroupements.map( &:regroupement_id ) )
-      .where( regroupements__semainier: regroupements.map( &:semainier ) )
+      .where( regroupement_id: regroupement_id )
+      .where( semainier: semainier )
       .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" )
       .where( deleted: false )
   end
@@ -121,57 +110,23 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
       ( date_debut .. date_fin )
         .reject { |day| day.wday != c.jour_de_la_semaine }
         .map do |jour|
-        c.regroupements.map do |regroupement|
-          next unless regroupement.semainier[ jour.cweek ] == 1
-          { id: c.id,
-            creneau_emploi_du_temps_id: c.id,
-            start: Time.new( jour.year,
-                             jour.month,
-                             jour.mday,
-                             c.debut.hour,
-                             c.debut.min ).iso8601,
-            end: Time.new( jour.year,
-                           jour.month,
-                           jour.mday,
-                           c.fin.hour,
-                           c.fin.min ).iso8601,
-            heure_debut: Time.new( jour.year,
-                                   jour.month,
-                                   jour.mday,
-                                   c.debut.hour,
-                                   c.debut.min ).iso8601,
-            heure_fin: Time.new( jour.year,
-                                 jour.month,
-                                 jour.mday,
-                                 c.fin.hour,
-                                 c.fin.min ).iso8601,
-            has_cours: c.cours.count { |cours| cours.date_cours == jour } > 0,
-            jour_de_la_semaine: c.jour_de_la_semaine,
-            matiere_id: c.matiere_id,
-            regroupement_id: regroupement.regroupement_id,
-            semainier: regroupement.semainier,
-            vierge: cours.count.zero? && devoirs.count.zero? }
-        end
+        next unless c.semainier[ jour.cweek ] == 1
+        { id: c.id,
+          creneau_emploi_du_temps_id: c.id,
+          start: Time.new( jour.year, jour.month, jour.mday, c.debut.hour, c.debut.min ).iso8601,
+          end: Time.new( jour.year, jour.month, jour.mday, c.fin.hour, c.fin.min ).iso8601,
+          heure_debut: Time.new( jour.year, jour.month, jour.mday, c.debut.hour, c.debut.min ).iso8601,
+          heure_fin: Time.new( jour.year, jour.month, jour.mday, c.fin.hour, c.fin.min ).iso8601,
+          has_cours: c.cours.count { |cours| cours.date_cours == jour } > 0,
+          jour_de_la_semaine: c.jour_de_la_semaine,
+          matiere_id: c.matiere_id,
+          regroupement_id: c.regroupement_id,
+          semainier: c.semainier,
+          vierge: cours.count.zero? && devoirs.count.zero? }
       end
-    end
+      end
       .flatten
       .compact
-  end
-
-  def update_semainier_regroupement( regroupement_id, semainier_regroupement )
-    CreneauEmploiDuTempsRegroupement.where( creneau_emploi_du_temps_id: id, regroupement_id: regroupement_id)
-                                    .update( semainier: semainier_regroupement )
-  end
-
-  def update_regroupement( regroupement_id, previous_regroupement_id, semainier_regroupement )
-    return unless CreneauEmploiDuTempsRegroupement.where( creneau_emploi_du_temps_id: id, regroupement_id: regroupement_id ).count < 1
-
-    CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
-    cr = add_regroupement( regroupement_id: regroupement_id )
-    cr.update( semainier: semainier_regroupement ) unless semainier_regroupement.nil?
-    CreneauEmploiDuTempsRegroupement.restrict_primary_key
-
-    CreneauEmploiDuTempsRegroupement.where( creneau_emploi_du_temps_id: id, regroupement_id: previous_regroupement_id ).destroy
   end
 
   def update_salle( salle_id, semainier_salle )
@@ -198,8 +153,8 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
 
     save
 
-    update_regroupement( params[:regroupement_id], params[:previous_regroupement_id], params[:semainier_regroupement] ) if params.key?( :regroupement_id ) && !params[:regroupement_id].nil? && params[:regroupement_id] != -1
-    update_semainier_regroupement( params[:regroupement_id], params[:semainier_regroupement] ) if params.key?( :semainier_regroupement )
+    update( regroupement_id: params[:regroupement_id] ) if params.key?( :regroupement_id )
+    update( semainier: params[:semainier_regroupement] ) if params.key?( :semainier_regroupement )
 
     update_salle( params[:salle_id], params[:semainier_salle] ) if params.key?( :salle_id )
   rescue StandardError => e
@@ -213,7 +168,6 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
   def deep_destroy
     remove_all_cours
     remove_all_devoirs
-    regroupements.map( &:destroy )
     remove_all_salles
 
     destroy

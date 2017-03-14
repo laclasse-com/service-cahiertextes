@@ -169,7 +169,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                },
                                { label: 'Réinitialiser',
                                  apply: function() {
-                                     $scope.semaines_actives.regroupement = $scope.creneau.en_creation ? semaines_toutes_actives() : fixnum_to_bitfield( _(creneau.regroupements).findWhere( { regroupement_id: creneau.regroupement_id } ).semainier );
+                                     $scope.semaines_actives.regroupement = $scope.creneau.en_creation ? semaines_toutes_actives() : fixnum_to_bitfield( creneau.semainier );
                                  }
                                }
                            ];
@@ -193,18 +193,18 @@ angular.module( 'cahierDeTextesClientApp' )
                                };
 
                                if ( $scope.dirty ) {
-                                       swal( { title: 'Ceci supprimera le créneau à compter du ' + $filter( 'amDateFormat' )( creneau.heure_debut, 'dddd D MMMM YYYY' ),
-                                               text: 'Le créneau avec ses séquences pédagogiques et devoirs associés restera visible pour les dates antérieures.',
-                                               type: 'warning',
-                                               showCancelButton: true,
-                                               confirmButtonColor: '#ff6b55',
-                                               confirmButtonText: 'Confirmer',
-                                               cancelButtonText: 'Annuler'
-                                             } ).then( do_it,
-                                                       do_nothing );
-                                   } else {
-                                       do_it();
-                                   }
+                                   swal( { title: 'Ceci supprimera le créneau à compter du ' + $filter( 'amDateFormat' )( creneau.heure_debut, 'dddd D MMMM YYYY' ),
+                                           text: 'Le créneau avec ses séquences pédagogiques et devoirs associés restera visible pour les dates antérieures.',
+                                           type: 'warning',
+                                           showCancelButton: true,
+                                           confirmButtonColor: '#ff6b55',
+                                           confirmButtonText: 'Confirmer',
+                                           cancelButtonText: 'Annuler'
+                                         } ).then( do_it,
+                                                   do_nothing );
+                               } else {
+                                   do_it();
+                               }
                            };
 
                            $scope.annuler = function () {

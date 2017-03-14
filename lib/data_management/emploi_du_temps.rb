@@ -6,16 +6,14 @@ module DataManagement
 
     def get( debut, fin, regroupements_ids, eleve_id )
       # Nota Bene: semainiers callés sur l'année civile
-      CreneauEmploiDuTemps.association_join( :regroupements )
-                          .select_append( :regroupements__semainier___semainier_regroupement )
+      CreneauEmploiDuTemps.where( regroupement_id: regroupements_ids )
                           .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" )
                           .where( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{fin}')" )
-                          .where( regroupement_id: regroupements_ids )
                           .all
                           .map do |creneau|
-        ( debut .. fin ).select { |day| day.wday == creneau.jour_de_la_semaine && creneau[:semainier_regroupement][ day.cweek ] == 1 }
+        ( debut .. fin ).select { |day| day.wday == creneau.jour_de_la_semaine && creneau.semainier[ day.cweek ] == 1 }
                         .map do |day|
-          { regroupement_id: creneau[ :regroupement_id ],
+          { regroupement_id: creneau.regroupement_id,
             creneau_emploi_du_temps_id: creneau.id,
             matiere_id: creneau.matiere_id,
             start: Time.new( day.year, day.month, day.mday, creneau.debut.hour, creneau.debut.min ).iso8601,
