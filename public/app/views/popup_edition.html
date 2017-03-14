@@ -5,7 +5,7 @@
     <span ng:if="!mode_edition_creneau">
         <h3>{{creneau.heure_debut | amDateFormat : 'dddd D MMMM YYYY' }}, semaine {{creneau.n_week}}</h3>
         <h4>
-            {{selected_regroupement.libelle}} - {{selected_matiere.libelle_long}} ({{creneau.heure_debut | amDateFormat: 'HH:mm'}} - {{creneau.heure_fin | amDateFormat: 'HH:mm'}})
+            {{selected_regroupement.libelle}} - {{selected_matiere.libelle_long}} ({{creneau.heure_debut | amDateFormat: 'HH:mm'}} - {{creneau.heure_fin | amDateFormat: 'HH:mm'}}<span ng:if="creneau.salles.length > 0">, salle {{creneau.salles[0].nom}}</span>)
         </h4>
     </span>
     <!-- }}} -->
