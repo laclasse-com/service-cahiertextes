@@ -25,6 +25,8 @@ angular.module( 'cahierDeTextesClientApp' )
                        // http://stackoverflow.com/questions/19408883/angularjs-select-not-2-way-binding-to-model
                        $scope.scope = $scope;
 
+                       var do_nothing = function() {};
+
                        User.get_user().then( function( response ) {
                            $scope.current_user = response.data;
 
@@ -189,19 +191,20 @@ angular.module( 'cahierDeTextesClientApp' )
                                            $scope.fermer();
                                        } );
                                };
+
                                if ( $scope.dirty ) {
-                                   swal( { title: 'Ceci supprimera le créneau à compter du ' + $filter( 'amDateFormat' )( creneau.heure_debut, 'dddd D MMMM YYYY' ),
-                                           text: 'Le créneau avec ses séquences pédagogiques et devoirs associés restera visible pour les dates antérieures.',
-                                           type: 'warning',
-                                           showCancelButton: true,
-                                           confirmButtonColor: '#ff6b55',
-                                           confirmButtonText: 'Confirmer',
-                                           cancelButtonText: 'Annuler'
-                                         },
-                                         do_it );
-                               } else {
-                                   do_it();
-                               }
+                                       swal( { title: 'Ceci supprimera le créneau à compter du ' + $filter( 'amDateFormat' )( creneau.heure_debut, 'dddd D MMMM YYYY' ),
+                                               text: 'Le créneau avec ses séquences pédagogiques et devoirs associés restera visible pour les dates antérieures.',
+                                               type: 'warning',
+                                               showCancelButton: true,
+                                               confirmButtonColor: '#ff6b55',
+                                               confirmButtonText: 'Confirmer',
+                                               cancelButtonText: 'Annuler'
+                                             } ).then( do_it,
+                                                       do_nothing );
+                                   } else {
+                                       do_it();
+                                   }
                            };
 
                            $scope.annuler = function () {
@@ -224,8 +227,8 @@ angular.module( 'cahierDeTextesClientApp' )
                                            confirmButtonColor: '#ff6b55',
                                            confirmButtonText: 'Confirmer',
                                            cancelButtonText: 'Annuler'
-                                         },
-                                         do_it);
+                                         } ).then( do_it,
+                                                   do_nothing );
                                } else {
                                    do_it();
                                }
