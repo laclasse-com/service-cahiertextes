@@ -4,17 +4,15 @@ module DataManagement
   module EmploiDuTemps
     module_function
 
-    def get( debut, fin, regroupements_ids, profil_type, eleve_id )
+    def get( debut, fin, regroupements_ids, eleve_id )
       # Nota Bene: semainiers callés sur l'année civile
-      # .where { date_creation >= 1.year.ago }
-      # .where { !creneaux_emploi_du_temps__deleted || creneaux_emploi_du_temps__date_suppression >= fin }
-      emploi_du_temps = CreneauEmploiDuTemps.association_join( :regroupements )
-                                            .select_append( :regroupements__semaines_de_presence___semainier_regroupement )
-                                            .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" )
-                                            .where( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{fin}')" )
-                                            .where( regroupement_id: regroupements_ids )
-                                            .all
-                                            .map do |creneau|
+      CreneauEmploiDuTemps.association_join( :regroupements )
+                          .select_append( :regroupements__semaines_de_presence___semainier_regroupement )
+                          .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" )
+                          .where( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{fin}')" )
+                          .where( regroupement_id: regroupements_ids )
+                          .all
+                          .map do |creneau|
         ( debut .. fin ).select { |day| day.wday == creneau.jour_de_la_semaine && creneau[:semainier_regroupement][ day.cweek ] == 1 }
                         .map do |day|
           { regroupement_id: creneau[ :regroupement_id ],
@@ -44,10 +42,8 @@ module DataManagement
             end }
         end
       end
-                                            .flatten
-                                            .compact
-
-      emploi_du_temps
+                          .flatten
+                          .compact
     end
 
     # def ical( debut, fin, regroupements_ids, profil_type, eleve_id )

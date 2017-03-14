@@ -35,7 +35,7 @@ module CahierDeTextesApp
 
       error!( 'Créneau inconnu', 404 ) if creneau.nil?
 
-      creneau.similaires( params[:debut], params[:fin], user )
+      creneau.similaires( params[:debut], params[:fin] )
     end
 
     #--------------------------------------------------------------------

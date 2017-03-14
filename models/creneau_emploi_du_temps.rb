@@ -111,9 +111,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
     end
   end
 
-  def similaires( date_debut, date_fin, user )
-    # .where { date_creation >= 1.year.ago }
-    # .where { !deleted || date_suppression >= fin }
+  def similaires( date_debut, date_fin )
     CreneauEmploiDuTemps
       .where( matiere_id: matiere_id )
       .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" )
