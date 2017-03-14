@@ -32,7 +32,7 @@ IrresponsibleModule:
   - Cours
   - CoursRessource
   - CreneauEmploiDuTemps
-  - SemainesDePresenceMixin
+  - SemainierMixin
   - Devoir
   - DevoirRessource
   - Etablissement

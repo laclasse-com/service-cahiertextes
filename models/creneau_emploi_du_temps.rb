@@ -124,7 +124,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
           semainier: c.semainier,
           vierge: cours.count.zero? && devoirs.count.zero? }
       end
-      end
+    end
       .flatten
       .compact
   end
