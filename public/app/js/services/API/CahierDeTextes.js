@@ -73,7 +73,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                        heure_fin: '@heure_fin',
                                        matiere_id: '@matiere_id',
                                        semaines_de_presence_regroupement: '@semaines_de_presence_regroupement',
-                                       semaines_de_presence_enseignant: '@semaines_de_presence_enseignant',
                                        semaines_de_presence_salle: '@semaines_de_presence_salle' },
                                      { update: { method: 'PUT' },
                                        delete: { method: 'DELETE',
