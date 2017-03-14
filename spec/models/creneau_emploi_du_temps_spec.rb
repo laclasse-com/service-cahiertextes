@@ -85,7 +85,7 @@ describe CreneauEmploiDuTemps do
     expect( CreneauEmploiDuTempsRegroupement[ creneau_emploi_du_temps_id: @creneau.id,
                                               regroupement_id: 999_999 ] ).to_not be nil
     expect( CreneauEmploiDuTempsRegroupement[ creneau_emploi_du_temps_id: @creneau.id,
-                                              regroupement_id: 999_999 ].semaines_de_presence ).to eq 2**52 - 1
+                                              regroupement_id: 999_999 ].semainier ).to eq 2**52 - 1
   end
 
   it 'def modifie( params ) # change regroupement' do
@@ -94,14 +94,14 @@ describe CreneauEmploiDuTemps do
     expect( CreneauEmploiDuTempsRegroupement[ creneau_emploi_du_temps_id: @creneau.id,
                                               regroupement_id: 999_999 ] ).to_not be nil
     expect( CreneauEmploiDuTempsRegroupement[ creneau_emploi_du_temps_id: @creneau.id,
-                                              regroupement_id: 999_999 ].semaines_de_presence ).to eq 2**52 - 1
+                                              regroupement_id: 999_999 ].semainier ).to eq 2**52 - 1
     @creneau.modifie( regroupement_id: 999_999,
-                      semaines_de_presence_regroupement: 123)
+                      semainier_regroupement: 123)
     expect( @creneau.regroupements.count ).to eq 1
     expect( CreneauEmploiDuTempsRegroupement[ creneau_emploi_du_temps_id: @creneau.id,
                                               regroupement_id: 999_999 ] ).to_not be nil
     expect( CreneauEmploiDuTempsRegroupement[ creneau_emploi_du_temps_id: @creneau.id,
-                                              regroupement_id: 999_999 ].semaines_de_presence ).to eq 123
+                                              regroupement_id: 999_999 ].semainier ).to eq 123
   end
 
   it 'def modifie( params ) # add salle' do
@@ -110,7 +110,7 @@ describe CreneauEmploiDuTemps do
     expect( CreneauEmploiDuTempsSalle[ creneau_emploi_du_temps_id: @creneau.id,
                                        salle_id: @salle.id ] ).to_not be nil
     expect( CreneauEmploiDuTempsSalle[ creneau_emploi_du_temps_id: @creneau.id,
-                                       salle_id: @salle.id ].semaines_de_presence ).to eq 2**52 - 1
+                                       salle_id: @salle.id ].semainier ).to eq 2**52 - 1
   end
 
   it 'def modifie( params ) # change salle' do
@@ -119,13 +119,13 @@ describe CreneauEmploiDuTemps do
     expect( CreneauEmploiDuTempsSalle[ creneau_emploi_du_temps_id: @creneau.id,
                                        salle_id: @salle.id ] ).to_not be nil
     expect( CreneauEmploiDuTempsSalle[ creneau_emploi_du_temps_id: @creneau.id,
-                                       salle_id: @salle.id ].semaines_de_presence ).to eq 2**52 - 1
+                                       salle_id: @salle.id ].semainier ).to eq 2**52 - 1
     @creneau.modifie( salle_id: @salle.id,
-                      semaines_de_presence_salle: 123)
+                      semainier_salle: 123)
     expect( @creneau.salles.count ).to eq 1
     expect( CreneauEmploiDuTempsSalle[ creneau_emploi_du_temps_id: @creneau.id,
                                        salle_id: @salle.id ] ).to_not be nil
     expect( CreneauEmploiDuTempsSalle[ creneau_emploi_du_temps_id: @creneau.id,
-                                       salle_id: @salle.id ].semaines_de_presence ).to eq 123
+                                       salle_id: @salle.id ].semainier ).to eq 123
   end
 end

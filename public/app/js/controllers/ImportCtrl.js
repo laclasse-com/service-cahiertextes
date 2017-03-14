@@ -457,15 +457,15 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                           if ( _(creneau).has('Salle') ) {
                                               pre_creneau.salle_id = _($scope.report.salles).find( { identifiant: creneau.Salle.Ident } ).id;
-                                              pre_creneau.semaines_de_presence_salle = parseInt( creneau.Salle.Semaines );
+                                              pre_creneau.semainier_salle = parseInt( creneau.Salle.Semaines );
                                           }
 
                                           if ( _(creneau).has('Classe') ) {
                                               pre_creneau.regroupement_id = $scope.pronote.classes[ creneau.Classe.Ident ].laclasse.id;
-                                              pre_creneau.semaines_de_presence_regroupement = parseInt( creneau.Classe.Semaines );
+                                              pre_creneau.semainier_regroupement = parseInt( creneau.Classe.Semaines );
                                           } else {
                                               pre_creneau.regroupement_id = $scope.pronote.groupes_eleves[ creneau.Groupe.Ident ].laclasse.id;
-                                              pre_creneau.semaines_de_presence_regroupement = parseInt( creneau.Groupe.Semaines );
+                                              pre_creneau.semainier_regroupement = parseInt( creneau.Groupe.Semaines );
                                           }
 
                                           return pre_creneau;

@@ -48,8 +48,8 @@ module CahierDeTextesApp
 
       optional :regroupement_id, type: String
       optional :salle_id, type: Integer
-      optional :semaines_de_presence_regroupement, type: Integer
-      optional :semaines_de_presence_salle, type: Integer
+      optional :semainier_regroupement, type: Integer
+      optional :semainier_salle, type: Integer
     end
     post  do
       user_needs_to_be( %w( ENS DOC ), true )
@@ -77,10 +77,10 @@ module CahierDeTextesApp
         requires :heure_fin, type: Time
         requires :matiere_id, type: String
         requires :regroupement_id, type: Integer
-        requires :semaines_de_presence_regroupement, type: Integer
+        requires :semainier_regroupement, type: Integer
 
         optional :salle_id, type: Integer
-        optional :semaines_de_presence_salle, type: Integer
+        optional :semainier_salle, type: Integer
       end
     end
     post '/bulk' do
@@ -110,8 +110,8 @@ module CahierDeTextesApp
       optional :heure_debut, type: Time
       optional :heure_fin, type: Time
       optional :salle_id, type: Integer
-      optional :semaines_de_presence_regroupement, type: Integer
-      optional :semaines_de_presence_salle, type: Integer
+      optional :semainier_regroupement, type: Integer
+      optional :semainier_salle, type: Integer
       optional :jour_de_la_semaine, type: Integer
     end
     put '/:id'  do

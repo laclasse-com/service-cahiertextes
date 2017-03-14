@@ -158,7 +158,7 @@ DROP TABLE IF EXISTS `creneaux_emploi_du_temps_enseignants`;
 CREATE TABLE `creneaux_emploi_du_temps_enseignants` (
   `creneau_emploi_du_temps_id` int(11) NOT NULL,
   `enseignant_id` varchar(255) NOT NULL,
-  `semaines_de_presence` bigint(20) NOT NULL DEFAULT '9007199254740991',
+  `semainier` bigint(20) NOT NULL DEFAULT '9007199254740991',
   PRIMARY KEY (`creneau_emploi_du_temps_id`,`enseignant_id`),
   CONSTRAINT `creneaux_emploi_du_temps_enseignants_ibfk_1` FOREIGN KEY (`creneau_emploi_du_temps_id`) REFERENCES `creneaux_emploi_du_temps` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -184,7 +184,7 @@ DROP TABLE IF EXISTS `creneaux_emploi_du_temps_regroupements`;
 CREATE TABLE `creneaux_emploi_du_temps_regroupements` (
   `creneau_emploi_du_temps_id` int(11) NOT NULL,
   `regroupement_id` varchar(255) NOT NULL,
-  `semaines_de_presence` bigint(20) NOT NULL DEFAULT '9007199254740991',
+  `semainier` bigint(20) NOT NULL DEFAULT '9007199254740991',
   PRIMARY KEY (`creneau_emploi_du_temps_id`,`regroupement_id`),
   CONSTRAINT `creneaux_emploi_du_temps_regroupements_ibfk_1` FOREIGN KEY (`creneau_emploi_du_temps_id`) REFERENCES `creneaux_emploi_du_temps` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -210,7 +210,7 @@ DROP TABLE IF EXISTS `creneaux_emploi_du_temps_salles`;
 CREATE TABLE `creneaux_emploi_du_temps_salles` (
   `creneau_emploi_du_temps_id` int(11) NOT NULL,
   `salle_id` int(11) NOT NULL,
-  `semaines_de_presence` bigint(20) NOT NULL DEFAULT '9007199254740991',
+  `semainier` bigint(20) NOT NULL DEFAULT '9007199254740991',
   PRIMARY KEY (`creneau_emploi_du_temps_id`,`salle_id`),
   KEY `salle_id` (`salle_id`),
   CONSTRAINT `creneaux_emploi_du_temps_salles_ibfk_1` FOREIGN KEY (`creneau_emploi_du_temps_id`) REFERENCES `creneaux_emploi_du_temps` (`id`),

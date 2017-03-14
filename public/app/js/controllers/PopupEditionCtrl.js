@@ -169,7 +169,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                },
                                { label: 'Réinitialiser',
                                  apply: function() {
-                                     $scope.semaines_actives.regroupement = $scope.creneau.en_creation ? semaines_toutes_actives() : fixnum_to_bitfield( _(creneau.regroupements).findWhere( { regroupement_id: creneau.regroupement_id } ).semaines_de_presence );
+                                     $scope.semaines_actives.regroupement = $scope.creneau.en_creation ? semaines_toutes_actives() : fixnum_to_bitfield( _(creneau.regroupements).findWhere( { regroupement_id: creneau.regroupement_id } ).semainier );
                                  }
                                }
                            ];
@@ -249,7 +249,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                    }
                                    $scope.creneau.heure_debut = $filter('correctTimeZone')( $scope.creneau.tmp_heure_debut );
                                    $scope.creneau.heure_fin = $filter('correctTimeZone')( $scope.creneau.tmp_heure_fin );
-                                   $scope.creneau.semaines_de_presence_regroupement = bitfield_to_fixnum( $scope.semaines_actives.regroupement );
+                                   $scope.creneau.semainier_regroupement = bitfield_to_fixnum( $scope.semaines_actives.regroupement );
 
                                    $scope.creneau.$update();
 

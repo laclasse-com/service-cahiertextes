@@ -9,7 +9,7 @@ class Devoir < Sequel::Model( :devoirs )
 
   def to_deep_hash( user = nil )
     hash = JSON.parse( to_json( include: self.class.associations,
-                                except: [ :regroupement_id, :semaines_de_presence ] ),
+                                except: [ :regroupement_id, :semainier ] ),
                        symbolize_names: true )
 
     hash[:ressources] = ressources.map(&:to_hash)

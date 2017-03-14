@@ -7,7 +7,7 @@ module DataManagement
     def get( debut, fin, regroupements_ids, eleve_id )
       # Nota Bene: semainiers callés sur l'année civile
       CreneauEmploiDuTemps.association_join( :regroupements )
-                          .select_append( :regroupements__semaines_de_presence___semainier_regroupement )
+                          .select_append( :regroupements__semainier___semainier_regroupement )
                           .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" )
                           .where( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{fin}')" )
                           .where( regroupement_id: regroupements_ids )

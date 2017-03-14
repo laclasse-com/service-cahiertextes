@@ -2,15 +2,15 @@
 
 require_relative '../lib/utils/holidays'
 
-module SemainesDePresenceMixin
+module SemainierMixin
   def present_pour_la_semaine?( semaine )
-    semaines_de_presence[ semaine ] == 1
+    semainier[ semaine ] == 1
   end
 end
 
 class CreneauEmploiDuTempsSalle < Sequel::Model( :creneaux_emploi_du_temps_salles )
   unrestrict_primary_key
-  include SemainesDePresenceMixin
+  include SemainierMixin
 
   many_to_one :creneau_emploi_du_temps
   many_to_one :salle
@@ -18,7 +18,7 @@ end
 
 class CreneauEmploiDuTempsRegroupement < Sequel::Model( :creneaux_emploi_du_temps_regroupements )
   unrestrict_primary_key
-  include SemainesDePresenceMixin
+  include SemainierMixin
 
   many_to_one :creneau_emploi_du_temps
 end
@@ -59,11 +59,11 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
       .select_append( :creneaux_emploi_du_temps__id___id )
       .where( Sequel.~( creneaux_emploi_du_temps__id: id ) )
       .association_join( :regroupements )
-      .select_append( :regroupements__semaines_de_presence___semainier_regroupement )
+      .select_append( :regroupements__semainier___semainier_regroupement )
       .where( matiere_id: matiere_id )
       .where( jour_de_la_semaine: jour_de_la_semaine )
       .where( regroupements__regroupement_id: regroupements.map( &:regroupement_id ) )
-      .where( regroupements__semaines_de_presence: regroupements.map( &:semaines_de_presence ) )
+      .where( regroupements__semainier: regroupements.map( &:semainier ) )
       .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" )
       .where( deleted: false )
   end
@@ -122,7 +122,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
         .reject { |day| day.wday != c.jour_de_la_semaine }
         .map do |jour|
         c.regroupements.map do |regroupement|
-          next unless regroupement.semaines_de_presence[ jour.cweek ] == 1
+          next unless regroupement.semainier[ jour.cweek ] == 1
           { id: c.id,
             creneau_emploi_du_temps_id: c.id,
             start: Time.new( jour.year,
@@ -149,7 +149,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
             jour_de_la_semaine: c.jour_de_la_semaine,
             matiere_id: c.matiere_id,
             regroupement_id: regroupement.regroupement_id,
-            semaines_de_presence: regroupement.semaines_de_presence,
+            semainier: regroupement.semainier,
             vierge: cours.count.zero? && devoirs.count.zero? }
         end
       end
@@ -158,23 +158,23 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
       .compact
   end
 
-  def update_semaines_de_presence_regroupement( regroupement_id, semaines_de_presence_regroupement )
+  def update_semainier_regroupement( regroupement_id, semainier_regroupement )
     CreneauEmploiDuTempsRegroupement.where( creneau_emploi_du_temps_id: id, regroupement_id: regroupement_id)
-                                    .update( semaines_de_presence: semaines_de_presence_regroupement )
+                                    .update( semainier: semainier_regroupement )
   end
 
-  def update_regroupement( regroupement_id, previous_regroupement_id, semaines_de_presence_regroupement )
+  def update_regroupement( regroupement_id, previous_regroupement_id, semainier_regroupement )
     return unless CreneauEmploiDuTempsRegroupement.where( creneau_emploi_du_temps_id: id, regroupement_id: regroupement_id ).count < 1
 
     CreneauEmploiDuTempsRegroupement.unrestrict_primary_key
     cr = add_regroupement( regroupement_id: regroupement_id )
-    cr.update( semaines_de_presence: semaines_de_presence_regroupement ) unless semaines_de_presence_regroupement.nil?
+    cr.update( semainier: semainier_regroupement ) unless semainier_regroupement.nil?
     CreneauEmploiDuTempsRegroupement.restrict_primary_key
 
     CreneauEmploiDuTempsRegroupement.where( creneau_emploi_du_temps_id: id, regroupement_id: previous_regroupement_id ).destroy
   end
 
-  def update_salle( salle_id, semaines_de_presence_salle )
+  def update_salle( salle_id, semainier_salle )
     creneau_salle = CreneauEmploiDuTempsSalle[ creneau_emploi_du_temps_id: id, salle_id: salle_id ]
     if creneau_salle.nil?
       salle = Salle[ salle_id ]
@@ -185,7 +185,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
       creneau_salle = CreneauEmploiDuTempsSalle[ creneau_emploi_du_temps_id: id, salle_id: salle_id ]
     end
 
-    creneau_salle.update( semaines_de_presence: semaines_de_presence_salle ) unless semaines_de_presence_salle.nil?
+    creneau_salle.update( semainier: semainier_salle ) unless semainier_salle.nil?
   end
 
   # rubocop:disable Metrics/PerceivedComplexity
@@ -198,10 +198,10 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
 
     save
 
-    update_regroupement( params[:regroupement_id], params[:previous_regroupement_id], params[:semaines_de_presence_regroupement] ) if params.key?( :regroupement_id ) && !params[:regroupement_id].nil? && params[:regroupement_id] != -1
-    update_semaines_de_presence_regroupement( params[:regroupement_id], params[:semaines_de_presence_regroupement] ) if params.key?( :semaines_de_presence_regroupement )
+    update_regroupement( params[:regroupement_id], params[:previous_regroupement_id], params[:semainier_regroupement] ) if params.key?( :regroupement_id ) && !params[:regroupement_id].nil? && params[:regroupement_id] != -1
+    update_semainier_regroupement( params[:regroupement_id], params[:semainier_regroupement] ) if params.key?( :semainier_regroupement )
 
-    update_salle( params[:salle_id], params[:semaines_de_presence_salle] ) if params.key?( :salle_id )
+    update_salle( params[:salle_id], params[:semainier_salle] ) if params.key?( :salle_id )
   rescue StandardError => e
     puts "Can't do that with #{self}"
     puts e.message
