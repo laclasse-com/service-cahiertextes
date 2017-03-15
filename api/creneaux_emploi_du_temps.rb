@@ -46,6 +46,7 @@ module CahierDeTextesApp
       requires :heure_fin, type: Time
       requires :matiere_id, type: String
 
+      optional :import_id, type: Integer
       optional :regroupement_id, type: String
       optional :salle_id, type: Integer
       optional :semainier_regroupement, type: Integer
@@ -79,6 +80,7 @@ module CahierDeTextesApp
         requires :regroupement_id, type: Integer
         requires :semainier_regroupement, type: Integer
 
+        optional :import_id, type: Integer
         optional :salle_id, type: Integer
         optional :semainier_salle, type: Integer
       end
@@ -104,6 +106,7 @@ module CahierDeTextesApp
     params do
       requires :id, type: Integer
 
+      optional :import_id, type: Integer
       optional :matiere_id, type: String
       optional :regroupement_id, type: Integer
       optional :previous_regroupement_id, type: Integer

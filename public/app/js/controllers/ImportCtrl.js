@@ -365,6 +365,8 @@ angular.module( 'cahierDeTextesClientApp' )
                       var import_data = function() {
                           var started_at = moment();
                           var bulk_package_size = 15;
+                          var import_id = null;
+
                           var handle_error = function( response ) {
                               return $q.reject( response );
                           };
@@ -378,7 +380,9 @@ angular.module( 'cahierDeTextesClientApp' )
                           // Log import
                           return $http.post( APP_PATH + '/api/import/log/start', { uai: $scope.pronote.UAI, type: 'client ' + VERSION, comment: '' } )
                               .then(
-                                  function success() {
+                                  function success( response ) {
+                                      import_id = response.data.id;
+
                                       // Create Etablissement
                                       var ct_etablissement = new Etablissements( { uai: $scope.pronote.UAI,
                                                                                    date_premier_jour_premiere_semaine: new Date( $scope.pronote.AnneeScolaire[0].DatePremierJourSemaine1 ),
@@ -450,7 +454,8 @@ angular.module( 'cahierDeTextesClientApp' )
                                       var creneaux_to_import = creneaux_emploi_du_temps.map( function( creneau ) {
                                           var heure_debut = Utils.libelleHeure_to_Moment( $scope.pronote.plages_horaires[ creneau.NumeroPlaceDebut ].LibelleHeureDebut );
 
-                                          var pre_creneau = { jour_de_la_semaine: parseInt( creneau.Jour ),
+                                          var pre_creneau = { import_id: import_id,
+                                                              jour_de_la_semaine: parseInt( creneau.Jour ),
                                                               heure_debut: heure_debut.toISOString(),
                                                               heure_fin: heure_debut.add( parseInt( creneau.NombrePlaces ) * parseInt( $scope.pronote.GrilleHoraire[0].DureePlace ), 'minutes' ).toISOString(),
                                                               matiere_id: $scope.pronote.matieres[ creneau.Matiere.Ident ].laclasse.id };

@@ -23,6 +23,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
   one_to_many :devoirs
 
   many_to_one :etablissement, class: :Etablissement, key: :etablissement_id
+  many_to_one :import, class: :Import, key: :import_id
 
   def toggle_deleted( date_suppression )
     if deleted
@@ -149,6 +150,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
     update( debut: params[:heure_debut] ) if params.key?( :heure_debut )
     update( fin: params[:heure_fin] ) if params.key?( :heure_fin )
     update( matiere_id: params[:matiere_id] ) if params.key?( :matiere_id )
+    update( import_id: params[:import_id] ) if params.key?( :import_id )
     update( jour_de_la_semaine: params[:jour_de_la_semaine] ) if params.key?( :jour_de_la_semaine )
 
     save
