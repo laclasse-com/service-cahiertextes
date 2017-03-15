@@ -134,7 +134,7 @@
                                            append-to-body="true"
                                            ng:model="scope.selected.classes">
                                     <ui-select-match placeholder="Classe(s)...">
-                                        {{$item.Nom}} <i class="glyphicon glyphicon-warning-sign" style="color: red" title="Risque de duplication de créneaux déjà existants" ng:if="$item.existing_creneaux > 0"></i>
+                                        <span class="label label-success">{{$item.Nom}}</span> <i class="glyphicon glyphicon-warning-sign" style="color: red" title="Risque de duplication de créneaux déjà existants" ng:if="$item.existing_creneaux > 0"></i>
                                     </ui-select-match>
                                     <ui-select-choices repeat="classe in pronote.Classes[0].Classe | orderBy:['Nom']">
                                         {{classe.Nom}}<i class="glyphicon glyphicon-warning-sign" style="color: red" title="Risque de duplication de créneaux déjà existants" ng:if="classe.existing_creneaux > 0"></i>
@@ -152,7 +152,7 @@
                                            append-to-body="true"
                                            ng:model="scope.selected.groupes">
                                     <ui-select-match placeholder="Groupe(s) d'élèves...">
-                                        {{$item.Nom}} <i class="glyphicon glyphicon-warning-sign" style="color: red" title="Risque de duplication de créneaux déjà existants" ng:if="$item.existing_creneaux > 0"></i>
+                                        <span class="label label-info">{{$item.Nom}}</span> <i class="glyphicon glyphicon-warning-sign" style="color: red" title="Risque de duplication de créneaux déjà existants" ng:if="$item.existing_creneaux > 0"></i>
                                     </ui-select-match>
                                     <ui-select-choices repeat="groupe in pronote.Groupes[0].Groupe | orderBy:['Nom']">
                                         {{groupe.Nom}}<i class="glyphicon glyphicon-warning-sign" style="color: red" title="Risque de duplication de créneaux déjà existants" ng:if="groupe.existing_creneaux > 0"></i>

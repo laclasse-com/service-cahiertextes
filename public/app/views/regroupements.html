@@ -10,10 +10,16 @@
                        append-to-body="true"
                        ng:change="process_data()"
                        ng:model="scope.selected_regroupements">
-                <ui-select-match placeholder="Regroupement(s)...">{{$item.libelle}}</ui-select-match>
-                <ui-select-choices repeat="classe in classes | orderBy:['type','libelle']"
+                <ui-select-match placeholder="Regroupement(s)...">
+                    <span class="label" ng:class="{'label-success': $item.type === 'groupe', 'label-info': $item.type === 'classe' }">
+                        {{$item.libelle}}
+                    </span>
+                </ui-select-match>
+                <ui-select-choices repeat="regroupement in classes | orderBy:['type','libelle']"
                                    group-by="'type'">
-                    {{classe.libelle}}
+                    <span class="label" ng:class="{'label-success': regroupement.type === 'groupe', 'label-info': regroupement.type === 'classe' }">
+                        {{regroupement.libelle}}
+                    </span>
                 </ui-select-choices>
             </ui-select>
             <button class="btn btn-xs btn-primary"
@@ -61,20 +67,24 @@
 
 <div class="col-md-12" ng:if="!classe">
     <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3"
-         ng:repeat="classe in individualCharts.classes | orderBy:'regroupement.libelle'">
+         ng:repeat="classe in individualCharts.classes | orderBy:['regroupement.type', 'regroupement.libelle']">
         <div class="panel panel-default">
-            <div class="panel-heading"><h3 class="panel-title">{{classe.regroupement.libelle}}</h3></div>
+            <div class="panel-heading"><h3 class="panel-title">
+                <span class="label" ng:class="{'label-success': classe.regroupement.type === 'groupe', 'label-info': classe.regroupement.type === 'classe' }">
+                    {{classe.regroupement.libelle}}
+                </span>
+            </h3></div>
             <div class="panel-body">
                 <nvd3 data="classe.pieChart.data" options="classe.pieChart.options"></nvd3>
                 <ul>
-                    <li class="label label-primary">{{classe.classe.creneaux_emploi_du_temps.vides.length}} créneaux vierges
+                    <li class="label label-primary">{{classe.regroupement.creneaux_emploi_du_temps.vides.length}} créneaux vierges
                         <!-- <button class="btn btn-danger btn-xs"
                              ng:click="delete_creneaux( classe.classe.creneaux_emploi_du_temps.vides )"
                              ng:if="classe.classe.creneaux_emploi_du_temps.vides.length > 0">
                              <i class="glyphicon glyphicon-trash"></i>
                              </button> -->
                     </li>
-                    <li class="label label-success">{{classe.classe.creneaux_emploi_du_temps.pleins.length}} créneaux avec saisies
+                    <li class="label label-success">{{classe.regroupement.creneaux_emploi_du_temps.pleins.length}} créneaux avec saisies
                         <!-- <button class="btn btn-danger btn-xs"
                              ng:click="delete_creneaux( classe.classe.creneaux_emploi_du_temps.pleins )"
                              ng:if="classe.classe.creneaux_emploi_du_temps.pleins.length > 0">

@@ -6,10 +6,16 @@
                            append-to-body="true"
                            ng:change="filter_data()"
                            ng:model="scope.selected_regroupements">
-                    <ui-select-match placeholder="Regroupement(s)...">{{$item.libelle}}</ui-select-match>
+                    <ui-select-match placeholder="Regroupement(s)...">
+                        <span class="label" ng:class="{'label-success': $item.type === 'groupe', 'label-info': $item.type === 'classe' }">
+                            {{$item.libelle}}
+                        </span>
+                    </ui-select-match>
                     <ui-select-choices repeat="regroupement in regroupements | orderBy:['type','libelle']"
                                        group-by="'type'">
-                        {{regroupement.libelle}}
+                        <span class="label" ng:class="{'label-success': regroupement.type === 'groupe', 'label-info': regroupement.type === 'classe' }">
+                            {{regroupement.libelle}}
+                        </span>
                     </ui-select-choices>
                 </ui-select>
                 <button class="btn btn-xs btn-primary"

@@ -6,10 +6,16 @@
                        append-to-body="true"
                        ng:change="refresh_calendar()"
                        ng:model="scope.selected_regroupements">
-                <ui-select-match placeholder="Regroupement(s)...">{{$item.libelle}}</ui-select-match>
+                <ui-select-match placeholder="Regroupement(s)...">
+                    <span class="label" ng:class="{'label-success': $item.type === 'groupe', 'label-info': $item.type === 'classe' }">
+                        {{$item.libelle}}
+                    </span>
+                </ui-select-match>
                 <ui-select-choices repeat="classe in current_user.profil_actif.regroupements | orderBy:['type','libelle']"
                                    group-by="'type'">
-                    {{classe.libelle}}
+                    <span class="label" ng:class="{'label-success': classe.type === 'groupe', 'label-info': classe.type === 'classe' }">
+                        {{classe.libelle}}
+                    </span>
                 </ui-select-choices>
             </ui-select>
             <button class="btn btn-xs btn-primary"
