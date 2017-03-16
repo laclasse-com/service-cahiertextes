@@ -11,7 +11,8 @@ angular.module( 'cahierDeTextesClientApp' )
              [ '$resource', 'URL_ENT',
                function( $resource, URL_ENT ) {
                    return $resource( URL_ENT + '/api/app/users/:user_id',
-                                     { user_id: '@user_id' },
+                                     { user_id: '@user_id',
+                                       expand: true },
                                      { bulk: { method: 'GET',
                                                url: URL_ENT + '/api/app/users/liste/:uids',
                                                params: { uids: '@uids' },
