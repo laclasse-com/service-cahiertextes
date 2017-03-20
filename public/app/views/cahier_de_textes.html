@@ -9,7 +9,11 @@
                            append-to-body="true"
                            ng:model="scope.selected_regroupements"
                            ng:change="update_regroupements_in_url">
-                    <ui-select-match placeholder="Regroupement(s)...">{{$item.libelle}}</ui-select-match>
+                    <ui-select-match placeholder="Regroupement(s)...">
+                        <span class="label" ng:class="{'label-success': $item.type === 'groupe', 'label-info': $item.type === 'classe' }">
+                            {{$item.libelle}}
+                        </span>
+                    </ui-select-match>
                     <ui-select-choices repeat="classe in current_user.profil_actif.regroupements | orderBy:['type','libelle']"
                                        group-by="'type'">
                         {{classe.libelle}}
@@ -31,7 +35,7 @@
                 <label style="line-height: 34px;"><span class="new-SP-or-devoir">Nouvelle séquence pédagogique ou devoir pour le :</span>
                     <select class="pull-right"
                             ng:model="selected_creneau_vide"
-                            ng:options="creneau as ( creneau | formateCreneau ) group by creneau.regroupement.libelle for creneau in creneaux_vides | orderBy:['creneau.regroupement.libelle', 'start'] | filter:selected_regroupement_id" >
+                            ng:options="creneau as ( creneau | formateCreneau ) group by [creneau.regroupement.libelle, creneau.matiere.libelle_long] for creneau in creneaux_vides | orderBy:['creneau.regroupement.libelle', 'start'] | filter:selected_regroupement_id" >
                         <option value="" selected>Sélectionnez un créneau...</option>
                     </select>
                 </label>

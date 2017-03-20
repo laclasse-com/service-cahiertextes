@@ -18,13 +18,15 @@
                     </fieldset>
 
                     <fieldset>
-                        <legend><span class="glyphicon glyphicon-envelope"></span> Classes</legend>
-                        <span class="label label-info pull-left" ng:repeat="classe in enseignant.liste_classes">{{classe.classe_libelle}}</span>
+                        <legend><span class="glyphicon glyphicon-envelope"></span> Classes et Groupes</legend>
+                        <span class="label pull-left"
+                              ng:class="{'label-success': regroupement.type_regroupement_id === 'GRP', 'label-info': regroupement.type_regroupement_id === 'CLS' }"
+                              ng:repeat="regroupement in enseignant.liste_regroupements">{{regroupement.classe_libelle}}</span>
                     </fieldset>
 
                     <fieldset ng:if="enseignant.prof_principal.length > 0">
                         <legend><span class="glyphicon glyphicon-bell"></span> Professeur principal de</legend>
-                        <span class="label label-info pull-left" ng:repeat="classe in enseignant.prof_principal">{{classe}}</span>
+                        <span class="label label-info pull-left" ng:repeat="regroupement in enseignant.prof_principal">{{regroupement}}</span>
                     </fieldset>
                 </div>
             </div>
@@ -44,21 +46,20 @@
     <div class="panel-heading">
         <div class="row">
             <div class="col-md-9">
-                <multiSelect ms-data="scope.classes"
-                             ms-model="scope.selected_regroupements"
-                             order-by="['type_regroupement_id','libelle']"
-                             group-by="'type_regroupement_id'"
-                             on-change="scope.graphiques.populate( raw_data )"></multiSelect>
                 <div class="ui-select-wrapper">
                     <ui-select multiple class="pull-left" theme="bootstrap"
                                append-to-body="true"
-                               ng:if="classes.length > 0 && classes[ classes.length - 1 ].id"
+                               ng:if="regroupements.length > 0 && regroupements[ regroupements.length - 1 ].id"
                                ng:change="graphiques.populate( raw_data )"
                                ng:model="scope.selected_regroupements">
-                        <ui-select-match placeholder="Regroupement(s)...">{{$item.libelle}}</ui-select-match>
-                        <ui-select-choices repeat="classe in classes track by $index | orderBy:['type_regroupement_id','libelle']"
+                        <ui-select-match placeholder="Regroupement(s)...">
+                            <span class="label" ng:class="{'label-success': $item.type_regroupement_id === 'GRP', 'label-info': $item.type_regroupement_id === 'CLS' }">
+                                {{$item.libelle_aaf}}
+                            </span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="regroupement in regroupements track by $index | orderBy:['type_regroupement_id','libelle']"
                                            group-by="'type_regroupement_id'">
-                            {{classe.libelle}}
+                            {{regroupement.libelle_aaf}}
                         </ui-select-choices>
                     </ui-select>
                     <button class="btn btn-xs btn-primary"
@@ -88,7 +89,7 @@
             <thead>
                 <tr>
                     <th style="width:12em;">Date</th>
-                    <th style="width:12em;">Classe</th>
+                    <th style="width:12em;">Classe / Groupe</th>
                     <th style="width:12em;">Matière</th>
                     <th>Cours</th>
                     <th>Travail à faire</th>
@@ -106,7 +107,7 @@
                 <tr ng:repeat="saisie in raw_data | filter:filter_saisie( montre_valides, moisCourant, selected_regroupements ) | orderBy:'cours.date_cours'"
                     ng:class="{'even': $even, 'odd': $odd, 'recent': saisie.recent && current_user.profil_actif.profil_id === 'DIR' }">
                     <td>{{saisie.cours.date_cours | amDateFormat:'Do MMMM YYYY'}}</td>
-                    <td ng:bind="detail_regroupement( saisie.regroupement_id ).libelle"></td>
+                    <td ng:bind="detail_regroupement( saisie.regroupement_id ).libelle_aaf"></td>
                     <td ng:bind="matieres[ saisie.matiere_id ].libelle_long"></td>
                     <td>
                         <div class="alert alert-default" ng:bind-html="saisie.cours.contenu"></div>

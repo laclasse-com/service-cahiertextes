@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module( 'cahierDeTextesClientApp' )
-    .service('User',
-             [ '$http', 'APP_PATH',
+    .service( 'User',
+              [ '$http', 'APP_PATH',
                function( $http, APP_PATH ) {
                    this.get_user = _.memoize( function() {
                        return $http.get( APP_PATH + '/api/users/current' )
@@ -40,12 +40,14 @@ angular.module( 'cahierDeTextesClientApp' )
                                          { parametres: JSON.stringify( parametres ) } );
                    };
                } ] )
-    .factory('StatistiquesRegroupements', [ '$resource', 'APP_PATH',
-                                            function( $resource, APP_PATH ) {
+
+    .factory( 'StatistiquesRegroupements', [ '$resource', 'APP_PATH',
+                                             function( $resource, APP_PATH ) {
                                                 return $resource( APP_PATH + '/api/etablissements/:uai/statistiques/regroupements/:id',
                                                                   { uai: '@uai',
                                                                     id: '@id' } );
                                             } ] )
+
     .factory('Cours',
              [ '$resource', 'APP_PATH',
                function( $resource, APP_PATH ) {
@@ -61,6 +63,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                                           creneau_emploi_du_temps_id: '@creneau_emploi_du_temps_id',
                                                           date: '@date' } } } );
                } ] )
+
     .factory('CreneauxEmploiDuTemps',
              [ '$resource', 'APP_PATH',
                function( $resource, APP_PATH ) {
@@ -83,6 +86,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                                url: APP_PATH + '/api/creneaux_emploi_du_temps/bulk',
                                                params: { creneaux_emploi_du_temps: '@creneaux_emploi_du_temps' } } } );
                } ] )
+
     .factory('Devoirs',
              [ '$resource', 'APP_PATH',
                function( $resource, APP_PATH ) {
@@ -99,6 +103,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                                           creneau_emploi_du_temps_id: '@creneau_emploi_du_temps_id',
                                                           date_due: '@date_due' } } } );
                } ] )
+
     .factory('EmploisDuTemps',
              [ '$resource', 'APP_PATH',
                function( $resource, APP_PATH ) {
@@ -107,6 +112,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                        fin: '@fin',
                                        uid: '@uid' } );
                } ] )
+
     .factory('Enseignants',
              [ '$resource', 'APP_PATH',
                function( $resource, APP_PATH ) {
@@ -114,12 +120,14 @@ angular.module( 'cahierDeTextesClientApp' )
                                      { uai: '@uai',
                                        enseignant_id: '@enseignant_id' } );
                } ] )
+
     .factory('Etablissements',
              [ '$resource', 'APP_PATH',
                function( $resource, APP_PATH ) {
                    return $resource( APP_PATH + '/api/etablissements/:uai',
                                      { uai: '@uai' } );
                } ] )
+
     .factory('Salles',
              [ '$resource', 'APP_PATH',
                function( $resource, APP_PATH ) {
@@ -130,6 +138,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                                url: APP_PATH + '/api/salles/bulk',
                                                params: { salles: '@salles' } } } );
                } ] )
+
     .factory('CahiersDeTextes',
              [ '$resource', 'APP_PATH',
                function( $resource, APP_PATH ) {
@@ -140,12 +149,14 @@ angular.module( 'cahierDeTextesClientApp' )
                                                url: APP_PATH + '/api/cahiers_de_textes/bulk',
                                                params: { cahiers_de_textes: '@cahiers_de_textes' } } } );
                } ] )
+
     .factory('TypesDeDevoir',
              [ '$resource', 'APP_PATH',
                function( $resource, APP_PATH ) {
                    return $resource( APP_PATH + '/api/types_de_devoir/:id',
                                      { id: '@id' });
                } ] )
+
     .factory('Matchable',
              [ '$resource', 'APP_PATH',
                function( $resource, APP_PATH ) {

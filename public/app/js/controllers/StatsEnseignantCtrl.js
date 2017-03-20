@@ -37,7 +37,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                                  $scope.graphiques.multiBarChart.data = [ { key: 'saisies',
                                                                                             values: [] },
                                                                                           { key: 'visas',
-                                                                                            values: [] }];
+                                                                                            values: [] } ];
                                                  $scope.graphiques.pieChart.data = [ { label: 'saisies',
                                                                                        value: 0 },
                                                                                      { label: 'visas',
@@ -64,7 +64,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                            };
 
                        $scope.select_all_regroupements = function() {
-                           $scope.selected_regroupements = $scope.classes;
+                           $scope.selected_regroupements = $scope.regroupements;
                            $scope.graphiques.populate( $scope.raw_data );
                        };
 
@@ -137,22 +137,26 @@ angular.module( 'cahierDeTextesClientApp' )
                                        $scope.enseignant.email_principal = _($scope.enseignant.emails).first();
                                    }
 
-                                   // filtrer les classes de l'enseignant sur l'établissement actif
-                                   $scope.enseignant.liste_classes = _.chain( $scope.enseignant.classes )
-                                       .reject( function( classe ) {
-                                           return classe.etablissement_code != $scope.current_user.profil_actif.etablissement_code_uai;
+                                   // filtrer les regroupements de l'enseignant sur l'établissement actif
+                                   $scope.enseignant.liste_regroupements = _.chain($scope.enseignant.classes.concat( $scope.enseignant.groupes_eleves ))
+                                       .map( function( regroupement ) {
+                                           regroupement.id = _(regroupement).has('classe_id') ? regroupement.classe_id : regroupement.groupe_id;
+                                           regroupement.libelle = _(regroupement).has( 'classe_libelle' ) ? regroupement.classe_libelle : regroupement.groupe_libelle;
+
+                                           return regroupement;
                                        } )
-                                       .uniq( function ( classe ) {
-                                           return classe.classe_id;
+                                       .reject( function( regroupement ) {
+                                           return regroupement.etablissement_code != $scope.current_user.profil_actif.etablissement_code_uai;
                                        } )
+                                       .uniq( function( regroupement ) { return regroupement.id; } )
                                        .compact()
                                        .value();
 
-                                   $scope.enseignant.liste_matieres = _.chain( $scope.enseignant.classes ).pluck('matiere_libelle').uniq().compact().value();
+                                   $scope.enseignant.liste_matieres = _.chain(  $scope.enseignant.liste_regroupements ).pluck('matiere_libelle').uniq().compact().value();
 
-                                   $scope.enseignant.prof_principal = _.chain( $scope.enseignant.classes )
-                                       .filter( function ( matiere ) { return matiere.prof_principal == 'O'; } )
-                                       .pluck( 'classe_libelle' )
+                                   $scope.enseignant.prof_principal = _.chain(  $scope.enseignant.liste_regroupements )
+                                       .filter( function( matiere ) { return matiere.prof_principal == 'O'; } )
+                                       .pluck( 'libelle' )
                                        .uniq()
                                        .compact()
                                        .value();
@@ -186,7 +190,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                                .object()
                                                .value();
 
-                                           var promesses_classes = _.chain( $scope.raw_data)
+                                           var promesses_regroupements = _.chain( $scope.raw_data)
                                                .pluck('regroupement_id')
                                                .uniq()
                                                .map( function( regroupement_id ) {
@@ -196,8 +200,8 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                            $scope.nb_saisies_visables = calc_nb_saisies_visables( $scope.raw_data );
 
-                                           $q.all( promesses_classes ).then( function( response ) {
-                                               $scope.classes = response;
+                                           $q.all( promesses_regroupements ).then( function( response ) {
+                                               $scope.regroupements = response;
                                                $scope.select_all_regroupements();
                                            } );
                                        } );
