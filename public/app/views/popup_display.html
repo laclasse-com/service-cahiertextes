@@ -21,12 +21,8 @@
                             <span><i class="picto" ng:style="{'background-image':'url(' + app_path + '/app/vendor/laclasse-common-client/images/picto_cours.svg)'}"></i> Séquence pédagogique : <em>{{devoir.cours.date_cours | date : 'dd/MM'}}</em></span>
                         </li>
                     </ul>
-
-                    <span switch
-                          class="toggle-fait violet"
-                          ng:if="!(devoir.type_devoir_id == 1) && current_user.profil_actif.profil_id === 'ELV'"
-                          ng:model="devoir.fait"
-                          ng:change="fait( devoir )" ></span>
+                    <switch-devoir devoir="devoir"
+                                   ng:if="current_user.profil_actif.profil_id === 'ELV'" ></switch-devoir>
 
                 </div>
                 <div class="col-md-6 contenu">

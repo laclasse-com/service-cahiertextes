@@ -41,20 +41,9 @@
             <div class="pull-left date">{{devoir.date_due | amDateFormat: 'dddd D MMMM'}}</div>
         </div>
 
-        <div class="row contenu"
-             ng:class="{ 'type1': devoir.type_devoir_id == 1, 'type2': devoir.type_devoir_id == 2, 'type3': devoir.type_devoir_id == 3, 'type4': devoir.type_devoir_id == 4, 'type5': devoir.type_devoir_id == 5, 'type6': devoir.type_devoir_id == 6, 'fait': devoir.fait, 'a-faire': !devoir.fait }">
-
-            <div class="col-md-5 alert alert-default">
-                <h5> {{devoir.matiere.libelle_long}}</h5>
-                <h6>{{devoir.type_devoir.description}} :</h6>
-                <div class="alert alert-default" ng:bind-html="devoir.contenu"></div>
-
-                <div class="row col-md-12 ressources">
-                    <div class="attached-document" ng:repeat="ressource in devoir.ressources">
-                        <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
-                    </div>
-                </div>
-            </div>
+        <div class="row contenu">
+            <display-devoir class="col-md-5 alert alert-default"
+                            devoir="devoir"></display-devoir>
 
             <div class="col-md-4 alert alert-default">
                 <h5>Séquence pédagogique du {{devoir.cours.date_cours | amDateFormat:'dddd D MMMM'}}</h5>
@@ -66,16 +55,13 @@
             </div>
 
             <div class="col-md-2 todo">
-                <span switch
-                      class="violet"
-                      ng:if="!(devoir.type_devoir_id == 1) && current_user.profil_actif.profil_id === 'ELV'"
-                      ng:model="devoir.fait"
-                      ng:change="fait( devoir )" ></span>
+                <switch-devoir devoir="devoir"
+                               ng:if="current_user.profil_actif.profil_id === 'ELV'" ></switch-devoir>
             </div>
         </div>
 
         <div class="clearfix"></div>
-    </li>
+        </li>
 </ul>
 <span class="no-data" ng:if="!devoirs">
     Aucun devoir trouvé pour cette période.

@@ -24,25 +24,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                                  popup_ouverte );
                       };
 
-                      $scope.fait = function( devoir ) {
-                          devoir.$fait()
-                              .then( function( response ) {
-                                  if ( response.fait ) {
-                                      toastr.success( 'Devoir fait.',
-                                                      'Bravo !' );
-                                  } else {
-                                      toastr.info( 'Devoir à faire',
-                                                   'Encore un petit effort.' );
-                                  }
-                                  if ( !$scope.affiche_faits && !_(response.date_fait).isNull() ) {
-                                      var date_fait_holder = response.date_fait;
-                                      response.date_fait = null;
-
-                                      $timeout( function() { response.date_fait = date_fait_holder; }, 3000 );
-                                  }
-                              } );
-                      };
-
                       $scope.current_user = current_user;
 
                       var retrieve_data = function() {

@@ -54,20 +54,5 @@ angular.module( 'cahierDeTextesClientApp' )
 
                       User.get_user().then( function( response ) {
                           $scope.current_user = response.data;
-
-                          if ( $scope.current_user.profil_actif.profil_id === 'ELV' ) {
-                              $scope.fait = function( devoir ) {
-                                  devoir.$fait()
-                                      .then( function( response ) {
-                                          if ( response.fait ) {
-                                              toastr.success( 'Devoir fait.',
-                                                              'Bravo !' );
-                                          } else {
-                                              toastr.info( 'Devoir à faire',
-                                                           'Encore un petit effort.' );
-                                          }
-                                      } );
-                              };
-                          }
                       } );
                   } ] );
