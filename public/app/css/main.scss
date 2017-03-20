@@ -92,9 +92,9 @@ h2 {
     font-size: 21px;
     font-weight: bolder;
 }
-.fc-event {
-    border-radius: 0;
-}
+// .fc-event {
+//     border-radius: 0;
+// }
 .fc-ltr .fc-time-grid .fc-event-container {
     margin: 0;
 }
@@ -215,38 +215,36 @@ h2 {
 }
 
 .edt-cours {
-    background-color: #929292;
+    // background-color: #929292;
+    background-color: #b2b2b2;  // gris1
 }
-
 .edt-cours-saisie, .edt-cours-saisie-valide {
-    background-color: #707070;
+    // background-color: #707070;
+    background-color: #5b5b5b;  // gris4-moins
 }
-
 .edt-cours-saisie-valide {
-    border-left: 8px solid #0f0;
+    // border-left: 8px solid #0f0;
+    border-left: 8px solid #80ba66; // vert
 }
-
 .edt-permanence {
     background-color: #d5d5d5;
 }
-
 .edt-devoir-a-faire {
-    background-color: #ae8ab8;
+    // background-color: #ae8ab8;
+    background-color: #48b4d6;  // bleu-moins
 }
-
 .edt-devoir-fait {
-    background-color: #8dc47c;
+    // background-color: #8dc47c;
+    background-color: #99c665;  // vert-moins
 }
-
 /* .edt-devoir-note-maison{ background-color: #00afd4 } */
 /* .edt-devoir-note-surveille{ background-color: #f56d68 } */
-
 .edt-devoir-note-maison {
-    background-color: #1aa1cc;
+    background-color: #1aa1cc;  // bleu
 }
-
 .edt-devoir-note-surveille {
-    background-color: rgb(232, 194, 85);
+    // background-color: rgb(232, 194, 85);
+    background-color: #ff9343;  // orange-brillant-moins
 }
 
 /* #e173ff */
