@@ -69,8 +69,7 @@ module CahierDeTextesApp
 
       error!( 'Créneau invalide', 409 ) if CreneauEmploiDuTemps[ params[:creneau_emploi_du_temps_id] ].nil?
 
-      devoir = Devoir.create( enseignant_id: user[:uid],
-                              type_devoir_id: params[:type_devoir_id],
+      devoir = Devoir.create( type_devoir_id: params[:type_devoir_id],
                               creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
                               contenu: params[:contenu],
                               date_due: params[:date_due],
@@ -97,6 +96,8 @@ module CahierDeTextesApp
         end
         devoir.update( cours_id: cours.id )
       end
+
+      params[:enseignant_id] = user[:uid]
 
       devoir.modifie( params )
 
