@@ -71,7 +71,7 @@ class Devoir < Sequel::Model( :devoirs )
     self.contenu = params[:contenu]
     self.temps_estime = params[:temps_estime] unless params[:temps_estime].nil?
     self.cours_id = params[:cours_id] unless params[:cours_id].nil?
-    self.enseignant_id = params[:enseignant_id]
+    self.enseignant_id = params[:enseignant_id] unless params[:enseignant_id].nil?
 
     if params[:ressources]
       remove_all_ressources

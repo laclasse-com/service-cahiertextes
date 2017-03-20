@@ -16,28 +16,36 @@ module CahierDeTextesApp
       optional :uai, type: String
     end
     get '/' do
+      uid = params[:uid] ? params[:uid] : user[:uid]
+
       if params[:uid]
         user_annuaire = Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_user, "#{user[:uid]}", expand: 'true' )
         error!( '401 Unauthorized', 401 ) unless user_annuaire['profils'].find { |p| p['actif'] }['profil_id'] == 'TUT' && !user_annuaire['enfants'].find { |e| e['enfant']['id_ent'] == params[:uid] }.nil?
-
-        regroupements_annuaire = Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_user, "#{params[:uid]}/regroupements", expand: 'true' )
-      else
-        regroupements_annuaire = Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_user, "#{user[:uid]}/regroupements", expand: 'true' )
       end
+
+      regroupements_annuaire = Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_user, "#{uid}/regroupements", expand: 'true' )
 
       regroupements_ids = regroupements_annuaire['classes'].concat( regroupements_annuaire['groupes_eleves'] )
                                                            .concat( regroupements_annuaire['groupes_libres'] )
                                                            .reject { |regroupement| regroupement['etablissement_code'] != params[:uai] if params[:uai] }
-                                                           .map { |regroupement| regroupement.key?( 'classe_id' ) ? regroupement['classe_id'] : regroupement.key?( 'groupe_id' ) ? regroupement['groupe_id'] : regroupement['id'] } # rubocop:disable Style/NestedTernaryOperator
+                                                           .map do |regroupement|
+        if regroupement.key?( 'classe_id' )
+          regroupement['classe_id']
+        elsif regroupement.key?( 'groupe_id' )
+          regroupement['groupe_id']
+        else
+          regroupement['id']
+        end
+      end
                                                            .uniq
 
-      Devoir.join(:creneaux_emploi_du_temps, id: :creneau_emploi_du_temps_id)
+      Devoir.association_join(:creneau_emploi_du_temps)
             .select_append( :devoirs__id___id )
             .where( devoirs__deleted: false )
             .where( regroupement_id: regroupements_ids )
             .where( date_due: params[:debut] .. params[:fin] )
             .all
-            .map { |devoir| p devoir; devoir.to_deep_hash( uid: params[:uid] ? params[:uid] : user[:uid] ) }
+            .map { |devoir| devoir.to_deep_hash( uid: uid ) }
     end
 
     desc 'renvoi le détail d\'un devoir'
