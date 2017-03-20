@@ -45,23 +45,21 @@
             <display-devoir class="col-md-5 alert alert-default"
                             devoir="devoir"></display-devoir>
 
-            <div class="col-md-4 alert alert-default">
-                <h5>Séquence pédagogique du {{devoir.cours.date_cours | amDateFormat:'dddd D MMMM'}}</h5>
-                <div class="alert alert-default" ng:bind-html="devoir.cours.contenu"></div>
-            </div>
-
-            <div class="col-md-1 detail">
-                <button class="btn btn-default" ng:click="popup_display( devoir )">Détail</button>
-            </div>
+            <display-sequence-pedagogique class="col-md-5 alert alert-default"
+                                          sp="devoir.cours"></display-sequence-pedagogique>
+            <!--
+                 <div class="col-md-1 detail">
+                 <button class="btn btn-default" ng:click="popup_display( devoir )">Détail</button>
+                 </div> -->
 
             <div class="col-md-2 todo">
                 <switch-devoir devoir="devoir"
                                ng:if="current_user.profil_actif.profil_id === 'ELV'" ></switch-devoir>
             </div>
-        </div>
+</div>
 
-        <div class="clearfix"></div>
-        </li>
+<div class="clearfix"></div>
+    </li>
 </ul>
 <span class="no-data" ng:if="!devoirs">
     Aucun devoir trouvé pour cette période.

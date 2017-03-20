@@ -7,32 +7,22 @@
         <!-- ####################### Devoirs ####################### -->
         <uib-tab ng:if="devoirs.length > 0" heading="Travail à faire">
             <div ng:repeat="devoir in devoirs"
-                 class="devoir col-md-12"
-                 ng:class="{ 'type1': devoir.type_devoir_id == 1, 'type2': devoir.type_devoir_id == 2, 'type3': devoir.type_devoir_id == 3, 'type4': devoir.type_devoir_id == 4, 'type5': devoir.type_devoir_id == 5, 'type6': devoir.type_devoir_id == 6, 'fait': devoir.fait }" >
+                 class="devoir col-md-12" >
+                <div class="col-md-6 contenu">
+                    <display-devoir devoir="devoir"></display-devoir>
+                </div>
                 <div class="col-md-5 infos">
                     <ul>
-                        <li><span ><i class="picto" ng:style="{'background-image':'url(' + app_path + '/app/vendor/laclasse-common-client/images/picto_matiere.svg)'}"></i> Matière : <em>{{matiere}}</em></span></li>
-                        <li><span ><i class="picto" ng:style="{'background-image':'url(' + app_path + '/app/vendor/laclasse-common-client/images/picto_devoir.svg)'}"></i> Type de devoir : <em>{{devoir.type_devoir.description}}</em></span></li>
-                        <!-- <li ng:if="devoir.temps_estime > 0"><span><i class="picto" ng:style="{'background-image':'url(' + app_path + '/app/vendor/laclasse-common-client/images/picto_temps.svg)'}"></i> Temps estimé : <em>{{devoir.temps_estime * 5}} minutes</em></span></li> -->
                         <li class="clickable"
                             tooltip-trigger="'click'"
                             tooltip-placement="right"
                             uib-tooltip-html="devoir.cours.contenu">
-                            <span><i class="picto" ng:style="{'background-image':'url(' + app_path + '/app/vendor/laclasse-common-client/images/picto_cours.svg)'}"></i> Séquence pédagogique : <em>{{devoir.cours.date_cours | date : 'dd/MM'}}</em></span>
+                            <span><i class="picto" ng:style="{'background-image':'url(' + app_path + '/app/node_modules/laclasse-common-client/images/picto_cours.svg)'}"></i> Séquence pédagogique : <em>{{devoir.cours.date_cours | date : 'dd/MM'}}</em></span>
                         </li>
                     </ul>
                     <switch-devoir devoir="devoir"
                                    ng:if="current_user.profil_actif.profil_id === 'ELV'" ></switch-devoir>
 
-                </div>
-                <div class="col-md-6 contenu">
-                    <span ng:bind-html="devoir.contenu"></span>
-
-                    <ul ng:if="devoir.ressources.length > 0">
-                        <li ng:repeat="ressource in devoir.ressources">
-                            <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
-                        </li>
-                    </ul>
                 </div>
             </div>
             <div class="clearfix"></div>
@@ -41,24 +31,17 @@
         <uib-tab heading="Séquence pédagogique" data-active="tab_SP_active">
             <div class="col-md-5 infos">
                 <ul>
-                    <li><span ><i class="picto" ng:style="{'background-image':'url(' + app_path + '/app/vendor/laclasse-common-client/images/picto_matiere.svg)'}"></i> Matière : <em>{{matiere}}</em></span></li>
                     <li class="clickable" ng:repeat="devoir in cours.devoirs"
                         tooltip-trigger="'click'"
                         tooltip-placement="right"
                         uib-tooltip-html="devoir.tooltip"
                         ng:class="{ 'type1': devoir.type_devoir_id == 1, 'type2': devoir.type_devoir_id == 2, 'type3': devoir.type_devoir_id == 3, 'type4': devoir.type_devoir_id == 4, 'type5': devoir.type_devoir_id == 5, 'type6': devoir.type_devoir_id == 6, 'fait': devoir.fait }" >
-                        <span><i class="picto" ng:style="{'background-image':'url(' + app_path + '/app/vendor/laclasse-common-client/images/picto_devoir.svg)'}"></i> Devoir associé : <em>{{devoir.date_due | date : 'dd/MM'}}</em></span>
+                        <span><i class="picto" ng:style="{'background-image':'url(' + app_path + '/app/node_modules/laclasse-common-client/images/picto_devoir.svg)'}"></i> Devoir associé : <em>{{devoir.date_due | date : 'dd/MM'}}</em></span>
                     </li>
                 </ul>
             </div>
             <div class="col-md-6 contenu">
-                <span ng:bind-html="cours.contenu"></span>
-
-                <ul ng:if="cours.ressources.length > 0">
-                    <li ng:repeat="ressource in cours.ressources">
-                        <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
-                    </li>
-                </ul>
+                <display-sequence-pedagogique sp="cours"></display-sequence-pedagogique>
             </div>
             <div class="clearfix"></div>
         </uib-tab>

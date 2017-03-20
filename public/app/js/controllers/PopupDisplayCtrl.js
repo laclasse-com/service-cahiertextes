@@ -2,21 +2,20 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller('PopupDisplayCtrl',
-                [ '$scope', '$sce', '$uibModalInstance', 'toastr', 'APP_PATH', 'DOCS_URL', 'Cours', 'Devoirs', 'User',
+                [ '$scope', '$sce', '$uibModalInstance', 'toastr', 'APP_PATH', 'Cours', 'Devoirs', 'User',
                   'titre', 'cours', 'devoirs',
-                  function( $scope, $sce, $uibModalInstance, toastr, APP_PATH, DOCS_URL, Cours, Devoirs, User,
+                  function( $scope, $sce, $uibModalInstance, toastr, APP_PATH, Cours, Devoirs, User,
                             matiere, cours, devoirs ) {
                       $scope.app_path = APP_PATH;
                       $scope.matiere = matiere;
                       $scope.date = null;
 
+                      console.log(matiere)
+                      console.log(cours)
+                      console.log(devoirs)
+
                       if ( ! _(cours).isNull() ) {
                           $scope.cours = Cours.get( { id: cours.id } );
-                          $scope.cours.$promise.then( function() {
-                              _($scope.cours.ressources).each( function( ressource ) {
-                                  ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
-                              } );
-                          } );
 
                           $scope.cours.$promise.then( function( cours ) {
                               $scope.date = $scope.cours.date_cours;
@@ -35,10 +34,7 @@ angular.module( 'cahierDeTextesClientApp' )
                       } );
                       _($scope.devoirs).each( function( devoir ) {
                           devoir.$promise.then( function() {
-                              devoir.cours.contenu = $sce.trustAsHtml( devoir.cours.contenu );
-                              _(devoir.ressources).each( function( ressource ) {
-                                  ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
-                              } );
+                              devoir.matiere = matiere;
                           } );
                       } );
                       if ( _($scope.date).isNull() && !_($scope.devoirs).isEmpty() ) {
