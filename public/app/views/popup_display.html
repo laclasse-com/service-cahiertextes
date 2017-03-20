@@ -1,6 +1,7 @@
 <div class="modal-header">
     <h3>{{date | date : 'fullDate' }}<span ng:if="creneau.salles.length > 0">, salle {{creneau.salles[0].nom}}</span></h3>
 </div>
+
 <div class="modal-body">
 
     <uib-tabset>
@@ -8,10 +9,10 @@
         <uib-tab ng:if="devoirs.length > 0" heading="Travail à faire">
             <div ng:repeat="devoir in devoirs"
                  class="devoir col-md-12" >
-                <div class="col-md-6 contenu">
+                <div class="col-md-8">
                     <display-devoir devoir="devoir"></display-devoir>
                 </div>
-                <div class="col-md-5 infos">
+                <div class="col-md-4">
                     <ul>
                         <li class="clickable"
                             tooltip-trigger="'click'"
@@ -29,7 +30,11 @@
         </uib-tab>
 
         <uib-tab heading="Séquence pédagogique" data-active="tab_SP_active">
-            <div class="col-md-5 infos">
+            <div class="col-md-8">
+                <display-sequence-pedagogique sp="cours"></display-sequence-pedagogique>
+            </div>
+
+            <div class="col-md-4">
                 <ul>
                     <li class="clickable" ng:repeat="devoir in cours.devoirs"
                         tooltip-trigger="'click'"
@@ -40,13 +45,12 @@
                     </li>
                 </ul>
             </div>
-            <div class="col-md-6 contenu">
-                <display-sequence-pedagogique sp="cours"></display-sequence-pedagogique>
-            </div>
+
             <div class="clearfix"></div>
         </uib-tab>
     </uib-tabset>
 </div>
+
 <div class="modal-footer">
     <button class="btn btn-default btn-sm pull-right" ng:click="fermer()">
         <span class="glyphicon glyphicon-remove-sign"></span> Fermer

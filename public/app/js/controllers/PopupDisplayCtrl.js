@@ -10,11 +10,7 @@ angular.module( 'cahierDeTextesClientApp' )
                       $scope.matiere = matiere;
                       $scope.date = null;
 
-                      console.log(matiere)
-                      console.log(cours)
-                      console.log(devoirs)
-
-                      if ( ! _(cours).isNull() ) {
+                      if ( !_(cours).isNull() ) {
                           $scope.cours = Cours.get( { id: cours.id } );
 
                           $scope.cours.$promise.then( function( cours ) {
@@ -30,15 +26,17 @@ angular.module( 'cahierDeTextesClientApp' )
                       }
 
                       $scope.devoirs = devoirs.map( function( devoir ) {
-                          return Devoirs.get( { id: devoir.id } );
+                          return Devoirs.get( { id: devoir.id } ).$promise;
                       } );
+
                       _($scope.devoirs).each( function( devoir ) {
-                          devoir.$promise.then( function() {
+                          devoir.then( function() {
                               devoir.matiere = matiere;
                           } );
                       } );
+
                       if ( _($scope.date).isNull() && !_($scope.devoirs).isEmpty() ) {
-                          $scope.devoirs[0].$promise.then( function() {
+                          $scope.devoirs[0].then( function() {
                               $scope.date = $scope.devoirs[0].date_due;
                           } );
                       }
