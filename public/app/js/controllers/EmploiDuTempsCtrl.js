@@ -1,337 +1,310 @@
 'use strict';
 
 angular.module( 'cahierDeTextesClientApp' )
-    .controller('EmploiDuTempsCtrl',
-                [ '$scope', 'moment', '$stateParams', '$state',
-                  'CALENDAR_OPTIONS', 'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'EmploisDuTemps', 'PopupsCreneau', 'CreneauxEmploiDuTemps', 'Utils',
-                  'current_user',
-                  function ( $scope, moment, $stateParams, $state,
-                             CALENDAR_OPTIONS, APP_PATH, SEMAINES_VACANCES, ZONE, EmploisDuTemps, PopupsCreneau, CreneauxEmploiDuTemps, Utils,
-                             current_user ) {
-                      $scope.current_user = current_user;
-                      $scope.zone = ZONE;
-                      var first_load = true;
+    .controller( 'EmploiDuTempsCtrl',
+                 [ '$scope', 'moment', '$stateParams', '$state',
+                   'CALENDAR_OPTIONS', 'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'EmploisDuTemps', 'PopupsCreneau', 'CreneauxEmploiDuTemps', 'Utils',
+                   'current_user',
+                   function ( $scope, moment, $stateParams, $state,
+                              CALENDAR_OPTIONS, APP_PATH, SEMAINES_VACANCES, ZONE, EmploisDuTemps, PopupsCreneau, CreneauxEmploiDuTemps, Utils,
+                              current_user ) {
+                       $scope.scope = $scope;
+                       $scope.current_user = current_user;
+                       $scope.zone = ZONE;
+                       $scope.emploi_du_temps = angular.element('#emploi_du_temps');
+                       var popup_ouverte = false;
+                       var first_load = true;
 
-                      $scope.emploi_du_temps = angular.element('#emploi_du_temps');
-                      // console.log($scope.emploi_du_temps)
-                      // if ( moment( $stateParams.date ).isValid() ) {
-                      //     console.log('trying ' + $stateParams.date);
-                      //     if ( moment( $stateParams.date ).isBefore( Utils.school_year_start() ) ) {
-                      //         $stateParams.date = Utils.school_year_start();
-                      //     } else if ( moment( $stateParams.date ).isAfter( Utils.school_year_end() ) ) {
-                      //         $stateParams.date = Utils.school_year_end();
-                      //     }
-                      //     console.log('finally going to ' + $stateParams.date);
+                       $scope.filter_data = function( raw_data ) {
+                           if ( _( [ 'EVS', 'DIR'] ).contains( $scope.current_user.profil_actif.profil_id ) ) {
+                               return filter_by_regroupement( raw_data, $scope.selected_regroupements );
+                           } else if ( _( [ 'ENS', 'DOC'] ).contains( $scope.current_user.profil_actif.profil_id ) ) {
+                               return filter_by_matieres( filter_by_regroupement( raw_data,
+                                                                                  $scope.selected_regroupements ),
+                                                          _($scope.current_user.profil_actif.matieres).pluck('id'),
+                                                          $scope.uniquement_mes_creneaux );
+                           } else {
+                               return raw_data;
+                           }
+                       };
 
-                      //     $scope.emploi_du_temps.fullCalendar( 'gotoDate', $stateParams.date );
-                      // }
+                       $scope.prev = function() { $scope.emploi_du_temps.fullCalendar('prev'); };
+                       $scope.next = function() { $scope.emploi_du_temps.fullCalendar('next'); };
 
-                      var popup_ouverte = false;
-                      $scope.filter_data = angular.identity;
-                      $scope.scope = $scope;
+                       $scope.select_all_regroupements = function() {
+                           $scope.selected_regroupements = $scope.current_user.profil_actif.regroupements;
+                           $scope.refresh_calendar();
+                       };
 
-                      $scope.prev = function() { $scope.emploi_du_temps.fullCalendar('prev'); };
-                      $scope.next = function() { $scope.emploi_du_temps.fullCalendar('next'); };
+                       $scope.select_no_regroupements = function() {
+                           $scope.selected_regroupements = [];
+                           $scope.refresh_calendar();
+                       };
 
-                      $scope.select_all_regroupements = function() {
-                          $scope.selected_regroupements = $scope.current_user.profil_actif.regroupements;
-                          $scope.refresh_calendar();
-                      };
+                       var popup_callback = function( scope_popup ) {
+                           var view = $scope.emploi_du_temps.fullCalendar( 'getView' );
+                           retrieve_data( view.start.toDate(), view.end.toDate() );
+                       };
 
-                      $scope.select_no_regroupements = function() {
-                          $scope.selected_regroupements = [];
-                          $scope.refresh_calendar();
-                      };
+                       // consommation des données
+                       var to_fullcalendar_events = function( filtered_data ) {
+                           var CalendarEvent = function( event ) {
+                               var _this = this; //pour pouvoir le référencé dans les .then()
+                               this.details = event;
+                               this.allDay = false;
+                               this.regroupement = _($scope.current_user.profil_actif.regroupements).findWhere({ id: parseInt( this.details.regroupement_id ) });
+                               this.title = ( _(this.regroupement).isUndefined() ) ? '' : this.regroupement.libelle;
+                               this.matiere = _($scope.current_user.profil_actif.matieres).findWhere({ id: this.details.matiere_id });
+                               this.has_resources = _(event.cours).has( 'ressources' ) && event.cours.ressources.length > 0;
+                               this.temps_estime = 0;
+                               this.start = moment( event.start );
+                               this.end = moment( event.end );
+                               this.className = 'saisie-vide';
 
-                      var popup_callback = function( scope_popup ) {
-                          var view = $scope.emploi_du_temps.fullCalendar( 'getView' );
-                          retrieve_data( view.start.toDate(), view.end.toDate() );
-                      };
+                               if ( !_(event.cours).isNull() ) {
+                                   _(event.cours.devoirs).each( function( devoir ) {
+                                       _this.has_ressources = _this.has_ressources || _(devoir).has( 'ressources' ) && devoir.ressources.length > 0;
+                                   } );
+                               }
 
-                      // consommation des données
-                      var to_fullcalendar_events = function( filtered_data ) {
-                          var CalendarEvent = function( event ) {
-                              var _this = this; //pour pouvoir le référencé dans les .then()
-                              this.details = event;
-                              this.allDay = false;
-                              this.regroupement = _($scope.current_user.profil_actif.regroupements).findWhere({ id: parseInt( this.details.regroupement_id ) });
-                              this.title = ( _(this.regroupement).isUndefined() ) ? '' : this.regroupement.libelle;
-                              this.matiere = _($scope.current_user.profil_actif.matieres).findWhere({ id: this.details.matiere_id });
-                              this.has_resources = _(event.cours).has( 'ressources' ) && event.cours.ressources.length > 0;
-                              this.temps_estime = 0;
-                              this.start = moment( event.start );
-                              this.end = moment( event.end );
-                              this.className = 'saisie-vide';
+                               _(event.devoirs).each( function( devoir ) {
+                                   _this.has_ressources = _this.has_ressources || _(devoir).has( 'ressources' ) && devoir.ressources.length > 0;
+                                   if ( !_(devoir.temps_estime).isNull() ) {
+                                       _this.temps_estime += devoir.temps_estime;
+                                       if ( _this.temps_estime > 15 ) {
+                                           _this.temps_estime = 15;
+                                       }
+                                   }
+                               } );
 
-                              if ( !_(event.cours).isNull() ) {
-                                  _(event.cours.devoirs).each( function( devoir ) {
-                                      _this.has_ressources = _this.has_ressources || _(devoir).has( 'ressources' ) && devoir.ressources.length > 0;
-                                  } );
-                              }
+                               // couleur de la case
+                               if ( event.devoirs.length > 0 ) {
+                                   var highest_type_de_devoir = _.chain(event.devoirs).pluck( 'type_devoir_id' ).sort().first().value();
+                                   switch( highest_type_de_devoir ) {
+                                   case 1:
+                                       this.className = 'edt-devoir-note-surveille';
+                                       break;
+                                   case 2:
+                                       this.className = 'edt-devoir-note-maison';
+                                       break;
+                                   default:
+                                       this.className = _.chain(event.devoirs).pluck( 'fait' ).contains( true ).value() ? 'edt-devoir-fait' : 'edt-devoir-a-faire';
+                                   }
+                               } else {
+                                   this.className = 'edt-cours';
+                                   if ( !_(event.cours).isNull() && !_(event.cours.date_validation).isNull() && ( $scope.current_user.profil_actif.profil_id === 'ENS' && $scope.current_user.profil_actif.profil_id === 'DOC' ) ) {
+                                       this.className += '-valide';
+                                   } else if ( !_(event.cours).isNull() ) {
+                                       this.className += '-saisie';
+                                   }
+                               }
 
-                              _(event.devoirs).each( function( devoir ) {
-                                  _this.has_ressources = _this.has_ressources || _(devoir).has( 'ressources' ) && devoir.ressources.length > 0;
-                                  if ( !_(devoir.temps_estime).isNull() ) {
-                                      _this.temps_estime += devoir.temps_estime;
-                                      if ( _this.temps_estime > 15 ) {
-                                          _this.temps_estime = 15;
-                                      }
-                                  }
-                              } );
+                               if ( ( ( _( [ 'ELV', 'TUT', 'EVS', 'DIR'] ).contains( $scope.current_user.profil_actif.profil_id ) ) && _(event.cours).isNull() && _(event.devoirs).isEmpty() ) ) {
+                                   this.className += ' unclickable-event';
+                               } else {
+                                   this.className += ' clickable-event';
+                               }
+                           };
 
-                              // couleur de la case
-                              if ( event.devoirs.length > 0 ) {
-                                  var highest_type_de_devoir = _.chain(event.devoirs).pluck( 'type_devoir_id' ).sort().first().value();
-                                  switch( highest_type_de_devoir ) {
-                                  case 1:
-                                      this.className = 'edt-devoir-note-surveille';
-                                      break;
-                                  case 2:
-                                      this.className = 'edt-devoir-note-maison';
-                                      break;
-                                  default:
-                                      this.className = _.chain(event.devoirs).pluck( 'fait' ).contains( true ).value() ? 'edt-devoir-fait' : 'edt-devoir-a-faire';
-                                  }
-                              } else {
-                                  this.className = 'edt-cours';
-                                  if ( !_(event.cours).isNull() && !_(event.cours.date_validation).isNull() && ( $scope.current_user.profil_actif.profil_id === 'ENS' && $scope.current_user.profil_actif.profil_id === 'DOC' ) ) {
-                                      this.className += '-valide';
-                                  } else if ( !_(event.cours).isNull() ) {
-                                      this.className += '-saisie';
-                                  }
-                              }
+                           return _( filtered_data ).map( function( event ) {
+                               return new CalendarEvent( event );
+                           } );
+                       };
 
-                              if ( ( ( _( [ 'ELV', 'TUT', 'EVS', 'DIR'] ).contains( $scope.current_user.profil_actif.profil_id ) ) && _(event.cours).isNull() && _(event.devoirs).isEmpty() ) ) {
-                                  this.className += ' unclickable-event';
-                              } else {
-                                  this.className += ' clickable-event';
-                              }
-                          };
+                       $scope.refresh_calendar = function() {
+                           $scope.calendar.events[ 0 ] = to_fullcalendar_events( $scope.filter_data( $scope.raw_data ) );
 
-                          return _( filtered_data ).map( function( event ) {
-                          return new CalendarEvent( event );
-                      } );
-                  };
+                           $stateParams.regroupements = _($scope.selected_regroupements).pluck('libelle');
+                           $state.go( $state.current, $stateParams, { notify: false, reload: false } );
+                       };
 
-                  $scope.refresh_calendar = function() {
-                      $scope.calendar.events[ 0 ] = to_fullcalendar_events( $scope.filter_data( $scope.raw_data ) );
+                       var retrieve_data = function( from_date, to_date ) {
+                           if ( $scope.current_user.profil_actif.profil_id != 'TUT' || $scope.current_user.enfant_actif ) {
+                               EmploisDuTemps.query( { debut: from_date,
+                                                       fin: to_date,
+                                                       uai: $scope.current_user.profil_actif.etablissement_code_uai,
+                                                       uid: $scope.current_user.profil_actif.profil_id == 'TUT' ? $scope.current_user.enfant_actif.enfant.id_ent : null } )
+                                   .$promise
+                                   .then( function success( response ) {
+                                       $stateParams.date = moment( from_date ).toDate().toISOString().split('T')[0];
+                                       $state.go( $state.current, $stateParams, { notify: false, reload: false } );
 
-                      $stateParams.regroupements = _($scope.selected_regroupements).pluck('libelle');
-                      $state.go( $state.current, $stateParams, { notify: false, reload: false } );
-                  };
+                                       $scope.raw_data = response;
+                                       $scope.refresh_calendar();
+                                   });
+                           }
+                       };
 
-                  var retrieve_data = function( from_date, to_date ) {
-                      if ( $scope.current_user.profil_actif.profil_id != 'TUT' || $scope.current_user.enfant_actif ) {
-                          EmploisDuTemps.query( { debut: from_date,
-                                                  fin: to_date,
-                                                  uai: $scope.current_user.profil_actif.etablissement_code_uai,
-                                                  uid: $scope.current_user.profil_actif.profil_id == 'TUT' ? $scope.current_user.enfant_actif.enfant.id_ent : null } )
-                              .$promise
-                              .then( function success( response ) {
-                                  $stateParams.date = moment( from_date ).toDate().toISOString().split('T')[0];
-                                  $state.go( $state.current, $stateParams, { notify: false, reload: false } );
+                       // configuration du composant calendrier
+                       $scope.extraEventSignature = function( event ) {
+                           return '' + event.matiere;
+                       };
 
-                                  $scope.raw_data = response;
-                                  $scope.refresh_calendar();
-                              });
-                      }
-                  };
+                       var filter_by_regroupement = function( raw_data, selected_regroupements ) {
+                           return _( raw_data ).filter( function( creneau ) {
+                               return _.chain(selected_regroupements).pluck('id').contains( parseInt( creneau.regroupement_id ) ).value();
+                           } );
+                       };
+                       var filter_by_matieres = function( raw_data, matieres, active ) {
+                           return !active ? raw_data : _( raw_data ).filter( function( creneau ) {
+                               return _(matieres).contains( creneau.matiere_id );
+                           } );
+                       };
 
-                  // configuration du composant calendrier
-                  $scope.extraEventSignature = function(event) {
-                      return '' + event.matiere;
-                  };
+                       $scope.uniquement_mes_creneaux = !_( [ 'EVS', 'DIR'] ).contains( $scope.current_user.profil_actif.profil_id );
 
-                  $scope.calendar = { options: CALENDAR_OPTIONS,
-                                      events: [  ] };
+                       if ( $scope.uniquement_mes_creneaux ) {
+                           $scope.selected_regroupements = $scope.current_user.profil_actif.regroupements;
+                       } else {
+                           $scope.selected_regroupements = [ $scope.current_user.profil_actif.regroupements[0] ];
+                       }
 
-                  $scope.calendar.options.weekends = $scope.current_user.parametrage_cahier_de_textes.affichage_week_ends;
+                       // Les TUT peuvent choisir parmi leurs enfants
+                       if ( $scope.current_user.profil_actif.profil_id === 'TUT' ) {
+                           if ( $scope.current_user.enfants.length == 0 ) {
+                               swal( { title: 'Erreur',
+                                       text: 'Aucun enfant configuré pour ce profil.',
+                                       type: 'error',
+                                       showCancelButton: false,
+                                       confirmButtonColor: '#ff6b55',
+                                       confirmButtonText: 'Fermer'
+                                     } );
+                           } else {
+                               $scope.uid_enfant_actif = $scope.current_user.enfant_actif.enfant.id_ent;
+                               $scope.reload_data = popup_callback;
+                           }
+                       }
 
-                  $scope.calendar.options.viewRender = function( view, element ) {
-                      $scope.current_user.date = view.start;
-                      $scope.n_week = view.start.week();
-                      $scope.c_est_les_vacances = Utils.sont_ce_les_vacances( $scope.n_week, $scope.zone );
+                       $scope.calendar = { options: CALENDAR_OPTIONS,
+                                           events: [  ] };
 
-                      retrieve_data( view.start.toDate(), view.end.toDate() );
-                  };
+                       // Les (ENS|DOC) et les Admin sont en lecture/écriture
+                       if ( _( [ 'ENS', 'DOC'] ).contains( $scope.current_user.profil_actif.profil_id )
+                            || $scope.current_user.profil_actif.admin ) {
+                           $scope.calendar.options.selectable = true;
+                           $scope.calendar.options.editable = true;
+                           $scope.calendar.options.eventDurationEditable = true;
+                           $scope.calendar.options.eventStartEditable = true;
+                       }
 
-                  $scope.calendar.options.eventRender = function ( event, element ) {
-                          // FIXME: manipulation du DOM dans le contrôleur, sale, mais obligé pour l'interprétation du HTML ?
-                          var elt_fc_content_title = element.find( '.fc-title' );
-                          var elt_fc_content = element.find( '.fc-content' );
+                       $scope.calendar.options.weekends = $scope.current_user.parametrage_cahier_de_textes.affichage_week_ends;
 
-                          if ( !_(event.matiere).isUndefined() ) {
-                              elt_fc_content_title.append( ' - ' + event.matiere.libelle_long );
-                          }
+                       $scope.calendar.options.viewRender = function( view, element ) {
+                           $scope.current_user.date = view.start;
+                           $scope.n_week = view.start.week();
+                           $scope.c_est_les_vacances = Utils.sont_ce_les_vacances( $scope.n_week, $scope.zone );
 
-                          if ( event.has_resources ) {
-                              elt_fc_content.prepend( '<i class="glyphicon glyphicon-paperclip"></i>' );
-                          }
-                          if ( $scope.current_user.profil_actif.profil_id !== 'ELV' ) {
-                              if ( event.temps_estime > 0 ) {
-                                  var class_couleur = '';
-                                  if (event.temps_estime  < 4 ) {
-                                      class_couleur = ' label-success';
-                                  } else if (event.temps_estime  < 8 ) {
-                                      class_couleur = ' label-info';
-                                  } else if (event.temps_estime  < 12 ) {
-                                      class_couleur = ' label-warning';
-                                  } else if (event.temps_estime  <= 15 ) {
-                                      class_couleur = ' label-danger';
-                                  }
-                                  elt_fc_content.prepend( '<div class="est-time est-time-' + event.temps_estime + class_couleur + '"></div>' );
-                              }
-                          }
-                      };
+                           retrieve_data( view.start.toDate(), view.end.toDate() );
+                       };
 
-                      $scope.calendar.options.weekends = $scope.current_user.parametrage_cahier_de_textes.affichage_week_ends;
+                       $scope.calendar.options.eventRender = function ( event, element ) {
+                           // FIXME: manipulation du DOM dans le contrôleur, sale, mais obligé pour l'interprétation du HTML ?
+                           var elt_fc_content_title = element.find( '.fc-title' );
+                           var elt_fc_content = element.find( '.fc-content' );
 
-                      var filter_by_regroupement = function( raw_data, selected_regroupements ) {
-                          return _( raw_data ).filter( function( creneau ) {
-                              return _.chain(selected_regroupements).pluck('id').contains( parseInt( creneau.regroupement_id ) ).value();
-                          } );
-                      };
-                      var filter_by_matieres = function( raw_data, matieres, active ) {
-                          return !active ? raw_data : _( raw_data ).filter( function( creneau ) {
-                              return _(matieres).contains( creneau.matiere_id );
-                          } );
-                      };
+                           if ( !_(event.matiere).isUndefined() ) {
+                               elt_fc_content_title.append( ' - ' + event.matiere.libelle_long );
+                           }
 
-                      $scope.uniquement_mes_creneaux = false;
-                      // ############################## Profile-specific code ##############################################
-                      // Les EVS et DIR n'ont qu'une classe sélectionnée par défaut
-                      if ( _( [ 'EVS', 'DIR'] ).contains( $scope.current_user.profil_actif.profil_id ) ) {
-                          $scope.uniquement_mes_creneaux = false;
+                           if ( event.has_resources ) {
+                               elt_fc_content.prepend( '<i class="glyphicon glyphicon-paperclip"></i>' );
+                           }
+                           if ( $scope.current_user.profil_actif.profil_id !== 'ELV' ) {
+                               if ( event.temps_estime > 0 ) {
+                                   var class_couleur = '';
+                                   if (event.temps_estime  < 4 ) {
+                                       class_couleur = ' label-success';
+                                   } else if (event.temps_estime  < 8 ) {
+                                       class_couleur = ' label-info';
+                                   } else if (event.temps_estime  < 12 ) {
+                                       class_couleur = ' label-warning';
+                                   } else if (event.temps_estime  <= 15 ) {
+                                       class_couleur = ' label-danger';
+                                   }
+                                   elt_fc_content.prepend( '<div class="est-time est-time-' + event.temps_estime + class_couleur + '"></div>' );
+                               }
+                           }
+                       };
 
-                          $scope.filter_data = function( raw_data ) {
-                              return filter_by_regroupement( raw_data, $scope.selected_regroupements );
-                          };
+                       $scope.calendar.options.eventClick = function( event ) {
+                           if ( _( [ 'ENS', 'DOC'] ).contains( $scope.current_user.profil_actif.profil_id ) ) {
+                               if ( !popup_ouverte ) {
+                                   CreneauxEmploiDuTemps.get( { id: event.details.creneau_emploi_du_temps_id } )
+                                       .$promise
+                                       .then( function( creneau_selectionne ) {
+                                           creneau_selectionne.dirty = false;
+                                           creneau_selectionne.en_creation = false;
+                                           creneau_selectionne.heure_debut = event.start;
+                                           creneau_selectionne.heure_fin = event.end;
+                                           creneau_selectionne.regroupement_id = event.details.regroupement_id;
 
-                          $scope.selected_regroupements = [ $scope.current_user.profil_actif.regroupements[0] ];
-                      }
-                      // Les TUT peuvent choisir parmi leurs enfants
-                      if ( $scope.current_user.profil_actif.profil_id == 'TUT' ) {
-                          if ( $scope.current_user.enfants.length == 0 ) {
-                              swal( { title: 'Erreur',
-                                      text: 'Aucun enfant configuré pour ce profil.',
-                                      type: 'error',
-                                      showCancelButton: false,
-                                      confirmButtonColor: '#ff6b55',
-                                      confirmButtonText: 'Fermer'
-                                    } );
-                          } else {
-                              $scope.uid_enfant_actif = $scope.current_user.enfant_actif.enfant.id_ent;
-                              $scope.reload_data = popup_callback;
-                          }
-                      }
-                      // Les non-(ENS|DOC) ne sont qu'en lecture seule
-                      if ( $scope.current_user.profil_actif.profil_id != 'ENS' || $scope.current_user.profil_actif.profil_id != 'DOC' ) {
-                          $scope.calendar.options.eventClick = function( event ) {
-                              if ( !popup_ouverte && ( ( event.details.devoirs.length > 0 ) || ( ! _(event.details.cours).isNull() && _(event.details.cours).has( 'contenu' ) ) ) ) {
-                                  PopupsCreneau.display( event.matiere.libelle_long,
-                                                         event.details.cours,
-                                                         event.details.devoirs,
-                                                         popup_callback,
-                                                         popup_ouverte );
-                              }
-                          };
-                      }
+                                           PopupsCreneau.edition( $scope.raw_data,
+                                                                  $scope.current_user.profil_actif.matieres, $scope.current_user.profil_actif.regroupements,
+                                                                  creneau_selectionne, event.details.cours, event.details.devoirs,
+                                                                  popup_callback, popup_ouverte );
+                                       } );
+                               }
+                           } else {
+                               if ( !popup_ouverte && ( ( event.details.devoirs.length > 0 ) || ( ! _(event.details.cours).isNull() && _(event.details.cours).has( 'contenu' ) ) ) ) {
+                                   PopupsCreneau.display( event.matiere.libelle_long,
+                                                          event.details.cours,
+                                                          event.details.devoirs,
+                                                          popup_callback,
+                                                          popup_ouverte );
+                               }
+                           }
+                       };
 
-                      if ( $scope.current_user.profil_actif.profil_id == 'ENS'
-                           || $scope.current_user.profil_actif.profil_id == 'DOC'
-                           || ( $scope.current_user.profil_actif.admin && !_( [ 'ELV', 'TUT'] ).contains( $scope.current_user.profil_actif.profil_id ) ) ) {
-                          $scope.uniquement_mes_creneaux = false;
-                          $scope.calendar.options.selectable = true;
-                          $scope.calendar.options.editable = true;
-                          $scope.calendar.options.eventDurationEditable = true;
-                          $scope.calendar.options.eventStartEditable = true;
+                       // création d'un nouveau créneau
+                       // Le regroupement_id peut être null car on n'a pas fait de choix au niveau de la select box des classes sur full_calendar
+                       $scope.calendar.options.select = function ( start, end, allDay ) {
+                           if ( $scope.calendar.options.selectable && $scope.calendar.options.editable ) {
+                               if ( end - start == 1800000 ) {
+                                   end = moment( end ).add( 30, 'minutes' ).toDate();
+                               }
+                               if ( !popup_ouverte ) {
+                                   // création du créneau avec les bons horaires
+                                   start = new Date( start );
+                                   end = new Date( end );
+                                   var regroupement_id = $scope.selected_regroupements.length == 1 ? '' + $scope.selected_regroupements[0].id : null;
+                                   var new_creneau = new CreneauxEmploiDuTemps( { regroupement_id: regroupement_id,
+                                                                                  jour_de_la_semaine: start.getDay(),
+                                                                                  heure_debut: moment(start).toISOString(),
+                                                                                  heure_fin: moment(end).toISOString(),
+                                                                                  matiere_id: '' } );
 
-                          $scope.filter_data = function( raw_data ) {
-                              return filter_by_matieres( filter_by_regroupement( raw_data,
-                                                                                 $scope.selected_regroupements ),
-                                                         _($scope.current_user.profil_actif.matieres).pluck('id'),
-                                                         $scope.uniquement_mes_creneaux );
-                          };
+                                   new_creneau.$save()
+                                       .then( function () {
+                                           new_creneau.dirty = true;
+                                           new_creneau.en_creation = true;
+                                           new_creneau.heure_debut = start;
+                                           new_creneau.heure_fin = end;
+                                           new_creneau.regroupement_id = regroupement_id;
 
-                          // édition d'un créneau existant
-                          $scope.calendar.options.eventClick = function ( event ) {
-                              if ( !popup_ouverte ) {
-                                  CreneauxEmploiDuTemps.get( { id: event.details.creneau_emploi_du_temps_id } )
-                                      .$promise
-                                      .then( function( creneau_selectionne ) {
-                                          creneau_selectionne.dirty = false;
-                                          creneau_selectionne.en_creation = false;
-                                          creneau_selectionne.heure_debut = event.start;
-                                          creneau_selectionne.heure_fin = event.end;
-                                          creneau_selectionne.regroupement_id = event.details.regroupement_id;
+                                           PopupsCreneau.edition( $scope.raw_data,
+                                                                  $scope.current_user.profil_actif.matieres, $scope.current_user.profil_actif.regroupements,
+                                                                  new_creneau, null, [],
+                                                                  popup_callback, popup_ouverte );
 
-                                          PopupsCreneau.edition( $scope.raw_data,
-                                                                 $scope.current_user.profil_actif.matieres, $scope.current_user.profil_actif.regroupements,
-                                                                 creneau_selectionne, event.details.cours, event.details.devoirs,
-                                                                 popup_callback, popup_ouverte );
-                                      } );
-                              }
-                          };
+                                           $scope.emploi_du_temps.fullCalendar( 'unselect' );
+                                       } );
+                               }
+                           }
+                       };
 
-                          // création d'un nouveau créneau
-                          // Le regroupement_id peut être null car on n'a pas fait de choix au niveau de la select box des classes sur full_calendar
-                          $scope.calendar.options.select = function ( start, end, allDay ) {
-                              if ( end - start == 1800000 ) {
-                                  end = moment( end ).add( 30, 'minutes' ).toDate();
-                              }
-                              if ( !popup_ouverte ) {
-                                  // création du créneau avec les bons horaires
-                                  start = new Date( start );
-                                  end = new Date( end );
-                                  var regroupement_id = $scope.selected_regroupements.length == 1 ? '' + $scope.selected_regroupements[0].id : null;
-                                  var new_creneau = new CreneauxEmploiDuTemps( { regroupement_id: regroupement_id,
-                                                                                 jour_de_la_semaine: start.getDay(),
-                                                                                 heure_debut: moment(start).toISOString(),
-                                                                                 heure_fin: moment(end).toISOString(),
-                                                                                 matiere_id: '' } );
-
-                                  new_creneau.$save()
-                                      .then( function () {
-                                          new_creneau.dirty = true;
-                                          new_creneau.en_creation = true;
-                                          new_creneau.heure_debut = start;
-                                          new_creneau.heure_fin = end;
-                                          new_creneau.regroupement_id = regroupement_id;
-
-                                          PopupsCreneau.edition( $scope.raw_data,
-                                                                 $scope.current_user.profil_actif.matieres, $scope.current_user.profil_actif.regroupements,
-                                                                 new_creneau, null, [],
-                                                                 popup_callback, popup_ouverte );
-
-                                          $scope.emploi_du_temps.fullCalendar( 'unselect' );
-                                      } );
-                              }
-                          };
-
-                          $scope.calendar.options.eventDrop = function( event, delta, revertFunc, jsEvent, ui, view ) {
-                              CreneauxEmploiDuTemps.update( { id: event.details.creneau_emploi_du_temps_id,
-                                                              heure_debut: event.start.toDate(),
-                                                              heure_fin: event.end.toDate(),
-                                                              jour_de_la_semaine: event.end.day() } );
-                          };
-                          $scope.calendar.options.eventResize = function( event, delta, revertFunc, jsEvent, ui, view ) {
-                              CreneauxEmploiDuTemps.update( { id: event.details.creneau_emploi_du_temps_id,
-                                                              heure_debut: event.start.toDate(),
-                                                              heure_fin: event.end.toDate() } );
-                          };
-                      }
-
-                      $scope.uniquement_mes_creneaux = _(['ENS', 'DOC']).includes( $scope.current_user.profil_actif.profil_id );
-
-                      if ( $scope.uniquement_mes_creneaux ) {
-                          $scope.selected_regroupements = $scope.current_user.profil_actif.regroupements;
-                      }
-
-                      // // Récupération d'une date prédéfinie s'il y a lieu
-                      // if ( $scope.current_user.date ) {
-                      //     var mdate = moment( $scope.current_user.date );
-                      //     $scope.calendar.options.year = mdate.year();
-                      //     $scope.calendar.options.month = mdate.month();
-                      //     $scope.calendar.options.date = mdate.date();
-                      // }
-                  } ] );
+                       $scope.calendar.options.eventDrop = function( event, delta, revertFunc, jsEvent, ui, view ) {
+                           if ( $scope.calendar.options.selectable && $scope.calendar.options.editable ) {
+                               CreneauxEmploiDuTemps.update( { id: event.details.creneau_emploi_du_temps_id,
+                                                               heure_debut: event.start.toDate(),
+                                                               heure_fin: event.end.toDate(),
+                                                               jour_de_la_semaine: event.end.day() } );
+                           }
+                       };
+                       $scope.calendar.options.eventResize = function( event, delta, revertFunc, jsEvent, ui, view ) {
+                           if ( $scope.calendar.options.selectable && $scope.calendar.options.editable ) {
+                               CreneauxEmploiDuTemps.update( { id: event.details.creneau_emploi_du_temps_id,
+                                                               heure_debut: event.start.toDate(),
+                                                               heure_fin: event.end.toDate() } );
+                           }
+                       };
+                   } ] );

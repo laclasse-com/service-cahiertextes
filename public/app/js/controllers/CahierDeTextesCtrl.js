@@ -34,27 +34,19 @@ angular.module( 'cahierDeTextesClientApp' )
 
                       var filter_creneaux_avec_saisies = function( raw_data ) {
                           return _.chain(raw_data)
-                              .filter( function( creneau ) {
-                                  return creneau.enseignant_id === $scope.current_user.uid;
-                              } )
                               .reject( function( creneau ) {
                                   return _(creneau.cours).isEmpty() && _(creneau.devoirs).isEmpty();
-                              })
+                              } )
                               .map( function( creneau ) {
                                   creneau.devoirs.ouvert = true;
                                   return creneau;
-                              })
+                              } )
                               .value();
                       };
                       var filter_creneaux_vides = function( raw_data ) {
-                          return _.chain(raw_data)
-                              .filter( function( creneau ) {
-                                  return creneau.enseignant_id === $scope.current_user.uid;
-                              } )
-                              .filter( function( creneau ) {
-                                  return _(creneau.cours).isEmpty();
-                              })
-                              .value();
+                          return _(raw_data).filter( function( creneau ) {
+                              return _(creneau.cours).isEmpty();
+                          } );
                       };
 
                       var list_matieres = function(raw_data) {
@@ -85,15 +77,9 @@ angular.module( 'cahierDeTextesClientApp' )
                       $scope.period_offsets_list.push( { offset: 9999,
                                                          label: 'année complète'} );
 
-                      $scope.incr_offset = function() {
-                          $scope.period_offset++;
-                      };
-                      $scope.decr_offset = function() {
-                          $scope.period_offset--;
-                      };
-                      $scope.reset_offset = function() {
-                          $scope.period_offset = 0;
-                      };
+                      $scope.incr_offset = function() { $scope.period_offset++; };
+                      $scope.decr_offset = function() { $scope.period_offset--; };
+                      $scope.reset_offset = function() { $scope.period_offset = 0; };
 
                       $scope.retrieve_data = function() {
                           changing_period_offset = true;
@@ -143,7 +129,12 @@ angular.module( 'cahierDeTextesClientApp' )
                                                   uai: $scope.current_user.profil_actif.etablissement_code_uai } )
                               .$promise
                               .then( function success( response ) {
-                                  $scope.raw_data = response;
+                                  var regroupements_ids = _($scope.current_user.profil_actif.regroupements).pluck('id');
+                                  var matieres_ids = _($scope.current_user.profil_actif.matieres).pluck('id');
+
+                                  $scope.raw_data = _(response).select( function( creneau ) {
+                                      return _(regroupements_ids).contains( creneau.regroupement_id ) && _(matieres_ids).contains( creneau.matiere_id );
+                                  } );
                                   matieres = list_matieres( $scope.raw_data );
 
                                   _($scope.raw_data).each( function( creneau ) {
