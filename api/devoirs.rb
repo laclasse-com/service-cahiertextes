@@ -31,12 +31,13 @@ module CahierDeTextesApp
                                                            .map { |regroupement| regroupement.key?( 'classe_id' ) ? regroupement['classe_id'] : regroupement.key?( 'groupe_id' ) ? regroupement['groupe_id'] : regroupement['id'] } # rubocop:disable Style/NestedTernaryOperator
                                                            .uniq
 
-      Devoir.join(:creneaux_emploi_du_temps_regroupements, creneau_emploi_du_temps_id: :creneau_emploi_du_temps_id)
-            .where( deleted: false )
+      Devoir.join(:creneaux_emploi_du_temps, id: :creneau_emploi_du_temps_id)
+            .select_append( :devoirs__id___id )
+            .where( devoirs__deleted: false )
             .where( regroupement_id: regroupements_ids )
             .where( date_due: params[:debut] .. params[:fin] )
             .all
-            .map { |devoir| devoir.to_deep_hash( uid: params[:uid] ? params[:uid] : user[:uid] ) }
+            .map { |devoir| p devoir; devoir.to_deep_hash( uid: params[:uid] ? params[:uid] : user[:uid] ) }
     end
 
     desc 'renvoi le détail d\'un devoir'

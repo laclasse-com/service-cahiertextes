@@ -8,19 +8,21 @@ class Devoir < Sequel::Model( :devoirs )
   many_to_one :cours
 
   def to_deep_hash( user = nil )
-    hash = JSON.parse( to_json( include: self.class.associations,
-                                except: [ :regroupement_id, :semainier ] ),
-                       symbolize_names: true )
+    h = to_hash
 
-    hash[:ressources] = ressources.map(&:to_hash)
+    h[:ressources] = ressources.map(&:to_hash)
 
-    hash[:devoir_todo_items] = [] if user.nil?
-    hash[:devoir_todo_items].select! { |dti| dti[:eleve_id] == user[:uid] } unless user.nil?
+    h[:creneau_emploi_du_temps] = creneau_emploi_du_temps.to_hash
+    h[:cours] = cours.to_hash
 
-    hash[:fait] = user.nil? ? false : fait_par?( user[:uid] )
-    hash[:date_fait] = hash[:fait] ? fait_le( user[:uid] ) : nil
+    h[:devoir_todo_items] = devoir_todo_items
+    h[:devoir_todo_items] = [] if user.nil?
+    h[:devoir_todo_items].select! { |dti| dti[:eleve_id] == user[:uid] } unless user.nil?
 
-    hash
+    h[:fait] = user.nil? ? false : fait_par?( user[:uid] )
+    h[:date_fait] = h[:fait] ? fait_le( user[:uid] ) : nil
+
+    h
   end
 
   def fait_par!( eleve_id )
@@ -28,23 +30,20 @@ class Devoir < Sequel::Model( :devoirs )
   end
 
   def fait_par?( eleve_id )
-    # FIXME: peut sûrement mieux faire
     devoir_todo_items_dataset.where(eleve_id: eleve_id).count > 0
   end
 
   def fait_le( eleve_id )
-    # FIXME: peut sûrement mieux faire
     devoir_todo_items_dataset.where(eleve_id: eleve_id).first[:date_fait]
   end
 
   def a_faire_par!( eleve_id )
-    # FIXME: peut sûrement mieux faire
     devoir_todo_items_dataset.where(eleve_id: eleve_id).destroy
   end
 
   def toggle_deleted
     update( deleted: !deleted, date_modification: Time.now )
-    save                        # useful?
+    save
   end
 
   def toggle_fait( user )
