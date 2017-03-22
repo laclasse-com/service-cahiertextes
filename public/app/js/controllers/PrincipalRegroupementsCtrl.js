@@ -2,8 +2,8 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller('PrincipalRegroupementsCtrl',
-                [ '$scope', '$locale', 'API', 'Annuaire', 'CreneauxEmploiDuTemps', 'current_user', 'PIECHART_DEFINITION', 'MULTIBARCHART_DEFINITION',
-                  function ( $scope, $locale, API, Annuaire, CreneauxEmploiDuTemps, current_user, PIECHART_DEFINITION, MULTIBARCHART_DEFINITION ) {
+                [ '$scope', '$locale', '$q', 'API', 'Annuaire', 'CreneauxEmploiDuTemps', 'current_user', 'PIECHART_DEFINITION', 'MULTIBARCHART_DEFINITION',
+                  function ( $scope, $locale, $q, API, Annuaire, CreneauxEmploiDuTemps, current_user, PIECHART_DEFINITION, MULTIBARCHART_DEFINITION ) {
                       var ctrl = $scope;
                       ctrl.scope = $scope;
 
@@ -234,9 +234,16 @@ angular.module( 'cahierDeTextesClientApp' )
                                   confirmButtonText: 'Confirmer',
                                   cancelButtonText: 'Annuler',
                                   preConfirm: function() {
-                                      return CreneauxEmploiDuTemps.bulk_delete( { ids: angular.toJson( creneaux[ type ] ),
-                                                                                  date_creneau: end_of_last_august,
-                                                                                  ignore_matiere: true } ).$promise
+                                      var bulk_package_size = 1500;
+                                      var promises = [];
+
+                                      while ( creneaux[ type ].length > 0 ) {
+                                          promises.push( CreneauxEmploiDuTemps.bulk_delete( { ids: angular.toJson( creneaux[ type ].splice( 0, bulk_package_size ) ),
+                                                                                              date_creneau: end_of_last_august,
+                                                                                              ignore_matiere: true } ).$promise );
+                                      }
+
+                                      $q.all( promises )
                                           .then( function success( response ) {
                                               ctrl.$onInit();
 
