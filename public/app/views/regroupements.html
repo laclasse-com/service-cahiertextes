@@ -15,7 +15,7 @@
                         {{$item.libelle}}
                     </span>
                 </ui-select-match>
-                <ui-select-choices repeat="regroupement in classes | orderBy:['type','libelle']"
+                <ui-select-choices repeat="regroupement in regroupements | orderBy:['type','libelle']"
                                    group-by="'type'">
                     <span class="label" ng:class="{'label-success': regroupement.type === 'groupe', 'label-info': regroupement.type === 'classe' }">
                         {{regroupement.libelle}}
@@ -47,49 +47,49 @@
         <div class="row">
             <ul class="col-md-12">
                 <li class="label label-primary">{{creneaux_emploi_du_temps.vides.length}} créneaux vierges
-                    <!-- <button class="btn btn-danger btn-xs"
-                         ng:click="delete_creneaux( creneaux_emploi_du_temps.vides )"
-                         ng:if="creneaux_emploi_du_temps.vides.length > 0">
-                         <i class="glyphicon glyphicon-trash"></i>
-                         </button> -->
+                    <button class="btn btn-danger btn-xs"
+                            ng:click="delete_creneaux( creneaux_emploi_du_temps, 'vides' )"
+                            ng:if="creneaux_emploi_du_temps.vides.length > 0">
+                        <i class="glyphicon glyphicon-trash"></i>
+                    </button>
                 </li>
                 <li class="label label-success">{{creneaux_emploi_du_temps.pleins.length}} créneaux avec saisies
-                    <!-- <button class="btn btn-danger btn-xs"
-                         ng:click="delete_creneaux( creneaux_emploi_du_temps.pleins )"
-                         ng:if="creneaux_emploi_du_temps.pleins.length > 0">
-                         <i class="glyphicon glyphicon-trash"></i>
-                         </button> -->
+                    <button class="btn btn-danger btn-xs"
+                            ng:click="delete_creneaux( creneaux_emploi_du_temps, 'pleins' )"
+                            ng:if="creneaux_emploi_du_temps.pleins.length > 0">
+                        <i class="glyphicon glyphicon-trash"></i>
+                    </button>
                 </li>
             </ul>
         </div>
     </div>
 </div>
 
-<div class="col-md-12" ng:if="!classe">
+<div class="col-md-12" ng:if="!regroupement">
     <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3"
-         ng:repeat="classe in individualCharts.classes | orderBy:['regroupement.type', 'regroupement.libelle']">
+         ng:repeat="regroupement in individualCharts.regroupements | orderBy:['regroupement.type', 'regroupement.libelle']">
         <div class="panel panel-default">
             <div class="panel-heading"><h3 class="panel-title">
-                <span class="label" ng:class="{'label-success': classe.regroupement.type === 'groupe', 'label-info': classe.regroupement.type === 'classe' }">
-                    {{classe.regroupement.libelle}}
+                <span class="label" ng:class="{'label-success': regroupement.regroupement.type === 'groupe', 'label-info': regroupement.regroupement.type === 'classe' }">
+                    {{regroupement.regroupement.libelle}}
                 </span>
             </h3></div>
             <div class="panel-body">
-                <nvd3 data="classe.pieChart.data" options="classe.pieChart.options"></nvd3>
+                <nvd3 data="regroupement.pieChart.data" options="regroupement.pieChart.options"></nvd3>
                 <ul>
-                    <li class="label label-primary">{{classe.regroupement.creneaux_emploi_du_temps.vides.length}} créneaux vierges
-                        <!-- <button class="btn btn-danger btn-xs"
-                             ng:click="delete_creneaux( classe.classe.creneaux_emploi_du_temps.vides )"
-                             ng:if="classe.classe.creneaux_emploi_du_temps.vides.length > 0">
-                             <i class="glyphicon glyphicon-trash"></i>
-                             </button> -->
+                    <li class="label label-primary">{{regroupement.data.creneaux_emploi_du_temps.vides.length}} créneaux vierges
+                        <button class="btn btn-danger btn-xs"
+                                ng:click="delete_creneaux( regroupement.data.creneaux_emploi_du_temps, 'vides' )"
+                                ng:if="regroupement.data.creneaux_emploi_du_temps.vides.length > 0">
+                            <i class="glyphicon glyphicon-trash"></i>
+                        </button>
                     </li>
-                    <li class="label label-success">{{classe.regroupement.creneaux_emploi_du_temps.pleins.length}} créneaux avec saisies
-                        <!-- <button class="btn btn-danger btn-xs"
-                             ng:click="delete_creneaux( classe.classe.creneaux_emploi_du_temps.pleins )"
-                             ng:if="classe.classe.creneaux_emploi_du_temps.pleins.length > 0">
-                             <i class="glyphicon glyphicon-trash"></i>
-                             </button> -->
+                    <li class="label label-success">{{regroupement.data.creneaux_emploi_du_temps.pleins.length}} créneaux avec saisies
+                        <button class="btn btn-danger btn-xs"
+                                ng:click="delete_creneaux( regroupement.data.creneaux_emploi_du_temps, 'pleins' )"
+                                ng:if="regroupement.data.creneaux_emploi_du_temps.pleins.length > 0">
+                            <i class="glyphicon glyphicon-trash"></i>
+                        </button>
                     </li>
                 </ul>
             </div>

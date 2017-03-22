@@ -130,6 +130,33 @@ module CahierDeTextesApp
     end
 
     #--------------------------------------------------------------------
+    desc 'marque des créneaux comme effacé et inversement'
+    params do
+      requires :ids # , type: Array[Integer]
+      requires :date_creneau, type: Date
+      requires :ignore_matiere, type: Boolean, default: false
+    end
+    delete '/bulk' do
+      user_needs_to_be( %w( ENS DOC ), true )
+
+      JSON.parse( params[:ids] ).map do |id|
+        creneau = CreneauEmploiDuTemps[ id ]
+
+        error!( 'Créneau inconnu', 404 ) if creneau.nil?
+
+        creneau
+      end.map do |creneau|
+        if ( params[:hard] || creneau.matiere_id.empty? ) && creneau.cours.empty? && creneau.devoirs.empty?
+          creneau.deep_destroy
+        else
+          creneau.toggle_deleted( params[:date_creneau] )
+        end
+
+        creneau.id
+      end
+    end
+
+    #--------------------------------------------------------------------
     desc 'marque un créneau comme effacé et inversement'
     params do
       requires :id, type: Integer

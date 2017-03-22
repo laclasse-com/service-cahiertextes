@@ -84,7 +84,12 @@ angular.module( 'cahierDeTextesClientApp' )
                                        bulk: { method: 'POST',
                                                isArray: true,
                                                url: APP_PATH + '/api/creneaux_emploi_du_temps/bulk',
-                                               params: { creneaux_emploi_du_temps: '@creneaux_emploi_du_temps' } } } );
+                                               params: { creneaux_emploi_du_temps: '@creneaux_emploi_du_temps' } },
+                                       bulk_delete: { method: 'DELETE',
+                                                      isArray: true,
+                                                      url: APP_PATH + '/api/creneaux_emploi_du_temps/bulk',
+                                                      params: { ids: '@ids',
+                                                                date_creneau: '@date_creneau' } } } );
                } ] )
 
     .factory('Devoirs',
