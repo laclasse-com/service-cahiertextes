@@ -21,7 +21,7 @@ before_script:
 script:
   - "bundle exec rspec ./spec/api ./spec/models ./spec/lib"
   - "bundle exec rubocop -D"
-  - "bundle exec reek --sort-by smelliness *.rb api lib migrations models routes views tasks spec"
+#  - "bundle exec reek --sort-by smelliness *.rb api lib migrations models routes views tasks spec"
   - "bundle exec rake preprocess_assets:production"
 
 gemfile:
