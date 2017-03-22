@@ -115,6 +115,9 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                   return regroupement;
                               })
+                              .sortBy( function( regroupement ) {
+                                  return regroupement.type;
+                              } )
                               .value();
                       };
 
