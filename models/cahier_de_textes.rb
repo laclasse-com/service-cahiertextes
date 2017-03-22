@@ -22,6 +22,7 @@ class CahierDeTextes < Sequel::Model( :cahiers_de_textes )
         { matiere_id: record.values[ :matiere_id ],
           mois: (1..12).map do |month|
             tmp_cours = cours.association_join( :creneau_emploi_du_temps )
+                             .where( creneau_emploi_du_temps__deleted: false )
                              .where( matiere_id: record.values[:matiere_id] )
                              .where( "extract( month from date_cours ) = #{month}" )
 
