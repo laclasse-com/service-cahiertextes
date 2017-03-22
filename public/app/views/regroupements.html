@@ -5,7 +5,7 @@
 <div class="panel panel-default" ng:if="!empty">
     <div class="panel-body">
 
-        <div class="ui-select-wrapper">
+        <div class="ui-select-wrapper col-md-12">
             <ui-select multiple class="pull-left" theme="bootstrap"
                        append-to-body="true"
                        ng:change="process_data()"
@@ -28,11 +28,17 @@
                     ng:click="select_no_regroupements()"><span class="glyphicon glyphicon-erase"></span></button>
         </div>
 
-        <select class="col-md-3" ng:model="scope.selected_mois" ng:change="process_data()" ng:options="annee.indexOf(m)+1 as m for m in annee">
+        <select class="col-md-3"
+                ng:model="scope.selected_mois"
+                ng:change="process_data()"
+                ng:options="annee.indexOf(m)+1 as m for m in annee">
             <option value="">Toute l'année</option>
         </select>
 
-        <select class="col-md-3" ng:model="scope.selected_matiere" ng:change="process_data()" ng:options="m.id as m.libelle_long for m in matieres">
+        <select class="col-md-3"
+                ng:model="scope.selected_matiere"
+                ng:change="process_data()"
+                ng:options="m.id as m.libelle_long for m in matieres">
             <option value="">Toute les matières</option>
         </select>
     </div>
