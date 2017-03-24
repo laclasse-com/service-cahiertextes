@@ -179,7 +179,7 @@
                 </div>
                 <div class="panel-body">
                     <button class="btn btn-default ajout-devoir"
-                            ng:if="!creneau.etranger"
+                            ng:if="creneau.can_add_homework"
                             ng:click="ajout_devoir( cours.devoirs, 'next' )">
                         <span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
                     </button>
@@ -287,7 +287,7 @@
 
             <button class="btn btn-default ajout-devoir"
                     ng:click="ajout_devoir( devoirs, creneau )"
-                    ng:if="!creneau.etranger">
+                    ng:if="creneau.can_add_homework">
                 <span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
             </button>
             <div class="clearfix"></div>

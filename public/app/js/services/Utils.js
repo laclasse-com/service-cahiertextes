@@ -117,5 +117,20 @@ angular.module( 'cahierDeTextesClientApp' )
 
                         return date;
                     };
+
+                    this.fixnum_to_bitfield = function( fixnum ) {
+                        var string = fixnum.toString(2);
+                        var padding = '';
+                        _(52 - string.length).times( function() { padding += '0'; } );
+                        string = padding + string;
+                        return _(string.split('')
+                                 .map( function( e ) { return parseInt( e ); } )
+                                 .reverse())
+                            .rest();
+                    };
+
+                    this.bitfield_to_fixnum = function( bitfield ) {
+                        return parseInt( bitfield.reverse().join('') + '0', 2 );
+                    };
                 }
               ] );

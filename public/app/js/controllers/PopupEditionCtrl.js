@@ -11,675 +11,665 @@ angular.module( 'cahierDeTextesClientApp' )
                               Documents, API, CreneauxEmploiDuTemps, Cours, Devoirs, User, Utils,
                               cours, devoirs, creneau, raw_data, classes, matieres )
                    {
-                       $scope.app_path = APP_PATH;
-                       $scope.ZONE = ZONE;
-                       $scope.jours = _($locale.DATETIME_FORMATS.DAY).indexBy( function( jour ) { return _($locale.DATETIME_FORMATS.DAY).indexOf( jour ); } );
+                       var ctrl = $scope;
+                       ctrl.scope = ctrl;
 
-                       $scope.faulty_docs_app = false;
+                       ctrl.app_path = APP_PATH;
+                       ctrl.ZONE = ZONE;
+                       ctrl.jours = _($locale.DATETIME_FORMATS.DAY).indexBy( function( jour ) { return _($locale.DATETIME_FORMATS.DAY).indexOf( jour ); } );
+                       ctrl.classes = classes;
+                       ctrl.matieres = _(matieres).sortBy( 'libelle_long' );
 
-                       $scope.erreurs = [];
-                       $scope.dirty = false;
-                       $scope.mode_duplication = false;
-                       $scope.actions_done = [];
+                       ctrl.faulty_docs_app = false;
+                       ctrl.erreurs = [];
+                       ctrl.dirty = false;
+                       ctrl.mode_duplication = false;
+                       ctrl.actions_done = [];
 
-                       // http://stackoverflow.com/questions/19408883/angularjs-select-not-2-way-binding-to-model
-                       $scope.scope = $scope;
+                       ctrl.creneau = creneau;
+                       ctrl.creneau.jour_de_la_semaine = '' + ctrl.creneau.jour_de_la_semaine;
+                       ctrl.mode_edition_creneau = ctrl.creneau.en_creation;
+                       ctrl.creneau.regroupement_id = parseInt( ctrl.creneau.regroupement_id );
+                       ctrl.creneau.previous_regroupement_id = ctrl.creneau.regroupement_id;
+                       ctrl.creneau.vierge = _(creneau.vierge).isUndefined();
+                       ctrl.selected_regroupement = _(ctrl.creneau.regroupement_id).isUndefined() ? _( ctrl.classes ).first() : _( ctrl.classes ).findWhere( { id: parseInt( ctrl.creneau.regroupement_id ) } );
+                       ctrl.selected_matiere = _(ctrl.creneau.matiere_id).isEmpty() ? _( ctrl.matieres ).first() : _(ctrl.matieres).findWhere( { id: ctrl.creneau.matiere_id } );
+                       if ( ctrl.creneau.en_creation ) {
+                           ctrl.creneau.tmp_heure_debut = $filter( 'correctTimeZoneToGMT' )( ctrl.creneau.heure_debut );
+                           ctrl.creneau.tmp_heure_fin = $filter( 'correctTimeZoneToGMT' )( ctrl.creneau.heure_fin );
+                       } else {
+                           ctrl.creneau.tmp_heure_debut = angular.copy( ctrl.creneau.heure_debut );
+                           ctrl.creneau.tmp_heure_fin = angular.copy( ctrl.creneau.heure_fin );
+
+                           _(ctrl.creneau.regroupements).each( function( regroupement ) {
+                               regroupement.regroupement_id = parseInt( regroupement.regroupement_id );
+                           } );
+                       }
+                       ctrl.creneau.tmp_heure_debut = moment( ctrl.creneau.tmp_heure_debut );
+                       ctrl.creneau.tmp_heure_fin = moment( ctrl.creneau.tmp_heure_fin );
+                       ctrl.creneau.n_week = moment(ctrl.creneau.tmp_heure_debut).week();
 
                        var do_nothing = function() {};
 
-                       User.get_user().then( function( response ) {
-                           $scope.current_user = response.data;
+                       var create_cours = function( creneau ) {
+                           var cours = new Cours( { creneau_emploi_du_temps_id: creneau.id,
+                                                    date_cours: new Date(creneau.heure_debut).toISOString(),
+                                                    date_validation: null,
+                                                    enseignant_id: ctrl.current_user.uid,
+                                                    contenu: ''} );
+                           cours.devoirs = [];
+                           cours.create = true;
 
-                           if ( !$scope.current_user.parametrage_cahier_de_textes.affichage_week_ends ) {
-                               delete $scope.jours[0]; // sunday
-                               delete $scope.jours[6]; // saturday
+                           return cours;
+                       };
+
+                       ctrl.is_dirty = function( item ) {
+                           item = _(item).isUndefined() || _(item).isNull() ? null : item;
+                           ctrl.dirty = ctrl.dirty || ( _(item).isNull() || ( !_(item).isNull() && item.contenu.length > 0 ) );
+                           if ( !_(item).isNull() ) {
+                               item.dirty = true;
                            }
+                       };
 
-                           var create_cours = function( creneau ) {
-                               var cours = new Cours( { creneau_emploi_du_temps_id: creneau.id,
-                                                        date_cours: new Date(creneau.heure_debut).toISOString(),
-                                                        date_validation: null,
-                                                        enseignant_id: $scope.current_user.uid,
-                                                        contenu: ''} );
-                               cours.devoirs = [];
-                               cours.create = true;
+                       // Initialisations {{{
 
-                               return cours;
-                           };
-                           $scope.is_dirty = function( item ) {
-                               item = _(item).isUndefined() || _(item).isNull() ? null : item;
-                               $scope.dirty = $scope.dirty || ( _(item).isNull() || ( !_(item).isNull() && item.contenu.length > 0 ) );
-                               if ( !_(item).isNull() ) {
-                                   item.dirty = true;
+                       // Gestion des semaines actives
+                       ctrl.overlay_semainier = Utils.overlay_semainier();
+
+                       ctrl.sont_ce_les_vacances = Utils.sont_ce_les_vacances;
+
+                       var semaines_toutes_actives = function() {
+                           var semainier = [];
+                           _(52).times( function( i ) {
+                               if ( !Utils.sont_ce_les_vacances( i + 1, ZONE ) ) {
+                                   semainier.push( 1 );
+                               } else {
+                                   semainier.push( 0 );
                                }
+                           });
+
+                           return semainier;
+                       };
+
+                       ctrl.semaines_actives = { regroupement: [] };
+                       ctrl.templates_semainier = [
+                           { label: 'Tout',
+                             apply: function() {
+                                 ctrl.semaines_actives.regroupement = semaines_toutes_actives();
+                             }
+                           },
+                           { label: 'Semaine A',
+                             apply: function() {
+                                 var template = [];
+                                 var semaines_depuis_les_vacances = 0;
+                                 _(52).times( function( i ) {
+                                     if ( Utils.sont_ce_les_vacances( i + 1, ZONE ) ) {
+                                         semaines_depuis_les_vacances = 0;
+                                     } else {
+                                         semaines_depuis_les_vacances++;
+                                     }
+                                     template.push( ( semaines_depuis_les_vacances % 2 == 1 ) ? 1 : 0 );
+                                 });
+                                 ctrl.semaines_actives.regroupement = template;
+                             }
+                           },
+                           { label: 'Semaine B',
+                             apply: function() {
+                                 var template = [];
+                                 var semaines_depuis_les_vacances = 0;
+                                 _(52).times( function( i ) {
+                                     if ( Utils.sont_ce_les_vacances( i + 1, ZONE ) ) {
+                                         semaines_depuis_les_vacances = 0;
+                                     } else {
+                                         semaines_depuis_les_vacances++;
+                                     }
+                                     template.push( ( semaines_depuis_les_vacances % 2 == 0 ) ? 1 : 0 );
+                                 });
+                                 ctrl.semaines_actives.regroupement = template;
+                             }
+                           },
+                           { label: 'Unique',
+                             apply: function() {
+                                 var template = [];
+                                 _(52).times( function( week ) {
+                                     template.push( ( week + 1 == ctrl.creneau.n_week ) ? 1 : 0 );
+                                 });
+                                 ctrl.semaines_actives.regroupement = template;
+                             }
+                           },
+                           { label: 'Inverser',
+                             apply: function() {
+                                 ctrl.semaines_actives.regroupement = _(ctrl.semaines_actives.regroupement).map( function( w, i ) {
+                                     return ( ( w == 0 ) && !Utils.sont_ce_les_vacances( i + 1, ZONE ) ) ? 1 : 0;
+                                 } );
+                             }
+                           },
+                           { label: 'Réinitialiser',
+                             apply: function() {
+                                 ctrl.semaines_actives.regroupement = ctrl.creneau.en_creation ? semaines_toutes_actives() : Utils.fixnum_to_bitfield( creneau.semainier );
+                             }
+                           }
+                       ];
+                       _(ctrl.templates_semainier).findWhere( { label: 'Réinitialiser' } ).apply();
+
+                       // helpers
+                       ctrl.fermer = function () {
+                           $uibModalInstance.close( ctrl );
+                       };
+
+                       ctrl.effacer_creneau = function() {
+                           var do_it = function () {
+                               CreneauxEmploiDuTemps.delete( {
+                                   id: ctrl.creneau.id,
+                                   date_creneau: ctrl.creneau.heure_debut
+                               } )
+                                   .$promise.then( function () {
+                                       ctrl.actions_done.push( POPUP_ACTIONS.CRENEAU_DELETED );
+                                       ctrl.fermer();
+                                   } );
                            };
 
-                           // Initialisations {{{
-                           $scope.classes = classes;
-                           $scope.matieres = _(matieres).sortBy( 'libelle_long' );
-
-                           $scope.creneau = creneau;
-                           $scope.creneau.jour_de_la_semaine = '' + $scope.creneau.jour_de_la_semaine;
-                           $scope.mode_edition_creneau = $scope.creneau.en_creation;
-                           $scope.creneau.regroupement_id = parseInt( $scope.creneau.regroupement_id );
-                           $scope.creneau.mine = $scope.creneau.en_creation || _.chain( $scope.current_user.profil_actif.matieres ).pluck( 'id' ).include( $scope.creneau.matiere_id ).value();
-                           $scope.creneau.etranger = !$scope.current_user.profil_actif.admin && !$scope.creneau.en_creation && !$scope.creneau.mine;
-                           $scope.creneau.previous_regroupement_id = $scope.creneau.regroupement_id;
-                           $scope.creneau.vierge = _(creneau.vierge).isUndefined();
-                           $scope.selected_regroupement = _($scope.creneau.regroupement_id).isUndefined() ? _( $scope.classes ).first() : _( $scope.classes ).findWhere( { id: parseInt( $scope.creneau.regroupement_id ) } );
-                           $scope.selected_matiere = _($scope.creneau.matiere_id).isEmpty() ? _( $scope.matieres ).first() : _($scope.matieres).findWhere( { id: $scope.creneau.matiere_id } );
-                           if ( $scope.creneau.en_creation ) {
-                               $scope.creneau.tmp_heure_debut = $filter( 'correctTimeZoneToGMT' )( $scope.creneau.heure_debut );
-                               $scope.creneau.tmp_heure_fin = $filter( 'correctTimeZoneToGMT' )( $scope.creneau.heure_fin );
+                           if ( ctrl.dirty ) {
+                               swal( { title: 'Ceci supprimera le créneau à compter du ' + $filter( 'amDateFormat' )( creneau.heure_debut, 'dddd D MMMM YYYY' ),
+                                       text: 'Le créneau avec ses séquences pédagogiques et devoirs associés restera visible pour les dates antérieures.',
+                                       type: 'warning',
+                                       showCancelButton: true,
+                                       confirmButtonColor: '#ff6b55',
+                                       confirmButtonText: 'Confirmer',
+                                       cancelButtonText: 'Annuler'
+                                     } ).then( do_it,
+                                               do_nothing );
                            } else {
-                               $scope.creneau.tmp_heure_debut = angular.copy( $scope.creneau.heure_debut );
-                               $scope.creneau.tmp_heure_fin = angular.copy( $scope.creneau.heure_fin );
-
-                               _($scope.creneau.regroupements).each( function( regroupement ) {
-                                   regroupement.regroupement_id = parseInt( regroupement.regroupement_id );
-                               } );
+                               do_it();
                            }
-                           $scope.creneau.tmp_heure_debut = moment( $scope.creneau.tmp_heure_debut );
-                           $scope.creneau.tmp_heure_fin = moment( $scope.creneau.tmp_heure_fin );
-                           $scope.creneau.n_week = moment($scope.creneau.tmp_heure_debut).week();
+                       };
 
-                           // Gestion des semaines actives
-                           $scope.overlay_semainier = Utils.overlay_semainier();
-
-                           var fixnum_to_bitfield = function( fixnum ) {
-                               var string = fixnum.toString(2);
-                               var padding = '';
-                               _(52 - string.length).times( function() { padding += '0'; } );
-                               string = padding + string;
-                               return _(string.split('')
-                                        .map( function( e ) { return parseInt( e ); } )
-                                        .reverse())
-                                   .rest();
-                           };
-                           var bitfield_to_fixnum = function( bitfield ) {
-                               return parseInt( bitfield.reverse().join('') + '0', 2 );
-                           };
-                           $scope.sont_ce_les_vacances = Utils.sont_ce_les_vacances;
-
-                           var semaines_toutes_actives = function() {
-                               var semainier = [];
-                               _(52).times( function( i ) {
-                                   if ( !Utils.sont_ce_les_vacances( i + 1, ZONE ) ) {
-                                       semainier.push( 1 );
-                                   } else {
-                                       semainier.push( 0 );
-                                   }
-                               });
-
-                               return semainier;
-                           };
-
-                           $scope.semaines_actives = { regroupement: [] };
-                           $scope.templates_semainier = [
-                               { label: 'Tout',
-                                 apply: function() {
-                                     $scope.semaines_actives.regroupement = semaines_toutes_actives();
-                                 }
-                               },
-                               { label: 'Semaine A',
-                                 apply: function() {
-                                     var template = [];
-                                     var semaines_depuis_les_vacances = 0;
-                                     _(52).times( function( i ) {
-                                         if ( Utils.sont_ce_les_vacances( i + 1, ZONE ) ) {
-                                             semaines_depuis_les_vacances = 0;
-                                         } else {
-                                             semaines_depuis_les_vacances++;
-                                         }
-                                         template.push( ( semaines_depuis_les_vacances % 2 == 1 ) ? 1 : 0 );
-                                     });
-                                     $scope.semaines_actives.regroupement = template;
-                                 }
-                               },
-                               { label: 'Semaine B',
-                                 apply: function() {
-                                     var template = [];
-                                     var semaines_depuis_les_vacances = 0;
-                                     _(52).times( function( i ) {
-                                         if ( Utils.sont_ce_les_vacances( i + 1, ZONE ) ) {
-                                             semaines_depuis_les_vacances = 0;
-                                         } else {
-                                             semaines_depuis_les_vacances++;
-                                         }
-                                         template.push( ( semaines_depuis_les_vacances % 2 == 0 ) ? 1 : 0 );
-                                     });
-                                     $scope.semaines_actives.regroupement = template;
-                                 }
-                               },
-                               { label: 'Unique',
-                                 apply: function() {
-                                     var template = [];
-                                     _(52).times( function( week ) {
-                                         template.push( ( week + 1 == $scope.creneau.n_week ) ? 1 : 0 );
-                                     });
-                                     $scope.semaines_actives.regroupement = template;
-                                 }
-                               },
-                               { label: 'Inverser',
-                                 apply: function() {
-                                     $scope.semaines_actives.regroupement = _($scope.semaines_actives.regroupement).map( function( w, i ) {
-                                         return ( ( w == 0 ) && !Utils.sont_ce_les_vacances( i + 1, ZONE ) ) ? 1 : 0;
-                                     } );
-                                 }
-                               },
-                               { label: 'Réinitialiser',
-                                 apply: function() {
-                                     $scope.semaines_actives.regroupement = $scope.creneau.en_creation ? semaines_toutes_actives() : fixnum_to_bitfield( creneau.semainier );
-                                 }
-                               }
-                           ];
-                           _($scope.templates_semainier).findWhere( { label: 'Réinitialiser' } ).apply();
-
-                           // helpers
-                           $scope.fermer = function () {
-                               $uibModalInstance.close( $scope );
-                           };
-
-                           $scope.effacer_creneau = function() {
-                               var do_it = function () {
-                                   CreneauxEmploiDuTemps.delete( {
-                                       id: $scope.creneau.id,
-                                       date_creneau: $scope.creneau.heure_debut
-                                   } )
-                                       .$promise.then( function () {
-                                           $scope.actions_done.push( POPUP_ACTIONS.CRENEAU_DELETED );
-                                           $scope.fermer();
-                                       } );
-                               };
-
-                               if ( $scope.dirty ) {
-                                   swal( { title: 'Ceci supprimera le créneau à compter du ' + $filter( 'amDateFormat' )( creneau.heure_debut, 'dddd D MMMM YYYY' ),
-                                           text: 'Le créneau avec ses séquences pédagogiques et devoirs associés restera visible pour les dates antérieures.',
-                                           type: 'warning',
-                                           showCancelButton: true,
-                                           confirmButtonColor: '#ff6b55',
-                                           confirmButtonText: 'Confirmer',
-                                           cancelButtonText: 'Annuler'
-                                         } ).then( do_it,
-                                                   do_nothing );
+                       ctrl.annuler = function () {
+                           var do_it = function () {
+                               if ( ctrl.creneau.en_creation ) {
+                                   ctrl.effacer_creneau();
                                } else {
-                                   do_it();
+                                   ctrl.dirty = false;
+                                   if ( ctrl.actions_done.length == 0 ) {
+                                       ctrl.actions_done.push( POPUP_ACTIONS.CANCELLED );
+                                   }
+                                   ctrl.fermer();
                                }
                            };
+                           if ( ctrl.dirty ) {
+                               swal( { title: 'Êtes-vous sur ?',
+                                       text: 'Les modifications que vous avez faites dans cette fenêtre seront perdues.',
+                                       type: 'warning',
+                                       showCancelButton: true,
+                                       confirmButtonColor: '#ff6b55',
+                                       confirmButtonText: 'Confirmer',
+                                       cancelButtonText: 'Annuler'
+                                     } ).then( do_it,
+                                               do_nothing );
+                           } else {
+                               do_it();
+                           }
+                       };
 
-                           $scope.annuler = function () {
-                               var do_it = function () {
-                                   if ( $scope.creneau.en_creation ) {
-                                       $scope.effacer_creneau();
-                                   } else {
-                                       $scope.dirty = false;
-                                       if ( $scope.actions_done.length == 0 ) {
-                                           $scope.actions_done.push( POPUP_ACTIONS.CANCELLED );
-                                       }
-                                       $scope.fermer();
-                                   }
-                               };
-                               if ( $scope.dirty ) {
-                                   swal( { title: 'Êtes-vous sur ?',
-                                           text: 'Les modifications que vous avez faites dans cette fenêtre seront perdues.',
-                                           type: 'warning',
-                                           showCancelButton: true,
-                                           confirmButtonColor: '#ff6b55',
-                                           confirmButtonText: 'Confirmer',
-                                           cancelButtonText: 'Annuler'
-                                         } ).then( do_it,
-                                                   do_nothing );
-                               } else {
-                                   do_it();
+                       ctrl.valider = function () {
+                           // réinitialisation des erreurs
+                           ctrl.erreurs = [];
+                           var promesses = [];
+
+                           if ( ctrl.mode_edition_creneau ) {
+                               ctrl.creneau.matiere_id = ctrl.selected_matiere.id;
+                               ctrl.creneau.regroupement_id = ctrl.selected_regroupement.id;
+                               if ( ctrl.creneau.tmp_heure_debut > ctrl.creneau.tmp_heure_fin ) {
+                                   var tmp = ctrl.creneau.tmp_heure_debut;
+                                   ctrl.creneau.tmp_heure_debut = ctrl.creneau.tmp_heure_fin;
+                                   ctrl.creneau.tmp_heure_fin = tmp;
                                }
-                           };
+                               ctrl.creneau.heure_debut = $filter('correctTimeZone')( ctrl.creneau.tmp_heure_debut );
+                               ctrl.creneau.heure_fin = $filter('correctTimeZone')( ctrl.creneau.tmp_heure_fin );
+                               ctrl.creneau.semainier_regroupement = Utils.bitfield_to_fixnum( ctrl.semaines_actives.regroupement );
 
-                           $scope.valider = function () {
-                               // réinitialisation des erreurs
-                               $scope.erreurs = [];
-                               var promesses = [];
+                               ctrl.creneau.$update();
 
-                               if ( $scope.mode_edition_creneau ) {
-                                   $scope.creneau.matiere_id = $scope.selected_matiere.id;
-                                   $scope.creneau.regroupement_id = $scope.selected_regroupement.id;
-                                   if ( $scope.creneau.tmp_heure_debut > $scope.creneau.tmp_heure_fin ) {
-                                       var tmp = $scope.creneau.tmp_heure_debut;
-                                       $scope.creneau.tmp_heure_debut = $scope.creneau.tmp_heure_fin;
-                                       $scope.creneau.tmp_heure_fin = tmp;
-                                   }
-                                   $scope.creneau.heure_debut = $filter('correctTimeZone')( $scope.creneau.tmp_heure_debut );
-                                   $scope.creneau.heure_fin = $filter('correctTimeZone')( $scope.creneau.tmp_heure_fin );
-                                   $scope.creneau.semainier_regroupement = bitfield_to_fixnum( $scope.semaines_actives.regroupement );
-
-                                   $scope.creneau.$update();
-
-                                   $scope.actions_done.push( POPUP_ACTIONS.CRENEAU_MODIFIED );
-                               } else {
-                                   // Gestion des Cours et Devoirs
-                                   var valider_devoirs = function( devoirs, cours ) {
-                                       _.chain( devoirs )
-                                           .where( { dirty: true } )
-                                           .each( function ( devoir ) {
-                                               var prom = $q.defer();
-                                               var treat_error = function error( response ) {
-                                                   $scope.erreurs.unshift( { status: response.status,
-                                                                             message: response.data.error } );
-                                                   prom.reject( response );
+                               ctrl.actions_done.push( POPUP_ACTIONS.CRENEAU_MODIFIED );
+                           } else {
+                               // Gestion des Cours et Devoirs
+                               var valider_devoirs = function( devoirs, cours ) {
+                                   _.chain( devoirs )
+                                       .where( { dirty: true } )
+                                       .each( function ( devoir ) {
+                                           var prom = $q.defer();
+                                           var treat_error = function error( response ) {
+                                               ctrl.erreurs.unshift( { status: response.status,
+                                                                         message: response.data.error } );
+                                               prom.reject( response );
+                                           };
+                                           var treat_success = function( action ) {
+                                               return function success( result ) {
+                                                   devoir.id = result.id;
+                                                   prom.resolve( result );
+                                                   ctrl.actions_done.push( action );
                                                };
-                                               var treat_success = function( action ) {
-                                                   return function success( result ) {
-                                                       devoir.id = result.id;
-                                                       prom.resolve( result );
-                                                       $scope.actions_done.push( action );
-                                                   };
-                                               };
+                                           };
 
-                                               if ( devoir.create ) {
-                                                   devoir.regroupement_id = $scope.selected_regroupement.id;
-                                                   if ( ! _(cours).isNull() ) { devoir.cours_id = cours.id; }
-                                                   if ( !_( devoir ).has( 'contenu' ) ) { devoir.contenu = ''; }
+                                           if ( devoir.create ) {
+                                               devoir.regroupement_id = ctrl.selected_regroupement.id;
+                                               if ( ! _(cours).isNull() ) { devoir.cours_id = cours.id; }
+                                               if ( !_( devoir ).has( 'contenu' ) ) { devoir.contenu = ''; }
 
-                                                   devoir.$save().then( treat_success( POPUP_ACTIONS.DEVOIR_CREATED ),
-                                                                        treat_error );
-                                               } else {
-                                                   devoir.$update().then( treat_success( POPUP_ACTIONS.DEVOIR_MODIFIED ),
-                                                                          treat_error );
-                                               }
-
-                                               promesses.push( prom.promise );
-                                           } );
-                                   };
-
-                                   // Séquence Pédogogique du créneau
-                                   if ( ( $scope.cours.contenu.length > 0 || ( _($scope.cours).has('ressources') && $scope.cours.ressources.length > 0 ) ) || ( $scope.cours.devoirs.length > 0 ) ) {
-                                       var cours_devoirs = _($scope.cours.devoirs).map( function( devoir ) {
-                                           return new Devoirs( devoir );
-                                       });
-
-                                       if ( $scope.cours.editable ) {
-                                           var promesse = $q.when( true );
-
-                                           if ( $scope.cours.create ) {
-                                               $scope.cours.regroupement_id = $scope.selected_regroupement.id;
-                                               $scope.cours.creneau_emploi_du_temps_id = $scope.creneau.id;
-                                               promesse = $scope.cours.$save();
-                                               $scope.actions_done.push( POPUP_ACTIONS.SEQUENCE_PEDAGOGIQUE_CREATED );
+                                               devoir.$save().then( treat_success( POPUP_ACTIONS.DEVOIR_CREATED ),
+                                                                    treat_error );
                                            } else {
-                                               promesse = $scope.cours.$update();
-                                               $scope.actions_done.push( POPUP_ACTIONS.SEQUENCE_PEDAGOGIQUE_MODIFIED );
+                                               devoir.$update().then( treat_success( POPUP_ACTIONS.DEVOIR_MODIFIED ),
+                                                                      treat_error );
                                            }
 
-                                           // Devoirs liés au cours
-                                           if ( cours_devoirs.length > 0 ) {
-                                               promesse.then( function ( cours_from_DB ) {
-                                                   valider_devoirs( cours_devoirs, cours_from_DB );
-                                               } );
-                                           }
+                                           promesses.push( prom.promise );
+                                       } );
+                               };
+
+                               // Séquence Pédogogique du créneau
+                               if ( ( ctrl.cours.contenu.length > 0 || ( _(ctrl.cours).has('ressources') && ctrl.cours.ressources.length > 0 ) ) || ( ctrl.cours.devoirs.length > 0 ) ) {
+                                   var cours_devoirs = _(ctrl.cours.devoirs).map( function( devoir ) {
+                                       return new Devoirs( devoir );
+                                   });
+
+                                   if ( ctrl.cours.editable ) {
+                                       var promesse = $q.when( true );
+
+                                       if ( ctrl.cours.create ) {
+                                           ctrl.cours.regroupement_id = ctrl.selected_regroupement.id;
+                                           ctrl.cours.creneau_emploi_du_temps_id = ctrl.creneau.id;
+                                           promesse = ctrl.cours.$save();
+                                           ctrl.actions_done.push( POPUP_ACTIONS.SEQUENCE_PEDAGOGIQUE_CREATED );
                                        } else {
-                                           valider_devoirs( cours_devoirs, $scope.cours );
+                                           promesse = ctrl.cours.$update();
+                                           ctrl.actions_done.push( POPUP_ACTIONS.SEQUENCE_PEDAGOGIQUE_MODIFIED );
                                        }
-                                   }
 
-                                   // Devoirs dûs ce créneau
-                                   valider_devoirs( $scope.devoirs, null );
+                                       // Devoirs liés au cours
+                                       if ( cours_devoirs.length > 0 ) {
+                                           promesse.then( function ( cours_from_DB ) {
+                                               valider_devoirs( cours_devoirs, cours_from_DB );
+                                           } );
+                                       }
+                                   } else {
+                                       valider_devoirs( cours_devoirs, ctrl.cours );
+                                   }
                                }
 
-                               $q.all( promesses ).then( $scope.fermer );
+                               // Devoirs dûs ce créneau
+                               valider_devoirs( ctrl.devoirs, null );
+                           }
+
+                           $q.all( promesses ).then( ctrl.fermer );
+                       };
+
+
+
+
+
+                       // Gestion des Cours et Devoirs ///////////////////////////////////////////////////////////////////////////
+                       if ( !ctrl.creneau.en_creation ) {
+                           // fonctions UI pour le temps estimé
+                           ctrl.estimation_over = function ( d, value ) {
+                               d.overValue = value;
+                               d.minutes = 5 * value;
+                           };
+                           ctrl.estimation_leave = function ( d ) {
+                               ctrl.estimation_over( d, d.temps_estime );
                            };
 
+                           ctrl.types_de_devoir = API.query_types_de_devoir();
 
+                           var init_cours_existant = function( cours ) {
+                               ctrl.cours = Cours.get( { id: cours.id } );
+                               ctrl.cours.$promise.then( function( cours ) {
+                                   ctrl.cours.editable = _(ctrl.cours.date_validation).isNull() && _(['ENS', 'DOC']).includes( ctrl.current_user.profil_actif.profil_id ) && ctrl.cours.enseignant_id === ctrl.current_user.uid;
+                                   if ( !ctrl.cours.editable ) {
+                                       ctrl.cours.contenu = $sce.trustAsHtml( ctrl.cours.contenu );
+                                   }
 
+                                   cours.devoirs = _.chain(cours.devoirs)
+                                       .select( function( devoir ) {
+                                           return _.chain(devoirs).findWhere({ id: devoir.id }).isUndefined().value();
+                                       } )
+                                       .map( function( devoir ) {
+                                           return Devoirs.get( { id: devoir.id } );
+                                       } )
+                                       .value();
 
+                                   _(cours.devoirs).each( function( devoir ) {
+                                       devoir.$promise.then( function( d ) {
+                                           ctrl.estimation_leave( d );
+                                           d.tooltip = '<em>' + $filter('amDateFormat')( d.date_due, 'dddd D MMMM YYYY' ) + '</em><hr />' + d.contenu;
+                                           if ( d.temps_estime > 0 ) {
+                                               d.tooltip = '<span><i class="picto temps"></i>' + d.temps_estime * 5 + ' minutes</span><hr />' + d.tooltip;
+                                           }
+                                           d.tooltip = $sce.trustAsHtml( '<div>' + d.tooltip + '</div>' );
 
-                           // Gestion des Cours et Devoirs ///////////////////////////////////////////////////////////////////////////
-                           if ( !$scope.creneau.en_creation ) {
-                               // fonctions UI pour le temps estimé
-                               $scope.estimation_over = function ( d, value ) {
-                                   d.overValue = value;
-                                   d.minutes = 5 * value;
-                               };
-                               $scope.estimation_leave = function ( d ) {
-                                   $scope.estimation_over( d, d.temps_estime );
-                               };
-
-                               $scope.types_de_devoir = API.query_types_de_devoir();
-
-                               var init_cours_existant = function( cours ) {
-                                   $scope.cours = Cours.get( { id: cours.id } );
-                                   $scope.cours.$promise.then( function( cours ) {
-                                       $scope.cours.editable = _($scope.cours.date_validation).isNull() && _(['ENS', 'DOC']).includes( $scope.current_user.profil_actif.profil_id ) && $scope.cours.enseignant_id === $scope.current_user.uid;
-                                       if ( !$scope.cours.editable ) {
-                                           $scope.cours.contenu = $sce.trustAsHtml( $scope.cours.contenu );
-                                       }
-
-                                       cours.devoirs = _.chain(cours.devoirs)
-                                           .select( function( devoir ) {
-                                               return _.chain(devoirs).findWhere({ id: devoir.id }).isUndefined().value();
-                                           } )
-                                           .map( function( devoir ) {
-                                               return Devoirs.get( { id: devoir.id } );
-                                           } )
-                                           .value();
-
-                                       _(cours.devoirs).each( function( devoir ) {
-                                           devoir.$promise.then( function( d ) {
-                                               $scope.estimation_leave( d );
-                                               d.tooltip = '<em>' + $filter('amDateFormat')( d.date_due, 'dddd D MMMM YYYY' ) + '</em><hr />' + d.contenu;
-                                               if ( d.temps_estime > 0 ) {
-                                                   d.tooltip = '<span><i class="picto temps"></i>' + d.temps_estime * 5 + ' minutes</span><hr />' + d.tooltip;
-                                               }
-                                               d.tooltip = $sce.trustAsHtml( '<div>' + d.tooltip + '</div>' );
-
-                                               if ( $scope.creneau.etranger ) {
-                                                   d.contenu = $sce.trustAsHtml( d.contenu );
-                                               }
-                                           } );
+                                           if ( ctrl.creneau.etranger ) {
+                                               d.contenu = $sce.trustAsHtml( d.contenu );
+                                           }
                                        } );
+                                   } );
 
-                                       $q.all( $scope.devoirs ).then( function() {
-                                           $scope.cours.devoirs = _($scope.cours.devoirs).filter( function( devoir ) {
-                                               return _.chain($scope.devoirs).findWhere({ id: devoir.id }).isUndefined().value();
-                                           } );
+                                   $q.all( ctrl.devoirs ).then( function() {
+                                       ctrl.cours.devoirs = _(ctrl.cours.devoirs).filter( function( devoir ) {
+                                           return _.chain(ctrl.devoirs).findWhere({ id: devoir.id }).isUndefined().value();
                                        } );
+                                   } );
 
-                                       $scope.cours.$promise.then( function() {
-                                           _($scope.cours.ressources).each( function( ressource ) {
+                                   ctrl.cours.$promise.then( function() {
+                                       _(ctrl.cours.ressources).each( function( ressource ) {
+                                           ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+                                       } );
+                                   } );
+                                   _(ctrl.cours.devoirs).each( function( devoir ) {
+                                       devoir.$promise.then( function() {
+                                           _(devoir.ressources).each( function( ressource ) {
                                                ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
                                            } );
                                        } );
-                                       _($scope.cours.devoirs).each( function( devoir ) {
-                                           devoir.$promise.then( function() {
-                                               _(devoir.ressources).each( function( ressource ) {
-                                                   ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
-                                               } );
-                                           } );
-                                       } );
-
-                                   } );
-                                   $scope.cours.create = false;
-                               };
-
-                               if ( _(cours).isNull() ) {
-                                   if ( !$scope.creneau.etranger ) {
-                                       $scope.cours = create_cours( creneau );
-                                       $scope.cours.editable = true;
-                                   }
-                               } else {
-                                   init_cours_existant( cours );
-                               }
-
-                               $scope.devoirs = devoirs.map( function( devoir ) {
-                                   var devoir_from_DB = Devoirs.get( { id: devoir.id } );
-                                   devoir_from_DB.$promise.then( function( d ) {
-                                       d.cours.tooltip = $sce.trustAsHtml( "<div><em>" + $filter('amDateFormat')( d.cours.date_cours, 'dddd D MMMM YYYY' ) + "</em><hr />" + d.cours.contenu + "</div>" );
                                    } );
 
-                                   return devoir_from_DB;
+                               } );
+                               ctrl.cours.create = false;
+                           };
+
+                           ctrl.devoirs = devoirs.map( function( devoir ) {
+                               var devoir_from_DB = Devoirs.get( { id: devoir.id } );
+                               devoir_from_DB.$promise.then( function( d ) {
+                                   d.cours.tooltip = $sce.trustAsHtml( "<div><em>" + $filter('amDateFormat')( d.cours.date_cours, 'dddd D MMMM YYYY' ) + "</em><hr />" + d.cours.contenu + "</div>" );
                                } );
 
-                               _( $scope.devoirs ).each( function ( devoir ) {
-                                   devoir.$promise.then( function() {
-                                       $scope.estimation_leave( devoir );
-                                       _(devoir.ressources).each( function( ressource ) {
-                                           ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
-                                       } );
-                                       if ( $scope.creneau.etranger ) {
-                                           devoir.contenu = $sce.trustAsHtml( devoir.contenu );
-                                       }
+                               return devoir_from_DB;
+                           } );
+
+                           _( ctrl.devoirs ).each( function ( devoir ) {
+                               devoir.$promise.then( function() {
+                                   ctrl.estimation_leave( devoir );
+                                   _(devoir.ressources).each( function( ressource ) {
+                                       ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
                                    } );
+                                   if ( ctrl.creneau.etranger ) {
+                                       devoir.contenu = $sce.trustAsHtml( devoir.contenu );
+                                   }
+                               } );
+                           } );
+
+                           // Fonction UI pour fixer l'id du créneau en fct du choix dans la sbox des créneaux possibles.
+                           ctrl.set_creneau_date_due = function ( devoir ) {
+                               // on prend le premier créneau qui correspond à cette date.
+                               var creneau_choisi = _( ctrl.creneaux_devoirs_possibles ).findWhere( {
+                                   date_due: devoir.date_due
+                               } );
+                               devoir.creneau_emploi_du_temps_id = creneau_choisi.creneau_emploi_du_temps_id;
+                               ctrl.is_dirty( devoir );
+                           };
+
+                           var liste_créneaux_similaires = function( creneau, n_semaines_before, n_semaines_after ) {
+                               return API.get_creneaux_emploi_du_temps_similaires({ id: creneau.id,
+                                                                                    debut: moment( creneau.heure_debut.toISOString() ).subtract( n_semaines_before, 'weeks' ).toDate(),
+                                                                                    fin: moment( creneau.heure_debut.toISOString() ).add( n_semaines_after, 'weeks' ).toDate() } );
+                           };
+
+                           liste_créneaux_similaires( ctrl.creneau, 2, 8 )
+                               .then( function( response ) {
+                                   ctrl.creneaux_devoirs_possibles_duplication = [];
+                                   ctrl.creneaux_similaires = _.chain(response.data)
+                                       .reject( function( creneau ) { return _(creneau.regroupement_id).isUndefined() || creneau.has_cours; } )
+                                       .map( function ( creneau ) {
+                                           creneau.classe = _( ctrl.classes ).findWhere( { id: parseInt( creneau.regroupement_id ) } );
+                                           creneau.heure_debut = new Date( creneau.heure_debut );
+                                           creneau.heure_fin = new Date( creneau.heure_fin );
+
+                                           return creneau;
+                                       } )
+                                       .value();
+                                   ctrl.creneaux_similaires.selected = [];
                                } );
 
-                               // Fonction UI pour fixer l'id du créneau en fct du choix dans la sbox des créneaux possibles.
-                               $scope.set_creneau_date_due = function ( devoir ) {
-                                   // on prend le premier créneau qui correspond à cette date.
-                                   var creneau_choisi = _( $scope.creneaux_devoirs_possibles ).findWhere( {
-                                       date_due: devoir.date_due
-                                   } );
-                                   devoir.creneau_emploi_du_temps_id = creneau_choisi.creneau_emploi_du_temps_id;
-                                   $scope.is_dirty( devoir );
-                               };
+                           liste_créneaux_similaires( ctrl.creneau, 0, 8 )
+                               .then( function( response ) {
+                                   ctrl.creneaux_devoirs_possibles = _.chain(response.data)
+                                       .select( function( creneau ) { return creneau.regroupement_id == ctrl.creneau.regroupement_id; } )
+                                       .map( function ( creneau ) {
+                                           creneau.classe = _( ctrl.classes ).findWhere( { id: parseInt( creneau.regroupement_id ) } );
+                                           creneau.date_due = $filter( 'date' )( creneau.start, 'y-MM-dd' );
+                                           creneau.semaine = moment( creneau.start).from( moment( ctrl.creneau.heure_debut ) );
+                                           creneau.heure_debut = new Date( creneau.heure_debut );
+                                           creneau.heure_fin = new Date( creneau.heure_fin );
 
-                               var liste_créneaux_similaires = function( creneau, n_semaines_before, n_semaines_after ) {
-                                   return API.get_creneaux_emploi_du_temps_similaires({ id: creneau.id,
-                                                                                        debut: moment( creneau.heure_debut.toISOString() ).subtract( n_semaines_before, 'weeks' ).toDate(),
-                                                                                        fin: moment( creneau.heure_debut.toISOString() ).add( n_semaines_after, 'weeks' ).toDate() } );
-                               };
-
-                               liste_créneaux_similaires( $scope.creneau, 2, 8 )
-                                   .then( function( response ) {
-                                       $scope.creneaux_devoirs_possibles_duplication = [];
-                                       $scope.creneaux_similaires = _.chain(response.data)
-                                           .reject( function( creneau ) { return creneau.regroupement_id === 'undefined'; } )
-                                           .reject( function( creneau ) { return creneau.has_cours; } )
-                                           .map( function ( creneau ) {
-                                               creneau.classe = _( $scope.classes ).findWhere( { id: parseInt( creneau.regroupement_id ) } );
-                                               creneau.heure_debut = new Date( creneau.heure_debut );
-                                               creneau.heure_fin = new Date( creneau.heure_fin );
-
-                                               return creneau;
-                                           } )
-                                           .value();
-                                       $scope.creneaux_similaires.selected = [];
-                                   } );
-
-                               liste_créneaux_similaires( $scope.creneau, 0, 8 )
-                                   .then( function( response ) {
-                                       $scope.creneaux_devoirs_possibles = _.chain(response.data)
-                                           .select( function( creneau ) { return creneau.regroupement_id == $scope.creneau.regroupement_id; } )
-                                           .map( function ( creneau ) {
-                                               creneau.classe = _( $scope.classes ).findWhere( { id: parseInt( creneau.regroupement_id ) } );
-                                               creneau.date_due = $filter( 'date' )( creneau.start, 'y-MM-dd' );
-                                               creneau.semaine = moment( creneau.start).from( moment( $scope.creneau.heure_debut ) );
-                                               creneau.heure_debut = new Date( creneau.heure_debut );
-                                               creneau.heure_fin = new Date( creneau.heure_fin );
-
-                                               return creneau;
-                                           } )
-                                           .sortBy( function ( creneau ) { // Trie par dates croissantes
-                                               return creneau.start;
-                                           } )
-                                           .value();
-                                       if ( $scope.creneaux_devoirs_possibles.length > 1 ) {
-                                           $scope.creneaux_devoirs_possibles = _($scope.creneaux_devoirs_possibles)
-                                               .select( function ( creneau ) {
-                                                   return creneau.heure_debut.toISOString() != $scope.creneau.heure_debut.toISOString();
-                                               } );
-                                       }
-                                   } );
-
-                               // {{{ Gestion des documents attachés
-                               $scope.cartable = {};
-                               $scope.cartable.expandedNodes = [];
-                               $scope.treeOptions = {
-                                   dirSelectable: false
-                               };
-
-                               var dead_Documents = function() {
-                                   $scope.erreurs.push( { message: "Application Documents non disponible" } );
-                                   $scope.faulty_docs_app = true;
-                               };
-
-                               if ( LOCALHOST ) {
-                                   $scope.erreurs.push( { message: "Instance sur localhost" } );
-                                   $scope.faulty_docs_app = true;
-                               } else {
-                                   Documents.list_files()
-                                       .then( function ( response ) {
-                                           if ( _(response.error).isEmpty() && _(response).has( 'files' ) ) {
-                                               $scope.cartable = response;
-                                               $scope.cartable.files = _( response.files ).reject( function( file ) {
-                                                   return _(file).has( 'phash' );
-                                               } ); //.rest();
-                                               $scope.cartable.expandedNodes = [];
-                                           } else {
-                                               dead_Documents();
-                                           }
-                                       },
-                                              dead_Documents );
-                               }
-
-                               $scope.consume_Documents_response_callback = function( item ) {
-                                   return function( response ) {
-                                       $scope.erreurs = [];
-                                       if ( !_(response.error).isEmpty() ) {
-                                           $scope.erreurs.push( { message: response.error } );
-                                       } else {
-                                           var _item = _( response.added ).first();
-                                           item.ressources.push( {
-                                               name: _item.name,
-                                               hash: _item.hash,
-                                               url: $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + _item.hash )
+                                           return creneau;
+                                       } )
+                                       .sortBy( function ( creneau ) { // Trie par dates croissantes
+                                           return creneau.start;
+                                       } )
+                                       .value();
+                                   if ( ctrl.creneaux_devoirs_possibles.length > 1 ) {
+                                       ctrl.creneaux_devoirs_possibles = _(ctrl.creneaux_devoirs_possibles)
+                                           .select( function ( creneau ) {
+                                               return creneau.heure_debut.toISOString() != ctrl.creneau.heure_debut.toISOString();
                                            } );
-                                           $scope.is_dirty( item );
-                                       }
-                                   };
-                               };
-
-                               $scope.upload_and_add_ressource = function ( item, fichiers ) {
-                                   if ( item.ressources === undefined ) {
-                                       item.ressources = [];
                                    }
-                                   var responses = Documents.upload_dans_cahier_de_textes( $scope.selected_regroupement, fichiers );
-                                   for ( var i = 0; i < responses.length; i++ ) {
-                                       responses[ i ]
-                                           .then( $scope.consume_Documents_response_callback( item ),
-                                                  function ( response ) {
-                                                      console.debug( response.error );
-                                                  } );
-                                   }
-                               };
+                               } );
 
-                               $scope.remove_ressource = function ( item, hash ) {
-                                   item.ressources = _( item.ressources ).reject( function ( ressource ) {
-                                       return ressource.hash == hash;
-                                   } );
-                                   $scope.is_dirty( item );
-                               };
-                               // }}}
+                           // {{{ Gestion des documents attachés
+                           ctrl.cartable = {};
+                           ctrl.cartable.expandedNodes = [];
+                           ctrl.treeOptions = {
+                               dirSelectable: false
+                           };
 
-                               // fonctions d'événements GUI {{{
-                               $scope.ajout_devoir = function( where, creneau_cible ) {
-                                   if ( _(creneau_cible).isNull() || _(creneau_cible).isUndefined() ) {
-                                       creneau_cible = $scope.creneau;
-                                   } else if ( creneau_cible === 'next' ) {
-                                       if ( $scope.creneaux_devoirs_possibles.length > 1 ) {
-                                           creneau_cible = _.chain($scope.creneaux_devoirs_possibles)
-                                               .select( function( creneau ) {
-                                                   return creneau.heure_debut > $scope.creneau.heure_debut;
-                                               } )
-                                               .head()
-                                               .value();
+                           var dead_Documents = function() {
+                               ctrl.erreurs.push( { message: "Application Documents non disponible" } );
+                               ctrl.faulty_docs_app = true;
+                           };
+
+                           if ( LOCALHOST ) {
+                               ctrl.erreurs.push( { message: "Instance sur localhost" } );
+                               ctrl.faulty_docs_app = true;
+                           } else {
+                               Documents.list_files()
+                                   .then( function ( response ) {
+                                       if ( _(response.error).isEmpty() && _(response).has( 'files' ) ) {
+                                           ctrl.cartable = response;
+                                           ctrl.cartable.files = _( response.files ).reject( function( file ) {
+                                               return _(file).has( 'phash' );
+                                           } ); //.rest();
+                                           ctrl.cartable.expandedNodes = [];
                                        } else {
-                                           creneau_cible = _($scope.creneaux_devoirs_possibles).first();
+                                           dead_Documents();
                                        }
-                                   }
+                                   },
+                                          dead_Documents );
+                           }
 
-                                   var devoir = new Devoirs( { cours_id: $scope.cours.id,
-                                                               date_due: $filter( 'date' )( creneau_cible.heure_debut, 'yyyy-MM-dd' ),
-                                                               type_devoir_id: _($scope.types_de_devoir).last().id,
-                                                               creneau_emploi_du_temps_id: creneau_cible.id } );
-                                   devoir.create = true;
-                                   devoir.dirty = true;
-                                   where.unshift( devoir );
-                               };
-
-                               $scope.ok_go_for_duplication = false;
-                               $scope.are_we_go_for_duplication = function() {
-                                   $scope.ok_go_for_duplication = !_($scope.creneaux_similaires.selected).isEmpty()
-                                       && _($scope.cours.devoirs).reduce( function( is_it, devoir ) { return is_it && _(devoir).has('creneau_cible'); }, true );
-                               };
-
-                               $scope.creneau_cible_duplication_SP_updated = function() {
-                                   // Calcul des créneaux cibles pour les devoirs
-                                   liste_créneaux_similaires( $scope.creneaux_similaires.selected, 0, 4 )
-                                       .then( function( response ) {
-                                           $scope.creneaux_devoirs_possibles_duplication = _.chain(response.data)
-                                               .select( function( creneau ) { return creneau.regroupement_id == $scope.creneaux_similaires.selected.regroupement_id; } )
-                                               .map( function ( creneau ) {
-                                                   creneau.classe = _( $scope.classes ).findWhere( { id: parseInt( creneau.regroupement_id ) } );
-                                                   creneau.date_due = $filter( 'date' )( creneau.start, 'y-MM-dd' );
-                                                   creneau.semaine = moment( creneau.start).from( moment( $scope.creneau.heure_debut ), true ) + ' plus tard';
-                                                   creneau.heure_debut = new Date( creneau.heure_debut );
-                                                   creneau.heure_fin = new Date( creneau.heure_fin );
-
-                                                   return creneau;
-                                               } )
-                                               .value();
-                                       } );
-                                   $scope.are_we_go_for_duplication();
-                               };
-
-                               $scope.dupliquer = function () {
-                                   var devoirs = angular.copy( $scope.cours.devoirs );
-                                   $scope.cours.$copie( {
-                                       regroupement_id: $scope.creneaux_similaires.selected.regroupement_id,
-                                       creneau_emploi_du_temps_id: $scope.creneaux_similaires.selected.creneau_emploi_du_temps_id,
-                                       date: $scope.creneaux_similaires.selected.start
-                                   } ).then( function() {
-                                       $scope.actions_done.push( POPUP_ACTIONS.SEQUENCE_PEDAGOGIQUE_DUPLICATED );
-                                       toastr.success( '', 'Séquence pédagogique copiée.');
-
-                                       _(devoirs).each( function( devoir ) {
-                                           devoir.$copie( {
-                                               cours_id: $scope.cours.copie_id,
-                                               creneau_emploi_du_temps_id: devoir.creneau_cible.id,
-                                               date_due: devoir.creneau_cible.date_due
-                                           } )
-                                               .then( function() {
-                                                   $scope.actions_done.push( POPUP_ACTIONS.DEVOIR_DUPLICATED );
-                                                   toastr.success( '', 'Devoir copié.');
-                                                   devoir.creneau_cible = [];
-                                               } );
-                                       } );
-                                       $scope.creneaux_similaires = _($scope.creneaux_similaires).reject( function( creneau ) {
-                                           return creneau.id + creneau.start == $scope.creneaux_similaires.selected.id + $scope.creneaux_similaires.selected.start;
-                                       } );
-                                       $scope.creneaux_similaires.selected = [];
-                                       init_cours_existant( $scope.cours );
-
-                                       swal( { title: 'Créneau copié !',
-                                               type: 'success',
-                                               timer: 2000,
-                                               showCancelButton: false,
-                                               confirmButtonColor: '#ff6b55',
-                                               confirmButtonText: 'Fermer'
-                                             } );
-                                   } );
-                               };
-
-                               $scope.effacer_cours = function () {
-                                   $scope.cours.$delete()
-                                       .then( function () {
-                                           $scope.actions_done.push( POPUP_ACTIONS.SEQUENCE_PEDAGOGIQUE_DELETED );
-                                           init_cours_existant( $scope.cours );
-                                       } );
-                               };
-
-                               $scope.effacer_devoir = function ( devoir ) {
-                                   if ( _(devoir).has('id') ) {
-                                       devoir.$delete().then( function() {
-                                           $scope.actions_done.push( POPUP_ACTIONS.DEVOIR_DELETED );
-                                       } );
+                           ctrl.consume_Documents_response_callback = function( item ) {
+                               return function( response ) {
+                                   ctrl.erreurs = [];
+                                   if ( !_(response.error).isEmpty() ) {
+                                       ctrl.erreurs.push( { message: response.error } );
                                    } else {
-                                       devoir.deleted = true;
+                                       var _item = _( response.added ).first();
+                                       item.ressources.push( {
+                                           name: _item.name,
+                                           hash: _item.hash,
+                                           url: $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + _item.hash )
+                                       } );
+                                       ctrl.is_dirty( item );
                                    }
                                };
+                           };
 
-                               $scope.switch_to_duplication_mode = function() {
-                                   $scope.mode_duplication = true;
-                               };
+                           ctrl.upload_and_add_ressource = function ( item, fichiers ) {
+                               if ( item.ressources === undefined ) {
+                                   item.ressources = [];
+                               }
+                               var responses = Documents.upload_dans_cahier_de_textes( ctrl.selected_regroupement, fichiers );
+                               for ( var i = 0; i < responses.length; i++ ) {
+                                   responses[ i ]
+                                       .then( ctrl.consume_Documents_response_callback( item ),
+                                              function ( response ) {
+                                                  console.debug( response.error );
+                                              } );
+                               }
+                           };
 
-                               $scope.switch_to_modification_mode = function() {
-                                   $scope.mode_edition_creneau = false;
-                                   $scope.mode_duplication = false;
-                               };
-
-                               $scope.switch_to_creneau_edition = function() {
-                                   $scope.dirty = true;
-                                   $scope.erreurs = [];
-                                   $scope.mode_edition_creneau = true;
-                               };
-                           }	// /fin gestion des Cours et Devoirs
+                           ctrl.remove_ressource = function ( item, hash ) {
+                               item.ressources = _( item.ressources ).reject( function ( ressource ) {
+                                   return ressource.hash == hash;
+                               } );
+                               ctrl.is_dirty( item );
+                           };
                            // }}}
+
+                           ctrl.effacer_cours = function () {
+                               ctrl.cours.$delete()
+                                   .then( function () {
+                                       ctrl.actions_done.push( POPUP_ACTIONS.SEQUENCE_PEDAGOGIQUE_DELETED );
+                                       init_cours_existant( ctrl.cours );
+                                   } );
+                           };
+
+                           ctrl.effacer_devoir = function ( devoir ) {
+                               if ( _(devoir).has('id') ) {
+                                   devoir.$delete().then( function() {
+                                       ctrl.actions_done.push( POPUP_ACTIONS.DEVOIR_DELETED );
+                                   } );
+                               } else {
+                                   devoir.deleted = true;
+                               }
+                           };
+
+                           // fonctions d'événements GUI {{{
+                           ctrl.ajout_devoir = function( where, creneau_cible ) {
+                               if ( _(creneau_cible).isNull() || _(creneau_cible).isUndefined() ) {
+                                   creneau_cible = ctrl.creneau;
+                               } else if ( creneau_cible === 'next' ) {
+                                   if ( ctrl.creneaux_devoirs_possibles.length > 1 ) {
+                                       creneau_cible = _.chain(ctrl.creneaux_devoirs_possibles)
+                                           .select( function( creneau ) {
+                                               return creneau.heure_debut > ctrl.creneau.heure_debut;
+                                           } )
+                                           .head()
+                                           .value();
+                                   } else {
+                                       creneau_cible = _(ctrl.creneaux_devoirs_possibles).first();
+                                   }
+                               }
+
+                               var devoir = new Devoirs( { cours_id: ctrl.cours.id,
+                                                           date_due: $filter( 'date' )( creneau_cible.heure_debut, 'yyyy-MM-dd' ),
+                                                           type_devoir_id: _(ctrl.types_de_devoir).last().id,
+                                                           creneau_emploi_du_temps_id: creneau_cible.id } );
+                               devoir.create = true;
+                               devoir.dirty = true;
+                               where.unshift( devoir );
+                           };
+
+                           // {{{ duplication
+                           ctrl.switch_to_duplication_mode = function() {
+                               ctrl.mode_duplication = true;
+                           };
+
+                           ctrl.ok_go_for_duplication = false;
+                           ctrl.are_we_go_for_duplication = function() {
+                               ctrl.ok_go_for_duplication = !_(ctrl.creneaux_similaires.selected).isEmpty()
+                                   && _(ctrl.cours.devoirs).reduce( function( is_it, devoir ) { return is_it && _(devoir).has('creneau_cible'); }, true );
+                           };
+
+                           ctrl.creneau_cible_duplication_SP_updated = function() {
+                               // Calcul des créneaux cibles pour les devoirs
+                               liste_créneaux_similaires( ctrl.creneaux_similaires.selected, 0, 4 )
+                                   .then( function( response ) {
+                                       ctrl.creneaux_devoirs_possibles_duplication = _.chain(response.data)
+                                           .select( function( creneau ) { return creneau.regroupement_id == ctrl.creneaux_similaires.selected.regroupement_id; } )
+                                           .map( function ( creneau ) {
+                                               creneau.classe = _( ctrl.classes ).findWhere( { id: parseInt( creneau.regroupement_id ) } );
+                                               creneau.date_due = $filter( 'date' )( creneau.start, 'y-MM-dd' );
+                                               creneau.semaine = moment( creneau.start).from( moment( ctrl.creneau.heure_debut ), true ) + ' plus tard';
+                                               creneau.heure_debut = new Date( creneau.heure_debut );
+                                               creneau.heure_fin = new Date( creneau.heure_fin );
+
+                                               return creneau;
+                                           } )
+                                           .value();
+                                   } );
+                               ctrl.are_we_go_for_duplication();
+                           };
+
+                           ctrl.dupliquer = function () {
+                               var devoirs = angular.copy( ctrl.cours.devoirs );
+                               ctrl.cours.$copie( {
+                                   regroupement_id: ctrl.creneaux_similaires.selected.regroupement_id,
+                                   creneau_emploi_du_temps_id: ctrl.creneaux_similaires.selected.creneau_emploi_du_temps_id,
+                                   date: ctrl.creneaux_similaires.selected.start
+                               } ).then( function() {
+                                   ctrl.actions_done.push( POPUP_ACTIONS.SEQUENCE_PEDAGOGIQUE_DUPLICATED );
+                                   toastr.success( '', 'Séquence pédagogique copiée.');
+
+                                   _(devoirs).each( function( devoir ) {
+                                       devoir.$copie( {
+                                           cours_id: ctrl.cours.copie_id,
+                                           creneau_emploi_du_temps_id: devoir.creneau_cible.id,
+                                           date_due: devoir.creneau_cible.date_due
+                                       } )
+                                           .then( function() {
+                                               ctrl.actions_done.push( POPUP_ACTIONS.DEVOIR_DUPLICATED );
+                                               toastr.success( '', 'Devoir copié.');
+                                               devoir.creneau_cible = [];
+                                           } );
+                                   } );
+                                   ctrl.creneaux_similaires = _(ctrl.creneaux_similaires).reject( function( creneau ) {
+                                       return creneau.id + creneau.start == ctrl.creneaux_similaires.selected.id + ctrl.creneaux_similaires.selected.start;
+                                   } );
+                                   ctrl.creneaux_similaires.selected = [];
+                                   init_cours_existant( ctrl.cours );
+
+                                   swal( { title: 'Créneau copié !',
+                                           type: 'success',
+                                           timer: 2000,
+                                           showCancelButton: false,
+                                           confirmButtonColor: '#ff6b55',
+                                           confirmButtonText: 'Fermer'
+                                         } );
+                               } );
+                           };
+                           // }}} /duplication
+
+                           ctrl.switch_to_modification_mode = function() {
+                               ctrl.mode_edition_creneau = false;
+                               ctrl.mode_duplication = false;
+                           };
+
+                           ctrl.switch_to_creneau_edition = function() {
+                               ctrl.dirty = true;
+                               ctrl.erreurs = [];
+                               ctrl.mode_edition_creneau = true;
+                           };
+                       }	// /fin gestion des Cours et Devoirs
+                       // }}}
+
+                       User.get_user().then( function( response ) {
+                           ctrl.current_user = response.data;
+
+                           if ( !ctrl.current_user.parametrage_cahier_de_textes.affichage_week_ends ) {
+                               delete ctrl.jours[0]; // sunday
+                               delete ctrl.jours[6]; // saturday
+                           }
+
+                           ctrl.creneau.mine = ctrl.creneau.en_creation || _.chain( ctrl.current_user.profil_actif.matieres ).pluck( 'id' ).include( ctrl.creneau.matiere_id ).value();
+                           ctrl.creneau.can_add_homework = _(['ENS', 'DOC']).includes( ctrl.current_user.profil_actif.profil_id ) && _.chain( ctrl.current_user.profil_actif.matieres ).pluck( 'id' ).include( ctrl.creneau.matiere_id ).value();
+                           ctrl.creneau.etranger = !ctrl.current_user.profil_actif.admin && !ctrl.creneau.en_creation && !ctrl.creneau.mine;
+
+                           if ( _(cours).isNull() ) {
+                               if ( !ctrl.creneau.etranger ) {
+                                   ctrl.cours = create_cours( creneau );
+                                   ctrl.cours.editable = true;
+                               }
+                           } else {
+                               init_cours_existant( cours );
+                           }
                        } );
                    } ] );
