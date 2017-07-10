@@ -53,7 +53,7 @@ module CahierDeTextesApp
       optional :semainier_salle, type: Integer
     end
     post  do
-      user_needs_to_be( %w( ENS DOC ), true )
+      user_needs_to_be( %w( ENS DOC ) )
 
       etablissement_id = Etablissement[ UAI: user[:user_detailed]['profil_actif']['etablissement_code_uai'] ].id
 
@@ -118,7 +118,7 @@ module CahierDeTextesApp
       optional :jour_de_la_semaine, type: Integer
     end
     put '/:id'  do
-      user_needs_to_be( %w( ENS DOC ), true )
+      user_needs_to_be( %w( ENS DOC ) )
 
       creneau = CreneauEmploiDuTemps[ params[:id] ]
 
@@ -137,7 +137,7 @@ module CahierDeTextesApp
       requires :ignore_matiere, type: Boolean, default: false
     end
     delete '/bulk' do
-      user_needs_to_be( %w( ENS DOC ), true )
+      user_needs_to_be( %w( ENS DOC ) )
 
       JSON.parse( params[:ids] ).map do |id|
         creneau = CreneauEmploiDuTemps[ id ]
@@ -163,7 +163,7 @@ module CahierDeTextesApp
       requires :date_creneau, type: Date
     end
     delete '/:id' do
-      user_needs_to_be( %w( ENS DOC ), true )
+      user_needs_to_be( %w( ENS DOC ) )
 
       creneau = CreneauEmploiDuTemps[ params[:id] ]
 

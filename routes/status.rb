@@ -20,7 +20,9 @@ module CahierDeTextesApp
             reason = 'Base de données vide.'
           end
 
-          app_status = app_infos
+          app_status = { app_id: ANNUAIRE[:app_id],
+                         app_version: APP_VERSION.nil? ? 'missing APP_VERSION' : APP_VERSION,
+                         rack_env: ENV[ 'RACK_ENV' ] }
 
           app_status[:status] = status
           app_status[:reason] = reason

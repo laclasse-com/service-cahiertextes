@@ -4,17 +4,17 @@ angular.module( 'cahierDeTextesClientApp' )
     .factory('Regroupements',
              [ '$resource', 'URL_ENT',
                function( $resource, URL_ENT ) {
-                   return $resource( URL_ENT + '/api/app/regroupements/:regroupement_id',
+                   return $resource( URL_ENT + '/api/groups/:regroupement_id',
                                      { regroupement_id: '@regroupement_id' } );
                } ] )
     .factory('Users',
              [ '$resource', 'URL_ENT',
                function( $resource, URL_ENT ) {
-                   return $resource( URL_ENT + '/api/app/users/:user_id',
+                   return $resource( URL_ENT + '/api/users/:user_id',
                                      { user_id: '@user_id',
                                        expand: true },
                                      { bulk: { method: 'GET',
-                                               url: URL_ENT + '/api/app/users/liste/:uids',
+                                               url: URL_ENT + '/api/users',
                                                params: { uids: '@uids' },
                                                isArray: true }
                                      } );
@@ -25,24 +25,24 @@ angular.module( 'cahierDeTextesClientApp' )
              [ '$http', 'Regroupements', 'Users', 'URL_ENT',
                function( $http, Regroupements, Users, URL_ENT ) {
                    this.get_matieres = _.memoize( function(  ) {
-                       return $http.get( URL_ENT + '/api/app/matieres' );
+                       return $http.get( URL_ENT + '/api/subjects' );
                    });
 
                    this.get_matiere = _.memoize( function( matiere_id ) {
-                       return $http.get( URL_ENT + '/api/app/matieres/' + matiere_id );
+                       return $http.get( URL_ENT + '/api/subjects/' + matiere_id );
                    });
 
                    this.get_etablissement = _.memoize( function( uai ) {
-                       return $http.get( URL_ENT + '/api/app/v2/etablissements/' + uai );
+                       return $http.get( URL_ENT + '/api/structures/' + uai );
                    });
 
-                   this.get_etablissement_enseignants = _.memoize( function( uai ) {
-                       return $http.get( URL_ENT + '/api/app/etablissements/' + uai + '/enseignants' );
-                   });
+                   // this.get_etablissement_enseignants = _.memoize( function( uai ) {
+                   //     return $http.get( URL_ENT + '/api/app/etablissements/' + uai + '/enseignants' );
+                   // });
 
-                   this.get_etablissement_regroupements = _.memoize( function( uai ) {
-                       return $http.get( URL_ENT + '/api/app/etablissements/' + uai + '/regroupements' );
-                   });
+                   // this.get_etablissement_regroupements = _.memoize( function( uai ) {
+                   //     return $http.get( URL_ENT + '/api/app/etablissements/' + uai + '/regroupements' );
+                   // });
 
                    this.get_regroupement = _.memoize( function( regroupement_id ) {
                        return Regroupements.get({ regroupement_id: regroupement_id });

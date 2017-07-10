@@ -13,7 +13,7 @@ module CahierDeTextesApp
       # pas de gestion restriction d'accès sur les get
       next if request.get?
 
-      user_needs_to_be( %w( ENS DOC DIR ), false )
+      user_needs_to_be( %w( ENS DOC DIR ) )
     end
 
     desc 'renvoi le détail d\'une séquence pédagogique'
@@ -38,7 +38,7 @@ module CahierDeTextesApp
       optional :ressources
     end
     post do
-      user_needs_to_be( %w( ENS DOC ), true )
+      user_needs_to_be( %w( ENS DOC ) )
 
       error!( 'Créneau invalide', 409 ) if CreneauEmploiDuTemps[ params[:creneau_emploi_du_temps_id] ].nil?
 
@@ -62,7 +62,7 @@ module CahierDeTextesApp
       optional :ressources, type: Array
     end
     put '/:id' do
-      user_needs_to_be( %w( ENS DOC ), true )
+      user_needs_to_be( %w( ENS DOC ) )
 
       cours = Cours[ params[:id] ]
 
@@ -79,7 +79,7 @@ module CahierDeTextesApp
       requires :id
     end
     put '/:id/valide' do
-      user_needs_to_be( %w( DIR ), true )
+      user_needs_to_be( %w( DIR ) )
 
       cours = Cours[ params[:id] ]
       error!( 'Cours inconnu', 404 ) if cours.nil?
@@ -97,7 +97,7 @@ module CahierDeTextesApp
       requires :date, type: Date
     end
     put '/:id/copie/regroupement/:regroupement_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date/:date' do
-      user_needs_to_be( %w( ENS DOC ), true )
+      user_needs_to_be( %w( ENS DOC ) )
 
       cours = Cours[ params[:id] ]
 
@@ -116,7 +116,7 @@ module CahierDeTextesApp
       requires :id
     end
     delete '/:id' do
-      user_needs_to_be( %w( ENS DOC ), true )
+      user_needs_to_be( %w( ENS DOC ) )
 
       cours = Cours[ params[:id].to_i ]
 

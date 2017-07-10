@@ -4,11 +4,11 @@ angular.module( 'cahierDeTextesClientApp' )
     .controller('ImportCtrl',
                 [ '$scope', '$http', '$locale', '$sce', '$filter', 'fileUpload', 'moment', 'toastr', '$q',
                   'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'VERSION',
-                  'Annuaire', 'Utils', 'Etablissements', 'Salles', 'CreneauxEmploiDuTemps', 'CahiersDeTextes', 'API', 'Matchable',
+                  'Annuaire', 'Utils', 'Etablissements', 'CreneauxEmploiDuTemps', 'API', 'Matchable',
                   'current_user',
                   function ( $scope, $http, $locale, $sce, $filter, fileUpload, moment, toastr, $q,
                              APP_PATH, SEMAINES_VACANCES, ZONE, VERSION,
-                             Annuaire, Utils, Etablissements, Salles, CreneauxEmploiDuTemps, CahiersDeTextes, API, Matchable,
+                             Annuaire, Utils, Etablissements, CreneauxEmploiDuTemps, API, Matchable,
                              current_user ) {
                       $scope.scope = $scope;
                       $scope.jours_de_la_semaine = $locale.DATETIME_FORMATS.DAY;
@@ -173,27 +173,21 @@ angular.module( 'cahierDeTextesClientApp' )
                               )
                               .then(
                                   function success( response ) {
-                                      $scope.etablissement = { teachers: _(response.data.users).select( function( user ) { return _(user.profils).includes( 'ENS' ) || _(user.profils).includes( 'DOC' ); } ),
-                                                               classes: _(response.data.groups).where( { type_regroupement_id: 'CLS' } ),
-                                                               groupes_eleves: _(response.data.groups).select( { type_regroupement_id: 'GRP' } ) };
+                                      $scope.etablissement = { classes: _(response.data.groups).where( { type: 'CLS' } ),
+                                                               groupes_eleves: _(response.data.groups).select( { type: 'GRP' } ) };
 
-                                      _($scope.etablissement.teachers).each( function( user ) {
-                                          user.firstname = user.firstname.toUpperCase();
-                                          user.lastname = user.lastname.toUpperCase();
-                                          user.displayed_label = user.lastname + ' ' + user.firstname.toLocaleLowerCase();
-                                      } );
                                       _($scope.etablissement.groupes_eleves).each( function( regroupement ) {
-                                          regroupement.libelle_aaf = regroupement.libelle_aaf.toUpperCase();
-                                          regroupement.displayed_label = regroupement.libelle_aaf;
+                                          regroupement.libelle_aaf = regroupement.name.toUpperCase();
+                                          regroupement.displayed_label = regroupement.name;
                                       } );
                                       _($scope.etablissement.classes).each( function( regroupement ) {
-                                          regroupement.libelle_aaf = regroupement.libelle_aaf.toUpperCase();
-                                          regroupement.displayed_label = regroupement.libelle_aaf;
+                                          regroupement.libelle_aaf = regroupement.name.toUpperCase();
+                                          regroupement.displayed_label = regroupement.name;
                                       } );
 
                                       toastr.info('traitement des données des regroupements');
                                       // 3.3 Classes et Groupes
-                                      return API.query_statistiques_regroupements( { uai: current_user.profil_actif.etablissement_code_uai } ).$promise;
+                                      return API.query_statistiques_regroupements( { uai: current_user.profil_actif.structure_id } ).$promise;
                                   },
                                   handle_error
                               )
@@ -304,8 +298,8 @@ angular.module( 'cahierDeTextesClientApp' )
                               .then(
                                   function success( response ) {
                                       $scope.matieres = _(response.data).map( function( matiere ) {
-                                          matiere.libelle_long = matiere.libelle_long.toUpperCase();
-                                          matiere.displayed_label = matiere.libelle_long;
+                                          matiere.libelle_long = matiere.name.toUpperCase();
+                                          matiere.displayed_label = matiere.name;
 
                                           return matiere;
                                       } );
@@ -378,7 +372,7 @@ angular.module( 'cahierDeTextesClientApp' )
                           } );
 
                           // Log import
-                          return $http.post( APP_PATH + '/api/import/log/start', { uai: $scope.pronote.UAI, type: 'client ' + VERSION, comment: '' } )
+                          return $http.post( APP_PATH + '/api/import/log/start/?uai=' + $scope.pronote.UAI, { uai: $scope.pronote.UAI, type: 'client ' + VERSION, comment: '' } )
                               .then(
                                   function success( response ) {
                                       import_id = response.data.id;
@@ -402,12 +396,10 @@ angular.module( 'cahierDeTextesClientApp' )
                                           return _.chain(liste_regroupements)
                                               .reject( function( regroupement ) { return _(regroupement.laclasse).isUndefined(); } )
                                               .map( function( regroupement ) {
-                                                  return {
-                                                      label: regroupement.laclasse.libelle_aaf,
-                                                      regroupement_id: regroupement.laclasse.id,
-                                                      debut_annee_scolaire: new Date( $scope.pronote.AnneeScolaire[0].DateDebut ),
-                                                      fin_annee_scolaire: new Date( $scope.pronote.AnneeScolaire[0].DateFin )
-                                                  };
+                                                  return { label: regroupement.laclasse.libelle_aaf,
+                                                           regroupement_id: regroupement.laclasse.id,
+                                                           debut_annee_scolaire: new Date( $scope.pronote.AnneeScolaire[0].DateDebut ),
+                                                           fin_annee_scolaire: new Date( $scope.pronote.AnneeScolaire[0].DateFin ) };
                                               } )
                                               .value();
                                       };
@@ -415,22 +407,16 @@ angular.module( 'cahierDeTextesClientApp' )
                                       regroupements.push( preprocess_cahiers_de_textes( $scope.pronote.groupes_eleves ) );
                                       regroupements = _(regroupements).flatten();
 
-                                      var promises = [];
-                                      while ( regroupements.length > 0 ) {
-                                          promises.push( CahiersDeTextes.bulk( { cahiers_de_textes: regroupements.splice( 0, bulk_package_size ) } ).$promise );
-                                      }
-
-                                      return $q.all( promises );
+                                      return $http.post( APP_PATH + '/api/cahiers_de_textes/bulk', { cahiers_de_textes: regroupements } );
                                   },
                                   handle_error
                               )
                               .then(
                                   function success( response ) {
-                                      $scope.report.cahiers_de_textes = _(response).flatten();
+                                      $scope.report.cahiers_de_textes = response.data;
 
                                       // Create Salle
                                       toastr.info('Création des salles');
-                                      var promises = [];
                                       var salles_to_import = _($scope.pronote.salles)
                                           .map( function( salle ) {
                                               return { uai: $scope.pronote.UAI,
@@ -438,17 +424,13 @@ angular.module( 'cahierDeTextesClientApp' )
                                                        nom: salle.Nom };
                                           } );
 
-                                      while ( salles_to_import.length > 0 ) {
-                                          promises.push( Salles.bulk( { salles: salles_to_import.splice( 0, bulk_package_size ) } ).$promise );
-                                      }
-
-                                      return $q.all( promises );
+                                      return $http.post( APP_PATH + '/api/salles/bulk', { salles: salles_to_import } );
                                   },
                                   handle_error
                               )
                               .then(
                                   function success( response ) {
-                                      $scope.report.salles = _(response).flatten();
+                                      $scope.report.salles = response.data;
 
                                       // Create Creneaux
                                       var creneaux_to_import = creneaux_emploi_du_temps.map( function( creneau ) {
@@ -475,21 +457,18 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                           return pre_creneau;
                                       } );
-                                      var promises = [];
+
                                       toastr.info('Import de ' + creneaux_to_import.length + ' créneaux');
 
-                                      while ( creneaux_to_import.length > 0 ) {
-                                          promises.push( CreneauxEmploiDuTemps.bulk( { uai: $scope.pronote.UAI,
-                                                                                       creneaux_emploi_du_temps: creneaux_to_import.splice( 0, bulk_package_size ) } ).$promise );
-                                      }
-
-                                      return $q.all( promises );
+                                      return $http.post( APP_PATH + '/api/creneaux_emploi_du_temps/bulk/',
+                                                         { uai: $scope.pronote.UAI,
+                                                           creneaux_emploi_du_temps: creneaux_to_import } );
                                   },
                                   handle_error
                               )
                               .then(
                                   function success( response ) {
-                                      $scope.report.creneaux = _(response).flatten();
+                                      $scope.report.creneaux = response.data;
 
                                       return $q.resolve( $scope.report );
                                   },

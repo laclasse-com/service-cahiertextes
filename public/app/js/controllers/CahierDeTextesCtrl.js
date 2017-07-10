@@ -126,7 +126,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
                           EmploisDuTemps.query( { debut: $scope.from_date,
                                                   fin: $scope.to_date,
-                                                  uai: $scope.current_user.profil_actif.etablissement_code_uai } )
+                                                  uai: $scope.current_user.profil_actif.structure_id } )
                               .$promise
                               .then( function success( response ) {
                                   var regroupements_ids = _($scope.current_user.profil_actif.regroupements).pluck('id');

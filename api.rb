@@ -5,8 +5,7 @@ require 'bundler'
 
 Bundler.require( :default, ENV['RACK_ENV'].to_sym )     # require tout les gems définis dans Gemfile
 
-require 'laclasse/helpers/authentication'
-require 'laclasse/helpers/user'
+require_relative './lib/helpers/user'
 
 require_relative './models/models'
 require_relative './lib/data_management'
@@ -34,13 +33,13 @@ module CahierDeTextesApp
       error!({ messages: e.full_messages }, 400)
     end
 
-    helpers Laclasse::Helpers::Authentication
-    helpers Laclasse::Helpers::User
+    helpers LaClasse::Helpers::User
 
     before do
-      error!( '401 Unauthorized', 401 ) unless logged? || !request.env['PATH_INFO'].match(/.*swagger.*\.json$/).nil?
+      redirect "#{APP_PATH}/auth/cas/?url=#{request.env['REQUEST_PATH']}" unless env['rack.session']['authenticated']
+      # error!( '401 Unauthorized', 401 ) unless logged? || !request.env['PATH_INFO'].match(/.*swagger.*\.json$/).nil?
 
-      DataManagement::Provisioning.provision( user )
+      # DataManagement::Provisioning.provision( user )
     end
 
     resource( :users                    ) { mount ::CahierDeTextesApp::UsersAPI }

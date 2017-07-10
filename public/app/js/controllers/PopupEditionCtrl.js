@@ -324,7 +324,7 @@ angular.module( 'cahierDeTextesClientApp' )
                            var init_cours_existant = function( cours ) {
                                ctrl.cours = Cours.get( { id: cours.id } );
                                ctrl.cours.$promise.then( function( cours ) {
-                                   ctrl.cours.editable = _(ctrl.cours.date_validation).isNull() && _(['ENS', 'DOC']).includes( ctrl.current_user.profil_actif.profil_id ) && ctrl.cours.enseignant_id === ctrl.current_user.uid;
+                                   ctrl.cours.editable = _(ctrl.cours.date_validation).isNull() && _(['ENS', 'DOC']).includes( ctrl.current_user.profil_actif.type ) && ctrl.cours.enseignant_id === ctrl.current_user.uid;
                                    if ( !ctrl.cours.editable ) {
                                        ctrl.cours.contenu = $sce.trustAsHtml( ctrl.cours.contenu );
                                    }
@@ -660,7 +660,7 @@ angular.module( 'cahierDeTextesClientApp' )
                            }
 
                            ctrl.creneau.mine = ctrl.creneau.en_creation || _.chain( ctrl.current_user.profil_actif.matieres ).pluck( 'id' ).include( ctrl.creneau.matiere_id ).value();
-                           ctrl.creneau.can_add_homework = _(['ENS', 'DOC']).includes( ctrl.current_user.profil_actif.profil_id ) && _.chain( ctrl.current_user.profil_actif.matieres ).pluck( 'id' ).include( ctrl.creneau.matiere_id ).value();
+                           ctrl.creneau.can_add_homework = _(['ENS', 'DOC']).includes( ctrl.current_user.profil_actif.type ) && _.chain( ctrl.current_user.profil_actif.matieres ).pluck( 'id' ).include( ctrl.creneau.matiere_id ).value();
                            ctrl.creneau.etranger = !ctrl.current_user.profil_actif.admin && !ctrl.creneau.en_creation && !ctrl.creneau.mine;
 
                            if ( _(cours).isNull() ) {

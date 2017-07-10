@@ -194,7 +194,7 @@ angular.module( 'cahierDeTextesClientApp' )
                       };
 
                       ctrl.$onInit = function() {
-                          API.query_statistiques_regroupements( { uai: current_user.profil_actif.etablissement_code_uai } )
+                          API.query_statistiques_regroupements( { uai: current_user.profil_actif.structure_id } )
                               .$promise.then( function( response ) {
                                   ctrl.raw_data = response;
 

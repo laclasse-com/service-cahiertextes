@@ -9,7 +9,7 @@ angular.module( 'cahierDeTextesClientApp' )
                        $scope.mois = _($locale.DATETIME_FORMATS.MONTH).toArray();
                        $scope.scope = $scope;
                        $scope.moisCourant = null;
-                       $scope.montre_valides = current_user.profil_actif.profil_id !== 'DIR';
+                       $scope.montre_valides = current_user.profil_actif.type !== 'DIR';
                        $scope.nb_saisies_visables = 0;
                        $scope.current_user = current_user;
                        $scope.enseignant_id = _($stateParams).has( 'enseignant_id' ) ? $stateParams.enseignant_id : $scope.current_user.uid;
@@ -74,7 +74,7 @@ angular.module( 'cahierDeTextesClientApp' )
                        };
 
                        $scope.valide = function( saisie ) {
-                           if ( current_user.profil_actif.profil_id === 'DIR' ) {
+                           if ( current_user.profil_actif.type === 'DIR' ) {
                                var disable_toastr = _(saisie).has( 'disable_toastr' );
                                saisie.cours.$valide().then( function( response ) {
                                    saisie.valide = !_(response.date_validation).isNull();
@@ -146,7 +146,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                            return regroupement;
                                        } )
                                        .reject( function( regroupement ) {
-                                           return regroupement.etablissement_code != $scope.current_user.profil_actif.etablissement_code_uai;
+                                           return regroupement.etablissement_code != $scope.current_user.profil_actif.structure_id;
                                        } )
                                        .uniq( function( regroupement ) { return regroupement.id; } )
                                        .compact()
@@ -162,7 +162,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                        .value();
 
                                    API.get_enseignant( { enseignant_id: $scope.enseignant_id,
-                                                         uai: $scope.current_user.profil_actif.etablissement_code_uai } )
+                                                         uai: $scope.current_user.profil_actif.structure_id } )
                                        .$promise.then( function success( response ) {
                                            var _2_semaines_avant = moment().subtract( 2, 'weeks' );
 

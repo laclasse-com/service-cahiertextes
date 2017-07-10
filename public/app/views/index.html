@@ -19,7 +19,7 @@
         </a>
 
         <select class="pull-right choix-enfant"
-                ng:if="current_user && current_user.profil_actif.profil_id === 'TUT'"
+                ng:if="current_user && current_user.profil_actif.type === 'TUT'"
                 ng:options="enfant as enfant.enfant.prenom+' '+enfant.enfant.nom for enfant in current_user.enfants track by enfant.enfant.id"
                 ng:model="current_user.enfant_actif"
                 ng:change="reload()"></select>

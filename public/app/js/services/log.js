@@ -6,11 +6,11 @@ angular.module( 'cahierDeTextesClientApp' )
                         User.get_user(  )
                             .then( function( response ) {
                                 var user = response.data;
-                                $http.post( '/api/app/v2/log',
+                                $http.post( '/api/log',
                                             { app: app,
                                               uid: user.uid,
-                                              uai: user.profil_actif.etablissement_code_uai,
-                                              user_type: user.profil_actif.profil_id,
+                                              uai: user.profil_actif.structure_id,
+                                              user_type: user.profil_actif.type,
                                               timestamp: Date.now(),
                                               url: ( _(url).isNull() ? APP_PATH + $state.current.url: url ).substr( 0, 1023 ),
                                               params: _(params).isNull() ? _($state.params).map( function( value, key ) { return key + '=' + value; } ).join( '&' ) : params } )

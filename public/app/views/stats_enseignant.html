@@ -1,7 +1,7 @@
 <div class="panel panel-default">
     <div class="panel-heading">
         <div class="row">
-            <a class="btn btn-info pull-left" data-ui-sref="principal.enseignants" ng:if="current_user.profil_actif.profil_id === 'DIR'" >← Retour à la liste des enseignants</a>
+            <a class="btn btn-info pull-left" data-ui-sref="principal.enseignants" ng:if="current_user.profil_actif.type === 'DIR'" >← Retour à la liste des enseignants</a>
         </div>
     </div>
 
@@ -96,7 +96,7 @@
                     <th>
                         <button class="btn btn-warning pull-right"
                                 ng:class="{'disabled': nb_saisies_visables < 1 }"
-                                ng:if="current_user.profil_actif.profil_id === 'DIR'"
+                                ng:if="current_user.profil_actif.type === 'DIR'"
                                 ng:click="valide_all()">
                             <span class="glyphicon glyphicon-check"></span> Viser la totalité
                         </button>
@@ -105,7 +105,7 @@
             </thead>
             <tbody>
                 <tr ng:repeat="saisie in raw_data | filter:filter_saisie( montre_valides, moisCourant, selected_regroupements ) | orderBy:'cours.date_cours'"
-                    ng:class="{'even': $even, 'odd': $odd, 'recent': saisie.recent && current_user.profil_actif.profil_id === 'DIR' }">
+                    ng:class="{'even': $even, 'odd': $odd, 'recent': saisie.recent && current_user.profil_actif.type === 'DIR' }">
                     <td>{{saisie.cours.date_cours | amDateFormat:'Do MMMM YYYY'}}</td>
                     <td ng:bind="detail_regroupement( saisie.regroupement_id ).libelle_aaf"></td>
                     <td ng:bind="matieres[ saisie.matiere_id ].libelle_long"></td>
@@ -118,10 +118,10 @@
                     <td>
                         <span switch
                               class="violet"
-                              disabled="current_user.profil_actif.profil_id !== 'DIR' || saisie.recent"
-                              ng:disabled="current_user.profil_actif.profil_id !== 'DIR' || saisie.recent"
+                              disabled="current_user.profil_actif.type !== 'DIR' || saisie.recent"
+                              ng:disabled="current_user.profil_actif.type !== 'DIR' || saisie.recent"
                               ng:model="saisie.valide"
-                              ng:change="current_user.profil_actif.profil_id === 'DIR' && !saisie.recent && valide( saisie )" >
+                              ng:change="current_user.profil_actif.type === 'DIR' && !saisie.recent && valide( saisie )" >
                         </span>
                     </td>
                 </tr>

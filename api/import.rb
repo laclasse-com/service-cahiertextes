@@ -9,7 +9,7 @@ module CahierDeTextesApp
     format :json
 
     before do
-      user_needs_to_be( %w( DIR ), true )
+      user_needs_to_be( %w[ DIR ] )
     end
 
     desc 'returns an Import record'
@@ -61,7 +61,7 @@ module CahierDeTextesApp
       File.open( params[:file][:tempfile] ) do |xml|
         uai = ProNote.extract_from_xml( xml, 'UAI' )
 
-        error!( '401 Unauthorized', 401 ) unless user_is_profils_in_etablissement?( %w( DIR ENS DOC ), uai )
+        error!( '401 Unauthorized', 401 ) unless user_is_profile_in_structure?( 'DIR', uai )
 
         hash = Hash.from_xml( ProNote.decrypt_xml(  File.open( params[:file][:tempfile] ) ) )[:ExportEmploiDuTemps]
 

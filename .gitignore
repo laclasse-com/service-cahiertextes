@@ -58,3 +58,4 @@ config/constants.rb
 /config/options.rb.prod_v2
 /config/options.rb.v3
 /config/puma.rb
+/*.sql

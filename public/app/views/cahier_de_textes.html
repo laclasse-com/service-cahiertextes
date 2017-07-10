@@ -2,7 +2,7 @@
      ng:swipe-left="decr_offset()"
      ng:swipe-right="incr_offset()">
     <div class="panel-heading">
-        <div class="col-md-12" ng:if="current_user.profil_actif.profil_id === 'ENS' || current_user.profil_actif.profil_id === 'DOC'">
+        <div class="col-md-12" ng:if="current_user.profil_actif.type === 'ENS' || current_user.profil_actif.type === 'DOC'">
 
             <div class="ui-select-wrapper">
                 <ui-select multiple class="pull-left" theme="bootstrap"

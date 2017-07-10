@@ -1,11 +1,3 @@
-GIT
-  remote: https://github.com/laclasse-com/laclasse-common.git
-  revision: 954932295d05d89ac6846ab4f8e23905988360fd
-  specs:
-    laclasse-common (0.2.37)
-      redis-rack (~> 1.5.0)
-      rest-client
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -99,12 +91,6 @@ GEM
       rack (>= 1.0)
     rainbow (2.2.1)
     rake (12.0.0)
-    redis (3.3.3)
-    redis-rack (1.5.0)
-      rack (~> 1.5)
-      redis-store (~> 1.1.0)
-    redis-store (1.1.7)
-      redis (>= 2.2)
     reek (4.5.6)
       codeclimate-engine-rb (~> 0.4.0)
       parser (>= 2.3.1.2, < 2.5)
@@ -169,7 +155,6 @@ DEPENDENCIES
   grape-cache_control
   grape-swagger
   icalendar
-  laclasse-common!
   mysql2
   nokogiri
   omniauth-cas

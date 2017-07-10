@@ -9,7 +9,10 @@ class Etablissement < Sequel::Model( :etablissements )
   one_to_many :matchables
 
   def statistiques_regroupements
-    etab = Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_v2_etablissements, values[:UAI], expand: 'true' )
+    etab = JSON.parse( RestClient::Request.execute( method: :get,
+                                                    url: "#{URL_ENT}/api/structures/#{values[:UAI]}",
+                                                    user: ANNUAIRE[:app_id],
+                                                    password: ANNUAIRE[:api_key] ) )
 
     etab['groups'].map do |classe|
       cdt = CahierDeTextes.where( regroupement_id: classe['id'] ).first

@@ -45,7 +45,7 @@ angular.module( 'cahierDeTextesClientApp' )
                       };
 
                       // Récupération et consommation des données
-                      API.query_enseignants( { uai: current_user.profil_actif.etablissement_code_uai } )
+                      API.query_enseignants( { uai: current_user.profil_actif.structure_id } )
                           .$promise.then( function success( response ) {
                               $scope.selected_regroupements = [];
                               $scope.raw_data = _(response).reject( function( enseignant ) {
@@ -59,7 +59,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                       $scope.regroupements = _.chain(response)
                                           .pluck( 'regroupements' )
                                           .flatten()
-                                          .where({ etablissement_code: current_user.profil_actif.etablissement_code_uai })
+                                          .where({ etablissement_code: current_user.profil_actif.structure_id })
                                           .map( function( regroupement ) {
                                               return { id: regroupement.id,
                                                        libelle: regroupement.libelle,

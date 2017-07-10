@@ -10,7 +10,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                _(response.data.profils).each( function( profil ) {
                                    // Liste des regroupements liées au profil
                                    profil.regroupements = _.chain(response.data.regroupements)
-                                       .filter( function( classe ) { return classe.etablissement_code == profil.etablissement_code_uai; } )
+                                       .filter( function( classe ) { return classe.etablissement_code == profil.structure_id; } )
                                        .map( function( classe ) {
                                            return { id: classe.id,
                                                     libelle: classe.libelle,
@@ -20,15 +20,15 @@ angular.module( 'cahierDeTextesClientApp' )
                                        .reject( function( item ) { return _.isUndefined( item.id ); } )
                                        .value();
                                } );
-                               response.data.profil_actif = _(response.data.profils).findWhere( { actif: true } );
+                               response.data.profil_actif = _(response.data.profils).findWhere( { active: true } );
 
                                if ( response.data.enfants.length > 0 ) {
                                    response.data.enfant_actif = response.data.enfants[ 0 ];
                                }
 
                                // Voir quel est le profil
-                               response.data.is = function( profil_id ) {
-                                   return this.profil_actif.profil_id == profil_id;
+                               response.data.is = function( type ) {
+                                   return this.profil_actif.type == type;
                                };
 
                                return response;

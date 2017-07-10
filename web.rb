@@ -7,9 +7,7 @@ require_relative './config/init'
 
 Bundler.require( :default, ENV['RACK_ENV'].to_sym )     # require tout les gems définis dans Gemfile
 
-require 'laclasse/helpers/authentication'
-require 'laclasse/helpers/user'
-require 'laclasse/helpers/app_infos'
+require_relative './lib/helpers/user'
 
 require_relative './lib/utils/holidays'
 
@@ -20,9 +18,7 @@ require_relative './routes/status'
 # Application Sinatra servant de base
 module CahierDeTextesApp
   class Web < Sinatra::Base
-    helpers Laclasse::Helpers::Authentication
-    helpers Laclasse::Helpers::User
-    helpers Laclasse::Helpers::AppInfos
+    helpers LaClasse::Helpers::User
 
     configure :production, :development do
       set :protection, true
@@ -30,9 +26,12 @@ module CahierDeTextesApp
       set :show_exceptions, false
     end
 
-    before  do
-      pass if %r{#{APP_PATH}/(auth|login|status)} =~ request.path
-      login!( request.path_info ) unless logged?
+    before do
+      cache_control :no_cache
+
+      pass if request.path =~ %r{#{APP_PATH}/(auth|login|status)/}
+
+      redirect "#{APP_PATH}/auth/cas/?url=#{request.env['REQUEST_PATH']}" unless env['rack.session']['authenticated']
     end
 
     ##### routes #################################################################

@@ -23,21 +23,22 @@ module CahierDeTextesApp
         error!( '401 Unauthorized', 401 ) unless user_annuaire['profils'].find { |p| p['actif'] }['profil_id'] == 'TUT' && !user_annuaire['enfants'].find { |e| e['enfant']['id_ent'] == params[:uid] }.nil?
       end
 
-      regroupements_annuaire = Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_user, "#{uid}/regroupements", expand: 'true' )
+      # regroupements_annuaire = Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_user, "#{uid}/regroupements", expand: 'true' )
+      # regroupements_ids = regroupements_annuaire['classes'].concat( regroupements_annuaire['groupes_eleves'] )
+      #                                                      .concat( regroupements_annuaire['groupes_libres'] )
+      #                                                      .reject { |regroupement| regroupement['etablissement_code'] != params[:uai] if params[:uai] }
+      #                                                      .map do |regroupement|
+      #   if regroupement.key?( 'classe_id' )
+      #     regroupement['classe_id']
+      #   elsif regroupement.key?( 'groupe_id' )
+      #     regroupement['groupe_id']
+      #   else
+      #     regroupement['id']
+      #   end
+      # end
+      #                                                      .uniq
 
-      regroupements_ids = regroupements_annuaire['classes'].concat( regroupements_annuaire['groupes_eleves'] )
-                                                           .concat( regroupements_annuaire['groupes_libres'] )
-                                                           .reject { |regroupement| regroupement['etablissement_code'] != params[:uai] if params[:uai] }
-                                                           .map do |regroupement|
-        if regroupement.key?( 'classe_id' )
-          regroupement['classe_id']
-        elsif regroupement.key?( 'groupe_id' )
-          regroupement['groupe_id']
-        else
-          regroupement['id']
-        end
-      end
-                                                           .uniq
+      regroupements_ids = user_regroupements_ids
 
       Devoir.association_join(:creneau_emploi_du_temps)
             .select_append( :devoirs__id___id )
@@ -73,7 +74,7 @@ module CahierDeTextesApp
       optional :temps_estime
     end
     post  do
-      user_needs_to_be( %w( ENS DOC ), true )
+      user_needs_to_be( %w( ENS DOC ) )
 
       error!( 'Créneau invalide', 409 ) if CreneauEmploiDuTemps[ params[:creneau_emploi_du_temps_id] ].nil?
 
@@ -125,7 +126,7 @@ module CahierDeTextesApp
       optional :temps_estime
     end
     put '/:id' do
-      user_needs_to_be( %w( ENS DOC ), true )
+      user_needs_to_be( %w( ENS DOC ) )
 
       devoir = Devoir[ params[:id] ]
       error!( 'Devoir inconnu', 404 ) if devoir.nil?
@@ -144,7 +145,7 @@ module CahierDeTextesApp
       requires :date_due
     end
     put '/:id/copie/cours/:cours_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date_due/:date_due' do
-      user_needs_to_be( %w( ENS DOC ), true )
+      user_needs_to_be( %w( ENS DOC ) )
 
       devoir = Devoir[ params[:id] ]
       error!( 'Devoir inconnu', 404 ) if devoir.nil?
@@ -159,7 +160,7 @@ module CahierDeTextesApp
       requires :id
     end
     put '/:id/fait' do
-      user_needs_to_be( %w( ELV ), true )
+      user_needs_to_be( %w( ELV ) )
 
       devoir = Devoir[ params[:id] ]
       error!( 'Devoir inconnu', 404 ) if devoir.nil?
@@ -174,7 +175,7 @@ module CahierDeTextesApp
       requires :id
     end
     delete '/:id' do
-      user_needs_to_be( %w( ENS DOC ), true )
+      user_needs_to_be( %w( ENS DOC ) )
 
       devoir = Devoir[ params[:id] ]
       error!( 'Devoir inconnu', 404 ) if devoir.nil?
