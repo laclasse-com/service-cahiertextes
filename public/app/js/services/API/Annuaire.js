@@ -2,8 +2,8 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .service('Annuaire',
-             [ '$http', 'URL_ENT',
-               function( $http, URL_ENT ) {
+             [ '$http', '$q', 'URL_ENT',
+               function( $http, $q, URL_ENT ) {
                    var service = this;
 
                    service.query_subjects = _.memoize( function(  ) {
@@ -39,18 +39,19 @@ angular.module( 'cahierDeTextesClientApp' )
                            .then( function( response ) {
                                response.data.profil_actif = _(response.data.profiles).findWhere( { active: true } );
 
-                               service.get_groups( _(response.data.groups).pluck('group_id') )
-                                   .then( function( groups ) {
-                                       response.data.groups.forEach( function( group ) {
-                                           group.group = _(groups.data).findWhere({id: group.group_id });
+                               response.data.get_actual_groups = function() {
+                                   return service.get_groups( _(response.data.groups).pluck('group_id') )
+                                       .then( function( groups ) {
+                                           return $q.resolve( groups.data );
                                        } );
-                                   } );
-                               service.get_subjects( _.chain(response.data.groups).pluck('subject_id').uniq().value() )
-                                   .then( function( subjects ) {
-                                       response.data.groups.forEach( function( group ) {
-                                           group.subject = _(subjects.data).findWhere({id: group.subject_id });
+                               };
+
+                               response.data.get_actual_subjects = function() {
+                                   return service.get_subjects( _(response.data.groups).pluck('subject_id') )
+                                       .then( function( subjects ) {
+                                           return $q.resolve( subjects.data );
                                        } );
-                                   } );
+                               };
 
                                return response;
                            } );

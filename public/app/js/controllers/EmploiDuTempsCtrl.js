@@ -10,7 +10,6 @@ angular.module( 'cahierDeTextesClientApp' )
                               current_user ) {
                        $scope.scope = $scope;
                        $scope.current_user = current_user;
-                       console.log(current_user)
                        $scope.zone = ZONE;
                        $scope.emploi_du_temps = angular.element('#emploi_du_temps');
                        var popup_ouverte = false;
@@ -35,7 +34,7 @@ angular.module( 'cahierDeTextesClientApp' )
                        $scope.next = function() { $scope.emploi_du_temps.fullCalendar('next'); };
 
                        $scope.select_all_regroupements = function() {
-                           $scope.selected_regroupements = $scope.groups;
+                           $scope.selected_regroupements = $scope.current_user.actual_groups;
                            $scope.refresh_calendar();
                        };
 

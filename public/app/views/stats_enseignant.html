@@ -6,22 +6,26 @@
     </div>
 
     <div class="panel-body">
-        <h4 class="col-md-12 pull-left">{{enseignant.prenom}} {{enseignant.nom}}</h4>
+        <h4 class="col-md-12 pull-left">{{enseignant.firstname}} {{enseignant.lastname}}</h4>
         <div class="col-md-4">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <legend><span class="glyphicon glyphicon-envelope"></span> <a class="email" href="mailto:{{enseignant.email_principal.adresse}}">{{enseignant.email_principal.adresse}}</a></legend>
+                    <legend ng:repeat="email in enseignant.emails">
+                        <span class="glyphicon glyphicon-envelope"></span>
+                        <a class="email" href="mailto:{{email.address}}"
+                           ng:style="{'font-size': email.primary ? 'inherit' : '75%'}">{{email.address}}</a>
+                    </legend>
 
                     <fieldset>
                         <legend><span class="glyphicon glyphicon-briefcase"></span> Matières enseignées</legend>
-                        <span class="label label-primary pull-left" ng:repeat="matiere in enseignant.liste_matieres">{{matiere}}</span>
+                        <span class="label label-primary pull-left" ng:repeat="matiere in enseignant.liste_matieres">{{matiere.name}}</span>
                     </fieldset>
 
                     <fieldset>
                         <legend><span class="glyphicon glyphicon-envelope"></span> Classes et Groupes</legend>
                         <span class="label pull-left"
-                              ng:class="{'label-success': regroupement.type_regroupement_id === 'GRP', 'label-info': regroupement.type_regroupement_id === 'CLS' }"
-                              ng:repeat="regroupement in enseignant.liste_regroupements">{{regroupement.classe_libelle}}</span>
+                              ng:class="{'label-success': regroupement.type === 'GRP', 'label-info': regroupement.type === 'CLS' }"
+                              ng:repeat="regroupement in enseignant.liste_regroupements">{{regroupement.name}}</span>
                     </fieldset>
 
                     <fieldset ng:if="enseignant.prof_principal.length > 0">
@@ -49,17 +53,17 @@
                 <div class="ui-select-wrapper">
                     <ui-select multiple class="pull-left" theme="bootstrap"
                                append-to-body="true"
-                               ng:if="regroupements.length > 0 && regroupements[ regroupements.length - 1 ].id"
+                               ng:if="enseignant.liste_regroupements.length > 0"
                                ng:change="graphiques.populate( raw_data )"
                                ng:model="scope.selected_regroupements">
                         <ui-select-match placeholder="Regroupement(s)...">
-                            <span class="label" ng:class="{'label-success': $item.type_regroupement_id === 'GRP', 'label-info': $item.type_regroupement_id === 'CLS' }">
-                                {{$item.libelle_aaf}}
+                            <span class="label" ng:class="{'label-success': $item.type === 'GRP', 'label-info': $item.type === 'CLS' }">
+                                {{$item.name}}
                             </span>
                         </ui-select-match>
-                        <ui-select-choices repeat="regroupement in regroupements track by $index | orderBy:['type_regroupement_id','libelle']"
-                                           group-by="'type_regroupement_id'">
-                            {{regroupement.libelle_aaf}}
+                        <ui-select-choices repeat="regroupement in enseignant.liste_regroupements | orderBy:['type','name']"
+                                           group-by="'type'">
+                            {{regroupement.name}}
                         </ui-select-choices>
                     </ui-select>
                     <button class="btn btn-xs btn-primary"
@@ -107,8 +111,8 @@
                 <tr ng:repeat="saisie in raw_data | filter:filter_saisie( montre_valides, moisCourant, selected_regroupements ) | orderBy:'cours.date_cours'"
                     ng:class="{'even': $even, 'odd': $odd, 'recent': saisie.recent && current_user.profil_actif.type === 'DIR' }">
                     <td>{{saisie.cours.date_cours | amDateFormat:'Do MMMM YYYY'}}</td>
-                    <td ng:bind="detail_regroupement( saisie.regroupement_id ).libelle_aaf"></td>
-                    <td ng:bind="matieres[ saisie.matiere_id ].libelle_long"></td>
+                    <td ng:bind="saisie.group.name"></td>
+                    <td ng:bind="saisie.matiere.name"></td>
                     <td>
                         <div class="alert alert-default" ng:bind-html="saisie.cours.contenu"></div>
                     </td>
