@@ -52,7 +52,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                   return enseignant.enseignant_id === '';
                               });
 
-                              Annuaire.get_users_bulk( _($scope.raw_data).pluck( 'enseignant_id' ) ).$promise
+                              Annuaire.get_users( _($scope.raw_data).pluck( 'enseignant_id' ) )
                                   .then( function( response ) {
                                       var enseignants_details = _(response).indexBy( 'id_ent' );
 

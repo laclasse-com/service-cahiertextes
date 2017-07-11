@@ -167,7 +167,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                       $scope.etablissement_summary = response;
                                       _($scope.etablissement_summary.imports).each( function( i ) { i.date_import = new Date( i.date_import ); } );
 
-                                      return Annuaire.get_etablissement( $scope.pronote.UAI );
+                                      return Annuaire.get_structure( $scope.pronote.UAI );
                                   },
                                   handle_error
                               )
@@ -291,7 +291,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                       toastr.info('Récupération des matieres');
                                       // 3.1 Matières
-                                      return Annuaire.get_matieres();
+                                      return Annuaire.query_subjects();
                                   },
                                   handle_error
                               )

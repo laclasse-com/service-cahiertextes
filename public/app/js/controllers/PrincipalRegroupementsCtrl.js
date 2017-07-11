@@ -95,7 +95,7 @@ angular.module( 'cahierDeTextesClientApp' )
                               .map( function( matiere_id ) {
                                   var matiere = _(current_user.profil_actif.matieres).findWhere({ id: matiere_id });
                                   if ( _(matiere).isUndefined() ) {
-                                      matiere = Annuaire.get_matiere( matiere_id );
+                                      matiere = Annuaire.get_subject( matiere_id );
                                   }
 
                                   return matiere;
@@ -110,7 +110,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                   regroupement_id = parseInt( regroupement_id );
                                   var regroupement = _(current_user.profil_actif.regroupements).findWhere({ id: regroupement_id });
                                   if ( _(regroupement).isUndefined() ) {
-                                      regroupement = Annuaire.get_regroupement( regroupement_id );
+                                      regroupement = Annuaire.get_group( regroupement_id );
                                   }
 
                                   return regroupement;

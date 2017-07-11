@@ -19,7 +19,7 @@ angular.module( 'cahierDeTextesClientApp' )
                        };
 
                        $scope.detail_regroupement = function( id ) {
-                           return Annuaire.get_regroupement( parseInt( id ) );
+                           return Annuaire.get_group( parseInt( id ) );
                        };
 
                        $scope.filter_saisie = function( montre_valides, mois, selected_regroupements ) {
@@ -182,7 +182,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                                .map( function( matiere_id ) {
                                                    var matiere = _($scope.current_user.profil_actif.matieres).findWhere({ id: matiere_id });
                                                    if ( _(matiere).isUndefined() ) {
-                                                       matiere = Annuaire.get_matiere( matiere_id );
+                                                       matiere = Annuaire.get_subject( matiere_id );
                                                    }
 
                                                    return [ matiere_id, matiere ];
