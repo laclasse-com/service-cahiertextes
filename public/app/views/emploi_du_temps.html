@@ -7,14 +7,14 @@
                        ng:change="refresh_calendar()"
                        ng:model="scope.selected_regroupements">
                 <ui-select-match placeholder="Regroupement(s)...">
-                    <span class="label" ng:class="{'label-success': $item.type === 'groupe', 'label-info': $item.type === 'classe' }">
-                        {{$item.libelle}}
+                    <span class="label" ng:class="{'label-success': $item.type === 'GRP', 'label-info': $item.type === 'CLS' }">
+                        {{$item.name}}
                     </span>
                 </ui-select-match>
-                <ui-select-choices repeat="classe in current_user.profil_actif.regroupements | orderBy:['type','libelle']"
+                <ui-select-choices repeat="classe in current_user.actual_groups | orderBy:['type','name']"
                                    group-by="'type'">
-                    <span class="label" ng:class="{'label-success': classe.type === 'groupe', 'label-info': classe.type === 'classe' }">
-                        {{classe.libelle}}
+                    <span class="label" ng:class="{'label-success': classe.type === 'GRP', 'label-info': classe.type === 'CLS' }">
+                        {{classe.name}}
                     </span>
                 </ui-select-choices>
             </ui-select>
@@ -28,7 +28,6 @@
             <label><checkbox class="btn-info" ng:model="scope.uniquement_mes_creneaux"
                              ng:change="refresh_calendar()"></checkbox> Ne montrer que ce qui me concerne directement</label>
         </div>
-
         <div class="clearfix"></div>
     </div>
     <div class="panel-body"

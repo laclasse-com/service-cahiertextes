@@ -22,12 +22,13 @@ class Etablissement < Sequel::Model( :etablissements )
   end
 
   def statistiques_enseignants
-    Laclasse::CrossApp::Sender
-      .send_request_signed( :service_annuaire_v2_etablissements, values[:UAI], expand: 'true' )['users']
-      .select { |u| u['profils'].include?( 'ENS' ) }
-      .map do |enseignant|
-      { enseignant_id: enseignant['ent_id'],
-        classes: saisies_enseignant( enseignant['ent_id'] )[:saisies]
+    JSON.parse( RestClient::Request.execute( method: :get,
+                                             url: "#{URL_ENT}/api/profiles/?type=ENS&structure_id=#{values[:UAI]}",
+                                             user: ANNUAIRE[:app_id],
+                                             password: ANNUAIRE[:api_key] ) )
+        .map do |enseignant|
+      { enseignant_id: enseignant['user_id'],
+        classes: saisies_enseignant( enseignant['user_id'] )[:saisies]
           .group_by { |s| s[:regroupement_id] }
           .map do |regroupement_id, regroupement_saisies|
           { regroupement_id: regroupement_id,
@@ -46,9 +47,12 @@ class Etablissement < Sequel::Model( :etablissements )
     { enseignant_id: enseignant_id,
       saisies: Cours.where( enseignant_id: enseignant_id )
                     .where( deleted: false )
-                    .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" )
+                    .where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" ) )
                     .map do |cours|
         devoirs = Devoir.where(cours_id: cours.id)
+                        .where( deleted: false )
+                        .where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" ) )
+                        .all
         creneau = CreneauEmploiDuTemps[ cours.creneau_emploi_du_temps_id ]
 
         { mois: cours.date_cours.month,
@@ -59,6 +63,23 @@ class Etablissement < Sequel::Model( :etablissements )
           valide: !cours.date_validation.nil? }
       end }
   end
+  # def saisies_enseignant( enseignant_id )
+  #   { enseignant_id: enseignant_id,
+  #     saisies: Cours.where( enseignant_id: enseignant_id )
+  #                   .where( deleted: false )
+  #                   .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" )
+  #                   .map do |cours|
+  #       devoirs = Devoir.where(cours_id: cours.id)
+  #       creneau = CreneauEmploiDuTemps[ cours.creneau_emploi_du_temps_id ]
+
+  #       { mois: cours.date_cours.month,
+  #         regroupement_id: creneau.regroupement_id,
+  #         matiere_id: creneau.matiere_id,
+  #         cours: cours,
+  #         devoirs: devoirs,
+  #         valide: !cours.date_validation.nil? }
+  #     end }
+  # end
 
   def merge_all_twin_creneaux( truly_destroy = false )
     merged_twins = []

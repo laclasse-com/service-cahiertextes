@@ -42,7 +42,7 @@ module CahierDeTextesApp
 
       error!( 'Créneau invalide', 409 ) if CreneauEmploiDuTemps[ params[:creneau_emploi_du_temps_id] ].nil?
 
-      cours = Cours.create( enseignant_id: user[:uid],
+      cours = Cours.create( enseignant_id: user['id'],
                             cahier_de_textes_id: DataManagement::Accessors.create_or_get( CahierDeTextes, regroupement_id: params[:regroupement_id] ).id,
                             creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
                             date_cours: params[:date_cours].to_s,

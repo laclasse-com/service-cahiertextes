@@ -28,7 +28,7 @@ module CahierDeTextesApp
     # end
     # get '/ics' do
     #   content_type 'text/calendar'
-    #   header 'Content-Disposition', "filename*=UTF-8''emploi_du_temps_#{params.key?(:uid) ? params[:uid] : user[:uid]}.ics"
+    #   header 'Content-Disposition', "filename*=UTF-8''emploi_du_temps_#{params.key?(:uid) ? params[:uid] : user['id']}.ics"
 
     #   DataManagement::EmploiDuTemps.ical( Date.parse( params[:debut].iso8601 ),
     #                                       Date.parse( params[:fin].iso8601 ),

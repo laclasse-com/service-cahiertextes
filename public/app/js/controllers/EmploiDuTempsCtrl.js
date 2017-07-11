@@ -3,17 +3,20 @@
 angular.module( 'cahierDeTextesClientApp' )
     .controller( 'EmploiDuTempsCtrl',
                  [ '$scope', 'moment', '$stateParams', '$state',
-                   'CALENDAR_OPTIONS', 'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'EmploisDuTemps', 'PopupsCreneau', 'CreneauxEmploiDuTemps', 'Utils',
+                   'CALENDAR_OPTIONS', 'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'EmploisDuTemps', 'PopupsCreneau', 'CreneauxEmploiDuTemps', 'Utils', 'Annuaire',
                    'current_user',
                    function ( $scope, moment, $stateParams, $state,
-                              CALENDAR_OPTIONS, APP_PATH, SEMAINES_VACANCES, ZONE, EmploisDuTemps, PopupsCreneau, CreneauxEmploiDuTemps, Utils,
+                              CALENDAR_OPTIONS, APP_PATH, SEMAINES_VACANCES, ZONE, EmploisDuTemps, PopupsCreneau, CreneauxEmploiDuTemps, Utils, Annuaire,
                               current_user ) {
                        $scope.scope = $scope;
                        $scope.current_user = current_user;
+                       console.log(current_user)
                        $scope.zone = ZONE;
                        $scope.emploi_du_temps = angular.element('#emploi_du_temps');
                        var popup_ouverte = false;
                        var first_load = true;
+
+                       $scope.uniquement_mes_creneaux = !_( [ 'EVS', 'DIR'] ).contains( $scope.current_user.profil_actif.type );
 
                        $scope.filter_data = function( raw_data ) {
                            if ( _( [ 'EVS', 'DIR'] ).contains( $scope.current_user.profil_actif.type ) ) {
@@ -21,7 +24,7 @@ angular.module( 'cahierDeTextesClientApp' )
                            } else if ( _( [ 'ENS', 'DOC'] ).contains( $scope.current_user.profil_actif.type ) ) {
                                return filter_by_matieres( filter_by_regroupement( raw_data,
                                                                                   $scope.selected_regroupements ),
-                                                          _($scope.current_user.profil_actif.matieres).pluck('id'),
+                                                          $scope.current_user.extract_subjects_ids(),
                                                           $scope.uniquement_mes_creneaux );
                            } else {
                                return raw_data;
@@ -32,7 +35,7 @@ angular.module( 'cahierDeTextesClientApp' )
                        $scope.next = function() { $scope.emploi_du_temps.fullCalendar('next'); };
 
                        $scope.select_all_regroupements = function() {
-                           $scope.selected_regroupements = $scope.current_user.profil_actif.regroupements;
+                           $scope.selected_regroupements = $scope.groups;
                            $scope.refresh_calendar();
                        };
 
@@ -49,30 +52,30 @@ angular.module( 'cahierDeTextesClientApp' )
                        // consommation des données
                        var to_fullcalendar_events = function( filtered_data ) {
                            var CalendarEvent = function( event ) {
-                               var _this = this; //pour pouvoir le référencé dans les .then()
-                               this.details = event;
-                               this.allDay = false;
-                               this.regroupement = _($scope.current_user.profil_actif.regroupements).findWhere({ id: parseInt( this.details.regroupement_id ) });
-                               this.title = ( _(this.regroupement).isUndefined() ) ? '' : this.regroupement.libelle;
-                               this.matiere = _($scope.current_user.profil_actif.matieres).findWhere({ id: this.details.matiere_id });
-                               this.has_resources = _(event.cours).has( 'ressources' ) && event.cours.ressources.length > 0;
-                               this.temps_estime = 0;
-                               this.start = moment( event.start );
-                               this.end = moment( event.end );
-                               this.className = 'saisie-vide';
+                               var fc_event = this; //pour pouvoir le référencé dans les .then()
+                               fc_event.details = event;
+                               fc_event.allDay = false;
+                               fc_event.regroupement = _($scope.current_period_groups).findWhere({ id: parseInt( fc_event.details.regroupement_id ) });
+                               fc_event.title = ( _(fc_event.regroupement).isUndefined() ) ? '' : fc_event.regroupement.name;
+                               fc_event.matiere = _($scope.subjects).findWhere({ id: fc_event.details.matiere_id });
+                               fc_event.has_resources = _(event.cours).has( 'ressources' ) && event.cours.ressources.length > 0;
+                               fc_event.temps_estime = 0;
+                               fc_event.start = moment( event.start );
+                               fc_event.end = moment( event.end );
+                               fc_event.className = 'saisie-vide';
 
                                if ( !_(event.cours).isNull() ) {
                                    _(event.cours.devoirs).each( function( devoir ) {
-                                       _this.has_ressources = _this.has_ressources || _(devoir).has( 'ressources' ) && devoir.ressources.length > 0;
+                                       fc_event.has_ressources = fc_event.has_ressources || _(devoir).has( 'ressources' ) && devoir.ressources.length > 0;
                                    } );
                                }
 
                                _(event.devoirs).each( function( devoir ) {
-                                   _this.has_ressources = _this.has_ressources || _(devoir).has( 'ressources' ) && devoir.ressources.length > 0;
+                                   fc_event.has_ressources = fc_event.has_ressources || _(devoir).has( 'ressources' ) && devoir.ressources.length > 0;
                                    if ( !_(devoir.temps_estime).isNull() ) {
-                                       _this.temps_estime += devoir.temps_estime;
-                                       if ( _this.temps_estime > 15 ) {
-                                           _this.temps_estime = 15;
+                                       fc_event.temps_estime += devoir.temps_estime;
+                                       if ( fc_event.temps_estime > 15 ) {
+                                           fc_event.temps_estime = 15;
                                        }
                                    }
                                } );
@@ -82,27 +85,27 @@ angular.module( 'cahierDeTextesClientApp' )
                                    var highest_type_de_devoir = _.chain(event.devoirs).pluck( 'type_devoir_id' ).sort().first().value();
                                    switch( highest_type_de_devoir ) {
                                    case 1:
-                                       this.className = 'edt-devoir-note-surveille';
+                                       fc_event.className = 'edt-devoir-note-surveille';
                                        break;
                                    case 2:
-                                       this.className = 'edt-devoir-note-maison';
+                                       fc_event.className = 'edt-devoir-note-maison';
                                        break;
                                    default:
-                                       this.className = _.chain(event.devoirs).pluck( 'fait' ).contains( true ).value() ? 'edt-devoir-fait' : 'edt-devoir-a-faire';
+                                       fc_event.className = _.chain(event.devoirs).pluck( 'fait' ).contains( true ).value() ? 'edt-devoir-fait' : 'edt-devoir-a-faire';
                                    }
                                } else {
-                                   this.className = 'edt-cours';
+                                   fc_event.className = 'edt-cours';
                                    if ( !_(event.cours).isNull() && !_(event.cours.date_validation).isNull() && ( $scope.current_user.profil_actif.type === 'ENS' && $scope.current_user.profil_actif.type === 'DOC' ) ) {
-                                       this.className += '-valide';
+                                       fc_event.className += '-valide';
                                    } else if ( !_(event.cours).isNull() ) {
-                                       this.className += '-saisie';
+                                       fc_event.className += '-saisie';
                                    }
                                }
 
                                if ( ( ( _( [ 'ELV', 'TUT', 'EVS', 'DIR'] ).contains( $scope.current_user.profil_actif.type ) ) && _(event.cours).isNull() && _(event.devoirs).isEmpty() ) ) {
-                                   this.className += ' unclickable-event';
+                                   fc_event.className += ' unclickable-event';
                                } else {
-                                   this.className += ' clickable-event';
+                                   fc_event.className += ' clickable-event';
                                }
                            };
 
@@ -114,8 +117,8 @@ angular.module( 'cahierDeTextesClientApp' )
                        $scope.refresh_calendar = function() {
                            $scope.calendar.events[ 0 ] = to_fullcalendar_events( $scope.filter_data( $scope.raw_data ) );
 
-                           $stateParams.regroupements = _($scope.selected_regroupements).pluck('libelle');
-                           $state.go( $state.current, $stateParams, { notify: false, reload: false } );
+                           // $stateParams.regroupements = _($scope.selected_regroupements).pluck('libelle');
+                           // $state.go( $state.current, $stateParams, { notify: false, reload: false } );
                        };
 
                        var retrieve_data = function( from_date, to_date ) {
@@ -126,16 +129,40 @@ angular.module( 'cahierDeTextesClientApp' )
                                                        uid: $scope.current_user.profil_actif.type == 'TUT' ? $scope.current_user.enfant_actif.enfant.id_ent : null } )
                                    .$promise
                                    .then( function success( response ) {
-                                       $stateParams.date = moment( from_date ).toDate().toISOString().split('T')[0];
-                                       $state.go( $state.current, $stateParams, { notify: false, reload: false } );
+                                       // $stateParams.date = moment( from_date ).toDate().toISOString().split('T')[0];
+                                       // $state.go( $state.current, $stateParams, { notify: false, reload: false } );
 
                                        $scope.raw_data = response;
-                                       $scope.refresh_calendar();
+                                       var groups_ids = _.chain($scope.raw_data).pluck('regroupement_id').uniq().value();
+                                       var subjects_ids = _.chain($scope.raw_data).pluck('matiere_id').uniq().value();
+
+                                       Annuaire.get_groups( groups_ids )
+                                           .then( function( response ) {
+                                               $scope.current_period_groups = response.data;
+
+                                               return Annuaire.get_subjects( subjects_ids );
+                                           } )
+                                           .then( function( response ) {
+                                               // $scope.subjects = _(response.data).indexBy('id');
+                                               $scope.subjects = response.data;
+
+                                               $scope.refresh_calendar();
+                                           } );
                                    });
                            }
                        };
 
                        // configuration du composant calendrier
+                       $scope.current_user.get_actual_groups()
+                           .then( function( actual_groups ) {
+                               if ( $scope.uniquement_mes_creneaux ) {
+                                   $scope.selected_regroupements = $scope.current_user.actual_groups;
+                               } else {
+                                   $scope.selected_regroupements = [ $scope.current_user.actual_groups[0] ];
+                               }
+                           } );
+
+
                        $scope.extraEventSignature = function( event ) {
                            return '' + event.matiere;
                        };
@@ -145,19 +172,11 @@ angular.module( 'cahierDeTextesClientApp' )
                                return _.chain(selected_regroupements).pluck('id').contains( parseInt( creneau.regroupement_id ) ).value();
                            } );
                        };
-                       var filter_by_matieres = function( raw_data, matieres, active ) {
+                       var filter_by_matieres = function( raw_data, subjects_ids, active ) {
                            return !active ? raw_data : _( raw_data ).filter( function( creneau ) {
-                               return _(matieres).contains( creneau.matiere_id );
+                               return _(subjects_ids).contains( creneau.matiere_id );
                            } );
                        };
-
-                       $scope.uniquement_mes_creneaux = !_( [ 'EVS', 'DIR'] ).contains( $scope.current_user.profil_actif.type );
-
-                       if ( $scope.uniquement_mes_creneaux ) {
-                           $scope.selected_regroupements = $scope.current_user.profil_actif.regroupements;
-                       } else {
-                           $scope.selected_regroupements = [ $scope.current_user.profil_actif.regroupements[0] ];
-                       }
 
                        // Les TUT peuvent choisir parmi leurs enfants
                        if ( $scope.current_user.profil_actif.type === 'TUT' ) {
@@ -190,43 +209,43 @@ angular.module( 'cahierDeTextesClientApp' )
                        $scope.calendar.options.weekends = $scope.current_user.parametrage_cahier_de_textes.affichage_week_ends;
 
                        $scope.calendar.options.viewRender = function( view, element ) {
-                           $scope.current_user.date = view.start;
-                           $scope.n_week = view.start.week();
-                           $scope.c_est_les_vacances = Utils.sont_ce_les_vacances( $scope.n_week, $scope.zone );
+                                   $scope.current_user.date = view.start;
+                                   $scope.n_week = view.start.week();
+                                   $scope.c_est_les_vacances = Utils.sont_ce_les_vacances( $scope.n_week, $scope.zone );
 
-                           retrieve_data( view.start.toDate(), view.end.toDate() );
-                       };
+                                   retrieve_data( view.start.toDate(), view.end.toDate() );
+                               };
 
-                       $scope.calendar.options.eventRender = function ( event, element ) {
-                           // FIXME: manipulation du DOM dans le contrôleur, sale, mais obligé pour l'interprétation du HTML ?
-                           var elt_fc_content_title = element.find( '.fc-title' );
-                           var elt_fc_content = element.find( '.fc-content' );
+                               $scope.calendar.options.eventRender = function ( event, element ) {
+                                   // FIXME: manipulation du DOM dans le contrôleur, sale, mais obligé pour l'interprétation du HTML ?
+                                   var elt_fc_content_title = element.find( '.fc-title' );
+                                   var elt_fc_content = element.find( '.fc-content' );
 
-                           if ( !_(event.matiere).isUndefined() ) {
-                               elt_fc_content_title.append( ' - ' + event.matiere.libelle_long );
-                           }
-
-                           if ( event.has_resources ) {
-                               elt_fc_content.prepend( '<i class="glyphicon glyphicon-paperclip"></i>' );
-                           }
-                           if ( $scope.current_user.profil_actif.type !== 'ELV' ) {
-                               if ( event.temps_estime > 0 ) {
-                                   var class_couleur = '';
-                                   if (event.temps_estime  < 4 ) {
-                                       class_couleur = ' label-success';
-                                   } else if (event.temps_estime  < 8 ) {
-                                       class_couleur = ' label-info';
-                                   } else if (event.temps_estime  < 12 ) {
-                                       class_couleur = ' label-warning';
-                                   } else if (event.temps_estime  <= 15 ) {
-                                       class_couleur = ' label-danger';
+                                   if ( !_(event.matiere).isUndefined() ) {
+                                       elt_fc_content_title.append( ' - ' + event.matiere.name );
                                    }
-                                   elt_fc_content.prepend( '<div class="est-time est-time-' + event.temps_estime + class_couleur + '"></div>' );
-                               }
-                           }
-                       };
 
-                       $scope.calendar.options.eventClick = function( event ) {
+                                   if ( event.has_resources ) {
+                                       elt_fc_content.prepend( '<i class="glyphicon glyphicon-paperclip"></i>' );
+                                   }
+                                   if ( $scope.current_user.profil_actif.type !== 'ELV' ) {
+                                       if ( event.temps_estime > 0 ) {
+                                           var class_couleur = '';
+                                           if (event.temps_estime  < 4 ) {
+                                               class_couleur = ' label-success';
+                                           } else if (event.temps_estime  < 8 ) {
+                                               class_couleur = ' label-info';
+                                           } else if (event.temps_estime  < 12 ) {
+                                               class_couleur = ' label-warning';
+                                           } else if (event.temps_estime  <= 15 ) {
+                                               class_couleur = ' label-danger';
+                                           }
+                                           elt_fc_content.prepend( '<div class="est-time est-time-' + event.temps_estime + class_couleur + '"></div>' );
+                                       }
+                                   }
+                               };
+
+                               $scope.calendar.options.eventClick = function( event ) {
                            if ( _( [ 'ENS', 'DOC' ] ).contains( $scope.current_user.profil_actif.type ) || $scope.current_user.profil_actif.admin ) {
                                if ( !popup_ouverte ) {
                                    CreneauxEmploiDuTemps.get( { id: event.details.creneau_emploi_du_temps_id } )

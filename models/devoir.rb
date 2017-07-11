@@ -17,10 +17,10 @@ class Devoir < Sequel::Model( :devoirs )
 
     h[:devoir_todo_items] = devoir_todo_items
     h[:devoir_todo_items] = [] if user.nil?
-    h[:devoir_todo_items].select! { |dti| dti[:eleve_id] == user[:uid] } unless user.nil?
+    h[:devoir_todo_items].select! { |dti| dti[:eleve_id] == user['id'] } unless user.nil?
 
-    h[:fait] = user.nil? ? false : fait_par?( user[:uid] )
-    h[:date_fait] = h[:fait] ? fait_le( user[:uid] ) : nil
+    h[:fait] = user.nil? ? false : fait_par?( user['id'] )
+    h[:date_fait] = h[:fait] ? fait_le( user['id'] ) : nil
 
     h
   end
@@ -47,7 +47,7 @@ class Devoir < Sequel::Model( :devoirs )
   end
 
   def toggle_fait( user )
-    fait_par?( user[:uid] ) ? a_faire_par!( user[:uid] ) : fait_par!( user[:uid] )
+    fait_par?( user['id'] ) ? a_faire_par!( user['id'] ) : fait_par!( user['id'] )
   end
 
   def copie( cours_id, creneau_emploi_du_temps_id, date_due )

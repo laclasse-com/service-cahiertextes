@@ -31,6 +31,34 @@ module LaClasse
       def user_regroupements_ids( uid = nil )
         user( uid )['groups'].map { |g| g['group_id'] }
       end
+
+      def user_ctxt
+        utilisateur = JSON.parse( RestClient::Request.execute( method: :get,
+                                                               url: "#{URL_ENT}/api/users/#{env['rack.session']['uid']}",
+                                                               user: ANNUAIRE[:app_id],
+                                                               password: ANNUAIRE[:api_key] ) )
+
+        parametres = UserParameters.where( uid: utilisateur[ 'id' ] ).first
+        parametres = UserParameters.create( uid: utilisateur[ 'id' ] ) if parametres.nil?
+        parametres.update( date_connexion: Time.now )
+        parametres.save
+
+        utilisateur[ 'parametrage_cahier_de_textes' ] = JSON.parse( parametres[:parameters] )
+
+        all_matieres = JSON.parse( RestClient::Request.execute( method: :get,
+                                                                url: "#{URL_ENT}/api/subjects",
+                                                                user: ANNUAIRE[:app_id],
+                                                                password: ANNUAIRE[:api_key] ) )
+
+        utilisateur['enfants'] = utilisateur['children']
+        utilisateur[ 'profils' ] = utilisateur['profiles'].map do |profil|
+          profil['matieres'] = all_matieres
+          p profil['active']
+          profil
+        end
+
+        utilisateur
+      end
     end
   end
 end

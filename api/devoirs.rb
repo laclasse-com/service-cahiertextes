@@ -16,27 +16,11 @@ module CahierDeTextesApp
       optional :uai, type: String
     end
     get '/' do
-      uid = params[:uid] ? params[:uid] : user[:uid]
+      uid = params[:uid] ? params[:uid] : user['id']
 
       if params[:uid]
-        user_annuaire = Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_user, "#{user[:uid]}", expand: 'true' )
-        error!( '401 Unauthorized', 401 ) unless user_annuaire['profils'].find { |p| p['actif'] }['profil_id'] == 'TUT' && !user_annuaire['enfants'].find { |e| e['enfant']['id_ent'] == params[:uid] }.nil?
+        error!( '401 Unauthorized', 401 ) unless user['profils'].find { |p| p['actif'] }['profil_id'] == 'TUT' && !user['enfants'].find { |e| e['enfant']['id_ent'] == params[:uid] }.nil?
       end
-
-      # regroupements_annuaire = Laclasse::CrossApp::Sender.send_request_signed( :service_annuaire_user, "#{uid}/regroupements", expand: 'true' )
-      # regroupements_ids = regroupements_annuaire['classes'].concat( regroupements_annuaire['groupes_eleves'] )
-      #                                                      .concat( regroupements_annuaire['groupes_libres'] )
-      #                                                      .reject { |regroupement| regroupement['etablissement_code'] != params[:uai] if params[:uai] }
-      #                                                      .map do |regroupement|
-      #   if regroupement.key?( 'classe_id' )
-      #     regroupement['classe_id']
-      #   elsif regroupement.key?( 'groupe_id' )
-      #     regroupement['groupe_id']
-      #   else
-      #     regroupement['id']
-      #   end
-      # end
-      #                                                      .uniq
 
       regroupements_ids = user_regroupements_ids
 
@@ -96,7 +80,7 @@ module CahierDeTextesApp
           cahier_de_textes = CahierDeTextes.where( regroupement_id: params[:regroupement_id] ).first
           cahier_de_textes = CahierDeTextes.create( date_creation: Time.now, regroupement_id: params[:regroupement_id] ) if cahier_de_textes.nil?
 
-          cours = Cours.create( enseignant_id: user[:uid],
+          cours = Cours.create( enseignant_id: user['id'],
                                 cahier_de_textes_id: cahier_de_textes.id,
                                 creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
                                 date_cours: params[:date_due],
@@ -106,7 +90,7 @@ module CahierDeTextesApp
         devoir.update( cours_id: cours.id )
       end
 
-      params[:enseignant_id] = user[:uid]
+      params[:enseignant_id] = user['id']
 
       devoir.modifie( params )
 
@@ -130,7 +114,7 @@ module CahierDeTextesApp
 
       devoir = Devoir[ params[:id] ]
       error!( 'Devoir inconnu', 404 ) if devoir.nil?
-      params[:enseignant_id] = user[:uid]
+      params[:enseignant_id] = user['id']
 
       devoir.modifie( params )
 

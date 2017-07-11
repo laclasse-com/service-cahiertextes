@@ -2,43 +2,56 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .service( 'User',
-              [ '$http', 'APP_PATH',
-               function( $http, APP_PATH ) {
-                   this.get_user = _.memoize( function() {
-                       return $http.get( APP_PATH + '/api/users/current' )
-                           .then( function( response ) {
-                               _(response.data.profils).each( function( profil ) {
-                                   // Liste des regroupements liées au profil
-                                   profil.regroupements = _.chain(response.data.regroupements)
-                                       .filter( function( classe ) { return classe.etablissement_code == profil.structure_id; } )
-                                       .map( function( classe ) {
-                                           return { id: classe.id,
-                                                    libelle: classe.libelle,
-                                                    type: classe.type };
-                                       } )
-                                       .uniq( function( item ) { return item.id; } )
-                                       .reject( function( item ) { return _.isUndefined( item.id ); } )
-                                       .value();
-                               } );
-                               response.data.profil_actif = _(response.data.profils).findWhere( { active: true } );
+              [ '$http', '$q', 'APP_PATH', 'Annuaire',
+                function( $http, $q, APP_PATH, Annuaire ) {
+                    this.get_user = _.memoize( function() {
+                        return $http.get( APP_PATH + '/api/users/current' )
+                            .then( function( response ) {
+                                _(response.data.profils).each( function( profil ) {
+                                    // Liste des regroupements liées au profil
+                                    profil.regroupements = _.chain(response.data.regroupements)
+                                        .filter( function( classe ) { return classe.etablissement_code == profil.structure_id; } )
+                                        .map( function( classe ) {
+                                            return { id: classe.id,
+                                                     libelle: classe.libelle,
+                                                     type: classe.type };
+                                        } )
+                                        .uniq( function( item ) { return item.id; } )
+                                        .reject( function( item ) { return _.isUndefined( item.id ); } )
+                                        .value();
+                                } );
+                                response.data.profil_actif = _(response.data.profils).findWhere( { active: true } );
 
-                               if ( response.data.enfants.length > 0 ) {
-                                   response.data.enfant_actif = response.data.enfants[ 0 ];
-                               }
+                                if ( response.data.enfants.length > 0 ) {
+                                    response.data.enfant_actif = response.data.enfants[ 0 ];
+                                }
 
-                               // Voir quel est le profil
-                               response.data.is = function( type ) {
-                                   return this.profil_actif.type == type;
-                               };
+                                response.data.get_actual_groups = function() {
+                                    return Annuaire.get_groups( _.chain(response.data.groups).pluck( 'group_id' ).uniq().value() )
+                                        .then( function( groups ) {
+                                            response.data.actual_groups = groups.data;
 
-                               return response;
-                           } );
-                   } );
+                                            return $q.resolve( groups.data );
+                                        } );
+                                };
 
-                   this.update_parameters = function( parametres ) {
-                       return $http.put( APP_PATH + '/api/users/current/parametres',
-                                         { parametres: JSON.stringify( parametres ) } );
-                   };
+                                response.data.extract_subjects_ids = function() {
+                                    return _.chain(response.data.groups).pluck('subject_id').uniq().value();
+                                };
+
+                                // Voir quel est le profil
+                                response.data.is = function( type ) {
+                                    return this.profil_actif.type == type;
+                                };
+
+                                return response;
+                            } );
+                    } );
+
+                    this.update_parameters = function( parametres ) {
+                        return $http.put( APP_PATH + '/api/users/current/parametres',
+                                          { parametres: JSON.stringify( parametres ) } );
+                    };
                } ] )
 
     .factory( 'StatistiquesRegroupements', [ '$resource', 'APP_PATH',
