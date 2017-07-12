@@ -53,7 +53,7 @@ module LaClasse
         utilisateur['enfants'] = utilisateur['children']
         utilisateur[ 'profils' ] = utilisateur['profiles'].map do |profil|
           profil['matieres'] = all_matieres
-          p profil['active']
+
           profil
         end
 
