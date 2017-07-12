@@ -3,34 +3,30 @@
 angular.module( 'cahierDeTextesClientApp' )
     .controller('CahierDeTextesCtrl',
                 [ '$scope', '$sce', '$q', '$state', '$stateParams', 'moment',
-                  'APP_PATH', 'DOCS_URL', 'API', 'EmploisDuTemps', 'current_user', 'PopupsCreneau', 'CreneauxEmploiDuTemps', 'Utils',
+                  'APP_PATH', 'DOCS_URL', 'API', 'EmploisDuTemps', 'current_user', 'PopupsCreneau', 'CreneauxEmploiDuTemps', 'Utils', 'Annuaire',
                   function ( $scope, $sce, $q, $state, $stateParams, moment,
-                             APP_PATH, DOCS_URL, API, EmploisDuTemps, current_user, PopupsCreneau, CreneauxEmploiDuTemps, Utils ) {
+                             APP_PATH, DOCS_URL, API, EmploisDuTemps, current_user, PopupsCreneau, CreneauxEmploiDuTemps, Utils, Annuaire ) {
                       var first_load = true;
                       var changing_period_offset = false;
 
                       $scope.current_user = current_user;
+                      $scope.current_user.get_actual_groups()
+                          .then( function() {
+                              $scope.select_all_regroupements();
+                          } );
 
-                      var matieres = [];
-                      var matieres_enseignees = [];
                       var popup_ouverte = false;
                       $scope.scope = $scope;
                       $scope.selected_creneau_vide = null;
                       $scope.complet = false;
 
-                      $scope.update_regroupements_in_url = function() {
-                          $stateParams.regroupements = _($scope.selected_regroupements).pluck('libelle');
-                          $state.go( $state.current, $stateParams, { notify: false, reload: false } );
-                      };
-
                       $scope.select_all_regroupements = function() {
-                          $scope.selected_regroupements = $scope.current_user.profil_actif.regroupements;
+                          $scope.selected_regroupements = $scope.current_user.actual_groups;
                       };
 
                       $scope.select_no_regroupements = function() {
                           $scope.selected_regroupements = [];
                       };
-                      $scope.select_all_regroupements();
 
                       var filter_creneaux_avec_saisies = function( raw_data ) {
                           return _.chain(raw_data)
@@ -49,30 +45,18 @@ angular.module( 'cahierDeTextesClientApp' )
                           } );
                       };
 
-                      var list_matieres = function(raw_data) {
-                          return _.chain(raw_data)
-                              .pluck('matiere_id')
-                              .uniq()
-                              .compact()
-                              .reject( function( id ) { return id === 'undefined'; } )
-                              .map(function(matiere_id) {
-                                  return [ matiere_id, _($scope.current_user.profil_actif.matieres).findWhere({ id: matiere_id }) ];
-                              })
-                              .object()
-                              .value();
-                      };
-
                       $scope.period_offset = $scope.current_user.date ? moment.duration( moment() - moment( $scope.current_user.date ) ).months() : 0;
 
                       // $scope.retrieve_data() when the value of week_offset changes
                       // n.b.: triggered when week_offset is initialized above
+                      // FIXME: calculation on months but it's weeks now
                       var nb_mois_depuis_septembre = Math.abs( 9 - ( moment().month() + 1 ) );
                       $scope.period_offsets_list = _.range( nb_mois_depuis_septembre,
                                                             ( 10 - nb_mois_depuis_septembre ) * -1,
                                                             -1 )
                           .map( function( offset ) {
                               return { offset: offset,
-                                       label: offset == 0 ? 'ce mois' : moment().add( offset * -1, 'months' ).fromNow() };
+                                       label: offset == 0 ? 'cette semaine' : moment().add( offset * -1, 'weeks' ).fromNow() };
                           } );
                       $scope.period_offsets_list.push( { offset: 9999,
                                                          label: 'année complète'} );
@@ -103,22 +87,22 @@ angular.module( 'cahierDeTextesClientApp' )
                               $scope.from_date = $scope.from_date.toDate();
                               $scope.to_date = $scope.to_date.toDate();
                           } else {
-                              if ( first_load && moment( $stateParams.date ).isValid() ) {
-                                  if ( moment( $stateParams.date ).isBefore( Utils.school_year_start() ) ) {
-                                      $stateParams.date = Utils.school_year_start();
-                                  } else if ( moment( $stateParams.date ).isAfter( Utils.school_year_end() ) ) {
-                                      $stateParams.date = Utils.school_year_end();
-                                  }
+                              // if ( first_load && moment( $stateParams.date ).isValid() ) {
+                              //     if ( moment( $stateParams.date ).isBefore( Utils.school_year_start() ) ) {
+                              //         $stateParams.date = Utils.school_year_start();
+                              //     } else if ( moment( $stateParams.date ).isAfter( Utils.school_year_end() ) ) {
+                              //         $stateParams.date = Utils.school_year_end();
+                              //     }
 
-                                  $scope.current_user.date = moment( $stateParams.date ).toDate();
+                              //     $scope.current_user.date = moment( $stateParams.date ).toDate();
 
-                                  $scope.period_offset = moment.duration( now - $scope.current_user.date ).months() - 1;
-                              } else {
-                                  $scope.current_user.date = moment().subtract( $scope.period_offset, 'months' ).toDate();
-                              }
+                              //     $scope.period_offset = moment.duration( now - $scope.current_user.date ).months() - 1;
+                              // } else {
+                              $scope.current_user.date = moment().subtract( $scope.period_offset, 'weeks' ).toDate();
+                              // }
 
-                              $scope.from_date = moment( $scope.current_user.date ).subtract( 2, 'weeks' ).startOf( 'week' ).toDate();
-                              $scope.to_date = moment( $scope.current_user.date ).add( 2, 'weeks' ).endOf( 'week' ).toDate();
+                              $scope.from_date = moment( $scope.current_user.date ).startOf( 'week' ).toDate();
+                              $scope.to_date = moment( $scope.current_user.date ).endOf( 'week' ).toDate();
                           }
 
                           $stateParams.date = $scope.from_date.toISOString().split('T')[0];
@@ -129,34 +113,64 @@ angular.module( 'cahierDeTextesClientApp' )
                                                   uai: $scope.current_user.profil_actif.structure_id } )
                               .$promise
                               .then( function success( response ) {
-                                  var regroupements_ids = _($scope.current_user.profil_actif.regroupements).pluck('id');
-                                  var matieres_ids = _($scope.current_user.profil_actif.matieres).pluck('id');
+                                  var filter_by_regroupement = function( raw_data, selected_regroupements ) {
+                                      return _( raw_data ).filter( function( creneau ) {
+                                          return _.chain(selected_regroupements).pluck('id').contains( parseInt( creneau.regroupement_id ) ).value();
+                                      } );
+                                  };
+                                  var filter_by_matieres = function( raw_data, subjects_ids, active ) {
+                                      return !active ? raw_data : _( raw_data ).filter( function( creneau ) {
+                                          return _(subjects_ids).contains( creneau.matiere_id );
+                                      } );
+                                  };
 
-                                  $scope.raw_data = _(response).select( function( creneau ) {
-                                      return _(regroupements_ids).contains( creneau.regroupement_id ) && _(matieres_ids).contains( creneau.matiere_id );
-                                  } );
-                                  matieres = list_matieres( $scope.raw_data );
+                                  $scope.uniquement_mes_creneaux = true;
 
-                                  _($scope.raw_data).each( function( creneau ) {
-                                      creneau.matiere = _($scope.current_user.profil_actif.matieres).findWhere({ id: creneau.matiere_id });
-                                      creneau.regroupement = _($scope.current_user.profil_actif.regroupements).findWhere({ id: parseInt( creneau.regroupement_id ) });
-                                  });
+                                  $scope.filter_data = function( raw_data ) {
+                                      return filter_by_matieres( filter_by_regroupement( raw_data,
+                                                                                         $scope.selected_regroupements ),
+                                                                 $scope.current_user.extract_subjects_ids(),
+                                                                 $scope.uniquement_mes_creneaux );
+                                  };
 
-                                  $scope.creneaux_vides = filter_creneaux_vides( $scope.raw_data );
+                                  $scope.raw_data = $scope.filter_data( response );
 
-                                  $scope.creneaux_saisies = filter_creneaux_avec_saisies( $scope.raw_data );
-                                  _($scope.creneaux_saisies).each( function( creneau ) {
-                                      if ( !_(creneau.cours).isNull() ) {
-                                          _(creneau.cours.ressources).each( function( ressource ) {
-                                              ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
-                                          } );
-                                      }
-                                      _(creneau.devoirs).each( function( devoir ) {
-                                          _(devoir.ressources).each( function( ressource ) {
-                                              ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+                                  var groups_ids = _.chain($scope.raw_data).pluck('regroupement_id').uniq().value();
+                                  var subjects_ids = _.chain($scope.raw_data).pluck('matiere_id').uniq().value();
+
+                                  Annuaire.get_groups( groups_ids )
+                                      .then( function( response ) {
+                                          $scope.current_period_groups = response.data;
+
+                                          return Annuaire.get_subjects( subjects_ids );
+                                      } )
+                                      .then( function( response ) {
+                                          // $scope.subjects = _(response.data).indexBy('id');
+                                          $scope.subjects = response.data;
+
+                                          //$scope.refresh_calendar();
+
+                                          _($scope.raw_data).each( function( creneau ) {
+                                              creneau.matiere = _($scope.subjects).findWhere({ id: creneau.matiere_id });
+                                              creneau.regroupement = _($scope.current_period_groups).findWhere({ id: parseInt( creneau.regroupement_id ) });
+                                          });
+
+                                          $scope.creneaux_vides = filter_creneaux_vides( $scope.raw_data );
+
+                                          $scope.creneaux_saisies = filter_creneaux_avec_saisies( $scope.raw_data );
+                                          _($scope.creneaux_saisies).each( function( creneau ) {
+                                              if ( !_(creneau.cours).isNull() ) {
+                                                  _(creneau.cours.ressources).each( function( ressource ) {
+                                                      ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+                                                  } );
+                                              }
+                                              _(creneau.devoirs).each( function( devoir ) {
+                                                  _(devoir.ressources).each( function( ressource ) {
+                                                      ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+                                                  } );
+                                              } );
                                           } );
                                       } );
-                                  } );
 
                                   $scope.selected_creneau_vide = null;
                               });
@@ -177,12 +191,11 @@ angular.module( 'cahierDeTextesClientApp' )
                                   creneau_selectionne.regroupement_id = event.regroupement_id;
 
                                   PopupsCreneau.edition( $scope.raw_data,
-                                                         matieres_enseignees, $scope.current_user.profil_actif.regroupements,
+                                                         $scope.subjects, $scope.current_period_groups,
                                                          creneau_selectionne, event.cours, event.devoirs,
                                                          $scope.popup_callback, popup_ouverte );
                               } );
                       };
-                      matieres_enseignees = $scope.current_user.profil_actif.matieres;
 
                       $scope.$watch( 'period_offset', function() {
                           if ( !changing_period_offset ) {
