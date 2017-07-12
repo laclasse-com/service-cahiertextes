@@ -19,12 +19,9 @@ task :load_config do
   require_relative '../config/database'
   require_relative '../models/models'
   require_relative '../lib/utils/semainier'
-  require 'laclasse/laclasse_logger'
-  require 'laclasse/cross_app/sender'
 end
 
 desc 'Open pry with app environment'
 task pry: :load_config do
-  LOGGER = Laclasse::LoggerFactory.get_logger
   pry.binding
 end
