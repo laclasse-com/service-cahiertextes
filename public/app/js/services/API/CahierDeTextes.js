@@ -29,9 +29,11 @@ angular.module( 'cahierDeTextesClientApp' )
                                 response.data.get_actual_groups = function() {
                                     return Annuaire.get_groups( _.chain(response.data.groups).pluck( 'group_id' ).uniq().value() )
                                         .then( function( groups ) {
-                                            response.data.actual_groups = groups.data;
+                                            response.data.actual_groups = _(groups.data).select( function( group ) {
+                                                return group.structure_id === response.data.profil_actif.structure_id;
+                                            } );
 
-                                            return $q.resolve( groups.data );
+                                            return $q.resolve( response.data.actual_groups );
                                         } );
                                 };
 
