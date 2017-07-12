@@ -71,11 +71,11 @@
                     <div class="col-md-4 sequence-pedagogique">
                         <span ng:bind-html="creneau.cours.contenu"></span>
 
-                        <div class="row col-md-12 ressources">
-                            <div class="attached-document" ng:repeat="ressource in creneau.cours.ressources">
-                                <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
-                            </div>
-                        </div>
+                        <!-- <div class="row col-md-12 ressources">
+                             <div class="attached-document" ng:repeat="ressource in creneau.cours.ressources">
+                             <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
+                             </div>
+                             </div> -->
                     </div>
 
                     <ul class="col-md-4 devoirs">
@@ -88,11 +88,11 @@
 
                             <span class="contenu" ng:bind-html="devoir.contenu"></span>
 
-                            <div class="col-md-12 ressources">
-                                <div class="attached-document" ng:repeat="ressource in devoir.ressources">
-                                    <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
-                                </div>
-                            </div>
+                            <!-- <div class="col-md-12 ressources">
+                                 <div class="attached-document" ng:repeat="ressource in devoir.ressources">
+                                 <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
+                                 </div>
+                                 </div> -->
                         </li>
                     </ul>
 

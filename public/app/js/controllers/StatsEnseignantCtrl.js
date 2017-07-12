@@ -138,6 +138,14 @@ angular.module( 'cahierDeTextesClientApp' )
                                            .compact()
                                            .value();
 
+                                       $scope.enseignant.prof_principal = _.chain($scope.enseignant.groups)
+                                           .where({ type: 'PRI' })
+                                           .pluck('group_id')
+                                           .map( function( group_id ) {
+                                               return _($scope.enseignant.liste_regroupements).findWhere({ id: group_id });
+                                           } )
+                                           .value();
+
                                        $scope.select_all_regroupements();
                                    } );
 
@@ -148,13 +156,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                            .compact()
                                            .value();
                                    } );
-
-                               // $scope.enseignant.prof_principal = _.chain(  $scope.enseignant.liste_regroupements )
-                               //     .filter( function( matiere ) { return matiere.prof_principal == 'O'; } )
-                               //     .pluck( 'libelle' )
-                               //     .uniq()
-                               //     .compact()
-                               //     .value();
 
                                return API.get_enseignant( { enseignant_id: $scope.enseignant_id,
                                                             uai: $scope.current_user.profil_actif.structure_id } ).$promise;

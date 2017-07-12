@@ -30,7 +30,7 @@
 
                     <fieldset ng:if="enseignant.prof_principal.length > 0">
                         <legend><span class="glyphicon glyphicon-bell"></span> Professeur principal de</legend>
-                        <span class="label label-info pull-left" ng:repeat="regroupement in enseignant.prof_principal">{{regroupement}}</span>
+                        <span class="label label-info pull-left" ng:repeat="regroupement in enseignant.prof_principal">{{regroupement.name}}</span>
                     </fieldset>
                 </div>
             </div>

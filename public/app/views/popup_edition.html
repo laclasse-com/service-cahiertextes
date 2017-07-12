@@ -118,36 +118,36 @@
                              ng:if="!cours.editable && !cours.deleted" ></div>
                         <div class="panel-body deleted"
                              ng:if="cours.deleted" >(Séquence pédagogique supprimée)</div>
-                        <div class="panel-footer ressources" ng:if="!cours.deleted">
-                            <div class="row">
-                                <div class="attached-document" ng:repeat="ressource in cours.ressources">
-                                    <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
-                                    <button class="btn btn-sm btn-danger" ng:click="remove_ressource( cours, ressource.hash )">✕</button>
-                                </div>
-                            </div>
+                        <!-- <div class="panel-footer ressources" ng:if="!cours.deleted">
+                             <div class="row">
+                             <div class="attached-document" ng:repeat="ressource in cours.ressources">
+                             <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
+                             <button class="btn btn-sm btn-danger" ng:click="remove_ressource( cours, ressource.hash )">✕</button>
+                             </div>
+                             </div>
 
-                            <div uib-dropdown class="uib-dropdown" ng:if="!creneau.etranger">
-                                <button uib-dropdown-toggle class="btn btn-sm btn-default uib-dropdown-toggle pull-right" role="button" data-toggle="uib-dropdown" data-target="#" href=""
-                                        ng:class="{'disabled': faulty_docs_app}">
-                                    <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
-                                </button>
-                                <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng:click="$event.stopPropagation()">
-                                    <div cartable
-                                         class="treecontrol-container"
-                                         data-racine="cartable.files"
-                                         data-target="cours"
-                                         data-regroupement="selected_regroupement"
-                                         data-add-callback="consume_Documents_response_callback">
-                                    </div>
-                                    <input type="file"
-                                           class="upload"
-                                           name="upload[]"
-                                           multiple
-                                           onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().cours, this.files)" />
-                                </div>
-                            </div>
-                            <div class="clearfix"></div>
-                        </div>
+                             <div uib-dropdown class="uib-dropdown" ng:if="!creneau.etranger">
+                             <button uib-dropdown-toggle class="btn btn-sm btn-default uib-dropdown-toggle pull-right" role="button" data-toggle="uib-dropdown" data-target="#" href=""
+                             ng:class="{'disabled': faulty_docs_app}">
+                             <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
+                             </button>
+                             <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng:click="$event.stopPropagation()">
+                             <div cartable
+                             class="treecontrol-container"
+                             data-racine="cartable.files"
+                             data-target="cours"
+                             data-regroupement="selected_regroupement"
+                             data-add-callback="consume_Documents_response_callback">
+                             </div>
+                             <input type="file"
+                             class="upload"
+                             name="upload[]"
+                             multiple
+                             onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().cours, this.files)" />
+                             </div>
+                             </div>
+                             <div class="clearfix"></div>
+                             </div> -->
                     </div>
                 </div>
                 <div class="col-md-3 infos">
@@ -228,37 +228,37 @@
                                 </div>
                                 <div class="panel-body" ng:bind-html="devoir.contenu" ng:if="creneau.etranger"></div>
 
-                                <div class="panel-footer ressources">
-                                    <div class="row">
-                                        <div class="attached-document" ng:repeat="ressource in devoir.ressources">
-                                            <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
-                                            <button class="btn btn-sm btn-danger" ng:click="remove_ressource( devoir, ressource.hash )">✕</button>
-                                        </div>
-                                    </div>
+                                <!-- <div class="panel-footer ressources">
+                                     <div class="row">
+                                     <div class="attached-document" ng:repeat="ressource in devoir.ressources">
+                                     <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
+                                     <button class="btn btn-sm btn-danger" ng:click="remove_ressource( devoir, ressource.hash )">✕</button>
+                                     </div>
+                                     </div>
 
-                                    <div uib-dropdown class="uib-dropdown" ng:if="!creneau.etranger">
-                                        <button uib-dropdown-toggle class="btn btn-sm btn-default uib-dropdown-toggle pull-right" role="button" data-toggle="uib-dropdown" data-target="#" href=""
-                                                ng:class="{'disabled': faulty_docs_app}">
-                                            <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
-                                        </button>
-                                        <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng:click="$event.stopPropagation()">
-                                            <div cartable
-                                                 class="treecontrol-container"
-                                                 data-racine="cartable.files"
-                                                 data-target="devoir"
-                                                 data-regroupement="selected_regroupement"
-                                                 data-add-callback="consume_Documents_response_callback">
-                                            </div>
+                                     <div uib-dropdown class="uib-dropdown" ng:if="!creneau.etranger">
+                                     <button uib-dropdown-toggle class="btn btn-sm btn-default uib-dropdown-toggle pull-right" role="button" data-toggle="uib-dropdown" data-target="#" href=""
+                                     ng:class="{'disabled': faulty_docs_app}">
+                                     <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
+                                     </button>
+                                     <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng:click="$event.stopPropagation()">
+                                     <div cartable
+                                     class="treecontrol-container"
+                                     data-racine="cartable.files"
+                                     data-target="devoir"
+                                     data-regroupement="selected_regroupement"
+                                     data-add-callback="consume_Documents_response_callback">
+                                     </div>
 
-                                            <input type="file"
-                                                   class="upload"
-                                                   name="upload[]"
-                                                   multiple
-                                                   onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files)" />
-                                        </div>
-                                    </div>
-                                    <div class="clearfix"></div>
-                                </div>
+                                     <input type="file"
+                                     class="upload"
+                                     name="upload[]"
+                                     multiple
+                                     onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files)" />
+                                     </div>
+                                     </div>
+                                     <div class="clearfix"></div>
+                                     </div> -->
 
                             </div>
 
@@ -336,37 +336,37 @@
                         </div>
                         <div class="panel-body" ng:bind-html="devoir.contenu" ng:if="creneau.etranger"></div>
 
-                        <div class="panel-footer ressources">
-                            <div class="row">
-                                <div class="attached-document" ng:repeat="ressource in devoir.ressources">
-                                    <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
-                                    <button class="btn btn-sm btn-danger" ng:click="remove_ressource( devoir, ressource.hash )">✕</button>
-                                </div>
-                            </div>
+                        <!-- <div class="panel-footer ressources">
+                             <div class="row">
+                             <div class="attached-document" ng:repeat="ressource in devoir.ressources">
+                             <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>
+                             <button class="btn btn-sm btn-danger" ng:click="remove_ressource( devoir, ressource.hash )">✕</button>
+                             </div>
+                             </div>
 
-                            <div uib-dropdown class="uib-dropdown" ng:if="!creneau.etranger">
-                                <button uib-dropdown-toggle class="btn btn-sm btn-default uib-dropdown-toggle pull-right" role="button" data-toggle="uib-dropdown" data-target="#" href=""
-                                        ng:class="{'disabled': faulty_docs_app}">
-                                    <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
-                                </button>
-                                <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng:click="$event.stopPropagation()">
-                                    <div cartable
-                                         class="treecontrol-container"
-                                         data-racine="cartable.files"
-                                         data-target="devoir"
-                                         data-regroupement="selected_regroupement"
-                                         data-add-callback="consume_Documents_response_callback">
-                                    </div>
+                             <div uib-dropdown class="uib-dropdown" ng:if="!creneau.etranger">
+                             <button uib-dropdown-toggle class="btn btn-sm btn-default uib-dropdown-toggle pull-right" role="button" data-toggle="uib-dropdown" data-target="#" href=""
+                             ng:class="{'disabled': faulty_docs_app}">
+                             <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
+                             </button>
+                             <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng:click="$event.stopPropagation()">
+                             <div cartable
+                             class="treecontrol-container"
+                             data-racine="cartable.files"
+                             data-target="devoir"
+                             data-regroupement="selected_regroupement"
+                             data-add-callback="consume_Documents_response_callback">
+                             </div>
 
-                                    <input type="file"
-                                           class="upload"
-                                           name="upload[]"
-                                           multiple
-                                           onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files)" />
-                                </div>
-                            </div>
-                            <div class="clearfix"></div>
-                        </div>
+                             <input type="file"
+                             class="upload"
+                             name="upload[]"
+                             multiple
+                             onchange="angular.element(this).scope().upload_and_add_ressource( angular.element(this).scope().devoir, this.files)" />
+                             </div>
+                             </div>
+                             <div class="clearfix"></div>
+                             </div> -->
                     </div>
 
                     <div class="col-md-3 infos"

@@ -257,7 +257,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                            creneau_selectionne.regroupement_id = event.details.regroupement_id;
 
                                            PopupsCreneau.edition( $scope.raw_data,
-                                                                  $scope.current_user.profil_actif.matieres, $scope.current_user.profil_actif.regroupements,
+                                                                  $scope.subjects, $scope.current_period_groups,
                                                                   creneau_selectionne, event.details.cours, event.details.devoirs,
                                                                   popup_callback, popup_ouverte );
                                        } );
