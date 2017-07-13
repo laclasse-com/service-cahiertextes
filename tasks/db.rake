@@ -7,13 +7,18 @@ namespace :db do
     require(File.join(APP_ROOT, 'api'))
   end
 
-  desc 'Apply migrations'
-  task migrations: :load_config do
-    Sequel::Migrator.run( DB, 'migrations' )
+  desc 'Run migrations'
+  task :migrate, [:version] do |_t, args|
+    require_relative('../config/options')
+    require(File.join(APP_ROOT, 'api'))
+    if args[:version]
+      puts "Migrating to version #{args[:version]}"
+      Sequel::Migrator.run( DB, 'migrations', target: args[:version].to_i )
+    else
+      puts 'Migrating to latest'
+      Sequel::Migrator.run( DB, 'migrations' )
+    end
   end
-
-  desc 'Apply migrations too'
-  task migrate: :migrations
 
   desc 'Checks if a migration is needed'
   task check_migrate: :load_config do
@@ -24,6 +29,6 @@ namespace :db do
   desc 'Dumps database'
   task dump: :load_config do
     STDERR.puts "Dumping database #{DB_CONFIG[:name]} into #{DB_CONFIG[:name]}_#{Time.now.strftime('%F')}.sql"
-    `mysqldump -u #{DB_CONFIG[:user]} -p#{DB_CONFIG[:password]} #{DB_CONFIG[:name]} > #{DB_CONFIG[:name]}_#{Time.now.strftime('%F')}.sql` # rubocop:disable Metrics/LineLength
+    `mysqldump -u #{DB_CONFIG[:user]} -p#{DB_CONFIG[:password]} #{DB_CONFIG[:name]} > #{DB_CONFIG[:name]}_#{Time.now.strftime('%F')}.sql`
   end
 end
