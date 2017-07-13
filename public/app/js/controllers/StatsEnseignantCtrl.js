@@ -104,23 +104,23 @@ angular.module( 'cahierDeTextesClientApp' )
                                    showCancelButton: true,
                                    confirmButtonColor: '#ff6b55',
                                    confirmButtonText: 'Confirmer',
-                                   cancelButtonText: 'Annuler' },
-                                 function () {
-                                     var counter = 0;
-                                     _.chain($scope.raw_data)
+                                   cancelButtonText: 'Annuler' } )
+                               .then( function confirm() {
+                                   var counter = 0;
+                                   _.chain($scope.raw_data)
                                          .reject( function( saisie ) { return saisie.valide || saisie.recent; } )
                                          .each( function( saisie ) {
                                              saisie.disable_toastr = true;
                                              $scope.valide( saisie );
                                              counter++;
                                          } );
-
-                                     if ( counter > 0 ) {
-                                         var pluriel = counter > 1 ? 's' : '';
-                                         var message = counter + ' séquence' + pluriel + ' pédagogique' + pluriel + ' visée' + pluriel + '.';
-                                         toastr.success( message, 'Opération réussie' );
-                                     }
-                                 } );
+                                   if ( counter > 0 ) {
+                                       var pluriel = counter > 1 ? 's' : '';
+                                       var message = counter + ' séquence' + pluriel + ' pédagogique' + pluriel + ' visée' + pluriel + '.';
+                                       toastr.success( message, 'Opération réussie' );
+                                   }
+                               },
+                                      function cancel() {} );
                        };
 
                        // Récupération et consommation des données
