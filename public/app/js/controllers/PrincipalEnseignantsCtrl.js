@@ -54,7 +54,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
                               Annuaire.get_users( _($scope.raw_data).pluck( 'enseignant_id' ) )
                                   .then( function( response ) {
-                                      var enseignants_details = _(response).indexBy( 'id_ent' );
+                                      var enseignants_details = _(response.data).indexBy( 'id' );
 
                                       $scope.regroupements = _.chain(response)
                                           .pluck( 'regroupements' )
