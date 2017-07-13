@@ -55,14 +55,14 @@ module CahierDeTextesApp
     post  do
       user_needs_to_be( %w( ENS DOC ) )
 
-      etablissement_id = Etablissement[ UAI: user[:user_detailed]['profil_actif']['etablissement_code_uai'] ].id
-
+      etablissement = DataManagement::Accessors.create_or_get( Etablissement,
+                                                               UAI: user_active_profile['structure_id'] )
       creneau = CreneauEmploiDuTemps.create( date_creation: Time.now,
                                              debut: params[:heure_debut],
                                              fin: params[:heure_fin],
                                              jour_de_la_semaine: params[:jour_de_la_semaine] - 1,
                                              matiere_id: params[:matiere_id],
-                                             etablissement_id: etablissement_id )
+                                             etablissement_id: etablissement.id )
 
       creneau.modifie( params )
 
