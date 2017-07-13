@@ -37,9 +37,6 @@ module CahierDeTextesApp
 
     before do
       redirect "#{APP_PATH}/auth/cas/?url=#{request.env['REQUEST_PATH']}" unless env['rack.session']['authenticated']
-      # error!( '401 Unauthorized', 401 ) unless logged? || !request.env['PATH_INFO'].match(/.*swagger.*\.json$/).nil?
-
-      # DataManagement::Provisioning.provision( user )
     end
 
     resource( :users                    ) { mount ::CahierDeTextesApp::UsersAPI }
