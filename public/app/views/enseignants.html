@@ -7,14 +7,14 @@
                            ng:change="filter_data()"
                            ng:model="scope.selected_regroupements">
                     <ui-select-match placeholder="Regroupement(s)...">
-                        <span class="label" ng:class="{'label-success': $item.type === 'groupe', 'label-info': $item.type === 'classe' }">
-                            {{$item.libelle}}
+                        <span class="label" ng:class="{'label-success': $item.type === 'GRP', 'label-info': $item.type === 'CLS' }">
+                            {{$item.name}}
                         </span>
                     </ui-select-match>
-                    <ui-select-choices repeat="regroupement in regroupements | orderBy:['type','libelle']"
+                    <ui-select-choices repeat="regroupement in regroupements | orderBy:['type','name']"
                                        group-by="'type'">
-                        <span class="label" ng:class="{'label-success': regroupement.type === 'groupe', 'label-info': regroupement.type === 'classe' }">
-                            {{regroupement.libelle}}
+                        <span class="label" ng:class="{'label-success': regroupement.type === 'GRP', 'label-info': regroupement.type === 'CLS' }">
+                            {{regroupement.name}}
                         </span>
                     </ui-select-choices>
                 </ui-select>
