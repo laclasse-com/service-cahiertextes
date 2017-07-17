@@ -11,37 +11,27 @@ angular.module( 'cahierDeTextesClientApp' )
                       $scope.date = null;
 
                       if ( !_(cours).isNull() ) {
-                          $scope.cours = Cours.get( { id: cours.id } );
+                          $scope.cours = new Cours( cours );
 
-                          $scope.cours.$promise.then( function( cours ) {
-                              $scope.date = $scope.cours.date_cours;
-                              _(cours.devoirs).each( function( devoir ) {
-                                  devoir.tooltip = devoir.contenu;
-                                  if ( devoir.temps_estime > 0 ) {
-                                      devoir.tooltip = '<span><i class="picto temps"></i>' + devoir.temps_estime * 5 + ' minutes</span><hr>' + devoir.tooltip;
-                                  }
-                                  devoir.tooltip = $sce.trustAsHtml( devoir.tooltip );
-                              } );
+                          $scope.date = $scope.cours.date_cours;
+                          _(cours.devoirs).each( function( devoir ) {
+                              devoir.tooltip = devoir.contenu;
+                              if ( devoir.temps_estime > 0 ) {
+                                  devoir.tooltip = '<span><i class="picto temps"></i>' + devoir.temps_estime * 5 + ' minutes</span><hr>' + devoir.tooltip;
+                              }
+                              devoir.tooltip = $sce.trustAsHtml( devoir.tooltip );
                           } );
                       }
 
                       $scope.devoirs = devoirs.map( function( devoir ) {
-                          return Devoirs.get( { id: devoir.id } ).$promise;
-                      } );
-
-                      _($scope.devoirs).each( function( devoir ) {
-                          devoir.then( function() {
-                              devoir.matiere = matiere;
-                          } );
+                          devoir.matiere = matiere;
+                          return new Devoirs( devoir );
                       } );
 
                       if ( _($scope.date).isNull() && !_($scope.devoirs).isEmpty() ) {
-                          $scope.devoirs[0].then( function() {
-                              $scope.date = $scope.devoirs[0].date_due;
-                          } );
+                          $scope.date = $scope.devoirs[0].date_due;
                       }
 
-                      $scope.tab_SP_active = _($scope.devoirs).isEmpty();
                       $scope.fermer = function() {
                           $uibModalInstance.close( $scope );
                       };

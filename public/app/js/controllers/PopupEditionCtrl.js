@@ -18,7 +18,7 @@ angular.module( 'cahierDeTextesClientApp' )
                        ctrl.ZONE = ZONE;
                        ctrl.jours = _($locale.DATETIME_FORMATS.DAY).indexBy( function( jour ) { return _($locale.DATETIME_FORMATS.DAY).indexOf( jour ); } );
                        ctrl.classes = classes;
-                       ctrl.matieres = _(matieres).sortBy( 'libelle_long' );
+                       ctrl.matieres = _(matieres).sortBy( 'name' );
 
                        ctrl.faulty_docs_app = false;
                        ctrl.erreurs = [];
@@ -359,18 +359,18 @@ angular.module( 'cahierDeTextesClientApp' )
                                        } );
                                    } );
 
-                                   ctrl.cours.$promise.then( function() {
-                                       _(ctrl.cours.ressources).each( function( ressource ) {
-                                           ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
-                                       } );
-                                   } );
-                                   _(ctrl.cours.devoirs).each( function( devoir ) {
-                                       devoir.$promise.then( function() {
-                                           _(devoir.ressources).each( function( ressource ) {
-                                               ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
-                                           } );
-                                       } );
-                                   } );
+                                   // ctrl.cours.$promise.then( function() {
+                                   //     _(ctrl.cours.ressources).each( function( ressource ) {
+                                   //         ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+                                   //     } );
+                                   // } );
+                                   // _(ctrl.cours.devoirs).each( function( devoir ) {
+                                   //     devoir.$promise.then( function() {
+                                   //         _(devoir.ressources).each( function( ressource ) {
+                                   //             ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+                                   //         } );
+                                   //     } );
+                                   // } );
 
                                } );
                                ctrl.cours.create = false;
@@ -388,9 +388,9 @@ angular.module( 'cahierDeTextesClientApp' )
                            _( ctrl.devoirs ).each( function ( devoir ) {
                                devoir.$promise.then( function() {
                                    ctrl.estimation_leave( devoir );
-                                   _(devoir.ressources).each( function( ressource ) {
-                                       ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
-                                   } );
+                                   // _(devoir.ressources).each( function( ressource ) {
+                                   //     ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+                                   // } );
                                    if ( ctrl.creneau.etranger ) {
                                        devoir.contenu = $sce.trustAsHtml( devoir.contenu );
                                    }
@@ -455,73 +455,73 @@ angular.module( 'cahierDeTextesClientApp' )
                                } );
 
                            // {{{ Gestion des documents attachés
-                           ctrl.cartable = {};
-                           ctrl.cartable.expandedNodes = [];
-                           ctrl.treeOptions = {
-                               dirSelectable: false
-                           };
+                           // ctrl.cartable = {};
+                           // ctrl.cartable.expandedNodes = [];
+                           // ctrl.treeOptions = {
+                           //     dirSelectable: false
+                           // };
 
-                           var dead_Documents = function() {
-                               ctrl.erreurs.push( { message: "Application Documents non disponible" } );
-                               ctrl.faulty_docs_app = true;
-                           };
+                           // var dead_Documents = function() {
+                           //     ctrl.erreurs.push( { message: "Application Documents non disponible" } );
+                           //     ctrl.faulty_docs_app = true;
+                           // };
 
-                           if ( LOCALHOST ) {
-                               ctrl.erreurs.push( { message: "Instance sur localhost" } );
-                               ctrl.faulty_docs_app = true;
-                           } else {
-                               Documents.list_files()
-                                   .then( function ( response ) {
-                                       if ( _(response.error).isEmpty() && _(response).has( 'files' ) ) {
-                                           ctrl.cartable = response;
-                                           ctrl.cartable.files = _( response.files ).reject( function( file ) {
-                                               return _(file).has( 'phash' );
-                                           } ); //.rest();
-                                           ctrl.cartable.expandedNodes = [];
-                                       } else {
-                                           dead_Documents();
-                                       }
-                                   },
-                                          dead_Documents );
-                           }
+                           // if ( LOCALHOST ) {
+                           //     ctrl.erreurs.push( { message: "Instance sur localhost" } );
+                           //     ctrl.faulty_docs_app = true;
+                           // } else {
+                           //     Documents.list_files()
+                           //         .then( function ( response ) {
+                           //             if ( _(response.error).isEmpty() && _(response).has( 'files' ) ) {
+                           //                 ctrl.cartable = response;
+                           //                 ctrl.cartable.files = _( response.files ).reject( function( file ) {
+                           //                     return _(file).has( 'phash' );
+                           //                 } ); //.rest();
+                           //                 ctrl.cartable.expandedNodes = [];
+                           //             } else {
+                           //                 dead_Documents();
+                           //             }
+                           //         },
+                           //                dead_Documents );
+                           // }
 
-                           ctrl.consume_Documents_response_callback = function( item ) {
-                               return function( response ) {
-                                   ctrl.erreurs = [];
-                                   if ( !_(response.error).isEmpty() ) {
-                                       ctrl.erreurs.push( { message: response.error } );
-                                   } else {
-                                       var _item = _( response.added ).first();
-                                       item.ressources.push( {
-                                           name: _item.name,
-                                           hash: _item.hash,
-                                           url: $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + _item.hash )
-                                       } );
-                                       ctrl.is_dirty( item );
-                                   }
-                               };
-                           };
+                           // ctrl.consume_Documents_response_callback = function( item ) {
+                           //     return function( response ) {
+                           //         ctrl.erreurs = [];
+                           //         if ( !_(response.error).isEmpty() ) {
+                           //             ctrl.erreurs.push( { message: response.error } );
+                           //         } else {
+                           //             var _item = _( response.added ).first();
+                           //             item.ressources.push( {
+                           //                 name: _item.name,
+                           //                 hash: _item.hash,
+                           //                 url: $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + _item.hash )
+                           //             } );
+                           //             ctrl.is_dirty( item );
+                           //         }
+                           //     };
+                           // };
 
-                           ctrl.upload_and_add_ressource = function ( item, fichiers ) {
-                               if ( item.ressources === undefined ) {
-                                   item.ressources = [];
-                               }
-                               var responses = Documents.upload_dans_cahier_de_textes( ctrl.selected_regroupement, fichiers );
-                               for ( var i = 0; i < responses.length; i++ ) {
-                                   responses[ i ]
-                                       .then( ctrl.consume_Documents_response_callback( item ),
-                                              function ( response ) {
-                                                  console.debug( response.error );
-                                              } );
-                               }
-                           };
+                           // ctrl.upload_and_add_ressource = function ( item, fichiers ) {
+                           //     if ( item.ressources === undefined ) {
+                           //         item.ressources = [];
+                           //     }
+                           //     var responses = Documents.upload_dans_cahier_de_textes( ctrl.selected_regroupement, fichiers );
+                           //     for ( var i = 0; i < responses.length; i++ ) {
+                           //         responses[ i ]
+                           //             .then( ctrl.consume_Documents_response_callback( item ),
+                           //                    function ( response ) {
+                           //                        console.debug( response.error );
+                           //                    } );
+                           //     }
+                           // };
 
-                           ctrl.remove_ressource = function ( item, hash ) {
-                               item.ressources = _( item.ressources ).reject( function ( ressource ) {
-                                   return ressource.hash == hash;
-                               } );
-                               ctrl.is_dirty( item );
-                           };
+                           // ctrl.remove_ressource = function ( item, hash ) {
+                           //     item.ressources = _( item.ressources ).reject( function ( ressource ) {
+                           //         return ressource.hash == hash;
+                           //     } );
+                           //     ctrl.is_dirty( item );
+                           // };
                            // }}}
 
                            ctrl.effacer_cours = function () {

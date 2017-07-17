@@ -5,7 +5,7 @@
     <span ng:if="!mode_edition_creneau">
         <h3>{{creneau.heure_debut | amDateFormat : 'dddd D MMMM YYYY' }}, semaine {{creneau.n_week}}</h3>
         <h4>
-            {{selected_regroupement.libelle}} - {{selected_matiere.libelle_long}} ({{creneau.heure_debut | amDateFormat: 'HH:mm'}} - {{creneau.heure_fin | amDateFormat: 'HH:mm'}}<span ng:if="creneau.salles.length > 0">, salle {{creneau.salles[0].nom}}</span>)
+            {{selected_regroupement.name}} - {{selected_matiere.name}} ({{creneau.heure_debut | amDateFormat: 'HH:mm'}} - {{creneau.heure_fin | amDateFormat: 'HH:mm'}}<span ng:if="creneau.salles.length > 0">, salle {{creneau.salles[0].nom}}</span>)
         </h4>
     </span>
     <!-- }}} -->
@@ -16,7 +16,7 @@
         <div class="col-md-6">
             <label>Choisir la classe/le groupe :</label>
             <select ng:model="scope.selected_regroupement"
-                    ng:options="classe as classe.libelle group by classe.type for classe in classes | orderBy:['type','libelle']"
+                    ng:options="classe as classe.name group by classe.type for classe in classes | orderBy:['type','name']"
                     ng:required="true">
             </select>
         </div>
@@ -24,7 +24,7 @@
         <div class="col-md-6">
             <label>Choisir la matière :</label>
             <select ng:model="scope.selected_matiere"
-                    ng:options="matiere as matiere.libelle_long for matiere in matieres | orderBy:['libelle_long']"
+                    ng:options="matiere as matiere.name for matiere in matieres | orderBy:['name']"
                     ng:required="true">
             </select>
         </div>
@@ -415,13 +415,13 @@
                     </ul>
                     <select class="col-md-3 pull-left"
                             ng:model="scope.selected_regroupement_id_duplication"
-                            ng:options="classe.id as classe.libelle for classe in classes">
+                            ng:options="classe.id as classe.name for classe in classes">
                         <option value="" selected>Toutes les classes</option>
                     </select>
                     <select ng:required
                             ng:change="creneau_cible_duplication_SP_updated()"
                             ng:model="creneaux_similaires.selected"
-                            ng:options="creneau as ( creneau | formateCreneau ) group by creneau.classe.libelle for creneau in creneaux_similaires | orderBy:['+start'] | filter:selected_regroupement_id_duplication" >
+                            ng:options="creneau as ( creneau | formateCreneau ) group by creneau.classe.name for creneau in creneaux_similaires | orderBy:['+start'] | filter:selected_regroupement_id_duplication" >
                     </select>
                 </li>
                 <li ng:if="cours.devoirs.length > 0">

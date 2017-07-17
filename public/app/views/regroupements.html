@@ -11,14 +11,14 @@
                        ng:change="process_data()"
                        ng:model="scope.selected_regroupements">
                 <ui-select-match placeholder="Regroupement(s)...">
-                    <span class="label" ng:class="{'label-success': $item.type === 'groupe', 'label-info': $item.type === 'classe' }">
-                        {{$item.libelle}}
+                    <span class="label" ng:class="{'label-success': $item.type === 'GRP', 'label-info': $item.type === 'CLS' }">
+                        {{$item.name}}
                     </span>
                 </ui-select-match>
-                <ui-select-choices repeat="regroupement in regroupements | orderBy:['type','libelle']"
+                <ui-select-choices repeat="regroupement in regroupements | orderBy:['type','name']"
                                    group-by="'type'">
-                    <span class="label" ng:class="{'label-success': regroupement.type === 'groupe', 'label-info': regroupement.type === 'classe' }">
-                        {{regroupement.libelle}}
+                    <span class="label" ng:class="{'label-success': regroupement.type === 'GRP', 'label-info': regroupement.type === 'CLS' }">
+                        {{regroupement.name}}
                     </span>
                 </ui-select-choices>
             </ui-select>
@@ -38,9 +38,9 @@
         <select class="col-md-3"
                 ng:model="scope.selected_matiere"
                 ng:change="process_data()"
-                ng:options="m.id as m.libelle_long for m in matieres">
+                ng:options="m.id as m.name for m in matieres">
             <option value="">Toute les matières</option>
-        </select>
+        </select>{{matieres}}
     </div>
 </div>
 
@@ -73,11 +73,11 @@
 
 <div class="col-md-12" ng:if="!regroupement">
     <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3"
-         ng:repeat="regroupement in individualCharts.regroupements | orderBy:['regroupement.type', 'regroupement.libelle']">
+         ng:repeat="regroupement in individualCharts.regroupements | orderBy:['regroupement.type', 'regroupement.name']">
         <div class="panel panel-default">
             <div class="panel-heading"><h3 class="panel-title">
-                <span class="label" ng:class="{'label-success': regroupement.regroupement.type === 'groupe', 'label-info': regroupement.regroupement.type === 'classe' }">
-                    {{regroupement.regroupement.libelle}}
+                <span class="label" ng:class="{'label-success': regroupement.regroupement.type === 'GRP', 'label-info': regroupement.regroupement.type === 'CLS' }">
+                    {{regroupement.regroupement.name}}
                 </span>
             </h3></div>
             <div class="panel-body">

@@ -17,7 +17,7 @@ angular.module( 'cahierDeTextesClientApp' )
                       var popup_callback = function() {};
 
                       $scope.popup_display = function( devoir ) {
-                          PopupsCreneau.display( devoir.matiere.libelle_long,
+                          PopupsCreneau.display( devoir.matiere.name,
                                                  devoir.cours,
                                                  [ devoir ],
                                                  popup_callback,
@@ -62,7 +62,7 @@ angular.module( 'cahierDeTextesClientApp' )
                               $scope.devoirs = _($scope.all_devoirs).select( function( devoir ) {
                                   return devoir.creneau_emploi_du_temps.matiere_id == matiere.id;
                               } );
-                              $stateParams.matiere = matiere.libelle_long;
+                              $stateParams.matiere = matiere.name;
                           }
                           $state.go( $state.current, $stateParams, { notify: false, reload: false } );
                       };

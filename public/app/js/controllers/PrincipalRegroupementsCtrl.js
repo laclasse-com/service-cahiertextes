@@ -9,13 +9,13 @@ angular.module( 'cahierDeTextesClientApp' )
 
                       ctrl.empty = false;
 
-                      ctrl.raw_data    = [];
-                      ctrl.displayed_data  = [];
-                      ctrl.regroupements     = [];
-                      ctrl.matieres    = [];
+                      ctrl.raw_data = [];
+                      ctrl.displayed_data = [];
+                      ctrl.regroupements = [];
+                      ctrl.matieres = [];
                       ctrl.annee = _($locale.DATETIME_FORMATS.MONTH).toArray();
 
-                      ctrl.selected_mois       = null;
+                      ctrl.selected_mois = null;
                       ctrl.selected_matiere = null;
 
                       ctrl.select_all_regroupements = function() {
@@ -28,16 +28,16 @@ angular.module( 'cahierDeTextesClientApp' )
                           ctrl.process_data();
                       };
 
-                      ctrl.global_stats    = { filled: 0,
-                                                 validated: 0 };
+                      ctrl.global_stats = { filled: 0,
+                                            validated: 0 };
 
                       ctrl.pieChart = angular.copy( PIECHART_DEFINITION );
                       ctrl.multiBarChart = angular.copy( MULTIBARCHART_DEFINITION );
                       ctrl.pieChart.populate = function( data ) {
                           ctrl.pieChart.data = [ { label: 'saisies',
-                                                     value: data.filled - data.validated },
-                                                   { label: 'visas',
-                                                     value: data.validated } ];
+                                                   value: data.filled - data.validated },
+                                                 { label: 'visas',
+                                                   value: data.validated } ];
                       };
                       ctrl.multiBarChart.populate = function( data ) {
                           var sort_by_index = function( a, b ) { return a.index > b.index; };
@@ -64,61 +64,49 @@ angular.module( 'cahierDeTextesClientApp' )
 
 
                           ctrl.multiBarChart.data = [ { key: 'saisies',
-                                                          values: multiBarChart_data.filled.sort( sort_by_index ) },
-                                                        { key: 'visas',
-                                                          values: multiBarChart_data.validated.sort( sort_by_index ) } ];
+                                                        values: multiBarChart_data.filled.sort( sort_by_index ) },
+                                                      { key: 'visas',
+                                                        values: multiBarChart_data.validated.sort( sort_by_index ) } ];
                       };
 
                       ctrl.individualCharts = { regroupements: [],
-                                                  populate: function( data, regroupements ) {
-                                                      var hashed_regroupements = _.chain(regroupements).map( function(c) { return [ c.id, c ]; } ).object().value();
-                                                      ctrl.individualCharts.regroupements = _(data)
-                                                          .map( function( regroupement ) {
-                                                              var individualChart = { data: regroupement,
-                                                                                      regroupement: hashed_regroupements[ regroupement.regroupement_id ],
-                                                                                      pieChart: angular.copy( PIECHART_DEFINITION ) };
-                                                              individualChart.pieChart.data = [ { label: 'saisies',
-                                                                                                  value: regroupement.filled - regroupement.validated },
-                                                                                                { label: 'visas',
-                                                                                                  value: regroupement.validated } ];
-                                                              return individualChart;
-                                                          });
-                                                  } };
+                                                populate: function( data, regroupements ) {
+                                                    var hashed_regroupements = _.chain(regroupements).map( function(c) { return [ c.id, c ]; } ).object().value();
+                                                    ctrl.individualCharts.regroupements = _(data)
+                                                        .map( function( regroupement ) {
+                                                            var individualChart = { data: regroupement,
+                                                                                    regroupement: hashed_regroupements[ regroupement.regroupement_id ],
+                                                                                    pieChart: angular.copy( PIECHART_DEFINITION ) };
+                                                            individualChart.pieChart.data = [ { label: 'saisies',
+                                                                                                value: regroupement.filled - regroupement.validated },
+                                                                                              { label: 'visas',
+                                                                                                value: regroupement.validated } ];
+                                                            return individualChart;
+                                                        });
+                                                } };
 
                       ctrl.extract_matieres = function( data ) {
-                          return _.chain(data)
-                              .pluck( 'matieres' )
-                              .flatten()
-                              .pluck( 'matiere_id' )
-                              .uniq()
-                              .compact()
-                              .map( function( matiere_id ) {
-                                  var matiere = _(current_user.profil_actif.matieres).findWhere({ id: matiere_id });
-                                  if ( _(matiere).isUndefined() ) {
-                                      matiere = Annuaire.get_subject( matiere_id );
-                                  }
+                          return Annuaire.get_subjects( _.chain(data)
+                                                        .pluck('matieres')
+                                                        .flatten()
+                                                        .pluck( 'matiere_id' )
+                                                        .uniq()
+                                                        .value() )
+                              .then( function( response ) {
+                                  ctrl.matieres = response.data;
 
-                                  return matiere;
-                              })
-                              .value();
+                                  return response.data;
+                              } );
                       };
 
                       ctrl.extract_regroupements = function( data ) {
-                          return _.chain( data )
-                              .pluck( 'regroupement_id' )
-                              .map(function( regroupement_id ) {
-                                  regroupement_id = parseInt( regroupement_id );
-                                  var regroupement = _(current_user.profil_actif.regroupements).findWhere({ id: regroupement_id });
-                                  if ( _(regroupement).isUndefined() ) {
-                                      regroupement = Annuaire.get_group( regroupement_id );
-                                  }
+                          return Annuaire.get_groups( _(data).pluck( 'regroupement_id' ) )
+                              .then( function( response ) {
+                                  ctrl.regroupements = response.data;
+                                  ctrl.select_all_regroupements();
 
-                                  return regroupement;
-                              })
-                              .sortBy( function( regroupement ) {
-                                  return regroupement.type;
-                              } )
-                              .value();
+                                  return response.data;
+                              } );
                       };
 
                       ctrl.process_data = function() {
@@ -193,31 +181,6 @@ angular.module( 'cahierDeTextesClientApp' )
                           }
                       };
 
-                      ctrl.$onInit = function() {
-                          API.query_statistiques_regroupements( { uai: current_user.profil_actif.structure_id } )
-                              .$promise.then( function( response ) {
-                                  ctrl.raw_data = response;
-
-                                  ctrl.creneaux_emploi_du_temps = _(ctrl.raw_data).reduce( function( memo, regroupement ) {
-                                      memo.vides = memo.vides.concat( regroupement.creneaux_emploi_du_temps.vides );
-                                      memo.pleins = memo.pleins.concat( regroupement.creneaux_emploi_du_temps.pleins );
-
-                                      return memo;
-                                  },
-                                                                                           { vides: [],
-                                                                                     pleins: [] } );
-
-                                  ctrl.empty = _(ctrl.raw_data[ 0 ]).size() == 0;
-
-                                  if ( ! ctrl.empty ) {
-                                      ctrl.matieres = ctrl.extract_matieres( ctrl.raw_data );
-                                      ctrl.regroupements = ctrl.extract_regroupements( ctrl.raw_data );
-
-                                      ctrl.select_all_regroupements();
-                                  }
-                              });
-                      };
-
                       ctrl.delete_creneaux = function( creneaux, type ) {
                           var end_of_last_august = moment().endOf('month');
                           while ( end_of_last_august.month() !== 7 ) {
@@ -255,5 +218,28 @@ angular.module( 'cahierDeTextesClientApp' )
                                   allowOutsideClick: false } );
                       };
 
+                      ctrl.$onInit = function() {
+                          API.query_statistiques_regroupements( { uai: current_user.profil_actif.structure_id } )
+                              .$promise.then( function( response ) {
+                                  ctrl.raw_data = response;
+
+                                  ctrl.creneaux_emploi_du_temps = _(ctrl.raw_data).reduce( function( memo, regroupement ) {
+                                      memo.vides = memo.vides.concat( regroupement.creneaux_emploi_du_temps.vides );
+                                      memo.pleins = memo.pleins.concat( regroupement.creneaux_emploi_du_temps.pleins );
+
+                                      return memo;
+                                  },
+                                                                                           { vides: [],
+                                                                                             pleins: [] } );
+
+                                  ctrl.empty = _(ctrl.raw_data[ 0 ]).isEmpty();
+
+                                  if ( !ctrl.empty ) {
+                                      ctrl.extract_matieres( ctrl.raw_data );
+                                      ctrl.extract_regroupements( ctrl.raw_data );
+                                  }
+                              });
+                      };
+
                       ctrl.$onInit();
-                } ] );
+                  } ] );

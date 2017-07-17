@@ -298,7 +298,7 @@ angular.module( 'cahierDeTextesClientApp' )
                               .then(
                                   function success( response ) {
                                       $scope.matieres = _(response.data).map( function( matiere ) {
-                                          matiere.libelle_long = matiere.name.toUpperCase();
+                                          matiere.name = matiere.name.toUpperCase();
                                           matiere.displayed_label = matiere.name;
 
                                           return matiere;
@@ -308,7 +308,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                       _($scope.pronote.Matieres[0].Matiere)
                                           .each( function( matiere ) {
                                               matiere.displayed_label = matiere.Libelle;
-                                              matiere.laclasse = _($scope.matieres).findWhere( { libelle_long: matiere.Libelle.toUpperCase() } );
+                                              matiere.laclasse = _($scope.matieres).findWhere( { name: matiere.Libelle.toUpperCase() } );
 
                                               if ( _(matiere.laclasse).isUndefined() ) {
 
@@ -322,7 +322,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                               matiere.edit = _(matiere.laclasse).isUndefined();
                                               if ( !matiere.edit ) {
-                                                  matiere.laclasse.displayed_label = matiere.laclasse.libelle_long;
+                                                  matiere.laclasse.displayed_label = matiere.laclasse.name;
                                               }
                                           } );
 

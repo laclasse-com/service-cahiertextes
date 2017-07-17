@@ -116,7 +116,7 @@ angular.module( 'cahierDeTextesClientApp' )
                        $scope.refresh_calendar = function() {
                            $scope.calendar.events[ 0 ] = to_fullcalendar_events( $scope.filter_data( $scope.raw_data ) );
 
-                           // $stateParams.regroupements = _($scope.selected_regroupements).pluck('libelle');
+                           // $stateParams.regroupements = _($scope.selected_regroupements).pluck('name');
                            // $state.go( $state.current, $stateParams, { notify: false, reload: false } );
                        };
 

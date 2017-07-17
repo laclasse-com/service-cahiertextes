@@ -11,7 +11,7 @@ angular.module( 'cahierDeTextesClientApp' )
                   ' \'type6\': $ctrl.devoir.type_$ctrl.devoir_id === 6,' +
                   ' \'fait\': $ctrl.devoir.fait,' +
                   ' \'a-faire\': !$ctrl.devoir.fait }">' +
-                  '    <h5><i class="picto" ng:style="{\'background-image\':\'url(\' + app_path + \'/app/node_modules/laclasse-common-client/images/picto_matiere.svg)\'}"></i> {{$ctrl.devoir.matiere.libelle_long}} </h5>' +
+                  '    <h5><i class="picto" ng:style="{\'background-image\':\'url(\' + app_path + \'/app/node_modules/laclasse-common-client/images/picto_matiere.svg)\'}"></i> {{$ctrl.devoir.matiere.name}} </h5>' +
                   '    <h6><i class="picto" ng:style="{\'background-image\':\'url(\' + app_path + \'/app/node_modules/laclasse-common-client/images/picto_devoir.svg)\'}"></i> {{$ctrl.devoir.type_devoir.description}} : </h6>' +
                   // '<!-- <li ng:if="$ctrl.devoir.temps_estime > 0"><span><i class="picto" ng:style="{\'background-image\':\'url(\' + app_path + \'/app/node_modules/laclasse-common-client/images/picto_temps.svg)\'}"></i> Temps estimé : <em>{{$Ctrl.devoir.temps_estime * 5}} minutes</em></span></li> -->' +
                   // '    <div class="alert alert-default" ng:bind-html="$ctrl.devoir.contenu"></div>' +
