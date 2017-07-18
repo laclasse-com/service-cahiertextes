@@ -63,23 +63,6 @@ class Etablissement < Sequel::Model( :etablissements )
           valide: !cours.date_validation.nil? }
       end }
   end
-  # def saisies_enseignant( enseignant_id )
-  #   { enseignant_id: enseignant_id,
-  #     saisies: Cours.where( enseignant_id: enseignant_id )
-  #                   .where( deleted: false )
-  #                   .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" )
-  #                   .map do |cours|
-  #       devoirs = Devoir.where(cours_id: cours.id)
-  #       creneau = CreneauEmploiDuTemps[ cours.creneau_emploi_du_temps_id ]
-
-  #       { mois: cours.date_cours.month,
-  #         regroupement_id: creneau.regroupement_id,
-  #         matiere_id: creneau.matiere_id,
-  #         cours: cours,
-  #         devoirs: devoirs,
-  #         valide: !cours.date_validation.nil? }
-  #     end }
-  # end
 
   def merge_all_twin_creneaux( truly_destroy = false )
     merged_twins = []
