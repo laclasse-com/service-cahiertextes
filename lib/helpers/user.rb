@@ -29,7 +29,15 @@ module LaClasse
       end
 
       def user_regroupements_ids( uid = nil )
-        user( uid )['groups'].map { |g| g['group_id'] }
+        if %w[DIR DOC CPE].include?( user_active_profile['type'] )
+          JSON.parse( RestClient::Request.execute( method: :get,
+                                                   url: "#{URL_ENT}/api/groups/?structure_id=#{user_active_profile['structure_id']}",
+                                                   user: ANNUAIRE[:app_id],
+                                                   password: ANNUAIRE[:api_key] ) )
+              .map { |g| g['id'] }
+        else
+          user( uid )['groups'].map { |g| g['group_id'] }
+        end
       end
 
       def user_ctxt
