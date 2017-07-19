@@ -118,10 +118,15 @@ angular.module( 'cahierDeTextesClientApp' )
                       // ********** readiness
                       var update_creneaux_readiness = function() {
                           _($scope.creneaux).each( function( creneau ) {
-                              creneau.readiness = { matiere: !_($scope.pronote.matieres[ creneau.Matiere.Ident ].laclasse).isUndefined(),
+                              creneau.readiness = { matiere: !_($scope.pronote.matieres[ creneau.Matiere.Ident ]).isUndefined()
+                                                    && !_($scope.pronote.matieres[ creneau.Matiere.Ident ].laclasse).isUndefined(),
                                                     salle: !_(creneau.Salle).isUndefined(),
-                                                    classe: _(creneau).has('Classe') && !_($scope.pronote.classes[ creneau.Classe.Ident ].laclasse).isUndefined(),
-                                                    groupe_eleve: _(creneau).has('Groupe') && !_($scope.pronote.groupes_eleves[ creneau.Groupe.Ident ].laclasse).isUndefined() };
+                                                    classe: _(creneau).has('Classe')
+                                                    && !_($scope.pronote.classes[ creneau.Classe.Ident ]).isUndefined()
+                                                    && !_($scope.pronote.classes[ creneau.Classe.Ident ].laclasse).isUndefined(),
+                                                    groupe_eleve: _(creneau).has('Groupe')
+                                                    && !_($scope.pronote.groupes_eleves[ creneau.Groupe.Ident ]).isUndefined()
+                                                    && !_($scope.pronote.groupes_eleves[ creneau.Groupe.Ident ].laclasse).isUndefined() };
 
                               creneau.ready = creneau.readiness.matiere && ( creneau.readiness.classe || creneau.readiness.groupe_eleve );
                           } );
@@ -298,6 +303,9 @@ angular.module( 'cahierDeTextesClientApp' )
                               .then(
                                   function success( response ) {
                                       $scope.matieres = _(response.data).map( function( matiere ) {
+                                          if ( _(matiere.name).isNull() ) {
+                                              matiere.name = '';
+                                          }
                                           matiere.name = matiere.name.toUpperCase();
                                           matiere.displayed_label = matiere.name;
 
@@ -358,7 +366,6 @@ angular.module( 'cahierDeTextesClientApp' )
 
                       var import_data = function() {
                           var started_at = moment();
-                          var bulk_package_size = 15;
                           var import_id = null;
 
                           var handle_error = function( response ) {
@@ -460,15 +467,25 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                       toastr.info('Import de ' + creneaux_to_import.length + ' créneaux');
 
-                                      return $http.post( APP_PATH + '/api/creneaux_emploi_du_temps/bulk/',
-                                                         { uai: $scope.pronote.UAI,
-                                                           creneaux_emploi_du_temps: creneaux_to_import } );
+                                      // return $http.post( APP_PATH + '/api/creneaux_emploi_du_temps/bulk/',
+                                      //                    { uai: $scope.pronote.UAI,
+                                      //                      creneaux_emploi_du_temps: creneaux_to_import } );
+
+                                      var promises = [];
+                                      while ( creneaux_to_import.length > 0 ) {
+                                          promises.push( $http.post( APP_PATH + '/api/creneaux_emploi_du_temps/bulk/',
+                                                                     { uai: $scope.pronote.UAI,
+                                                                       creneaux_emploi_du_temps: creneaux_to_import.splice( 0, 500 ) } ) );
+                                      }
+
+                                      return $q.all( promises );
                                   },
                                   handle_error
                               )
                               .then(
                                   function success( response ) {
-                                      $scope.report.creneaux = response.data;
+                                      // $scope.report.creneaux = response.data;
+                                      $scope.report.creneaux = _.chain(response).pluck('data').flatten().value();
 
                                       return $q.resolve( $scope.report );
                                   },
