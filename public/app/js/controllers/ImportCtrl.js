@@ -467,10 +467,6 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                       toastr.info('Import de ' + creneaux_to_import.length + ' créneaux');
 
-                                      // return $http.post( APP_PATH + '/api/creneaux_emploi_du_temps/bulk/',
-                                      //                    { uai: $scope.pronote.UAI,
-                                      //                      creneaux_emploi_du_temps: creneaux_to_import } );
-
                                       var promises = [];
                                       while ( creneaux_to_import.length > 0 ) {
                                           promises.push( $http.post( APP_PATH + '/api/creneaux_emploi_du_temps/bulk/',
@@ -484,7 +480,6 @@ angular.module( 'cahierDeTextesClientApp' )
                               )
                               .then(
                                   function success( response ) {
-                                      // $scope.report.creneaux = response.data;
                                       $scope.report.creneaux = _.chain(response).pluck('data').flatten().value();
 
                                       return $q.resolve( $scope.report );
