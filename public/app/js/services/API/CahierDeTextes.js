@@ -21,6 +21,11 @@ angular.module( 'cahierDeTextesClientApp' )
                                         .value();
                                 } );
                                 response.data.profil_actif = _(response.data.profils).findWhere( { active: true } );
+                                response.data.profil_actif.admin = !_.chain(response.data.profils)
+                                    .findWhere( { structure_id: response.data.profil_actif.structure_id,
+                                                  type: 'ADM' } )
+                                    .isUndefined()
+                                    .value();
 
                                 if ( response.data.enfants.length > 0 ) {
                                     response.data.enfant_actif = response.data.enfants[ 0 ];
