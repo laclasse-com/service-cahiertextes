@@ -208,41 +208,41 @@ angular.module( 'cahierDeTextesClientApp' )
                        $scope.calendar.options.weekends = $scope.current_user.parametrage_cahier_de_textes.affichage_week_ends;
 
                        $scope.calendar.options.viewRender = function( view, element ) {
-                                   $scope.current_user.date = view.start;
-                                   $scope.n_week = view.start.week();
-                                   $scope.c_est_les_vacances = Utils.sont_ce_les_vacances( $scope.n_week, $scope.zone );
+                           $scope.current_user.date = view.start;
+                           $scope.n_week = view.start.week();
+                           $scope.c_est_les_vacances = Utils.sont_ce_les_vacances( $scope.n_week, $scope.zone );
 
-                                   retrieve_data( view.start.toDate(), view.end.toDate() );
-                               };
+                           retrieve_data( view.start.toDate(), view.end.toDate() );
+                       };
 
-                               $scope.calendar.options.eventRender = function ( event, element ) {
-                                   // FIXME: manipulation du DOM dans le contrôleur, sale, mais obligé pour l'interprétation du HTML ?
-                                   var elt_fc_content_title = element.find( '.fc-title' );
-                                   var elt_fc_content = element.find( '.fc-content' );
+                       $scope.calendar.options.eventRender = function ( event, element ) {
+                           // FIXME: manipulation du DOM dans le contrôleur, sale, mais obligé pour l'interprétation du HTML ?
+                           var elt_fc_content_title = element.find( '.fc-title' );
+                           var elt_fc_content = element.find( '.fc-content' );
 
-                                   if ( !_(event.matiere).isUndefined() ) {
-                                       elt_fc_content_title.append( ' - ' + event.matiere.name );
+                           if ( !_(event.matiere).isUndefined() ) {
+                               elt_fc_content_title.append( ' - ' + event.matiere.name );
+                           }
+
+                           if ( event.has_resources ) {
+                               elt_fc_content.prepend( '<i class="glyphicon glyphicon-paperclip"></i>' );
+                           }
+                           if ( $scope.current_user.profil_actif.type !== 'ELV' ) {
+                               if ( event.temps_estime > 0 ) {
+                                   var class_couleur = '';
+                                   if (event.temps_estime  < 4 ) {
+                                       class_couleur = ' label-success';
+                                   } else if (event.temps_estime  < 8 ) {
+                                       class_couleur = ' label-info';
+                                   } else if (event.temps_estime  < 12 ) {
+                                       class_couleur = ' label-warning';
+                                   } else if (event.temps_estime  <= 15 ) {
+                                       class_couleur = ' label-danger';
                                    }
-
-                                   if ( event.has_resources ) {
-                                       elt_fc_content.prepend( '<i class="glyphicon glyphicon-paperclip"></i>' );
-                                   }
-                                   if ( $scope.current_user.profil_actif.type !== 'ELV' ) {
-                                       if ( event.temps_estime > 0 ) {
-                                           var class_couleur = '';
-                                           if (event.temps_estime  < 4 ) {
-                                               class_couleur = ' label-success';
-                                           } else if (event.temps_estime  < 8 ) {
-                                               class_couleur = ' label-info';
-                                           } else if (event.temps_estime  < 12 ) {
-                                               class_couleur = ' label-warning';
-                                           } else if (event.temps_estime  <= 15 ) {
-                                               class_couleur = ' label-danger';
-                                           }
-                                           elt_fc_content.prepend( '<div class="est-time est-time-' + event.temps_estime + class_couleur + '"></div>' );
-                                       }
-                                   }
-                               };
+                                   elt_fc_content.prepend( '<div class="est-time est-time-' + event.temps_estime + class_couleur + '"></div>' );
+                               }
+                           }
+                       };
 
                                $scope.calendar.options.eventClick = function( event ) {
                            if ( _( [ 'ENS', 'DOC' ] ).contains( $scope.current_user.profil_actif.type ) || $scope.current_user.profil_actif.admin ) {
