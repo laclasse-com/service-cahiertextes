@@ -15,12 +15,10 @@ module CahierDeTextesApp
       requires :uai, desc: 'Code UAI de l\'établissement'
     end
     get '/:uai' do
-      etablissement = Etablissement[uai: params[:uai]]
-
-      error!( "Établissement #{params[:uai]} inconnu", 404 ) if etablissement.nil?
+      etablissement = DataManagement::Accessors.create_or_get( Etablissement,
+                                                               UAI: params[:uai] )
 
       hetablissement = etablissement.to_hash
-      # .where { date_creation >= 1.year.ago }
       hetablissement[:nb_creneaux] = CreneauEmploiDuTemps.where( etablissement_id: etablissement.id )
                                                          .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" )
                                                          .count
@@ -59,9 +57,8 @@ module CahierDeTextesApp
       optional :date_premier_jour_premiere_semaine, desc: 'Date du premier jour de la semaine de commencement de l\'année scolaire'
     end
     put '/:uai' do
-      etablissement = Etablissement[ uai: params[:uai] ]
-
-      error!( "Établissement #{params[:uai]} inconnu", 404 ) if etablissement.nil?
+      etablissement = DataManagement::Accessors.create_or_get( Etablissement,
+                                                               UAI: params[:uai] )
 
       etablissement.debut_annee_scolaire = params[:debut_annee_scolaire] if params.key?( :debut_annee_scolaire )
       etablissement.fin_annee_scolaire = params[:fin_annee_scolaire] if params.key?( :fin_annee_scolaire )
@@ -75,9 +72,8 @@ module CahierDeTextesApp
       requires :uai, desc: 'Code UAI de l\'établissement'
     end
     get '/:uai/statistiques/regroupements' do
-      etablissement = Etablissement[ uai: params[:uai] ]
-
-      error!( "Établissement #{params[:uai]} inconnu", 404 ) if etablissement.nil?
+      etablissement = DataManagement::Accessors.create_or_get( Etablissement,
+                                                               UAI: params[:uai] )
 
       etablissement.statistiques_regroupements
     end
@@ -100,9 +96,8 @@ module CahierDeTextesApp
       requires :uai, desc: 'Code UAI de l\'établissement'
     end
     get '/:uai/statistiques/enseignants' do
-      etablissement = Etablissement[ uai: params[:uai] ]
-
-      error!( "Établissement #{params[:uai]} inconnu", 404 ) if etablissement.nil?
+      etablissement = DataManagement::Accessors.create_or_get( Etablissement,
+                                                               UAI: params[:uai] )
 
       etablissement.statistiques_enseignants
     end

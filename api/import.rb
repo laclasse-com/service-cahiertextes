@@ -41,9 +41,8 @@ module CahierDeTextesApp
       optional :comment, type: String # [[regroupements], [enseignants], [matieres], [...]]
     end
     post '/log/start' do
-      etablissement = Etablissement.where(uai: params[:uai]).first
-
-      error!( "Établissement #{params[:uai]} inconnu", 404 ) if etablissement.nil?
+      etablissement = DataManagement::Accessors.create_or_get( Etablissement,
+                                                               UAI: params[:uai] )
 
       Import.create( etablissement_id: etablissement.id,
                      date_import: Sequel::SQLTime.now,

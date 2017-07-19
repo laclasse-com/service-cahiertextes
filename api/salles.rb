@@ -26,12 +26,11 @@ module CahierDeTextesApp
       requires :nom, desc: 'nom de la salle'
     end
     post '/' do
-      etablissement = Etablissement.where(uai: params[:uai]).first
-
-      error!( "Établissement #{params[:uai]} inconnu", 404 ) if etablissement.nil?
+      etablissement = DataManagement::Accessors.create_or_get( Etablissement,
+                                                               UAI: params[:uai] )
 
       salle = DataManagement::Accessors.create_or_get( Salle,
-                                                       # etablissement_id: etablissement.id,
+                                                       etablissement_id: etablissement.id,
                                                        identifiant: params[:identifiant] )
       salle.update( nom: params[:nom] )
       salle.save
@@ -68,11 +67,10 @@ module CahierDeTextesApp
       error!( "Salle #{params[:id]} inconnue", 404 ) if salle.nil?
 
       if params.key? :uai
-        etablissement = Etablissement.where(uai: params[:uai]).first
+        etablissement = DataManagement::Accessors.create_or_get( Etablissement,
+                                                                 UAI: params[:uai] )
 
-        error!( "Établissement #{params[:uai]} inconnu", 404 ) if etablissement.nil?
-
-        salle.etablissement_id = params[:uai]
+        salle.etablissement_id = etablissement.id
       end
       salle.identifiant = params[:identifiant] if params.key? :identifiant
       salle.nom = params[:nom] if params.key? :nom

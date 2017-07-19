@@ -15,10 +15,10 @@ module CahierDeTextesApp
       requires :uai
     end
     get '/:uai' do
-      etab = Etablissement[ UAI: params[:uai] ]
-      error!( "Etablissement #{params[:uai]} unknown", 404 ) if etab.nil?
+      etablissement = DataManagement::Accessors.create_or_get( Etablissement,
+                                                               UAI: params[:uai] )
 
-      Matchable.where( etablissement_id: etab.id ).all
+      Matchable.where( etablissement_id: etablissement.id ).all
     end
 
     desc 'Get a match'
@@ -27,10 +27,10 @@ module CahierDeTextesApp
       requires :hash_item
     end
     get '/:uai/:hash_item' do
-      etab = Etablissement[ UAI: params[:uai] ]
-      error!( "Etablissement #{params[:uai]} unknown", 404 ) if etab.nil?
+      etablissement = DataManagement::Accessors.create_or_get( Etablissement,
+                                                               UAI: params[:uai] )
 
-      fi = Matchable[ etablissement_id: etab.id,
+      fi = Matchable[ etablissement_id: etablissement.id,
                       hash_item: params[:hash_item] ]
       error!( "No match for #{params[:hash_item]}", 404 ) if fi.nil?
 
@@ -44,11 +44,11 @@ module CahierDeTextesApp
       requires :id_annuaire
     end
     post '/:uai/:hash_item' do
-      etab = Etablissement[ UAI: params[:uai] ]
-      error!( "Etablissement #{params[:uai]} unknown", 404 ) if etab.nil?
+      etablissement = DataManagement::Accessors.create_or_get( Etablissement,
+                                                               UAI: params[:uai] )
 
-      fi = Matchable[ etablissement_id: etab.id, hash_item: params[:hash_item] ]
-      fi = Matchable.create( etablissement_id: etab.id, hash_item: params[:hash_item] ) if fi.nil?
+      fi = Matchable[ etablissement_id: etablissement.id, hash_item: params[:hash_item] ]
+      fi = Matchable.create( etablissement_id: etablissement.id, hash_item: params[:hash_item] ) if fi.nil?
 
       fi.update( id_annuaire: params[:id_annuaire] )
       fi.save
@@ -62,10 +62,10 @@ module CahierDeTextesApp
       requires :hash_item
     end
     delete '/:uai/:hash_item' do
-      etab = Etablissement[ UAI: params[:uai] ]
-      error!( "Etablissement #{params[:uai]} unknown", 404 ) if etab.nil?
+      etablissement = DataManagement::Accessors.create_or_get( Etablissement,
+                                                               UAI: params[:uai] )
 
-      fi = Matchable[ etablissement_id: etab.id,
+      fi = Matchable[ etablissement_id: etablissement.id,
                       hash_item: params[:hash_item] ]
       fi.destroy unless fi.nil?
 
