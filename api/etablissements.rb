@@ -7,7 +7,7 @@ module CahierDeTextesApp
     format :json
 
     before  do
-      user_needs_to_be( %w( DIR ENS DOC ) )
+      user_needs_to_be( %w[ DIR ENS DOC ] )
     end
 
     desc 'que connait le CTXT d\'un établissement'
