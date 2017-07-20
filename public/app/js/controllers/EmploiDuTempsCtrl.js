@@ -243,7 +243,7 @@ angular.module( 'cahierDeTextesClientApp' )
                            }
                        };
 
-                               $scope.calendar.options.eventClick = function( event ) {
+                       $scope.calendar.options.eventClick = function( event ) {
                            if ( _( [ 'ENS', 'DOC' ] ).contains( $scope.current_user.profil_actif.type ) || $scope.current_user.profil_actif.admin ) {
                                if ( !popup_ouverte ) {
                                    CreneauxEmploiDuTemps.get( { id: event.details.creneau_emploi_du_temps_id } )
@@ -273,7 +273,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                                           popup_ouverte );
                                }
                            }
-                               };
+                       };
 
                        // création d'un nouveau créneau
                        // Le regroupement_id peut être null car on n'a pas fait de choix au niveau de la select box des classes sur full_calendar
