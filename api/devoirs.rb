@@ -64,6 +64,7 @@ module CahierDeTextesApp
 
       devoir = Devoir.create( type_devoir_id: params[:type_devoir_id],
                               creneau_emploi_du_temps_id: params[:creneau_emploi_du_temps_id],
+                              enseignant_id: user['id'],
                               contenu: params[:contenu],
                               date_due: params[:date_due],
                               temps_estime: params[:temps_estime],
@@ -89,8 +90,6 @@ module CahierDeTextesApp
         end
         devoir.update( cours_id: cours.id )
       end
-
-      params[:enseignant_id] = user['id']
 
       devoir.modifie( params )
 
