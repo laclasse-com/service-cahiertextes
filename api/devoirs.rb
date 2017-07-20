@@ -19,7 +19,7 @@ module CahierDeTextesApp
       uid = params[:uid] ? params[:uid] : user['id']
 
       if params[:uid]
-        error!( '401 Unauthorized', 401 ) unless user['profiles'].find { |p| p['active'] }['type'] == 'TUT' && !user['childs'].find { |e| e['childs']['id'] == params[:uid] }.nil?
+        error!( '401 Unauthorized', 401 ) unless user['profiles'].select { |p| p['active'] }.first['type'] == 'TUT' && !user['children'].find { |e| e['child_id'] == params[:uid] }.nil?
       end
 
       Devoir.association_join(:creneau_emploi_du_temps)

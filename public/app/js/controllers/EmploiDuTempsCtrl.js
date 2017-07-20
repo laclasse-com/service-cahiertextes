@@ -125,7 +125,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                EmploisDuTemps.query( { debut: from_date,
                                                        fin: to_date,
                                                        uai: $scope.current_user.profil_actif.structure_id,
-                                                       uid: $scope.current_user.profil_actif.type == 'TUT' ? $scope.current_user.enfant_actif.enfant.id_ent : null } )
+                                                       uid: $scope.current_user.profil_actif.type === 'TUT' ? $scope.current_user.enfant_actif.child_id : null } )
                                    .$promise
                                    .then( function success( response ) {
                                        // $stateParams.date = moment( from_date ).toDate().toISOString().split('T')[0];
@@ -187,7 +187,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                        confirmButtonText: 'Fermer'
                                      } );
                            } else {
-                               $scope.uid_enfant_actif = $scope.current_user.enfant_actif.enfant.id_ent;
+                               $scope.uid_enfant_actif = $scope.current_user.enfant_actif.child_id;
                                $scope.reload_data = popup_callback;
                            }
                        }

@@ -28,6 +28,13 @@ angular.module( 'cahierDeTextesClientApp' )
                                     .value();
 
                                 if ( response.data.enfants.length > 0 ) {
+                                    response.data.enfants.forEach( function( child ) {
+                                        Annuaire.get_user( child.child_id )
+                                            .then( function( user ) {
+                                                child.enfant = user.data;
+                                            } );
+                                    } );
+
                                     response.data.enfant_actif = response.data.enfants[ 0 ];
                                 }
 
@@ -55,12 +62,12 @@ angular.module( 'cahierDeTextesClientApp' )
                                         } );
                                 };
 
-                                    // Voir quel est le profil
-                                    response.data.is = function( type ) {
-                                        return this.profil_actif.type == type;
-                                    };
+                                // Voir quel est le profil
+                                response.data.is = function( type ) {
+                                    return this.profil_actif.type == type;
+                                };
 
-                                    return response;
+                                return response;
                             } );
                     } );
 
@@ -68,14 +75,14 @@ angular.module( 'cahierDeTextesClientApp' )
                         return $http.put( APP_PATH + '/api/users/current/parametres',
                                           { parametres: JSON.stringify( parametres ) } );
                     };
-               } ] )
+                } ] )
 
     .factory( 'StatistiquesRegroupements', [ '$resource', 'APP_PATH',
                                              function( $resource, APP_PATH ) {
-                                                return $resource( APP_PATH + '/api/etablissements/:uai/statistiques/regroupements/:id',
-                                                                  { uai: '@uai',
-                                                                    id: '@id' } );
-                                            } ] )
+                                                 return $resource( APP_PATH + '/api/etablissements/:uai/statistiques/regroupements/:id',
+                                                                   { uai: '@uai',
+                                                                     id: '@id' } );
+                                             } ] )
 
     .factory('Cours',
              [ '$resource', 'APP_PATH',

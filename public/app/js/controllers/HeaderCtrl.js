@@ -9,7 +9,7 @@ angular.module( 'cahierDeTextesClientApp' )
                       $scope.DOCS_URL_login = $sce.trustAsResourceUrl( DOCS_URL + '/login' );
                       $scope.embedded = window != window.top;
                       User.get_user().then( function( response ) {
-                          $scope.current_user = response;
+                          $scope.current_user = response.data;
                       });
 
                       $scope.reload = function() {
