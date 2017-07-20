@@ -177,7 +177,7 @@ module CahierDeTextesApp
         creneau.toggle_deleted( params[:date_creneau] )
       end
 
-      creneau
+      creneau.to_json
     end
   end
 end
