@@ -44,10 +44,10 @@ module CahierDeTextesApp
       requires :jour_de_la_semaine, type: Integer
       requires :heure_debut, type: Time
       requires :heure_fin, type: Time
+      requires :regroupement_id, type: String
       requires :matiere_id, type: String
 
       optional :import_id, type: Integer
-      optional :regroupement_id, type: String
       optional :salle_id, type: Integer
       optional :semainier_regroupement, type: Integer
       optional :semainier_salle, type: Integer
@@ -61,6 +61,7 @@ module CahierDeTextesApp
                                              debut: params[:heure_debut],
                                              fin: params[:heure_fin],
                                              jour_de_la_semaine: params[:jour_de_la_semaine] - 1,
+                                             regroupement_id: params[:regroupement_id],
                                              matiere_id: params[:matiere_id],
                                              etablissement_id: etablissement.id )
 
@@ -90,10 +91,11 @@ module CahierDeTextesApp
 
       params[:creneaux_emploi_du_temps].map do |creneau|
         new_creneau = CreneauEmploiDuTemps.create( date_creation: Time.now,
-                                                   jour_de_la_semaine: creneau[:jour_de_la_semaine] - 1,
-                                                   matiere_id: creneau[:matiere_id],
                                                    debut: creneau[:heure_debut],
                                                    fin: creneau[:heure_fin],
+                                                   jour_de_la_semaine: creneau[:jour_de_la_semaine] - 1,
+                                                   regroupement_id: creneau[:regroupement_id],
+                                                   matiere_id: creneau[:matiere_id],
                                                    etablissement_id: etablissement_id )
         new_creneau.modifie( creneau )
 
