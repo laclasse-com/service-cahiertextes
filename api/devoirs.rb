@@ -19,15 +19,13 @@ module CahierDeTextesApp
       uid = params[:uid] ? params[:uid] : user['id']
 
       if params[:uid]
-        error!( '401 Unauthorized', 401 ) unless user['profils'].find { |p| p['actif'] }['profil_id'] == 'TUT' && !user['enfants'].find { |e| e['enfant']['id_ent'] == params[:uid] }.nil?
+        error!( '401 Unauthorized', 401 ) unless user['profiles'].find { |p| p['active'] }['type'] == 'TUT' && !user['childs'].find { |e| e['childs']['id'] == params[:uid] }.nil?
       end
-
-      regroupements_ids = user_regroupements_ids
 
       Devoir.association_join(:creneau_emploi_du_temps)
             .select_append( :devoirs__id___id )
             .where( devoirs__deleted: false )
-            .where( regroupement_id: regroupements_ids )
+            .where( regroupement_id: user_regroupements_ids )
             .where( date_due: params[:debut] .. params[:fin] )
             .all
             .map { |devoir| devoir.to_deep_hash( uid: uid ) }
