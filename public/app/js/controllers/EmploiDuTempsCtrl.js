@@ -300,7 +300,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                            new_creneau.regroupement_id = regroupement_id;
 
                                            PopupsCreneau.edition( $scope.raw_data,
-                                                                  $scope.current_user.profil_actif.matieres, $scope.current_user.profil_actif.regroupements,
+                                                                  $scope.subjects, $scope.current_period_groups,
                                                                   new_creneau, null, [],
                                                                   popup_callback, popup_ouverte );
 
