@@ -142,7 +142,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                                return Annuaire.get_subjects( subjects_ids );
                                            } )
                                            .then( function( response ) {
-                                               // $scope.subjects = _(response.data).indexBy('id');
                                                $scope.subjects = response.data;
 
                                                $scope.refresh_calendar();
@@ -256,10 +255,13 @@ angular.module( 'cahierDeTextesClientApp' )
                                            creneau_selectionne.heure_fin = event.end;
                                            creneau_selectionne.regroupement_id = event.details.regroupement_id;
 
-                                           PopupsCreneau.edition( $scope.raw_data,
-                                                                  $scope.subjects, $scope.current_period_groups,
-                                                                  creneau_selectionne, event.details.cours, event.details.devoirs,
-                                                                  popup_callback, popup_ouverte );
+                                           $scope.current_user.get_actual_subjects()
+                                               .then( function( actual_subjects ) {
+                                                   PopupsCreneau.edition( $scope.raw_data,
+                                                                          actual_subjects, $scope.current_user.actual_groups,
+                                                                          creneau_selectionne, event.details.cours, event.details.devoirs,
+                                                                          popup_callback, popup_ouverte );
+                                               } );
                                        } );
                                }
                            } else {
@@ -271,7 +273,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                                           popup_ouverte );
                                }
                            }
-                       };
+                               };
 
                        // création d'un nouveau créneau
                        // Le regroupement_id peut être null car on n'a pas fait de choix au niveau de la select box des classes sur full_calendar
@@ -299,10 +301,14 @@ angular.module( 'cahierDeTextesClientApp' )
                                            new_creneau.heure_fin = end;
                                            new_creneau.regroupement_id = regroupement_id;
 
-                                           PopupsCreneau.edition( $scope.raw_data,
-                                                                  $scope.subjects, $scope.current_period_groups,
-                                                                  new_creneau, null, [],
-                                                                  popup_callback, popup_ouverte );
+
+                                           $scope.current_user.get_actual_subjects()
+                                               .then( function( actual_subjects ) {
+                                                   PopupsCreneau.edition( $scope.raw_data,
+                                                                          actual_subjects, $scope.current_user.actual_groups,
+                                                                          new_creneau, null, [],
+                                                                          popup_callback, popup_ouverte );
+                                               } );
 
                                            $scope.emploi_du_temps.fullCalendar( 'unselect' );
                                        } );

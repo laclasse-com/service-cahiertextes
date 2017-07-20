@@ -46,12 +46,21 @@ angular.module( 'cahierDeTextesClientApp' )
                                     return _.chain(response.data.groups).pluck('subject_id').uniq().value();
                                 };
 
-                                // Voir quel est le profil
-                                response.data.is = function( type ) {
-                                    return this.profil_actif.type == type;
+                                response.data.get_actual_subjects = function() {
+                                    return Annuaire.get_subjects( response.data.extract_subjects_ids() )
+                                        .then( function( subjects ) {
+                                            response.data.actual_subjects = subjects.data;
+
+                                            return $q.resolve( response.data.actual_subjects );
+                                        } );
                                 };
 
-                                return response;
+                                    // Voir quel est le profil
+                                    response.data.is = function( type ) {
+                                        return this.profil_actif.type == type;
+                                    };
+
+                                    return response;
                             } );
                     } );
 
