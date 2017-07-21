@@ -39,7 +39,10 @@ angular.module( 'cahierDeTextesClientApp' )
                                 }
 
                                 response.data.get_actual_groups = function() {
-                                    return Annuaire.get_groups( _.chain(response.data.groups).pluck( 'group_id' ).uniq().value() )
+                                    var groups_ids = _.chain(response.data.groups).pluck( 'group_id' ).uniq().value();
+                                    var promise = _(groups_ids).isEmpty() ? $q.resolve([]) : Annuaire.get_groups( groups_ids );
+
+                                    return promise
                                         .then( function( groups ) {
                                             response.data.actual_groups = _(groups.data).select( function( group ) {
                                                 return group.structure_id === response.data.profil_actif.structure_id;
