@@ -15,7 +15,7 @@ module CahierDeTextesApp
       DataManagement::EmploiDuTemps.get( Date.parse( params[:debut].iso8601 ),
                                          Date.parse( params[:fin].iso8601 ),
                                          user_regroupements_ids( params[:uid] ),
-                                         params[:uid] )
+                                         user_active_profile['type'] == 'ELV' ? user['id'] : nil )
     end
   end
 end
