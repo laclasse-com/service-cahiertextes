@@ -322,59 +322,59 @@ angular.module( 'cahierDeTextesClientApp' )
                            ctrl.types_de_devoir = API.query_types_de_devoir();
 
                            var init_cours_existant = function( cours ) {
-                               // ctrl.cours = Cours.get( { id: cours.id } );
-                               ctrl.cours = new Cours( cours );
+                               ctrl.cours = Cours.get( { id: cours.id } );
+                               // ctrl.cours = new Cours( cours );
 
-                               // ctrl.cours.$promise.then( function( cours ) {
-                               ctrl.cours.editable = _(ctrl.cours.date_validation).isNull() && _(['ENS', 'DOC']).includes( ctrl.current_user.profil_actif.type ) && ctrl.cours.enseignant_id === ctrl.current_user.id;
-                               if ( !ctrl.cours.editable ) {
-                                   ctrl.cours.contenu = $sce.trustAsHtml( ctrl.cours.contenu );
-                               }
+                               ctrl.cours.$promise.then( function( cours ) {
+                                   ctrl.cours.editable = _(ctrl.cours.date_validation).isNull() && _(['ENS', 'DOC']).includes( ctrl.current_user.profil_actif.type ) && ctrl.cours.enseignant_id === ctrl.current_user.id;
+                                   if ( !ctrl.cours.editable ) {
+                                       ctrl.cours.contenu = $sce.trustAsHtml( ctrl.cours.contenu );
+                                   }
 
-                               cours.devoirs = _.chain(cours.devoirs)
-                                   .select( function( devoir ) {
-                                       return _.chain(devoirs).findWhere({ id: devoir.id }).isUndefined().value();
-                                   } )
-                                   .map( function( devoir ) {
-                                       return Devoirs.get( { id: devoir.id } );
-                                   } )
-                                   .value();
+                                   cours.devoirs = _.chain(cours.devoirs)
+                                       .select( function( devoir ) {
+                                           return _.chain(devoirs).findWhere({ id: devoir.id }).isUndefined().value();
+                                       } )
+                                       .map( function( devoir ) {
+                                           return Devoirs.get( { id: devoir.id } );
+                                       } )
+                                       .value();
 
-                               _(cours.devoirs).each( function( devoir ) {
-                                   devoir.$promise.then( function( d ) {
-                                       ctrl.estimation_leave( d );
-                                       d.tooltip = '<em>' + $filter('amDateFormat')( d.date_due, 'dddd D MMMM YYYY' ) + '</em><hr />' + d.contenu;
-                                       if ( d.temps_estime > 0 ) {
-                                           d.tooltip = '<span><i class="picto temps"></i>' + d.temps_estime * 5 + ' minutes</span><hr />' + d.tooltip;
-                                       }
-                                       d.tooltip = $sce.trustAsHtml( '<div>' + d.tooltip + '</div>' );
+                                   _(cours.devoirs).each( function( devoir ) {
+                                       devoir.$promise.then( function( d ) {
+                                           ctrl.estimation_leave( d );
+                                           d.tooltip = '<em>' + $filter('amDateFormat')( d.date_due, 'dddd D MMMM YYYY' ) + '</em><hr />' + d.contenu;
+                                           if ( d.temps_estime > 0 ) {
+                                               d.tooltip = '<span><i class="picto temps"></i>' + d.temps_estime * 5 + ' minutes</span><hr />' + d.tooltip;
+                                           }
+                                           d.tooltip = $sce.trustAsHtml( '<div>' + d.tooltip + '</div>' );
 
-                                       if ( ctrl.creneau.etranger ) {
-                                           d.contenu = $sce.trustAsHtml( d.contenu );
-                                       }
+                                           if ( ctrl.creneau.etranger ) {
+                                               d.contenu = $sce.trustAsHtml( d.contenu );
+                                           }
+                                       } );
                                    } );
-                               } );
 
-                               $q.all( ctrl.devoirs ).then( function() {
-                                   ctrl.cours.devoirs = _(ctrl.cours.devoirs).filter( function( devoir ) {
-                                       return _.chain(ctrl.devoirs).findWhere({ id: devoir.id }).isUndefined().value();
+                                   $q.all( ctrl.devoirs ).then( function() {
+                                       ctrl.cours.devoirs = _(ctrl.cours.devoirs).filter( function( devoir ) {
+                                           return _.chain(ctrl.devoirs).findWhere({ id: devoir.id }).isUndefined().value();
+                                       } );
                                    } );
+
+                                   // ctrl.cours.$promise.then( function() {
+                                   //     _(ctrl.cours.ressources).each( function( ressource ) {
+                                   //         ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+                                   //     } );
+                                   // } );
+                                   // _(ctrl.cours.devoirs).each( function( devoir ) {
+                                   //     devoir.$promise.then( function() {
+                                   //         _(devoir.ressources).each( function( ressource ) {
+                                   //             ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+                                   //         } );
+                                   //     } );
+                                   // } );
+
                                } );
-
-                               // ctrl.cours.$promise.then( function() {
-                               //     _(ctrl.cours.ressources).each( function( ressource ) {
-                               //         ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
-                               //     } );
-                               // } );
-                               // _(ctrl.cours.devoirs).each( function( devoir ) {
-                               //     devoir.$promise.then( function() {
-                               //         _(devoir.ressources).each( function( ressource ) {
-                               //             ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
-                               //         } );
-                               //     } );
-                               // } );
-
-                               // } );
                                ctrl.cours.create = false;
                            };
 
