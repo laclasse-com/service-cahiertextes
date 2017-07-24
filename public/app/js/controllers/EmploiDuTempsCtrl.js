@@ -278,15 +278,15 @@ angular.module( 'cahierDeTextesClientApp' )
                        // création d'un nouveau créneau
                        // Le regroupement_id peut être null car on n'a pas fait de choix au niveau de la select box des classes sur full_calendar
                        $scope.calendar.options.select = function ( start, end, allDay ) {
-                           if ( $scope.calendar.options.selectable && $scope.calendar.options.editable ) {
-                               if ( end - start == 1800000 ) {
+                           if ( $scope.calendar.options.selectable && $scope.calendar.options.editable && $scope.selected_regroupements.length > 0 ) {
+                               if ( end - start === 1800000 ) {
                                    end = moment( end ).add( 30, 'minutes' ).toDate();
                                }
                                if ( !popup_ouverte ) {
                                    // création du créneau avec les bons horaires
                                    start = new Date( start );
                                    end = new Date( end );
-                                   var regroupement_id = $scope.selected_regroupements.length == 1 ? '' + $scope.selected_regroupements[0].id : null;
+                                   var regroupement_id = $scope.selected_regroupements[0].id;
                                    var new_creneau = new CreneauxEmploiDuTemps( { regroupement_id: regroupement_id,
                                                                                   jour_de_la_semaine: start.getDay(),
                                                                                   heure_debut: moment(start).toISOString(),
