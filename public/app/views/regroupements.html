@@ -11,13 +11,13 @@
                        ng:change="process_data()"
                        ng:model="scope.selected_regroupements">
                 <ui-select-match placeholder="Regroupement(s)...">
-                    <span class="label" ng:class="{'label-success': $item.type === 'GRP', 'label-info': $item.type === 'CLS' }">
+                    <span class="label" ng:class="{'label-success': $item.type === 'GRP', 'label-info': $item.type === 'CLS', 'label-warning': $item.type === 'GPL' }">
                         {{$item.name}}
                     </span>
                 </ui-select-match>
                 <ui-select-choices repeat="regroupement in regroupements | orderBy:['type','name']"
                                    group-by="'type'">
-                    <span class="label" ng:class="{'label-success': regroupement.type === 'GRP', 'label-info': regroupement.type === 'CLS' }">
+                    <span class="label" ng:class="{'label-success': regroupement.type === 'GRP', 'label-info': regroupement.type === 'CLS', 'label-warning': regroupement.type === 'GPL' }">
                         {{regroupement.name}}
                     </span>
                 </ui-select-choices>

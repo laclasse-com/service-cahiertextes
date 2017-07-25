@@ -9,7 +9,7 @@
                            append-to-body="true"
                            ng:model="scope.selected_regroupements">
                     <ui-select-match placeholder="Regroupement(s)...">
-                        <span class="label" ng:class="{'label-success': $item.type === 'GRP', 'label-info': $item.type === 'CLS' }">
+                        <span class="label" ng:class="{'label-success': $item.type === 'GRP', 'label-info': $item.type === 'CLS', 'label-warning': $item.type === 'GPL' }">
                             {{$item.name}}
                         </span>
                     </ui-select-match>
