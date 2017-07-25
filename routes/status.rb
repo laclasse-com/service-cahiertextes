@@ -4,7 +4,7 @@ module CahierDeTextesApp
   module Routes
     module Status
       def self.registered( app )
-        app.get "#{APP_PATH}/status/?" do
+        app.get '/status/?' do
           content_type :json
 
           status = 'OK'
@@ -27,20 +27,20 @@ module CahierDeTextesApp
           app_status[:status] = status
           app_status[:reason] = reason
 
-          app_status.to_json
+          json( app_status )
         end
 
-        app.get "#{APP_PATH}/status/report/?" do
+        app.get '/status/report/?' do
           content_type :json
 
-          { nb_etablissements: Etablissement.count,
-            nb_cahiers_de_textes: CahierDeTextes.count,
-            nb_sequences_pedagogiques: Cours.count,
-            nb_devoirs: Devoir.count,
-            nb_devoirs_faits: DevoirTodoItem.count,
-            nb_ressources: Ressource.count,
-            nb_utilisateurs_actifs: UserParameters.count,
-            nb_creneaux_emploi_du_temps: CreneauEmploiDuTemps.count }.to_json
+          json( nb_etablissements: Etablissement.count,
+                nb_cahiers_de_textes: CahierDeTextes.count,
+                nb_sequences_pedagogiques: Cours.count,
+                nb_devoirs: Devoir.count,
+                nb_devoirs_faits: DevoirTodoItem.count,
+                nb_ressources: Ressource.count,
+                nb_utilisateurs_actifs: UserParameters.count,
+                nb_creneaux_emploi_du_temps: CreneauEmploiDuTemps.count )
         end
       end
     end

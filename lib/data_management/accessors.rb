@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 module DataManagement
-  # Layer over models
   module Accessors
     module_function
 
