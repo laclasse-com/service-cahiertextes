@@ -12,21 +12,21 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
     <!-- Ces CSS là référencent de manière relative des ressources -->
-    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/node_modules/font-awesome/css/font-awesome.min.css?v=<%=CACHE_BUSTER%>" />
-    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/node_modules/bootstrap/dist/css/bootstrap.min.css?v=<%=CACHE_BUSTER%>" />
-    <link rel='stylesheet' type="text/css" href="<%=APP_PATH%>/app/node_modules/textangular/dist/textAngular.css?v=<%=CACHE_BUSTER%>">
+    <link rel="stylesheet" type="text/css" href="app/node_modules/font-awesome/css/font-awesome.min.css?v=<%=CACHE_BUSTER%>" />
+    <link rel="stylesheet" type="text/css" href="app/node_modules/bootstrap/dist/css/bootstrap.min.css?v=<%=CACHE_BUSTER%>" />
+    <link rel='stylesheet' type="text/css" href="app/node_modules/textangular/dist/textAngular.css?v=<%=CACHE_BUSTER%>">
 
-    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/node_modules/node_modules.min.css?v=<%=CACHE_BUSTER%>" />
-    <link rel="stylesheet" type="text/css" href="<%=APP_PATH%>/app/css/cdt.min.css?v=<%=CACHE_BUSTER%>" />
+    <link rel="stylesheet" type="text/css" href="app/node_modules/node_modules.min.css?v=<%=CACHE_BUSTER%>" />
+    <link rel="stylesheet" type="text/css" href="app/css/cdt.min.css?v=<%=CACHE_BUSTER%>" />
   </head>
   <body>
       <!--[if lt IE 7]>
-          <p class="chromeframe">You are using an outdated browser. <a href="<%=APP_PATH%>/app/http://browsehappy.com/">Upgrade your browser today</a> or <a href="<%=APP_PATH%>/app/http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+          <p class="chromeframe">You are using an outdated browser. <a href="app/http://browsehappy.com/">Upgrade your browser today</a> or <a href="app/http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
       <![endif]-->
 
       <!--[if lt IE 9]>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/es5-shim/es5-shim.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/json3/lib/json3.min.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/es5-shim/es5-shim.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/json3/lib/json3.min.js?v=<%=CACHE_BUSTER%>"></script>
       <![endif]-->
 
 
@@ -36,107 +36,107 @@
 
 
       <% if ENV['RACK_ENV'] == 'production' %>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/node_modules.min.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/cdt.min.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/node_modules.min.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/cdt.min.js?v=<%=CACHE_BUSTER%>"></script>
       <% else %>
           <!-- Node_Modules Javascript -->
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/jquery/dist/jquery.min.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/es6-promise/dist/es6-promise.auto.min.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/underscore/underscore-min.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/moment/min/moment-with-locales.min.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/moment-timezone/moment-timezone.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/sweetalert2/dist/sweetalert2.min.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/rangy/lib/rangy-core.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/rangy/lib/rangy-classapplier.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/rangy/lib/rangy-selectionsaverestore.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/rangy/lib/rangy-serializer.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/d3/d3.min.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/nvd3/build/nv.d3.min.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/jquery/dist/jquery.min.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/es6-promise/dist/es6-promise.auto.min.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/underscore/underscore-min.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/moment/min/moment-with-locales.min.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/moment-timezone/moment-timezone.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/sweetalert2/dist/sweetalert2.min.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/rangy/lib/rangy-core.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/rangy/lib/rangy-classapplier.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/rangy/lib/rangy-selectionsaverestore.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/rangy/lib/rangy-serializer.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/d3/d3.min.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/nvd3/build/nv.d3.min.js?v=<%=CACHE_BUSTER%>"></script>
 
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular/angular.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-touch/angular-touch.min.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-animate/angular-animate.min.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-bootstrap-checkbox/angular-bootstrap-checkbox.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-cookies/angular-cookies.min.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-i18n/angular-locale_fr-fr.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-loading-bar/build/loading-bar.min.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-moment/angular-moment.min.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-resource/angular-resource.min.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-sanitize/angular-sanitize.min.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-ui-calendar/src/calendar.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-ui-router/release/angular-ui-router.min.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-nvd3/dist/angular-nvd3.min.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/fullcalendar/dist/fullcalendar.min.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/fullcalendar/dist/locale-all.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/ng-color-picker/color-picker.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-ui-switch/angular-ui-switch.min.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/textangular/dist/textAngular-sanitize.min.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/textangular/dist/textAngular.min.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/angular-toastr/dist/angular-toastr.tpls.min.js"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/node_modules/ui-select/dist/select.min.js"></script>
+          <script type="text/javascript" src="app/node_modules/angular/angular.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/angular-touch/angular-touch.min.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/angular-animate/angular-animate.min.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/angular-bootstrap-checkbox/angular-bootstrap-checkbox.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/angular-cookies/angular-cookies.min.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/angular-i18n/angular-locale_fr-fr.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/angular-loading-bar/build/loading-bar.min.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/angular-moment/angular-moment.min.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/angular-resource/angular-resource.min.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/angular-sanitize/angular-sanitize.min.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/angular-ui-calendar/src/calendar.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/angular-ui-router/release/angular-ui-router.min.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/angular-nvd3/dist/angular-nvd3.min.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/fullcalendar/dist/fullcalendar.min.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/fullcalendar/dist/locale-all.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/ng-color-picker/color-picker.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/angular-ui-switch/angular-ui-switch.min.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/textangular/dist/textAngular-sanitize.min.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/textangular/dist/textAngular.min.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/node_modules/angular-toastr/dist/angular-toastr.tpls.min.js"></script>
+          <script type="text/javascript" src="app/node_modules/ui-select/dist/select.min.js"></script>
 
           <!-- Application Javascript -->
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/app.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/defaults.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/routes.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/http_interceptors.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/config.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/app.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/defaults.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/routes.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/http_interceptors.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/config.js?v=<%=CACHE_BUSTER%>"></script>
 
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/services/API/CahierDeTextes.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/services/API/Annuaire.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/services/API/Documents.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/services/Redirection.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/services/PopupsCreneau.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/services/FileUpload.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/services/Utils.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/services/log.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/services/API/CahierDeTextes.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/services/API/Annuaire.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/services/API/Documents.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/services/Redirection.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/services/PopupsCreneau.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/services/FileUpload.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/services/Utils.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/services/log.js?v=<%=CACHE_BUSTER%>"></script>
 
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/directives/cartable.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/directives/file_model.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/directives/cartable.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/directives/file_model.js?v=<%=CACHE_BUSTER%>"></script>
 
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/filters/correctTimeZone.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/filters/correctTimeZoneToGMT.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/filters/formateCreneau.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/filters/correctTimeZone.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/filters/correctTimeZoneToGMT.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/filters/formateCreneau.js?v=<%=CACHE_BUSTER%>"></script>
 
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/IndexCtrl.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/HeaderCtrl.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/FooterCtrl.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/controllers/IndexCtrl.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/controllers/HeaderCtrl.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/controllers/FooterCtrl.js?v=<%=CACHE_BUSTER%>"></script>
 
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/ImportCtrl.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/controllers/ImportCtrl.js?v=<%=CACHE_BUSTER%>"></script>
 
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/VieScolaireCtrl.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/controllers/VieScolaireCtrl.js?v=<%=CACHE_BUSTER%>"></script>
 
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/PrincipalCtrl.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/PrincipalEnseignantsCtrl.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/PrincipalRegroupementsCtrl.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/StatsEnseignantCtrl.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/controllers/PrincipalCtrl.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/controllers/PrincipalEnseignantsCtrl.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/controllers/PrincipalRegroupementsCtrl.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/controllers/StatsEnseignantCtrl.js?v=<%=CACHE_BUSTER%>"></script>
 
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/EmploiDuTempsCtrl.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/PopupDisplayCtrl.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/PopupEditionCtrl.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/controllers/EmploiDuTempsCtrl.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/controllers/PopupDisplayCtrl.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/controllers/PopupEditionCtrl.js?v=<%=CACHE_BUSTER%>"></script>
 
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/EleveCtrl.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/EleveDevoirsCtrl.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/controllers/EleveCtrl.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/controllers/EleveDevoirsCtrl.js?v=<%=CACHE_BUSTER%>"></script>
 
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/EnseignantCtrl.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/controllers/CahierDeTextesCtrl.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/controllers/EnseignantCtrl.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/controllers/CahierDeTextesCtrl.js?v=<%=CACHE_BUSTER%>"></script>
 
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/components/displayDevoir.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/components/displaySequencePedagogique.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/components/switchDevoir.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/components/displayDevoir.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/components/displaySequencePedagogique.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/components/switchDevoir.js?v=<%=CACHE_BUSTER%>"></script>
 
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/templates/404.html.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/templates/cahier_de_textes.html.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/templates/regroupements.html.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/templates/devoirs.html.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/templates/emploi_du_temps.html.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/templates/enseignants.html.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/templates/import.html.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/templates/index.html.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/templates/popup_display.html.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/templates/popup_edition.html.js?v=<%=CACHE_BUSTER%>"></script>
-          <script type="text/javascript" src="<%=APP_PATH%>/app/js/templates/stats_enseignant.html.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/templates/404.html.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/templates/cahier_de_textes.html.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/templates/regroupements.html.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/templates/devoirs.html.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/templates/emploi_du_temps.html.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/templates/enseignants.html.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/templates/import.html.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/templates/index.html.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/templates/popup_display.html.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/templates/popup_edition.html.js?v=<%=CACHE_BUSTER%>"></script>
+          <script type="text/javascript" src="app/js/templates/stats_enseignant.html.js?v=<%=CACHE_BUSTER%>"></script>
       <% end %>
       <script>
        angular.module( 'cahierDeTextesClientApp' )
@@ -147,10 +147,10 @@
               .constant( 'SEMAINES_VACANCES', { A: <%=CahierDeTextesApp::Utils::Holidays.get( 'A', CahierDeTextesApp::Utils::Holidays.year_rentree )%>,
                                                 B: <%=CahierDeTextesApp::Utils::Holidays.get( 'B', CahierDeTextesApp::Utils::Holidays.year_rentree )%>,
                                                 C: <%=CahierDeTextesApp::Utils::Holidays.get( 'C', CahierDeTextesApp::Utils::Holidays.year_rentree )%> } )
-       /* .config( [ '$compileProvider',
-        *            function( $compileProvider ) {
-        *                $compileProvider.debugInfoEnabled( <%= ENV['RACK_ENV'] == 'development' %> );
-        *            } ] );*/
+              .config( [ '$compileProvider',
+                         function( $compileProvider ) {
+                             $compileProvider.debugInfoEnabled( <%= ENV['RACK_ENV'] == 'development' %> );
+                         } ] );
       </script>
 
   </body>
