@@ -28,6 +28,16 @@ angular.module( 'cahierDeTextesClientApp' )
                           $scope.selected_regroupements = [];
                       };
 
+                      $scope.filter_creneaux = function() {
+                          return function( creneau ) {
+                              console.log(creneau)
+                              return _.chain($scope.selected_regroupements)
+                                  .pluck('id')
+                                  .includes( creneau.regroupement_id )
+                                  .value();
+                          };
+                      };
+
                       var filter_creneaux_avec_saisies = function( raw_data ) {
                           return _.chain(raw_data)
                               .reject( function( creneau ) {
