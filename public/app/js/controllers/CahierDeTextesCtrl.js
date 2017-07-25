@@ -30,7 +30,6 @@ angular.module( 'cahierDeTextesClientApp' )
 
                       $scope.filter_creneaux = function() {
                           return function( creneau ) {
-                              console.log(creneau)
                               return _.chain($scope.selected_regroupements)
                                   .pluck('id')
                                   .includes( creneau.regroupement_id )
