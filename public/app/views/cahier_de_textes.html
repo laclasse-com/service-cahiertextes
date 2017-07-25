@@ -34,7 +34,7 @@
                 <label style="line-height: 34px;"><span class="new-SP-or-devoir">Nouvelle séquence pédagogique ou devoir pour le :</span>
                     <select class="pull-right"
                             ng:model="selected_creneau_vide"
-                            ng:options="creneau as ( creneau | formateCreneau ) group by [creneau.regroupement.name, creneau.matiere.name] for creneau in creneaux_vides | orderBy:['creneau.regroupement.name', 'start'] | filter:selected_regroupement_id" >
+                            ng:options="creneau as ( creneau | formateCreneau ) group by [creneau.regroupement.name, creneau.matiere.name] for creneau in creneaux_vides | orderBy:['creneau.regroupement.name', 'start'] | filter:filter_creneaux()" >
                         <option value="" selected>Sélectionnez un créneau...</option>
                     </select>
                 </label>
@@ -54,7 +54,7 @@
     </div>
     <div class="panel-body">
         <ul class="list-group">
-            <li ng:repeat="creneau in creneaux_saisies | orderBy:'start':true | selectedRegroupements:selected_regroupements"
+            <li ng:repeat="creneau in creneaux_saisies | orderBy:'start':true | filter:filter_creneaux()"
                 class="creneau list-group-item">
 
                 <div class="row date">
