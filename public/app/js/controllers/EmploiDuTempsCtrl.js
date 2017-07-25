@@ -2,10 +2,10 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller( 'EmploiDuTempsCtrl',
-                 [ '$scope', 'moment', '$stateParams', '$state',
+                 [ '$scope', 'moment', '$stateParams', '$state', '$q',
                    'CALENDAR_OPTIONS', 'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'EmploisDuTemps', 'PopupsCreneau', 'CreneauxEmploiDuTemps', 'Utils', 'Annuaire',
                    'current_user',
-                   function ( $scope, moment, $stateParams, $state,
+                   function ( $scope, moment, $stateParams, $state, $q,
                               CALENDAR_OPTIONS, APP_PATH, SEMAINES_VACANCES, ZONE, EmploisDuTemps, PopupsCreneau, CreneauxEmploiDuTemps, Utils, Annuaire,
                               current_user ) {
                        $scope.scope = $scope;
@@ -134,8 +134,9 @@ angular.module( 'cahierDeTextesClientApp' )
                                        $scope.raw_data = response;
                                        var groups_ids = _.chain($scope.raw_data).pluck('regroupement_id').uniq().value();
                                        var subjects_ids = _.chain($scope.raw_data).pluck('matiere_id').uniq().value();
+                                       var promise = _(groups_ids).isEmpty() ? $q.resolve([]) : Annuaire.get_groups( groups_ids );
 
-                                       Annuaire.get_groups( groups_ids )
+                                       promise
                                            .then( function( response ) {
                                                $scope.current_period_groups = response.data;
 
