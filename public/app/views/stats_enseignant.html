@@ -24,7 +24,7 @@
                     <fieldset>
                         <legend><span class="glyphicon glyphicon-envelope"></span> Classes et Groupes</legend>
                         <span class="label pull-left"
-                              ng:class="{'label-success': regroupement.type === 'GRP', 'label-info': regroupement.type === 'CLS' }"
+                              ng:class="{'label-success': regroupement.type === 'GRP', 'label-info': regroupement.type === 'CLS', 'label-warning': regroupement.type === 'GPL' }"
                               ng:repeat="regroupement in enseignant.liste_regroupements">{{regroupement.name}}</span>
                     </fieldset>
 
@@ -57,7 +57,7 @@
                                ng:change="graphiques.populate( raw_data )"
                                ng:model="scope.selected_regroupements">
                         <ui-select-match placeholder="Regroupement(s)...">
-                            <span class="label" ng:class="{'label-success': $item.type === 'GRP', 'label-info': $item.type === 'CLS' }">
+                            <span class="label" ng:class="{'label-success': $item.type === 'GRP', 'label-info': $item.type === 'CLS', 'label-warning': $item.type === 'GPL' }">
                                 {{$item.name}}
                             </span>
                         </ui-select-match>

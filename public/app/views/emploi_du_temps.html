@@ -7,13 +7,13 @@
                        ng:change="refresh_calendar()"
                        ng:model="scope.selected_regroupements">
                 <ui-select-match placeholder="Regroupement(s)...">
-                    <span class="label" ng:class="{'label-success': $item.type === 'GRP', 'label-info': $item.type === 'CLS' }">
+                    <span class="label" ng:class="{'label-success': $item.type === 'GRP', 'label-info': $item.type === 'CLS', 'label-warning': $item.type === 'GPL' }">
                         {{$item.name}}
                     </span>
                 </ui-select-match>
                 <ui-select-choices repeat="classe in current_user.actual_groups | orderBy:['type','name']"
                                    group-by="'type'">
-                    <span class="label" ng:class="{'label-success': classe.type === 'GRP', 'label-info': classe.type === 'CLS' }">
+                    <span class="label" ng:class="{'label-success': classe.type === 'GRP', 'label-info': classe.type === 'CLS', 'label-warning': classe.type === 'GPL' }">
                         {{classe.name}}
                     </span>
                 </ui-select-choices>
