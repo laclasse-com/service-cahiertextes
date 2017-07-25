@@ -4,13 +4,19 @@ module DataManagement
   module EmploiDuTemps
     module_function
 
-    def get( debut, fin, regroupements_ids, eleve_id )
+    def get( debut, fin, groups_ids, subjects_ids, eleve_id )
+      debut = Date.parse( debut ) if debut.is_a?( String )
+      fin = Date.parse( fin ) if fin.is_a?( String )
+
       # Nota Bene: semainiers callés sur l'année civile
-      CreneauEmploiDuTemps.where( regroupement_id: regroupements_ids )
-                          .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" )
-                          .where( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{fin}')" )
-                          .all
-                          .map do |creneau|
+      query = CreneauEmploiDuTemps.where( regroupement_id: groups_ids )
+                                  .where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" ) )
+                                  .where( Sequel.lit( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{fin}')" ) )
+
+      query = query.where( matiere_id: subjects_ids ) unless subjects_ids.nil?
+
+      query.all
+           .map do |creneau|
         ( debut .. fin ).select { |day| day.wday == creneau.jour_de_la_semaine && creneau.semainier[ day.cweek ] == 1 }
                         .map do |day|
           { regroupement_id: creneau.regroupement_id,
@@ -40,29 +46,8 @@ module DataManagement
             end }
         end
       end
-                          .flatten
-                          .compact
+           .flatten
+           .compact
     end
-
-    # def ical( debut, fin, regroupements_ids, profil_type, eleve_id )
-    #   ical = Icalendar::Calendar.new
-
-    #   get( debut, fin, regroupements_ids, profil_type, eleve_id )
-    #     .each do |creneau|
-    #     ical.event do |e|
-    #       # [:regroupement_id, :enseignant_id, :creneau_emploi_du_temps_id, :matiere_id, :cahier_de_textes_id, :start, :end, :cours, :devoirs]
-    #       e.dtstart = DateTime.parse( creneau[:start] )
-    #       e.dtend = DateTime.parse( creneau[:end] )
-    #       e.summary = "#{creneau[:regroupement_id]} - #{creneau[:matiere_id]}"
-    #       e.description = creneau[:cours][:contenu] unless creneau[:cours].nil?
-    #       # e.created = DateTime.parse( creneau[:date_creation] )
-    #       # e.last_modified = DateTime.parse( creneau[:date_modification] )
-    #     end
-    #   end
-
-    #   ical.publish
-
-    #   ical.to_ical
-    # end
   end
 end

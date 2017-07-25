@@ -10,7 +10,7 @@ module CahierDeTextesApp
       module_function
 
       def get( zone, year_rentree )
-        raise( ArgumentError, 'Valid zones are ["A", "B", "C"]' ) unless %w(A B C).include?( zone )
+        raise( ArgumentError, 'Valid zones are ["A", "B", "C"]' ) unless %w[A B C].include?( zone )
 
         uri = "http://www.education.gouv.fr/download.php?file=http://cache.media.education.gouv.fr/ics/Calendrier_Scolaire_Zone_#{zone}.ics"
 
@@ -23,14 +23,16 @@ module CahierDeTextesApp
 
           next unless this_year
 
-          [ e.description.downcase.include?( 'rentrée' ) ? e.dtstart.to_date.prev_week.cweek : e.dtstart.to_date.next_week.cweek,
-            e.dtend.nil? ? nil : e.dtend.to_date.prev_week.cweek ]
+          [ e.dtstart.to_date.cweek + ( e.description.downcase.include?( 'rentrée' ) ? 0 : 1 ),
+            e.dtend.nil? ? nil : e.dtend.to_date.cweek ]
         end.flatten.compact
 
         # add summer holidays' weeks
         holidays_weeks.concat( ( holidays_weeks.last .. holidays_weeks.first ).to_a )
 
         holidays_weeks.sort.uniq
+      rescue => _e
+        []
       end
 
       def year_rentree
