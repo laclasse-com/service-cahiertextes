@@ -41,7 +41,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                 response.data.get_actual_groups = function() {
                                     var groups_ids = _.chain(response.data.groups).pluck( 'group_id' ).uniq().value();
                                     var promise = $q.resolve([]);
-                                    if ( _(groups_ids).isEmpty() && ( response.data.profil_actif.type === 'DIR' || response.data.profil_actif.admin ) ) {
+                                    if ( response.data.profil_actif.type === 'DIR' || response.data.profil_actif.admin ) {
                                         promise = Annuaire.get_groups_of_structures( [ response.data.profil_actif.structure_id ] );
                                     } else {
                                         promise = Annuaire.get_groups( groups_ids );
