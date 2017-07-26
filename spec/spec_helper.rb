@@ -21,11 +21,6 @@ require_relative './helper_lib/test_data'
 require_relative './helper_mocks/helpers/authentication'
 require_relative './helper_mocks/mocked_data'
 
-require 'laclasse/laclasse_logger'
-
-LOGGER = Laclasse::LoggerFactory.get_logger
-LOGGER.info("Démarrage des test du Cahier de Textes avec #{LOGGER.loggers_count} logger#{LOGGER.loggers_count > 1 ? 's' : ''}")
-
 RSpec.configure do |config|
   config.mock_with :rspec
   config.expect_with :rspec
