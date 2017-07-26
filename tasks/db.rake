@@ -9,8 +9,7 @@ namespace :db do
 
   desc 'Run migrations'
   task :migrate, [:version] do |_t, args|
-    require_relative('../config/options')
-    require(File.join(APP_ROOT, 'api'))
+    require_relative('../config/init')
     if args[:version]
       puts "Migrating to version #{args[:version]}"
       Sequel::Migrator.run( DB, 'migrations', target: args[:version].to_i )
