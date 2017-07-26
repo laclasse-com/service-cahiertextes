@@ -33,9 +33,9 @@ angular.module( 'cahierDeTextesClientApp' )
                                                                     display: true,
                                                                     pieChart: angular.copy( PIECHART_DEFINITION ) };
 
-                                                      chart.pieChart.data = [ { label: 'saisies',
+                                                      chart.pieChart.data = [ { label: 'saisies non visées',
                                                                                 value: enseignant.filled - enseignant.validated },
-                                                                              { label: 'visas',
+                                                                              { label: 'saisies visées',
                                                                                 value: enseignant.validated } ];
 
                                                       $scope.individualCharts.enseignants.push( chart );

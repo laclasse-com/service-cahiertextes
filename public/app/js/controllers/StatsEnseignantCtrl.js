@@ -34,13 +34,13 @@ angular.module( 'cahierDeTextesClientApp' )
                        $scope.graphiques = { pieChart: angular.copy( PIECHART_DEFINITION ),
                                              multiBarChart: angular.copy( MULTIBARCHART_DEFINITION ),
                                              populate: function ( data ) {
-                                                 $scope.graphiques.multiBarChart.data = [ { key: 'saisies',
+                                                 $scope.graphiques.multiBarChart.data = [ { key: 'saisies non visées',
                                                                                             values: [] },
-                                                                                          { key: 'visas',
+                                                                                          { key: 'saisies visées',
                                                                                             values: [] } ];
-                                                 $scope.graphiques.pieChart.data = [ { label: 'saisies',
+                                                 $scope.graphiques.pieChart.data = [ { label: 'saisies non visées',
                                                                                        value: 0 },
-                                                                                     { label: 'visas',
+                                                                                     { label: 'saisies visées',
                                                                                        value: 0 } ];
 
                                                  _.chain( data )
