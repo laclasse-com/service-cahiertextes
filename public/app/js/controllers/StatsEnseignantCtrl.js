@@ -34,13 +34,13 @@ angular.module( 'cahierDeTextesClientApp' )
                        $scope.graphiques = { pieChart: angular.copy( PIECHART_DEFINITION ),
                                              multiBarChart: angular.copy( MULTIBARCHART_DEFINITION ),
                                              populate: function ( data ) {
-                                                 $scope.graphiques.multiBarChart.data = [ { key: 'saisies',
+                                                 $scope.graphiques.multiBarChart.data = [ { key: 'saisies non visées',
                                                                                             values: [] },
-                                                                                          { key: 'visas',
+                                                                                          { key: 'saisies visées',
                                                                                             values: [] } ];
-                                                 $scope.graphiques.pieChart.data = [ { label: 'saisies',
+                                                 $scope.graphiques.pieChart.data = [ { label: 'saisies non visées',
                                                                                        value: 0 },
-                                                                                     { label: 'visas',
+                                                                                     { label: 'saisies visées',
                                                                                        value: 0 } ];
 
                                                  _.chain( data )
@@ -132,7 +132,8 @@ angular.module( 'cahierDeTextesClientApp' )
                                    .then( function( response ) {
                                        $scope.enseignant.liste_regroupements = _.chain(response)
                                            .select( function( group ) {
-                                               return group.structure_id === $scope.current_user.profil_actif.structure_id;
+                                               return group.type !== 'GPL'
+                                                   && group.structure_id === $scope.current_user.profil_actif.structure_id;
                                            } )
                                            .uniq( function( group ) { return group.id; } )
                                            .compact()

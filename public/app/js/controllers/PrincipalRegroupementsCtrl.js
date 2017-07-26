@@ -34,9 +34,9 @@ angular.module( 'cahierDeTextesClientApp' )
                       ctrl.pieChart = angular.copy( PIECHART_DEFINITION );
                       ctrl.multiBarChart = angular.copy( MULTIBARCHART_DEFINITION );
                       ctrl.pieChart.populate = function( data ) {
-                          ctrl.pieChart.data = [ { label: 'saisies',
+                          ctrl.pieChart.data = [ { label: 'saisies non visées',
                                                    value: data.filled - data.validated },
-                                                 { label: 'visas',
+                                                 { label: 'saisies visées',
                                                    value: data.validated } ];
                       };
                       ctrl.multiBarChart.populate = function( data ) {
@@ -63,9 +63,9 @@ angular.module( 'cahierDeTextesClientApp' )
                                validated: angular.copy( data_bootstrap ) } );
 
 
-                          ctrl.multiBarChart.data = [ { key: 'saisies',
+                          ctrl.multiBarChart.data = [ { key: 'saisies non visées',
                                                         values: multiBarChart_data.filled.sort( sort_by_index ) },
-                                                      { key: 'visas',
+                                                      { key: 'saisies visées',
                                                         values: multiBarChart_data.validated.sort( sort_by_index ) } ];
                       };
 
@@ -77,9 +77,9 @@ angular.module( 'cahierDeTextesClientApp' )
                                                             var individualChart = { data: regroupement,
                                                                                     regroupement: hashed_regroupements[ regroupement.regroupement_id ],
                                                                                     pieChart: angular.copy( PIECHART_DEFINITION ) };
-                                                            individualChart.pieChart.data = [ { label: 'saisies',
+                                                            individualChart.pieChart.data = [ { label: 'saisies non visées',
                                                                                                 value: regroupement.filled - regroupement.validated },
-                                                                                              { label: 'visas',
+                                                                                              { label: 'saisies visées',
                                                                                                 value: regroupement.validated } ];
                                                             return individualChart;
                                                         });

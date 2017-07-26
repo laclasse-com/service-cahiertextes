@@ -61,8 +61,8 @@ angular.module( 'cahierDeTextesClientApp' )
                                      rotateLabels: -45,
                                      labelSunbeamLayout: true,
                                      color: function( d, i ) {
-                                         var colors = { saisies: '#aaffaa',
-                                                        visas: '#00ff00' };
+                                         var colors = { 'saisies non visées': '#aaffaa',
+                                                        'saisies visées': '#00ff00' };
                                          return colors[ d.key ];
                                      }
                                    }
@@ -76,8 +76,8 @@ angular.module( 'cahierDeTextesClientApp' )
                                      x: function( d ) { return d.label; },
                                      y: function( d ) { return d.value; },
                                      color: function( d, i ) {
-                                         var colors = { saisies: '#aaffaa',
-                                                        visas: '#00ff00' };
+                                         var colors = { 'saisies non visées': '#aaffaa',
+                                                        'saisies visées': '#00ff00' };
                                          return colors[ d.label ];
                                      },
                                      showLabels: false,

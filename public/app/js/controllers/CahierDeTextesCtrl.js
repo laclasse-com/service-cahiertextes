@@ -58,14 +58,17 @@ angular.module( 'cahierDeTextesClientApp' )
 
                       // $scope.retrieve_data() when the value of week_offset changes
                       // n.b.: triggered when week_offset is initialized above
-                      // FIXME: calculation on months but it's weeks now
-                      var nb_mois_depuis_septembre = Math.abs( 9 - ( moment().month() + 1 ) );
-                      $scope.period_offsets_list = _.range( nb_mois_depuis_septembre,
-                                                            ( 10 - nb_mois_depuis_septembre ) * -1,
+                      var nb_months_since_last_september = Math.abs( 9 - ( moment().month() + 1 ) );
+                      if ( moment().month() < 8 ) {
+                          nb_months_since_last_september += 8;
+                      }
+
+                      $scope.period_offsets_list = _.range( nb_months_since_last_september,
+                                                            nb_months_since_last_september - 12,
                                                             -1 )
                           .map( function( offset ) {
                               return { offset: offset,
-                                       label: offset == 0 ? 'cette semaine' : moment().add( offset * -1, 'weeks' ).fromNow() };
+                                       label: offset === 0 ? 'ce mois' : moment().add( offset * -1, 'months' ).fromNow() };
                           } );
                       $scope.period_offsets_list.push( { offset: 9999,
                                                          label: 'année complète'} );
@@ -107,11 +110,11 @@ angular.module( 'cahierDeTextesClientApp' )
 
                               //     $scope.period_offset = moment.duration( now - $scope.current_user.date ).months() - 1;
                               // } else {
-                              $scope.current_user.date = moment().subtract( $scope.period_offset, 'weeks' ).toDate();
+                              $scope.current_user.date = moment().subtract( $scope.period_offset, 'months' ).toDate();
                               // }
 
-                              $scope.from_date = moment( $scope.current_user.date ).startOf( 'week' ).toDate();
-                              $scope.to_date = moment( $scope.current_user.date ).endOf( 'week' ).toDate();
+                              $scope.from_date = moment( $scope.current_user.date ).startOf( 'month' ).toDate();
+                              $scope.to_date = moment( $scope.current_user.date ).endOf( 'month' ).toDate();
                           }
 
                           $stateParams.date = $scope.from_date.toISOString().split('T')[0];

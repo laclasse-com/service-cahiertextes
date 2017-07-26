@@ -33,9 +33,9 @@ angular.module( 'cahierDeTextesClientApp' )
                                                                     display: true,
                                                                     pieChart: angular.copy( PIECHART_DEFINITION ) };
 
-                                                      chart.pieChart.data = [ { label: 'saisies',
+                                                      chart.pieChart.data = [ { label: 'saisies non visées',
                                                                                 value: enseignant.filled - enseignant.validated },
-                                                                              { label: 'visas',
+                                                                              { label: 'saisies visées',
                                                                                 value: enseignant.validated } ];
 
                                                       $scope.individualCharts.enseignants.push( chart );
@@ -43,7 +43,9 @@ angular.module( 'cahierDeTextesClientApp' )
 
                       Annuaire.get_groups_of_structures( [ current_user.profil_actif.structure_id ] )
                           .then( function success( response ) {
-                              $scope.regroupements = response.data;
+                              $scope.regroupements = _(response.data).reject( function( group ) {
+                                  return group.type === 'GPL';
+                              } );
 
                               $scope.selected_regroupements = $scope.regroupements;
                           } );
