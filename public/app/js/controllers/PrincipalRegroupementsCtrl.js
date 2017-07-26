@@ -40,8 +40,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                                    value: data.validated } ];
                       };
                       ctrl.multiBarChart.populate = function( data ) {
-                          var sort_by_index = function( a, b ) { return a.index > b.index; };
-
                           var data_bootstrap = _(ctrl.annee).map( function( mois ) {
                               return { key: mois,
                                        y : 0 };
@@ -64,9 +62,9 @@ angular.module( 'cahierDeTextesClientApp' )
 
 
                           ctrl.multiBarChart.data = [ { key: 'saisies non visées',
-                                                        values: multiBarChart_data.filled.sort( sort_by_index ) },
+                                                        values: _(multiBarChart_data.filled).sortBy( function( item ) { return item.index;} ) },
                                                       { key: 'saisies visées',
-                                                        values: multiBarChart_data.validated.sort( sort_by_index ) } ];
+                                                        values: _(multiBarChart_data.validated).sortBy( function( item ) { return item.index;} ) } ];
                       };
 
                       ctrl.individualCharts = { regroupements: [],
