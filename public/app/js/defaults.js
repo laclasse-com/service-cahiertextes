@@ -17,35 +17,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                   DEVOIR_DUPLICATED: 'DEVOIR_DUPLICATED',
                                   DEVOIR_DELETED: 'DEVOIR_DELETED'
                                 } )
-// options des calendriers
-    .factory( 'CALENDAR_OPTIONS', [ '$locale',
-                                    function( $locale ) {
-                                        return { lang: 'fr',
-                                                 locale: 'fr',
-                                                 height: 600,
-                                                 header: { left: '',
-                                                           center: 'title',
-                                                           right: 'today prev,next' },
-                                                 firstDay: 1,
-                                                 minTime: '07:00:00',
-                                                 maxTime: '19:00:00',
-                                                 businessHours: { start: '7:00',
-                                                                  end: '19:00',
-                                                                  dow: [ 1, 2, 3, 4, 5 ] },
-                                                 timeFormat: ' ',
-                                                 ignoreTimezone: false,
-                                                 axisFormat: $locale.DATETIME_FORMATS.shortTime,
-                                                 allDaySlot: false,
-                                                 theme: false,
-                                                 defaultView: 'agendaWeek',
-                                                 editable: false,
-                                                 eventDurationEditable: false,
-                                                 eventStartEditable: false,
-                                                 selectable: false,
-                                                 selectHelper: true,
-                                                 weekends: false
-                                               };
-                                    } ] )
 
 // options des graphiques
     .constant( 'MULTIBARCHART_DEFINITION',
