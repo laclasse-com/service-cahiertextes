@@ -40,8 +40,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                                    value: data.validated } ];
                       };
                       ctrl.multiBarChart.populate = function( data ) {
-                          var sort_by_index = function( a, b ) { return a.index > b.index; };
-
                           var data_bootstrap = _(ctrl.annee).map( function( mois ) {
                               return { key: mois,
                                        y : 0 };
@@ -64,9 +62,9 @@ angular.module( 'cahierDeTextesClientApp' )
 
 
                           ctrl.multiBarChart.data = [ { key: 'saisies non visées',
-                                                        values: multiBarChart_data.filled.sort( sort_by_index ) },
+                                                        values: _(multiBarChart_data.filled).sortBy( function( item ) { return item.index;} ) },
                                                       { key: 'saisies visées',
-                                                        values: multiBarChart_data.validated.sort( sort_by_index ) } ];
+                                                        values: _(multiBarChart_data.validated).sortBy( function( item ) { return item.index;} ) } ];
                       };
 
                       ctrl.individualCharts = { regroupements: [],
@@ -181,42 +179,42 @@ angular.module( 'cahierDeTextesClientApp' )
                           }
                       };
 
-                      ctrl.delete_creneaux = function( creneaux, type ) {
-                          var end_of_last_august = moment().endOf('month');
-                          while ( end_of_last_august.month() !== 7 ) {
-                              end_of_last_august.subtract( 1, 'month' );
-                          }
-                          end_of_last_august = end_of_last_august.toDate();
+                      // ctrl.delete_creneaux = function( creneaux, type ) {
+                      //     var end_of_last_august = moment().endOf('month');
+                      //     while ( end_of_last_august.month() !== 7 ) {
+                      //         end_of_last_august.subtract( 1, 'month' );
+                      //     }
+                      //     end_of_last_august = end_of_last_august.toDate();
 
-                          swal( { title: 'ATTENTION',
-                                  text: 'Ceci supprimera ' + creneaux[ type ].length + ' créneaux ' + type,
-                                  type: 'warning',
-                                  showLoaderOnConfirm: true,
-                                  showCancelButton: true,
-                                  confirmButtonColor: '#ff6b55',
-                                  confirmButtonText: 'Confirmer',
-                                  cancelButtonText: 'Annuler',
-                                  preConfirm: function() {
-                                      var bulk_package_size = 1500;
-                                      var promises = [];
+                      //     swal( { title: 'ATTENTION',
+                      //             text: 'Ceci supprimera ' + creneaux[ type ].length + ' créneaux ' + type,
+                      //             type: 'warning',
+                      //             showLoaderOnConfirm: true,
+                      //             showCancelButton: true,
+                      //             confirmButtonColor: '#ff6b55',
+                      //             confirmButtonText: 'Confirmer',
+                      //             cancelButtonText: 'Annuler',
+                      //             preConfirm: function() {
+                      //                 var bulk_package_size = 1500;
+                      //                 var promises = [];
 
-                                      while ( creneaux[ type ].length > 0 ) {
-                                          promises.push( CreneauxEmploiDuTemps.bulk_delete( { ids: angular.toJson( creneaux[ type ].splice( 0, bulk_package_size ) ),
-                                                                                              date_creneau: end_of_last_august,
-                                                                                              ignore_matiere: true } ).$promise );
-                                      }
+                      //                 while ( creneaux[ type ].length > 0 ) {
+                      //                     promises.push( CreneauxEmploiDuTemps.bulk_delete( { ids: angular.toJson( creneaux[ type ].splice( 0, bulk_package_size ) ),
+                      //                                                                         date_creneau: end_of_last_august,
+                      //                                                                         ignore_matiere: true } ).$promise );
+                      //                 }
 
-                                      $q.all( promises )
-                                          .then( function success( response ) {
-                                              ctrl.$onInit();
+                      //                 $q.all( promises )
+                      //                     .then( function success( response ) {
+                      //                         ctrl.$onInit();
 
-                                              swal.closeModal();
-                                          }, function error( response ) {
-                                              swal.closeModal();
-                                          } );
-                                  },
-                                  allowOutsideClick: false } );
-                      };
+                      //                         swal.closeModal();
+                      //                     }, function error( response ) {
+                      //                         swal.closeModal();
+                      //                     } );
+                      //             },
+                      //             allowOutsideClick: false } );
+                      // };
 
                       ctrl.$onInit = function() {
                           API.query_statistiques_regroupements( { uai: current_user.profil_actif.structure_id } )
