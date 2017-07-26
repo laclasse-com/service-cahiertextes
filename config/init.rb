@@ -5,22 +5,15 @@ Bundler.require( :default, ENV['RACK_ENV'].to_sym )     # require tout les gems 
 Encoding.default_external = Encoding::UTF_8
 Encoding.default_internal = Encoding::UTF_8
 
-# DIR Method
-def __DIR__(*args)              # rubocop:disable Style/MethodName
-  filename = caller(0..0)[/^(.*):/, 1]
-  dir = File.expand_path(File.dirname(filename))
-  ::File.expand_path( ::File.join( dir, *args.map(&:to_s) ) )
-end
-
 # Require settings
 puts 'loading config/options'
-require __DIR__('options')
+require_relative './options'
 
 puts 'loading config/database'
-require __DIR__('database')
+require_relative './database'
 
 puts 'loading config/constants'
-require __DIR__('constants')
+require_relative './constants'
 
 puts 'loading config/internal_constants'
-require __DIR__('internal_constants')
+require_relative './internal_constants'
