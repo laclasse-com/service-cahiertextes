@@ -43,7 +43,9 @@ angular.module( 'cahierDeTextesClientApp' )
 
                       Annuaire.get_groups_of_structures( [ current_user.profil_actif.structure_id ] )
                           .then( function success( response ) {
-                              $scope.regroupements = response.data;
+                              $scope.regroupements = _(response.data).reject( function( group ) {
+                                  return group.type === 'GPL';
+                              } );
 
                               $scope.selected_regroupements = $scope.regroupements;
                           } );

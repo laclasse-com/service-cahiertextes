@@ -132,7 +132,8 @@ angular.module( 'cahierDeTextesClientApp' )
                                    .then( function( response ) {
                                        $scope.enseignant.liste_regroupements = _.chain(response)
                                            .select( function( group ) {
-                                               return group.structure_id === $scope.current_user.profil_actif.structure_id;
+                                               return group.type !== 'GPL'
+                                                   && group.structure_id === $scope.current_user.profil_actif.structure_id;
                                            } )
                                            .uniq( function( group ) { return group.id; } )
                                            .compact()
