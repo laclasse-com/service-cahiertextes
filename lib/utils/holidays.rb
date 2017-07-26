@@ -1,4 +1,5 @@
 # encoding: utf-8
+
 # -*- coding: utf-8 -*-
 
 require 'open-uri'
@@ -10,7 +11,7 @@ module CahierDeTextesApp
       module_function
 
       def get( zone, year_rentree )
-        raise( ArgumentError, 'Valid zones are ["A", "B", "C"]' ) unless %w(A B C).include?( zone )
+        raise( ArgumentError, 'Valid zones are ["A", "B", "C"]' ) unless %w[A B C].include?( zone )
 
         uri = "http://www.education.gouv.fr/download.php?file=http://cache.media.education.gouv.fr/ics/Calendrier_Scolaire_Zone_#{zone}.ics"
 

@@ -9,7 +9,7 @@ AllCops:
 Style/UnneededInterpolation:
   Enabled: false
 
-Style/SpaceInsidePercentLiteralDelimiters:
+Layout/SpaceInsidePercentLiteralDelimiters:
   Enabled: false
 
 Style/AsciiIdentifiers:
@@ -21,16 +21,16 @@ Style/CommandLiteral:
 Style/VariableName:
   Enabled: false
 
-Style/SpaceInsideBrackets:
+Layout/SpaceInsideBrackets:
   Enabled: false
 
-Style/SpaceInsideHashLiteralBraces:
+Layout/SpaceInsideHashLiteralBraces:
   Enabled: false
 
-Style/SpaceInsideParens:
+Layout/SpaceInsideParens:
   Enabled: false
 
-Style/SpaceInsideRangeLiteral:
+Layout/SpaceInsideRangeLiteral:
   Enabled: false
 
 Style/AsciiComments:
@@ -39,7 +39,7 @@ Style/AsciiComments:
 Style/MultilineBlockChain:
   Enabled: false
 
-Style/ExtraSpacing:
+Layout/ExtraSpacing:
   Enabled: false
 
 Metrics/ClassLength:

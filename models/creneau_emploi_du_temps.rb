@@ -109,7 +109,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
       .all
       .map do |c|
       ( date_debut .. date_fin )
-        .reject { |day| day.wday != c.jour_de_la_semaine }
+        .select { |day| day.wday == c.jour_de_la_semaine }
         .map do |jour|
         next unless c.semainier[ jour.cweek ] == 1
         { id: c.id,

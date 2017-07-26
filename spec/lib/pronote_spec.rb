@@ -15,7 +15,7 @@ describe ProNote do
 
   it 'decrypts the XML file' do
     if ENV['TRAVIS']
-      LOGGER.debug 'Travis doesn\'t have the private key to test this'
+      puts 'Travis doesn\'t have the private key to test this'
     else
       xml_decrypted = Nokogiri::XML( ProNote.decrypt_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ) ) )
 

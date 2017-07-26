@@ -40,7 +40,7 @@ Sequel.migration do
     end
 
     create_table!(:creneaux_emploi_du_temps_salles) do
-      primary_key [:creneau_emploi_du_temps_id, :salle_id]
+      primary_key %i[creneau_emploi_du_temps_id salle_id]
       foreign_key :creneau_emploi_du_temps_id, :creneaux_emploi_du_temps, null: false
       foreign_key :salle_id, :salles, null: false
 
@@ -48,7 +48,7 @@ Sequel.migration do
     end
 
     create_table!(:creneaux_emploi_du_temps_enseignants) do
-      primary_key [:creneau_emploi_du_temps_id, :enseignant_id]
+      primary_key %i[creneau_emploi_du_temps_id enseignant_id]
       foreign_key :creneau_emploi_du_temps_id, :creneaux_emploi_du_temps, null: false
 
       String :enseignant_id, null: false
@@ -56,7 +56,7 @@ Sequel.migration do
     end
 
     create_table!(:creneaux_emploi_du_temps_regroupements) do
-      primary_key [:creneau_emploi_du_temps_id, :regroupement_id]
+      primary_key %i[creneau_emploi_du_temps_id regroupement_id]
       foreign_key :creneau_emploi_du_temps_id, :creneaux_emploi_du_temps, null: false
 
       String :regroupement_id, null: false
@@ -109,7 +109,7 @@ Sequel.migration do
       [ 'Exposé', 'Exposé à préparer' ],
       [ 'Recherche', 'Recherche à faire' ],
       [ 'Travail', 'Travail à faire' ] ].each do |type_devoir|
-      self[:types_devoir].insert( [ :label, :description ], type_devoir )
+      self[:types_devoir].insert( %i[label description], type_devoir )
     end
 
     create_table!(:devoirs) do

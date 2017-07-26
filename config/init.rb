@@ -7,7 +7,7 @@ Encoding.default_internal = Encoding::UTF_8
 
 # DIR Method
 def __DIR__(*args)              # rubocop:disable Style/MethodName
-  filename = caller[0][/^(.*):/, 1]
+  filename = caller(0..0)[/^(.*):/, 1]
   dir = File.expand_path(File.dirname(filename))
   ::File.expand_path( ::File.join( dir, *args.map(&:to_s) ) )
 end

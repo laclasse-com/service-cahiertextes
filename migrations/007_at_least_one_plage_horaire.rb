@@ -2,9 +2,9 @@
 
 Sequel.migration do
   change do
-    self[:plages_horaires].insert( [ :label,
-                                     :debut,
-                                     :fin ],
+    self[:plages_horaires].insert( %i[label
+                                      debut
+                                      fin],
                                    [ 'default',
                                      Time.parse( '0:00' ),
                                      Time.parse( '1:00' ) ] )

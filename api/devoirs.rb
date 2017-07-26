@@ -141,7 +141,7 @@ module CahierDeTextesApp
       requires :id
     end
     put '/:id/fait' do
-      user_needs_to_be( %w( ELV ) )
+      user_needs_to_be( %w[ ELV ] )
 
       devoir = Devoir[ params[:id] ]
       error!( 'Devoir inconnu', 404 ) if devoir.nil?

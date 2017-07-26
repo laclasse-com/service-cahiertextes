@@ -64,7 +64,7 @@ module CahierDeTextesApp
 
         hash = Hash.from_xml( ProNote.decrypt_xml(  File.open( params[:file][:tempfile] ) ) )[:ExportEmploiDuTemps]
 
-        %w( Eleves Etiquettes MotifsAbsence Absences ) .each { |key| hash.delete key.to_sym }
+        %w[ Eleves Etiquettes MotifsAbsence Absences ] .each { |key| hash.delete key.to_sym }
 
         # FIXME: fugly
         File.open( params[:file][:tempfile] ) do |xmlagain|
