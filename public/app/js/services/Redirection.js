@@ -18,12 +18,15 @@ angular.module( 'cahierDeTextesClientApp' )
                                 case 'DIR':
                                     stateName = 'principal.enseignants';
                                     break;
-                                case 'ENS':
-                                case 'DOC':
-                                    stateName = 'enseignant.emploi_du_temps';
+                                case 'ADM':
+                                    stateName = 'adm.emploi_du_temps';
                                     break;
                                 case 'EVS':
                                     stateName = 'vie_scolaire.emploi_du_temps';
+                                    break;
+                                case 'ENS':
+                                case 'DOC':
+                                    stateName = 'enseignant.emploi_du_temps';
                                     break;
                                 case 'TUT':
                                 case 'ELV':

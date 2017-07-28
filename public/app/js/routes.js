@@ -86,6 +86,38 @@ angular.module( 'cahierDeTextesClientApp' )
                            }
                        })
 
+                   // ADM ///////////////////////////////////////////////////////////////
+                       .state('adm', {
+                           resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ADM' ] ); } ],
+                                      current_user: [ 'User', function( User ) { return User.get_user().then( function( response ) { return response.data; } ); } ] },
+                           abstract: true,
+                           url: '/adm',
+                           controller: 'ADMCtrl',
+                           templateUrl: 'views/index.html'
+                       })
+                       .state('adm.emploi_du_temps', {
+                           resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ADM' ] ); } ] },
+                           parent: 'adm',
+                           url: '/emploi_du_temps/:date/:regroupements',
+                           views: {
+                               'content': {
+                                   templateUrl: 'views/emploi_du_temps.html',
+                                   controller: 'EmploiDuTempsCtrl'
+                               }
+                           }
+                       })
+                       .state('adm.import', {
+                           parent: 'adm',
+                           url: '/import',
+                           resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ADM' ] ); } ] },
+                           views: {
+                               'content': {
+                                   controller: 'ImportCtrl',
+                                   templateUrl: 'views/import.html'
+                               }
+                           }
+                       })
+
                    // Vie Scolaire ///////////////////////////////////////////////////////////////
                        .state('vie_scolaire', {
                            resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'EVS' ] ); } ],

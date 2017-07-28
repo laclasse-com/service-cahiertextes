@@ -29,7 +29,7 @@ module LaClasse
       end
 
       def user_regroupements_ids( uid = nil )
-        if %w[DIR DOC CPE].include?( user_active_profile['type'] )
+        if %w[DIR ADM DOC CPE].include?( user_active_profile['type'] )
           JSON.parse( RestClient::Request.execute( method: :get,
                                                    url: "#{URL_ENT}/api/groups/?structure_id=#{user_active_profile['structure_id']}",
                                                    user: ANNUAIRE[:app_id],
