@@ -14,7 +14,7 @@
                         </span>
                     </ui-select-match>
                     <ui-select-choices repeat="classe in current_user.actual_groups | orderBy:['type','name']"
-                                       group-by="'type'">
+                                       group-by="'full_type'">
                         {{classe.name}}
                     </ui-select-choices>
                 </ui-select>

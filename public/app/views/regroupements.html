@@ -16,7 +16,7 @@
                     </span>
                 </ui-select-match>
                 <ui-select-choices repeat="regroupement in regroupements | orderBy:['type','name']"
-                                   group-by="'type'">
+                                   group-by="'full_type'">
                     <span class="label" ng:class="{'label-success': regroupement.type === 'GRP', 'label-info': regroupement.type === 'CLS', 'label-warning': regroupement.type === 'GPL' }">
                         {{regroupement.name}}
                     </span>

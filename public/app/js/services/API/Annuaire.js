@@ -5,6 +5,14 @@ angular.module( 'cahierDeTextesClientApp' )
              [ '$http', '$q', 'URL_ENT',
                function( $http, $q, URL_ENT ) {
                    var service = this;
+                   var beautify_group_type = function( type ) {
+                       switch( type ) {
+                       case 'CLS': return 'Classe';
+                       case 'GRP': return 'Groupe';
+                       case 'GPL': return 'Groupe libre';
+                       default: return '';
+                       }
+                   };
 
                    service.query_subjects = _.memoize( function(  ) {
                        return $http.get( URL_ENT + '/api/subjects' );
@@ -23,15 +31,38 @@ angular.module( 'cahierDeTextesClientApp' )
                    });
 
                    service.get_group = _.memoize( function( group_id ) {
-                       return $http.get( URL_ENT + '/api/groups/' + group_id );
+                       return $http.get( URL_ENT + '/api/groups/' + group_id )
+                           .then( function success( response ) {
+                               response.data.full_type = beautify_group_type( response.data.type );
+
+                               return $q.resolve( response );
+                           } );
                    });
 
                    service.get_groups = _.memoize( function( groups_ids ) {
-                       return $http.get( URL_ENT + '/api/groups/', { params: { 'id[]': groups_ids } } );
+                       return $http.get( URL_ENT + '/api/groups/', { params: { 'id[]': groups_ids } } )
+                           .then( function success( response ) {
+                               response.data = response.data.map( function( group ) {
+                                   group.full_type = beautify_group_type( group.type );
+
+                                   return group;
+                               } );
+
+                               return $q.resolve( response );
+                           } );
                    });
 
                    service.get_groups_of_structures = _.memoize( function( structures_ids ) {
-                       return $http.get( URL_ENT + '/api/groups/', { params: { 'structure_id[]': structures_ids } } );
+                       return $http.get( URL_ENT + '/api/groups/', { params: { 'structure_id[]': structures_ids } } )
+                           .then( function success( response ) {
+                               response.data = response.data.map( function( group ) {
+                                   group.full_type = beautify_group_type( group.type );
+
+                                   return group;
+                               } );
+
+                               return $q.resolve( response );
+                           } );
                    });
 
                    service.get_user = _.memoize( function( user_id ) {

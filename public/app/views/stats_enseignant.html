@@ -62,7 +62,7 @@
                             </span>
                         </ui-select-match>
                         <ui-select-choices repeat="regroupement in enseignant.liste_regroupements | orderBy:['type','name']"
-                                           group-by="'type'">
+                                           group-by="'full_type'">
                             {{regroupement.name}}
                         </ui-select-choices>
                     </ui-select>
