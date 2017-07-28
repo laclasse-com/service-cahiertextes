@@ -15,10 +15,10 @@ angular.module( 'cahierDeTextesClientApp' )
                        var popup_ouverte = false;
                        var first_load = true;
 
-                       $scope.uniquement_mes_creneaux = !_( [ 'EVS', 'DIR'] ).contains( $scope.current_user.profil_actif.type );
+                       $scope.uniquement_mes_creneaux = !_( [ 'EVS', 'DIR', 'ADM' ] ).contains( $scope.current_user.profil_actif.type );
 
                        $scope.filter_data = function( raw_data ) {
-                           if ( _( [ 'EVS', 'DIR'] ).contains( $scope.current_user.profil_actif.type ) ) {
+                           if ( _( [ 'EVS', 'DIR', 'ADM' ] ).contains( $scope.current_user.profil_actif.type ) ) {
                                return filter_by_regroupement( raw_data, $scope.selected_regroupements );
                            } else if ( _( [ 'ENS', 'DOC'] ).contains( $scope.current_user.profil_actif.type ) ) {
                                return filter_by_matieres( filter_by_regroupement( raw_data,
@@ -101,7 +101,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                    }
                                }
 
-                               if ( ( ( _( [ 'ELV', 'TUT', 'EVS', 'DIR'] ).contains( $scope.current_user.profil_actif.type ) ) && _(event.cours).isNull() && _(event.devoirs).isEmpty() ) ) {
+                               if ( ( ( _( [ 'ELV', 'TUT', 'EVS', 'DIR', 'ADM' ] ).contains( $scope.current_user.profil_actif.type ) ) && _(event.cours).isNull() && _(event.devoirs).isEmpty() ) ) {
                                    fc_event.className += ' unclickable-event';
                                } else {
                                    fc_event.className += ' clickable-event';
@@ -193,7 +193,7 @@ angular.module( 'cahierDeTextesClientApp' )
                            }
                        }
 
-                       var can_edit = _( [ 'ENS', 'DOC', 'DIR'] ).contains( $scope.current_user.profil_actif.type ) || $scope.current_user.profil_actif.admin;
+                       var can_edit = _( [ 'ENS', 'DOC', 'DIR', 'ADM' ] ).contains( $scope.current_user.profil_actif.type ) || $scope.current_user.profil_actif.admin;
                        $scope.calendar = { options: { lang: 'fr',
                                                       locale: 'fr',
                                                       height: 600,
