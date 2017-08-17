@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-module CahierDeTextesApp
+module LaClasse
   module Routes
     module Auth
       def self.registered( app )
-        app.get "#{APP_PATH}/auth/cas/callback" do
+        app.get '/auth/cas/callback' do
           env['rack.session']['authenticated'] = true
           env['rack.session']['uid'] = env['omniauth.auth']['extra']['uid']
 
@@ -13,24 +13,24 @@ module CahierDeTextesApp
           redirect "#{protocol}://#{env['HTTP_HOST']}#{APP_PATH}/"
         end
 
-        app.get "#{APP_PATH}/auth/failure" do
+        app.get '/auth/failure' do
           erb :auth_failure
         end
 
-        app.get "#{APP_PATH}/auth/cas/deauthorized" do
+        app.get '/auth/cas/deauthorized' do
           erb :auth_deauthorized
         end
 
-        app.get "#{APP_PATH}/protected" do
+        app.get '/protected' do
           throw( :halt, [ 401, "Not authorized\n" ] ) unless env['rack.session']['authenticated']
           erb :auth_protected
         end
 
-        app.get "#{APP_PATH}/login" do
+        app.get '/login' do
           redirect "#{APP_PATH}/auth/cas/?url=#{URL_ENT}#{APP_PATH}/"
         end
 
-        app.get "#{APP_PATH}/logout" do
+        app.get '/logout' do
           env['rack.session']['authenticated'] = false
           session.clear
 

@@ -380,9 +380,9 @@ angular.module( 'cahierDeTextesClientApp' )
 
                            ctrl.devoirs = devoirs.map( function( devoir ) {
                                var devoir_from_DB = Devoirs.get( { id: devoir.id } );
-                               devoir_from_DB.$promise.then( function( d ) {
-                                   d.cours.tooltip = $sce.trustAsHtml( "<div><em>" + $filter('amDateFormat')( d.cours.date_cours, 'dddd D MMMM YYYY' ) + "</em><hr />" + d.cours.contenu + "</div>" );
-                               } );
+                               // devoir_from_DB.$promise.then( function( d ) {
+                               //     d.cours.tooltip = $sce.trustAsHtml( "<div><em>" + $filter('amDateFormat')( d.cours.date_cours, 'dddd D MMMM YYYY' ) + "</em><hr />" + d.cours.contenu + "</div>" );
+                               // } );
 
                                return devoir_from_DB;
                            } );
@@ -433,8 +433,11 @@ angular.module( 'cahierDeTextesClientApp' )
 
                            liste_créneaux_similaires( ctrl.creneau, 0, 8 )
                                .then( function( response ) {
+                                   if ( _(response.data).isEmpty() ) {
+                                       response.data = [ ctrl.creneau ];
+                                   }
                                    ctrl.creneaux_devoirs_possibles = _.chain(response.data)
-                                       .select( function( creneau ) { return creneau.regroupement_id == ctrl.creneau.regroupement_id; } )
+                                       .select( function( creneau ) { return creneau.regroupement_id === ctrl.creneau.regroupement_id; } )
                                        .map( function ( creneau ) {
                                            creneau.classe = _( ctrl.classes ).findWhere( { id: parseInt( creneau.regroupement_id ) } );
                                            creneau.date_due = $filter( 'date' )( creneau.start, 'y-MM-dd' );
@@ -560,11 +563,13 @@ angular.module( 'cahierDeTextesClientApp' )
                                        creneau_cible = _(ctrl.creneaux_devoirs_possibles).first();
                                    }
                                }
+                               console.log(creneau_cible)
 
                                var devoir = new Devoirs( { cours_id: ctrl.cours.id,
                                                            date_due: $filter( 'date' )( creneau_cible.heure_debut, 'yyyy-MM-dd' ),
                                                            type_devoir_id: _(ctrl.types_de_devoir).last().id,
-                                                           creneau_emploi_du_temps_id: creneau_cible.id } );
+                                                           creneau_emploi_du_temps_id: creneau_cible.id,
+                                                           contenu: '' } );
                                devoir.create = true;
                                devoir.dirty = true;
                                where.unshift( devoir );

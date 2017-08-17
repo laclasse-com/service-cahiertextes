@@ -7,24 +7,6 @@ class Devoir < Sequel::Model( :devoirs )
   one_to_many :devoir_todo_items
   many_to_one :cours
 
-  def to_deep_hash( user = nil )
-    h = to_hash
-
-    h[:ressources] = ressources.map(&:to_hash)
-
-    h[:creneau_emploi_du_temps] = creneau_emploi_du_temps.to_hash
-    h[:cours] = cours.to_hash
-
-    h[:devoir_todo_items] = devoir_todo_items
-    h[:devoir_todo_items] = [] if user.nil?
-    h[:devoir_todo_items].select! { |dti| dti[:eleve_id] == user['id'] } unless user.nil?
-
-    h[:fait] = user.nil? ? false : fait_par?( user['id'] )
-    h[:date_fait] = h[:fait] ? fait_le( user['id'] ) : nil
-
-    h
-  end
-
   def fait_par!( eleve_id )
     add_devoir_todo_item( eleve_id: eleve_id, date_fait: Time.now )
   end
@@ -65,18 +47,18 @@ class Devoir < Sequel::Model( :devoirs )
   end
 
   def modifie( params )
-    self.date_due = params[:date_due]
-    self.creneau_emploi_du_temps_id = params[:creneau_emploi_du_temps_id]
-    self.type_devoir_id = params[:type_devoir_id]
-    self.contenu = params[:contenu]
-    self.temps_estime = params[:temps_estime] unless params[:temps_estime].nil?
-    self.cours_id = params[:cours_id] unless params[:cours_id].nil?
-    self.enseignant_id = params[:enseignant_id] unless params[:enseignant_id].nil?
+    self.date_due = params['date_due']
+    self.creneau_emploi_du_temps_id = params['creneau_emploi_du_temps_id']
+    self.type_devoir_id = params['type_devoir_id']
+    self.contenu = params['contenu']
+    self.temps_estime = params['temps_estime'] unless params['temps_estime'].nil?
+    self.cours_id = params['cours_id'] unless params['cours_id'].nil?
+    self.enseignant_id = params['enseignant_id'] unless params['enseignant_id'].nil?
 
-    if params[:ressources]
+    if params['ressources']
       remove_all_ressources
 
-      params[:ressources].each do |ressource|
+      params['ressources'].each do |ressource|
         add_ressource( DataManagement::Accessors.create_or_get( Ressource, name: ressource['name'],
                                                                            hash: ressource['hash'] ) )
       end

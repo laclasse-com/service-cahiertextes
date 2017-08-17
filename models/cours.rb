@@ -7,13 +7,15 @@ class Cours < Sequel::Model( :cours )
   one_to_many :devoirs
 
   def to_deep_hash
-    hash = JSON.parse( to_json( include: self.class.associations ), symbolize_names: true ) # FIXME: WTF
+    # hash = JSON.parse( to_json( include: self.class.associations ), symbolize_names: true ) # FIXME: WTF
+    hash = to_hash
 
     hash[:ressources] = ressources.map(&:to_hash)
     hash[:devoirs] = devoirs.select { |devoir| !devoir.deleted || devoir.date_modification > UNDELETE_TIME_WINDOW.minutes.ago }
     hash[:devoirs].each do |devoir|
       devoir[:ressources] = devoir.ressources.map(&:to_hash)
     end
+    hash[:devoirs] = hash[:devoirs].map(&:to_hash)
 
     hash
   end
@@ -39,12 +41,12 @@ class Cours < Sequel::Model( :cours )
   end
 
   def modifie( params )
-    self.contenu = params[:contenu]
+    self.contenu = params['contenu']
     self.date_modification = Time.now
 
-    if params[:ressources]
+    if params['ressources']
       remove_all_ressources
-      params[:ressources].each do |ressource|
+      params['ressources'].each do |ressource|
         add_ressource( DataManagement::Accessors.create_or_get( Ressource, name: ressource['name'],
                                                                            hash: ressource['hash'] ) )
       end

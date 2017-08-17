@@ -18,10 +18,8 @@ end
 
 class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
   many_to_many :salles, class: :Salle, join_table: :creneaux_emploi_du_temps_salles
-
   one_to_many :cours, class: :Cours
   one_to_many :devoirs
-
   many_to_one :etablissement, class: :Etablissement, key: :etablissement_id
   many_to_one :import, class: :Import, key: :import_id
 
@@ -34,14 +32,25 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
     save
   end
 
-  def to_deep_hash( debut, fin, expand )
+  def to_hash
+    h = super
+    h.each { |k, v| h[k] = v.iso8601 if v.is_a?( Time ) }
+
+    h
+  end
+
+  def to_deep_hash( date_debut, date_fin, expand )
     h = to_hash
     h[:salles] = salles
     h[:vierge] = cours.count.zero? && devoirs.count.zero?
-    if expand
-      h[:cours] = Cours.where( creneau_emploi_du_temps_id: id ).where( deleted: false ).where( date_cours: debut .. fin )
-      h[:devoirs] = Devoir.where( creneau_emploi_du_temps_id: id ).where( date_due: debut .. fin )
-    end
+    #if expand
+    # p date_debut
+    # p date_fin
+    # date_debut = Date.parse( date_debut )
+    # date_fin = Date.parse( date_fin )
+    # h[:cours] = Cours.where( creneau_emploi_du_temps_id: id ).where( deleted: false ).where( date_cours: date_debut .. date_fin ).all
+    # h[:devoirs] = Devoir.where( creneau_emploi_du_temps_id: id ).where( date_due: date_debut .. date_fin ).all
+    #end
 
     h
   end
@@ -54,7 +63,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
       .where( jour_de_la_semaine: jour_de_la_semaine )
       .where( regroupement_id: regroupement_id )
       .where( semainier: semainier )
-      .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" )
+      .where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" ) )
       .where( deleted: false )
   end
 
@@ -101,11 +110,14 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
     end
   end
 
-  def similaires( date_debut, date_fin )
+  def similaires( groups_ids, date_debut, date_fin )
+    date_debut = Date.parse( date_debut )
+    date_fin = Date.parse( date_fin )
     CreneauEmploiDuTemps
       .where( matiere_id: matiere_id )
-      .where( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" )
-      .where( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{fin}')" )
+      .where( regroupement_id: groups_ids )
+      .where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" ) )
+      .where( Sequel.lit( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{fin}')" ) )
       .all
       .map do |c|
       ( date_debut .. date_fin )
@@ -147,18 +159,21 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
   # rubocop:disable Metrics/PerceivedComplexity
   # rubocop:disable Metrics/CyclomaticComplexity
   def modifie( params )
-    update( debut: params[:heure_debut] ) if params.key?( :heure_debut )
-    update( fin: params[:heure_fin] ) if params.key?( :heure_fin )
-    update( matiere_id: params[:matiere_id] ) if params.key?( :matiere_id )
-    update( import_id: params[:import_id] ) if params.key?( :import_id )
-    update( jour_de_la_semaine: params[:jour_de_la_semaine] ) if params.key?( :jour_de_la_semaine )
+    update( debut: params['heure_debut'] ) if params.key?( 'heure_debut' )
+    update( fin: params['heure_fin'] ) if params.key?( 'heure_fin' )
+
+    update( debut: params['debut'] ) if params.key?( 'debut' )
+    update( fin: params['fin'] ) if params.key?( 'fin' )
+
+    update( matiere_id: params['matiere_id'] ) if params.key?( 'matiere_id' )
+    update( import_id: params['import_id'] ) if params.key?( 'import_id' )
+    update( jour_de_la_semaine: params['jour_de_la_semaine'] ) if params.key?( 'jour_de_la_semaine' )
+    update( regroupement_id: params['regroupement_id'] ) if params.key?( 'regroupement_id' )
+    update( semainier: params['semainier_regroupement'] ) if params.key?( 'semainier_regroupement' )
 
     save
 
-    update( regroupement_id: params[:regroupement_id] ) if params.key?( :regroupement_id )
-    update( semainier: params[:semainier_regroupement] ) if params.key?( :semainier_regroupement )
-
-    update_salle( params[:salle_id], params[:semainier_salle] ) if params.key?( :salle_id )
+    update_salle( params[:salle_id], params['semainier_salle'] ) if params.key?( 'salle_id' )
   rescue StandardError => e
     puts "Can't do that with #{self}"
     puts e.message

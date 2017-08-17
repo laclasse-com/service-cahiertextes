@@ -4,11 +4,11 @@ module CahierDeTextesApp
   module Routes
     module Index
       def self.registered( app )
-        app.get "#{APP_PATH}/?" do
+        app.get '/?' do
           erb :app
         end
 
-        app.get "#{APP_PATH}/rien/?" do
+        app.get '/rien/?' do
           erb :rien
         end
       end
