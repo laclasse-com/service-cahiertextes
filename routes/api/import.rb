@@ -43,7 +43,7 @@ module CahierDeTextesApp
           app.post '/api/import/pronote/decrypt' do
             # param :file # , File, required: true
 
-            halt( 500, 'Le ficher n\'est pas un fichier XML valide.' ) if %r{^text/xml;.*}.match( FileMagic.new(FileMagic::MAGIC_MIME).file( params[:file][:tempfile].path ) ).nil?
+            halt( 500, 'Le fichier n\'est pas un fichier XML valide.' ) if %r{^text/xml;.*}.match( FileMagic.new(FileMagic::MAGIC_MIME).file( params[:file][:tempfile].path ) ).nil?
 
             json( File.open( params[:file][:tempfile] ) do |xml|
                     uai = ProNote.extract_from_xml( xml, 'UAI' )
