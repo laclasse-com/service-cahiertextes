@@ -7,7 +7,7 @@ module CahierDeTextesApp
         def self.registered( app )
           app.get '/api/users/current/parametres/?' do
             parameters = DataManagement::Accessors.create_or_get( UserParameters,
-                                                                  uid: params['uid'] )
+                                                                  uid: session['user'] )
             parameters.update( date_connexion: Time.now )
             parameters.save
 
@@ -19,7 +19,7 @@ module CahierDeTextesApp
             body = JSON.parse( request.body.read )
 
             parameters = DataManagement::Accessors.create_or_get( UserParameters,
-                                                                  uid: params['uid'] )
+                                                                  uid: session['user'] )
 
             parameters.update( parameters: body['parameters'] )
             parameters.save
