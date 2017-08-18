@@ -45,8 +45,6 @@ module CahierDeTextesApp
 
             cours.modifie( body )
 
-            p cours
-
             json( cours.to_deep_hash )
           end
 
