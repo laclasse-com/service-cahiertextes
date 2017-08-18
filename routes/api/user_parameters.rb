@@ -6,8 +6,6 @@ module CahierDeTextesApp
       module UserParametersAPI
         def self.registered( app )
           app.get '/api/users/current/parametres/?' do
-            # param :uid, String, required: true
-
             parameters = DataManagement::Accessors.create_or_get( UserParameters,
                                                                   uid: params['uid'] )
             parameters.update( date_connexion: Time.now )
@@ -17,8 +15,6 @@ module CahierDeTextesApp
           end
 
           app.put '/api/users/current/parametres/?' do
-            # param :uid, String, required: true
-
             request.body.rewind
             body = JSON.parse( request.body.read )
 

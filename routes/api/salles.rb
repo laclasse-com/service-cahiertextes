@@ -10,8 +10,6 @@ module CahierDeTextesApp
           end
 
           app.get '/api/salles/:id/?' do
-            # param :id, Integer, required: true
-
             salle = Salle[ params[:id] ]
             halt( 404, "Salle #{params[:id]} inconnue" ) if salle.nil?
 
@@ -19,10 +17,6 @@ module CahierDeTextesApp
           end
 
           app.post '/api/salles/?' do
-            # param :uai, String, required: true
-            # param :identifiant, String, required: true
-            # param :nom, String, required: true
-
             etablissement = Etablissement.where(uai: params[:uai]).first
             halt( 404, "Établissement #{params[:uai]} inconnu" ) if etablissement.nil?
 
@@ -56,11 +50,6 @@ module CahierDeTextesApp
           end
 
           app.put '/api/salles/:id/?' do
-            # param :id, Integer, required: true
-            # param :uai, String, required: false
-            # param :identifiant, String, required: false
-            # param :nom, String, required: false
-
             salle = Salle[ params[:id] ]
 
             halt( 404, "Salle #{params[:id]} inconnue" ) if salle.nil?
@@ -80,8 +69,6 @@ module CahierDeTextesApp
           end
 
           app.delete '/api/salles/:id/?' do
-            # param :id, Integer, required: true
-
             salle = Salle[ params[:id] ]
 
             halt( 404, "Salle #{params[:id]} inconnue" ) if salle.nil?

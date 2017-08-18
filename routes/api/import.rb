@@ -10,14 +10,10 @@ module CahierDeTextesApp
       module ImportAPI
         def self.registered( app )
           app.get '/api/import/:id/?' do
-            # param :id, Integer, required: true
-
-            json Import[ params[:id] ]
+            json( Import[ params[:id] ] )
           end
 
           app.get '/api/import/:id/creneaux/?' do
-            # param :id, Integer, required: true
-
             import = Import[ params[:id] ]
 
             json CreneauEmploiDuTemps.where( etablissement_id: import.etablissement_id )
@@ -26,10 +22,6 @@ module CahierDeTextesApp
           end
 
           app.post '/api/import/log/start/?' do
-            # param :uai, String, required: true
-            # param :type, String, required: false
-            # param :comment, String, required: false
-
             etablissement = Etablissement.where(uai: params[:uai]).first
 
             halt( 404, "Établissement #{params[:uai]} inconnu" ) if etablissement.nil?
@@ -41,9 +33,6 @@ module CahierDeTextesApp
           end
 
           app.post '/api/import/pronote/decrypt' do
-            # param :file # , File, required: true
-
-            halt( 500, 'Le fichier n\'est pas un fichier XML valide.' ) if %r{^text/xml;.*}.match( FileMagic.new(FileMagic::MAGIC_MIME).file( params[:file][:tempfile].path ) ).nil?
 
             json( File.open( params[:file][:tempfile] ) do |xml|
                     uai = ProNote.extract_from_xml( xml, 'UAI' )

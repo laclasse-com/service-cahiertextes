@@ -6,11 +6,6 @@ module CahierDeTextesApp
       module CahiersDeTextes
         def self.registered( app )
           app.post '/api/cahiers_de_textes/?' do
-            # param :regroupement_id, String, required: true
-            # param :debut_annee_scolaire, Date, required: true
-            # param :fin_annee_scolaire, Date, required: true
-            # param :label, String, required: true
-
             user_needs_to_be( %w[ ADM DIR ] )
 
             ct = DataManagement::Accessors.create_or_get( CahierDeTextes,

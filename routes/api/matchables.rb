@@ -6,8 +6,6 @@ module CahierDeTextesApp
       module Matchables
         def self.registered( app )
           app.get '/api/matchables/:uai/?' do
-            # param :uai, String, required: true
-
             etab = Etablissement[ UAI: params[:uai] ]
             halt( 404, "Etablissement #{params[:uai]} unknown" ) if etab.nil?
 
@@ -15,9 +13,6 @@ module CahierDeTextesApp
           end
 
           app.get '/api/matchables/:uai/:hash_item/?' do
-            # param :uai, String, required: true
-            # param :hash_item, String, required: true
-
             etab = Etablissement[ UAI: params[:uai] ]
             halt( 404, "Etablissement #{params[:uai]} unknown" ) if etab.nil?
 
@@ -29,10 +24,6 @@ module CahierDeTextesApp
           end
 
           app.post '/api/matchables/:uai/:hash_item/?' do
-            # param :uai, String, required: true
-            # param :hash_item, String, required: true
-            # param :id_annuaire, String, required: true
-
             etab = Etablissement[ UAI: params[:uai] ]
             halt( 404, "Etablissement #{params[:uai]} unknown" ) if etab.nil?
 
@@ -46,9 +37,6 @@ module CahierDeTextesApp
           end
 
           app.delete '/api/matchables/:uai/:hash_item/?' do
-            # param :uai, String, required: true
-            # param :hash_item, String, required: true
-
             etab = Etablissement[ UAI: params[:uai] ]
             halt( 404, "Etablissement #{params[:uai]} unknown" ) if etab.nil?
 
