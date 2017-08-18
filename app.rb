@@ -21,10 +21,10 @@ require_relative './models/ressource'
 require_relative './models/salle'
 require_relative './models/user_parameters'
 
+require_relative './lib/helpers/auth'
 require_relative './lib/helpers/user'
 
 require_relative './routes/index'
-require_relative './routes/auth'
 require_relative './routes/status'
 require_relative './routes/api/cahiers_de_textes'
 require_relative './routes/api/cours'
@@ -42,41 +42,38 @@ require_relative './routes/api/user_parameters'
 # Application Sinatra servant de base
 module CahierDeTextesApp
   class CdTServer < Sinatra::Base
-    use Rack::Session::Cookie,
-        expire_after: SESSION_TIME,
-        secret: SESSION_KEY
-    # path: '/portail',
-    # domain: URL_ENT.gsub( /http[s]?:\/\//, '' )
+    helpers Sinatra::Helpers
+    helpers Sinatra::Cookies
 
-    use OmniAuth::Builder do
-      provider :cas, CASAUTH::CONFIG
-      configure do |config|
-        config.path_prefix = '/auth'
-        config.full_host = CASAUTH::CONFIG[:full_host] if ENV['RACK_ENV'] == 'production'
-      end
-    end
+    helpers LaClasse::Helpers::Auth
+    helpers LaClasse::Helpers::User
 
     configure :production, :development do
-      set :sessions, true
       set :protection, true
       set :protection, except: :frame_options
       set :show_exceptions, false
     end
 
-    # helpers Sinatra::Param
-    helpers LaClasse::Helpers::User
+    not_found do
+      "Page non trouvée\n"
+    end
+
+    error do
+      status 500
+
+      log_exception env['sinatra.error']
+      'Erreur Interne au serveur'
+    end
 
     ##### routes #################################################################
 
     before do
-      pass if request.path =~ %r{#{APP_PATH}/(auth|login|status)/}
-
       cache_control :no_cache
 
-      redirect "#{APP_PATH}/auth/cas/?url=#{request.env['REQUEST_PATH']}" unless env['rack.session']['authenticated']
-    end
+      pass if request.path =~ %r{#{APP_PATH}/status/}
 
-    register LaClasse::Routes::Auth
+      login! env['REQUEST_PATH'] unless logged?
+    end
 
     register CahierDeTextesApp::Routes::Index
     register CahierDeTextesApp::Routes::Status

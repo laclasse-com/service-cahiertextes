@@ -1,8 +1,6 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.5.1)
-      public_suffix (~> 2.0, >= 2.0.2)
     ast (2.3.0)
     axiom-types (0.1.1)
       descendants_tracker (~> 0.0.4)
@@ -24,7 +22,6 @@ GEM
       nokogiri (>= 1.4.3)
     execjs (2.7.0)
     ffi (1.9.18)
-    hashie (3.5.6)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     icalendar (2.4.1)
@@ -40,13 +37,6 @@ GEM
     netrc (0.11.0)
     nokogiri (1.8.0)
       mini_portile2 (~> 2.2.0)
-    omniauth (1.6.1)
-      hashie (>= 3.4.6, < 3.6.0)
-      rack (>= 1.6.2, < 3)
-    omniauth-cas (1.1.1)
-      addressable (~> 2.3)
-      nokogiri (~> 1.5)
-      omniauth (~> 1.2)
     parallel (1.11.2)
     parser (2.4.0.0)
       ast (~> 2.2)
@@ -55,7 +45,6 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
-    public_suffix (2.0.5)
     puma (3.9.1)
     rack (2.0.3)
     rack-protection (2.0.0)
@@ -139,8 +128,6 @@ DEPENDENCIES
   icalendar
   mysql2
   nokogiri
-  omniauth
-  omniauth-cas
   pry
   puma
   rack

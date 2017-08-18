@@ -7,7 +7,7 @@ module LaClasse
     module User
       def user( uid = nil )
         JSON.parse( RestClient::Request.execute( method: :get,
-                                                 url: "#{URL_ENT}/api/users/#{uid.nil? ? env['rack.session']['uid'] : uid}",
+                                                 url: "#{URL_ENT}/api/users/#{uid.nil? ? session['user'] : uid}",
                                                  user: ANNUAIRE[:app_id],
                                                  password: ANNUAIRE[:api_key] ) )
       end
@@ -42,7 +42,7 @@ module LaClasse
 
       def user_ctxt
         utilisateur = JSON.parse( RestClient::Request.execute( method: :get,
-                                                               url: "#{URL_ENT}/api/users/#{env['rack.session']['uid']}",
+                                                               url: "#{URL_ENT}/api/users/#{session['user']}",
                                                                user: ANNUAIRE[:app_id],
                                                                password: ANNUAIRE[:api_key] ) )
 
