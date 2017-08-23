@@ -405,7 +405,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                var creneau_choisi = _( ctrl.creneaux_devoirs_possibles ).findWhere( {
                                    date_due: devoir.date_due
                                } );
-                               devoir.creneau_emploi_du_temps_id = creneau_choisi.creneau_emploi_du_temps_id;
+                               devoir.creneau_emploi_du_temps_id = creneau_choisi.id;
                                ctrl.is_dirty( devoir );
                            };
 
@@ -440,10 +440,10 @@ angular.module( 'cahierDeTextesClientApp' )
                                        .select( function( creneau ) { return creneau.regroupement_id === ctrl.creneau.regroupement_id; } )
                                        .map( function ( creneau ) {
                                            creneau.classe = _( ctrl.classes ).findWhere( { id: parseInt( creneau.regroupement_id ) } );
-                                           creneau.date_due = $filter( 'date' )( creneau.start, 'y-MM-dd' );
                                            creneau.semaine = moment( creneau.start).from( moment( ctrl.creneau.heure_debut ) );
                                            creneau.heure_debut = new Date( creneau.heure_debut );
                                            creneau.heure_fin = new Date( creneau.heure_fin );
+                                           creneau.date_due = $filter( 'date' )( creneau.heure_debut, 'y-MM-dd' );
 
                                            return creneau;
                                        } )
@@ -549,7 +549,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
                            // fonctions d'événements GUI {{{
                            ctrl.ajout_devoir = function( where, creneau_cible ) {
-                               if ( _(creneau_cible).isNull() || _(creneau_cible).isUndefined() ) {
+                               if ( _(creneau_cible).isNull() || _(creneau_cible).isUndefined() || ctrl.creneaux_devoirs_possibles.length < 1 ) {
                                    creneau_cible = ctrl.creneau;
                                } else if ( creneau_cible === 'next' ) {
                                    if ( ctrl.creneaux_devoirs_possibles.length > 1 ) {
@@ -563,7 +563,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                        creneau_cible = _(ctrl.creneaux_devoirs_possibles).first();
                                    }
                                }
-                               console.log(creneau_cible)
 
                                var devoir = new Devoirs( { cours_id: ctrl.cours.id,
                                                            date_due: $filter( 'date' )( creneau_cible.heure_debut, 'yyyy-MM-dd' ),
@@ -572,6 +571,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                                            contenu: '' } );
                                devoir.create = true;
                                devoir.dirty = true;
+
                                where.unshift( devoir );
                            };
 
