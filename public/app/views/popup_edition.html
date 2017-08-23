@@ -164,7 +164,7 @@
                     </ul>
                 </div>
                 <div class="col-md-3" ng:if="cours.id">
-                    <button type="button" class="btn btn-xs btn-default pull-right supprimer"
+                    <button type="button" class="btn btn-xs btn-danger pull-right supprimer"
                             ng:click="effacer_cours(  )"
                             ng:if="cours.id && ( cours.deleted || ( !creneau.etranger && cours.editable ) )" >
                         <span ng:if="!cours.deleted"><span class="glyphicon glyphicon-trash"></span> Supprimer</span>
@@ -266,7 +266,7 @@
                                  ng:if="devoir.deleted" >(Devoir supprimé)</div>
 
                             <div class="col-md-3">
-                                <button type="button" class="btn btn-xs btn-default pull-right supprimer"
+                                <button type="button" class="btn btn-xs btn-danger pull-right supprimer"
                                         ng:click="effacer_devoir( devoir )"
                                         ng:if="devoir.id && !creneau.etranger && !devoir.cours.deleted">
                                     <span ng:if="!devoir.deleted"><span class="glyphicon glyphicon-trash"></span> Supprimer</span>
@@ -386,7 +386,7 @@
                          ng:if="devoir.deleted" >(Devoir supprimé)</div>
 
                     <div class="col-md-3">
-                        <button type="button" class="btn btn-xs btn-default pull-right supprimer"
+                        <button type="button" class="btn btn-xs btn-danger pull-right supprimer"
                                 ng:click="effacer_devoir( devoir )"
                                 ng:if="devoir.id && !creneau.etranger && !devoir.cours.deleted">
                             <span ng:if="!devoir.deleted"><span class="glyphicon glyphicon-trash"></span> Supprimer</span>
