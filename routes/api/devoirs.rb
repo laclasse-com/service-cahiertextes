@@ -53,7 +53,8 @@ module CahierDeTextesApp
             creneau = CreneauEmploiDuTemps[ body['creneau_emploi_du_temps_id'] ]
             halt( 409, 'Créneau invalide' ) if creneau.nil?
 
-            devoir = Devoir.create( type_devoir_id: body['type_devoir_id'],
+            devoir = Devoir.create( enseignant_id: user['id'],
+                                    type_devoir_id: body['type_devoir_id'],
                                     creneau_emploi_du_temps_id: creneau.id,
                                     contenu: body['contenu'],
                                     date_due: body['date_due'],
