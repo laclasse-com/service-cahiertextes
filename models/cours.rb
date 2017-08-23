@@ -7,7 +7,6 @@ class Cours < Sequel::Model( :cours )
   one_to_many :devoirs
 
   def to_deep_hash
-    # hash = JSON.parse( to_json( include: self.class.associations ), symbolize_names: true ) # FIXME: WTF
     hash = to_hash
 
     hash[:ressources] = ressources.map(&:to_hash)
