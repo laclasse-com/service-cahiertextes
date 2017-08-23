@@ -113,13 +113,14 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
   def similaires( groups_ids, date_debut, date_fin )
     date_debut = Date.parse( date_debut )
     date_fin = Date.parse( date_fin )
-    CreneauEmploiDuTemps
-      .where( matiere_id: matiere_id )
-      .where( regroupement_id: groups_ids )
-      .where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" ) )
-      .where( Sequel.lit( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{fin}')" ) )
-      .all
-      .map do |c|
+    query = CreneauEmploiDuTemps.where( matiere_id: matiere_id )
+                                .where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" ) )
+                                .where( Sequel.lit( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{fin}')" ) )
+
+    query = query.where( regroupement_id: groups_ids ) unless groups_ids.nil?
+
+    query.all
+         .map do |c|
       ( date_debut .. date_fin )
         .select { |day| day.wday == c.jour_de_la_semaine }
         .map do |jour|
@@ -138,8 +139,8 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
           vierge: cours.count.zero? && devoirs.count.zero? }
       end
     end
-      .flatten
-      .compact
+         .flatten
+         .compact
   end
 
   def update_salle( salle_id, semainier_salle )
