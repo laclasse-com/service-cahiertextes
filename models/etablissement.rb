@@ -14,9 +14,9 @@ class Etablissement < Sequel::Model( :etablissements )
                                                     user: ANNUAIRE[:app_id],
                                                     password: ANNUAIRE[:api_key] ) )
 
-    etab['groups'].map do |classe|
-      cdt = CahierDeTextes.where( regroupement_id: classe['id'] ).first
-      cdt = CahierDeTextes.create( date_creation: Time.now, regroupement_id: classe[ 'id' ] ) if cdt.nil?
+    etab['groups'].map do |group|
+      cdt = CahierDeTextes[ regroupement_id: group['id'] ]
+      cdt = CahierDeTextes.create( date_creation: Time.now, regroupement_id: group[ 'id' ] ) if cdt.nil?
       cdt.statistiques
     end
   end
