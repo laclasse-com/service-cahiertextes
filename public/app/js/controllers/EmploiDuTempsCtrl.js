@@ -262,24 +262,25 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                                           var elt_fc_content_title = element.find( '.fc-list-item-title' );
                                                           if ( elt_fc_content_title.length > 0 && ( !_(event.details.cours).isNull() || !_(event.details.devoirs).isEmpty() ) ) {
-                                                              elt_fc_content_title.append( '<br>' );
-                                                              console.log(event)
+                                                              var event_content = elt_fc_content_title.html();
 
-                                                              elt_fc_content_title.append( '<div class="col-md-4 sequence-pedagogique" style="height: 100%">');
-                                                              elt_fc_content_title.append( !_(event.details.cours).isNull() ? event.details.cours.contenu : '' );
-                                                              elt_fc_content_title.append( '</div>' );
+                                                              event_content += '<br>';
 
-                                                              elt_fc_content_title.append( '<ul class="col-md-4 devoirs">' );
+                                                              event_content += '<div class="col-md-4 sequence-pedagogique" style="height: 100%">';
+                                                              event_content += !_(event.details.cours).isNull() ? event.details.cours.contenu : '';
+                                                              event_content += '</div>';
 
+                                                              event_content += '<ul class="col-md-4 devoirs">';
                                                               _(event.details.devoirs).each( function( assignement ) {
-                                                                  elt_fc_content_title.append( '  <li class="devoir">' );
-                                                                  elt_fc_content_title.append( '    <span class="type">' + assignement.type_devoir_description + '</span>' );
-                                                                  elt_fc_content_title.append( '    <span class="temps-estime">' + assignement.temps_estime * 5 + ' minutes</span>' );
-                                                                  elt_fc_content_title.append( assignement.contenu );
-                                                                  elt_fc_content_title.append( '  </li>' );
+                                                                  event_content += '  <li class="devoir">';
+                                                                  event_content += '    <span class="type">' + assignement.type_devoir_description + '</span>';
+                                                                  event_content += '    <span class="temps-estime">' + assignement.temps_estime * 5 + ' minutes</span>';
+                                                                  event_content += assignement.contenu;
+                                                                  event_content += '  </li>';
                                                               } );
+                                                              event_content += '</ul>';
 
-                                                              elt_fc_content_title.append( '</ul>' );
+                                                              elt_fc_content_title.html( event_content );
                                                           }
                                                       },
 
