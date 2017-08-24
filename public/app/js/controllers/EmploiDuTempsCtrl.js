@@ -2,10 +2,10 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller( 'EmploiDuTempsCtrl',
-                 [ '$scope', 'moment', '$stateParams', '$state', '$q', '$locale',
+                 [ '$scope', 'moment', '$state', '$q', '$locale',
                    'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'EmploisDuTemps', 'PopupsCreneau', 'CreneauxEmploiDuTemps', 'Utils', 'Annuaire',
                    'current_user',
-                   function ( $scope, moment, $stateParams, $state, $q, $locale,
+                   function ( $scope, moment, $state, $q, $locale,
                               APP_PATH, SEMAINES_VACANCES, ZONE, EmploisDuTemps, PopupsCreneau, CreneauxEmploiDuTemps, Utils, Annuaire,
                               current_user ) {
                        $scope.scope = $scope;
@@ -63,6 +63,10 @@ angular.module( 'cahierDeTextesClientApp' )
                                fc_event.end = moment( event.end );
                                fc_event.className = 'saisie-vide';
 
+                               if ( !_(fc_event.matiere).isNull() ) {
+                                   fc_event.title += ' - ' + fc_event.matiere.name;
+                               }
+
                                if ( !_(event.cours).isNull() ) {
                                    _(event.cours.devoirs).each( function( devoir ) {
                                        fc_event.has_ressources = fc_event.has_ressources || _(devoir).has( 'ressources' ) && devoir.ressources.length > 0;
@@ -115,9 +119,6 @@ angular.module( 'cahierDeTextesClientApp' )
 
                        $scope.refresh_calendar = function() {
                            $scope.calendar.events[ 0 ] = to_fullcalendar_events( $scope.filter_data( $scope.raw_data ) );
-
-                           // $stateParams.regroupements = _($scope.selected_regroupements).pluck('name');
-                           // $state.go( $state.current, $stateParams, { notify: false, reload: false } );
                        };
 
                        var retrieve_data = function( from_date, to_date ) {
@@ -128,9 +129,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                                        uid: $scope.current_user.profil_actif.type === 'TUT' ? $scope.current_user.enfant_actif.child_id : null } )
                                    .$promise
                                    .then( function success( response ) {
-                                       // $stateParams.date = moment( from_date ).toDate().toISOString().split('T')[0];
-                                       // $state.go( $state.current, $stateParams, { notify: false, reload: false } );
-
                                        $scope.raw_data = response;
                                        var groups_ids = _.chain($scope.raw_data).pluck('regroupement_id').uniq().value();
                                        var subjects_ids = _.chain($scope.raw_data).pluck('matiere_id').uniq().value();
@@ -197,7 +195,7 @@ angular.module( 'cahierDeTextesClientApp' )
                        $scope.calendar = { options: { lang: 'fr',
                                                       locale: 'fr',
                                                       height: 600,
-                                                      header: { left: '',
+                                                      header: { left: _( [ 'ENS', 'DOC' ] ).contains( $scope.current_user.profil_actif.type ) ? 'timetableWeek,textbookWeek' : '',
                                                                 center: 'title',
                                                                 right: 'today prev,next' },
                                                       firstDay: 1,
@@ -206,53 +204,68 @@ angular.module( 'cahierDeTextesClientApp' )
                                                       businessHours: { start: '7:00',
                                                                        end: '19:00',
                                                                        dow: [ 1, 2, 3, 4, 5 ] },
-                                                      timeFormat: ' ',
+                                                      titleFormat: 'D MMM YYYY, [semaine] W',
+                                                      columnFormat: 'dddd D',
+                                                      slotDuration: '00:30:00',
+                                                      slotEventOverlap: false,
                                                       ignoreTimezone: false,
-                                                      axisFormat: $locale.DATETIME_FORMATS.shortTime,
+                                                      slotLabelFormat: $locale.DATETIME_FORMATS.shortTime,
                                                       allDaySlot: false,
                                                       theme: false,
-                                                      defaultView: 'agendaWeek',
+                                                      defaultView: 'timetableWeek',
                                                       editable: can_edit,
                                                       eventDurationEditable: can_edit,
                                                       eventStartEditable: can_edit,
                                                       selectable: can_edit,
                                                       selectHelper: true,
                                                       weekends: $scope.current_user.parametrage_cahier_de_textes.affichage_week_ends,
+                                                      // view specific options [https://fullcalendar.io/docs/views/View-Specific-Options/]
+                                                      views: {
+                                                          timetableWeek: {
+                                                              type: 'agenda',
+                                                              duration: { weeks: 1 },
+                                                              buttonText: 'Emploi du temps',
+                                                              displayEventTime: false
+                                                          },
+                                                          textbookWeek: {
+                                                              type: 'list',
+                                                              duration: { weeks: 1 },
+                                                              buttonText: 'Cahier de textes'
+                                                          }
+                                                      },
 
                                                       viewRender: function( view, element ) {
                                                           $scope.current_user.date = view.start;
-                                                          $scope.n_week = view.start.week();
-                                                          $scope.c_est_les_vacances = Utils.sont_ce_les_vacances( $scope.n_week, $scope.zone );
+                                                          $scope.c_est_les_vacances = Utils.sont_ce_les_vacances( view.start.week(), $scope.zone );
 
                                                           retrieve_data( view.start.toDate(), view.end.toDate() );
                                                       },
 
-                                                      eventRender: function( event, element ) {
-                                                          // FIXME: manipulation du DOM dans le contrôleur, sale, mais obligé pour l'interprétation du HTML ?
-                                                          var elt_fc_content_title = element.find( '.fc-title' );
-                                                          var elt_fc_content = element.find( '.fc-content' );
+                                                      eventRender: function( event, element, view ) {
+                                                          if ( view.type.match( /^agenda.*/ ) ) {
+                                                              var elt_fc_content = element.find( '.fc-content' );
 
-                                                          if ( !_(event.matiere).isUndefined() ) {
-                                                              elt_fc_content_title.append( ' - ' + event.matiere.name );
-                                                          }
+                                                              // if ( event.has_resources ) {
+                                                              //     elt_fc_content.prepend( '<i class="glyphicon glyphicon-paperclip"></i>' );
+                                                              // }
 
-                                                          if ( event.has_resources ) {
-                                                              elt_fc_content.prepend( '<i class="glyphicon glyphicon-paperclip"></i>' );
-                                                          }
-                                                          if ( $scope.current_user.profil_actif.type !== 'ELV' ) {
-                                                              if ( event.temps_estime > 0 ) {
-                                                                  var class_couleur = '';
-                                                                  if (event.temps_estime  < 4 ) {
-                                                                      class_couleur = ' label-success';
-                                                                  } else if (event.temps_estime  < 8 ) {
-                                                                      class_couleur = ' label-info';
-                                                                  } else if (event.temps_estime  < 12 ) {
-                                                                      class_couleur = ' label-warning';
-                                                                  } else if (event.temps_estime  <= 15 ) {
-                                                                      class_couleur = ' label-danger';
+                                                              if ( !_( [ 'ELV', 'TUT' ] ).contains( $scope.current_user.profil_actif.type ) ) {
+                                                                  if ( event.temps_estime > 0 ) {
+                                                                      var class_couleur = '';
+                                                                      if (event.temps_estime  < 4 ) {
+                                                                          class_couleur = ' label-success';
+                                                                      } else if (event.temps_estime  < 8 ) {
+                                                                          class_couleur = ' label-info';
+                                                                      } else if (event.temps_estime  < 12 ) {
+                                                                          class_couleur = ' label-warning';
+                                                                      } else if (event.temps_estime  <= 15 ) {
+                                                                          class_couleur = ' label-danger';
+                                                                      }
+                                                                      elt_fc_content.prepend( '<div class="est-time est-time-' + event.temps_estime + class_couleur + '"></div>' );
                                                                   }
-                                                                  elt_fc_content.prepend( '<div class="est-time est-time-' + event.temps_estime + class_couleur + '"></div>' );
                                                               }
+                                                          } else {
+                                                              event.title += '\n\ntralala\n\nbilibili'
                                                           }
                                                       },
 
