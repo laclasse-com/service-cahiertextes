@@ -2,8 +2,12 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller('PrincipalRegroupementsCtrl',
-                [ '$scope', '$locale', '$q', 'API', 'Annuaire', 'CreneauxEmploiDuTemps', 'current_user', 'PIECHART_DEFINITION', 'MULTIBARCHART_DEFINITION',
-                  function ( $scope, $locale, $q, API, Annuaire, CreneauxEmploiDuTemps, current_user, PIECHART_DEFINITION, MULTIBARCHART_DEFINITION ) {
+                [ '$scope', '$locale', '$q',
+                  'API', 'Annuaire', 'CreneauxEmploiDuTemps', 'PIECHART_DEFINITION', 'MULTIBARCHART_DEFINITION',
+                  'current_user',
+                  function ( $scope, $locale, $q,
+                             API, Annuaire, CreneauxEmploiDuTemps, PIECHART_DEFINITION, MULTIBARCHART_DEFINITION,
+                             current_user ) {
                       var ctrl = $scope;
                       ctrl.scope = $scope;
 
@@ -79,33 +83,10 @@ angular.module( 'cahierDeTextesClientApp' )
                                                                                                 value: regroupement.filled - regroupement.validated },
                                                                                               { label: 'saisies visées',
                                                                                                 value: regroupement.validated } ];
+
                                                             return individualChart;
                                                         });
                                                 } };
-
-                      ctrl.extract_matieres = function( data ) {
-                          return Annuaire.get_subjects( _.chain(data)
-                                                        .pluck('matieres')
-                                                        .flatten()
-                                                        .pluck( 'matiere_id' )
-                                                        .uniq()
-                                                        .value() )
-                              .then( function( response ) {
-                                  ctrl.matieres = response.data;
-
-                                  return response.data;
-                              } );
-                      };
-
-                      ctrl.extract_regroupements = function( data ) {
-                          return Annuaire.get_groups( _(data).pluck( 'regroupement_id' ) )
-                              .then( function( response ) {
-                                  ctrl.regroupements = response.data;
-                                  ctrl.select_all_regroupements();
-
-                                  return response.data;
-                              } );
-                      };
 
                       ctrl.process_data = function() {
                           if ( ctrl.raw_data.length > 0 ) {
@@ -233,8 +214,21 @@ angular.module( 'cahierDeTextesClientApp' )
                                   ctrl.empty = _(ctrl.raw_data[ 0 ]).isEmpty();
 
                                   if ( !ctrl.empty ) {
-                                      ctrl.extract_matieres( ctrl.raw_data );
-                                      ctrl.extract_regroupements( ctrl.raw_data );
+                                      Annuaire.get_subjects( _.chain(ctrl.raw_data)
+                                                             .pluck('matieres')
+                                                             .flatten()
+                                                             .pluck( 'matiere_id' )
+                                                             .uniq()
+                                                             .value() )
+                                          .then( function( response ) {
+                                              ctrl.matieres = response.data;
+                                          } );
+
+                                      Annuaire.get_groups( _(ctrl.raw_data).pluck( 'regroupement_id' ) )
+                                          .then( function( response ) {
+                                              ctrl.regroupements = response.data;
+                                              ctrl.select_all_regroupements();
+                                          } );
                                   }
                               });
                       };
