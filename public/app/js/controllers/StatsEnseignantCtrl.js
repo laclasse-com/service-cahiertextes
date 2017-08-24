@@ -52,13 +52,13 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                                          $scope.graphiques.multiBarChart.data[0].values.push( { key: nom_regroupement,
                                                                                                                 x: nom_regroupement,
-                                                                                                                y: filled } );
-                                                 $scope.graphiques.multiBarChart.data[1].values.push( { key: nom_regroupement,
-                                                                                                        x: nom_regroupement,
-                                                                                                        y: validated } );
+                                                                                                                y: filled - validated } );
+                                                         $scope.graphiques.multiBarChart.data[1].values.push( { key: nom_regroupement,
+                                                                                                                x: nom_regroupement,
+                                                                                                                y: validated } );
 
-                                                 $scope.graphiques.pieChart.data[ 0 ].value += filled - validated;
-                                                 $scope.graphiques.pieChart.data[ 1 ].value += validated;
+                                                         $scope.graphiques.pieChart.data[ 0 ].value += filled - validated;
+                                                         $scope.graphiques.pieChart.data[ 1 ].value += validated;
                                                      } );
                                              }
                                            };
@@ -108,12 +108,12 @@ angular.module( 'cahierDeTextesClientApp' )
                                .then( function confirm() {
                                    var counter = 0;
                                    _.chain($scope.raw_data)
-                                         .reject( function( saisie ) { return saisie.valide || saisie.recent; } )
-                                         .each( function( saisie ) {
-                                             saisie.disable_toastr = true;
-                                             $scope.valide( saisie );
-                                             counter++;
-                                         } );
+                                       .reject( function( saisie ) { return saisie.valide || saisie.recent; } )
+                                       .each( function( saisie ) {
+                                           saisie.disable_toastr = true;
+                                           $scope.valide( saisie );
+                                           counter++;
+                                       } );
                                    if ( counter > 0 ) {
                                        var pluriel = counter > 1 ? 's' : '';
                                        var message = counter + ' séquence' + pluriel + ' pédagogique' + pluriel + ' visée' + pluriel + '.';
@@ -178,7 +178,10 @@ angular.module( 'cahierDeTextesClientApp' )
                                    }
                                    saisie.group = _($scope.enseignant.liste_regroupements).findWhere({ id: saisie.regroupement_id });
                                    if ( _(saisie.group).isUndefined() ) {
-                                       saisie.group = Annuaire.get_group( saisie.regroupement_id );
+                                       Annuaire.get_group( saisie.regroupement_id )
+                                           .then( function success( response ) {
+                                               saisie.group = response.data;
+                                           } );
                                    }
 
                                    return saisie;
