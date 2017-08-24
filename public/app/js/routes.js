@@ -191,17 +191,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                }
                            }
                        })
-                       .state('enseignant.cahier_de_textes', {
-                           parent: 'enseignant',
-                           url: '/cahier_de_textes/:date/:regroupements',
-                           resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ENS', 'DOC' ] ); } ] },
-                           views: {
-                               'content': {
-                                   templateUrl: 'views/cahier_de_textes.html',
-                                   controller: 'CahierDeTextesCtrl'
-                               }
-                           }
-                       })
                        .state('enseignant.stats', {
                            parent: 'enseignant',
                            url: '/stats',

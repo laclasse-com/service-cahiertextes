@@ -242,30 +242,44 @@ angular.module( 'cahierDeTextesClientApp' )
                                                       },
 
                                                       eventRender: function( event, element, view ) {
-                                                          if ( view.type.match( /^agenda.*/ ) ) {
-                                                              var elt_fc_content = element.find( '.fc-content' );
+                                                          var elt_fc_content = element.find( '.fc-content' );
 
-                                                              // if ( event.has_resources ) {
-                                                              //     elt_fc_content.prepend( '<i class="glyphicon glyphicon-paperclip"></i>' );
-                                                              // }
-
-                                                              if ( !_( [ 'ELV', 'TUT' ] ).contains( $scope.current_user.profil_actif.type ) ) {
-                                                                  if ( event.temps_estime > 0 ) {
-                                                                      var class_couleur = '';
-                                                                      if (event.temps_estime  < 4 ) {
-                                                                          class_couleur = ' label-success';
-                                                                      } else if (event.temps_estime  < 8 ) {
-                                                                          class_couleur = ' label-info';
-                                                                      } else if (event.temps_estime  < 12 ) {
-                                                                          class_couleur = ' label-warning';
-                                                                      } else if (event.temps_estime  <= 15 ) {
-                                                                          class_couleur = ' label-danger';
-                                                                      }
-                                                                      elt_fc_content.prepend( '<div class="est-time est-time-' + event.temps_estime + class_couleur + '"></div>' );
+                                                          if ( !_( [ 'ELV', 'TUT' ] ).contains( $scope.current_user.profil_actif.type ) ) {
+                                                              if ( event.temps_estime > 0 ) {
+                                                                  var class_couleur = '';
+                                                                  if (event.temps_estime  < 4 ) {
+                                                                      class_couleur = ' label-success';
+                                                                  } else if (event.temps_estime  < 8 ) {
+                                                                      class_couleur = ' label-info';
+                                                                  } else if (event.temps_estime  < 12 ) {
+                                                                      class_couleur = ' label-warning';
+                                                                  } else if (event.temps_estime  <= 15 ) {
+                                                                      class_couleur = ' label-danger';
                                                                   }
+                                                                  elt_fc_content.prepend( '<div class="est-time est-time-' + event.temps_estime + class_couleur + '"></div>' );
                                                               }
-                                                          } else {
-                                                              event.title += '\n\ntralala\n\nbilibili'
+                                                          }
+
+                                                          var elt_fc_content_title = element.find( '.fc-list-item-title' );
+                                                          if ( elt_fc_content_title.length > 0 && ( !_(event.details.cours).isNull() || !_(event.details.devoirs).isEmpty() ) ) {
+                                                              elt_fc_content_title.append( '<br>' );
+                                                              console.log(event)
+
+                                                              elt_fc_content_title.append( '<div class="col-md-4 sequence-pedagogique" style="height: 100%">');
+                                                              elt_fc_content_title.append( !_(event.details.cours).isNull() ? event.details.cours.contenu : '' );
+                                                              elt_fc_content_title.append( '</div>' );
+
+                                                              elt_fc_content_title.append( '<ul class="col-md-4 devoirs">' );
+
+                                                              _(event.details.devoirs).each( function( assignement ) {
+                                                                  elt_fc_content_title.append( '  <li class="devoir">' );
+                                                                  elt_fc_content_title.append( '    <span class="type">' + assignement.type_devoir_description + '</span>' );
+                                                                  elt_fc_content_title.append( '    <span class="temps-estime">' + assignement.temps_estime * 5 + ' minutes</span>' );
+                                                                  elt_fc_content_title.append( assignement.contenu );
+                                                                  elt_fc_content_title.append( '  </li>' );
+                                                              } );
+
+                                                              elt_fc_content_title.append( '</ul>' );
                                                           }
                                                       },
 
