@@ -81,7 +81,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
                     this.update_parameters = function( parametres ) {
                         return $http.put( APP_PATH + '/api/users/current/parametres',
-                                          { parametres: JSON.stringify( parametres ) } );
+                                          { parameters: JSON.stringify( parametres ) } );
                     };
                 } ] )
 
