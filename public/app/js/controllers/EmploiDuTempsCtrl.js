@@ -239,7 +239,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                                           textbookWeek: {
                                                               type: 'list',
                                                               duration: { weeks: 1 },
-                                                              buttonText: 'Cahier de textes'
+                                                              buttonText: 'Liste'
                                                           }
                                                       },
 

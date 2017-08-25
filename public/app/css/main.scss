@@ -223,42 +223,42 @@ h2 {
 }
 
 .edt-cours {
-    &.fc-event, &.fc-list-item .fc-list-item-time {
+    &.fc-event, &.fc-list-item .fc-list-item-time, &.label {
         background-color: #b2b2b2;  // gris1
     }
 }
 .edt-cours-saisie, .edt-cours-saisie-valide {
-    &.fc-event, &.fc-list-item .fc-list-item-time {
+    &.fc-event, &.fc-list-item .fc-list-item-time, &.label {
         background-color: #5b5b5b;  // gris4-moins
     }
 }
 .edt-cours-saisie-valide {
-    &.fc-event, &.fc-list-item .fc-list-item-time {
+    &.fc-event, &.fc-list-item .fc-list-item-time, &.label {
         border-left: 8px solid #80ba66; // vert
     }
 }
 .edt-permanence {
-    &.fc-event, &.fc-list-item .fc-list-item-time {
+    &.fc-event, &.fc-list-item .fc-list-item-time, &.label {
         background-color: #d5d5d5;
     }
 }
 .edt-devoir-a-faire {
-    &.fc-event, &.fc-list-item .fc-list-item-time {
+    &.fc-event, &.fc-list-item .fc-list-item-time, &.label {
         background-color: #48b4d6;  // bleu-moins
     }
 }
 .edt-devoir-fait {
-    &.fc-event, &.fc-list-item .fc-list-item-time {
+    &.fc-event, &.fc-list-item .fc-list-item-time, &.label {
         background-color: #99c665;  // vert-moins
     }
 }
 .edt-devoir-note-maison {
-    &.fc-event, &.fc-list-item .fc-list-item-time {
+    &.fc-event, &.fc-list-item .fc-list-item-time, &.label {
         background-color: #1aa1cc;  // bleu
     }
 }
 .edt-devoir-note-surveille {
-    &.fc-event, &.fc-list-item .fc-list-item-time {
+    &.fc-event, &.fc-list-item .fc-list-item-time, &.label {
         background-color: #ff9343;  // orange-brillant-moins
     }
 }
@@ -496,68 +496,6 @@ footer {
     }
     .contenu {
         margin-left: -15px;
-    }
-}
-
-.cahier-de-textes {
-    h2 { text-align: center;
-         text-transform: uppercase;
-         color: #b2b2b2;
-         font-size: 21px;
-         font-weight: bolder; }
-    .creneau {
-        list-style-type: none;
-        padding-bottom: 0;
-        .date {
-            border-bottom: 1px solid #ddd;
-            h3 {
-                margin: 0;
-                padding: 0.5em 1.7em 1em;
-                font-size: 18px;
-                font-weight: bolder;
-                color: #b2b2b2;
-            }
-        }
-        .detail {
-            border-left: 1em solid transparent;
-            padding-top: 1em;
-            padding-bottom: 1em;
-            &.vise {
-                border-color: #0f0;
-            }
-            .infos {
-                span {
-                    float: left;
-                    width: 100%;
-                }
-                .regroupement, .matiere {
-                    font-weight: bold;
-                }
-                .matiere {
-                    color: #8e8e8e;
-                }
-            }
-            .devoir {
-                list-style: none;
-                span {
-                    float: left;
-                    width: 100%;
-                }
-                .type {
-                    font-weight: bold;
-                }
-                .temps-estime {
-                    color: #b2b2b2;
-                }
-                .contenu {
-                    margin: 0;
-                }
-            }
-            .actions {
-                text-align: center;
-                padding-top: 2em;
-            }
-        }
     }
 }
 

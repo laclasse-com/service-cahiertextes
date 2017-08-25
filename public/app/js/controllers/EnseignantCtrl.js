@@ -4,7 +4,7 @@ angular.module( 'cahierDeTextesClientApp' )
     .controller('EnseignantCtrl',
                 [ '$scope', '$state', 'current_user',
                   function ( $scope, $state, current_user ) {
-                      $scope.tabs = [ { heading: 'Emploi du temps',
+                      $scope.tabs = [ { heading: 'Cahier de textes',
                                         uisref: 'enseignant.emploi_du_temps',
                                         css_class: 'glyphicon glyphicon-calendar',
                                         active: true },
