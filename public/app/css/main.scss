@@ -113,7 +113,38 @@ h2 {
     }
 }
 .fc-list-item {
-    color: #eee;
+    legend {
+        font-size: 0.8em;
+    }
+    &:hover td {
+        background: inherit;
+    }
+    .fc-list-item-time {
+        color: #eee;
+    }
+    .fc-list-item-marker {
+        display: none;
+    }
+    .fc-list-item-title {
+        background-color: #fdfdfd;
+        .sequence-pedagogique {
+            height: 100%;
+            padding: 3px;
+            fieldset {
+                border-left: 4px solid #baddad;
+            }
+        }
+        fieldset {
+            border-left: 4px solid #ddadba;
+            height: 100%;
+            .devoirs {
+                .devoir {
+                    list-style-type: none;
+                    padding: 3px;
+                }
+            }
+        }
+    }
 }
 
 .clickable-event {
@@ -192,39 +223,50 @@ h2 {
 }
 
 .edt-cours {
-    background-color: #b2b2b2;  // gris1
+    &.fc-event, &.fc-list-item .fc-list-item-time {
+        background-color: #b2b2b2;  // gris1
+    }
 }
 .edt-cours-saisie, .edt-cours-saisie-valide {
-    background-color: #5b5b5b;  // gris4-moins
+    &.fc-event, &.fc-list-item .fc-list-item-time {
+        background-color: #5b5b5b;  // gris4-moins
+    }
 }
 .edt-cours-saisie-valide {
-    border-left: 8px solid #80ba66; // vert
+    &.fc-event, &.fc-list-item .fc-list-item-time {
+        border-left: 8px solid #80ba66; // vert
+    }
 }
 .edt-permanence {
-    background-color: #d5d5d5;
+    &.fc-event, &.fc-list-item .fc-list-item-time {
+        background-color: #d5d5d5;
+    }
 }
 .edt-devoir-a-faire {
-    background-color: #48b4d6;  // bleu-moins
+    &.fc-event, &.fc-list-item .fc-list-item-time {
+        background-color: #48b4d6;  // bleu-moins
+    }
 }
 .edt-devoir-fait {
-    background-color: #99c665;  // vert-moins
+    &.fc-event, &.fc-list-item .fc-list-item-time {
+        background-color: #99c665;  // vert-moins
+    }
 }
-/* .edt-devoir-note-maison{ background-color: #00afd4 } */
-/* .edt-devoir-note-surveille{ background-color: #f56d68 } */
 .edt-devoir-note-maison {
-    background-color: #1aa1cc;  // bleu
+    &.fc-event, &.fc-list-item .fc-list-item-time {
+        background-color: #1aa1cc;  // bleu
+    }
 }
 .edt-devoir-note-surveille {
-    background-color: #ff9343;  // orange-brillant-moins
+    &.fc-event, &.fc-list-item .fc-list-item-time {
+        background-color: #ff9343;  // orange-brillant-moins
+    }
 }
 
-/* #e173ff */
-/* #70397f */
-/* #c199cc */
-/* #f1bfff */
-
 .edt-cours-saisie, .edt-devoir-a-faire, .edt-devoir-fait {
-    font-weight: bold;
+    &.fc-event {
+        font-weight: bold;
+    }
 }
 
 .timepicker {

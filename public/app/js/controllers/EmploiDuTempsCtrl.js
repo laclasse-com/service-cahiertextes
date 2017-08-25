@@ -261,24 +261,42 @@ angular.module( 'cahierDeTextesClientApp' )
                                                           }
 
                                                           var elt_fc_content_title = element.find( '.fc-list-item-title' );
-                                                          if ( elt_fc_content_title.length > 0 && ( !_(event.details.cours).isNull() || !_(event.details.devoirs).isEmpty() ) ) {
+                                                          if ( elt_fc_content_title.length > 0
+                                                               && ( !_(event.details.cours).isNull() || !_(event.details.devoirs).isEmpty() ) ) {
                                                               var event_content = elt_fc_content_title.html();
 
                                                               event_content += '<br>';
 
-                                                              event_content += '<div class="col-md-4 sequence-pedagogique" style="height: 100%">';
-                                                              event_content += !_(event.details.cours).isNull() ? event.details.cours.contenu : '';
+                                                              event_content += '<div class="col-md-6 sequence-pedagogique">';
+                                                              if ( !_(event.details.cours).isNull() ) {
+                                                                  event_content += '<fieldset>';
+                                                                  event_content += '<legend>Séquence pédagogique</legend>';
+                                                                  event_content += event.details.cours.contenu;
+                                                                  event_content += '</fieldset>';
+                                                              }
                                                               event_content += '</div>';
 
-                                                              event_content += '<ul class="col-md-4 devoirs">';
-                                                              _(event.details.devoirs).each( function( assignement ) {
-                                                                  event_content += '  <li class="devoir">';
-                                                                  event_content += '    <span class="type">' + assignement.type_devoir_description + '</span>';
-                                                                  event_content += '    <span class="temps-estime">' + assignement.temps_estime * 5 + ' minutes</span>';
-                                                                  event_content += assignement.contenu;
-                                                                  event_content += '  </li>';
-                                                              } );
-                                                              event_content += '</ul>';
+                                                              if ( !_(event.details.devoirs).isEmpty() ) {
+                                                                  event_content += '<fieldset><legend>Devoirs</legend>';
+                                                                  event_content += '<ul class="col-md-6 devoirs">';
+                                                                  _(event.details.devoirs).each( function( assignement ) {
+                                                                      var additional_classes =  $scope.current_user.profil_actif.type === 'ELV' ? (assignement.fait ? 'fait' : 'a-faire') : '';
+
+                                                                      event_content += '  <li class="devoir type' + assignement.type_devoir_id + ' ' + additional_classes + '">';
+                                                                      if ( $scope.current_user.parametrage_cahier_de_textes.affichage_types_de_devoir ) {
+                                                                          event_content += '    <span class="type">' + assignement.type_devoir_description + '</span>';
+                                                                      }
+
+                                                                      if ( assignement.temps_estime > 0 ) {
+                                                                          event_content += '    <span class="temps-estime">' + assignement.temps_estime * 5 + ' minutes</span>';
+                                                                      }
+
+                                                                      event_content += assignement.contenu;
+                                                                      event_content += '  </li>';
+                                                                  } );
+                                                                  event_content += '</ul>';
+                                                                  event_content += '</fieldset>';
+                                                              }
 
                                                               elt_fc_content_title.html( event_content );
                                                           }
