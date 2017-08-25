@@ -3,12 +3,12 @@
 angular.module( 'cahierDeTextesClientApp' )
     .component( 'displayDevoir',
                 { bindings: { devoir: '=' },
-                  template: '<div ng:class="{ \'type1\': $ctrl.devoir.type_$ctrl.devoir_id === 1,' +
-                  ' \'type2\': $ctrl.devoir.type_$ctrl.devoir_id === 2,' +
-                  ' \'type3\': $ctrl.devoir.type_$ctrl.devoir_id === 3,' +
-                  ' \'type4\': $ctrl.devoir.type_$ctrl.devoir_id === 4,' +
-                  ' \'type5\': $ctrl.devoir.type_$ctrl.devoir_id === 5,' +
-                  ' \'type6\': $ctrl.devoir.type_$ctrl.devoir_id === 6,' +
+                  template: '<div ng:class="{ \'type1\': $ctrl.devoir.type_devoir_id === 1,' +
+                  ' \'type2\': $ctrl.devoir.type_devoir_id === 2,' +
+                  ' \'type3\': $ctrl.devoir.type_devoir_id === 3,' +
+                  ' \'type4\': $ctrl.devoir.type_devoir_id === 4,' +
+                  ' \'type5\': $ctrl.devoir.type_devoir_id === 5,' +
+                  ' \'type6\': $ctrl.devoir.type_devoir_id === 6,' +
                   ' \'fait\': $ctrl.devoir.fait,' +
                   ' \'a-faire\': !$ctrl.devoir.fait }">' +
                   // '    <h5><i class="picto" ng:style="{\'background-image\':\'url(\' + app_path + \'/app/node_modules/laclasse-common-client/images/picto_matiere.svg)\'}"></i> {{$ctrl.devoir.matiere.name}} </h5>' +
