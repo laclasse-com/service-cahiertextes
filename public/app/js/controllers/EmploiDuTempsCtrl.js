@@ -3,10 +3,10 @@
 angular.module( 'cahierDeTextesClientApp' )
     .controller( 'EmploiDuTempsCtrl',
                  [ '$scope', 'moment', '$state', '$q', '$locale',
-                   'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'EmploisDuTemps', 'PopupsCreneau', 'CreneauxEmploiDuTemps', 'Utils', 'Annuaire',
+                   'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'EmploisDuTemps', 'PopupsCreneau', 'CreneauxEmploiDuTemps', 'Utils', 'Annuaire', 'User',
                    'current_user',
                    function ( $scope, moment, $state, $q, $locale,
-                              APP_PATH, SEMAINES_VACANCES, ZONE, EmploisDuTemps, PopupsCreneau, CreneauxEmploiDuTemps, Utils, Annuaire,
+                              APP_PATH, SEMAINES_VACANCES, ZONE, EmploisDuTemps, PopupsCreneau, CreneauxEmploiDuTemps, Utils, Annuaire, User,
                               current_user ) {
                        $scope.scope = $scope;
                        $scope.current_user = current_user;
@@ -16,6 +16,15 @@ angular.module( 'cahierDeTextesClientApp' )
                        var first_load = true;
 
                        $scope.uniquement_mes_creneaux = !_( [ 'EVS', 'DIR', 'ADM' ] ).contains( $scope.current_user.profil_actif.type );
+
+                       var set_preferred_view = function( view ) {
+                           $scope.current_user.parametrage_cahier_de_textes.preferredView = view; // or textbookWeek
+                           User.update_parameters( $scope.current_user.parametrage_cahier_de_textes );
+                       };
+
+                       if ( !_($scope.current_user.parametrage_cahier_de_textes).has('preferredView') ) {
+                           set_preferred_view( 'timetableWeek' );
+                       }
 
                        $scope.filter_data = function( raw_data ) {
                            if ( _( [ 'EVS', 'DIR', 'ADM' ] ).contains( $scope.current_user.profil_actif.type ) ) {
@@ -212,7 +221,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                                       slotLabelFormat: $locale.DATETIME_FORMATS.shortTime,
                                                       allDaySlot: false,
                                                       theme: false,
-                                                      defaultView: 'timetableWeek',
+                                                      defaultView: $scope.current_user.parametrage_cahier_de_textes.preferredView,
                                                       editable: can_edit,
                                                       eventDurationEditable: can_edit,
                                                       eventStartEditable: can_edit,
@@ -237,6 +246,10 @@ angular.module( 'cahierDeTextesClientApp' )
                                                       viewRender: function( view, element ) {
                                                           $scope.current_user.date = view.start;
                                                           $scope.c_est_les_vacances = Utils.sont_ce_les_vacances( view.start.week(), $scope.zone );
+
+                                                          if ( view.name !== $scope.current_user.parametrage_cahier_de_textes.preferredView ) {
+                                                              set_preferred_view( view.name );
+                                                          }
 
                                                           retrieve_data( view.start.toDate(), view.end.toDate() );
                                                       },
