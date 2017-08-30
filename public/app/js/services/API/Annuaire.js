@@ -27,11 +27,11 @@ angular.module( 'cahierDeTextesClientApp' )
                    });
 
                    service.get_structure = _.memoize( function( uai ) {
-                       return $http.get( URL_ENT + '/api/structures/' + uai );
+                       return $http.get( URL_ENT + '/api/structures/' + uai + '?expand=false' );
                    });
 
                    service.get_group = _.memoize( function( group_id ) {
-                       return $http.get( URL_ENT + '/api/groups/' + group_id )
+                       return $http.get( URL_ENT + '/api/groups/' + group_id + '?expand=false' )
                            .then( function success( response ) {
                                response.data.full_type = beautify_group_type( response.data.type );
 

@@ -273,6 +273,10 @@ angular.module( 'cahierDeTextesClientApp' )
                                                               }
                                                           }
 
+                                                          if ( event.has_resources ) {
+                                                              elt_fc_content.prepend( '<i class="glyphicon glyphicon-paperclip"></i>' );
+                                                          }
+
                                                           var elt_fc_content_title = element.find( '.fc-list-item-title' );
                                                           if ( elt_fc_content_title.length > 0
                                                                && ( !_(event.details.cours).isNull() || !_(event.details.devoirs).isEmpty() ) ) {

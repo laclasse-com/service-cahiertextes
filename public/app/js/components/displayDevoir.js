@@ -15,11 +15,11 @@ angular.module( 'cahierDeTextesClientApp' )
                   '    <h6><i class="picto" ng:style="{\'background-image\':\'url(\' + app_path + \'/app/node_modules/laclasse-common-client/images/picto_devoir.svg)\'}"></i> {{$ctrl.devoir.type_devoir_description}} : </h6>' +
                   // '<!-- <li ng:if="$ctrl.devoir.temps_estime > 0"><span><i class="picto" ng:style="{\'background-image\':\'url(\' + app_path + \'/app/node_modules/laclasse-common-client/images/picto_temps.svg)\'}"></i> Temps estimé : <em>{{$Ctrl.devoir.temps_estime * 5}} minutes</em></span></li> -->' +
                   '    <div class="alert alert-default" ng:bind-html="$ctrl.devoir.contenu"></div>' +
-                  // '    <div class="row col-md-12 ressources">' +
-                  // '      <div class="attached-document" ng:repeat="ressource in $ctrl.devoir.ressources">' +
-                  // '        <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>' +
-                  // '      </div>' +
-                  // '    </div>' +
+                  '    <div class="row col-md-12 ressources">' +
+                  '      <div class="attached-document" ng:repeat="ressource in $ctrl.devoir.ressources">' +
+                  '        <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>' +
+                  '      </div>' +
+                  '    </div>' +
                   '</div>',
                   controller: [ '$sce', 'DOCS_URL',
                                 function( $sce, DOCS_URL ) {
@@ -27,9 +27,9 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                     ctrl.$onInit = function() {
                                         ctrl.devoir.contenu = $sce.trustAsHtml( ctrl.devoir.contenu );
-                                        // _(ctrl.devoir.ressources).each( function( ressource ) {
-                                        //     ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
-                                        // } );
+                                        _(ctrl.devoir.ressources).each( function( ressource ) {
+                                            ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+                                        } );
                                     };
                                 } ]
                 } );
