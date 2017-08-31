@@ -18,7 +18,7 @@ module CahierDeTextesApp
             query = query.where( cours_id: params['cours_ids']) if params.key?( 'cours_ids' )
             query = query.where( Sequel.lit( "DATE_FORMAT( date_due, '%Y-%m-%d') >= '#{Date.parse( params['date_due>'] )}'" ) ) if params.key?( 'date_due>' )
             query = query.where( Sequel.lit( "DATE_FORMAT( date_due, '%Y-%m-%d') <= '#{Date.parse( params['date_due<'] )}'" ) ) if params.key?( 'date_due<' )
-            query = query.where( Sequel.~( Sequel.qualify( "devoirs", "deleted" ) ) ) unless params.key?( 'include_deleted')
+            query = query.where( Sequel.~( Sequel.qualify( 'devoirs', 'deleted' ) ) ) unless params.key?( 'include_deleted')
 
             data = query.naked.all
 
@@ -131,8 +131,8 @@ module CahierDeTextesApp
           app.put '/api/devoirs/:id/copie/cours/:cours_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date_due/:date_due' do
             user_needs_to_be( %w[ ENS DOC ] )
 
-            request.body.rewind
-            body = JSON.parse( request.body.read )
+            # request.body.rewind
+            # body = JSON.parse( request.body.read )
 
             devoir = Devoir[ params['id'] ]
             halt( 404, 'Devoir inconnu' ) if devoir.nil?

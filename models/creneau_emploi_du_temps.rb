@@ -39,18 +39,10 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
     h
   end
 
-  def to_deep_hash( date_debut, date_fin, expand )
+  def to_deep_hash( _date_debut, _date_fin, _expand )
     h = to_hash
     h[:salles] = salles
     h[:vierge] = cours.count.zero? && devoirs.count.zero?
-    #if expand
-    # p date_debut
-    # p date_fin
-    # date_debut = Date.parse( date_debut )
-    # date_fin = Date.parse( date_fin )
-    # h[:cours] = Cours.where( creneau_emploi_du_temps_id: id ).where( deleted: false ).where( date_cours: date_debut .. date_fin ).all
-    # h[:devoirs] = Devoir.where( creneau_emploi_du_temps_id: id ).where( date_due: date_debut .. date_fin ).all
-    #end
 
     h
   end
@@ -157,8 +149,6 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
     creneau_salle.update( semainier: semainier_salle ) unless semainier_salle.nil?
   end
 
-  # rubocop:disable Metrics/PerceivedComplexity
-  # rubocop:disable Metrics/CyclomaticComplexity
   def modifie( params )
     update( debut: params['heure_debut'] ) if params.key?( 'heure_debut' )
     update( fin: params['heure_fin'] ) if params.key?( 'heure_fin' )
@@ -180,8 +170,6 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
     puts e.message
     puts e.backtrace
   end
-  # rubocop:enable Metrics/PerceivedComplexity
-  # rubocop:enable Metrics/CyclomaticComplexity
 
   def deep_destroy
     remove_all_cours

@@ -3,7 +3,6 @@ require 'rubygems'
 
 ENV['RACK_ENV'] ||= 'test'
 
-require 'rack/test'
 require 'sequel'
 require 'tsort'
 require 'rspec/matchers' # required by equivalent-xml custom matcher `be_equivalent_to`

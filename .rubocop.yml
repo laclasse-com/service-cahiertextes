@@ -57,4 +57,13 @@ Metrics/MethodLength:
 Lint/BlockAlignment:
   Enabled: false
 
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+Metrics/ModuleLength:
+  Enabled: false
+
 inherit_from: .rubocop_todo.yml

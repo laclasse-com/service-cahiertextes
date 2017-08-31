@@ -49,8 +49,7 @@ module LaClasse
         parametres = DataManagement::Accessors.create_or_get( UserParameters,
                                                               uid: session['user'] )
         parametres.update( date_connexion: Time.now )
-        parametres.update( parameters: { affichage_types_de_devoir: true,
-                                         affichage_week_ends: false }.to_json ) if parametres[:parameters].empty?
+        parametres.update( parameters: { affichage_types_de_devoir: true, affichage_week_ends: false }.to_json ) if parametres[:parameters].empty?
         parametres.save
 
         utilisateur[ 'parametrage_cahier_de_textes' ] = JSON.parse( parametres[:parameters] )

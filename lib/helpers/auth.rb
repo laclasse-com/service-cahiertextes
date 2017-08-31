@@ -1,4 +1,5 @@
 # coding: utf-8
+
 module LaClasse
   module Helpers
     module Auth
@@ -8,7 +9,8 @@ module LaClasse
         unless cookies[:LACLASSE_AUTH].nil?
           RestClient::Request.execute(
             method: :get,
-            url: "#{ANNUAIRE[:url]}/sessions/#{cookies[:LACLASSE_AUTH]}") do |response, request, result|
+            url: "#{ANNUAIRE[:url]}/sessions/#{cookies[:LACLASSE_AUTH]}"
+          ) do |response, _request, result|
             if result.is_a?(Net::HTTPSuccess)
               session = JSON.parse(response)
               # put the current user in the AUTH_USER for the HTTP request logger
@@ -39,7 +41,7 @@ module LaClasse
           route += "?#{env['QUERY_STRING']}" unless env['QUERY_STRING'].empty?
           service = "#{protocol}://#{env['HTTP_HOST']}#{route}"
         end
-        redirect "/sso/login?ticket=false&service=" + URI.escape(service)
+        redirect '/sso/login?ticket=false&service=' + URI.escape(service)
       end
     end
   end

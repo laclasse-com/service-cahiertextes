@@ -11,8 +11,6 @@ class Hash
       { result.root.name.to_sym => xml_node_to_hash( result.root ) }
     end
 
-    # rubocop:disable Metrics/CyclomaticComplexity
-    # rubocop:disable Metrics/PerceivedComplexity
     def xml_node_to_hash( node )
       # If we are at the root of the document, start the hash
       return node.content.to_s unless node.element?
@@ -49,7 +47,5 @@ class Hash
 
       result_hash
     end
-    # rubocop:enable Metrics/PerceivedComplexity
-    # rubocop:enable Metrics/CyclomaticComplexity
   end
 end
