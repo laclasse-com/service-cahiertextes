@@ -53,11 +53,12 @@ angular.module( 'cahierDeTextesClientApp' )
                            } );
                    } );
 
-                   Documents.ajout_au_cahier_de_textes = function( classe, hash ) {
+                   Documents.ajout_au_cahier_de_textes = function( classe, node ) {
                        return Documents.get_ctxt_folder_hash( classe )
                            .then( function( ctxt_folder_hash ) {
                                var params = { cmd: 'paste',
-                                              'targets[]': [ hash ],
+                                              'targets[]': node.hash,
+                                              'renames[]': node.name,
                                               dst: ctxt_folder_hash,
                                               cut: false };
 

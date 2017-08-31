@@ -69,7 +69,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                                     target.ressources = [];
                                                 }
                                                 if ( _( target.ressources ).findWhere( { hash: node.hash } ) === undefined ) {
-                                                    Documents.ajout_au_cahier_de_textes( regroupement, node.hash )
+                                                    Documents.ajout_au_cahier_de_textes( regroupement, node )
                                                         .then( $scope.addCallback( target ),
                                                                function ( response ) {
                                                                    console.debug( response.error );
