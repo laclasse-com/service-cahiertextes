@@ -76,6 +76,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                    form_data.append( 'cmd', 'upload' );
                                    form_data.append( 'target', ctxt_folder_hash );
                                    form_data.append( 'upload[]', file );
+                                   form_data.append( 'renames[]', file.name );
 
                                    return $http.post( DOCS_URL + '/api/connector',
                                                       form_data,
