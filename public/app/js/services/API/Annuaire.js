@@ -27,7 +27,7 @@ angular.module( 'cahierDeTextesClientApp' )
                    });
 
                    service.get_structure = _.memoize( function( uai ) {
-                       return $http.get( URL_ENT + '/api/structures/' + uai + '?expand=false' );
+                       return $http.get( URL_ENT + '/api/structures/' + uai );
                    });
 
                    service.get_group = _.memoize( function( group_id ) {
