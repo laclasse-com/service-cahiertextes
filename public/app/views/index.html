@@ -1,13 +1,6 @@
 <header ng:controller="HeaderCtrl"
         ng:class="{'embedded': embedded}">
 
-    <div class="col-md-12 user" ng:if="!embedded" ng:cloak>
-        <div class="pull-right">
-            {{current_user['prenom']}} {{current_user['nom']}}
-            <a class="btn btn-danger" href="logout" uib-tooltip="Déconnexion" tooltip-placement="bottom"><i class="glyphicon glyphicon-log-out"></i></a>
-        </div>
-    </div>
-
     <div class="onglets">
         <a class="btn"
            ng:repeat="tab in tabs"
