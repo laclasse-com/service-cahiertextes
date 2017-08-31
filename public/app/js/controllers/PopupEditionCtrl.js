@@ -490,6 +490,12 @@ angular.module( 'cahierDeTextesClientApp' )
                                                                hash: _item.hash,
                                                                url: $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + _item.hash ) } );
                                        ctrl.is_dirty( item );
+
+                                       if ( !_(response.removed).isEmpty() ) {
+                                           item.ressources = _(item.ressources).reject( function( ressource ) {
+                                               return _(response.removed).includes( ressource.hash );
+                                           } );
+                                       }
                                    }
                                };
                            };
