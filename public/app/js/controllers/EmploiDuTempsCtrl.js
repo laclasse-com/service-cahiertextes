@@ -72,7 +72,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                fc_event.end = moment( event.end );
                                fc_event.className = 'saisie-vide';
 
-                               if ( !_(fc_event.matiere).isNull() ) {
+                               if ( !_(fc_event.matiere).isUndefined() ) {
                                    fc_event.title += ' - ' + fc_event.matiere.name;
                                }
 
