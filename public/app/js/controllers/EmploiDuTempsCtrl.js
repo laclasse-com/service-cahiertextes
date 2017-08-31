@@ -103,7 +103,9 @@ angular.module( 'cahierDeTextesClientApp' )
                                        fc_event.className = 'edt-devoir-note-maison';
                                        break;
                                    default:
-                                       fc_event.className = _.chain(event.devoirs).pluck( 'fait' ).contains( true ).value() ? 'edt-devoir-fait' : 'edt-devoir-a-faire';
+                                       if ( $scope.current_user.profil_actif.type === 'ELV' ) {
+                                           fc_event.className = _.chain(event.devoirs).pluck( 'fait' ).contains( true ).value() ? 'edt-devoir-fait' : 'edt-devoir-a-faire';
+                                       }
                                    }
                                } else {
                                    fc_event.className = 'edt-cours';
