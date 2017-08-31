@@ -164,7 +164,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
 
     save
 
-    update_salle( params[:salle_id], params['semainier_salle'] ) if params.key?( 'salle_id' )
+    update_salle( params['salle_id'], params['semainier_salle'] ) if params.key?( 'salle_id' )
   rescue StandardError => e
     puts "Can't do that with #{self}"
     puts e.message
