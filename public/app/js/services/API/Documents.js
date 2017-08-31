@@ -6,7 +6,7 @@ angular.module( 'cahierDeTextesClientApp' )
                function( $http, $q, DOCS_URL, Annuaire ) {
                    var Documents = this;
 
-                   Documents.list_files = function( root ) {
+                   Documents.list_files = _.memoize( function( root ) {
                        var params = { cmd: 'open',
                                       target: '' };
 
@@ -16,9 +16,9 @@ angular.module( 'cahierDeTextesClientApp' )
                            params.target = root;
                        }
                        return $http.get( DOCS_URL + '/api/connector', { params: params } );
-                   };
+                   } );
 
-                   Documents.get_ctxt_folder_hash = function( classe ) {
+                   Documents.get_ctxt_folder_hash = _.memoize( function( classe ) {
                        var structure,
                            structure_root,
                            classes_root,
@@ -51,7 +51,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                return cdt_root.hash;
                            } );
-                   };
+                   } );
 
                    Documents.ajout_au_cahier_de_textes = function( classe, hash ) {
                        return Documents.get_ctxt_folder_hash( classe )
