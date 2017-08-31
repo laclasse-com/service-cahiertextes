@@ -46,19 +46,16 @@
                             devoir="devoir"></display-devoir>
 
             <display-sequence-pedagogique class="col-md-5 alert alert-default"
+                                          ng:if="devoir.cours.contenu !== ''"
                                           sp="devoir.cours"></display-sequence-pedagogique>
-            <!--
-                 <div class="col-md-1 detail">
-                 <button class="btn btn-default" ng:click="popup_display( devoir )">Détail</button>
-                 </div> -->
 
             <div class="col-md-2 todo">
                 <switch-devoir devoir="devoir"
                                ng:if="current_user.profil_actif.type === 'ELV'" ></switch-devoir>
             </div>
-</div>
+        </div>
 
-<div class="clearfix"></div>
+        <div class="clearfix"></div>
     </li>
 </ul>
 <span class="no-data" ng:if="!devoirs">

@@ -230,8 +230,8 @@ angular.module( 'cahierDeTextesClientApp' )
                    this.query_types_de_devoir = _.memoize( function() {
                        return TypesDeDevoir.query();
                    } );
-                   this.get_type_de_devoir = _.memoize( function( params ) {
-                       return TypesDeDevoir.get( params );
+                   this.get_type_de_devoir = _.memoize( function( id ) {
+                       return TypesDeDevoir.get({ id: id });
                    } );
 
                    this.query_emplois_du_temps = function() {
