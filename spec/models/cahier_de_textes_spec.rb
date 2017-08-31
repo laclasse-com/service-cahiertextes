@@ -56,10 +56,5 @@ describe CahierDeTextes do
     stats = CahierDeTextes.first.statistiques
 
     expect( stats[:regroupement_id] ).to eq '2'
-    expect( stats[:matieres].count ).to eq 1
-    expect( stats[:matieres][0][:matiere_id] ).to eq '001122'
-    expect( stats[:matieres][0][:mois].count ).to eq 12
-    expect( stats[:matieres][0][:mois][8][:filled] ).to eq 1
-    expect( stats[:matieres][0][:mois][8][:validated] ).to eq 0
   end
 end

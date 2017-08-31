@@ -55,47 +55,47 @@ describe CreneauEmploiDuTemps do
   end
 
   it 'def modifie( params ) # hours as string' do
-    @creneau.modifie( heure_debut: '12:34',
-                      heure_fin: '23:45' )
+    @creneau.modifie( 'debut' => '12:34',
+                      'fin' => '23:45' )
     expect( @creneau.debut.iso8601.split('+').first.split('T').last ).to eq '12:34:00'
     expect( @creneau.fin.iso8601.split('+').first.split('T').last ).to eq '23:45:00'
   end
 
   it 'def modifie( params ) # hours as Time' do
-    @creneau.modifie( heure_debut: Time.parse( '10:02' ),
-                      heure_fin: Time.parse( '21:09' ) )
+    @creneau.modifie( 'debut' => Time.parse( '10:02' ),
+                      'fin' => Time.parse( '21:09' ) )
     expect( @creneau.debut.iso8601.split('+').first.split('T').last ).to eq '10:02:00'
     expect( @creneau.fin.iso8601.split('+').first.split('T').last ).to eq '21:09:00'
   end
 
   it 'def modifie( params ) # change matiere' do
-    @creneau.modifie( matiere_id: 'dummy_matiere_id' )
+    @creneau.modifie( 'matiere_id' => 'dummy_matiere_id' )
     expect( @creneau.matiere_id ).to eq 'dummy_matiere_id'
   end
 
   it 'def modifie( params ) # change day' do
-    @creneau.modifie( jour_de_la_semaine: @jour_de_la_semaine + 1 )
+    @creneau.modifie( 'jour_de_la_semaine' => @jour_de_la_semaine + 1 )
     expect( @creneau.jour_de_la_semaine ).to eq @jour_de_la_semaine + 1
   end
 
   it 'def modifie( params ) # add regroupement' do
-    @creneau.modifie( regroupement_id: 999_999 )
+    @creneau.modifie( 'regroupement_id' => 999_999 )
     expect( @creneau.regroupement_id ).to eq 999_999
     expect( @creneau.semainier ).to eq 2**52 - 1
   end
 
   it 'def modifie( params ) # change regroupement' do
-    @creneau.modifie( regroupement_id: 999_999 )
+    @creneau.modifie( 'regroupement_id' => 999_999 )
     expect( @creneau.regroupement_id ).to eq 999_999
 
-    @creneau.modifie( regroupement_id: 999_999,
-                      semainier_regroupement: 123)
+    @creneau.modifie( 'regroupement_id' => 999_999,
+                      'semainier_regroupement' => 123)
     expect( @creneau.regroupement_id ).to eq 999_999
     expect( @creneau.semainier ).to eq 123
   end
 
   it 'def modifie( params ) # add salle' do
-    @creneau.modifie( salle_id: @salle.id )
+    @creneau.modifie( 'salle_id' => @salle.id )
     expect( @creneau.salles.count ).to eq 1
     expect( CreneauEmploiDuTempsSalle[ creneau_emploi_du_temps_id: @creneau.id,
                                        salle_id: @salle.id ] ).to_not be nil
@@ -104,14 +104,14 @@ describe CreneauEmploiDuTemps do
   end
 
   it 'def modifie( params ) # change salle' do
-    @creneau.modifie( salle_id: @salle.id )
+    @creneau.modifie( 'salle_id' => @salle.id )
     expect( @creneau.salles.count ).to eq 1
     expect( CreneauEmploiDuTempsSalle[ creneau_emploi_du_temps_id: @creneau.id,
                                        salle_id: @salle.id ] ).to_not be nil
     expect( CreneauEmploiDuTempsSalle[ creneau_emploi_du_temps_id: @creneau.id,
                                        salle_id: @salle.id ].semainier ).to eq 2**52 - 1
-    @creneau.modifie( salle_id: @salle.id,
-                      semainier_salle: 123)
+    @creneau.modifie( 'salle_id' => @salle.id,
+                      'semainier_salle' => 123)
     expect( @creneau.salles.count ).to eq 1
     expect( CreneauEmploiDuTempsSalle[ creneau_emploi_du_temps_id: @creneau.id,
                                        salle_id: @salle.id ] ).to_not be nil
