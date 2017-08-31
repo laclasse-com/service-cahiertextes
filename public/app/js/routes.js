@@ -63,17 +63,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                }
                            }
                        })
-                       .state('principal.regroupements', {
-                           parent: 'principal',
-                           url: '/regroupements',
-                           resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } ] },
-                           views: {
-                               'content': {
-                                   templateUrl: 'views/regroupements.html',
-                                   controller: 'PrincipalRegroupementsCtrl'
-                               }
-                           }
-                       })
                        .state('principal.emploi_du_temps', {
                            parent: 'principal',
                            url: '/emploi_du_temps/:date/:regroupements',
