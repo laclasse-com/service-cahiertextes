@@ -35,7 +35,10 @@ module CahierDeTextesApp
         holidays_weeks.concat( ( holidays_weeks.last .. holidays_weeks.first ).to_a )
 
         holidays_weeks.sort.uniq
-      rescue => _e
+      rescue => e
+        puts e.message
+        puts e.backtrace
+
         []
       end
 
