@@ -24,7 +24,9 @@ module CahierDeTextesApp
 
           next unless this_year
 
-          [ e.dtstart.to_date.cweek + ( e.description.downcase.include?( 'rentrée' ) ? 0 : 1 ),
+          # puts "e.description : #{e.dtstart.to_date.cweek} ; #{e.dtend.nil? ? '-' : e.dtend.to_date.cweek}"
+
+          [ e.dtstart.to_date.cweek + ( e.description.downcase.include?( 'rentrée' ) ? ( e.dtstart.to_date.cwday == 1 ? -1 : 0 ) : 1 ),
             e.dtend.nil? ? nil : e.dtend.to_date.cweek ]
         end.flatten.compact
 
