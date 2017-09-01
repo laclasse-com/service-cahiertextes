@@ -23,32 +23,33 @@ angular.module( 'cahierDeTextesClientApp' )
                function( $provide ) {
                    //traduction de textAngular
                    $provide.decorator( 'taTranslations',
-                                       function( $delegate ) {
-                                           $delegate.html.tooltip = 'Basculer entre les vues HTML et texte enrichi';
-                                           $delegate.justifyLeft.tooltip = 'Justifier à gauche';
-                                           $delegate.justifyCenter.tooltip = 'Centrer';
-                                           $delegate.justifyRight.tooltip = 'Justifier à droite';
-                                           $delegate.bold.tooltip = 'Mettre en gras';
-                                           $delegate.italic.tooltip = 'Mettre en italique';
-                                           $delegate.underline.tooltip = 'Souligner';
-                                           $delegate.insertLink.tooltip = 'Insérer un lien';
-                                           $delegate.insertLink.dialogPrompt = 'Lien à insérer';
-                                           $delegate.editLink.targetToggle.buttontext = 'Le lien s\'ouvrira dans une nouvelle fenêtre';
-                                           $delegate.editLink.reLinkButton.tooltip = 'Éditer le lien';
-                                           $delegate.editLink.unLinkButton.tooltip = 'Enlever le lien';
-                                           $delegate.insertImage.tooltip = 'Insérer une image';
-                                           $delegate.insertImage.dialogPrompt = 'URL de l\'image :';
-                                           $delegate.insertVideo.tooltip = 'Insérer une vidéo';
-                                           $delegate.insertVideo.dialogPrompt = 'URL de la vidéo Youtube :';
-                                           $delegate.clear.tooltip = 'Enlever le formattage';
-                                           $delegate.ul.tooltip = 'Liste';
-                                           $delegate.ol.tooltip = 'Liste numérotée';
-                                           $delegate.quote.tooltip = 'Citation';
-                                           $delegate.undo.tooltip = 'Annuler';
-                                           $delegate.redo.tooltip = 'Rétablir';
+                                       [ '$delegate',
+                                         function( $delegate ) {
+                                             $delegate.html.tooltip = 'Basculer entre les vues HTML et texte enrichi';
+                                             $delegate.justifyLeft.tooltip = 'Justifier à gauche';
+                                             $delegate.justifyCenter.tooltip = 'Centrer';
+                                             $delegate.justifyRight.tooltip = 'Justifier à droite';
+                                             $delegate.bold.tooltip = 'Mettre en gras';
+                                             $delegate.italic.tooltip = 'Mettre en italique';
+                                             $delegate.underline.tooltip = 'Souligner';
+                                             $delegate.insertLink.tooltip = 'Insérer un lien';
+                                             $delegate.insertLink.dialogPrompt = 'Lien à insérer';
+                                             $delegate.editLink.targetToggle.buttontext = 'Le lien s\'ouvrira dans une nouvelle fenêtre';
+                                             $delegate.editLink.reLinkButton.tooltip = 'Éditer le lien';
+                                             $delegate.editLink.unLinkButton.tooltip = 'Enlever le lien';
+                                             $delegate.insertImage.tooltip = 'Insérer une image';
+                                             $delegate.insertImage.dialogPrompt = 'URL de l\'image :';
+                                             $delegate.insertVideo.tooltip = 'Insérer une vidéo';
+                                             $delegate.insertVideo.dialogPrompt = 'URL de la vidéo Youtube :';
+                                             $delegate.clear.tooltip = 'Enlever le formattage';
+                                             $delegate.ul.tooltip = 'Liste';
+                                             $delegate.ol.tooltip = 'Liste numérotée';
+                                             $delegate.quote.tooltip = 'Citation';
+                                             $delegate.undo.tooltip = 'Annuler';
+                                             $delegate.redo.tooltip = 'Rétablir';
 
-                                           return $delegate;
-                                       } );
+                                             return $delegate;
+                                         } ] );
                    // configuration de textAngular
                    $provide.decorator( 'taOptions',
                                        [ '$delegate', 'taRegisterTool',
