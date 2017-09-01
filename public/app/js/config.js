@@ -109,7 +109,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                                                             this.deferration = deferred;
                                                                             return false;
                                                                         } } );
-                                             taOptions.toolbar[0].push( 'table' );
+                                             //taOptions.toolbar[0].push( 'table' );
 
                                              taOptions.classes = {
                                                  focussed: 'focussed',
