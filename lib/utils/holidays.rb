@@ -26,7 +26,8 @@ module CahierDeTextesApp
 
           # puts "e.description : #{e.dtstart.to_date.cweek} ; #{e.dtend.nil? ? '-' : e.dtend.to_date.cweek}"
 
-          [ e.dtstart.to_date.cweek + ( e.description.downcase.include?( 'rentrée' ) ? ( e.dtstart.to_date.cwday == 1 ? -1 : 0 ) : 1 ),
+          start_week_offset = ( e.description.downcase.include?( 'rentrée' ) ? ( e.dtstart.to_date.cwday == 1 ? -1 : 0 ) : 1 ) # rubocop:disable Style/NestedTernaryOperator
+          [ e.dtstart.to_date.cweek + start_week_offset,
             e.dtend.nil? ? nil : e.dtend.to_date.cweek ]
         end.flatten.compact
 
