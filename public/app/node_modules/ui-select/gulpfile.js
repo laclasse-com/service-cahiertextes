@@ -103,9 +103,9 @@ gulp.task('pull', function(done) {
   done();
 });
 
-gulp.task('add', function() {
-  return gulp.src(['./*', '!./node_modules', '!./bower_components'])
-    .pipe($.git.add());
+gulp.task('add', function(done) {
+  $.git.add();
+  done();
 });
 
 gulp.task('recommendedBump', function(done) {
@@ -170,6 +170,7 @@ gulp.task('docs:assets', function () {
 });
 
 gulp.task('docs:examples', function () {
+  // Need a way to reset filename list: $.filenames('exampleFiles',{overrideMode:true});
   return gulp.src(['docs/examples/*.html'])
     .pipe($.header(fs.readFileSync('docs/partials/_header.html')))
     .pipe($.footer(fs.readFileSync('docs/partials/_footer.html')))
@@ -185,9 +186,13 @@ gulp.task('docs:index', function () {
     return '<h4><a href="./' + filename + '">' + cleaned + '</a> <plnkr-opener example-path="' + filename + '"></plnkr-opener></h4>';
   });
 
-  return gulp.src('docs/index.html')    
-    .pipe($.replace('<!-- INSERT EXAMPLES HERE -->', exampleFiles.join("\n")))        
+  return gulp.src('docs/index.html')
+    .pipe($.replace('<!-- INSERT EXAMPLES HERE -->', exampleFiles.join("\n")))
     .pipe(gulp.dest('./docs-built/'));
+});
+
+gulp.task('docs:watch', ['docs'], function() {
+  gulp.watch(['docs/**/*.{js,html}'], ['docs']);
 });
 
 var handleError = function (err) {

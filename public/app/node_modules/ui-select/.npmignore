@@ -4,3 +4,5 @@
 /.idea
 /.tmp
 .DS_Store
+npm-debug.log
+*~

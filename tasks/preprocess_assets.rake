@@ -93,7 +93,6 @@ namespace :preprocess_assets do
 
     STDERR.puts 'Uglification of node_modules Javascript'
     uglified, source_map = Uglify.those_files_with_map( [ 'public/app/node_modules/jquery/dist/jquery.js',
-                                                          'public/app/node_modules/es6-promise/dist/es6-promise.auto.min.js',
                                                           'public/app/node_modules/underscore/underscore.js',
                                                           'public/app/node_modules/moment/min/moment-with-locales.js',
                                                           'public/app/node_modules/moment-timezone/moment-timezone.js',
