@@ -1,3 +1,7 @@
+#!/bin/sh
+
+cat config/database.rb
+
 FILENAME=cahierdetextes_$(date+%F).sql
 
 mysqldump --add-drop-table -u cahierdetextes -p cahierdetextes > $FILENAME
