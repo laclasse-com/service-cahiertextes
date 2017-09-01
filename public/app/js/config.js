@@ -54,8 +54,11 @@ angular.module( 'cahierDeTextesClientApp' )
                    $provide.decorator( 'taOptions',
                                        [ '$delegate', 'taRegisterTool',
                                          function( taOptions, taRegisterTool ){
+                                             // taOptions.toolbar = [
+                                             //     [ 'bold', 'italics', 'underline', 'ul', 'ol', 'quote', 'justifyLeft', 'justifyCenter', 'justifyRight', 'insertLink', 'insertImage', 'insertVideo', 'html', 'redo', 'undo' ]
+                                             // ];
                                              taOptions.toolbar = [
-                                                 [ 'bold', 'italics', 'underline', 'ul', 'ol', 'quote', 'justifyLeft', 'justifyCenter', 'justifyRight', 'insertLink', 'insertImage', 'insertVideo', 'html', 'redo', 'undo' ]
+                                                 [ 'bold', 'italics', 'underline', 'ul', 'ol', 'quote', 'justifyLeft', 'justifyCenter', 'justifyRight', 'insertLink', 'html', 'redo', 'undo' ]
                                              ];
 
                                              var colorpicker_taTool = function( type ) {
