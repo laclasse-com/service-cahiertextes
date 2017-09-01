@@ -3,8 +3,7 @@
 ENV['RACK_ENV'] = 'development'
 namespace :db do
   task :load_config do
-    require_relative('../config/options')
-    require(File.join(APP_ROOT, 'api'))
+    require_relative('../config/init')
   end
 
   desc 'Run migrations'
@@ -27,7 +26,10 @@ namespace :db do
 
   desc 'Dumps database'
   task dump: :load_config do
-    STDERR.puts "Dumping database #{DB_CONFIG[:name]} into #{DB_CONFIG[:name]}_#{Time.now.strftime('%F')}.sql"
-    `mysqldump -u #{DB_CONFIG[:user]} -p#{DB_CONFIG[:password]} #{DB_CONFIG[:name]} > #{DB_CONFIG[:name]}_#{Time.now.strftime('%F')}.sql`
+    filename = "#{DB_CONFIG[:name]}_#{Time.now.strftime('%F')}.sql"
+    STDERR.puts "Dumping database #{DB_CONFIG[:name]} into #{filename}"
+    `mysqldump --add-drop-table -u #{DB_CONFIG[:user]} -p#{DB_CONFIG[:password]} #{DB_CONFIG[:name]} > #{filename}`
+
+    filename
   end
 end
