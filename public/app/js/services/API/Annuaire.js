@@ -40,17 +40,21 @@ angular.module( 'cahierDeTextesClientApp' )
                    });
 
                    service.get_groups = _.memoize( function( groups_ids ) {
-                       return $http.get( URL_ENT + '/api/groups/', { params: { 'id[]': groups_ids } } )
-                           .then( function success( response ) {
-                               response.data = response.data.map( function( group ) {
-                                   group.full_type = beautify_group_type( group.type );
+                       if ( _(groups_ids).isEmpty() ) {
+                           return $q.resolve({ data: [] });
+                       } else {
+                           return $http.get( URL_ENT + '/api/groups/', { params: { 'id[]': groups_ids } } )
+                               .then( function success( response ) {
+                                   response.data = response.data.map( function( group ) {
+                                       group.full_type = beautify_group_type( group.type );
 
-                                   return group;
+                                       return group;
+                                   } );
+
+                                   return $q.resolve( response );
                                } );
-
-                               return $q.resolve( response );
-                           } );
-                   });
+                       }
+                   } );
 
                    service.get_groups_of_structures = _.memoize( function( structures_ids ) {
                        return $http.get( URL_ENT + '/api/groups/', { params: { 'structure_id[]': structures_ids } } )
