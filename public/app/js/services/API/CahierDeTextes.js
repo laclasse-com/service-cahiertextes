@@ -28,14 +28,15 @@ angular.module( 'cahierDeTextesClientApp' )
                                     .value();
 
                                 if ( response.data.enfants.length > 0 ) {
-                                    response.data.enfants.forEach( function( child ) {
-                                        Annuaire.get_user( child.child_id )
+                                    var promises = response.data.enfants.forEach( function( child ) {
+                                        return Annuaire.get_user( child.child_id )
                                             .then( function( user ) {
                                                 child.enfant = user.data;
                                             } );
                                     } );
-
-                                    response.data.enfant_actif = response.data.enfants[ 0 ];
+                                    $q.all( promises ).then( function() {
+                                        response.data.enfant_actif = response.data.enfants[ 0 ];
+                                    } );
                                 }
 
                                 response.data.get_actual_groups = function() {
