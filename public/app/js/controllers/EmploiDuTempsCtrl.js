@@ -10,6 +10,9 @@ angular.module( 'cahierDeTextesClientApp' )
                               current_user ) {
                        $scope.scope = $scope;
                        $scope.current_user = current_user;
+                       if ( $scope.current_user.profil_actif.type === 'TUT' && _($scope.current_user.enfant_actif).isUndefined() ) {
+                           $scope.current_user.enfant_actif = $scope.current_user.enfants[0];
+                       }
                        $scope.zone = ZONE;
                        $scope.emploi_du_temps = angular.element('#emploi_du_temps');
                        var popup_ouverte = false;
