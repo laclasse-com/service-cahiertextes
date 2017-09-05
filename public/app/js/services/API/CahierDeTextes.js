@@ -28,7 +28,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                     .value();
 
                                 if ( response.data.enfants.length > 0 ) {
-                                    var promises = response.data.enfants.forEach( function( child ) {
+                                    var promises = response.data.enfants.map( function( child ) {
                                         return Annuaire.get_user( child.child_id )
                                             .then( function( user ) {
                                                 child.enfant = user.data;
