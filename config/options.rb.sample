@@ -39,7 +39,5 @@ ANNUAIRE = { url: 'http://localhost/annuaire/api',
              api_key: 'Clé secrete de signature des requetes REST' }.freeze
 
 # Options nécessaires au décryptage des fichiers exportés par ProNote
-PRONOTE = {
-  nom_integrateur: 'LaclasseCom',
-  cle_integrateur: '/home/cycojesus/projets/Erasme/laclasse-cahiertextes/clef_privee'
-}.freeze
+PRONOTE = { nom_integrateur: 'LaclasseCom',
+            cle_integrateur: '/home/cycojesus/projets/Erasme/laclasse-cahiertextes/clef_privee' }.freeze
