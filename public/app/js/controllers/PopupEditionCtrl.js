@@ -3,11 +3,11 @@
 angular.module( 'cahierDeTextesClientApp' )
     .controller( 'PopupEditionCtrl',
                  [ '$scope', '$filter', '$q', '$sce', '$uibModalInstance', '$locale', 'toastr', 'moment',
-                   'APP_PATH', 'DOCS_URL', 'SEMAINES_VACANCES', 'ZONE', 'POPUP_ACTIONS', 'LOCALHOST',
+                   'APP_PATH', 'URL_DOCS', 'SEMAINES_VACANCES', 'ZONE', 'POPUP_ACTIONS', 'LOCALHOST',
                    'Documents', 'API', 'CreneauxEmploiDuTemps', 'Cours', 'Devoirs', 'User', 'Utils',
                    'cours', 'devoirs', 'creneau', 'raw_data', 'classes', 'matieres',
                    function ( $scope, $filter, $q, $sce, $uibModalInstance, $locale, toastr, moment,
-                              APP_PATH, DOCS_URL, SEMAINES_VACANCES, ZONE, POPUP_ACTIONS, LOCALHOST,
+                              APP_PATH, URL_DOCS, SEMAINES_VACANCES, ZONE, POPUP_ACTIONS, LOCALHOST,
                               Documents, API, CreneauxEmploiDuTemps, Cours, Devoirs, User, Utils,
                               cours, devoirs, creneau, raw_data, classes, matieres )
                    {
@@ -363,13 +363,13 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                    ctrl.cours.$promise.then( function() {
                                        _(ctrl.cours.ressources).each( function( ressource ) {
-                                           ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+                                           ressource.url = $sce.trustAsResourceUrl( URL_DOCS + '/api/connector?cmd=file&target=' + ressource.hash );
                                        } );
                                    } );
                                    _(ctrl.cours.devoirs).each( function( devoir ) {
                                        devoir.$promise.then( function() {
                                            _(devoir.ressources).each( function( ressource ) {
-                                               ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+                                               ressource.url = $sce.trustAsResourceUrl( URL_DOCS + '/api/connector?cmd=file&target=' + ressource.hash );
                                            } );
                                        } );
                                    } );
@@ -391,7 +391,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                devoir.$promise.then( function() {
                                    ctrl.estimation_leave( devoir );
                                    _(devoir.ressources).each( function( ressource ) {
-                                       ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+                                       ressource.url = $sce.trustAsResourceUrl( URL_DOCS + '/api/connector?cmd=file&target=' + ressource.hash );
                                    } );
                                    if ( ctrl.creneau.etranger ) {
                                        devoir.contenu = $sce.trustAsHtml( devoir.contenu );
@@ -488,7 +488,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                        var _item = _(response.added).first();
                                        item.ressources.push( { name: _item.name,
                                                                hash: _item.hash,
-                                                               url: $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + _item.hash ) } );
+                                                               url: $sce.trustAsResourceUrl( URL_DOCS + '/api/connector?cmd=file&target=' + _item.hash ) } );
                                        ctrl.is_dirty( item );
 
                                        if ( !_(response.removed).isEmpty() ) {

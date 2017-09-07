@@ -32,10 +32,9 @@ SESSION_TIME = 3600
 URL_ENT = 'http://v3dev.laclasse.com'.freeze
 
 # Url des Docs
-DOCS_URL = 'https://v3dev.laclasse.com/docs'.freeze
-
 # nom du serveur d'annuaire ENT (xml-aaf académiques)
 SERVICE_ANNUAIRE_ENT = 'http://www.dev.laclasse/com/annuaire/'.freeze
+URL_DOCS = 'http://localhost/docs'.freeze
 
 #
 # Configuration du Serveur d'Authentification Central CAS

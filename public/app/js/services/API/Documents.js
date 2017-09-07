@@ -2,8 +2,8 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .service('Documents',
-             [ '$http', '$q', 'DOCS_URL', 'Annuaire',
-               function( $http, $q, DOCS_URL, Annuaire ) {
+             [ '$http', '$q', 'URL_DOCS', 'Annuaire',
+               function( $http, $q, URL_DOCS, Annuaire ) {
                    var Documents = this;
 
                    Documents.list_files = _.memoize( function( root ) {
@@ -15,7 +15,7 @@ angular.module( 'cahierDeTextesClientApp' )
                        } else {
                            params.target = root;
                        }
-                       return $http.get( DOCS_URL + '/api/connector', { params: params } );
+                       return $http.get( URL_DOCS + '/api/connector', { params: params } );
                    } );
 
                    Documents.get_ctxt_folder_hash = _.memoize( function( classe ) {
@@ -62,7 +62,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                               dst: ctxt_folder_hash,
                                               cut: false };
 
-                               return $http.get( DOCS_URL + '/api/connector', { params: params } );
+                               return $http.get( URL_DOCS + '/api/connector', { params: params } );
                            } )
                            .then( function success( response ) {
                                return response.data;
@@ -79,7 +79,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                    form_data.append( 'upload[]', file );
                                    form_data.append( 'renames[]', file.name );
 
-                                   return $http.post( DOCS_URL + '/api/connector',
+                                   return $http.post( URL_DOCS + '/api/connector',
                                                       form_data,
                                                       { headers: {'Content-Type': undefined },
                                                         transformRequest: angular.identity }

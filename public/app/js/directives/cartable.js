@@ -56,8 +56,8 @@ angular.module( 'cahierDeTextesClientApp' )
                               addCallback: '=addCallback'
                           },
                           replace: true,
-                          controller: [ '$scope', '$sce', 'DOCS_URL', 'Documents',
-                                        function( $scope, $sce, DOCS_URL, Documents ) {
+                          controller: [ '$scope', '$sce', 'URL_DOCS', 'Documents',
+                                        function( $scope, $sce, URL_DOCS, Documents ) {
                                             $scope.getChildren = function( noeud ) {
                                                 Documents.list_files( noeud.hash ).then( function ( response ) {
                                                     noeud.children = _( response.data.files ).rest();
@@ -81,7 +81,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                                 target.ressources.push( {
                                                     name: node.name,
                                                     hash: node.hash,
-                                                    url: $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + node.hash )
+                                                    url: $sce.trustAsResourceUrl( URL_DOCS + '/api/connector?cmd=file&target=' + node.hash )
                                                 } );
                                             };
                                         }

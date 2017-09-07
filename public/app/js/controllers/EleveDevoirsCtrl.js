@@ -3,10 +3,10 @@
 angular.module( 'cahierDeTextesClientApp' )
     .controller('EleveDevoirsCtrl',
                 [ '$scope', '$sce', '$timeout', 'toastr', '$state', '$stateParams', 'moment',
-                  'APP_PATH', 'DOCS_URL', 'API', 'Annuaire', 'Devoirs', 'Cours', 'CreneauxEmploiDuTemps',
+                  'APP_PATH', 'URL_DOCS', 'API', 'Annuaire', 'Devoirs', 'Cours', 'CreneauxEmploiDuTemps',
                   'current_user',
                   function( $scope, $sce, $timeout, toastr, $state, $stateParams, moment,
-                            APP_PATH, DOCS_URL, API, Annuaire, Devoirs, Cours, CreneauxEmploiDuTemps,
+                            APP_PATH, URL_DOCS, API, Annuaire, Devoirs, Cours, CreneauxEmploiDuTemps,
                             current_user ) {
                       // popup d'affichage des détails
                       $scope.affiche_faits = false;
@@ -52,7 +52,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                           } );
 
                                       _(devoir.ressources).each( function( ressource ) {
-                                          ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+                                          ressource.url = $sce.trustAsResourceUrl( URL_DOCS + '/api/connector?cmd=file&target=' + ressource.hash );
                                       } );
 
                                       return devoir;

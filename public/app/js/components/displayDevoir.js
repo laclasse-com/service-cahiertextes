@@ -21,8 +21,8 @@ angular.module( 'cahierDeTextesClientApp' )
                   '      </div>' +
                   '    </div>' +
                   '</div>',
-                  controller: [ '$sce', 'DOCS_URL', 'APP_PATH', 'API',
-                                function( $sce, DOCS_URL, APP_PATH, API ) {
+                  controller: [ '$sce', 'URL_DOCS', 'APP_PATH', 'API',
+                                function( $sce, URL_DOCS, APP_PATH, API ) {
                                     var ctrl = this;
 
                                     ctrl.$onInit = function() {
@@ -36,7 +36,7 @@ angular.module( 'cahierDeTextesClientApp' )
                                             } );
 
                                         _(ctrl.devoir.ressources).each( function( ressource ) {
-                                            ressource.url = $sce.trustAsResourceUrl( DOCS_URL + '/api/connector?cmd=file&target=' + ressource.hash );
+                                            ressource.url = $sce.trustAsResourceUrl( URL_DOCS + '/api/connector?cmd=file&target=' + ressource.hash );
                                         } );
                                     };
                                 } ]
