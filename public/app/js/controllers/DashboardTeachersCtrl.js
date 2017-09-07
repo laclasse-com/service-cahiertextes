@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module( 'cahierDeTextesClientApp' )
-    .controller('PrincipalEnseignantsCtrl',
+    .controller('DashboardTeachersCtrl',
                 [ '$scope', '$locale', '$q', 'API', 'Annuaire', 'current_user', 'PIECHART_DEFINITION',
                   function( $scope, $locale, $q, API, Annuaire, current_user, PIECHART_DEFINITION ) {
                       $scope.scope = $scope;

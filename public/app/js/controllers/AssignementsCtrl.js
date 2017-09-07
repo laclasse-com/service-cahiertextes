@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module( 'cahierDeTextesClientApp' )
-    .controller('EleveDevoirsCtrl',
+    .controller('AssignementsCtrl',
                 [ '$scope', '$sce', '$timeout', 'toastr', '$state', 'moment',
                   'APP_PATH', 'URL_DOCS', 'API', 'Annuaire', 'Devoirs', 'Cours', 'CreneauxEmploiDuTemps',
                   'current_user',

@@ -8,7 +8,7 @@ angular.module( 'cahierDeTextesClientApp' )
                    $stateProvider
                    // 404 /////////////////////////////////////////////////////////////////
                        .state('404', {
-                           url: '/404',
+                           url: '404',
                            templateUrl: 'views/404.html'
                        })
                    // index ///////////////////////////////////////////////////////////////
@@ -21,28 +21,28 @@ angular.module( 'cahierDeTextesClientApp' )
                        })
                        .state('emploi_du_temps', {
                            parent: 'index',
-                           url: '/emploi_du_temps',
+                           url: 'emploi_du_temps',
                            views: {
                                'content': {
                                    templateUrl: 'views/emploi_du_temps.html',
-                                   controller: 'EmploiDuTempsCtrl'
+                                   controller: 'TextBookCtrl'
                                }
                            }
                        })
                        .state('devoirs', {
                            parent: 'index',
-                           url: '/devoirs',
+                           url: 'devoirs',
                            resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ELV', 'TUT' ] ); } ] },
                            views: {
                                'content': {
                                    templateUrl: 'views/devoirs.html',
-                                   controller: 'EleveDevoirsCtrl'
+                                   controller: 'AssignementsCtrl'
                                }
                            }
                        })
                        .state('import', {
                            parent: 'index',
-                           url: '/import',
+                           url: 'import',
                            resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR', 'ADM' ] ); } ] },
                            views: {
                                'content': {
@@ -53,34 +53,34 @@ angular.module( 'cahierDeTextesClientApp' )
                        })
                        .state('enseignants', {
                            parent: 'index',
-                           url: '/enseignants',
+                           url: 'enseignants',
                            resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } ] },
                            views: {
                                'content': {
                                    templateUrl: 'views/enseignants.html',
-                                   controller: 'PrincipalEnseignantsCtrl'
+                                   controller: 'DashboardTeachersCtrl'
                                }
                            }
                        })
                        .state('enseignant', {
                            parent: 'index',
-                           url: '/enseignants/:enseignant_id',
+                           url: 'enseignants/:enseignant_id',
                            resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } ] },
                            views: {
                                'content': {
                                    templateUrl: 'views/stats_enseignant.html',
-                                   controller: 'StatsEnseignantCtrl'
+                                   controller: 'DashboardTeacherCtrl'
                                }
                            }
                        })
                        .state('stats', {
                            parent: 'index',
-                           url: '/stats',
+                           url: 'stats',
                            resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ENS', 'DOC' ] ); } ] },
                            views: {
                                'content': {
                                    templateUrl: 'views/stats_enseignant.html',
-                                   controller: 'StatsEnseignantCtrl'
+                                   controller: 'DashboardTeacherCtrl'
                                }
                            }
                        });

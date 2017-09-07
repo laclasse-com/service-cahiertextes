@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module( 'cahierDeTextesClientApp' )
-    .controller( 'EmploiDuTempsCtrl',
+    .controller( 'TextBookCtrl',
                  [ '$scope', 'moment', '$state', '$q', '$locale',
                    'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'EmploisDuTemps', 'PopupsCreneau', 'CreneauxEmploiDuTemps', 'Utils', 'Annuaire', 'User',
                    'current_user',

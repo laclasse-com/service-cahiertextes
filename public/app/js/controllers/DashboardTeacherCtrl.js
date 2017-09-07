@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module( 'cahierDeTextesClientApp' )
-    .controller( 'StatsEnseignantCtrl',
+    .controller( 'DashboardTeacherCtrl',
                  [ '$scope', '$stateParams', '$q', '$locale', '$timeout', 'moment', 'toastr',
                    'API', 'Cours', 'Annuaire', 'current_user', 'PIECHART_DEFINITION', 'MULTIBARCHART_DEFINITION',
                    function ( $scope, $stateParams, $q, $locale, $timeout, moment, toastr,
