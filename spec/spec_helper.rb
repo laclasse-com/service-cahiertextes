@@ -8,7 +8,6 @@ require 'tsort'
 require 'rspec/matchers' # required by equivalent-xml custom matcher `be_equivalent_to`
 require 'equivalent-xml'
 
-require_relative '../config/constants'
 require_relative '../config/options'
 require_relative '../config/database'
 
