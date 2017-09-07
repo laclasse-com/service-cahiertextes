@@ -12,7 +12,6 @@ before_install:
   - gem install rspec
 
 before_script:
-  - cp config/constants.rb.sample config/constants.rb
   - cp config/database.rb.sample config/database.rb
   - cp config/options.rb.sample config/options.rb
   - mysql -e 'create database CahierDeTextes;'
