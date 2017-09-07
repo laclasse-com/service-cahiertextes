@@ -3,22 +3,14 @@
 # Fenêtre de temps en minutes durant laquelle les cours et devoirs effacés restent accessibles par les APIs get
 UNDELETE_TIME_WINDOW = 5
 
-CACHE_BUSTER = Time.now.to_i.to_s
-
 # development ou production
 ENV[ 'RACK_ENV' ] = 'development'
 
 # niveau de log de l'application
 LOG_LEVEL = ''.freeze # Logger::INFO
 
-# Chemin absolu de l'application sur le serveur
-APP_ROOT = File.expand_path(File.join(File.dirname(__FILE__), '..'))
-
 # Mapping HAProxy de l'application, ex : '/v3/docs'
 APP_PATH = '/ct'.freeze
-
-# Version de l'application
-APP_VERSION = %x(git describe --tags).chomp
 
 # Langage par défaut de l'application
 LANG = 'fr'.freeze
@@ -30,7 +22,6 @@ URL_ENT = 'http://localhost/annuaire'.freeze
 URL_DOCS = 'http://localhost/docs'.freeze
 
 module Configuration
-  ENVIRONMENT = ENV['RACK_ENV']
   SSL = true
 end
 
@@ -41,3 +32,11 @@ ANNUAIRE = { url: 'http://localhost/annuaire/api',
 # Options nécessaires au décryptage des fichiers exportés par ProNote
 PRONOTE = { nom_integrateur: 'LaclasseCom',
             cle_integrateur: '/home/cycojesus/projets/Erasme/laclasse-cahiertextes/clef_privee' }.freeze
+
+# Chemin absolu de l'application sur le serveur
+APP_ROOT = File.expand_path(File.join(File.dirname(__FILE__), '..'))
+
+# Version de l'application
+APP_VERSION = %x(git describe --tags).chomp
+
+CACHE_BUSTER = Time.now.to_i.to_s
