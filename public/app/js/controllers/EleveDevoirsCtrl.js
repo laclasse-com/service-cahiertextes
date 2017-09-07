@@ -2,10 +2,10 @@
 
 angular.module( 'cahierDeTextesClientApp' )
     .controller('EleveDevoirsCtrl',
-                [ '$scope', '$sce', '$timeout', 'toastr', '$state', '$stateParams', 'moment',
+                [ '$scope', '$sce', '$timeout', 'toastr', '$state', 'moment',
                   'APP_PATH', 'URL_DOCS', 'API', 'Annuaire', 'Devoirs', 'Cours', 'CreneauxEmploiDuTemps',
                   'current_user',
-                  function( $scope, $sce, $timeout, toastr, $state, $stateParams, moment,
+                  function( $scope, $sce, $timeout, toastr, $state, moment,
                             APP_PATH, URL_DOCS, API, Annuaire, Devoirs, Cours, CreneauxEmploiDuTemps,
                             current_user ) {
                       // popup d'affichage des détails
@@ -27,10 +27,6 @@ angular.module( 'cahierDeTextesClientApp' )
                       var retrieve_data = function() {
                           $scope.from_date = moment().subtract( $scope.period_offset, 'months' ).subtract( 2, 'weeks' ).toDate();
                           $scope.to_date = moment().subtract( $scope.period_offset, 'months' ).add( 2, 'weeks' ).toDate();
-
-                          $stateParams.from = $scope.from_date.toISOString().split('T')[0];
-                          $stateParams.to = $scope.to_date.toISOString().split('T')[0];
-                          $state.go( $state.current, $stateParams, { notify: false, reload: false } );
 
                           API.query_devoirs({ 'date_due<': $scope.from_date,
                                               'date_due>': $scope.to_date,
@@ -64,14 +60,11 @@ angular.module( 'cahierDeTextesClientApp' )
                       $scope.filter_data = function( matiere ) {
                           if ( _(matiere).isNull() ) {
                               $scope.devoirs = $scope.all_devoirs;
-                              $stateParams.matiere = null;
                           } else {
                               $scope.devoirs = _($scope.all_devoirs).select( function( devoir ) {
                                   return devoir.creneau_emploi_du_temps.matiere_id == matiere.id;
                               } );
-                              $stateParams.matiere = matiere.name;
                           }
-                          $state.go( $state.current, $stateParams, { notify: false, reload: false } );
                       };
 
                       $scope.period_offset = 0;

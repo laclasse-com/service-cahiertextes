@@ -16,12 +16,12 @@ angular.module( 'cahierDeTextesClientApp' )
                            url: '/',
                            templateUrl: 'views/index.html',
                            controller: 'IndexCtrl',
-                           resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR', 'ENS', 'DOC', 'ELV', 'TUT', 'EVS' ] ); } ],
+                           resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ADM', 'DIR', 'ENS', 'DOC', 'ELV', 'TUT', 'EVS' ] ); } ],
                                       current_user: [ 'User', function( User ) { return User.get_user().then( function( response ) { return response.data; } ); } ] }
                        })
                        .state('emploi_du_temps', {
                            parent: 'index',
-                           url: '/emploi_du_temps/:date/:regroupements',
+                           url: '/emploi_du_temps',
                            views: {
                                'content': {
                                    templateUrl: 'views/emploi_du_temps.html',
@@ -31,7 +31,7 @@ angular.module( 'cahierDeTextesClientApp' )
                        })
                        .state('devoirs', {
                            parent: 'index',
-                           url: '/devoirs/:from/:to/:matiere',
+                           url: '/devoirs',
                            resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ELV', 'TUT' ] ); } ] },
                            views: {
                                'content': {
@@ -43,7 +43,7 @@ angular.module( 'cahierDeTextesClientApp' )
                        .state('import', {
                            parent: 'index',
                            url: '/import',
-                           resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } ] },
+                           resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR', 'ADM' ] ); } ] },
                            views: {
                                'content': {
                                    controller: 'ImportCtrl',
