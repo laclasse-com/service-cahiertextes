@@ -190,17 +190,6 @@ angular.module( 'cahierDeTextesClientApp' )
                                    controller: 'StatsEnseignantCtrl'
                                }
                            }
-                       })
-                       .state('enseignant.import', {
-                           parent: 'enseignant',
-                           url: '/import',
-                           resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ENS', 'DOC' ] ); } ] },
-                           views: {
-                               'content': {
-                                   controller: 'ImportCtrl',
-                                   templateUrl: 'views/import.html'
-                               }
-                           }
                        });
                } ] )
     .run( [ '$rootScope', 'log',
