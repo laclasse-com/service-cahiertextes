@@ -16,21 +16,15 @@ angular.module( 'cahierDeTextesClientApp' )
 
                                 switch ( response.data.profil_actif.type ) {
                                 case 'DIR':
-                                    stateName = 'principal.enseignants';
+                                    stateName = 'enseignants';
                                     break;
                                 case 'ADM':
-                                    stateName = 'adm.emploi_du_temps';
-                                    break;
                                 case 'EVS':
-                                    stateName = 'vie_scolaire.emploi_du_temps';
-                                    break;
                                 case 'ENS':
                                 case 'DOC':
-                                    stateName = 'enseignant.emploi_du_temps';
-                                    break;
                                 case 'TUT':
                                 case 'ELV':
-                                    stateName = 'eleve.emploi_du_temps';
+                                    stateName = 'emploi_du_temps';
                                     break;
                                 }
                                 $state.go( stateName, $state.params, { reload: true, inherit: true, notify: true } );

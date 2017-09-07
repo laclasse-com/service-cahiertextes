@@ -4,7 +4,7 @@
     <div class="onglets">
         <a class="btn"
            ng:repeat="tab in tabs"
-           data-ui-sref="{{tab.uisref}}"
+           ui:sref="{{tab.uisref}}"
            ng:class="{'btn-warning': tab.active, 'btn-default': !tab.active}"
            ng:click="set_active_tab( tab.uisref )">
             <span class="{{tab.css_class}}"></span> {{tab.heading}}
