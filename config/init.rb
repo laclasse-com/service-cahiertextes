@@ -11,9 +11,3 @@ require_relative './options'
 
 puts 'loading config/database'
 require_relative './database'
-
-puts 'loading config/constants'
-require_relative './constants'
-
-puts 'loading config/internal_constants'
-require_relative './internal_constants'

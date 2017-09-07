@@ -1,8 +1,9 @@
 # -*- encoding: utf-8 -*-
 
-#
-# Fichier de configuration de l'application
-#
+# Fenêtre de temps en minutes durant laquelle les cours et devoirs effacés restent accessibles par les APIs get
+UNDELETE_TIME_WINDOW = 5
+
+CACHE_BUSTER = Time.now.to_i.to_s
 
 # development ou production
 ENV[ 'RACK_ENV' ] = 'development'
@@ -13,54 +14,32 @@ LOG_LEVEL = ''.freeze # Logger::INFO
 # Chemin absolu de l'application sur le serveur
 APP_ROOT = File.expand_path(File.join(File.dirname(__FILE__), '..'))
 
-# Mapping HAProxy de l'application, ex : '/v3/ct'
-APP_PATH = '/app'.freeze
+# Mapping HAProxy de l'application, ex : '/v3/docs'
+APP_PATH = '/ct'.freeze
 
 # Version de l'application
-APP_VERSION = %x( git describe --tag ).chomp
+APP_VERSION = %x(git describe --tags).chomp
 
 # Langage par défaut de l'application
 LANG = 'fr'.freeze
 
-# Clé de hachage pour les cookies Rack
-SESSION_KEY = 'SomeKey'.freeze
-
-# Durée de la session en seconde (défaut 3600)
-SESSION_TIME = 3600
-
 # Url de l'ENT
-URL_ENT = 'http://v3dev.laclasse.com'.freeze
+URL_ENT = 'http://localhost/annuaire'.freeze
 
 # Url des Docs
-# nom du serveur d'annuaire ENT (xml-aaf académiques)
-SERVICE_ANNUAIRE_ENT = 'http://www.dev.laclasse/com/annuaire/'.freeze
 URL_DOCS = 'http://localhost/docs'.freeze
 
-#
-# Configuration du Serveur d'Authentification Central CAS
-#
-module CASAUTH
-  CONFIG = { host: 'v3dev.laclasse.com',
-             ssl: true,
-             port: 443,
-             disable_ssl_verification: true,
-             login_url: '/sso/login',
-             restmod_url: '/sso/api/tickets',
-             service_validate_url: '/sso/serviceValidate',
-             logout_url: '/sso/logout',
-             logout_saml_url: '/saml/saml2/idp/SingleLogoutService.php' }.freeze
+module Configuration
+  ENVIRONMENT = ENV['RACK_ENV']
+  SSL = true
 end
 
-#
-# Configuration du service d'annuaire de l'ENT
-#
-ANNUAIRE = { url: 'http://www.dev.laclasse.com/api/app',
-             app_id: 'Identifiant de l application dans l annuaire',
+ANNUAIRE = { url: 'http://localhost/annuaire/api',
+             app_id: 'CTXT',
              api_key: 'Clé secrete de signature des requetes REST' }.freeze
 
-#
-# Configuration du service REDIS
-#
-REDIS = { host: 'redis.dev.laclasse.lan',
-          port: 6379,
-          redis_root: 'com.laclasse.v3localhost' }.freeze
+# Options nécessaires au décryptage des fichiers exportés par ProNote
+PRONOTE = {
+  nom_integrateur: 'LaclasseCom',
+  cle_integrateur: '/home/cycojesus/projets/Erasme/laclasse-cahiertextes/clef_privee'
+}.freeze
