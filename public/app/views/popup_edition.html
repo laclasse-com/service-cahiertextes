@@ -200,7 +200,7 @@
                                         <select ng:required="true"
                                                 ng:model="devoir.date_due"
                                                 ng:change="set_creneau_date_due( devoir )"
-                                                ng:options="creneau.date_due as ( creneau | formateCreneau ) group by creneau.semaine for creneau in creneaux_devoirs_possibles">
+                                                ng:options="creneau.date_due as formateCreneau( creneau ) group by creneau.semaine for creneau in creneaux_devoirs_possibles">
                                         </select>
                                     </label>
 
@@ -418,7 +418,7 @@
                     <select ng:required
                             ng:change="creneau_cible_duplication_SP_updated()"
                             ng:model="creneaux_similaires.selected"
-                            ng:options="creneau as ( creneau | formateCreneau ) group by creneau.classe.name for creneau in creneaux_similaires | orderBy:['+start'] | filter:selected_regroupement_id_duplication" >
+                            ng:options="creneau as formateCreneau( creneau ) group by creneau.classe.name for creneau in creneaux_similaires | orderBy:['+start'] | filter:selected_regroupement_id_duplication" >
                     </select>
                 </li>
                 <li ng:if="cours.devoirs.length > 0">
@@ -433,7 +433,7 @@
                             </ul>
                             <select ng:change="are_we_go_for_duplication()"
                                     ng:model="devoir.creneau_cible"
-                                    ng:options="creneau as ( creneau | formateCreneau ) for creneau in creneaux_devoirs_possibles_duplication | orderBy:'date_due'" >
+                                    ng:options="creneau as formateCreneau( creneau ) for creneau in creneaux_devoirs_possibles_duplication | orderBy:'date_due'" >
                             </select>
                         </li>
                     </ol>

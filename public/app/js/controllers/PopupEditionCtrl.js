@@ -6,10 +6,10 @@ angular.module( 'cahierDeTextesClientApp' )
                    'APP_PATH', 'URL_DOCS', 'SEMAINES_VACANCES', 'ZONE', 'POPUP_ACTIONS', 'LOCALHOST',
                    'Documents', 'API', 'CreneauxEmploiDuTemps', 'Cours', 'Devoirs', 'User', 'Utils',
                    'cours', 'devoirs', 'creneau', 'raw_data', 'classes', 'matieres',
-                   function ( $scope, $filter, $q, $sce, $uibModalInstance, $locale, toastr, moment,
-                              APP_PATH, URL_DOCS, SEMAINES_VACANCES, ZONE, POPUP_ACTIONS, LOCALHOST,
-                              Documents, API, CreneauxEmploiDuTemps, Cours, Devoirs, User, Utils,
-                              cours, devoirs, creneau, raw_data, classes, matieres )
+                   function( $scope, $filter, $q, $sce, $uibModalInstance, $locale, toastr, moment,
+                             APP_PATH, URL_DOCS, SEMAINES_VACANCES, ZONE, POPUP_ACTIONS, LOCALHOST,
+                             Documents, API, CreneauxEmploiDuTemps, Cours, Devoirs, User, Utils,
+                             cours, devoirs, creneau, raw_data, classes, matieres )
                    {
                        var ctrl = $scope;
                        ctrl.scope = ctrl;
@@ -50,6 +50,18 @@ angular.module( 'cahierDeTextesClientApp' )
                        ctrl.creneau.n_week = moment(ctrl.creneau.tmp_heure_debut).week();
 
                        var do_nothing = function() {};
+
+                       ctrl.formateCreneau = function( creneau ) {
+                           var label = '';
+
+                           if ( _(creneau).has( 'start' ) ) {
+                               label += $filter( 'amDateFormat' )( creneau.start, 'ddd DD MMM HH:mm' ) + ' - ' + $filter( 'amDateFormat' )( creneau.end, 'HH:mm' );
+                           } else {
+                               label += $filter( 'amDateFormat' )( creneau.heure_debut, 'ddd DD MMM HH:mm' ) + ' - ' + $filter( 'amDateFormat' )( creneau.heure_fin, 'HH:mm' );
+                           }
+
+                           return label;
+                       };
 
                        var create_cours = function( creneau ) {
                            var cours = new Cours( { creneau_emploi_du_temps_id: creneau.id,
