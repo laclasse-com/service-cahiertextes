@@ -42,12 +42,10 @@ module CahierDeTextesApp
 
                     hash = Hash.from_xml( ProNote.decrypt_xml(  File.open( params[:file][:tempfile] ) ) )[:ExportEmploiDuTemps]
 
-                    %w[ Eleves Etiquettes MotifsAbsence Absences ].each { |key| hash.delete key.to_sym }
+                    %w[ Eleves Etiquettes MotifsAbsence Absences Professeurs Personnels Materiels ].each { |key| hash.delete key.to_sym }
 
                     File.open( params[:file][:tempfile] ) do |xmlagain|
                       hash[:DateHeureImport] = ProNote.extract_from_xml( xmlagain, 'DATEHEURE' )
-                    end
-                    File.open( params[:file][:tempfile] ) do |xmlagain|
                       hash[:Hash] = ProNote.extract_from_xml( xmlagain, 'VERIFICATION' )
                     end
 
