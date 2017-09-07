@@ -35,8 +35,8 @@ angular.module( 'cahierDeTextesClientApp' )
                        ctrl.selected_regroupement = _(ctrl.creneau.regroupement_id).isUndefined() ? _( ctrl.classes ).first() : _( ctrl.classes ).findWhere( { id: parseInt( ctrl.creneau.regroupement_id ) } );
                        ctrl.selected_matiere = _(ctrl.creneau.matiere_id).isEmpty() ? _( ctrl.matieres ).first() : _(ctrl.matieres).findWhere( { id: ctrl.creneau.matiere_id } );
                        if ( ctrl.creneau.en_creation ) {
-                           ctrl.creneau.tmp_heure_debut = $filter( 'correctTimeZoneToGMT' )( ctrl.creneau.heure_debut );
-                           ctrl.creneau.tmp_heure_fin = $filter( 'correctTimeZoneToGMT' )( ctrl.creneau.heure_fin );
+                           ctrl.creneau.tmp_heure_debut = ctrl.correctTimeZoneToGMT( ctrl.creneau.heure_debut );
+                           ctrl.creneau.tmp_heure_fin = ctrl.correctTimeZoneToGMT( ctrl.creneau.heure_fin );
                        } else {
                            ctrl.creneau.tmp_heure_debut = angular.copy( ctrl.creneau.heure_debut );
                            ctrl.creneau.tmp_heure_fin = angular.copy( ctrl.creneau.heure_fin );
@@ -61,6 +61,21 @@ angular.module( 'cahierDeTextesClientApp' )
                            }
 
                            return label;
+                       };
+
+                       ctrl.correctTimeZone = function( date ) {
+                           date = new Date( date );
+                           var timezoneOffset = date.getTimezoneOffset() / 60;
+                           date.setHours( date.getHours() - timezoneOffset );
+
+                           return date;
+                       };
+
+                       ctrl.correctTimeZoneToGMT = function( date ) {
+                           var timezoneOffset = new Date( date ).getTimezoneOffset() / 60;
+                           date.setHours( date.getHours() + timezoneOffset );
+
+                           return date;
                        };
 
                        var create_cours = function( creneau ) {
@@ -236,8 +251,8 @@ angular.module( 'cahierDeTextesClientApp' )
                                    ctrl.creneau.tmp_heure_debut = ctrl.creneau.tmp_heure_fin;
                                    ctrl.creneau.tmp_heure_fin = tmp;
                                }
-                               ctrl.creneau.heure_debut = $filter('correctTimeZone')( ctrl.creneau.tmp_heure_debut );
-                               ctrl.creneau.heure_fin = $filter('correctTimeZone')( ctrl.creneau.tmp_heure_fin );
+                               ctrl.creneau.heure_debut = ctrl.correctTimeZone( ctrl.creneau.tmp_heure_debut );
+                               ctrl.creneau.heure_fin = ctrl.correctTimeZone( ctrl.creneau.tmp_heure_fin );
                                ctrl.creneau.semainier_regroupement = Utils.bitfield_to_fixnum( ctrl.semaines_actives.regroupement );
 
                                ctrl.creneau.$update();
