@@ -10,8 +10,7 @@ module LaClasse
 
         unless cookies[:LACLASSE_AUTH].nil?
           RestClient::Request.execute( method: :get,
-                                       url: "#{ANNUAIRE[:url]}/sessions/#{cookies[:LACLASSE_AUTH]}"
-                                     ) do |response, _request, result|
+                                       url: "#{ANNUAIRE[:url]}/sessions/#{cookies[:LACLASSE_AUTH]}" ) do |response, _request, result|
             if result.is_a?( Net::HTTPSuccess )
               session = JSON.parse( response )
               # put the current user in the AUTH_USER for the HTTP request logger
