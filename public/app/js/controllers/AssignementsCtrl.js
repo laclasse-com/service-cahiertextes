@@ -28,8 +28,9 @@ angular.module( 'cahierDeTextesClientApp' )
                           $scope.from_date = moment().subtract( $scope.period_offset, 'months' ).subtract( 2, 'weeks' ).toDate();
                           $scope.to_date = moment().subtract( $scope.period_offset, 'months' ).add( 2, 'weeks' ).toDate();
 
-                          API.query_devoirs({ 'date_due<': $scope.from_date,
-                                              'date_due>': $scope.to_date,
+                          API.query_devoirs({ 'date_due>': $scope.from_date,
+                                              'date_due<': $scope.to_date,
+                                              'groups_ids[]': _($scope.current_user.groups).pluck('group_id'),
                                               uid: $scope.current_user.profil_actif.type === 'TUT' ? $scope.current_user.enfant_actif.child_id : null })
                               .$promise.then(function( response ) {
                                   $scope.matieres = {};

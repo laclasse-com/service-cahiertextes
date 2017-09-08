@@ -14,10 +14,15 @@ module CahierDeTextesApp
 
             query = Devoir
             query = query.where( creneau_emploi_du_temps_id: params['creneaux_ids']) if params.key?( 'creneaux_ids' )
+
             query = query.where( creneau_emploi_du_temps_id: CreneauEmploiDuTemps.where( regroupement_id: params['groups_ids'] ).select(:id).all.map(&:id) ) if params.key?( 'groups_ids' )
+
             query = query.where( cours_id: params['cours_ids']) if params.key?( 'cours_ids' )
+
             query = query.where( Sequel.lit( "DATE_FORMAT( date_due, '%Y-%m-%d') >= '#{Date.parse( params['date_due>'] )}'" ) ) if params.key?( 'date_due>' )
+
             query = query.where( Sequel.lit( "DATE_FORMAT( date_due, '%Y-%m-%d') <= '#{Date.parse( params['date_due<'] )}'" ) ) if params.key?( 'date_due<' )
+
             query = query.where( Sequel.~( Sequel.qualify( 'devoirs', 'deleted' ) ) ) unless params.key?( 'include_deleted')
 
             data = query.naked.all
