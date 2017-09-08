@@ -12,9 +12,11 @@ gem 'rake'
 gem 'rest-client'
 gem 'ruby-filemagic'
 gem 'rubyzip'
+gem 'sass'
 gem 'sequel'
 gem 'sinatra'
 gem 'sinatra-contrib'
+gem 'uglifier'
 gem 'xml-simple'
 
 group :development do
@@ -23,6 +25,4 @@ group :development do
   gem 'reek'
   gem 'rspec'
   gem 'rubocop'
-  gem 'sass'
-  gem 'uglifier'
 end
