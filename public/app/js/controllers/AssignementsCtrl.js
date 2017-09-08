@@ -30,7 +30,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
                           API.query_devoirs({ 'date_due>': $scope.from_date,
                                               'date_due<': $scope.to_date,
-                                              'groups_ids[]': _($scope.current_user.groups).pluck('group_id'),
+                                              'groups_ids[]': $scope.current_user.profil_actif.type === 'TUT' ? _( Annuaire.get_user( $scope.current_user.enfant_actif.child_id ).groups ).pluck('group_id') : _($scope.current_user.groups).pluck('group_id'),
                                               uid: $scope.current_user.profil_actif.type === 'TUT' ? $scope.current_user.enfant_actif.child_id : null })
                               .$promise.then(function( response ) {
                                   $scope.matieres = {};
