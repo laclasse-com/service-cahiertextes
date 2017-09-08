@@ -12,7 +12,7 @@ module CahierDeTextesApp
                                                      Date.parse( params['fin'] ).iso8601,
                                                      params.key?('groups_ids') ? params['groups_ids'] : user_regroupements_ids( params['uid'] ),
                                                      params.key?('subjects_ids') && !params['subjects_ids'].empty? ? params['subjects_ids'] : nil,
-                                                     params['uid'] ) )
+                                                     user_active_profile['type'] == 'ELV' ? user['id'] : params['uid'] ) )
           end
         end
       end

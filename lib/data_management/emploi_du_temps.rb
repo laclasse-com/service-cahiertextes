@@ -41,6 +41,7 @@ module DataManagement
               hdevoir[:type_devoir_description] = devoir.type_devoir.description
 
               hdevoir[:fait] = devoir.fait_par?( eleve_id ) unless eleve_id.nil?
+              hdevoir[:date_fait] = devoir.fait_le( eleve_id ) if hdevoir[:fait]
 
               hdevoir
             end }
