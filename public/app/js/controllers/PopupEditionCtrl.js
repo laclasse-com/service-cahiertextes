@@ -14,6 +14,13 @@ angular.module( 'cahierDeTextesClientApp' )
                        var ctrl = $scope;
                        ctrl.scope = ctrl;
 
+                       ctrl.correctTimeZoneToGMT = function( date ) {
+                           var timezoneOffset = new Date( date ).getTimezoneOffset() / 60;
+                           date.setHours( date.getHours() + timezoneOffset );
+
+                           return date;
+                       };
+
                        ctrl.app_path = APP_PATH;
                        ctrl.ZONE = ZONE;
                        ctrl.jours = _($locale.DATETIME_FORMATS.DAY).indexBy( function( jour ) { return _($locale.DATETIME_FORMATS.DAY).indexOf( jour ); } );
@@ -67,13 +74,6 @@ angular.module( 'cahierDeTextesClientApp' )
                            date = new Date( date );
                            var timezoneOffset = date.getTimezoneOffset() / 60;
                            date.setHours( date.getHours() - timezoneOffset );
-
-                           return date;
-                       };
-
-                       ctrl.correctTimeZoneToGMT = function( date ) {
-                           var timezoneOffset = new Date( date ).getTimezoneOffset() / 60;
-                           date.setHours( date.getHours() + timezoneOffset );
 
                            return date;
                        };
