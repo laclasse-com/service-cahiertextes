@@ -12,78 +12,47 @@ angular.module( 'cahierDeTextesClientApp' )
                            templateUrl: 'views/404.html'
                        })
                    // index ///////////////////////////////////////////////////////////////
-                       .state('index', {
-                           url: '/',
-                           templateUrl: 'views/index.html',
-                           controller: 'IndexCtrl',
-                           resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ADM', 'DIR', 'ENS', 'DOC', 'ELV', 'TUT', 'EVS' ] ); } ],
-                                      current_user: [ 'User', function( User ) { return User.get_user().then( function( response ) { return response.data; } ); } ] }
-                       })
-                       .state('emploi_du_temps', {
-                           parent: 'index',
-                           url: 'emploi_du_temps',
-                           views: {
-                               'content': {
-                                   templateUrl: 'views/emploi_du_temps.html',
-                                   controller: 'TextBookCtrl'
-                               }
-                           }
-                       })
-                       .state('devoirs', {
-                           parent: 'index',
-                           url: 'devoirs',
-                           resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ELV', 'TUT' ] ); } ] },
-                           views: {
-                               'content': {
-                                   templateUrl: 'views/devoirs.html',
-                                   controller: 'AssignementsCtrl'
-                               }
-                           }
-                       })
-                       .state('import', {
-                           parent: 'index',
-                           url: 'import',
-                           resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR', 'ADM' ] ); } ] },
-                           views: {
-                               'content': {
-                                   controller: 'ImportCtrl',
-                                   templateUrl: 'views/import.html'
-                               }
-                           }
-                       })
-                       .state('enseignants', {
-                           parent: 'index',
-                           url: 'enseignants',
-                           resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } ] },
-                           views: {
-                               'content': {
-                                   templateUrl: 'views/enseignants.html',
-                                   controller: 'DashboardTeachersCtrl'
-                               }
-                           }
-                       })
-                       .state('enseignant', {
-                           parent: 'index',
-                           url: 'enseignants/:enseignant_id',
-                           resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } ] },
-                           views: {
-                               'content': {
-                                   templateUrl: 'views/stats_enseignant.html',
-                                   controller: 'DashboardTeacherCtrl'
-                               }
-                           }
-                       })
-                       .state('stats', {
-                           parent: 'index',
-                           url: 'stats',
-                           resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ENS', 'DOC' ] ); } ] },
-                           views: {
-                               'content': {
-                                   templateUrl: 'views/stats_enseignant.html',
-                                   controller: 'DashboardTeacherCtrl'
-                               }
-                           }
-                       });
+                       .state( 'index',
+                               { url: '/',
+                                 templateUrl: 'views/index.html',
+                                 controller: 'IndexCtrl',
+                                 resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ADM', 'DIR', 'ENS', 'DOC', 'ELV', 'TUT', 'EVS' ] ); } ],
+                                            current_user: [ 'User', function( User ) { return User.get_user().then( function( response ) { return response.data; } ); } ] } } )
+                       .state( 'emploi_du_temps',
+                               { parent: 'index',
+                                 url: 'emploi_du_temps',
+                                 views: {  'content': { templateUrl: 'views/textbook.html',
+                                                        controller: 'TextBookCtrl' } } } )
+                       .state( 'devoirs',
+                               { parent: 'index',
+                                 url: 'devoirs',
+                                 resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ELV', 'TUT' ] ); } ] },
+                                 views: { 'content': { templateUrl: 'views/assignements.html',
+                                                       controller: 'AssignementsCtrl' } } } )
+                       .state( 'import',
+                               { parent: 'index',
+                                 url: 'import',
+                                 resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR', 'ADM' ] ); } ] },
+                                 views: { 'content': { templateUrl: 'views/import.html',
+                                                       controller: 'ImportCtrl' } } } )
+                       .state( 'enseignants',
+                               { parent: 'index',
+                                 url: 'enseignants',
+                                 resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } ] },
+                                 views: { 'content': { templateUrl: 'views/dashboard_teachers.html',
+                                                       controller: 'DashboardTeachersCtrl' } } } )
+                       .state( 'enseignant',
+                               { parent: 'index',
+                                 url: 'enseignants/:enseignant_id',
+                                 resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); } ] },
+                                 views: { 'content': { templateUrl: 'views/dashboard_teacher.html',
+                                                       controller: 'DashboardTeacherCtrl' } } } )
+                       .state( 'stats',
+                               { parent: 'index',
+                                 url: 'stats',
+                                 resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ENS', 'DOC' ] ); } ] },
+                                 views: { 'content': { templateUrl: 'views/dashboard_teacher.html',
+                                                       controller: 'DashboardTeacherCtrl' } } } );
                } ] )
     .run( [ '$rootScope', 'log',
             function( $rootScope, log ) {
