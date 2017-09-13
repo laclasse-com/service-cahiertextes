@@ -86,42 +86,40 @@ angular.module( 'cahierDeTextesClientApp' )
                                             };
                                         }
                                       ],
-                          template: `
-<ul class="cartable">
-  <li ng:repeat="node in $ctrl.racine"
-      ng:class="{'disabled': node.name == 'Cahier de textes.ct'}"
-      style="list-style-type: none">
-    <span class="glyphicon"
-          ng:class="{'glyphicon-folder-open': node.children, 'glyphicon-folder-close': !node.children}"
-          ng:if="node.mime == 'directory'"
-          ng:click="$ctrl.getChildren( node )">
-        {{node.name}}
-    </span>
-    <button class="btn btn-sm btn-success from-docs"
-            style="padding:top: 0; padding:bottom: 0"
-            ng:if="node.mime != 'directory'"
-            ng:click="$ctrl.add_ressource_to_target( $ctrl.target, node, $ctrl.regroupement )">
-      <span class="glyphicon glyphicon-plus"></span>
-    </button>
-    <button class="btn btn-sm btn-success from-ct"
-            style="padding:top: 0; padding:bottom: 0"
-            ng:if="node.mime != 'directory'"
-            ng:click="$ctrl.add_ressource_already_in_CT_to_target( $ctrl.target, node )">
-      <span class="glyphicon glyphicon-plus"></span>
-    </button>
-    <span class="glyphicon glyphicon-file" ng:if="node.mime != 'directory'">
-        {{node.name}} <span ng:if="node.mime != 'directory'">({{node.mime}})</span>
-    </span>
-    <div cartable
-         ng:if="node.mime == 'directory'"
-         racine="node.children"
-         target="$ctrl.target"
-         regroupement="$ctrl.regroupement"
-         add-callback="$ctrl.addCallback">
-    </div>
-  </li>
-</ul>
-`,
+                          template: '<ul class="cartable">' +
+                              '                              <li ng:repeat="node in $ctrl.racine"' +
+                              '                          ng:class="{\'disabled\': node.name == \'Cahier de textes.ct\'}"' +
+                              '                          style="list-style-type: none">' +
+                              '                              <span class="glyphicon"' +
+                              '                          ng:class="{\'glyphicon-folder-open\': node.children, \'glyphicon-folder-close\': !node.children}"' +
+                              '                          ng:if="node.mime == \'directory\'"' +
+                              '                          ng:click="$ctrl.getChildren( node )">' +
+                              '        {{node.name}}' +
+                              '    </span>' +
+                              '    <button class="btn btn-sm btn-success from-docs"' +
+                              '            style="padding:top: 0; padding:bottom: 0"' +
+                              '            ng:if="node.mime != \'directory\'"' +
+                              '            ng:click="$ctrl.add_ressource_to_target( $ctrl.target, node, $ctrl.regroupement )">' +
+                              '      <span class="glyphicon glyphicon-plus"></span>' +
+                              '    </button>' +
+                              '    <button class="btn btn-sm btn-success from-ct"' +
+                              '            style="padding:top: 0; padding:bottom: 0"' +
+                              '            ng:if="node.mime != \'directory\'"' +
+                              '            ng:click="$ctrl.add_ressource_already_in_CT_to_target( $ctrl.target, node )">' +
+                              '      <span class="glyphicon glyphicon-plus"></span>' +
+                              '    </button>' +
+                              '    <span class="glyphicon glyphicon-file" ng:if="node.mime != \'directory\'">' +
+                              '        {{node.name}} <span ng:if="node.mime != \'directory\'">({{node.mime}})</span>' +
+                              '    </span>' +
+                              '    <div cartable' +
+                              '         ng:if="node.mime == \'directory\'"' +
+                              '         racine="node.children"' +
+                              '         target="$ctrl.target"' +
+                              '         regroupement="$ctrl.regroupement"' +
+                              '         add-callback="$ctrl.addCallback">' +
+                              '    </div>' +
+                              '  </li>' +
+                              '</ul>',
                           compile: RecursionHelper.compile
                       };
                   } ] );
