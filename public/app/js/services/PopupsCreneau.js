@@ -56,7 +56,7 @@ angular.module( 'cahierDeTextesClientApp' )
                    };
 
                    this.edition = function ( raw_data, matieres, classes, creneau, cours, devoirs, popup_callback, popup_ouverte ) {
-                       open_modal( { templateUrl: 'views/popup_edition.html',
+                       open_modal( { templateUrl: 'app/views/popup_edition.html',
                                      controller: 'PopupEditionCtrl',
                                      resolve: { raw_data : function () { return raw_data; },
                                                 matieres : function () { return matieres; },
@@ -70,7 +70,7 @@ angular.module( 'cahierDeTextesClientApp' )
                    };
 
                    this.display = function( titre, cours, devoirs, popup_callback, popup_ouverte ) {
-                       open_modal( { templateUrl: 'views/popup_display.html',
+                       open_modal( { templateUrl: 'app/views/popup_display.html',
                                      controller: 'PopupDisplayCtrl',
                                      resolve: { titre   : function() { return titre; },
                                                 cours   : function() { return cours; },
