@@ -34,7 +34,7 @@ module LaClasse
       end
 
       def login!( route )
-        protocol = Configuration::SSL ? 'https' : 'http'
+        protocol = SSL ? 'https' : 'http'
         service = ''
 
         if route.empty?

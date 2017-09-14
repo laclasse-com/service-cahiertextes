@@ -21,9 +21,7 @@ URL_ENT = 'http://localhost/annuaire'.freeze
 # Url des Docs
 URL_DOCS = 'http://localhost/docs'.freeze
 
-module Configuration
-  SSL = true
-end
+SSL = true
 
 ANNUAIRE = { url: 'http://localhost/annuaire/api',
              app_id: 'CTXT',
