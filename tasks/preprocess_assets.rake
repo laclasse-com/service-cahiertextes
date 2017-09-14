@@ -12,10 +12,10 @@ namespace :preprocess_assets do
   end
 
   desc 'Everything'
-  task all: [ :templates, :js, :css ]
+  task all: :production
 
   desc 'For development deployement'
-  task development: [ :templates, :css ]
+  task development: :production
 
   desc 'For production deployement'
   task production: [ :templates, :js, :css ]
