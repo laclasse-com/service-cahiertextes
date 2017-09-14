@@ -140,3 +140,5 @@ namespace :preprocess_assets do
         .write( source_map )
   end
 end
+
+task preprocess_assets: 'preprocess_assets:production'
