@@ -38,6 +38,7 @@
     "es5-shim": "^4.5.9",
     "font-awesome": "^4.6.3",
     "fullcalendar": "^3.5.0",
+    "google-closure-compiler-js": "^20170910.0.0",
     "jquery": "^3.2.1",
     "laclasse-common-client": "git+https://github.com/laclasse-com/laclasse-common-client.git",
     "moment-timezone": "^0.5.13",
@@ -45,6 +46,7 @@
     "sizzle": "^2.3.3",
     "sweetalert2": "^6.6.9",
     "textangular": "^1.5.9",
+    "typescript": "^2.5.2",
     "ui-select": "^0.19.8",
     "underscore": "^1.8.3"
   }

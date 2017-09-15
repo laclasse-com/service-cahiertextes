@@ -17,7 +17,6 @@ gem 'sass'
 gem 'sequel'
 gem 'sinatra'
 gem 'sinatra-contrib'
-gem 'uglifier'
 gem 'xml-simple'
 
 group :development do

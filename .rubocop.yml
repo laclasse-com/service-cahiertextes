@@ -6,6 +6,9 @@ AllCops:
     - tasks/**/*
     - Guardfile
 
+Style/SymbolArray:
+  Enabled: false
+
 Style/UnneededInterpolation:
   Enabled: false
 
