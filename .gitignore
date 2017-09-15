@@ -5,4 +5,4 @@
 /config/puma.rb
 spec/fixtures/UDT*
 /*.sql
-/public/app/js/controllers/*.ts
+/public/app/js/templates/*.ts
