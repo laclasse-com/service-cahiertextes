@@ -234,48 +234,88 @@ angular.module('cahierDeTextesClientApp')
             }]);
     }]);
 angular.module('cahierDeTextesClientApp')
-    .config(['$stateProvider', '$urlRouterProvider',
-    function ($stateProvider, $urlRouterProvider) {
+    .config(['$stateProvider', '$urlRouterProvider', 'APP_PATH',
+    function ($stateProvider, $urlRouterProvider, APP_PATH) {
         $urlRouterProvider.otherwise('/');
         $stateProvider
             .state('404', {
             url: '404',
-            templateUrl: 'app/views/404.html'
+            templateUrl: APP_PATH + '/app/views/404.html'
         })
-            .state('index', { url: '/',
-            templateUrl: 'app/views/index.html',
+            .state('index', {
+            url: '/',
+            templateUrl: APP_PATH + '/app/views/index.html',
             controller: 'IndexCtrl',
-            resolve: { auth: ['Redirection', function (Redirection) { Redirection.doorman(['ADM', 'DIR', 'ENS', 'DOC', 'ELV', 'TUT', 'EVS']); }],
-                current_user: ['User', function (User) { return User.get_user().then(function (response) { return response.data; }); }] } })
-            .state('emploi_du_temps', { parent: 'index',
+            resolve: {
+                auth: ['Redirection', function (Redirection) { Redirection.doorman(['ADM', 'DIR', 'ENS', 'DOC', 'ELV', 'TUT', 'EVS']); }],
+                current_user: ['User', function (User) { return User.get_user().then(function (response) { return response.data; }); }]
+            }
+        })
+            .state('emploi_du_temps', {
+            parent: 'index',
             url: 'emploi_du_temps',
-            views: { 'content': { templateUrl: 'app/views/textbook.html',
-                    controller: 'TextBookCtrl' } } })
-            .state('devoirs', { parent: 'index',
+            views: {
+                'content': {
+                    templateUrl: APP_PATH + '/app/views/textbook.html',
+                    controller: 'TextBookCtrl'
+                }
+            }
+        })
+            .state('devoirs', {
+            parent: 'index',
             url: 'devoirs',
             resolve: { auth: ['Redirection', function (Redirection) { Redirection.doorman(['ELV', 'TUT']); }] },
-            views: { 'content': { templateUrl: 'app/views/assignements.html',
-                    controller: 'AssignementsCtrl' } } })
-            .state('import', { parent: 'index',
+            views: {
+                'content': {
+                    templateUrl: APP_PATH + '/app/views/assignements.html',
+                    controller: 'AssignementsCtrl'
+                }
+            }
+        })
+            .state('import', {
+            parent: 'index',
             url: 'import',
             resolve: { auth: ['Redirection', function (Redirection) { Redirection.doorman(['DIR', 'ADM']); }] },
-            views: { 'content': { templateUrl: 'app/views/import.html',
-                    controller: 'ImportCtrl' } } })
-            .state('enseignants', { parent: 'index',
+            views: {
+                'content': {
+                    templateUrl: APP_PATH + '/app/views/import.html',
+                    controller: 'ImportCtrl'
+                }
+            }
+        })
+            .state('enseignants', {
+            parent: 'index',
             url: 'enseignants',
             resolve: { auth: ['Redirection', function (Redirection) { Redirection.doorman(['DIR']); }] },
-            views: { 'content': { templateUrl: 'app/views/dashboard_teachers.html',
-                    controller: 'DashboardTeachersCtrl' } } })
-            .state('enseignant', { parent: 'index',
+            views: {
+                'content': {
+                    templateUrl: APP_PATH + '/app/views/dashboard_teachers.html',
+                    controller: 'DashboardTeachersCtrl'
+                }
+            }
+        })
+            .state('enseignant', {
+            parent: 'index',
             url: 'enseignants/:enseignant_id',
             resolve: { auth: ['Redirection', function (Redirection) { Redirection.doorman(['DIR']); }] },
-            views: { 'content': { templateUrl: 'app/views/dashboard_teacher.html',
-                    controller: 'DashboardTeacherCtrl' } } })
-            .state('stats', { parent: 'index',
+            views: {
+                'content': {
+                    templateUrl: APP_PATH + '/app/views/dashboard_teacher.html',
+                    controller: 'DashboardTeacherCtrl'
+                }
+            }
+        })
+            .state('stats', {
+            parent: 'index',
             url: 'stats',
             resolve: { auth: ['Redirection', function (Redirection) { Redirection.doorman(['ENS', 'DOC']); }] },
-            views: { 'content': { templateUrl: 'app/views/dashboard_teacher.html',
-                    controller: 'DashboardTeacherCtrl' } } });
+            views: {
+                'content': {
+                    templateUrl: APP_PATH + '/app/views/dashboard_teacher.html',
+                    controller: 'DashboardTeacherCtrl'
+                }
+            }
+        });
     }])
     .run(['$rootScope', 'log',
     function ($rootScope, log) {
@@ -2332,8 +2372,8 @@ angular.module('cahierDeTextesClientApp')
         };
     }]);
 angular.module('cahierDeTextesClientApp')
-    .service('PopupsCreneau', ['$uibModal', 'toastr', 'POPUP_ACTIONS',
-    function ($uibModal, toastr, POPUP_ACTIONS) {
+    .service('PopupsCreneau', ['$uibModal', 'toastr', 'POPUP_ACTIONS', 'APP_PATH',
+    function ($uibModal, toastr, POPUP_ACTIONS, APP_PATH) {
         var open_modal = function (params, popup_callback, popup_ouverte) {
             popup_ouverte = true;
             $uibModal.open(params)
@@ -2380,23 +2420,31 @@ angular.module('cahierDeTextesClientApp')
             });
         };
         this.edition = function (raw_data, matieres, classes, creneau, cours, devoirs, popup_callback, popup_ouverte) {
-            open_modal({ templateUrl: 'app/views/popup_edition.html',
+            open_modal({
+                templateUrl: APP_PATH + '/app/views/popup_edition.html',
                 controller: 'PopupEditionCtrl',
-                resolve: { raw_data: function () { return raw_data; },
+                resolve: {
+                    raw_data: function () { return raw_data; },
                     matieres: function () { return matieres; },
                     classes: function () { return classes; },
                     creneau: function () { return creneau; },
                     cours: function () { return cours; },
-                    devoirs: function () { return devoirs; } },
-                backdrop: 'static' }, popup_callback, popup_ouverte);
+                    devoirs: function () { return devoirs; }
+                },
+                backdrop: 'static'
+            }, popup_callback, popup_ouverte);
         };
         this.display = function (titre, cours, devoirs, popup_callback, popup_ouverte) {
-            open_modal({ templateUrl: 'app/views/popup_display.html',
+            open_modal({
+                templateUrl: APP_PATH + '/app/views/popup_display.html',
                 controller: 'PopupDisplayCtrl',
-                resolve: { titre: function () { return titre; },
+                resolve: {
+                    titre: function () { return titre; },
                     cours: function () { return cours; },
-                    devoirs: function () { return devoirs; } },
-                backdrop: 'static' }, popup_callback, popup_ouverte);
+                    devoirs: function () { return devoirs; }
+                },
+                backdrop: 'static'
+            }, popup_callback, popup_ouverte);
         };
     }]);
 angular.module('cahierDeTextesClientApp')
