@@ -16,33 +16,6 @@ namespace :preprocess_assets do
   task clean: [:load_config] do
     puts `[ -e #{COMPILED_FILE} ] && rm #{COMPILED_FILE}`
     puts `[ -e #{MINIFIED_FILE} ] && rm #{MINIFIED_FILE}`
-    puts `rm #{APP_ROOT}/public/app/js/templates/*.ts`
-  end
-
-  desc 'Typescriptify templates'
-  task templates: [:load_config] do
-    STDERR.puts 'Typescriptification of angular templates'
-    Dir.glob( 'public/app/views/*.html' )
-       .sort
-       .each do |fichier|
-      target = "#{fichier.gsub( /views/, 'js/templates' )}.ts"
-      template_name = fichier.gsub( %r{public/app/}, '' )
-      template = File.read( fichier )
-
-      # élimination du précédent template JS si besoin
-      File.delete( target ) if File.exist?( target )
-
-      # génération du template JS
-      File.open( target, 'w' ) do |target_file|
-        target_file.write "'use strict';\n"
-        target_file.write "angular.module( 'cahierDeTextesClientApp' )\n"
-        target_file.write "  .run( [ '$templateCache',\n"
-        target_file.write "    function( $templateCache ) {\n"
-        target_file.write "      $templateCache.put( '#{template_name}',\n"
-        target_file.write "                          `#{template}` ); "
-        target_file.write '    } ] );'
-      end
-    end
   end
 
   desc 'Minify CSS using Sass'
@@ -74,7 +47,7 @@ namespace :preprocess_assets do
   end
 
   desc 'Compile typescript files'
-  task ts2js: [:load_config, :templates] do
+  task ts2js: [:load_config] do
     puts "Compiling into #{COMPILED_FILE}"
     puts `#{APP_ROOT}/public/app/node_modules/.bin/tsc --project #{APP_ROOT}/public/app/js/tsconfig.json`
   end
