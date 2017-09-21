@@ -19,8 +19,8 @@ angular.module( 'cahierDeTextesClientApp' )
           }
 
           // Break the recursion loop by removing the contents
-          var contents = element.contents().remove();
-          var compiledContents;
+          let contents = element.contents().remove();
+          let compiledContents;
           return {
             pre: ( link && link.pre ) ? link.pre : null,
             /**
@@ -58,7 +58,7 @@ angular.module( 'cahierDeTextesClientApp' )
         replace: true,
         controller: [ '$scope', '$sce', 'URL_DOCS', 'Documents',
           function( $scope, $sce, URL_DOCS, Documents ) {
-            var ctrl = $scope;
+            let ctrl = $scope;
             ctrl.$ctrl = ctrl;
 
             ctrl.getChildren = function( noeud ) {
@@ -84,7 +84,7 @@ angular.module( 'cahierDeTextesClientApp' )
               target.ressources.push( {
                 name: node.name,
                 hash: node.hash,
-                url: $sce.trustAsResourceUrl( URL_DOCS + '/api/connector?cmd=file&target=' + node.hash )
+                url: $sce.trustAsResourceUrl( `${ URL_DOCS }/api/connector?cmd=file&target=${ node.hash }` )
               } );
             };
           }

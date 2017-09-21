@@ -7,8 +7,8 @@ angular.module( 'cahierDeTextesClientApp' )
       return {
         restrict: 'A',
         link: function( scope, element, attrs ) {
-          var model = $parse( attrs.fileModel );
-          var modelSetter = model.assign;
+          let model = $parse( attrs.fileModel );
+          let modelSetter = model.assign;
 
           element.bind( 'change',
             function() {

@@ -14,14 +14,14 @@ angular.module( 'cahierDeTextesClientApp' )
     ,
     controller: [ '$sce', 'URL_DOCS',
       function( $sce, URL_DOCS ) {
-        var ctrl = this;
+        let ctrl = this;
 
         ctrl.$onInit = function() {
           if ( typeof ctrl.sp.contenu == String ) {
             ctrl.sp.contenu = $sce.trustAsHtml( ctrl.sp.contenu );
           }
           _( ctrl.sp.ressources ).each( function( ressource ) {
-            ressource.url = $sce.trustAsResourceUrl( URL_DOCS + '/api/connector?cmd=file&target=' + ressource.hash );
+            ressource.url = $sce.trustAsResourceUrl( `${ URL_DOCS }/api/connector?cmd=file&target=${ ressource.hash }` );
           } );
         };
       }]

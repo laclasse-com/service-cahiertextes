@@ -6,7 +6,7 @@ angular.module( 'cahierDeTextesClientApp' )
     function( $scope, $state, User, Redirection, $sce, URL_DOCS ) {
       $scope.load_docs = window.location.hostname !== 'localhost';
 
-      $scope.URL_DOCS_login = $sce.trustAsResourceUrl( URL_DOCS + '/login' );
+      $scope.URL_DOCS_login = $sce.trustAsResourceUrl( `${ URL_DOCS }/login` );
       $scope.embedded = window != window.top;
       User.get_user().then( function( response ) {
         $scope.current_user = response.data;

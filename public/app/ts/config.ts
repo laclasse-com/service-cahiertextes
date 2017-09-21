@@ -58,16 +58,16 @@ angular.module( 'cahierDeTextesClientApp' )
               [ 'bold', 'italics', 'underline', 'ul', 'ol', 'quote', 'justifyLeft', 'justifyCenter', 'justifyRight', 'insertLink', 'insertImage', 'insertVideo', 'html', 'redo', 'undo' ]
             ];
 
-            var colorpicker_taTool = function( type ) {
-              var style = ( type === 'backcolor' ) ? 'background-' : '';
-              var couleurs = [ '#7bd148', '#5484ed', '#a4bdfc', '#46d6db', '#7ae7bf', '#51b749', '#fbd75b', '#ffb878', '#ff887c', '#dc2127', '#dbadff', '#e1e1e1' ];
+            let colorpicker_taTool = function( type ) {
+              let style = ( type === 'backcolor' ) ? 'background-' : '';
+              let couleurs = [ '#7bd148', '#5484ed', '#a4bdfc', '#46d6db', '#7ae7bf', '#51b749', '#fbd75b', '#ffb878', '#ff887c', '#dc2127', '#dbadff', '#e1e1e1' ];
               if ( type === 'backcolor' ) {
                 couleurs.push( 'transparent' );
               }
 
               return {
                 couleurs: couleurs,
-                display: '<span uib-dropdown><a uib-dropdown-toggle><i class="fa fa-font" data-ng-style="{\'' + style + 'color\': selected }"></i> <i class="fa fa-caret-down"></i></a><ng-color-picker uib-dropdown-menu selected="selected" colors="couleurs"></ng-color-picker></span>',
+                display: `<span uib-dropdown><a uib-dropdown-toggle><i class="fa fa-font" data-ng-style="{'${ style }color': selected }"></i> <i class="fa fa-caret-down"></i></a><ng-color-picker uib-dropdown-menu selected="selected" colors="couleurs"></ng-color-picker></span>`,
                 action: function() {
                   return ( this.selected === 'nil' ) ? false : this.$editor().wrapSelection( type, this.selected );
                 }
@@ -98,16 +98,16 @@ angular.module( 'cahierDeTextesClientApp' )
               tooltiptext: 'insérer un tableau',
               display: '<span uib-dropdown><a uib-dropdown-toggle><i class="fa fa-table"></i> <i class="fa fa-caret-down"></i></a><div uib-dropdown-menu data-ng-click="$event.stopPropagation()"><label><span uib-rating on-hover="hover( columns, value )" on-leave="leave( columns )" ng-model="columns.value" max="15" state-on="\'glyphicon-stop\'" state-off="\'glyphicon-unchecked\'"></span><br>{{columns.hovered}} colonnes</label><br><label><span uib-rating on-hover="hover( rows, value )" on-leave="leave( rows )" ng-model="rows.value" max="15" state-on="\'glyphicon-stop\'" state-off="\'glyphicon-unchecked\'"></span><br>{{rows.hovered}} lignes</label><br><button class="btn btn-success" data-ng-click="insert_table()">Insérer</button></div></span>',
               insert_table: function() {
-                var tds = '';
-                for ( var idxCol = 0; idxCol < this.columns.value; idxCol++ ) {
-                  tds = tds + '<td>&nbsp;</td>';
+                let tds = '';
+                for ( let idxCol = 0; idxCol < this.columns.value; idxCol++ ) {
+                  tds = `${ tds }<td>&nbsp;</td>`;
                 }
-                var trs = '';
-                for ( var idxRow = 0; idxRow < this.rows.value; idxRow++ ) {
-                  trs = trs + '<tr>' + tds + '</tr>';
+                let trs = '';
+                for ( let idxRow = 0; idxRow < this.rows.value; idxRow++ ) {
+                  trs = `${ trs }<tr>${ tds }</tr>`;
                 }
 
-                this.$editor().wrapSelection( 'insertHTML', '<table class="table table-bordered">' + trs + '</table>' );
+                this.$editor().wrapSelection( 'insertHTML', `<table class="table table-bordered">${ trs }</table>` );
 
                 this.deferration.resolve();
               },

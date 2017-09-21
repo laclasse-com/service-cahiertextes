@@ -4,11 +4,11 @@ angular.module( 'cahierDeTextesClientApp' )
   .controller( 'IndexCtrl',
   [ '$scope', '$state', 'User',
     function( $scope, $state, User ) {
-      var ctrl = $scope;
+      let ctrl = $scope;
 
       User.get_user()
         .then( function( response ) {
-          var user = response.data;
+          let user = response.data;
 
           switch ( user.profil_actif.type ) {
             case 'DIR':

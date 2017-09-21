@@ -12,11 +12,11 @@ angular.module( 'cahierDeTextesClientApp' )
       $scope.popup_ouverte = false;
       $scope.matiere_selected = null;
 
-      var getCours = _.memoize( function( id ) {
+      let getCours = _.memoize( function( id ) {
         return Cours.get( { id: id } );
       } );
 
-      var getCreneauxEmploiDuTemps = _.memoize( function( id ) {
+      let getCreneauxEmploiDuTemps = _.memoize( function( id ) {
         return CreneauxEmploiDuTemps.get( { id: id } );
       } );
 
@@ -34,7 +34,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
       // retrieve_data() when the value of week_offset changes
       // n.b.: triggered when period_offset is initialized above
-      var nb_mois_depuis_septembre = Math.abs( 9 - ( moment().month() + 1 ) );
+      let nb_mois_depuis_septembre = Math.abs( 9 - ( moment().month() + 1 ) );
       $scope.period_offsets_list = _.range( nb_mois_depuis_septembre, ( 10 - nb_mois_depuis_septembre ) * -1, -1 )
         .map( function( offset ) {
           return {
@@ -51,7 +51,7 @@ angular.module( 'cahierDeTextesClientApp' )
         .then( function( response ) {
           $scope.current_user = response.data;
 
-          var retrieve_data = function() {
+          let retrieve_data = function() {
             $scope.from_date = moment().subtract( $scope.period_offset, 'months' ).subtract( 2, 'weeks' ).toDate();
             $scope.to_date = moment().subtract( $scope.period_offset, 'months' ).add( 2, 'weeks' ).toDate();
 
@@ -78,7 +78,7 @@ angular.module( 'cahierDeTextesClientApp' )
                     } );
 
                   _( devoir.ressources ).each( function( ressource ) {
-                    ressource.url = $sce.trustAsResourceUrl( URL_DOCS + '/api/connector?cmd=file&target=' + ressource.hash );
+                    ressource.url = $sce.trustAsResourceUrl( `${ URL_DOCS }/api/connector?cmd=file&target=${ ressource.hash }` );
                   } );
 
                   return devoir;

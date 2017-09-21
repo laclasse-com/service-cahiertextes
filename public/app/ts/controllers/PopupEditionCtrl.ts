@@ -10,11 +10,11 @@ angular.module( 'cahierDeTextesClientApp' )
       APP_PATH, URL_DOCS, SEMAINES_VACANCES, ZONE, POPUP_ACTIONS, LOCALHOST,
       Documents, API, CreneauxEmploiDuTemps, Cours, Devoirs, User, Utils,
       cours, devoirs, creneau, raw_data, classes, matieres ) {
-      var ctrl = $scope;
+      let ctrl = $scope;
       ctrl.scope = ctrl;
 
       ctrl.correctTimeZoneToGMT = function( date ) {
-        var timezoneOffset = new Date( date ).getTimezoneOffset() / 60;
+        let timezoneOffset = new Date( date ).getTimezoneOffset() / 60;
         date.setHours( date.getHours() + timezoneOffset );
 
         return date;
@@ -55,15 +55,15 @@ angular.module( 'cahierDeTextesClientApp' )
       ctrl.creneau.tmp_heure_fin = moment( ctrl.creneau.tmp_heure_fin );
       ctrl.creneau.n_week = moment( ctrl.creneau.tmp_heure_debut ).week();
 
-      var do_nothing = function() { };
+      let do_nothing = function() { };
 
       ctrl.formateCreneau = function( creneau ) {
-        var label = '';
+        let label = '';
 
         if ( _( creneau ).has( 'start' ) ) {
-          label += $filter( 'amDateFormat' )( creneau.start, 'ddd DD MMM HH:mm' ) + ' - ' + $filter( 'amDateFormat' )( creneau.end, 'HH:mm' );
+          label += `${ $filter( 'amDateFormat' )( creneau.start, 'ddd DD MMM HH:mm' ) } - ${ $filter( 'amDateFormat' )( creneau.end, 'HH:mm' ) }`;
         } else {
-          label += $filter( 'amDateFormat' )( creneau.heure_debut, 'ddd DD MMM HH:mm' ) + ' - ' + $filter( 'amDateFormat' )( creneau.heure_fin, 'HH:mm' );
+          label += `${ $filter( 'amDateFormat' )( creneau.heure_debut, 'ddd DD MMM HH:mm' ) } - ${ $filter( 'amDateFormat' )( creneau.heure_fin, 'HH:mm' ) }`;
         }
 
         return label;
@@ -71,20 +71,20 @@ angular.module( 'cahierDeTextesClientApp' )
 
       ctrl.correctTimeZone = function( date ) {
         date = new Date( date );
-        var timezoneOffset = date.getTimezoneOffset() / 60;
+        let timezoneOffset = date.getTimezoneOffset() / 60;
         date.setHours( date.getHours() - timezoneOffset );
 
         return date;
       };
 
-      var create_cours = function( creneau ) {
-        var cours = new Cours( {
+      let create_cours = function( creneau ) {
+        let cours = new Cours( {
           creneau_emploi_du_temps_id: creneau.id,
           date_cours: new Date( creneau.heure_debut ).toISOString(),
           date_validation: null,
           enseignant_id: ctrl.current_user.id,
-          contenu: ''        
-} );
+          contenu: ''
+        } );
         cours.devoirs = [];
         cours.create = true;
 
@@ -106,8 +106,8 @@ angular.module( 'cahierDeTextesClientApp' )
 
       ctrl.sont_ce_les_vacances = Utils.sont_ce_les_vacances;
 
-      var semaines_toutes_actives = function() {
-        var semainier = [];
+      let semaines_toutes_actives = function() {
+        let semainier = [];
         _( 52 ).times( function( i ) {
           if ( !Utils.sont_ce_les_vacances( i + 1, ZONE ) ) {
             semainier.push( 1 );
@@ -130,8 +130,8 @@ angular.module( 'cahierDeTextesClientApp' )
         {
           label: 'Semaine A',
           apply: function() {
-            var template = [];
-            var semaines_depuis_les_vacances = 0;
+            let template = [];
+            let semaines_depuis_les_vacances = 0;
             _( 52 ).times( function( i ) {
               if ( Utils.sont_ce_les_vacances( i + 1, ZONE ) ) {
                 semaines_depuis_les_vacances = 0;
@@ -146,8 +146,8 @@ angular.module( 'cahierDeTextesClientApp' )
         {
           label: 'Semaine B',
           apply: function() {
-            var template = [];
-            var semaines_depuis_les_vacances = 0;
+            let template = [];
+            let semaines_depuis_les_vacances = 0;
             _( 52 ).times( function( i ) {
               if ( Utils.sont_ce_les_vacances( i + 1, ZONE ) ) {
                 semaines_depuis_les_vacances = 0;
@@ -162,7 +162,7 @@ angular.module( 'cahierDeTextesClientApp' )
         {
           label: 'Unique',
           apply: function() {
-            var template = [];
+            let template = [];
             _( 52 ).times( function( week ) {
               template.push( ( week + 1 == ctrl.creneau.n_week ) ? 1 : 0 );
             } );
@@ -192,7 +192,7 @@ angular.module( 'cahierDeTextesClientApp' )
       };
 
       ctrl.effacer_creneau = function() {
-        var do_it = function() {
+        let do_it = function() {
           CreneauxEmploiDuTemps.delete( {
             id: ctrl.creneau.id,
             date_creneau: ctrl.creneau.heure_debut
@@ -220,7 +220,7 @@ angular.module( 'cahierDeTextesClientApp' )
       };
 
       ctrl.annuler = function() {
-        var do_it = function() {
+        let do_it = function() {
           if ( ctrl.creneau.en_creation ) {
             ctrl.effacer_creneau();
           } else {
@@ -250,13 +250,13 @@ angular.module( 'cahierDeTextesClientApp' )
       ctrl.valider = function() {
         // réinitialisation des erreurs
         ctrl.erreurs = [];
-        var promesses = [];
+        let promesses = [];
 
         if ( ctrl.mode_edition_creneau ) {
           ctrl.creneau.matiere_id = ctrl.selected_matiere.id;
           ctrl.creneau.regroupement_id = ctrl.selected_regroupement.id;
           if ( ctrl.creneau.tmp_heure_debut > ctrl.creneau.tmp_heure_fin ) {
-            var tmp = ctrl.creneau.tmp_heure_debut;
+            let tmp = ctrl.creneau.tmp_heure_debut;
             ctrl.creneau.tmp_heure_debut = ctrl.creneau.tmp_heure_fin;
             ctrl.creneau.tmp_heure_fin = tmp;
           }
@@ -269,19 +269,19 @@ angular.module( 'cahierDeTextesClientApp' )
           ctrl.actions_done.push( POPUP_ACTIONS.CRENEAU_MODIFIED );
         } else {
           // Gestion des Cours et Devoirs
-          var valider_devoirs = function( devoirs, cours ) {
+          let valider_devoirs = function( devoirs, cours ) {
             _.chain( devoirs )
               .where( { dirty: true } )
               .each( function( devoir ) {
-                var prom = $q.defer();
-                var treat_error = function error( response ) {
+                let prom = $q.defer();
+                let treat_error = function error( response ) {
                   ctrl.erreurs.unshift( {
                     status: response.status,
                     message: response.data.error
                   } );
                   prom.reject( response );
                 };
-                var treat_success = function( action ) {
+                let treat_success = function( action ) {
                   return function success( result ) {
                     devoir.id = result.id;
                     prom.resolve( result );
@@ -307,12 +307,12 @@ angular.module( 'cahierDeTextesClientApp' )
 
           // Séquence Pédogogique du créneau
           if ( ( ctrl.cours.contenu.length > 0 || ( _( ctrl.cours ).has( 'ressources' ) && ctrl.cours.ressources.length > 0 ) ) || ( ctrl.cours.devoirs.length > 0 ) ) {
-            var cours_devoirs = _( ctrl.cours.devoirs ).map( function( devoir ) {
+            let cours_devoirs = _( ctrl.cours.devoirs ).map( function( devoir ) {
               return new Devoirs( devoir );
             } );
 
             if ( ctrl.cours.editable ) {
-              var promesse = $q.when( true );
+              let promesse = $q.when( true );
 
               if ( ctrl.cours.create ) {
                 ctrl.cours.regroupement_id = ctrl.selected_regroupement.id;
@@ -359,7 +359,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
         ctrl.types_de_devoir = API.query_types_de_devoir();
 
-        var init_cours_existant = function( cours ) {
+        let init_cours_existant = function( cours ) {
           ctrl.cours = Cours.get( { id: cours.id } );
           // ctrl.cours = new Cours( cours );
 
@@ -381,11 +381,11 @@ angular.module( 'cahierDeTextesClientApp' )
             _( cours.devoirs ).each( function( devoir ) {
               devoir.$promise.then( function( d ) {
                 ctrl.estimation_leave( d );
-                d.tooltip = '<em>' + $filter( 'amDateFormat' )( d.date_due, 'dddd D MMMM YYYY' ) + '</em><hr />' + d.contenu;
+                d.tooltip = `<em>${ $filter( 'amDateFormat' )( d.date_due, 'dddd D MMMM YYYY' ) }</em><hr />${ d.contenu }`;
                 if ( d.temps_estime > 0 ) {
-                  d.tooltip = '<span><i class="picto temps"></i>' + d.temps_estime * 5 + ' minutes</span><hr />' + d.tooltip;
+                  d.tooltip = `<span><i class="picto temps"></i>${ d.temps_estime * 5 } minutes</span><hr />${ d.tooltip }`;
                 }
-                d.tooltip = $sce.trustAsHtml( '<div>' + d.tooltip + '</div>' );
+                d.tooltip = $sce.trustAsHtml( `<div>${ d.tooltip }</div>` );
 
                 if ( ctrl.creneau.etranger ) {
                   d.contenu = $sce.trustAsHtml( d.contenu );
@@ -401,13 +401,13 @@ angular.module( 'cahierDeTextesClientApp' )
 
             ctrl.cours.$promise.then( function() {
               _( ctrl.cours.ressources ).each( function( ressource ) {
-                ressource.url = $sce.trustAsResourceUrl( URL_DOCS + '/api/connector?cmd=file&target=' + ressource.hash );
+                ressource.url = $sce.trustAsResourceUrl( `${ URL_DOCS }/api/connector?cmd=file&target=${ ressource.hash }` );
               } );
             } );
             _( ctrl.cours.devoirs ).each( function( devoir ) {
               devoir.$promise.then( function() {
                 _( devoir.ressources ).each( function( ressource ) {
-                  ressource.url = $sce.trustAsResourceUrl( URL_DOCS + '/api/connector?cmd=file&target=' + ressource.hash );
+                  ressource.url = $sce.trustAsResourceUrl( `${ URL_DOCS }/api/connector?cmd=file&target=${ ressource.hash }` );
                 } );
               } );
             } );
@@ -417,7 +417,7 @@ angular.module( 'cahierDeTextesClientApp' )
         };
 
         ctrl.devoirs = devoirs.map( function( devoir ) {
-          var devoir_from_DB = Devoirs.get( { id: devoir.id } );
+          let devoir_from_DB = Devoirs.get( { id: devoir.id } );
           // devoir_from_DB.$promise.then( function( d ) {
           //     d.cours.tooltip = $sce.trustAsHtml( "<div><em>" + $filter('amDateFormat')( d.cours.date_cours, 'dddd D MMMM YYYY' ) + "</em><hr />" + d.cours.contenu + "</div>" );
           // } );
@@ -429,7 +429,7 @@ angular.module( 'cahierDeTextesClientApp' )
           devoir.$promise.then( function() {
             ctrl.estimation_leave( devoir );
             _( devoir.ressources ).each( function( ressource ) {
-              ressource.url = $sce.trustAsResourceUrl( URL_DOCS + '/api/connector?cmd=file&target=' + ressource.hash );
+              ressource.url = $sce.trustAsResourceUrl( `${ URL_DOCS }/api/connector?cmd=file&target=${ ressource.hash }` );
             } );
             if ( ctrl.creneau.etranger ) {
               devoir.contenu = $sce.trustAsHtml( devoir.contenu );
@@ -440,14 +440,14 @@ angular.module( 'cahierDeTextesClientApp' )
         // Fonction UI pour fixer l'id du créneau en fct du choix dans la sbox des créneaux possibles.
         ctrl.set_creneau_date_due = function( devoir ) {
           // on prend le premier créneau qui correspond à cette date.
-          var creneau_choisi = _( ctrl.creneaux_devoirs_possibles ).findWhere( {
+          let creneau_choisi = _( ctrl.creneaux_devoirs_possibles ).findWhere( {
             date_due: devoir.date_due
           } );
           devoir.creneau_emploi_du_temps_id = creneau_choisi.id;
           ctrl.is_dirty( devoir );
         };
 
-        var liste_creneaux_similaires = function( creneau, n_semaines_before, n_semaines_after ) {
+        let liste_creneaux_similaires = function( creneau, n_semaines_before, n_semaines_after ) {
           return API.get_creneaux_emploi_du_temps_similaires( {
             id: creneau.id,
             debut: moment( creneau.heure_debut.toISOString() ).subtract( n_semaines_before, 'weeks' ).toDate(),
@@ -525,11 +525,11 @@ angular.module( 'cahierDeTextesClientApp' )
             if ( !_( response.error ).isEmpty() ) {
               ctrl.erreurs.push( { message: response.error } );
             } else {
-              var _item = _( response.added ).first();
+              let _item = _( response.added ).first();
               item.ressources.push( {
                 name: _item.name,
                 hash: _item.hash,
-                url: $sce.trustAsResourceUrl( URL_DOCS + '/api/connector?cmd=file&target=' + _item.hash )
+                url: $sce.trustAsResourceUrl( `${ URL_DOCS }/api/connector?cmd=file&target=${ _item.hash }` )
               } );
               ctrl.is_dirty( item );
 
@@ -597,7 +597,7 @@ angular.module( 'cahierDeTextesClientApp' )
             }
           }
 
-          var devoir = new Devoirs( {
+          let devoir = new Devoirs( {
             cours_id: ctrl.cours.id,
             date_due: $filter( 'date' )( creneau_cible.heure_debut, 'yyyy-MM-dd' ),
             type_devoir_id: _( ctrl.types_de_devoir ).last().id,
@@ -630,7 +630,7 @@ angular.module( 'cahierDeTextesClientApp' )
                 .map( function( creneau ) {
                   creneau.classe = _( ctrl.classes ).findWhere( { id: parseInt( creneau.regroupement_id ) } );
                   creneau.date_due = $filter( 'date' )( creneau.start, 'y-MM-dd' );
-                  creneau.semaine = moment( creneau.start ).from( moment( ctrl.creneau.heure_debut ), true ) + ' plus tard';
+                  creneau.semaine = `${ moment( creneau.start ).from( moment( ctrl.creneau.heure_debut ), true ) } plus tard`;
                   creneau.heure_debut = new Date( creneau.heure_debut );
                   creneau.heure_fin = new Date( creneau.heure_fin );
 
@@ -642,7 +642,7 @@ angular.module( 'cahierDeTextesClientApp' )
         };
 
         ctrl.dupliquer = function() {
-          var devoirs = angular.copy( ctrl.cours.devoirs );
+          let devoirs = angular.copy( ctrl.cours.devoirs );
           ctrl.cours.$copie( {
             regroupement_id: ctrl.creneaux_similaires.selected.regroupement_id,
             creneau_emploi_du_temps_id: ctrl.creneaux_similaires.selected.creneau_emploi_du_temps_id,

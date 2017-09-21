@@ -72,7 +72,7 @@ angular.module('cahierDeTextesClientApp')
                     }
                     return {
                         couleurs: couleurs,
-                        display: '<span uib-dropdown><a uib-dropdown-toggle><i class="fa fa-font" data-ng-style="{\'' + style + 'color\': selected }"></i> <i class="fa fa-caret-down"></i></a><ng-color-picker uib-dropdown-menu selected="selected" colors="couleurs"></ng-color-picker></span>',
+                        display: "<span uib-dropdown><a uib-dropdown-toggle><i class=\"fa fa-font\" data-ng-style=\"{'" + style + "color': selected }\"></i> <i class=\"fa fa-caret-down\"></i></a><ng-color-picker uib-dropdown-menu selected=\"selected\" colors=\"couleurs\"></ng-color-picker></span>",
                         action: function () {
                             return (this.selected === 'nil') ? false : this.$editor().wrapSelection(type, this.selected);
                         }
@@ -102,13 +102,13 @@ angular.module('cahierDeTextesClientApp')
                     insert_table: function () {
                         var tds = '';
                         for (var idxCol = 0; idxCol < this.columns.value; idxCol++) {
-                            tds = tds + '<td>&nbsp;</td>';
+                            tds = tds + "<td>&nbsp;</td>";
                         }
                         var trs = '';
                         for (var idxRow = 0; idxRow < this.rows.value; idxRow++) {
-                            trs = trs + '<tr>' + tds + '</tr>';
+                            trs = trs + "<tr>" + tds + "</tr>";
                         }
-                        this.$editor().wrapSelection('insertHTML', '<table class="table table-bordered">' + trs + '</table>');
+                        this.$editor().wrapSelection('insertHTML', "<table class=\"table table-bordered\">" + trs + "</table>");
                         this.deferration.resolve();
                     },
                     action: function (deferred) {
@@ -259,11 +259,11 @@ angular.module('cahierDeTextesClientApp')
         $stateProvider
             .state('404', {
             url: '404',
-            templateUrl: APP_PATH + '/app/views/404.html'
+            templateUrl: APP_PATH + "/app/views/404.html"
         })
             .state('index', {
             url: '/',
-            templateUrl: APP_PATH + '/app/views/index.html',
+            templateUrl: APP_PATH + "/app/views/index.html",
             controller: 'IndexCtrl',
             resolve: {
                 auth: ['Redirection', function (Redirection) { Redirection.doorman(['ADM', 'DIR', 'ENS', 'DOC', 'ELV', 'TUT', 'EVS']); }],
@@ -275,7 +275,7 @@ angular.module('cahierDeTextesClientApp')
             url: 'emploi_du_temps',
             views: {
                 'content': {
-                    templateUrl: APP_PATH + '/app/views/textbook.html',
+                    templateUrl: APP_PATH + "/app/views/textbook.html",
                     controller: 'TextBookCtrl'
                 }
             }
@@ -286,7 +286,7 @@ angular.module('cahierDeTextesClientApp')
             resolve: { auth: ['Redirection', function (Redirection) { Redirection.doorman(['ELV', 'TUT']); }] },
             views: {
                 'content': {
-                    templateUrl: APP_PATH + '/app/views/assignements.html',
+                    templateUrl: APP_PATH + "/app/views/assignements.html",
                     controller: 'AssignementsCtrl'
                 }
             }
@@ -297,7 +297,7 @@ angular.module('cahierDeTextesClientApp')
             resolve: { auth: ['Redirection', function (Redirection) { Redirection.doorman(['DIR', 'ADM']); }] },
             views: {
                 'content': {
-                    templateUrl: APP_PATH + '/app/views/import.html',
+                    templateUrl: APP_PATH + "/app/views/import.html",
                     controller: 'ImportCtrl'
                 }
             }
@@ -308,7 +308,7 @@ angular.module('cahierDeTextesClientApp')
             resolve: { auth: ['Redirection', function (Redirection) { Redirection.doorman(['DIR']); }] },
             views: {
                 'content': {
-                    templateUrl: APP_PATH + '/app/views/dashboard_teachers.html',
+                    templateUrl: APP_PATH + "/app/views/dashboard_teachers.html",
                     controller: 'DashboardTeachersCtrl'
                 }
             }
@@ -319,7 +319,7 @@ angular.module('cahierDeTextesClientApp')
             resolve: { auth: ['Redirection', function (Redirection) { Redirection.doorman(['DIR']); }] },
             views: {
                 'content': {
-                    templateUrl: APP_PATH + '/app/views/dashboard_teacher.html',
+                    templateUrl: APP_PATH + "/app/views/dashboard_teacher.html",
                     controller: 'DashboardTeacherCtrl'
                 }
             }
@@ -330,7 +330,7 @@ angular.module('cahierDeTextesClientApp')
             resolve: { auth: ['Redirection', function (Redirection) { Redirection.doorman(['ENS', 'DOC']); }] },
             views: {
                 'content': {
-                    templateUrl: APP_PATH + '/app/views/dashboard_teacher.html',
+                    templateUrl: APP_PATH + "/app/views/dashboard_teacher.html",
                     controller: 'DashboardTeacherCtrl'
                 }
             }
@@ -376,7 +376,7 @@ angular.module('cahierDeTextesClientApp')
                     ctrl.devoir.type_devoir = response;
                 });
                 _(ctrl.devoir.ressources).each(function (ressource) {
-                    ressource.url = $sce.trustAsResourceUrl(URL_DOCS + '/api/connector?cmd=file&target=' + ressource.hash);
+                    ressource.url = $sce.trustAsResourceUrl(URL_DOCS + "/api/connector?cmd=file&target=" + ressource.hash);
                 });
             };
         }]
@@ -399,7 +399,7 @@ angular.module('cahierDeTextesClientApp')
                     ctrl.sp.contenu = $sce.trustAsHtml(ctrl.sp.contenu);
                 }
                 _(ctrl.sp.ressources).each(function (ressource) {
-                    ressource.url = $sce.trustAsResourceUrl(URL_DOCS + '/api/connector?cmd=file&target=' + ressource.hash);
+                    ressource.url = $sce.trustAsResourceUrl(URL_DOCS + "/api/connector?cmd=file&target=" + ressource.hash);
                 });
             };
         }]
@@ -490,7 +490,7 @@ angular.module('cahierDeTextesClientApp')
                             });
                         });
                         _(devoir.ressources).each(function (ressource) {
-                            ressource.url = $sce.trustAsResourceUrl(URL_DOCS + '/api/connector?cmd=file&target=' + ressource.hash);
+                            ressource.url = $sce.trustAsResourceUrl(URL_DOCS + "/api/connector?cmd=file&target=" + ressource.hash);
                         });
                         return devoir;
                     });
@@ -577,18 +577,18 @@ angular.module('cahierDeTextesClientApp')
         };
         $scope.valide = function (saisie) {
             if (current_user.profil_actif.type === 'DIR') {
-                var disable_toastr = _(saisie).has('disable_toastr');
+                var disable_toastr_1 = _(saisie).has('disable_toastr');
                 saisie.cours.$valide().then(function (response) {
                     saisie.valide = !_(response.date_validation).isNull();
                     if (!$scope.montre_valides && !_(response.date_validation).isNull()) {
-                        var date_validation_holder = response.date_validation;
+                        var date_validation_holder_1 = response.date_validation;
                         response.date_validation = null;
-                        $timeout(function () { response.date_validation = date_validation_holder; }, 3000);
+                        $timeout(function () { response.date_validation = date_validation_holder_1; }, 3000);
                     }
                     $scope.nb_saisies_visables = calc_nb_saisies_visables($scope.raw_data);
                     $scope.graphiques.populate($scope.raw_data);
-                    if (!disable_toastr) {
-                        toastr.success('Séquence pédagogique ' + (saisie.valide ? '' : 'dé-') + 'visée.', 'Opération réussie');
+                    if (!disable_toastr_1) {
+                        toastr.success("S\u00E9quence p\u00E9dagogique " + (saisie.valide ? '' : 'dé-') + "vis\u00E9e.", 'Opération réussie');
                     }
                 });
             }
@@ -614,7 +614,7 @@ angular.module('cahierDeTextesClientApp')
                 });
                 if (counter > 0) {
                     var pluriel = counter > 1 ? 's' : '';
-                    var message = counter + ' séquence' + pluriel + ' pédagogique' + pluriel + ' visée' + pluriel + '.';
+                    var message = counter + " s\u00E9quence" + pluriel + " p\u00E9dagogique" + pluriel + " vis\u00E9e" + pluriel + ".";
                     toastr.success(message, 'Opération réussie');
                 }
             }, function cancel() { });
@@ -771,7 +771,7 @@ angular.module('cahierDeTextesClientApp')
     .controller('HeaderCtrl', ['$scope', '$state', 'User', 'Redirection', '$sce', 'URL_DOCS',
     function ($scope, $state, User, Redirection, $sce, URL_DOCS) {
         $scope.load_docs = window.location.hostname !== 'localhost';
-        $scope.URL_DOCS_login = $sce.trustAsResourceUrl(URL_DOCS + '/login');
+        $scope.URL_DOCS_login = $sce.trustAsResourceUrl(URL_DOCS + "/login");
         $scope.embedded = window != window.top;
         User.get_user().then(function (response) {
             $scope.current_user = response.data;
@@ -808,7 +808,7 @@ angular.module('cahierDeTextesClientApp')
                 _.chain(Utils.overlay_semainier())
                     .sortBy(function (month) { return month.index; })
                     .map(function (month) {
-                    var month_html = '<div class="month blanc"><h5 class="month-name gris4">' + month.label + '</h5>';
+                    var month_html = "<div class=\"month blanc\"><h5 class=\"month-name gris4\">" + month.label + "</h5>";
                     month_html += _(month.semaines).map(function (week) {
                         var week_html = '<span class="week';
                         if (Utils.sont_ce_les_vacances(week.semaine, ZONE)) {
@@ -817,7 +817,7 @@ angular.module('cahierDeTextesClientApp')
                         if (bsemainier[week.semaine] === '1') {
                             week_html += ' active orange-moins';
                         }
-                        week_html += '">' + week.semaine + '</span>';
+                        week_html += "\">" + week.semaine + "</span>";
                         return week_html;
                     }).join('');
                     month_html += '</div>';
@@ -925,7 +925,7 @@ angular.module('cahierDeTextesClientApp')
                 return $q.reject(response);
             };
             toastr.info('Déchiffrage du fichier');
-            return fileUpload.uploadFileToUrl(fichier, APP_PATH + '/api/import/pronote/decrypt')
+            return fileUpload.uploadFileToUrl(fichier, APP_PATH + "/api/import/pronote/decrypt")
                 .then(function success(response) {
                 $scope.pronote = response.data;
                 $scope.pronote.GrilleHoraire[0].DureePlace = parseInt($scope.pronote.GrilleHoraire[0].DureePlace);
@@ -1103,7 +1103,7 @@ angular.module('cahierDeTextesClientApp')
             var creneaux_emploi_du_temps = _($scope.creneaux).select(function (creneau) {
                 return creneau.ready && creneau.is_displayed;
             });
-            return $http.post(APP_PATH + '/api/import/log/start/?uai=' + $scope.pronote.UAI, { uai: $scope.pronote.UAI, type: 'client ' + VERSION, comment: '' })
+            return $http.post(APP_PATH + "/api/import/log/start/?uai=" + $scope.pronote.UAI, { uai: $scope.pronote.UAI, type: 'client ' + VERSION, comment: '' })
                 .then(function success(response) {
                 import_id = response.data.id;
                 var ct_etablissement = new Etablissements({
@@ -1132,7 +1132,7 @@ angular.module('cahierDeTextesClientApp')
                 var regroupements = preprocess_cahiers_de_textes($scope.pronote.classes);
                 regroupements.push(preprocess_cahiers_de_textes($scope.pronote.groupes_eleves));
                 regroupements = _(regroupements).flatten();
-                return $http.post(APP_PATH + '/api/cahiers_de_textes/bulk', { cahiers_de_textes: regroupements });
+                return $http.post(APP_PATH + "/api/cahiers_de_textes/bulk", { cahiers_de_textes: regroupements });
             }, handle_error)
                 .then(function success(response) {
                 $scope.report.cahiers_de_textes = response.data;
@@ -1145,7 +1145,7 @@ angular.module('cahierDeTextesClientApp')
                         nom: salle.Nom
                     };
                 });
-                return $http.post(APP_PATH + '/api/salles/bulk', { salles: salles_to_import });
+                return $http.post(APP_PATH + "/api/salles/bulk", { salles: salles_to_import });
             }, handle_error)
                 .then(function success(response) {
                 $scope.report.salles = response.data;
@@ -1172,10 +1172,10 @@ angular.module('cahierDeTextesClientApp')
                     }
                     return pre_creneau;
                 });
-                toastr.info('Import de ' + creneaux_to_import.length + ' créneaux');
+                toastr.info("Import de " + creneaux_to_import.length + " cr\u00E9neaux");
                 var promises = [];
                 while (creneaux_to_import.length > 0) {
-                    promises.push($http.post(APP_PATH + '/api/creneaux_emploi_du_temps/bulk/', {
+                    promises.push($http.post(APP_PATH + "/api/creneaux_emploi_du_temps/bulk/", {
                         uai: $scope.pronote.UAI,
                         creneaux_emploi_du_temps: creneaux_to_import.splice(0, 500)
                     }));
@@ -1379,7 +1379,7 @@ angular.module('cahierDeTextesClientApp')
             _(cours.devoirs).each(function (devoir) {
                 devoir.tooltip = devoir.contenu;
                 if (devoir.temps_estime > 0) {
-                    devoir.tooltip = '<span><i class="picto temps"></i>' + devoir.temps_estime * 5 + ' minutes</span><hr>' + devoir.tooltip;
+                    devoir.tooltip = "<span><i class=\"picto temps\"></i>" + devoir.temps_estime * 5 + " minutes</span><hr>" + devoir.tooltip;
                 }
                 devoir.tooltip = $sce.trustAsHtml(devoir.tooltip);
             });
@@ -1447,10 +1447,10 @@ angular.module('cahierDeTextesClientApp')
         ctrl.formateCreneau = function (creneau) {
             var label = '';
             if (_(creneau).has('start')) {
-                label += $filter('amDateFormat')(creneau.start, 'ddd DD MMM HH:mm') + ' - ' + $filter('amDateFormat')(creneau.end, 'HH:mm');
+                label += $filter('amDateFormat')(creneau.start, 'ddd DD MMM HH:mm') + " - " + $filter('amDateFormat')(creneau.end, 'HH:mm');
             }
             else {
-                label += $filter('amDateFormat')(creneau.heure_debut, 'ddd DD MMM HH:mm') + ' - ' + $filter('amDateFormat')(creneau.heure_fin, 'HH:mm');
+                label += $filter('amDateFormat')(creneau.heure_debut, 'ddd DD MMM HH:mm') + " - " + $filter('amDateFormat')(creneau.heure_fin, 'HH:mm');
             }
             return label;
         };
@@ -1636,7 +1636,7 @@ angular.module('cahierDeTextesClientApp')
                 ctrl.actions_done.push(POPUP_ACTIONS.CRENEAU_MODIFIED);
             }
             else {
-                var valider_devoirs = function (devoirs, cours) {
+                var valider_devoirs_1 = function (devoirs, cours) {
                     _.chain(devoirs)
                         .where({ dirty: true })
                         .each(function (devoir) {
@@ -1672,7 +1672,7 @@ angular.module('cahierDeTextesClientApp')
                     });
                 };
                 if ((ctrl.cours.contenu.length > 0 || (_(ctrl.cours).has('ressources') && ctrl.cours.ressources.length > 0)) || (ctrl.cours.devoirs.length > 0)) {
-                    var cours_devoirs = _(ctrl.cours.devoirs).map(function (devoir) {
+                    var cours_devoirs_1 = _(ctrl.cours.devoirs).map(function (devoir) {
                         return new Devoirs(devoir);
                     });
                     if (ctrl.cours.editable) {
@@ -1687,17 +1687,17 @@ angular.module('cahierDeTextesClientApp')
                             promesse = ctrl.cours.$update();
                             ctrl.actions_done.push(POPUP_ACTIONS.SEQUENCE_PEDAGOGIQUE_MODIFIED);
                         }
-                        if (cours_devoirs.length > 0) {
+                        if (cours_devoirs_1.length > 0) {
                             promesse.then(function (cours_from_DB) {
-                                valider_devoirs(cours_devoirs, cours_from_DB);
+                                valider_devoirs_1(cours_devoirs_1, cours_from_DB);
                             });
                         }
                     }
                     else {
-                        valider_devoirs(cours_devoirs, ctrl.cours);
+                        valider_devoirs_1(cours_devoirs_1, ctrl.cours);
                     }
                 }
-                valider_devoirs(ctrl.devoirs, null);
+                valider_devoirs_1(ctrl.devoirs, null);
             }
             $q.all(promesses).then(ctrl.fermer);
         };
@@ -1710,7 +1710,7 @@ angular.module('cahierDeTextesClientApp')
                 ctrl.estimation_over(d, d.temps_estime);
             };
             ctrl.types_de_devoir = API.query_types_de_devoir();
-            var init_cours_existant = function (cours) {
+            var init_cours_existant_1 = function (cours) {
                 ctrl.cours = Cours.get({ id: cours.id });
                 ctrl.cours.$promise.then(function (cours) {
                     ctrl.cours.editable = _(ctrl.cours.date_validation).isNull() && _(['ENS', 'DOC']).includes(ctrl.current_user.profil_actif.type) && ctrl.cours.enseignant_id === ctrl.current_user.id;
@@ -1728,11 +1728,11 @@ angular.module('cahierDeTextesClientApp')
                     _(cours.devoirs).each(function (devoir) {
                         devoir.$promise.then(function (d) {
                             ctrl.estimation_leave(d);
-                            d.tooltip = '<em>' + $filter('amDateFormat')(d.date_due, 'dddd D MMMM YYYY') + '</em><hr />' + d.contenu;
+                            d.tooltip = "<em>" + $filter('amDateFormat')(d.date_due, 'dddd D MMMM YYYY') + "</em><hr />" + d.contenu;
                             if (d.temps_estime > 0) {
-                                d.tooltip = '<span><i class="picto temps"></i>' + d.temps_estime * 5 + ' minutes</span><hr />' + d.tooltip;
+                                d.tooltip = "<span><i class=\"picto temps\"></i>" + d.temps_estime * 5 + " minutes</span><hr />" + d.tooltip;
                             }
-                            d.tooltip = $sce.trustAsHtml('<div>' + d.tooltip + '</div>');
+                            d.tooltip = $sce.trustAsHtml("<div>" + d.tooltip + "</div>");
                             if (ctrl.creneau.etranger) {
                                 d.contenu = $sce.trustAsHtml(d.contenu);
                             }
@@ -1745,13 +1745,13 @@ angular.module('cahierDeTextesClientApp')
                     });
                     ctrl.cours.$promise.then(function () {
                         _(ctrl.cours.ressources).each(function (ressource) {
-                            ressource.url = $sce.trustAsResourceUrl(URL_DOCS + '/api/connector?cmd=file&target=' + ressource.hash);
+                            ressource.url = $sce.trustAsResourceUrl(URL_DOCS + "/api/connector?cmd=file&target=" + ressource.hash);
                         });
                     });
                     _(ctrl.cours.devoirs).each(function (devoir) {
                         devoir.$promise.then(function () {
                             _(devoir.ressources).each(function (ressource) {
-                                ressource.url = $sce.trustAsResourceUrl(URL_DOCS + '/api/connector?cmd=file&target=' + ressource.hash);
+                                ressource.url = $sce.trustAsResourceUrl(URL_DOCS + "/api/connector?cmd=file&target=" + ressource.hash);
                             });
                         });
                     });
@@ -1766,7 +1766,7 @@ angular.module('cahierDeTextesClientApp')
                 devoir.$promise.then(function () {
                     ctrl.estimation_leave(devoir);
                     _(devoir.ressources).each(function (ressource) {
-                        ressource.url = $sce.trustAsResourceUrl(URL_DOCS + '/api/connector?cmd=file&target=' + ressource.hash);
+                        ressource.url = $sce.trustAsResourceUrl(URL_DOCS + "/api/connector?cmd=file&target=" + ressource.hash);
                     });
                     if (ctrl.creneau.etranger) {
                         devoir.contenu = $sce.trustAsHtml(devoir.contenu);
@@ -1780,14 +1780,14 @@ angular.module('cahierDeTextesClientApp')
                 devoir.creneau_emploi_du_temps_id = creneau_choisi.id;
                 ctrl.is_dirty(devoir);
             };
-            var liste_creneaux_similaires = function (creneau, n_semaines_before, n_semaines_after) {
+            var liste_creneaux_similaires_1 = function (creneau, n_semaines_before, n_semaines_after) {
                 return API.get_creneaux_emploi_du_temps_similaires({
                     id: creneau.id,
                     debut: moment(creneau.heure_debut.toISOString()).subtract(n_semaines_before, 'weeks').toDate(),
                     fin: moment(creneau.heure_debut.toISOString()).add(n_semaines_after, 'weeks').toDate()
                 });
             };
-            liste_creneaux_similaires(ctrl.creneau, 2, 8)
+            liste_creneaux_similaires_1(ctrl.creneau, 2, 8)
                 .then(function (response) {
                 ctrl.creneaux_devoirs_possibles_duplication = [];
                 ctrl.creneaux_similaires = _.chain(response.data)
@@ -1801,7 +1801,7 @@ angular.module('cahierDeTextesClientApp')
                     .value();
                 ctrl.creneaux_similaires.selected = [];
             });
-            liste_creneaux_similaires(ctrl.creneau, 0, 8)
+            liste_creneaux_similaires_1(ctrl.creneau, 0, 8)
                 .then(function (response) {
                 if (_(response.data).isEmpty()) {
                     response.data = [ctrl.creneau];
@@ -1853,7 +1853,7 @@ angular.module('cahierDeTextesClientApp')
                         item.ressources.push({
                             name: _item.name,
                             hash: _item.hash,
-                            url: $sce.trustAsResourceUrl(URL_DOCS + '/api/connector?cmd=file&target=' + _item.hash)
+                            url: $sce.trustAsResourceUrl(URL_DOCS + "/api/connector?cmd=file&target=" + _item.hash)
                         });
                         ctrl.is_dirty(item);
                         if (!_(response.removed).isEmpty()) {
@@ -1885,7 +1885,7 @@ angular.module('cahierDeTextesClientApp')
                 ctrl.cours.$delete()
                     .then(function () {
                     ctrl.actions_done.push(POPUP_ACTIONS.SEQUENCE_PEDAGOGIQUE_DELETED);
-                    init_cours_existant(ctrl.cours);
+                    init_cours_existant_1(ctrl.cours);
                 });
             };
             ctrl.effacer_devoir = function (devoir) {
@@ -1935,14 +1935,14 @@ angular.module('cahierDeTextesClientApp')
                     && _(ctrl.cours.devoirs).reduce(function (is_it, devoir) { return is_it && _(devoir).has('creneau_cible'); }, true);
             };
             ctrl.creneau_cible_duplication_SP_updated = function () {
-                liste_creneaux_similaires(ctrl.creneaux_similaires.selected, 0, 4)
+                liste_creneaux_similaires_1(ctrl.creneaux_similaires.selected, 0, 4)
                     .then(function (response) {
                     ctrl.creneaux_devoirs_possibles_duplication = _.chain(response.data)
                         .select(function (creneau) { return creneau.regroupement_id == ctrl.creneaux_similaires.selected.regroupement_id; })
                         .map(function (creneau) {
                         creneau.classe = _(ctrl.classes).findWhere({ id: parseInt(creneau.regroupement_id) });
                         creneau.date_due = $filter('date')(creneau.start, 'y-MM-dd');
-                        creneau.semaine = moment(creneau.start).from(moment(ctrl.creneau.heure_debut), true) + ' plus tard';
+                        creneau.semaine = moment(creneau.start).from(moment(ctrl.creneau.heure_debut), true) + " plus tard";
                         creneau.heure_debut = new Date(creneau.heure_debut);
                         creneau.heure_fin = new Date(creneau.heure_fin);
                         return creneau;
@@ -1976,7 +1976,7 @@ angular.module('cahierDeTextesClientApp')
                         return creneau.id + creneau.start == ctrl.creneaux_similaires.selected.id + ctrl.creneaux_similaires.selected.start;
                     });
                     ctrl.creneaux_similaires.selected = [];
-                    init_cours_existant(ctrl.cours);
+                    init_cours_existant_1(ctrl.cours);
                     swal({
                         title: 'Créneau copié !',
                         type: 'success',
@@ -2268,7 +2268,7 @@ angular.module('cahierDeTextesClientApp')
                             else if (event.temps_estime <= 15) {
                                 class_couleur = ' label-danger';
                             }
-                            elt_fc_content.prepend('<div class="est-time est-time-' + event.temps_estime + class_couleur + '"></div>');
+                            elt_fc_content.prepend("<div class=\"est-time est-time-" + event.temps_estime + " " + class_couleur + "\"></div>");
                         }
                     }
                     if (event.has_resources) {
@@ -2277,35 +2277,27 @@ angular.module('cahierDeTextesClientApp')
                     var elt_fc_content_title = element.find('.fc-list-item-title');
                     if (elt_fc_content_title.length > 0
                         && (!_(event.details.cours).isNull() || !_(event.details.devoirs).isEmpty())) {
-                        var event_content = elt_fc_content_title.html();
-                        event_content += '<br>';
-                        event_content += '<div class="col-md-6 sequence-pedagogique">';
+                        var event_content_1 = elt_fc_content_title.html() + "\n              <br>\n<div class=\"col-md-6 sequence-pedagogique\">";
                         if (!_(event.details.cours).isNull()) {
-                            event_content += '<fieldset>';
-                            event_content += '<legend>Séquence pédagogique</legend>';
-                            event_content += event.details.cours.contenu;
-                            event_content += '</fieldset>';
+                            event_content_1 += "\n              <fieldset>\n                <legend>S\u00E9quence p\u00E9dagogique</legend>\n                " + event.details.cours.contenu + "\n              </fieldset>";
                         }
-                        event_content += '</div>';
+                        event_content_1 += '</div>';
                         if (!_(event.details.devoirs).isEmpty()) {
-                            event_content += '<fieldset><legend>Devoirs</legend>';
-                            event_content += '<ul class="col-md-6 devoirs">';
+                            event_content_1 += "<fieldset>\n< legend > Devoirs < /legend>";
+                            event_content_1 += '<ul class="col-md-6 devoirs">';
                             _(event.details.devoirs).each(function (assignement) {
                                 var additional_classes = $scope.current_user.profil_actif.type === 'ELV' ? (assignement.fait ? 'fait' : 'a-faire') : '';
-                                event_content += '  <li class="devoir type' + assignement.type_devoir_id + ' ' + additional_classes + '">';
+                                event_content_1 += "  <li class=\"devoir type" + assignement.type_devoir_id + " " + additional_classes + "\">";
                                 if ($scope.current_user.parametrage_cahier_de_textes.affichage_types_de_devoir) {
-                                    event_content += '    <span class="type">' + assignement.type_devoir_description + '</span>';
+                                    event_content_1 += "    <span class=\"type\">" + assignement.type_devoir_description + "</span>";
                                 }
                                 if (assignement.temps_estime > 0) {
-                                    event_content += '    <span class="temps-estime">' + assignement.temps_estime * 5 + ' minutes</span>';
+                                    event_content_1 += "    <span class=\"temps-estime\">" + assignement.temps_estime * 5 + " minutes</span>\n" + assignement.contenu + "\n                      </li>";
                                 }
-                                event_content += assignement.contenu;
-                                event_content += '  </li>';
                             });
-                            event_content += '</ul>';
-                            event_content += '</fieldset>';
+                            event_content_1 += "</ul>\n</fieldset>";
                         }
-                        elt_fc_content_title.html(event_content);
+                        elt_fc_content_title.html(event_content_1);
                     }
                 },
                 eventClick: function (event) {
@@ -2340,24 +2332,24 @@ angular.module('cahierDeTextesClientApp')
                         if (!popup_ouverte) {
                             start = new Date(start);
                             end = new Date(end);
-                            var regroupement_id = $scope.selected_regroupements[0].id;
-                            var new_creneau = new CreneauxEmploiDuTemps({
-                                regroupement_id: regroupement_id,
+                            var regroupement_id_1 = $scope.selected_regroupements[0].id;
+                            var new_creneau_1 = new CreneauxEmploiDuTemps({
+                                regroupement_id: regroupement_id_1,
                                 jour_de_la_semaine: start.getDay(),
                                 heure_debut: moment(start).toISOString(),
                                 heure_fin: moment(end).toISOString(),
                                 matiere_id: ''
                             });
-                            new_creneau.$save()
+                            new_creneau_1.$save()
                                 .then(function () {
-                                new_creneau.dirty = true;
-                                new_creneau.en_creation = true;
-                                new_creneau.heure_debut = start;
-                                new_creneau.heure_fin = end;
-                                new_creneau.regroupement_id = regroupement_id;
+                                new_creneau_1.dirty = true;
+                                new_creneau_1.en_creation = true;
+                                new_creneau_1.heure_debut = start;
+                                new_creneau_1.heure_fin = end;
+                                new_creneau_1.regroupement_id = regroupement_id_1;
                                 $scope.current_user.get_actual_subjects()
                                     .then(function (actual_subjects) {
-                                    PopupsCreneau.edition($scope.raw_data, actual_subjects, $scope.current_user.actual_groups, new_creneau, null, [], popup_callback, popup_ouverte);
+                                    PopupsCreneau.edition($scope.raw_data, actual_subjects, $scope.current_user.actual_groups, new_creneau_1, null, [], popup_callback, popup_ouverte);
                                 });
                                 $scope.emploi_du_temps.fullCalendar('unselect');
                             });
@@ -2448,7 +2440,7 @@ angular.module('cahierDeTextesClientApp')
                         target.ressources.push({
                             name: node.name,
                             hash: node.hash,
-                            url: $sce.trustAsResourceUrl(URL_DOCS + '/api/connector?cmd=file&target=' + node.hash)
+                            url: $sce.trustAsResourceUrl(URL_DOCS + "/api/connector?cmd=file&target=" + node.hash)
                         });
                     };
                 }
@@ -2519,19 +2511,19 @@ angular.module('cahierDeTextesClientApp')
             }
         };
         service.query_subjects = _.memoize(function () {
-            return $http.get(URL_ENT + '/api/subjects');
+            return $http.get(URL_ENT + "/api/subjects");
         });
         service.get_subject = _.memoize(function (matiere_id) {
-            return $http.get(URL_ENT + '/api/subjects/' + matiere_id);
+            return $http.get(URL_ENT + "/api/subjects/" + matiere_id);
         });
         service.get_subjects = _.memoize(function (subjects_ids) {
-            return $http.get(URL_ENT + '/api/subjects/', { params: { 'id[]': subjects_ids } });
+            return $http.get(URL_ENT + "/api/subjects/", { params: { 'id[]': subjects_ids } });
         });
         service.get_structure = _.memoize(function (uai) {
-            return $http.get(URL_ENT + '/api/structures/' + uai);
+            return $http.get(URL_ENT + "/api/structures/" + uai);
         });
         service.get_group = _.memoize(function (group_id) {
-            return $http.get(URL_ENT + '/api/groups/' + group_id + '?expand=false')
+            return $http.get(URL_ENT + "/api/groups/" + group_id, { params: { expand: true } })
                 .then(function success(response) {
                 response.data.full_type = beautify_group_type(response.data.type);
                 return $q.resolve(response);
@@ -2542,7 +2534,7 @@ angular.module('cahierDeTextesClientApp')
                 return $q.resolve({ data: [] });
             }
             else {
-                return $http.get(URL_ENT + '/api/groups/', { params: { 'id[]': groups_ids } })
+                return $http.get(URL_ENT + "/api/groups/", { params: { 'id[]': groups_ids } })
                     .then(function success(response) {
                     response.data = response.data.map(function (group) {
                         group.full_type = beautify_group_type(group.type);
@@ -2553,7 +2545,7 @@ angular.module('cahierDeTextesClientApp')
             }
         });
         service.get_groups_of_structures = _.memoize(function (structures_ids) {
-            return $http.get(URL_ENT + '/api/groups/', { params: { 'structure_id[]': structures_ids } })
+            return $http.get(URL_ENT + "/api/groups/", { params: { 'structure_id[]': structures_ids } })
                 .then(function success(response) {
                 response.data = response.data.map(function (group) {
                     group.full_type = beautify_group_type(group.type);
@@ -2563,7 +2555,7 @@ angular.module('cahierDeTextesClientApp')
             });
         });
         service.get_user = _.memoize(function (user_id) {
-            return $http.get(URL_ENT + '/api/users/' + user_id)
+            return $http.get(URL_ENT + "/api/users/" + user_id)
                 .then(function (response) {
                 response.data.profil_actif = _(response.data.profiles).findWhere({ active: true });
                 response.data.get_actual_groups = function () {
@@ -2582,7 +2574,7 @@ angular.module('cahierDeTextesClientApp')
             });
         });
         service.get_users = _.memoize(function (users_ids) {
-            return $http.get(URL_ENT + '/api/users/', { params: { 'id[]': users_ids } });
+            return $http.get(URL_ENT + "/api/users/", { params: { 'id[]': users_ids } });
         });
     }
 ]);
@@ -2590,7 +2582,7 @@ angular.module('cahierDeTextesClientApp')
     .service('User', ['$http', '$q', 'APP_PATH', 'Annuaire',
     function ($http, $q, APP_PATH, Annuaire) {
         this.get_user = _.memoize(function () {
-            return $http.get(APP_PATH + '/api/users/current')
+            return $http.get(APP_PATH + "/api/users/current")
                 .then(function (response) {
                 _(response.data.profils).each(function (profil) {
                     profil.regroupements = _.chain(response.data.regroupements)
@@ -2659,27 +2651,27 @@ angular.module('cahierDeTextesClientApp')
             });
         });
         this.update_parameters = function (parametres) {
-            return $http.put(APP_PATH + '/api/users/current/parametres', { parameters: JSON.stringify(parametres) });
+            return $http.put(APP_PATH + "/api/users/current/parametres", { parameters: JSON.stringify(parametres) });
         };
     }])
     .factory('StatistiquesRegroupements', ['$resource', 'APP_PATH',
     function ($resource, APP_PATH) {
-        return $resource(APP_PATH + '/api/etablissements/:uai/statistiques/regroupements/:id', {
+        return $resource(APP_PATH + "/api/etablissements/:uai/statistiques/regroupements/:id", {
             uai: '@uai',
             id: '@id'
         });
     }])
     .factory('Cours', ['$resource', 'APP_PATH',
     function ($resource, APP_PATH) {
-        return $resource(APP_PATH + '/api/cours/:id', { id: '@id' }, {
+        return $resource(APP_PATH + "/api/cours/:id", { id: '@id' }, {
             update: { method: 'PUT' },
             valide: {
                 method: 'PUT',
-                url: APP_PATH + '/api/cours/:id/valide'
+                url: APP_PATH + "/api/cours/:id/valide"
             },
             copie: {
                 method: 'PUT',
-                url: APP_PATH + '/api/cours/:id/copie/regroupement/:regroupement_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date/:date',
+                url: APP_PATH + "/api/cours/:id/copie/regroupement/:regroupement_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date/:date",
                 params: {
                     id: '@id',
                     regroupement_id: '@regroupement_id',
@@ -2691,7 +2683,7 @@ angular.module('cahierDeTextesClientApp')
     }])
     .factory('CreneauxEmploiDuTemps', ['$resource', 'APP_PATH',
     function ($resource, APP_PATH) {
-        return $resource(APP_PATH + '/api/creneaux_emploi_du_temps/:id', {
+        return $resource(APP_PATH + "/api/creneaux_emploi_du_temps/:id", {
             id: '@id',
             regroupement_id: '@regroupement_id',
             previous_regroupement_id: '@previous_regroupement_id',
@@ -2713,13 +2705,13 @@ angular.module('cahierDeTextesClientApp')
             bulk: {
                 method: 'POST',
                 isArray: true,
-                url: APP_PATH + '/api/creneaux_emploi_du_temps/bulk',
+                url: APP_PATH + "/api/creneaux_emploi_du_temps/bulk",
                 params: { creneaux_emploi_du_temps: '@creneaux_emploi_du_temps' }
             },
             bulk_delete: {
                 method: 'DELETE',
                 isArray: true,
-                url: APP_PATH + '/api/creneaux_emploi_du_temps/bulk',
+                url: APP_PATH + "/api/creneaux_emploi_du_temps/bulk",
                 params: {
                     ids: '@ids',
                     date_creneau: '@date_creneau'
@@ -2729,18 +2721,18 @@ angular.module('cahierDeTextesClientApp')
     }])
     .factory('Devoirs', ['$resource', 'APP_PATH',
     function ($resource, APP_PATH) {
-        return $resource(APP_PATH + '/api/devoirs/:id', {
+        return $resource(APP_PATH + "/api/devoirs/:id", {
             id: '@id',
             uid: '@uid'
         }, {
             update: { method: 'PUT' },
             fait: {
                 method: 'PUT',
-                url: APP_PATH + '/api/devoirs/:id/fait'
+                url: APP_PATH + "/api/devoirs/:id/fait"
             },
             copie: {
                 method: 'PUT',
-                url: APP_PATH + '/api/devoirs/:id/copie/cours/:cours_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date_due/:date_due',
+                url: APP_PATH + "/api/devoirs/:id/copie/cours/:cours_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date_due/:date_due",
                 params: {
                     id: '@id',
                     cours_id: '@cours_id',
@@ -2752,7 +2744,7 @@ angular.module('cahierDeTextesClientApp')
     }])
     .factory('EmploisDuTemps', ['$resource', 'APP_PATH',
     function ($resource, APP_PATH) {
-        return $resource(APP_PATH + '/api/emplois_du_temps', {
+        return $resource(APP_PATH + "/api/emplois_du_temps", {
             debut: '@debut',
             fin: '@fin',
             uid: '@uid'
@@ -2760,44 +2752,44 @@ angular.module('cahierDeTextesClientApp')
     }])
     .factory('Enseignants', ['$resource', 'APP_PATH',
     function ($resource, APP_PATH) {
-        return $resource(APP_PATH + '/api/etablissements/:uai/statistiques/enseignants/:enseignant_id', {
+        return $resource(APP_PATH + "/api/etablissements/:uai/statistiques/enseignants/:enseignant_id", {
             uai: '@uai',
             enseignant_id: '@enseignant_id'
         });
     }])
     .factory('Etablissements', ['$resource', 'APP_PATH',
     function ($resource, APP_PATH) {
-        return $resource(APP_PATH + '/api/etablissements/:uai', { uai: '@uai' });
+        return $resource(APP_PATH + "/api/etablissements/:uai", { uai: '@uai' });
     }])
     .factory('Salles', ['$resource', 'APP_PATH',
     function ($resource, APP_PATH) {
-        return $resource(APP_PATH + '/api/salles/:id', { id: '@id' }, {
+        return $resource(APP_PATH + "/api/salles/:id", { id: '@id' }, {
             bulk: {
                 method: 'POST',
                 isArray: true,
-                url: APP_PATH + '/api/salles/bulk',
+                url: APP_PATH + "/api/salles/bulk",
                 params: { salles: '@salles' }
             }
         });
     }])
     .factory('CahiersDeTextes', ['$resource', 'APP_PATH',
     function ($resource, APP_PATH) {
-        return $resource(APP_PATH + '/api/cahiers_de_textes/:id', { id: '@id' }, {
+        return $resource(APP_PATH + "/api/cahiers_de_textes/:id", { id: '@id' }, {
             bulk: {
                 method: 'POST',
                 isArray: true,
-                url: APP_PATH + '/api/cahiers_de_textes/bulk',
+                url: APP_PATH + "/api/cahiers_de_textes/bulk",
                 params: { cahiers_de_textes: '@cahiers_de_textes' }
             }
         });
     }])
     .factory('TypesDeDevoir', ['$resource', 'APP_PATH',
     function ($resource, APP_PATH) {
-        return $resource(APP_PATH + '/api/types_de_devoir/:id', { id: '@id' });
+        return $resource(APP_PATH + "/api/types_de_devoir/:id", { id: '@id' });
     }])
     .factory('Matchable', ['$resource', 'APP_PATH',
     function ($resource, APP_PATH) {
-        return $resource(APP_PATH + '/api/matchables/:uai/:hash_item', {
+        return $resource(APP_PATH + "/api/matchables/:uai/:hash_item", {
             uai: '@uai',
             hash_item: '@hash_item',
             id_annuaire: '@id_annuaire'
@@ -2825,7 +2817,12 @@ angular.module('cahierDeTextesClientApp')
             return CreneauxEmploiDuTemps.get(params);
         };
         this.get_creneaux_emploi_du_temps_similaires = function (params) {
-            return $http.get(APP_PATH + '/api/creneaux_emploi_du_temps/' + params.id + '/similaires?debut=' + params.debut.toISOString() + '&fin=' + params.fin.toISOString());
+            return $http.get(APP_PATH + "/api/creneaux_emploi_du_temps/" + params.id + "/similaires", {
+                params: {
+                    debut: params.debut,
+                    fin: params.fin
+                }
+            });
         };
         this.query_enseignants = function (params) {
             return Enseignants.query(params);
@@ -2859,7 +2856,7 @@ angular.module('cahierDeTextesClientApp')
             else {
                 params.target = root;
             }
-            return $http.get(URL_DOCS + '/api/connector', { params: params });
+            return $http.get(URL_DOCS + "/api/connector", { params: params });
         });
         Documents.get_ctxt_folder_hash = _.memoize(function (classe) {
             var structure, structure_root, classes_root, classe_root, cdt_root;
@@ -2895,7 +2892,7 @@ angular.module('cahierDeTextesClientApp')
                     dst: ctxt_folder_hash,
                     cut: false
                 };
-                return $http.get(URL_DOCS + '/api/connector', { params: params });
+                return $http.get(URL_DOCS + "/api/connector", { params: params });
             })
                 .then(function success(response) {
                 return response.data;
@@ -2910,7 +2907,7 @@ angular.module('cahierDeTextesClientApp')
                     form_data.append('target', ctxt_folder_hash);
                     form_data.append('upload[]', file);
                     form_data.append('renames[]', file.name);
-                    return $http.post(URL_DOCS + '/api/connector', form_data, {
+                    return $http.post(URL_DOCS + "/api/connector", form_data, {
                         headers: { 'Content-Type': undefined },
                         transformRequest: angular.identity
                     });
@@ -2987,7 +2984,7 @@ angular.module('cahierDeTextesClientApp')
         };
         this.edition = function (raw_data, matieres, classes, creneau, cours, devoirs, popup_callback, popup_ouverte) {
             open_modal({
-                templateUrl: APP_PATH + '/app/views/popup_edition.html',
+                templateUrl: APP_PATH + "/app/views/popup_edition.html",
                 controller: 'PopupEditionCtrl',
                 resolve: {
                     raw_data: function () { return raw_data; },
@@ -3002,7 +2999,7 @@ angular.module('cahierDeTextesClientApp')
         };
         this.display = function (titre, cours, devoirs, popup_callback, popup_ouverte) {
             open_modal({
-                templateUrl: APP_PATH + '/app/views/popup_display.html',
+                templateUrl: APP_PATH + "/app/views/popup_display.html",
                 controller: 'PopupDisplayCtrl',
                 resolve: {
                     titre: function () { return titre; },
@@ -3126,9 +3123,9 @@ angular.module('cahierDeTextesClientApp')
                 return string;
             }
             else {
-                var pad = '';
-                _((target_length - string.length) / filler.length).times(function () { pad += filler; });
-                return (string + pad).substr(0, target_length);
+                var pad_1 = '';
+                _((target_length - string.length) / filler.length).times(function () { pad_1 += filler; });
+                return (string + pad_1).substr(0, target_length);
             }
         };
         this.padStart = function (string, target_length, filler) {
@@ -3136,9 +3133,9 @@ angular.module('cahierDeTextesClientApp')
                 return string;
             }
             else {
-                var pad = '';
-                _((target_length - string.length) / filler.length).times(function () { pad += filler; });
-                return (pad + string).substr(target_length * -1);
+                var pad_2 = '';
+                _((target_length - string.length) / filler.length).times(function () { pad_2 += filler; });
+                return (pad_2 + string).substr(target_length * -1);
             }
         };
         this.libelleHeure_to_Moment = function (libelle) {
@@ -3162,7 +3159,7 @@ angular.module('cahierDeTextesClientApp')
                 .rest();
         };
         this.bitfield_to_fixnum = function (bitfield) {
-            return parseInt(bitfield.reverse().join('') + '0', 2);
+            return parseInt(bitfield.reverse().join('') + "0", 2);
         };
     }
 ]);
@@ -3173,13 +3170,13 @@ angular.module('cahierDeTextesClientApp')
             User.get_user()
                 .then(function (response) {
                 var user = response.data;
-                $http.post(URL_ENT + '/api/logs', {
+                $http.post(URL_ENT + "/api/logs", {
                     application_id: app,
                     user_id: user.id,
                     structure_id: user.profil_actif.structure_id,
                     profil_id: user.profil_actif.type,
                     url: (_(url).isNull() ? APP_PATH + $state.current.url : url).substr(0, 1023),
-                    params: _(params).isNull() ? _($state.params).map(function (value, key) { return key + '=' + value; }).join('&') : params
+                    params: _(params).isNull() ? _($state.params).map(function (value, key) { return key + "=" + value; }).join('&') : params
                 })
                     .then(function success() { }, function error() { });
             });

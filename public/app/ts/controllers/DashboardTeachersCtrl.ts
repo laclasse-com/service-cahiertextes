@@ -30,7 +30,7 @@ angular.module( 'cahierDeTextesClientApp' )
       $scope.individualCharts = {
         enseignants: [],
         add: function( enseignant ) {
-          var chart = {
+          let chart = {
             enseignant: enseignant,
             display: true,
             pieChart: angular.copy( PIECHART_DEFINITION )
@@ -66,13 +66,13 @@ angular.module( 'cahierDeTextesClientApp' )
           return Annuaire.get_users( _( $scope.raw_data ).pluck( 'enseignant_id' ) );
         } )
         .then( function( response ) {
-          var enseignants_details = _( response.data ).indexBy( 'id' );
+          let enseignants_details = _( response.data ).indexBy( 'id' );
 
           _( $scope.raw_data ).each( function( enseignant ) {
             enseignant.details = enseignants_details[ enseignant.enseignant_id ];
 
-            var stats_enseignant = _( enseignant.classes ).reduce( function( totaux, classe ) {
-              var stats_classe = _( classe.statistiques ).reduce( function( totaux, mois ) {
+            let stats_enseignant = _( enseignant.classes ).reduce( function( totaux, classe ) {
+              let stats_classe = _( classe.statistiques ).reduce( function( totaux, mois ) {
                 return {
                   filled: totaux.filled + mois.filled,
                   validated: totaux.validated + mois.validated

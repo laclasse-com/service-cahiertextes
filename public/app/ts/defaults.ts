@@ -36,7 +36,7 @@ angular.module( 'cahierDeTextesClientApp' )
         rotateLabels: -45,
         labelSunbeamLayout: true,
         color: function( d, i ) {
-          var colors = {
+          let colors = {
             'saisies non visées': '#aaffaa',
             'saisies visées': '#00ff00'
           };
@@ -56,7 +56,7 @@ angular.module( 'cahierDeTextesClientApp' )
         x: function( d ) { return d.label; },
         y: function( d ) { return d.value; },
         color: function( d, i ) {
-          var colors = {
+          let colors = {
             'saisies non visées': '#aaffaa',
             'saisies visées': '#00ff00'
           };

@@ -17,7 +17,7 @@ angular.module( 'cahierDeTextesClientApp' )
         _( cours.devoirs ).each( function( devoir ) {
           devoir.tooltip = devoir.contenu;
           if ( devoir.temps_estime > 0 ) {
-            devoir.tooltip = '<span><i class="picto temps"></i>' + devoir.temps_estime * 5 + ' minutes</span><hr>' + devoir.tooltip;
+            devoir.tooltip = `<span><i class="picto temps"></i>${ devoir.temps_estime * 5 } minutes</span><hr>${ devoir.tooltip }`;
           }
           devoir.tooltip = $sce.trustAsHtml( devoir.tooltip );
         } );

@@ -12,7 +12,7 @@ angular.module( 'cahierDeTextesClientApp' )
             )
           ) {
             // traiter le raffraichissement de l'app en fonction du changement de profil actif
-            var stateName = '404';
+            let stateName = '404';
 
             switch ( response.data.profil_actif.type ) {
               case 'DIR':

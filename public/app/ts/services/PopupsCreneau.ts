@@ -4,7 +4,7 @@ angular.module( 'cahierDeTextesClientApp' )
   .service( 'PopupsCreneau',
   [ '$uibModal', 'toastr', 'POPUP_ACTIONS', 'APP_PATH',
     function( $uibModal, toastr, POPUP_ACTIONS, APP_PATH ) {
-      var open_modal = function( params, popup_callback, popup_ouverte ) {
+      let open_modal = function( params, popup_callback, popup_ouverte ) {
         popup_ouverte = true;
         $uibModal.open( params )
           .result.then( function( scope_popup ) {
@@ -57,7 +57,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
       this.edition = function( raw_data, matieres, classes, creneau, cours, devoirs, popup_callback, popup_ouverte ) {
         open_modal( {
-          templateUrl: APP_PATH + '/app/views/popup_edition.html',
+          templateUrl: `${ APP_PATH }/app/views/popup_edition.html`,
           controller: 'PopupEditionCtrl',
           resolve: {
             raw_data: function() { return raw_data; },
@@ -75,7 +75,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
       this.display = function( titre, cours, devoirs, popup_callback, popup_ouverte ) {
         open_modal( {
-          templateUrl: APP_PATH + '/app/views/popup_display.html',
+          templateUrl: `${ APP_PATH }/app/views/popup_display.html`,
           controller: 'PopupDisplayCtrl',
           resolve: {
             titre: function() { return titre; },

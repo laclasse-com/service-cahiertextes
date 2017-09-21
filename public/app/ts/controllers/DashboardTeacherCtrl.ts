@@ -14,7 +14,7 @@ angular.module( 'cahierDeTextesClientApp' )
       $scope.current_user = current_user;
       $scope.enseignant_id = _( $stateParams ).has( 'enseignant_id' ) ? $stateParams.enseignant_id : $scope.current_user.id;
 
-      var calc_nb_saisies_visables = function( saisies ) {
+      let calc_nb_saisies_visables = function( saisies ) {
         return _( saisies ).select( { recent: false, valide: false } ).length;
       };
 
@@ -55,9 +55,9 @@ angular.module( 'cahierDeTextesClientApp' )
           _.chain( data )
             .groupBy( 'regroupement_id' )
             .each( function( regroupement ) {
-              var filled = regroupement.length;
-              var validated = _( regroupement ).where( { valide: true } ).length;
-              var nom_regroupement = regroupement[ 0 ].group.name;
+              let filled = regroupement.length;
+              let validated = _( regroupement ).where( { valide: true } ).length;
+              let nom_regroupement = regroupement[ 0 ].group.name;
 
               $scope.graphiques.multiBarChart.data[ 0 ].values.push( {
                 key: nom_regroupement,
@@ -88,12 +88,12 @@ angular.module( 'cahierDeTextesClientApp' )
 
       $scope.valide = function( saisie ) {
         if ( current_user.profil_actif.type === 'DIR' ) {
-          var disable_toastr = _( saisie ).has( 'disable_toastr' );
+          let disable_toastr = _( saisie ).has( 'disable_toastr' );
           saisie.cours.$valide().then( function( response ) {
             saisie.valide = !_( response.date_validation ).isNull();
 
             if ( !$scope.montre_valides && !_( response.date_validation ).isNull() ) {
-              var date_validation_holder = response.date_validation;
+              let date_validation_holder = response.date_validation;
               response.date_validation = null;
 
               $timeout( function() { response.date_validation = date_validation_holder; }, 3000 );
@@ -103,7 +103,7 @@ angular.module( 'cahierDeTextesClientApp' )
             $scope.graphiques.populate( $scope.raw_data );
 
             if ( !disable_toastr ) {
-              toastr.success( 'Séquence pédagogique ' + ( saisie.valide ? '' : 'dé-' ) + 'visée.',
+              toastr.success( `Séquence pédagogique ${ ( saisie.valide ? '' : 'dé-' ) }visée.`,
                 'Opération réussie' );
             }
           } );
@@ -121,7 +121,7 @@ angular.module( 'cahierDeTextesClientApp' )
           cancelButtonText: 'Annuler'
         } )
           .then( function confirm() {
-            var counter = 0;
+            let counter = 0;
             _.chain( $scope.raw_data )
               .reject( function( saisie ) { return saisie.valide || saisie.recent; } )
               .each( function( saisie ) {
@@ -130,8 +130,8 @@ angular.module( 'cahierDeTextesClientApp' )
                 counter++;
               } );
             if ( counter > 0 ) {
-              var pluriel = counter > 1 ? 's' : '';
-              var message = counter + ' séquence' + pluriel + ' pédagogique' + pluriel + ' visée' + pluriel + '.';
+              let pluriel = counter > 1 ? 's' : '';
+              let message = `${ counter } séquence${ pluriel } pédagogique${ pluriel } visée${ pluriel }.`;
               toastr.success( message, 'Opération réussie' );
             }
           },
@@ -179,7 +179,7 @@ angular.module( 'cahierDeTextesClientApp' )
           } ).$promise;
         } )
         .then( function success( response ) {
-          var _2_semaines_avant = moment().subtract( 2, 'weeks' );
+          let _2_semaines_avant = moment().subtract( 2, 'weeks' );
 
           $scope.raw_data = _( response.saisies ).map( function( saisie, index ) {
             // on référence l'index d'origine dans chaque élément pour propager la validation

@@ -15,12 +15,12 @@ angular.module( 'cahierDeTextesClientApp' )
       }
       $scope.zone = ZONE;
       $scope.emploi_du_temps = angular.element( '#emploi_du_temps' );
-      var popup_ouverte = false;
-      var first_load = true;
+      let popup_ouverte = false;
+      let first_load = true;
 
       $scope.uniquement_mes_creneaux = !_( [ 'EVS', 'DIR', 'ADM' ] ).contains( $scope.current_user.profil_actif.type );
 
-      var set_preferred_view = function( view ) {
+      let set_preferred_view = function( view ) {
         $scope.current_user.parametrage_cahier_de_textes.preferredView = view; // or textbookWeek
         User.update_parameters( $scope.current_user.parametrage_cahier_de_textes );
       };
@@ -55,15 +55,15 @@ angular.module( 'cahierDeTextesClientApp' )
         $scope.refresh_calendar();
       };
 
-      var popup_callback = function( scope_popup ) {
-        var view = $scope.emploi_du_temps.fullCalendar( 'getView' );
+      let popup_callback = function( scope_popup ) {
+        let view = $scope.emploi_du_temps.fullCalendar( 'getView' );
         retrieve_data( view.start.toDate(), view.end.toDate() );
       };
 
       // consommation des données
-      var to_fullcalendar_events = function( filtered_data ) {
-        var CalendarEvent = function( event ) {
-          var fc_event = this; //pour pouvoir le référencé dans les .then()
+      let to_fullcalendar_events = function( filtered_data ) {
+        let CalendarEvent = function( event ) {
+          let fc_event = this; //pour pouvoir le référencé dans les .then()
           fc_event.details = event;
           fc_event.allDay = false;
           fc_event.regroupement = _( $scope.current_period_groups ).findWhere( { id: parseInt( fc_event.details.regroupement_id ) } );
@@ -97,7 +97,7 @@ angular.module( 'cahierDeTextesClientApp' )
 
           // couleur de la case
           if ( event.devoirs.length > 0 ) {
-            var highest_type_de_devoir = _.chain( event.devoirs ).pluck( 'type_devoir_id' ).sort().first().value();
+            let highest_type_de_devoir = _.chain( event.devoirs ).pluck( 'type_devoir_id' ).sort().first().value();
             switch ( highest_type_de_devoir ) {
               case 1:
                 fc_event.className = 'edt-devoir-note-surveille';
@@ -135,7 +135,7 @@ angular.module( 'cahierDeTextesClientApp' )
         $scope.calendar.events[ 0 ] = to_fullcalendar_events( $scope.filter_data( $scope.raw_data ) );
       };
 
-      var retrieve_data = function( from_date, to_date ) {
+      let retrieve_data = function( from_date, to_date ) {
         if ( $scope.current_user.profil_actif.type != 'TUT' || $scope.current_user.enfant_actif ) {
           EmploisDuTemps.query( {
             debut: from_date,
@@ -146,9 +146,9 @@ angular.module( 'cahierDeTextesClientApp' )
             .$promise
             .then( function success( response ) {
               $scope.raw_data = response;
-              var groups_ids = _.chain( $scope.raw_data ).pluck( 'regroupement_id' ).uniq().value();
-              var subjects_ids = _.chain( $scope.raw_data ).pluck( 'matiere_id' ).uniq().value();
-              var promise = _( groups_ids ).isEmpty() ? $q.resolve( [] ) : Annuaire.get_groups( groups_ids );
+              let groups_ids = _.chain( $scope.raw_data ).pluck( 'regroupement_id' ).uniq().value();
+              let subjects_ids = _.chain( $scope.raw_data ).pluck( 'matiere_id' ).uniq().value();
+              let promise = _( groups_ids ).isEmpty() ? $q.resolve( [] ) : Annuaire.get_groups( groups_ids );
 
               promise
                 .then( function( response ) {
@@ -180,12 +180,12 @@ angular.module( 'cahierDeTextesClientApp' )
         return '' + event.matiere;
       };
 
-      var filter_by_regroupement = function( raw_data, selected_regroupements ) {
+      let filter_by_regroupement = function( raw_data, selected_regroupements ) {
         return _( raw_data ).filter( function( creneau ) {
           return _.chain( selected_regroupements ).pluck( 'id' ).contains( parseInt( creneau.regroupement_id ) ).value();
         } );
       };
-      var filter_by_matieres = function( raw_data, subjects_ids, active ) {
+      let filter_by_matieres = function( raw_data, subjects_ids, active ) {
         return !active ? raw_data : _( raw_data ).filter( function( creneau ) {
           return _( subjects_ids ).contains( creneau.matiere_id );
         } );
@@ -208,7 +208,7 @@ angular.module( 'cahierDeTextesClientApp' )
         }
       }
 
-      var can_edit = _( [ 'ENS', 'DOC', 'DIR', 'ADM' ] ).contains( $scope.current_user.profil_actif.type ) || $scope.current_user.profil_actif.admin;
+      let can_edit = _( [ 'ENS', 'DOC', 'DIR', 'ADM' ] ).contains( $scope.current_user.profil_actif.type ) || $scope.current_user.profil_actif.admin;
       $scope.calendar = {
         options: {
           lang: 'fr',
@@ -269,11 +269,11 @@ angular.module( 'cahierDeTextesClientApp' )
           },
 
           eventRender: function( event, element, view ) {
-            var elt_fc_content = element.find( '.fc-content' );
+            let elt_fc_content = element.find( '.fc-content' );
 
             if ( !_( [ 'ELV', 'TUT' ] ).contains( $scope.current_user.profil_actif.type ) ) {
               if ( event.temps_estime > 0 ) {
-                var class_couleur = '';
+                let class_couleur = '';
                 if ( event.temps_estime < 4 ) {
                   class_couleur = ' label-success';
                 } else if ( event.temps_estime < 8 ) {
@@ -283,7 +283,7 @@ angular.module( 'cahierDeTextesClientApp' )
                 } else if ( event.temps_estime <= 15 ) {
                   class_couleur = ' label-danger';
                 }
-                elt_fc_content.prepend( '<div class="est-time est-time-' + event.temps_estime + class_couleur + '"></div>' );
+                elt_fc_content.prepend( `<div class="est-time est-time-${ event.temps_estime } ${ class_couleur }"></div>` );
               }
             }
 
@@ -291,42 +291,42 @@ angular.module( 'cahierDeTextesClientApp' )
               elt_fc_content.prepend( '<i class="glyphicon glyphicon-paperclip"></i>' );
             }
 
-            var elt_fc_content_title = element.find( '.fc-list-item-title' );
+            let elt_fc_content_title = element.find( '.fc-list-item-title' );
             if ( elt_fc_content_title.length > 0
               && ( !_( event.details.cours ).isNull() || !_( event.details.devoirs ).isEmpty() ) ) {
-              var event_content = elt_fc_content_title.html();
+              let event_content = `${ elt_fc_content_title.html() }
+              <br>
+<div class="col-md-6 sequence-pedagogique">`;
 
-              event_content += '<br>';
-
-              event_content += '<div class="col-md-6 sequence-pedagogique">';
               if ( !_( event.details.cours ).isNull() ) {
-                event_content += '<fieldset>';
-                event_content += '<legend>Séquence pédagogique</legend>';
-                event_content += event.details.cours.contenu;
-                event_content += '</fieldset>';
+                event_content += `
+              <fieldset>
+                <legend>Séquence pédagogique</legend>
+                ${event.details.cours.contenu }
+              </fieldset>`;
               }
               event_content += '</div>';
 
               if ( !_( event.details.devoirs ).isEmpty() ) {
-                event_content += '<fieldset><legend>Devoirs</legend>';
+                event_content += `<fieldset>
+< legend > Devoirs < /legend>`;
                 event_content += '<ul class="col-md-6 devoirs">';
                 _( event.details.devoirs ).each( function( assignement ) {
-                  var additional_classes = $scope.current_user.profil_actif.type === 'ELV' ? ( assignement.fait ? 'fait' : 'a-faire' ) : '';
+                  let additional_classes = $scope.current_user.profil_actif.type === 'ELV' ? ( assignement.fait ? 'fait' : 'a-faire' ) : '';
 
-                  event_content += '  <li class="devoir type' + assignement.type_devoir_id + ' ' + additional_classes + '">';
+                  event_content += `  <li class="devoir type${ assignement.type_devoir_id } ${ additional_classes }">`;
                   if ( $scope.current_user.parametrage_cahier_de_textes.affichage_types_de_devoir ) {
-                    event_content += '    <span class="type">' + assignement.type_devoir_description + '</span>';
+                    event_content += `    <span class="type">${ assignement.type_devoir_description }</span>`;
                   }
 
                   if ( assignement.temps_estime > 0 ) {
-                    event_content += '    <span class="temps-estime">' + assignement.temps_estime * 5 + ' minutes</span>';
+                    event_content += `    <span class="temps-estime">${ assignement.temps_estime * 5 } minutes</span>
+${assignement.contenu }
+                      </li>`;
                   }
-
-                  event_content += assignement.contenu;
-                  event_content += '  </li>';
                 } );
-                event_content += '</ul>';
-                event_content += '</fieldset>';
+                event_content += `</ul>
+</fieldset>`;
               }
 
               elt_fc_content_title.html( event_content );
@@ -374,8 +374,8 @@ angular.module( 'cahierDeTextesClientApp' )
                 // création du créneau avec les bons horaires
                 start = new Date( start );
                 end = new Date( end );
-                var regroupement_id = $scope.selected_regroupements[ 0 ].id;
-                var new_creneau = new CreneauxEmploiDuTemps( {
+                let regroupement_id = $scope.selected_regroupements[ 0 ].id;
+                let new_creneau = new CreneauxEmploiDuTemps( {
                   regroupement_id: regroupement_id,
                   jour_de_la_semaine: start.getDay(),
                   heure_debut: moment( start ).toISOString(),

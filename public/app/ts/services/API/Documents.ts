@@ -4,10 +4,10 @@ angular.module( 'cahierDeTextesClientApp' )
   .service( 'Documents',
   [ '$http', '$q', 'URL_DOCS', 'Annuaire',
     function( $http, $q, URL_DOCS, Annuaire ) {
-      var Documents = this;
+      let Documents = this;
 
       Documents.list_files = _.memoize( function( root ) {
-        var params = {
+        let params = {
           cmd: 'open',
           target: ''
         };
@@ -17,11 +17,11 @@ angular.module( 'cahierDeTextesClientApp' )
         } else {
           params.target = root;
         }
-        return $http.get( URL_DOCS + '/api/connector', { params: params } );
+        return $http.get( `${ URL_DOCS }/api/connector`, { params: params } );
       } );
 
       Documents.get_ctxt_folder_hash = _.memoize( function( classe ) {
-        var structure,
+        let structure,
           structure_root,
           classes_root,
           classe_root,
@@ -58,7 +58,7 @@ angular.module( 'cahierDeTextesClientApp' )
       Documents.ajout_au_cahier_de_textes = function( classe, node ) {
         return Documents.get_ctxt_folder_hash( classe )
           .then( function( ctxt_folder_hash ) {
-            var params = {
+            let params = {
               cmd: 'paste',
               'targets[]': node.hash,
               'renames[]': node.name,
@@ -66,7 +66,7 @@ angular.module( 'cahierDeTextesClientApp' )
               cut: false
             };
 
-            return $http.get( URL_DOCS + '/api/connector', { params: params } );
+            return $http.get( `${ URL_DOCS }/api/connector`, { params: params } );
           } )
           .then( function success( response ) {
             return response.data;
@@ -77,13 +77,13 @@ angular.module( 'cahierDeTextesClientApp' )
         return Documents.get_ctxt_folder_hash( classe )
           .then( function( ctxt_folder_hash ) {
             return $q.all( _( fichiers ).map( function( file ) {
-              var form_data = new FormData();
+              let form_data = new FormData();
               form_data.append( 'cmd', 'upload' );
               form_data.append( 'target', ctxt_folder_hash );
               form_data.append( 'upload[]', file );
               form_data.append( 'renames[]', file.name );
 
-              return $http.post( URL_DOCS + '/api/connector',
+              return $http.post( `${ URL_DOCS }/api/connector`,
                 form_data,
                 {
                   headers: { 'Content-Type': undefined },

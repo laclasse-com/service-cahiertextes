@@ -11,7 +11,7 @@ angular.module( 'cahierDeTextesClientApp' )
     '      ng:change="$ctrl.fait( $ctrl.devoir )" ></span>',
     controller: [ 'toastr',
       function( toastr ) {
-        var ctrl = this;
+        let ctrl = this;
 
         ctrl.fait = function( devoir ) {
           devoir.$fait()

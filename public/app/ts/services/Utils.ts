@@ -4,10 +4,10 @@ angular.module( 'cahierDeTextesClientApp' )
   .service( 'Utils',
   [ '$locale', 'moment', 'SEMAINES_VACANCES',
     function( $locale, moment, SEMAINES_VACANCES ) {
-      var _this = this;
+      let _this = this;
       this.school_year_start = function() {
-        var now = moment();
-        var school_year_start = moment();
+        let now = moment();
+        let school_year_start = moment();
 
         if ( now.month() + 1 > 8 ) {
           school_year_start.set( 'year', now.year() );
@@ -21,8 +21,8 @@ angular.module( 'cahierDeTextesClientApp' )
       };
 
       this.school_year_end = function() {
-        var now = moment();
-        var school_year_end = moment();
+        let now = moment();
+        let school_year_end = moment();
 
         if ( now.month() + 1 > 8 ) {
           school_year_end.set( 'year', now.year() + 1 );
@@ -45,8 +45,8 @@ angular.module( 'cahierDeTextesClientApp' )
       };
 
       this.what_month = function( n_week ) {
-        var now = moment();
-        var year = now.year();
+        let now = moment();
+        let year = now.year();
         if ( ( n_week < 36 ) && ( now.month() > 7 ) ) {
           year++;
         } else if ( now.month() < 7 ) {
@@ -56,13 +56,13 @@ angular.module( 'cahierDeTextesClientApp' )
       };
 
       this.fix_semainier_pronote = function( semainier_pronote, date_debut_annee_scolaire ) {
-        var nb_week_in_year = 52;
-        var bsemainier_pronote = parseInt( semainier_pronote ).toString( 2 );
+        let nb_week_in_year = 52;
+        let bsemainier_pronote = parseInt( semainier_pronote ).toString( 2 );
         bsemainier_pronote = _this.padStart( bsemainier_pronote, nb_week_in_year + 1, '0' );
         bsemainier_pronote = bsemainier_pronote.substr( 0, nb_week_in_year ).split( '' ).reverse().join( '' );
 
-        var pivot = nb_week_in_year - moment( new Date( date_debut_annee_scolaire ) ).week();
-        var bsemainier_laclasse = bsemainier_pronote.slice( pivot, nb_week_in_year ) + bsemainier_pronote.substr( 0, pivot );
+        let pivot = nb_week_in_year - moment( new Date( date_debut_annee_scolaire ) ).week();
+        let bsemainier_laclasse = bsemainier_pronote.slice( pivot, nb_week_in_year ) + bsemainier_pronote.substr( 0, pivot );
         bsemainier_laclasse = bsemainier_laclasse.split( '' ).reverse().join( '' );
 
         return parseInt( bsemainier_laclasse, 2 );
@@ -96,7 +96,7 @@ angular.module( 'cahierDeTextesClientApp' )
         if ( string.length >= target_length ) {
           return string;
         } else {
-          var pad = '';
+          let pad = '';
           _( ( target_length - string.length ) / filler.length ).times( function() { pad += filler; } );
 
           return ( string + pad ).substr( 0, target_length );
@@ -107,7 +107,7 @@ angular.module( 'cahierDeTextesClientApp' )
         if ( string.length >= target_length ) {
           return string;
         } else {
-          var pad = '';
+          let pad = '';
           _( ( target_length - string.length ) / filler.length ).times( function() { pad += filler; } );
 
           return ( pad + string ).substr( target_length * -1 );
@@ -115,9 +115,9 @@ angular.module( 'cahierDeTextesClientApp' )
       };
 
       this.libelleHeure_to_Moment = function( libelle ) {
-        var horaire = libelle.split( ':' ).map( function( i ) { return parseInt( i ); } );
-        var utc_offset = ( new Date() ).getTimezoneOffset() / 60 * -1;
-        var date = moment().set( {
+        let horaire = libelle.split( ':' ).map( function( i ) { return parseInt( i ); } );
+        let utc_offset = ( new Date() ).getTimezoneOffset() / 60 * -1;
+        let date = moment().set( {
           hour: horaire[ 0 ] + utc_offset,
           minute: horaire[ 1 ],
           second: horaire[ 2 ]
@@ -127,8 +127,8 @@ angular.module( 'cahierDeTextesClientApp' )
       };
 
       this.fixnum_to_bitfield = function( fixnum ) {
-        var string = fixnum.toString( 2 );
-        var padding = '';
+        let string = fixnum.toString( 2 );
+        let padding = '';
         _( 52 - string.length ).times( function() { padding += '0'; } );
         string = padding + string;
         return _( string.split( '' )
@@ -138,7 +138,7 @@ angular.module( 'cahierDeTextesClientApp' )
       };
 
       this.bitfield_to_fixnum = function( bitfield ) {
-        return parseInt( bitfield.reverse().join( '' ) + '0', 2 );
+        return parseInt( `${ bitfield.reverse().join( '' ) }0`, 2 );
       };
     }
   ] );
