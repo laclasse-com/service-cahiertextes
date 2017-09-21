@@ -47,6 +47,7 @@
     "sweetalert2": "^6.6.9",
     "textangular": "^1.5.9",
     "typescript": "^2.5.2",
+    "typescript-formatter": "^6.0.0",
     "ui-select": "^0.19.8",
     "underscore": "^1.8.3"
   }

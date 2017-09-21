@@ -70,7 +70,8 @@ angular.module('cahierDeTextesClientApp')
                     if (type === 'backcolor') {
                         couleurs.push('transparent');
                     }
-                    return { couleurs: couleurs,
+                    return {
+                        couleurs: couleurs,
                         display: '<span uib-dropdown><a uib-dropdown-toggle><i class="fa fa-font" data-ng-style="{\'' + style + 'color\': selected }"></i> <i class="fa fa-caret-down"></i></a><ng-color-picker uib-dropdown-menu selected="selected" colors="couleurs"></ng-color-picker></span>',
                         action: function () {
                             return (this.selected === 'nil') ? false : this.$editor().wrapSelection(type, this.selected);
@@ -81,10 +82,15 @@ angular.module('cahierDeTextesClientApp')
                 taOptions.toolbar[0].push('fontColor');
                 taRegisterTool('backgroundColor', colorpicker_taTool('backcolor'));
                 taOptions.toolbar[0].push('backgroundColor');
-                taRegisterTool('table', { columns: { value: 1,
-                        hovered: 1 },
-                    rows: { value: 1,
-                        hovered: 1 },
+                taRegisterTool('table', {
+                    columns: {
+                        value: 1,
+                        hovered: 1
+                    },
+                    rows: {
+                        value: 1,
+                        hovered: 1
+                    },
                     hover: function (objet, value) {
                         objet.hovered = value;
                     },
@@ -108,7 +114,8 @@ angular.module('cahierDeTextesClientApp')
                     action: function (deferred) {
                         this.deferration = deferred;
                         return false;
-                    } });
+                    }
+                });
                 taOptions.toolbar[0].push('table');
                 taOptions.classes = {
                     focussed: 'focussed',
@@ -158,7 +165,8 @@ angular.module('cahierDeTextesClientApp')
 angular.module('cahierDeTextesClientApp')
     .constant('LOCALHOST', false)
     .constant('ZONE', 'A')
-    .constant('POPUP_ACTIONS', { CANCELLED: 'CANCELLED',
+    .constant('POPUP_ACTIONS', {
+    CANCELLED: 'CANCELLED',
     CRENEAU_DELETED: 'CRENEAU_DELETED',
     CRENEAU_MODIFIED: 'CRENEAU_MODIFIED',
     SEQUENCE_PEDAGOGIQUE_CREATED: 'SEQUENCE_PEDAGOGIQUE_CREATED',
@@ -170,8 +178,11 @@ angular.module('cahierDeTextesClientApp')
     DEVOIR_DUPLICATED: 'DEVOIR_DUPLICATED',
     DEVOIR_DELETED: 'DEVOIR_DELETED'
 })
-    .constant('MULTIBARCHART_DEFINITION', { data: [],
-    options: { chart: { type: 'multiBarChart',
+    .constant('MULTIBARCHART_DEFINITION', {
+    data: [],
+    options: {
+        chart: {
+            type: 'multiBarChart',
             height: 240,
             showControls: false,
             showLegend: true,
@@ -182,22 +193,29 @@ angular.module('cahierDeTextesClientApp')
             rotateLabels: -45,
             labelSunbeamLayout: true,
             color: function (d, i) {
-                var colors = { 'saisies non visées': '#aaffaa',
-                    'saisies visées': '#00ff00' };
+                var colors = {
+                    'saisies non visées': '#aaffaa',
+                    'saisies visées': '#00ff00'
+                };
                 return colors[d.key];
             }
         }
     }
 })
-    .constant('PIECHART_DEFINITION', { data: [{ label: 'saisie', value: 0 },
+    .constant('PIECHART_DEFINITION', {
+    data: [{ label: 'saisie', value: 0 },
         { label: 'valide', value: 0 }],
-    options: { chart: { type: 'pieChart',
+    options: {
+        chart: {
+            type: 'pieChart',
             height: 128,
             x: function (d) { return d.label; },
             y: function (d) { return d.value; },
             color: function (d, i) {
-                var colors = { 'saisies non visées': '#aaffaa',
-                    'saisies visées': '#00ff00' };
+                var colors = {
+                    'saisies non visées': '#aaffaa',
+                    'saisies visées': '#00ff00'
+                };
                 return colors[d.label];
             },
             showLabels: false,
@@ -219,7 +237,8 @@ angular.module('cahierDeTextesClientApp')
                     },
                     'responseError': function (rejection) {
                         if (rejection.status === 401) {
-                            swal({ title: 'Erreur',
+                            swal({
+                                title: 'Erreur',
                                 text: 'Votre session a expirée.',
                                 type: 'error',
                                 showCancelButton: false,
@@ -325,7 +344,8 @@ angular.module('cahierDeTextesClientApp')
     }
 ]);
 angular.module('cahierDeTextesClientApp')
-    .component('displayDevoir', { bindings: { devoir: '=' },
+    .component('displayDevoir', {
+    bindings: { devoir: '=' },
     template: '<div ng:class="{ \'type1\': $ctrl.devoir.type_devoir_id === 1,' +
         ' \'type2\': $ctrl.devoir.type_devoir_id === 2,' +
         ' \'type3\': $ctrl.devoir.type_devoir_id === 3,' +
@@ -362,7 +382,8 @@ angular.module('cahierDeTextesClientApp')
         }]
 });
 angular.module('cahierDeTextesClientApp')
-    .component('displaySequencePedagogique', { bindings: { sp: '<' },
+    .component('displaySequencePedagogique', {
+    bindings: { sp: '<' },
     template: '<h5>Séquence pédagogique du {{$ctrl.sp.date_cours | amDateFormat:\'dddd D MMMM\'}}</h5>' +
         '<div class="alert alert-default" ng:bind-html="$ctrl.sp.contenu"></div>' +
         '<ul ng:if="sp.ressources.length > 0">' +
@@ -384,7 +405,8 @@ angular.module('cahierDeTextesClientApp')
         }]
 });
 angular.module('cahierDeTextesClientApp')
-    .component('switchDevoir', { bindings: { devoir: '=' },
+    .component('switchDevoir', {
+    bindings: { devoir: '=' },
     template: '<span switch' +
         '      class="violet"' +
         '      ng:if="!($ctrl.devoir.type_devoir_id == 1)"' +
@@ -434,8 +456,10 @@ angular.module('cahierDeTextesClientApp')
         var nb_mois_depuis_septembre = Math.abs(9 - (moment().month() + 1));
         $scope.period_offsets_list = _.range(nb_mois_depuis_septembre, (10 - nb_mois_depuis_septembre) * -1, -1)
             .map(function (offset) {
-            return { offset: offset,
-                label: offset == 0 ? 'ce mois' : moment().add(offset * -1, 'months').fromNow() };
+            return {
+                offset: offset,
+                label: offset == 0 ? 'ce mois' : moment().add(offset * -1, 'months').fromNow()
+            };
         });
         $scope.incr_offset = function () { $scope.period_offset++; };
         $scope.decr_offset = function () { $scope.period_offset--; };
@@ -446,10 +470,12 @@ angular.module('cahierDeTextesClientApp')
             var retrieve_data = function () {
                 $scope.from_date = moment().subtract($scope.period_offset, 'months').subtract(2, 'weeks').toDate();
                 $scope.to_date = moment().subtract($scope.period_offset, 'months').add(2, 'weeks').toDate();
-                API.query_devoirs({ 'date_due>': $scope.from_date,
+                API.query_devoirs({
+                    'date_due>': $scope.from_date,
                     'date_due<': $scope.to_date,
                     'groups_ids[]': $scope.current_user.profil_actif.type === 'TUT' ? _($scope.current_user.enfant_actif.enfant.groups).pluck('group_id') : _($scope.current_user.groups).pluck('group_id'),
-                    uid: $scope.current_user.profil_actif.type === 'TUT' ? $scope.current_user.enfant_actif.child_id : null })
+                    uid: $scope.current_user.profil_actif.type === 'TUT' ? $scope.current_user.enfant_actif.child_id : null
+                })
                     .$promise.then(function (response) {
                     $scope.matieres = {};
                     $scope.all_devoirs = _(response).map(function (devoir) {
@@ -500,29 +526,42 @@ angular.module('cahierDeTextesClientApp')
                     && (_.chain(selected_regroupements).pluck('id').contains(saisie.regroupement_id).value());
             };
         };
-        $scope.graphiques = { pieChart: angular.copy(PIECHART_DEFINITION),
+        $scope.graphiques = {
+            pieChart: angular.copy(PIECHART_DEFINITION),
             multiBarChart: angular.copy(MULTIBARCHART_DEFINITION),
             populate: function (data) {
-                $scope.graphiques.multiBarChart.data = [{ key: 'saisies non visées',
-                        values: [] },
-                    { key: 'saisies visées',
-                        values: [] }];
-                $scope.graphiques.pieChart.data = [{ label: 'saisies non visées',
-                        value: 0 },
-                    { label: 'saisies visées',
-                        value: 0 }];
+                $scope.graphiques.multiBarChart.data = [{
+                        key: 'saisies non visées',
+                        values: []
+                    },
+                    {
+                        key: 'saisies visées',
+                        values: []
+                    }];
+                $scope.graphiques.pieChart.data = [{
+                        label: 'saisies non visées',
+                        value: 0
+                    },
+                    {
+                        label: 'saisies visées',
+                        value: 0
+                    }];
                 _.chain(data)
                     .groupBy('regroupement_id')
                     .each(function (regroupement) {
                     var filled = regroupement.length;
                     var validated = _(regroupement).where({ valide: true }).length;
                     var nom_regroupement = regroupement[0].group.name;
-                    $scope.graphiques.multiBarChart.data[0].values.push({ key: nom_regroupement,
+                    $scope.graphiques.multiBarChart.data[0].values.push({
+                        key: nom_regroupement,
                         x: nom_regroupement,
-                        y: filled - validated });
-                    $scope.graphiques.multiBarChart.data[1].values.push({ key: nom_regroupement,
+                        y: filled - validated
+                    });
+                    $scope.graphiques.multiBarChart.data[1].values.push({
+                        key: nom_regroupement,
                         x: nom_regroupement,
-                        y: validated });
+                        y: validated
+                    });
                     $scope.graphiques.pieChart.data[0].value += filled - validated;
                     $scope.graphiques.pieChart.data[1].value += validated;
                 });
@@ -555,13 +594,15 @@ angular.module('cahierDeTextesClientApp')
             }
         };
         $scope.valide_all = function () {
-            swal({ title: 'Tout viser ?',
+            swal({
+                title: 'Tout viser ?',
                 text: 'Cette action va viser toutes les saisies actuellement affichées à l\'écran.',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#ff6b55',
                 confirmButtonText: 'Confirmer',
-                cancelButtonText: 'Annuler' })
+                cancelButtonText: 'Annuler'
+            })
                 .then(function confirm() {
                 var counter = 0;
                 _.chain($scope.raw_data)
@@ -607,8 +648,10 @@ angular.module('cahierDeTextesClientApp')
                     .compact()
                     .value();
             });
-            return API.get_enseignant({ enseignant_id: $scope.enseignant_id,
-                uai: $scope.current_user.profil_actif.structure_id }).$promise;
+            return API.get_enseignant({
+                enseignant_id: $scope.enseignant_id,
+                uai: $scope.current_user.profil_actif.structure_id
+            }).$promise;
         })
             .then(function success(response) {
             var _2_semaines_avant = moment().subtract(2, 'weeks');
@@ -657,17 +700,25 @@ angular.module('cahierDeTextesClientApp')
                     .value();
             });
         };
-        $scope.individualCharts = { enseignants: [],
+        $scope.individualCharts = {
+            enseignants: [],
             add: function (enseignant) {
-                var chart = { enseignant: enseignant,
+                var chart = {
+                    enseignant: enseignant,
                     display: true,
-                    pieChart: angular.copy(PIECHART_DEFINITION) };
-                chart.pieChart.data = [{ label: 'saisies non visées',
-                        value: enseignant.filled - enseignant.validated },
-                    { label: 'saisies visées',
-                        value: enseignant.validated }];
+                    pieChart: angular.copy(PIECHART_DEFINITION)
+                };
+                chart.pieChart.data = [{
+                        label: 'saisies non visées',
+                        value: enseignant.filled - enseignant.validated
+                    },
+                    {
+                        label: 'saisies visées',
+                        value: enseignant.validated
+                    }];
                 $scope.individualCharts.enseignants.push(chart);
-            } };
+            }
+        };
         Annuaire.get_groups_of_structures([current_user.profil_actif.structure_id])
             .then(function success(response) {
             $scope.regroupements = _(response.data).reject(function (group) {
@@ -686,11 +737,15 @@ angular.module('cahierDeTextesClientApp')
                 enseignant.details = enseignants_details[enseignant.enseignant_id];
                 var stats_enseignant = _(enseignant.classes).reduce(function (totaux, classe) {
                     var stats_classe = _(classe.statistiques).reduce(function (totaux, mois) {
-                        return { filled: totaux.filled + mois.filled,
-                            validated: totaux.validated + mois.validated };
+                        return {
+                            filled: totaux.filled + mois.filled,
+                            validated: totaux.validated + mois.validated
+                        };
                     }, { filled: 0, validated: 0 });
-                    return { filled: totaux.filled + stats_classe.filled,
-                        validated: totaux.validated + stats_classe.validated };
+                    return {
+                        filled: totaux.filled + stats_classe.filled,
+                        validated: totaux.validated + stats_classe.validated
+                    };
                 }, { filled: 0, validated: 0 });
                 enseignant.filled = stats_enseignant.filled;
                 enseignant.validated = stats_enseignant.validated;
@@ -738,13 +793,15 @@ angular.module('cahierDeTextesClientApp')
         $scope.display_all = false;
         $scope.step = 0;
         $scope.report = {};
-        $scope.ui = { show_detailed_creneaux: false,
+        $scope.ui = {
+            show_detailed_creneaux: false,
             display_ready: true,
             display_problems: true,
             sortCreneauxBy: ['Jour'],
             sort_creneaux_by: function (criteria) {
                 $scope.ui.sortCreneauxBy = $scope.ui.sortCreneauxBy[0] === criteria[0] ? _(criteria).map(function (sub_criteria) { return '-' + sub_criteria; }) : criteria;
-            } };
+            }
+        };
         $scope.beautify_semainier = function (semainier) {
             var bsemainier = Utils.padEnd(semainier.toString(2), 53, '0');
             return '<div class="semainier-tooltip gris1">' +
@@ -832,7 +889,8 @@ angular.module('cahierDeTextesClientApp')
         };
         var update_creneaux_readiness = function () {
             _($scope.creneaux).each(function (creneau) {
-                creneau.readiness = { matiere: !_($scope.pronote.matieres[creneau.Matiere.Ident]).isUndefined()
+                creneau.readiness = {
+                    matiere: !_($scope.pronote.matieres[creneau.Matiere.Ident]).isUndefined()
                         && !_($scope.pronote.matieres[creneau.Matiere.Ident].laclasse).isUndefined(),
                     salle: !_(creneau.Salle).isUndefined(),
                     classe: _(creneau).has('Classe')
@@ -840,7 +898,8 @@ angular.module('cahierDeTextesClientApp')
                         && !_($scope.pronote.classes[creneau.Classe.Ident].laclasse).isUndefined(),
                     groupe_eleve: _(creneau).has('Groupe')
                         && !_($scope.pronote.groupes_eleves[creneau.Groupe.Ident]).isUndefined()
-                        && !_($scope.pronote.groupes_eleves[creneau.Groupe.Ident].laclasse).isUndefined() };
+                        && !_($scope.pronote.groupes_eleves[creneau.Groupe.Ident].laclasse).isUndefined()
+                };
                 creneau.ready = creneau.readiness.matiere && (creneau.readiness.classe || creneau.readiness.groupe_eleve);
             });
             update_counters();
@@ -879,8 +938,10 @@ angular.module('cahierDeTextesClientApp')
                 return Annuaire.get_structure($scope.pronote.UAI);
             }, handle_error)
                 .then(function success(response) {
-                $scope.etablissement = { classes: _(response.data.groups).where({ type: 'CLS' }),
-                    groupes_eleves: _(response.data.groups).select({ type: 'GRP' }) };
+                $scope.etablissement = {
+                    classes: _(response.data.groups).where({ type: 'CLS' }),
+                    groupes_eleves: _(response.data.groups).select({ type: 'GRP' })
+                };
                 _($scope.etablissement.groupes_eleves).each(function (regroupement) {
                     regroupement.libelle_aaf = regroupement.name.toUpperCase();
                     regroupement.displayed_label = regroupement.name;
@@ -969,12 +1030,16 @@ angular.module('cahierDeTextesClientApp')
                 $scope.pronote.salles = Utils.groupByKey($scope.pronote.Salles[0].Salle, 'Ident');
                 $scope.pronote.plages_horaires = Utils.groupByKey($scope.pronote.GrilleHoraire[0].PlacesParJour[0].Place, 'Numero');
                 $scope.pronote.groupes_eleves = Utils.groupByKey($scope.pronote.Groupes[0].Groupe, 'Ident');
-                $scope.matcheable_data.push({ title: 'Classes',
+                $scope.matcheable_data.push({
+                    title: 'Classes',
                     pronote: $scope.pronote.classes,
-                    annuaire: $scope.etablissement.classes });
-                $scope.matcheable_data.push({ title: 'Groupes d\'élèves',
+                    annuaire: $scope.etablissement.classes
+                });
+                $scope.matcheable_data.push({
+                    title: 'Groupes d\'élèves',
                     pronote: $scope.pronote.groupes_eleves,
-                    annuaire: $scope.etablissement.groupes_eleves });
+                    annuaire: $scope.etablissement.groupes_eleves
+                });
                 toastr.info('Récupération des matieres');
                 return Annuaire.query_subjects();
             }, handle_error)
@@ -1005,17 +1070,21 @@ angular.module('cahierDeTextesClientApp')
                     }
                 });
                 $scope.pronote.matieres = Utils.groupByKey($scope.pronote.Matieres[0].Matiere, 'Ident');
-                $scope.matcheable_data.push({ title: 'Matières',
+                $scope.matcheable_data.push({
+                    title: 'Matières',
                     pronote: $scope.pronote.matieres,
-                    annuaire: $scope.matieres });
+                    annuaire: $scope.matieres
+                });
                 _($scope.matcheable_data).each(function (dataset) {
                     dataset.total = function () { return _(dataset.pronote).size(); };
                     dataset.unmatched = function () { return _(dataset.pronote).where({ laclasse: undefined }).length; };
                     dataset.percent_valid = function () { return (dataset.total() - dataset.unmatched()) / dataset.total(); };
                 });
-                $scope.selected = { matieres: $scope.pronote.Matieres[0].Matiere,
+                $scope.selected = {
+                    matieres: $scope.pronote.Matieres[0].Matiere,
                     classes: _($scope.pronote.Classes[0].Classe).where({ existing_creneaux: 0 }),
-                    groupes: _($scope.pronote.Groupes[0].Groupe).where({ existing_creneaux: 0 }) };
+                    groupes: _($scope.pronote.Groupes[0].Groupe).where({ existing_creneaux: 0 })
+                };
                 update_creneaux_readiness();
                 $scope.$watchCollection('selected', function () { update_counters(); });
             }, handle_error)
@@ -1037,7 +1106,8 @@ angular.module('cahierDeTextesClientApp')
             return $http.post(APP_PATH + '/api/import/log/start/?uai=' + $scope.pronote.UAI, { uai: $scope.pronote.UAI, type: 'client ' + VERSION, comment: '' })
                 .then(function success(response) {
                 import_id = response.data.id;
-                var ct_etablissement = new Etablissements({ uai: $scope.pronote.UAI,
+                var ct_etablissement = new Etablissements({
+                    uai: $scope.pronote.UAI,
                     date_premier_jour_premiere_semaine: new Date($scope.pronote.AnneeScolaire[0].DatePremierJourSemaine1),
                     debut_annee_scolaire: new Date($scope.pronote.AnneeScolaire[0].DateDebut),
                     fin_annee_scolaire: new Date($scope.pronote.AnneeScolaire[0].DateFin)
@@ -1050,10 +1120,12 @@ angular.module('cahierDeTextesClientApp')
                     return _.chain(liste_regroupements)
                         .reject(function (regroupement) { return _(regroupement.laclasse).isUndefined(); })
                         .map(function (regroupement) {
-                        return { label: regroupement.laclasse.libelle_aaf,
+                        return {
+                            label: regroupement.laclasse.libelle_aaf,
                             regroupement_id: regroupement.laclasse.id,
                             debut_annee_scolaire: new Date($scope.pronote.AnneeScolaire[0].DateDebut),
-                            fin_annee_scolaire: new Date($scope.pronote.AnneeScolaire[0].DateFin) };
+                            fin_annee_scolaire: new Date($scope.pronote.AnneeScolaire[0].DateFin)
+                        };
                     })
                         .value();
                 };
@@ -1067,9 +1139,11 @@ angular.module('cahierDeTextesClientApp')
                 toastr.info('Création des salles');
                 var salles_to_import = _($scope.pronote.salles)
                     .map(function (salle) {
-                    return { uai: $scope.pronote.UAI,
+                    return {
+                        uai: $scope.pronote.UAI,
                         identifiant: salle.Ident,
-                        nom: salle.Nom };
+                        nom: salle.Nom
+                    };
                 });
                 return $http.post(APP_PATH + '/api/salles/bulk', { salles: salles_to_import });
             }, handle_error)
@@ -1077,11 +1151,13 @@ angular.module('cahierDeTextesClientApp')
                 $scope.report.salles = response.data;
                 var creneaux_to_import = creneaux_emploi_du_temps.map(function (creneau) {
                     var heure_debut = Utils.libelleHeure_to_Moment($scope.pronote.plages_horaires[creneau.NumeroPlaceDebut].LibelleHeureDebut);
-                    var pre_creneau = { import_id: import_id,
+                    var pre_creneau = {
+                        import_id: import_id,
                         jour_de_la_semaine: parseInt(creneau.Jour),
                         heure_debut: heure_debut.toISOString(),
                         heure_fin: heure_debut.add(parseInt(creneau.NombrePlaces) * parseInt($scope.pronote.GrilleHoraire[0].DureePlace), 'minutes').toISOString(),
-                        matiere_id: $scope.pronote.matieres[creneau.Matiere.Ident].laclasse.id };
+                        matiere_id: $scope.pronote.matieres[creneau.Matiere.Ident].laclasse.id
+                    };
                     if (_(creneau).has('Salle')) {
                         pre_creneau.salle_id = _($scope.report.salles).find({ identifiant: creneau.Salle.Ident }).id;
                         pre_creneau.semainier_salle = parseInt(creneau.Salle.Semaines);
@@ -1099,8 +1175,10 @@ angular.module('cahierDeTextesClientApp')
                 toastr.info('Import de ' + creneaux_to_import.length + ' créneaux');
                 var promises = [];
                 while (creneaux_to_import.length > 0) {
-                    promises.push($http.post(APP_PATH + '/api/creneaux_emploi_du_temps/bulk/', { uai: $scope.pronote.UAI,
-                        creneaux_emploi_du_temps: creneaux_to_import.splice(0, 500) }));
+                    promises.push($http.post(APP_PATH + '/api/creneaux_emploi_du_temps/bulk/', {
+                        uai: $scope.pronote.UAI,
+                        creneaux_emploi_du_temps: creneaux_to_import.splice(0, 500)
+                    }));
                 }
                 return $q.all(promises);
             }, handle_error)
@@ -1111,23 +1189,28 @@ angular.module('cahierDeTextesClientApp')
         };
         $scope.match_this = function (item, uai) {
             var laclasse_id = _(item.laclasse).has('ent_id') ? item.laclasse.ent_id : item.laclasse.id;
-            var m = new Matchable({ uai: uai,
+            var m = new Matchable({
+                uai: uai,
                 hash_item: hash_me(item),
-                id_annuaire: laclasse_id });
+                id_annuaire: laclasse_id
+            });
             m.$save().then(function () {
                 update_creneaux_readiness();
             });
         };
         $scope.unmatch_this = function (item, uai) {
-            Matchable.$delete({ uai: uai,
-                hash_item: hash_me(item) })
+            Matchable.$delete({
+                uai: uai,
+                hash_item: hash_me(item)
+            })
                 .then(function () {
                 item.laclasse = null;
                 update_creneaux_readiness();
             });
         };
         $scope.process_load = function (fichier) {
-            swal({ title: "Chargement des données...",
+            swal({
+                title: "Chargement des données...",
                 text: "traitement en cours",
                 type: "info",
                 showLoaderOnConfirm: true,
@@ -1141,19 +1224,23 @@ angular.module('cahierDeTextesClientApp')
                         }, function error(response) {
                             console.log(response);
                             swal.closeModal();
-                            swal({ title: 'Erreur :(',
+                            swal({
+                                title: 'Erreur :(',
                                 text: response.data.error,
-                                type: 'error' });
+                                type: 'error'
+                            });
                         });
                     });
                 },
-                allowOutsideClick: false });
+                allowOutsideClick: false
+            });
         };
         $scope.validate_matches = function () {
             $scope.step++;
         };
         $scope.process_import = function () {
-            swal({ title: "Import des données...",
+            swal({
+                title: "Import des données...",
                 text: "traitement en cours",
                 type: "info",
                 showLoaderOnConfirm: true,
@@ -1166,15 +1253,19 @@ angular.module('cahierDeTextesClientApp')
                         import_data().then(function success(response) {
                             swal.closeModal();
                             $scope.step = 0;
-                            swal({ title: "Import terminé",
+                            swal({
+                                title: "Import terminé",
                                 html: "",
-                                type: 'success' });
+                                type: 'success'
+                            });
                         }, function error(response) {
                             console.log(response);
                             swal.closeModal();
-                            swal({ title: 'Erreur :(',
+                            swal({
+                                title: 'Erreur :(',
                                 text: response.data.error,
-                                type: 'error' });
+                                type: 'error'
+                            });
                         });
                     });
                 }
@@ -1190,55 +1281,75 @@ angular.module('cahierDeTextesClientApp')
             var user = response.data;
             switch (user.profil_actif.type) {
                 case 'DIR':
-                    ctrl.tabs = [{ heading: 'Validation des saisies par enseignant',
+                    ctrl.tabs = [{
+                            heading: 'Validation des saisies par enseignant',
                             uisref: 'enseignants',
                             css_class: 'glyphicon glyphicon-user',
-                            active: true },
-                        { heading: 'Emplois du Temps',
+                            active: true
+                        },
+                        {
+                            heading: 'Emplois du Temps',
                             uisref: 'emploi_du_temps',
                             css_class: 'glyphicon glyphicon-calendar',
-                            active: false },
-                        { heading: 'Import Pronote',
+                            active: false
+                        },
+                        {
+                            heading: 'Import Pronote',
                             uisref: 'import',
                             css_class: 'glyphicon glyphicon-import',
-                            active: false }];
+                            active: false
+                        }];
                     break;
                 case 'ENS':
-                    ctrl.tabs = [{ heading: 'Cahier de textes',
+                    ctrl.tabs = [{
+                            heading: 'Cahier de textes',
                             uisref: 'emploi_du_temps',
                             css_class: 'glyphicon glyphicon-calendar',
-                            active: true },
-                        { heading: 'Statistiques',
+                            active: true
+                        },
+                        {
+                            heading: 'Statistiques',
                             uisref: 'stats',
                             css_class: 'glyphicon glyphicon-stats',
-                            active: false }];
+                            active: false
+                        }];
                     break;
                 case 'TUT':
                 case 'ELV':
-                    ctrl.tabs = [{ heading: 'Emploi du temps',
+                    ctrl.tabs = [{
+                            heading: 'Emploi du temps',
                             uisref: 'emploi_du_temps',
                             css_class: 'glyphicon glyphicon-calendar',
-                            active: true },
-                        { heading: 'Liste des devoirs',
+                            active: true
+                        },
+                        {
+                            heading: 'Liste des devoirs',
                             uisref: 'devoirs',
                             css_class: 'glyphicon glyphicon-list',
-                            active: false }];
+                            active: false
+                        }];
                     break;
                 case 'ADM':
-                    ctrl.tabs = [{ heading: 'Emplois du Temps',
+                    ctrl.tabs = [{
+                            heading: 'Emplois du Temps',
                             uisref: 'emploi_du_temps',
                             css_class: 'glyphicon glyphicon-calendar',
-                            active: true },
-                        { heading: 'Import Pronote',
+                            active: true
+                        },
+                        {
+                            heading: 'Import Pronote',
                             uisref: 'import',
                             css_class: 'glyphicon glyphicon-import',
-                            active: false }];
+                            active: false
+                        }];
                     break;
                 case 'EVS':
-                    ctrl.tabs = [{ heading: 'Emplois du Temps',
+                    ctrl.tabs = [{
+                            heading: 'Emplois du Temps',
                             uisref: 'emploi_du_temps',
                             css_class: 'glyphicon glyphicon-calendar',
-                            active: true }];
+                            active: true
+                        }];
                     break;
                 default:
                     ctrl.tabs = [];
@@ -1350,11 +1461,13 @@ angular.module('cahierDeTextesClientApp')
             return date;
         };
         var create_cours = function (creneau) {
-            var cours = new Cours({ creneau_emploi_du_temps_id: creneau.id,
+            var cours = new Cours({
+                creneau_emploi_du_temps_id: creneau.id,
                 date_cours: new Date(creneau.heure_debut).toISOString(),
                 date_validation: null,
                 enseignant_id: ctrl.current_user.id,
-                contenu: '' });
+                contenu: ''
+            });
             cours.devoirs = [];
             cours.create = true;
             return cours;
@@ -1382,12 +1495,14 @@ angular.module('cahierDeTextesClientApp')
         };
         ctrl.semaines_actives = { regroupement: [] };
         ctrl.templates_semainier = [
-            { label: 'Tout',
+            {
+                label: 'Tout',
                 apply: function () {
                     ctrl.semaines_actives.regroupement = semaines_toutes_actives();
                 }
             },
-            { label: 'Semaine A',
+            {
+                label: 'Semaine A',
                 apply: function () {
                     var template = [];
                     var semaines_depuis_les_vacances = 0;
@@ -1403,7 +1518,8 @@ angular.module('cahierDeTextesClientApp')
                     ctrl.semaines_actives.regroupement = template;
                 }
             },
-            { label: 'Semaine B',
+            {
+                label: 'Semaine B',
                 apply: function () {
                     var template = [];
                     var semaines_depuis_les_vacances = 0;
@@ -1419,7 +1535,8 @@ angular.module('cahierDeTextesClientApp')
                     ctrl.semaines_actives.regroupement = template;
                 }
             },
-            { label: 'Unique',
+            {
+                label: 'Unique',
                 apply: function () {
                     var template = [];
                     _(52).times(function (week) {
@@ -1428,14 +1545,16 @@ angular.module('cahierDeTextesClientApp')
                     ctrl.semaines_actives.regroupement = template;
                 }
             },
-            { label: 'Inverser',
+            {
+                label: 'Inverser',
                 apply: function () {
                     ctrl.semaines_actives.regroupement = _(ctrl.semaines_actives.regroupement).map(function (w, i) {
                         return ((w == 0) && !Utils.sont_ce_les_vacances(i + 1, ZONE)) ? 1 : 0;
                     });
                 }
             },
-            { label: 'Réinitialiser',
+            {
+                label: 'Réinitialiser',
                 apply: function () {
                     ctrl.semaines_actives.regroupement = ctrl.creneau.en_creation ? semaines_toutes_actives() : Utils.fixnum_to_bitfield(creneau.semainier);
                 }
@@ -1457,7 +1576,8 @@ angular.module('cahierDeTextesClientApp')
                 });
             };
             if (ctrl.dirty) {
-                swal({ title: 'Ceci supprimera le créneau à compter du ' + $filter('amDateFormat')(creneau.heure_debut, 'dddd D MMMM YYYY'),
+                swal({
+                    title: 'Ceci supprimera le créneau à compter du ' + $filter('amDateFormat')(creneau.heure_debut, 'dddd D MMMM YYYY'),
                     text: 'Le créneau avec ses séquences pédagogiques et devoirs associés restera visible pour les dates antérieures.',
                     type: 'warning',
                     showCancelButton: true,
@@ -1484,7 +1604,8 @@ angular.module('cahierDeTextesClientApp')
                 }
             };
             if (ctrl.dirty) {
-                swal({ title: 'Êtes-vous sur ?',
+                swal({
+                    title: 'Êtes-vous sur ?',
                     text: 'Les modifications que vous avez faites dans cette fenêtre seront perdues.',
                     type: 'warning',
                     showCancelButton: true,
@@ -1521,8 +1642,10 @@ angular.module('cahierDeTextesClientApp')
                         .each(function (devoir) {
                         var prom = $q.defer();
                         var treat_error = function error(response) {
-                            ctrl.erreurs.unshift({ status: response.status,
-                                message: response.data.error });
+                            ctrl.erreurs.unshift({
+                                status: response.status,
+                                message: response.data.error
+                            });
                             prom.reject(response);
                         };
                         var treat_success = function (action) {
@@ -1658,9 +1781,11 @@ angular.module('cahierDeTextesClientApp')
                 ctrl.is_dirty(devoir);
             };
             var liste_creneaux_similaires = function (creneau, n_semaines_before, n_semaines_after) {
-                return API.get_creneaux_emploi_du_temps_similaires({ id: creneau.id,
+                return API.get_creneaux_emploi_du_temps_similaires({
+                    id: creneau.id,
                     debut: moment(creneau.heure_debut.toISOString()).subtract(n_semaines_before, 'weeks').toDate(),
-                    fin: moment(creneau.heure_debut.toISOString()).add(n_semaines_after, 'weeks').toDate() });
+                    fin: moment(creneau.heure_debut.toISOString()).add(n_semaines_after, 'weeks').toDate()
+                });
             };
             liste_creneaux_similaires(ctrl.creneau, 2, 8)
                 .then(function (response) {
@@ -1725,9 +1850,11 @@ angular.module('cahierDeTextesClientApp')
                     }
                     else {
                         var _item = _(response.added).first();
-                        item.ressources.push({ name: _item.name,
+                        item.ressources.push({
+                            name: _item.name,
                             hash: _item.hash,
-                            url: $sce.trustAsResourceUrl(URL_DOCS + '/api/connector?cmd=file&target=' + _item.hash) });
+                            url: $sce.trustAsResourceUrl(URL_DOCS + '/api/connector?cmd=file&target=' + _item.hash)
+                        });
                         ctrl.is_dirty(item);
                         if (!_(response.removed).isEmpty()) {
                             item.ressources = _(item.ressources).reject(function (ressource) {
@@ -1788,11 +1915,13 @@ angular.module('cahierDeTextesClientApp')
                         creneau_cible = _(ctrl.creneaux_devoirs_possibles).first();
                     }
                 }
-                var devoir = new Devoirs({ cours_id: ctrl.cours.id,
+                var devoir = new Devoirs({
+                    cours_id: ctrl.cours.id,
                     date_due: $filter('date')(creneau_cible.heure_debut, 'yyyy-MM-dd'),
                     type_devoir_id: _(ctrl.types_de_devoir).last().id,
                     creneau_emploi_du_temps_id: creneau_cible.id,
-                    contenu: '' });
+                    contenu: ''
+                });
                 devoir.create = true;
                 devoir.dirty = true;
                 where.unshift(devoir);
@@ -1848,7 +1977,8 @@ angular.module('cahierDeTextesClientApp')
                     });
                     ctrl.creneaux_similaires.selected = [];
                     init_cours_existant(ctrl.cours);
-                    swal({ title: 'Créneau copié !',
+                    swal({
+                        title: 'Créneau copié !',
                         type: 'success',
                         timer: 2000,
                         showCancelButton: false,
@@ -2004,10 +2134,12 @@ angular.module('cahierDeTextesClientApp')
         };
         var retrieve_data = function (from_date, to_date) {
             if ($scope.current_user.profil_actif.type != 'TUT' || $scope.current_user.enfant_actif) {
-                EmploisDuTemps.query({ debut: from_date,
+                EmploisDuTemps.query({
+                    debut: from_date,
                     fin: to_date,
                     uai: $scope.current_user.profil_actif.structure_id,
-                    uid: $scope.current_user.profil_actif.type === 'TUT' ? $scope.current_user.enfant_actif.child_id : null })
+                    uid: $scope.current_user.profil_actif.type === 'TUT' ? $scope.current_user.enfant_actif.child_id : null
+                })
                     .$promise
                     .then(function success(response) {
                     $scope.raw_data = response;
@@ -2050,7 +2182,8 @@ angular.module('cahierDeTextesClientApp')
         };
         if ($scope.current_user.profil_actif.type === 'TUT') {
             if ($scope.current_user.enfants.length == 0) {
-                swal({ title: 'Erreur',
+                swal({
+                    title: 'Erreur',
                     text: 'Aucun enfant configuré pour ce profil.',
                     type: 'error',
                     showCancelButton: false,
@@ -2064,18 +2197,24 @@ angular.module('cahierDeTextesClientApp')
             }
         }
         var can_edit = _(['ENS', 'DOC', 'DIR', 'ADM']).contains($scope.current_user.profil_actif.type) || $scope.current_user.profil_actif.admin;
-        $scope.calendar = { options: { lang: 'fr',
+        $scope.calendar = {
+            options: {
+                lang: 'fr',
                 locale: 'fr',
                 height: 600,
-                header: { left: _(['ENS', 'DOC']).contains($scope.current_user.profil_actif.type) ? 'timetableWeek,textbookWeek' : '',
+                header: {
+                    left: _(['ENS', 'DOC']).contains($scope.current_user.profil_actif.type) ? 'timetableWeek,textbookWeek' : '',
                     center: 'title',
-                    right: 'today prev,next' },
+                    right: 'today prev,next'
+                },
                 firstDay: 1,
                 minTime: '07:00:00',
                 maxTime: '19:00:00',
-                businessHours: { start: '7:00',
+                businessHours: {
+                    start: '7:00',
                     end: '19:00',
-                    dow: [1, 2, 3, 4, 5] },
+                    dow: [1, 2, 3, 4, 5]
+                },
                 titleFormat: 'D MMM YYYY, [semaine] W',
                 columnFormat: 'dddd D',
                 slotDuration: '00:30:00',
@@ -2202,11 +2341,13 @@ angular.module('cahierDeTextesClientApp')
                             start = new Date(start);
                             end = new Date(end);
                             var regroupement_id = $scope.selected_regroupements[0].id;
-                            var new_creneau = new CreneauxEmploiDuTemps({ regroupement_id: regroupement_id,
+                            var new_creneau = new CreneauxEmploiDuTemps({
+                                regroupement_id: regroupement_id,
                                 jour_de_la_semaine: start.getDay(),
                                 heure_debut: moment(start).toISOString(),
                                 heure_fin: moment(end).toISOString(),
-                                matiere_id: '' });
+                                matiere_id: ''
+                            });
                             new_creneau.$save()
                                 .then(function () {
                                 new_creneau.dirty = true;
@@ -2225,21 +2366,26 @@ angular.module('cahierDeTextesClientApp')
                 },
                 eventDrop: function (event, delta, revertFunc, jsEvent, ui, view) {
                     if ($scope.calendar.options.selectable && $scope.calendar.options.editable) {
-                        CreneauxEmploiDuTemps.update({ id: event.details.creneau_emploi_du_temps_id,
+                        CreneauxEmploiDuTemps.update({
+                            id: event.details.creneau_emploi_du_temps_id,
                             heure_debut: event.start.toDate(),
                             heure_fin: event.end.toDate(),
-                            jour_de_la_semaine: event.end.day() });
+                            jour_de_la_semaine: event.end.day()
+                        });
                     }
                 },
                 eventResize: function (event, delta, revertFunc, jsEvent, ui, view) {
                     if ($scope.calendar.options.selectable && $scope.calendar.options.editable) {
-                        CreneauxEmploiDuTemps.update({ id: event.details.creneau_emploi_du_temps_id,
+                        CreneauxEmploiDuTemps.update({
+                            id: event.details.creneau_emploi_du_temps_id,
                             heure_debut: event.start.toDate(),
-                            heure_fin: event.end.toDate() });
+                            heure_fin: event.end.toDate()
+                        });
                     }
                 }
             },
-            events: [] };
+            events: []
+        };
     }]);
 angular.module('cahierDeTextesClientApp')
     .factory('RecursionHelper', ['$compile',
@@ -2251,7 +2397,8 @@ angular.module('cahierDeTextesClientApp')
                 }
                 var contents = element.contents().remove();
                 var compiledContents;
-                return { pre: (link && link.pre) ? link.pre : null,
+                return {
+                    pre: (link && link.pre) ? link.pre : null,
                     post: function (scope, element) {
                         if (!compiledContents) {
                             compiledContents = $compile(contents);
@@ -2270,10 +2417,12 @@ angular.module('cahierDeTextesClientApp')
     .directive('cartable', ['RecursionHelper',
     function (RecursionHelper) {
         return {
-            scope: { racine: '=racine',
+            scope: {
+                racine: '=racine',
                 target: '=target',
                 regroupement: '=regroupement',
-                addCallback: '=addCallback' },
+                addCallback: '=addCallback'
+            },
             replace: true,
             controller: ['$scope', '$sce', 'URL_DOCS', 'Documents',
                 function ($scope, $sce, URL_DOCS, Documents) {
@@ -2344,7 +2493,8 @@ angular.module('cahierDeTextesClientApp')
 angular.module('cahierDeTextesClientApp')
     .directive('fileModel', ['$parse',
     function ($parse) {
-        return { restrict: 'A',
+        return {
+            restrict: 'A',
             link: function (scope, element, attrs) {
                 var model = $parse(attrs.fileModel);
                 var modelSetter = model.assign;
@@ -2356,6 +2506,422 @@ angular.module('cahierDeTextesClientApp')
             }
         };
     }]);
+angular.module('cahierDeTextesClientApp')
+    .service('Annuaire', ['$http', '$q', 'URL_ENT',
+    function ($http, $q, URL_ENT) {
+        var service = this;
+        var beautify_group_type = function (type) {
+            switch (type) {
+                case 'CLS': return 'Classe';
+                case 'GRP': return 'Groupe';
+                case 'GPL': return 'Groupe libre';
+                default: return '';
+            }
+        };
+        service.query_subjects = _.memoize(function () {
+            return $http.get(URL_ENT + '/api/subjects');
+        });
+        service.get_subject = _.memoize(function (matiere_id) {
+            return $http.get(URL_ENT + '/api/subjects/' + matiere_id);
+        });
+        service.get_subjects = _.memoize(function (subjects_ids) {
+            return $http.get(URL_ENT + '/api/subjects/', { params: { 'id[]': subjects_ids } });
+        });
+        service.get_structure = _.memoize(function (uai) {
+            return $http.get(URL_ENT + '/api/structures/' + uai);
+        });
+        service.get_group = _.memoize(function (group_id) {
+            return $http.get(URL_ENT + '/api/groups/' + group_id + '?expand=false')
+                .then(function success(response) {
+                response.data.full_type = beautify_group_type(response.data.type);
+                return $q.resolve(response);
+            });
+        });
+        service.get_groups = _.memoize(function (groups_ids) {
+            if (_(groups_ids).isEmpty()) {
+                return $q.resolve({ data: [] });
+            }
+            else {
+                return $http.get(URL_ENT + '/api/groups/', { params: { 'id[]': groups_ids } })
+                    .then(function success(response) {
+                    response.data = response.data.map(function (group) {
+                        group.full_type = beautify_group_type(group.type);
+                        return group;
+                    });
+                    return $q.resolve(response);
+                });
+            }
+        });
+        service.get_groups_of_structures = _.memoize(function (structures_ids) {
+            return $http.get(URL_ENT + '/api/groups/', { params: { 'structure_id[]': structures_ids } })
+                .then(function success(response) {
+                response.data = response.data.map(function (group) {
+                    group.full_type = beautify_group_type(group.type);
+                    return group;
+                });
+                return $q.resolve(response);
+            });
+        });
+        service.get_user = _.memoize(function (user_id) {
+            return $http.get(URL_ENT + '/api/users/' + user_id)
+                .then(function (response) {
+                response.data.profil_actif = _(response.data.profiles).findWhere({ active: true });
+                response.data.get_actual_groups = function () {
+                    return service.get_groups(_(response.data.groups).pluck('group_id'))
+                        .then(function (groups) {
+                        return $q.resolve(groups.data);
+                    });
+                };
+                response.data.get_actual_subjects = function () {
+                    return service.get_subjects(_(response.data.groups).pluck('subject_id'))
+                        .then(function (subjects) {
+                        return $q.resolve(subjects.data);
+                    });
+                };
+                return response;
+            });
+        });
+        service.get_users = _.memoize(function (users_ids) {
+            return $http.get(URL_ENT + '/api/users/', { params: { 'id[]': users_ids } });
+        });
+    }
+]);
+angular.module('cahierDeTextesClientApp')
+    .service('User', ['$http', '$q', 'APP_PATH', 'Annuaire',
+    function ($http, $q, APP_PATH, Annuaire) {
+        this.get_user = _.memoize(function () {
+            return $http.get(APP_PATH + '/api/users/current')
+                .then(function (response) {
+                _(response.data.profils).each(function (profil) {
+                    profil.regroupements = _.chain(response.data.regroupements)
+                        .filter(function (classe) { return classe.etablissement_code == profil.structure_id; })
+                        .map(function (classe) {
+                        return {
+                            id: classe.id,
+                            libelle: classe.name,
+                            type: classe.type
+                        };
+                    })
+                        .uniq(function (item) { return item.id; })
+                        .reject(function (item) { return _.isUndefined(item.id); })
+                        .value();
+                });
+                response.data.profil_actif = _(response.data.profils).findWhere({ active: true });
+                response.data.profil_actif.admin = !_.chain(response.data.profils)
+                    .findWhere({
+                    structure_id: response.data.profil_actif.structure_id,
+                    type: 'ADM'
+                })
+                    .isUndefined()
+                    .value();
+                if (response.data.enfants.length > 0) {
+                    var promises = response.data.enfants.map(function (child) {
+                        return Annuaire.get_user(child.child_id)
+                            .then(function (user) {
+                            child.enfant = user.data;
+                        });
+                    });
+                    $q.all(promises).then(function () {
+                        response.data.enfant_actif = response.data.enfants[0];
+                    });
+                }
+                response.data.get_actual_groups = function () {
+                    var groups_ids = _.chain(response.data.groups).pluck('group_id').uniq().value();
+                    var promise = $q.resolve([]);
+                    if (_(['EVS', 'DIR', 'ADM']).contains(response.data.profil_actif.type) || response.data.profil_actif.admin) {
+                        promise = Annuaire.get_groups_of_structures([response.data.profil_actif.structure_id]);
+                    }
+                    else {
+                        promise = Annuaire.get_groups(groups_ids);
+                    }
+                    return promise
+                        .then(function (groups) {
+                        response.data.actual_groups = _(groups.data).select(function (group) {
+                            return group.structure_id === response.data.profil_actif.structure_id;
+                        });
+                        return $q.resolve(response.data.actual_groups);
+                    });
+                };
+                response.data.extract_subjects_ids = function () {
+                    return _.chain(response.data.groups).pluck('subject_id').uniq().value();
+                };
+                response.data.get_actual_subjects = function () {
+                    return Annuaire.get_subjects(response.data.extract_subjects_ids())
+                        .then(function (subjects) {
+                        response.data.actual_subjects = subjects.data;
+                        return $q.resolve(response.data.actual_subjects);
+                    });
+                };
+                response.data.is = function (type) {
+                    return this.profil_actif.type == type;
+                };
+                return response;
+            });
+        });
+        this.update_parameters = function (parametres) {
+            return $http.put(APP_PATH + '/api/users/current/parametres', { parameters: JSON.stringify(parametres) });
+        };
+    }])
+    .factory('StatistiquesRegroupements', ['$resource', 'APP_PATH',
+    function ($resource, APP_PATH) {
+        return $resource(APP_PATH + '/api/etablissements/:uai/statistiques/regroupements/:id', {
+            uai: '@uai',
+            id: '@id'
+        });
+    }])
+    .factory('Cours', ['$resource', 'APP_PATH',
+    function ($resource, APP_PATH) {
+        return $resource(APP_PATH + '/api/cours/:id', { id: '@id' }, {
+            update: { method: 'PUT' },
+            valide: {
+                method: 'PUT',
+                url: APP_PATH + '/api/cours/:id/valide'
+            },
+            copie: {
+                method: 'PUT',
+                url: APP_PATH + '/api/cours/:id/copie/regroupement/:regroupement_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date/:date',
+                params: {
+                    id: '@id',
+                    regroupement_id: '@regroupement_id',
+                    creneau_emploi_du_temps_id: '@creneau_emploi_du_temps_id',
+                    date: '@date'
+                }
+            }
+        });
+    }])
+    .factory('CreneauxEmploiDuTemps', ['$resource', 'APP_PATH',
+    function ($resource, APP_PATH) {
+        return $resource(APP_PATH + '/api/creneaux_emploi_du_temps/:id', {
+            id: '@id',
+            regroupement_id: '@regroupement_id',
+            previous_regroupement_id: '@previous_regroupement_id',
+            jour_de_la_semaine: '@jour_de_la_semaine',
+            heure_debut: '@heure_debut',
+            heure_fin: '@heure_fin',
+            matiere_id: '@matiere_id',
+            semainier_regroupement: '@semainier_regroupement',
+            semainier_salle: '@semainier_salle'
+        }, {
+            update: { method: 'PUT' },
+            delete: {
+                method: 'DELETE',
+                params: {
+                    id: '@id',
+                    date_creneau: '@date_creneau'
+                }
+            },
+            bulk: {
+                method: 'POST',
+                isArray: true,
+                url: APP_PATH + '/api/creneaux_emploi_du_temps/bulk',
+                params: { creneaux_emploi_du_temps: '@creneaux_emploi_du_temps' }
+            },
+            bulk_delete: {
+                method: 'DELETE',
+                isArray: true,
+                url: APP_PATH + '/api/creneaux_emploi_du_temps/bulk',
+                params: {
+                    ids: '@ids',
+                    date_creneau: '@date_creneau'
+                }
+            }
+        });
+    }])
+    .factory('Devoirs', ['$resource', 'APP_PATH',
+    function ($resource, APP_PATH) {
+        return $resource(APP_PATH + '/api/devoirs/:id', {
+            id: '@id',
+            uid: '@uid'
+        }, {
+            update: { method: 'PUT' },
+            fait: {
+                method: 'PUT',
+                url: APP_PATH + '/api/devoirs/:id/fait'
+            },
+            copie: {
+                method: 'PUT',
+                url: APP_PATH + '/api/devoirs/:id/copie/cours/:cours_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date_due/:date_due',
+                params: {
+                    id: '@id',
+                    cours_id: '@cours_id',
+                    creneau_emploi_du_temps_id: '@creneau_emploi_du_temps_id',
+                    date_due: '@date_due'
+                }
+            }
+        });
+    }])
+    .factory('EmploisDuTemps', ['$resource', 'APP_PATH',
+    function ($resource, APP_PATH) {
+        return $resource(APP_PATH + '/api/emplois_du_temps', {
+            debut: '@debut',
+            fin: '@fin',
+            uid: '@uid'
+        });
+    }])
+    .factory('Enseignants', ['$resource', 'APP_PATH',
+    function ($resource, APP_PATH) {
+        return $resource(APP_PATH + '/api/etablissements/:uai/statistiques/enseignants/:enseignant_id', {
+            uai: '@uai',
+            enseignant_id: '@enseignant_id'
+        });
+    }])
+    .factory('Etablissements', ['$resource', 'APP_PATH',
+    function ($resource, APP_PATH) {
+        return $resource(APP_PATH + '/api/etablissements/:uai', { uai: '@uai' });
+    }])
+    .factory('Salles', ['$resource', 'APP_PATH',
+    function ($resource, APP_PATH) {
+        return $resource(APP_PATH + '/api/salles/:id', { id: '@id' }, {
+            bulk: {
+                method: 'POST',
+                isArray: true,
+                url: APP_PATH + '/api/salles/bulk',
+                params: { salles: '@salles' }
+            }
+        });
+    }])
+    .factory('CahiersDeTextes', ['$resource', 'APP_PATH',
+    function ($resource, APP_PATH) {
+        return $resource(APP_PATH + '/api/cahiers_de_textes/:id', { id: '@id' }, {
+            bulk: {
+                method: 'POST',
+                isArray: true,
+                url: APP_PATH + '/api/cahiers_de_textes/bulk',
+                params: { cahiers_de_textes: '@cahiers_de_textes' }
+            }
+        });
+    }])
+    .factory('TypesDeDevoir', ['$resource', 'APP_PATH',
+    function ($resource, APP_PATH) {
+        return $resource(APP_PATH + '/api/types_de_devoir/:id', { id: '@id' });
+    }])
+    .factory('Matchable', ['$resource', 'APP_PATH',
+    function ($resource, APP_PATH) {
+        return $resource(APP_PATH + '/api/matchables/:uai/:hash_item', {
+            uai: '@uai',
+            hash_item: '@hash_item',
+            id_annuaire: '@id_annuaire'
+        });
+    }]);
+angular.module('cahierDeTextesClientApp')
+    .service('API', ['$http', 'APP_PATH', 'StatistiquesRegroupements', 'Cours', 'CreneauxEmploiDuTemps', 'Devoirs', 'EmploisDuTemps', 'Enseignants', 'Etablissements', 'TypesDeDevoir',
+    function ($http, APP_PATH, StatistiquesRegroupements, Cours, CreneauxEmploiDuTemps, Devoirs, EmploisDuTemps, Enseignants, Etablissements, TypesDeDevoir) {
+        this.get_etablissement = function (params) {
+            return Etablissements.get(params);
+        };
+        this.query_statistiques_regroupements = function (params) {
+            return StatistiquesRegroupements.query(params);
+        };
+        this.query_types_de_devoir = _.memoize(function () {
+            return TypesDeDevoir.query();
+        });
+        this.get_type_de_devoir = _.memoize(function (id) {
+            return TypesDeDevoir.get({ id: id });
+        });
+        this.query_emplois_du_temps = function () {
+            return EmploisDuTemps.query();
+        };
+        this.get_creneau_emploi_du_temps = function (params) {
+            return CreneauxEmploiDuTemps.get(params);
+        };
+        this.get_creneaux_emploi_du_temps_similaires = function (params) {
+            return $http.get(APP_PATH + '/api/creneaux_emploi_du_temps/' + params.id + '/similaires?debut=' + params.debut.toISOString() + '&fin=' + params.fin.toISOString());
+        };
+        this.query_enseignants = function (params) {
+            return Enseignants.query(params);
+        };
+        this.get_enseignant = function (params) {
+            return Enseignants.get(params);
+        };
+        this.get_cours = function (params) {
+            return Cours.get(params);
+        };
+        this.query_devoirs = function (params) {
+            return Devoirs.query(params);
+        };
+        this.get_devoir = function (params) {
+            return Devoirs.get(params);
+        };
+    }
+]);
+angular.module('cahierDeTextesClientApp')
+    .service('Documents', ['$http', '$q', 'URL_DOCS', 'Annuaire',
+    function ($http, $q, URL_DOCS, Annuaire) {
+        var Documents = this;
+        Documents.list_files = _.memoize(function (root) {
+            var params = {
+                cmd: 'open',
+                target: ''
+            };
+            if (root == undefined) {
+                params.tree = 1;
+            }
+            else {
+                params.target = root;
+            }
+            return $http.get(URL_DOCS + '/api/connector', { params: params });
+        });
+        Documents.get_ctxt_folder_hash = _.memoize(function (classe) {
+            var structure, structure_root, classes_root, classe_root, cdt_root;
+            return Annuaire.get_structure(classe.structure_id)
+                .then(function success(response) {
+                structure = response.data;
+                return Documents.list_files();
+            })
+                .then(function success(response) {
+                structure_root = _(response.data.files).findWhere({ phash: null, name: structure.name });
+                return Documents.list_files(structure_root.hash);
+            })
+                .then(function success(response) {
+                classes_root = _(response.data.files).findWhere({ phash: structure_root.hash, name: 'classes' });
+                return Documents.list_files(classes_root.hash);
+            })
+                .then(function success(response) {
+                classe_root = _(response.data.files).findWhere({ phash: classes_root.hash, name: classe.name });
+                return Documents.list_files(classe_root.hash);
+            })
+                .then(function success(response) {
+                cdt_root = _(response.data.files).findWhere({ phash: classe_root.hash, name: 'Cahier de textes.ct' });
+                return cdt_root.hash;
+            });
+        });
+        Documents.ajout_au_cahier_de_textes = function (classe, node) {
+            return Documents.get_ctxt_folder_hash(classe)
+                .then(function (ctxt_folder_hash) {
+                var params = {
+                    cmd: 'paste',
+                    'targets[]': node.hash,
+                    'renames[]': node.name,
+                    dst: ctxt_folder_hash,
+                    cut: false
+                };
+                return $http.get(URL_DOCS + '/api/connector', { params: params });
+            })
+                .then(function success(response) {
+                return response.data;
+            });
+        };
+        Documents.upload_dans_cahier_de_textes = function (classe, fichiers) {
+            return Documents.get_ctxt_folder_hash(classe)
+                .then(function (ctxt_folder_hash) {
+                return $q.all(_(fichiers).map(function (file) {
+                    var form_data = new FormData();
+                    form_data.append('cmd', 'upload');
+                    form_data.append('target', ctxt_folder_hash);
+                    form_data.append('upload[]', file);
+                    form_data.append('renames[]', file.name);
+                    return $http.post(URL_DOCS + '/api/connector', form_data, {
+                        headers: { 'Content-Type': undefined },
+                        transformRequest: angular.identity
+                    });
+                }))
+                    .then(function (response) {
+                    return response;
+                });
+            });
+        };
+    }
+]);
 angular.module('cahierDeTextesClientApp')
     .service('fileUpload', ['$http',
     function ($http) {
@@ -2536,15 +3102,19 @@ angular.module('cahierDeTextesClientApp')
         this.overlay_semainier = function () {
             return _.chain(_.range(1, 52))
                 .map(function (s) {
-                return { semaine: s,
-                    mois: _this.what_month(s) };
+                return {
+                    semaine: s,
+                    mois: _this.what_month(s)
+                };
             })
                 .groupBy(function (s) { return s.mois; })
                 .toArray()
                 .map(function (semaines, i) {
-                return { index: i > 7 ? i - 8 : i + 4,
+                return {
+                    index: i > 7 ? i - 8 : i + 4,
                     label: $locale.DATETIME_FORMATS.MONTH[i],
-                    semaines: semaines };
+                    semaines: semaines
+                };
             })
                 .value();
         };
@@ -2574,9 +3144,11 @@ angular.module('cahierDeTextesClientApp')
         this.libelleHeure_to_Moment = function (libelle) {
             var horaire = libelle.split(':').map(function (i) { return parseInt(i); });
             var utc_offset = (new Date()).getTimezoneOffset() / 60 * -1;
-            var date = moment().set({ hour: horaire[0] + utc_offset,
+            var date = moment().set({
+                hour: horaire[0] + utc_offset,
                 minute: horaire[1],
-                second: horaire[2] });
+                second: horaire[2]
+            });
             return date;
         };
         this.fixnum_to_bitfield = function (fixnum) {
@@ -2601,371 +3173,15 @@ angular.module('cahierDeTextesClientApp')
             User.get_user()
                 .then(function (response) {
                 var user = response.data;
-                $http.post(URL_ENT + '/api/logs', { application_id: app,
+                $http.post(URL_ENT + '/api/logs', {
+                    application_id: app,
                     user_id: user.id,
                     structure_id: user.profil_actif.structure_id,
                     profil_id: user.profil_actif.type,
                     url: (_(url).isNull() ? APP_PATH + $state.current.url : url).substr(0, 1023),
-                    params: _(params).isNull() ? _($state.params).map(function (value, key) { return key + '=' + value; }).join('&') : params })
+                    params: _(params).isNull() ? _($state.params).map(function (value, key) { return key + '=' + value; }).join('&') : params
+                })
                     .then(function success() { }, function error() { });
-            });
-        };
-    }
-]);
-angular.module('cahierDeTextesClientApp')
-    .service('Annuaire', ['$http', '$q', 'URL_ENT',
-    function ($http, $q, URL_ENT) {
-        var service = this;
-        var beautify_group_type = function (type) {
-            switch (type) {
-                case 'CLS': return 'Classe';
-                case 'GRP': return 'Groupe';
-                case 'GPL': return 'Groupe libre';
-                default: return '';
-            }
-        };
-        service.query_subjects = _.memoize(function () {
-            return $http.get(URL_ENT + '/api/subjects');
-        });
-        service.get_subject = _.memoize(function (matiere_id) {
-            return $http.get(URL_ENT + '/api/subjects/' + matiere_id);
-        });
-        service.get_subjects = _.memoize(function (subjects_ids) {
-            return $http.get(URL_ENT + '/api/subjects/', { params: { 'id[]': subjects_ids } });
-        });
-        service.get_structure = _.memoize(function (uai) {
-            return $http.get(URL_ENT + '/api/structures/' + uai);
-        });
-        service.get_group = _.memoize(function (group_id) {
-            return $http.get(URL_ENT + '/api/groups/' + group_id + '?expand=false')
-                .then(function success(response) {
-                response.data.full_type = beautify_group_type(response.data.type);
-                return $q.resolve(response);
-            });
-        });
-        service.get_groups = _.memoize(function (groups_ids) {
-            if (_(groups_ids).isEmpty()) {
-                return $q.resolve({ data: [] });
-            }
-            else {
-                return $http.get(URL_ENT + '/api/groups/', { params: { 'id[]': groups_ids } })
-                    .then(function success(response) {
-                    response.data = response.data.map(function (group) {
-                        group.full_type = beautify_group_type(group.type);
-                        return group;
-                    });
-                    return $q.resolve(response);
-                });
-            }
-        });
-        service.get_groups_of_structures = _.memoize(function (structures_ids) {
-            return $http.get(URL_ENT + '/api/groups/', { params: { 'structure_id[]': structures_ids } })
-                .then(function success(response) {
-                response.data = response.data.map(function (group) {
-                    group.full_type = beautify_group_type(group.type);
-                    return group;
-                });
-                return $q.resolve(response);
-            });
-        });
-        service.get_user = _.memoize(function (user_id) {
-            return $http.get(URL_ENT + '/api/users/' + user_id)
-                .then(function (response) {
-                response.data.profil_actif = _(response.data.profiles).findWhere({ active: true });
-                response.data.get_actual_groups = function () {
-                    return service.get_groups(_(response.data.groups).pluck('group_id'))
-                        .then(function (groups) {
-                        return $q.resolve(groups.data);
-                    });
-                };
-                response.data.get_actual_subjects = function () {
-                    return service.get_subjects(_(response.data.groups).pluck('subject_id'))
-                        .then(function (subjects) {
-                        return $q.resolve(subjects.data);
-                    });
-                };
-                return response;
-            });
-        });
-        service.get_users = _.memoize(function (users_ids) {
-            return $http.get(URL_ENT + '/api/users/', { params: { 'id[]': users_ids } });
-        });
-    }
-]);
-angular.module('cahierDeTextesClientApp')
-    .service('User', ['$http', '$q', 'APP_PATH', 'Annuaire',
-    function ($http, $q, APP_PATH, Annuaire) {
-        this.get_user = _.memoize(function () {
-            return $http.get(APP_PATH + '/api/users/current')
-                .then(function (response) {
-                _(response.data.profils).each(function (profil) {
-                    profil.regroupements = _.chain(response.data.regroupements)
-                        .filter(function (classe) { return classe.etablissement_code == profil.structure_id; })
-                        .map(function (classe) {
-                        return { id: classe.id,
-                            libelle: classe.name,
-                            type: classe.type };
-                    })
-                        .uniq(function (item) { return item.id; })
-                        .reject(function (item) { return _.isUndefined(item.id); })
-                        .value();
-                });
-                response.data.profil_actif = _(response.data.profils).findWhere({ active: true });
-                response.data.profil_actif.admin = !_.chain(response.data.profils)
-                    .findWhere({ structure_id: response.data.profil_actif.structure_id,
-                    type: 'ADM' })
-                    .isUndefined()
-                    .value();
-                if (response.data.enfants.length > 0) {
-                    var promises = response.data.enfants.map(function (child) {
-                        return Annuaire.get_user(child.child_id)
-                            .then(function (user) {
-                            child.enfant = user.data;
-                        });
-                    });
-                    $q.all(promises).then(function () {
-                        response.data.enfant_actif = response.data.enfants[0];
-                    });
-                }
-                response.data.get_actual_groups = function () {
-                    var groups_ids = _.chain(response.data.groups).pluck('group_id').uniq().value();
-                    var promise = $q.resolve([]);
-                    if (_(['EVS', 'DIR', 'ADM']).contains(response.data.profil_actif.type) || response.data.profil_actif.admin) {
-                        promise = Annuaire.get_groups_of_structures([response.data.profil_actif.structure_id]);
-                    }
-                    else {
-                        promise = Annuaire.get_groups(groups_ids);
-                    }
-                    return promise
-                        .then(function (groups) {
-                        response.data.actual_groups = _(groups.data).select(function (group) {
-                            return group.structure_id === response.data.profil_actif.structure_id;
-                        });
-                        return $q.resolve(response.data.actual_groups);
-                    });
-                };
-                response.data.extract_subjects_ids = function () {
-                    return _.chain(response.data.groups).pluck('subject_id').uniq().value();
-                };
-                response.data.get_actual_subjects = function () {
-                    return Annuaire.get_subjects(response.data.extract_subjects_ids())
-                        .then(function (subjects) {
-                        response.data.actual_subjects = subjects.data;
-                        return $q.resolve(response.data.actual_subjects);
-                    });
-                };
-                response.data.is = function (type) {
-                    return this.profil_actif.type == type;
-                };
-                return response;
-            });
-        });
-        this.update_parameters = function (parametres) {
-            return $http.put(APP_PATH + '/api/users/current/parametres', { parameters: JSON.stringify(parametres) });
-        };
-    }])
-    .factory('StatistiquesRegroupements', ['$resource', 'APP_PATH',
-    function ($resource, APP_PATH) {
-        return $resource(APP_PATH + '/api/etablissements/:uai/statistiques/regroupements/:id', { uai: '@uai',
-            id: '@id' });
-    }])
-    .factory('Cours', ['$resource', 'APP_PATH',
-    function ($resource, APP_PATH) {
-        return $resource(APP_PATH + '/api/cours/:id', { id: '@id' }, { update: { method: 'PUT' },
-            valide: { method: 'PUT',
-                url: APP_PATH + '/api/cours/:id/valide' },
-            copie: { method: 'PUT',
-                url: APP_PATH + '/api/cours/:id/copie/regroupement/:regroupement_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date/:date',
-                params: { id: '@id',
-                    regroupement_id: '@regroupement_id',
-                    creneau_emploi_du_temps_id: '@creneau_emploi_du_temps_id',
-                    date: '@date' } } });
-    }])
-    .factory('CreneauxEmploiDuTemps', ['$resource', 'APP_PATH',
-    function ($resource, APP_PATH) {
-        return $resource(APP_PATH + '/api/creneaux_emploi_du_temps/:id', { id: '@id',
-            regroupement_id: '@regroupement_id',
-            previous_regroupement_id: '@previous_regroupement_id',
-            jour_de_la_semaine: '@jour_de_la_semaine',
-            heure_debut: '@heure_debut',
-            heure_fin: '@heure_fin',
-            matiere_id: '@matiere_id',
-            semainier_regroupement: '@semainier_regroupement',
-            semainier_salle: '@semainier_salle' }, { update: { method: 'PUT' },
-            delete: { method: 'DELETE',
-                params: { id: '@id',
-                    date_creneau: '@date_creneau' } },
-            bulk: { method: 'POST',
-                isArray: true,
-                url: APP_PATH + '/api/creneaux_emploi_du_temps/bulk',
-                params: { creneaux_emploi_du_temps: '@creneaux_emploi_du_temps' } },
-            bulk_delete: { method: 'DELETE',
-                isArray: true,
-                url: APP_PATH + '/api/creneaux_emploi_du_temps/bulk',
-                params: { ids: '@ids',
-                    date_creneau: '@date_creneau' } } });
-    }])
-    .factory('Devoirs', ['$resource', 'APP_PATH',
-    function ($resource, APP_PATH) {
-        return $resource(APP_PATH + '/api/devoirs/:id', { id: '@id',
-            uid: '@uid' }, { update: { method: 'PUT' },
-            fait: { method: 'PUT',
-                url: APP_PATH + '/api/devoirs/:id/fait' },
-            copie: { method: 'PUT',
-                url: APP_PATH + '/api/devoirs/:id/copie/cours/:cours_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date_due/:date_due',
-                params: { id: '@id',
-                    cours_id: '@cours_id',
-                    creneau_emploi_du_temps_id: '@creneau_emploi_du_temps_id',
-                    date_due: '@date_due' } } });
-    }])
-    .factory('EmploisDuTemps', ['$resource', 'APP_PATH',
-    function ($resource, APP_PATH) {
-        return $resource(APP_PATH + '/api/emplois_du_temps', { debut: '@debut',
-            fin: '@fin',
-            uid: '@uid' });
-    }])
-    .factory('Enseignants', ['$resource', 'APP_PATH',
-    function ($resource, APP_PATH) {
-        return $resource(APP_PATH + '/api/etablissements/:uai/statistiques/enseignants/:enseignant_id', { uai: '@uai',
-            enseignant_id: '@enseignant_id' });
-    }])
-    .factory('Etablissements', ['$resource', 'APP_PATH',
-    function ($resource, APP_PATH) {
-        return $resource(APP_PATH + '/api/etablissements/:uai', { uai: '@uai' });
-    }])
-    .factory('Salles', ['$resource', 'APP_PATH',
-    function ($resource, APP_PATH) {
-        return $resource(APP_PATH + '/api/salles/:id', { id: '@id' }, { bulk: { method: 'POST',
-                isArray: true,
-                url: APP_PATH + '/api/salles/bulk',
-                params: { salles: '@salles' } } });
-    }])
-    .factory('CahiersDeTextes', ['$resource', 'APP_PATH',
-    function ($resource, APP_PATH) {
-        return $resource(APP_PATH + '/api/cahiers_de_textes/:id', { id: '@id' }, { bulk: { method: 'POST',
-                isArray: true,
-                url: APP_PATH + '/api/cahiers_de_textes/bulk',
-                params: { cahiers_de_textes: '@cahiers_de_textes' } } });
-    }])
-    .factory('TypesDeDevoir', ['$resource', 'APP_PATH',
-    function ($resource, APP_PATH) {
-        return $resource(APP_PATH + '/api/types_de_devoir/:id', { id: '@id' });
-    }])
-    .factory('Matchable', ['$resource', 'APP_PATH',
-    function ($resource, APP_PATH) {
-        return $resource(APP_PATH + '/api/matchables/:uai/:hash_item', { uai: '@uai',
-            hash_item: '@hash_item',
-            id_annuaire: '@id_annuaire' });
-    }]);
-angular.module('cahierDeTextesClientApp')
-    .service('API', ['$http', 'APP_PATH', 'StatistiquesRegroupements', 'Cours', 'CreneauxEmploiDuTemps', 'Devoirs', 'EmploisDuTemps', 'Enseignants', 'Etablissements', 'TypesDeDevoir',
-    function ($http, APP_PATH, StatistiquesRegroupements, Cours, CreneauxEmploiDuTemps, Devoirs, EmploisDuTemps, Enseignants, Etablissements, TypesDeDevoir) {
-        this.get_etablissement = function (params) {
-            return Etablissements.get(params);
-        };
-        this.query_statistiques_regroupements = function (params) {
-            return StatistiquesRegroupements.query(params);
-        };
-        this.query_types_de_devoir = _.memoize(function () {
-            return TypesDeDevoir.query();
-        });
-        this.get_type_de_devoir = _.memoize(function (id) {
-            return TypesDeDevoir.get({ id: id });
-        });
-        this.query_emplois_du_temps = function () {
-            return EmploisDuTemps.query();
-        };
-        this.get_creneau_emploi_du_temps = function (params) {
-            return CreneauxEmploiDuTemps.get(params);
-        };
-        this.get_creneaux_emploi_du_temps_similaires = function (params) {
-            return $http.get(APP_PATH + '/api/creneaux_emploi_du_temps/' + params.id + '/similaires?debut=' + params.debut.toISOString() + '&fin=' + params.fin.toISOString());
-        };
-        this.query_enseignants = function (params) {
-            return Enseignants.query(params);
-        };
-        this.get_enseignant = function (params) {
-            return Enseignants.get(params);
-        };
-        this.get_cours = function (params) {
-            return Cours.get(params);
-        };
-        this.query_devoirs = function (params) {
-            return Devoirs.query(params);
-        };
-        this.get_devoir = function (params) {
-            return Devoirs.get(params);
-        };
-    }
-]);
-angular.module('cahierDeTextesClientApp')
-    .service('Documents', ['$http', '$q', 'URL_DOCS', 'Annuaire',
-    function ($http, $q, URL_DOCS, Annuaire) {
-        var Documents = this;
-        Documents.list_files = _.memoize(function (root) {
-            var params = { cmd: 'open',
-                target: '' };
-            if (root == undefined) {
-                params.tree = 1;
-            }
-            else {
-                params.target = root;
-            }
-            return $http.get(URL_DOCS + '/api/connector', { params: params });
-        });
-        Documents.get_ctxt_folder_hash = _.memoize(function (classe) {
-            var structure, structure_root, classes_root, classe_root, cdt_root;
-            return Annuaire.get_structure(classe.structure_id)
-                .then(function success(response) {
-                structure = response.data;
-                return Documents.list_files();
-            })
-                .then(function success(response) {
-                structure_root = _(response.data.files).findWhere({ phash: null, name: structure.name });
-                return Documents.list_files(structure_root.hash);
-            })
-                .then(function success(response) {
-                classes_root = _(response.data.files).findWhere({ phash: structure_root.hash, name: 'classes' });
-                return Documents.list_files(classes_root.hash);
-            })
-                .then(function success(response) {
-                classe_root = _(response.data.files).findWhere({ phash: classes_root.hash, name: classe.name });
-                return Documents.list_files(classe_root.hash);
-            })
-                .then(function success(response) {
-                cdt_root = _(response.data.files).findWhere({ phash: classe_root.hash, name: 'Cahier de textes.ct' });
-                return cdt_root.hash;
-            });
-        });
-        Documents.ajout_au_cahier_de_textes = function (classe, node) {
-            return Documents.get_ctxt_folder_hash(classe)
-                .then(function (ctxt_folder_hash) {
-                var params = { cmd: 'paste',
-                    'targets[]': node.hash,
-                    'renames[]': node.name,
-                    dst: ctxt_folder_hash,
-                    cut: false };
-                return $http.get(URL_DOCS + '/api/connector', { params: params });
-            })
-                .then(function success(response) {
-                return response.data;
-            });
-        };
-        Documents.upload_dans_cahier_de_textes = function (classe, fichiers) {
-            return Documents.get_ctxt_folder_hash(classe)
-                .then(function (ctxt_folder_hash) {
-                return $q.all(_(fichiers).map(function (file) {
-                    var form_data = new FormData();
-                    form_data.append('cmd', 'upload');
-                    form_data.append('target', ctxt_folder_hash);
-                    form_data.append('upload[]', file);
-                    form_data.append('renames[]', file.name);
-                    return $http.post(URL_DOCS + '/api/connector', form_data, { headers: { 'Content-Type': undefined },
-                        transformRequest: angular.identity });
-                }))
-                    .then(function (response) {
-                    return response;
-                });
             });
         };
     }

@@ -49,7 +49,7 @@ namespace :preprocess_assets do
   desc 'Compile typescript files'
   task ts2js: [:load_config] do
     puts "Compiling into #{COMPILED_FILE}"
-    puts `#{APP_ROOT}/public/app/node_modules/.bin/tsc --project #{APP_ROOT}/public/app/js/tsconfig.json`
+    puts `#{APP_ROOT}/public/app/node_modules/.bin/tsc --project #{APP_ROOT}/public/app/tsconfig.json`
   end
 
   desc 'Minify compiled file'
