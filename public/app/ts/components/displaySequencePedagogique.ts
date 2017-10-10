@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module( 'cahierDeTextesClientApp' )
-  .component( 'displaySequencePedagogique',
+angular.module('cahierDeTextesClientApp')
+  .component('displaySequencePedagogique',
   {
     bindings: { sp: '<' },
     template: '<h5>Séquence pédagogique du {{$ctrl.sp.date_cours | amDateFormat:\'dddd D MMMM\'}}</h5>' +
@@ -12,17 +12,17 @@ angular.module( 'cahierDeTextesClientApp' )
     '  </li>' +
     '</ul>'
     ,
-    controller: [ '$sce', 'URL_DOCS',
-      function( $sce, URL_DOCS ) {
+    controller: ['$sce', 'URL_DOCS',
+      function($sce, URL_DOCS) {
         let ctrl = this;
 
         ctrl.$onInit = function() {
-          if ( typeof ctrl.sp.contenu == String ) {
-            ctrl.sp.contenu = $sce.trustAsHtml( ctrl.sp.contenu );
+          if (typeof ctrl.sp.contenu == String) {
+            ctrl.sp.contenu = $sce.trustAsHtml(ctrl.sp.contenu);
           }
-          _( ctrl.sp.ressources ).each( function( ressource ) {
-            ressource.url = $sce.trustAsResourceUrl( `${ URL_DOCS }/api/connector?cmd=file&target=${ ressource.hash }` );
-          } );
+          _(ctrl.sp.ressources).each(function(ressource) {
+            ressource.url = $sce.trustAsResourceUrl(`${URL_DOCS}/api/connector?cmd=file&target=${ressource.hash}`);
+          });
         };
       }]
-  } );
+  });

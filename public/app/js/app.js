@@ -422,7 +422,7 @@ angular.module('cahierDeTextesClientApp')
                         toastr.success('Devoir fait.', 'Bravo !');
                     }
                     else {
-                        toastr.info('Devoir à faire', 'Encore un petit effort.');
+                        toastr.info('Devoir à faire', 'Encore un pett effort.');
                     }
                 });
             };
@@ -474,7 +474,7 @@ angular.module('cahierDeTextesClientApp')
                     'date_due>': $scope.from_date,
                     'date_due<': $scope.to_date,
                     'groups_ids[]': $scope.current_user.profil_actif.type === 'TUT' ? _($scope.current_user.enfant_actif.enfant.groups).pluck('group_id') : _($scope.current_user.groups).pluck('group_id'),
-                    uid: $scope.current_user.profil_actif.type === 'TUT' ? $scope.current_user.enfant_actif.child_id : null
+                    uid: $scope.current_user.profil_actif.type === 'TUT' ? $scope.current_user.enfant_actif.child_id : $scope.current_user.id
                 })
                     .$promise.then(function (response) {
                     $scope.matieres = {};
@@ -1701,6 +1701,7 @@ angular.module('cahierDeTextesClientApp')
             }
             $q.all(promesses).then(ctrl.fermer);
         };
+        var init_cours_existant = function (cours) { };
         if (!ctrl.creneau.en_creation) {
             ctrl.estimation_over = function (d, value) {
                 d.overValue = value;
@@ -1710,7 +1711,7 @@ angular.module('cahierDeTextesClientApp')
                 ctrl.estimation_over(d, d.temps_estime);
             };
             ctrl.types_de_devoir = API.query_types_de_devoir();
-            var init_cours_existant_1 = function (cours) {
+            init_cours_existant = function (cours) {
                 ctrl.cours = Cours.get({ id: cours.id });
                 ctrl.cours.$promise.then(function (cours) {
                     ctrl.cours.editable = _(ctrl.cours.date_validation).isNull() && _(['ENS', 'DOC']).includes(ctrl.current_user.profil_actif.type) && ctrl.cours.enseignant_id === ctrl.current_user.id;
@@ -1885,7 +1886,7 @@ angular.module('cahierDeTextesClientApp')
                 ctrl.cours.$delete()
                     .then(function () {
                     ctrl.actions_done.push(POPUP_ACTIONS.SEQUENCE_PEDAGOGIQUE_DELETED);
-                    init_cours_existant_1(ctrl.cours);
+                    init_cours_existant(ctrl.cours);
                 });
             };
             ctrl.effacer_devoir = function (devoir) {
@@ -1976,7 +1977,7 @@ angular.module('cahierDeTextesClientApp')
                         return creneau.id + creneau.start == ctrl.creneaux_similaires.selected.id + ctrl.creneaux_similaires.selected.start;
                     });
                     ctrl.creneaux_similaires.selected = [];
-                    init_cours_existant_1(ctrl.cours);
+                    init_cours_existant(ctrl.cours);
                     swal({
                         title: 'Créneau copié !',
                         type: 'success',

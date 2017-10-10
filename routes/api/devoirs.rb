@@ -31,6 +31,7 @@ module CahierDeTextesApp
               data.each do |devoir|
                 dti = DevoirTodoItem[ devoir_id: devoir[:id], eleve_id: params['uid'] ]
                 devoir[:date_fait] = dti.date_fait unless dti.nil?
+                devoir[:fait] = !dti.nil?
               end
             end
 

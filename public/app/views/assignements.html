@@ -46,7 +46,7 @@
                             devoir="devoir"></display-devoir>
 
             <display-sequence-pedagogique class="col-md-5 alert alert-default"
-                                          ng:if="devoir.cours.contenu !== ''"
+                                          ng:if="devoir.cours && devoir.cours.contenu !== ''"
                                           sp="devoir.cours"></display-sequence-pedagogique>
 
             <div class="col-md-2 pull-right todo">

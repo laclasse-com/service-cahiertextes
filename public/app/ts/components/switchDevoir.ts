@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module( 'cahierDeTextesClientApp' )
-  .component( 'switchDevoir',
+angular.module('cahierDeTextesClientApp')
+  .component('switchDevoir',
   {
     bindings: { devoir: '=' },
     template: '<span switch' +
@@ -9,21 +9,21 @@ angular.module( 'cahierDeTextesClientApp' )
     '      ng:if="!($ctrl.devoir.type_devoir_id == 1)"' +
     '      ng:model="$ctrl.devoir.fait"' +
     '      ng:change="$ctrl.fait( $ctrl.devoir )" ></span>',
-    controller: [ 'toastr',
-      function( toastr ) {
+    controller: ['toastr',
+      function(toastr) {
         let ctrl = this;
 
-        ctrl.fait = function( devoir ) {
+        ctrl.fait = function(devoir) {
           devoir.$fait()
-            .then( function( response ) {
-              if ( response.fait ) {
-                toastr.success( 'Devoir fait.',
-                  'Bravo !' );
+            .then(function(response) {
+              if (response.fait) {
+                toastr.success('Devoir fait.',
+                  'Bravo !');
               } else {
-                toastr.info( 'Devoir à faire',
-                  'Encore un petit effort.' );
+                toastr.info('Devoir à faire',
+                  'Encore un pett effort.');
               }
-            } );
+            });
         };
       }]
-  } );
+  });
