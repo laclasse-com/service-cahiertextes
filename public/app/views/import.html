@@ -102,6 +102,11 @@
                     </uib-tab>
                 </uib-tabset>
 
+                <button class="btn btn-primary pull-left"
+                        ng:click="step_backward()" >
+                    <span class="glyphicon glyphicon-backward"></span> Revenir à l'étape précédente
+                </button>
+
                 <button class="btn pull-right btn-success"
                         ng:click="validate_matches()" >
                     Recollement possibles effectués, passé à l'étape d'import
@@ -186,6 +191,12 @@
                     <!-- /Critères de filtrage -->
 
                     <div class="col-md-12" style="text-align: right;">
+
+                        <button class="btn btn-primary pull-left"
+                                ng:click="step_backward()" >
+                            <span class="glyphicon glyphicon-backward"></span> Revenir à l'étape précédente
+                        </button>
+
                         <button class="btn btn-lg btn-warning"
                                 ng:click="process_import()">
                             <span class="glyphicon glyphicon-cogs"></span> Valider
