@@ -192,17 +192,6 @@ angular.module('cahierDeTextesClientApp')
         });
     }])
 
-  .factory('EmploisDuTemps',
-  ['$resource', 'APP_PATH',
-    function($resource, APP_PATH) {
-      return $resource(`${APP_PATH}/api/emplois_du_temps`,
-        {
-          debut: '@debut',
-          fin: '@fin',
-          uid: '@uid'
-        });
-    }])
-
   .factory('Enseignants',
   ['$resource', 'APP_PATH',
     function($resource, APP_PATH) {
@@ -248,8 +237,8 @@ angular.module('cahierDeTextesClientApp')
 
 angular.module('cahierDeTextesClientApp')
   .service('API',
-  ['$http', 'APP_PATH', 'StatistiquesRegroupements', 'Cours', 'CreneauxEmploiDuTemps', 'Devoirs', 'EmploisDuTemps', 'Enseignants', 'Etablissements',
-    function($http, APP_PATH, StatistiquesRegroupements, Cours, CreneauxEmploiDuTemps, Devoirs, EmploisDuTemps, Enseignants, Etablissements) {
+  ['$http', 'APP_PATH', 'StatistiquesRegroupements', 'CreneauxEmploiDuTemps', 'Cours', 'Devoirs', 'Enseignants', 'Etablissements',
+    function($http, APP_PATH, StatistiquesRegroupements, CreneauxEmploiDuTemps, Cours, Devoirs, Enseignants, Etablissements) {
       this.get_etablissement = function(params) {
         return Etablissements.get(params);
       };
@@ -265,9 +254,16 @@ angular.module('cahierDeTextesClientApp')
         return $http.get(`${APP_PATH}/api/types_de_devoir/${id}`);
       });
 
-      this.query_emplois_du_temps = function() {
-        return EmploisDuTemps.query();
-      };
+      this.get_emploi_du_temps = function(from, to, uai, uid) {
+        return $http.get(`${APP_PATH}/api/emplois_du_temps`, {
+          params: {
+            debut: from,
+            fin: to,
+            uai: uai,
+            uid: uid
+          }
+        });
+      }
 
       this.get_creneau_emploi_du_temps = function(params) {
         return CreneauxEmploiDuTemps.get(params);

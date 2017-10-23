@@ -2028,9 +2028,9 @@ angular.module('cahierDeTextesClientApp')
     }]);
 angular.module('cahierDeTextesClientApp')
     .controller('TextBookCtrl', ['$scope', 'moment', '$state', '$q', '$locale',
-    'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'EmploisDuTemps', 'PopupsCreneau', 'CreneauxEmploiDuTemps', 'Utils', 'Annuaire', 'User',
+    'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'PopupsCreneau', 'CreneauxEmploiDuTemps', 'Utils', 'Annuaire', 'User', 'API',
     'current_user',
-    function ($scope, moment, $state, $q, $locale, APP_PATH, SEMAINES_VACANCES, ZONE, EmploisDuTemps, PopupsCreneau, CreneauxEmploiDuTemps, Utils, Annuaire, User, current_user) {
+    function ($scope, moment, $state, $q, $locale, APP_PATH, SEMAINES_VACANCES, ZONE, PopupsCreneau, CreneauxEmploiDuTemps, Utils, Annuaire, User, API, current_user) {
         $scope.scope = $scope;
         $scope.current_user = current_user;
         if ($scope.current_user.profil_actif.type === 'TUT' && _($scope.current_user.enfant_actif).isUndefined()) {
@@ -2143,15 +2143,9 @@ angular.module('cahierDeTextesClientApp')
         };
         var retrieve_data = function (from_date, to_date) {
             if ($scope.current_user.profil_actif.type != 'TUT' || $scope.current_user.enfant_actif) {
-                EmploisDuTemps.query({
-                    debut: from_date,
-                    fin: to_date,
-                    uai: $scope.current_user.profil_actif.structure_id,
-                    uid: $scope.current_user.profil_actif.type === 'TUT' ? $scope.current_user.enfant_actif.child_id : null
-                })
-                    .$promise
+                API.get_emploi_du_temps(from_date, to_date, $scope.current_user.profil_actif.structure_id, $scope.current_user.profil_actif.type === 'TUT' ? $scope.current_user.enfant_actif.child_id : null)
                     .then(function success(response) {
-                    $scope.raw_data = response;
+                    $scope.raw_data = response.data;
                     var groups_ids = _.chain($scope.raw_data).pluck('regroupement_id').uniq().value();
                     var subjects_ids = _.chain($scope.raw_data).pluck('matiere_id').uniq().value();
                     var promise = _(groups_ids).isEmpty() ? $q.resolve([]) : Annuaire.get_groups(groups_ids);
@@ -2751,14 +2745,6 @@ angular.module('cahierDeTextesClientApp')
             }
         });
     }])
-    .factory('EmploisDuTemps', ['$resource', 'APP_PATH',
-    function ($resource, APP_PATH) {
-        return $resource(APP_PATH + "/api/emplois_du_temps", {
-            debut: '@debut',
-            fin: '@fin',
-            uid: '@uid'
-        });
-    }])
     .factory('Enseignants', ['$resource', 'APP_PATH',
     function ($resource, APP_PATH) {
         return $resource(APP_PATH + "/api/etablissements/:uai/statistiques/enseignants/:enseignant_id", {
@@ -2790,8 +2776,8 @@ angular.module('cahierDeTextesClientApp')
         });
     }]);
 angular.module('cahierDeTextesClientApp')
-    .service('API', ['$http', 'APP_PATH', 'StatistiquesRegroupements', 'Cours', 'CreneauxEmploiDuTemps', 'Devoirs', 'EmploisDuTemps', 'Enseignants', 'Etablissements',
-    function ($http, APP_PATH, StatistiquesRegroupements, Cours, CreneauxEmploiDuTemps, Devoirs, EmploisDuTemps, Enseignants, Etablissements) {
+    .service('API', ['$http', 'APP_PATH', 'StatistiquesRegroupements', 'CreneauxEmploiDuTemps', 'Cours', 'Devoirs', 'Enseignants', 'Etablissements',
+    function ($http, APP_PATH, StatistiquesRegroupements, CreneauxEmploiDuTemps, Cours, Devoirs, Enseignants, Etablissements) {
         this.get_etablissement = function (params) {
             return Etablissements.get(params);
         };
@@ -2804,8 +2790,15 @@ angular.module('cahierDeTextesClientApp')
         this.get_type_de_devoir = _.memoize(function (id) {
             return $http.get(APP_PATH + "/api/types_de_devoir/" + id);
         });
-        this.query_emplois_du_temps = function () {
-            return EmploisDuTemps.query();
+        this.get_emploi_du_temps = function (from, to, uai, uid) {
+            return $http.get(APP_PATH + "/api/emplois_du_temps", {
+                params: {
+                    debut: from,
+                    fin: to,
+                    uai: uai,
+                    uid: uid
+                }
+            });
         };
         this.get_creneau_emploi_du_temps = function (params) {
             return CreneauxEmploiDuTemps.get(params);
