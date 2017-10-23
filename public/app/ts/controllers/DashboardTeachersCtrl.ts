@@ -63,7 +63,7 @@ angular.module('cahierDeTextesClientApp')
         .then(function success(response) {
           $scope.raw_data = response.data;
 
-          return Annuaire.get_users(_($scope.raw_data).pluck('enseignant_id'));
+          return Annuaire.gets(_($scope.raw_data).pluck('enseignant_id'));
         })
         .then(function(response) {
           let enseignants_details = _(response.data).indexBy('id');

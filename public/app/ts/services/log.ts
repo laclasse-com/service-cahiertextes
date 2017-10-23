@@ -2,10 +2,10 @@
 
 angular.module( 'cahierDeTextesClientApp' )
   .service( 'log',
-  [ '$http', '$state', 'APP_PATH', 'User', 'URL_ENT',
-    function( $http, $state, APP_PATH, User, URL_ENT ) {
+  [ '$http', '$state', 'APP_PATH', 'CurrentUser', 'URL_ENT',
+    function( $http, $state, APP_PATH, CurrentUser, URL_ENT ) {
       this.add = function( app, url, params ) {
-        User.get_user()
+        CurrentUser.get()
           .then( function( response ) {
             let user = response.data;
             $http.post( `${ URL_ENT }/api/logs`,

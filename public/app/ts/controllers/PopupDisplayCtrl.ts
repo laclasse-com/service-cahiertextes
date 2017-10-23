@@ -2,9 +2,9 @@
 
 angular.module( 'cahierDeTextesClientApp' )
   .controller( 'PopupDisplayCtrl',
-  [ '$scope', '$sce', '$uibModalInstance', 'toastr', 'APP_PATH', 'Cours', 'Devoirs', 'User',
+  [ '$scope', '$sce', '$uibModalInstance', 'toastr', 'APP_PATH', 'Cours', 'Devoirs', 'CurrentUser',
     'titre', 'cours', 'devoirs',
-    function( $scope, $sce, $uibModalInstance, toastr, APP_PATH, Cours, Devoirs, User,
+    function( $scope, $sce, $uibModalInstance, toastr, APP_PATH, Cours, Devoirs, CurrentUser,
       matiere, cours, devoirs ) {
       $scope.app_path = APP_PATH;
       $scope.matiere = matiere;
@@ -36,7 +36,7 @@ angular.module( 'cahierDeTextesClientApp' )
         $uibModalInstance.close( $scope );
       };
 
-      User.get_user().then( function( response ) {
+      CurrentUser.get().then( function( response ) {
         $scope.current_user = response.data;
       } );
     }] );

@@ -2,11 +2,11 @@
 
 angular.module( 'cahierDeTextesClientApp' )
   .controller( 'IndexCtrl',
-  [ '$scope', '$state', 'User',
-    function( $scope, $state, User ) {
+  [ '$scope', '$state', 'CurrentUser',
+    function( $scope, $state, CurrentUser ) {
       let ctrl = $scope;
 
-      User.get_user()
+      CurrentUser.get()
         .then( function( response ) {
           let user = response.data;
 

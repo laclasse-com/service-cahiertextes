@@ -3,9 +3,9 @@
 angular.module('cahierDeTextesClientApp')
   .controller('AssignementsCtrl',
   ['$scope', '$sce', '$timeout', 'toastr', '$state', 'moment',
-    'APP_PATH', 'URL_DOCS', 'API', 'Annuaire', 'Devoirs', 'Cours', 'CreneauxEmploiDuTemps', 'User',
+    'APP_PATH', 'URL_DOCS', 'API', 'Annuaire', 'Devoirs', 'Cours', 'CreneauxEmploiDuTemps', 'CurrentUser',
     function($scope, $sce, $timeout, toastr, $state, moment,
-      APP_PATH, URL_DOCS, API, Annuaire, Devoirs, Cours, CreneauxEmploiDuTemps, User) {
+      APP_PATH, URL_DOCS, API, Annuaire, Devoirs, Cours, CreneauxEmploiDuTemps, CurrentUser) {
       let ctrl = $scope;
 
       ctrl.affiche_faits = false;
@@ -48,7 +48,7 @@ angular.module('cahierDeTextesClientApp')
       ctrl.decr_offset = function() { ctrl.period_offset--; };
       ctrl.reset_offset = function() { ctrl.period_offset = 0; };
 
-      User.get_user()
+      CurrentUser.get()
         .then(function(response) {
           ctrl.current_user = response.data;
 

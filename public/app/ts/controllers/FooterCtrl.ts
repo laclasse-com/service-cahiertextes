@@ -2,15 +2,15 @@
 
 angular.module( 'cahierDeTextesClientApp' )
   .controller( 'FooterCtrl',
-  [ '$scope', '$state', '$stateParams', '$sce', 'VERSION', 'User',
-    function( $scope, $state, $stateParams, $sce, VERSION, User ) {
+  [ '$scope', '$state', '$stateParams', '$sce', 'VERSION', 'CurrentUser',
+    function( $scope, $state, $stateParams, $sce, VERSION, CurrentUser ) {
       $scope.version = VERSION;
 
-      User.get_user().then( function( response ) {
+      CurrentUser.get().then( function( response ) {
         $scope.current_user = response.data;
 
         $scope.save_and_reload = function() {
-          User.update_parameters( $scope.current_user.parametrage_cahier_de_textes )
+          CurrentUser.update_parameters( $scope.current_user.parametrage_cahier_de_textes )
             .then( function() {
               $state.transitionTo( $state.current, $stateParams, { reload: true, inherit: true, notify: true } );
             } );

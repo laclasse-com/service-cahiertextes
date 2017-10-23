@@ -139,7 +139,7 @@ angular.module('cahierDeTextesClientApp')
       };
 
       // Récupération et consommation des données
-      Annuaire.get_user($scope.enseignant_id)
+      Annuaire.get($scope.enseignant_id)
         .then(function(response) {
           $scope.enseignant = response.data;
 

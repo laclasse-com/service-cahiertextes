@@ -4,11 +4,11 @@ angular.module('cahierDeTextesClientApp')
   .controller('PopupEditionCtrl',
   ['$scope', '$filter', '$q', '$sce', '$uibModalInstance', '$locale', 'toastr', 'moment',
     'APP_PATH', 'URL_DOCS', 'SEMAINES_VACANCES', 'ZONE', 'POPUP_ACTIONS', 'LOCALHOST',
-    'Documents', 'API', 'CreneauxEmploiDuTemps', 'Cours', 'Devoirs', 'User', 'Utils',
+    'Documents', 'API', 'CreneauxEmploiDuTemps', 'Cours', 'Devoirs', 'CurrentUser', 'Utils',
     'cours', 'devoirs', 'creneau', 'raw_data', 'classes', 'matieres',
     function($scope, $filter, $q, $sce, $uibModalInstance, $locale, toastr, moment,
       APP_PATH, URL_DOCS, SEMAINES_VACANCES, ZONE, POPUP_ACTIONS, LOCALHOST,
-      Documents, API, CreneauxEmploiDuTemps, Cours, Devoirs, User, Utils,
+      Documents, API, CreneauxEmploiDuTemps, Cours, Devoirs, CurrentUser, Utils,
       cours, devoirs, creneau, raw_data, classes, matieres) {
       let ctrl = $scope;
       ctrl.scope = ctrl;
@@ -699,7 +699,7 @@ angular.module('cahierDeTextesClientApp')
       }	// /fin gestion des Cours et Devoirs
       // }}}
 
-      User.get_user().then(function(response) {
+      CurrentUser.get().then(function(response) {
         ctrl.current_user = response.data;
 
         if (!ctrl.current_user.parametrage_cahier_de_textes.affichage_week_ends) {

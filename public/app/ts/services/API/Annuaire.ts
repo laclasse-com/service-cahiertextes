@@ -69,7 +69,7 @@ angular.module( 'cahierDeTextesClientApp' )
           } );
       } );
 
-      service.get_user = _.memoize( function( user_id ) {
+      service.get = _.memoize( function( user_id ) {
         return $http.get( `${ URL_ENT }/api/users/${ user_id }` )
           .then( function( response ) {
             response.data.profil_actif = _( response.data.profiles ).findWhere( { active: true } );
@@ -92,7 +92,7 @@ angular.module( 'cahierDeTextesClientApp' )
           } );
       } );
 
-      service.get_users = _.memoize( function( users_ids ) {
+      service.gets = _.memoize( function( users_ids ) {
         return $http.get( `${ URL_ENT }/api/users/`, { params: { 'id[]': users_ids } } );
       } );
     }

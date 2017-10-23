@@ -3,10 +3,10 @@
 angular.module('cahierDeTextesClientApp')
   .controller('TextBookCtrl',
   ['$scope', 'moment', '$state', '$q', '$locale',
-    'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'PopupsCreneau', 'CreneauxEmploiDuTemps', 'Utils', 'Annuaire', 'User', 'API',
+    'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'PopupsCreneau', 'CreneauxEmploiDuTemps', 'Utils', 'Annuaire', 'CurrentUser', 'API',
     'current_user',
     function($scope, moment, $state, $q, $locale,
-      APP_PATH, SEMAINES_VACANCES, ZONE, PopupsCreneau, CreneauxEmploiDuTemps, Utils, Annuaire, User, API,
+      APP_PATH, SEMAINES_VACANCES, ZONE, PopupsCreneau, CreneauxEmploiDuTemps, Utils, Annuaire, CurrentUser, API,
       current_user) {
       $scope.scope = $scope;
       $scope.current_user = current_user;
@@ -22,7 +22,7 @@ angular.module('cahierDeTextesClientApp')
 
       let set_preferred_view = function(view) {
         $scope.current_user.parametrage_cahier_de_textes.preferredView = view; // or textbookWeek
-        User.update_parameters($scope.current_user.parametrage_cahier_de_textes);
+        CurrentUser.update_parameters($scope.current_user.parametrage_cahier_de_textes);
       };
 
       if (!_($scope.current_user.parametrage_cahier_de_textes).has('preferredView')) {

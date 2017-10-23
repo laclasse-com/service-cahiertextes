@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('cahierDeTextesClientApp')
-  .service('User',
+  .service('CurrentUser',
   ['$http', '$q', 'APP_PATH', 'Annuaire',
     function($http, $q, APP_PATH, Annuaire) {
-      this.get_user = _.memoize(function() {
+      this.get = _.memoize(function() {
         return $http.get(`${APP_PATH}/api/users/current`)
           .then(function(response) {
             _(response.data.profils).each(function(profil) {
@@ -33,7 +33,7 @@ angular.module('cahierDeTextesClientApp')
 
             if (response.data.enfants.length > 0) {
               let promises = response.data.enfants.map(function(child) {
-                return Annuaire.get_user(child.child_id)
+                return Annuaire.get(child.child_id)
                   .then(function(user) {
                     child.enfant = user.data;
                   });

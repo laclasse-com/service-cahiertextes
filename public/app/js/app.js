@@ -267,7 +267,7 @@ angular.module('cahierDeTextesClientApp')
             controller: 'IndexCtrl',
             resolve: {
                 auth: ['Redirection', function (Redirection) { Redirection.doorman(['ADM', 'DIR', 'ENS', 'DOC', 'ELV', 'TUT', 'EVS']); }],
-                current_user: ['User', function (User) { return User.get_user().then(function (response) { return response.data; }); }]
+                current_user: ['CurrentUser', function (CurrentUser) { return CurrentUser.get().then(function (response) { return response.data; }); }]
             }
         })
             .state('emploi_du_temps', {
@@ -430,8 +430,8 @@ angular.module('cahierDeTextesClientApp')
 });
 angular.module('cahierDeTextesClientApp')
     .controller('AssignementsCtrl', ['$scope', '$sce', '$timeout', 'toastr', '$state', 'moment',
-    'APP_PATH', 'URL_DOCS', 'API', 'Annuaire', 'Devoirs', 'Cours', 'CreneauxEmploiDuTemps', 'User',
-    function ($scope, $sce, $timeout, toastr, $state, moment, APP_PATH, URL_DOCS, API, Annuaire, Devoirs, Cours, CreneauxEmploiDuTemps, User) {
+    'APP_PATH', 'URL_DOCS', 'API', 'Annuaire', 'Devoirs', 'Cours', 'CreneauxEmploiDuTemps', 'CurrentUser',
+    function ($scope, $sce, $timeout, toastr, $state, moment, APP_PATH, URL_DOCS, API, Annuaire, Devoirs, Cours, CreneauxEmploiDuTemps, CurrentUser) {
         var ctrl = $scope;
         ctrl.affiche_faits = false;
         ctrl.tri_ascendant = true;
@@ -465,7 +465,7 @@ angular.module('cahierDeTextesClientApp')
         ctrl.incr_offset = function () { ctrl.period_offset++; };
         ctrl.decr_offset = function () { ctrl.period_offset--; };
         ctrl.reset_offset = function () { ctrl.period_offset = 0; };
-        User.get_user()
+        CurrentUser.get()
             .then(function (response) {
             ctrl.current_user = response.data;
             var retrieve_data = function () {
@@ -621,7 +621,7 @@ angular.module('cahierDeTextesClientApp')
                 }
             }, function cancel() { });
         };
-        Annuaire.get_user($scope.enseignant_id)
+        Annuaire.get($scope.enseignant_id)
             .then(function (response) {
             $scope.enseignant = response.data;
             $scope.enseignant.get_actual_groups()
@@ -728,7 +728,7 @@ angular.module('cahierDeTextesClientApp')
         API.query_enseignants(current_user.profil_actif.structure_id)
             .then(function success(response) {
             $scope.raw_data = response.data;
-            return Annuaire.get_users(_($scope.raw_data).pluck('enseignant_id'));
+            return Annuaire.gets(_($scope.raw_data).pluck('enseignant_id'));
         })
             .then(function (response) {
             var enseignants_details = _(response.data).indexBy('id');
@@ -753,13 +753,13 @@ angular.module('cahierDeTextesClientApp')
         });
     }]);
 angular.module('cahierDeTextesClientApp')
-    .controller('FooterCtrl', ['$scope', '$state', '$stateParams', '$sce', 'VERSION', 'User',
-    function ($scope, $state, $stateParams, $sce, VERSION, User) {
+    .controller('FooterCtrl', ['$scope', '$state', '$stateParams', '$sce', 'VERSION', 'CurrentUser',
+    function ($scope, $state, $stateParams, $sce, VERSION, CurrentUser) {
         $scope.version = VERSION;
-        User.get_user().then(function (response) {
+        CurrentUser.get().then(function (response) {
             $scope.current_user = response.data;
             $scope.save_and_reload = function () {
-                User.update_parameters($scope.current_user.parametrage_cahier_de_textes)
+                CurrentUser.update_parameters($scope.current_user.parametrage_cahier_de_textes)
                     .then(function () {
                     $state.transitionTo($state.current, $stateParams, { reload: true, inherit: true, notify: true });
                 });
@@ -767,12 +767,12 @@ angular.module('cahierDeTextesClientApp')
         });
     }]);
 angular.module('cahierDeTextesClientApp')
-    .controller('HeaderCtrl', ['$scope', '$state', 'User', 'Redirection', '$sce', 'URL_DOCS',
-    function ($scope, $state, User, Redirection, $sce, URL_DOCS) {
+    .controller('HeaderCtrl', ['$scope', '$state', 'CurrentUser', 'Redirection', '$sce', 'URL_DOCS',
+    function ($scope, $state, CurrentUser, Redirection, $sce, URL_DOCS) {
         $scope.load_docs = window.location.hostname !== 'localhost';
         $scope.URL_DOCS_login = $sce.trustAsResourceUrl(URL_DOCS + "/login");
         $scope.embedded = window != window.top;
-        User.get_user().then(function (response) {
+        CurrentUser.get().then(function (response) {
             $scope.current_user = response.data;
         });
         $scope.reload = function () {
@@ -1275,10 +1275,10 @@ angular.module('cahierDeTextesClientApp')
         };
     }]);
 angular.module('cahierDeTextesClientApp')
-    .controller('IndexCtrl', ['$scope', '$state', 'User',
-    function ($scope, $state, User) {
+    .controller('IndexCtrl', ['$scope', '$state', 'CurrentUser',
+    function ($scope, $state, CurrentUser) {
         var ctrl = $scope;
-        User.get_user()
+        CurrentUser.get()
             .then(function (response) {
             var user = response.data;
             switch (user.profil_actif.type) {
@@ -1369,9 +1369,9 @@ angular.module('cahierDeTextesClientApp')
         });
     }]);
 angular.module('cahierDeTextesClientApp')
-    .controller('PopupDisplayCtrl', ['$scope', '$sce', '$uibModalInstance', 'toastr', 'APP_PATH', 'Cours', 'Devoirs', 'User',
+    .controller('PopupDisplayCtrl', ['$scope', '$sce', '$uibModalInstance', 'toastr', 'APP_PATH', 'Cours', 'Devoirs', 'CurrentUser',
     'titre', 'cours', 'devoirs',
-    function ($scope, $sce, $uibModalInstance, toastr, APP_PATH, Cours, Devoirs, User, matiere, cours, devoirs) {
+    function ($scope, $sce, $uibModalInstance, toastr, APP_PATH, Cours, Devoirs, CurrentUser, matiere, cours, devoirs) {
         $scope.app_path = APP_PATH;
         $scope.matiere = matiere;
         $scope.date = null;
@@ -1396,16 +1396,16 @@ angular.module('cahierDeTextesClientApp')
         $scope.fermer = function () {
             $uibModalInstance.close($scope);
         };
-        User.get_user().then(function (response) {
+        CurrentUser.get().then(function (response) {
             $scope.current_user = response.data;
         });
     }]);
 angular.module('cahierDeTextesClientApp')
     .controller('PopupEditionCtrl', ['$scope', '$filter', '$q', '$sce', '$uibModalInstance', '$locale', 'toastr', 'moment',
     'APP_PATH', 'URL_DOCS', 'SEMAINES_VACANCES', 'ZONE', 'POPUP_ACTIONS', 'LOCALHOST',
-    'Documents', 'API', 'CreneauxEmploiDuTemps', 'Cours', 'Devoirs', 'User', 'Utils',
+    'Documents', 'API', 'CreneauxEmploiDuTemps', 'Cours', 'Devoirs', 'CurrentUser', 'Utils',
     'cours', 'devoirs', 'creneau', 'raw_data', 'classes', 'matieres',
-    function ($scope, $filter, $q, $sce, $uibModalInstance, $locale, toastr, moment, APP_PATH, URL_DOCS, SEMAINES_VACANCES, ZONE, POPUP_ACTIONS, LOCALHOST, Documents, API, CreneauxEmploiDuTemps, Cours, Devoirs, User, Utils, cours, devoirs, creneau, raw_data, classes, matieres) {
+    function ($scope, $filter, $q, $sce, $uibModalInstance, $locale, toastr, moment, APP_PATH, URL_DOCS, SEMAINES_VACANCES, ZONE, POPUP_ACTIONS, LOCALHOST, Documents, API, CreneauxEmploiDuTemps, Cours, Devoirs, CurrentUser, Utils, cours, devoirs, creneau, raw_data, classes, matieres) {
         var ctrl = $scope;
         ctrl.scope = ctrl;
         ctrl.correctTimeZoneToGMT = function (date) {
@@ -2003,7 +2003,7 @@ angular.module('cahierDeTextesClientApp')
                 ctrl.mode_edition_creneau = true;
             };
         }
-        User.get_user().then(function (response) {
+        CurrentUser.get().then(function (response) {
             ctrl.current_user = response.data;
             if (!ctrl.current_user.parametrage_cahier_de_textes.affichage_week_ends) {
                 delete ctrl.jours[0];
@@ -2025,9 +2025,9 @@ angular.module('cahierDeTextesClientApp')
     }]);
 angular.module('cahierDeTextesClientApp')
     .controller('TextBookCtrl', ['$scope', 'moment', '$state', '$q', '$locale',
-    'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'PopupsCreneau', 'CreneauxEmploiDuTemps', 'Utils', 'Annuaire', 'User', 'API',
+    'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'PopupsCreneau', 'CreneauxEmploiDuTemps', 'Utils', 'Annuaire', 'CurrentUser', 'API',
     'current_user',
-    function ($scope, moment, $state, $q, $locale, APP_PATH, SEMAINES_VACANCES, ZONE, PopupsCreneau, CreneauxEmploiDuTemps, Utils, Annuaire, User, API, current_user) {
+    function ($scope, moment, $state, $q, $locale, APP_PATH, SEMAINES_VACANCES, ZONE, PopupsCreneau, CreneauxEmploiDuTemps, Utils, Annuaire, CurrentUser, API, current_user) {
         $scope.scope = $scope;
         $scope.current_user = current_user;
         if ($scope.current_user.profil_actif.type === 'TUT' && _($scope.current_user.enfant_actif).isUndefined()) {
@@ -2040,7 +2040,7 @@ angular.module('cahierDeTextesClientApp')
         $scope.uniquement_mes_creneaux = !_(['EVS', 'DIR', 'ADM']).contains($scope.current_user.profil_actif.type);
         var set_preferred_view = function (view) {
             $scope.current_user.parametrage_cahier_de_textes.preferredView = view;
-            User.update_parameters($scope.current_user.parametrage_cahier_de_textes);
+            CurrentUser.update_parameters($scope.current_user.parametrage_cahier_de_textes);
         };
         if (!_($scope.current_user.parametrage_cahier_de_textes).has('preferredView')) {
             set_preferred_view('timetableWeek');
@@ -2554,7 +2554,7 @@ angular.module('cahierDeTextesClientApp')
                 return $q.resolve(response);
             });
         });
-        service.get_user = _.memoize(function (user_id) {
+        service.get = _.memoize(function (user_id) {
             return $http.get(URL_ENT + "/api/users/" + user_id)
                 .then(function (response) {
                 response.data.profil_actif = _(response.data.profiles).findWhere({ active: true });
@@ -2573,15 +2573,15 @@ angular.module('cahierDeTextesClientApp')
                 return response;
             });
         });
-        service.get_users = _.memoize(function (users_ids) {
+        service.gets = _.memoize(function (users_ids) {
             return $http.get(URL_ENT + "/api/users/", { params: { 'id[]': users_ids } });
         });
     }
 ]);
 angular.module('cahierDeTextesClientApp')
-    .service('User', ['$http', '$q', 'APP_PATH', 'Annuaire',
+    .service('CurrentUser', ['$http', '$q', 'APP_PATH', 'Annuaire',
     function ($http, $q, APP_PATH, Annuaire) {
-        this.get_user = _.memoize(function () {
+        this.get = _.memoize(function () {
             return $http.get(APP_PATH + "/api/users/current")
                 .then(function (response) {
                 _(response.data.profils).each(function (profil) {
@@ -2608,7 +2608,7 @@ angular.module('cahierDeTextesClientApp')
                     .value();
                 if (response.data.enfants.length > 0) {
                     var promises = response.data.enfants.map(function (child) {
-                        return Annuaire.get_user(child.child_id)
+                        return Annuaire.get(child.child_id)
                             .then(function (user) {
                             child.enfant = user.data;
                         });
@@ -2981,10 +2981,10 @@ angular.module('cahierDeTextesClientApp')
         };
     }]);
 angular.module('cahierDeTextesClientApp')
-    .service('Redirection', ['$state', 'User',
-    function ($state, User) {
+    .service('Redirection', ['$state', 'CurrentUser',
+    function ($state, CurrentUser) {
         this.doorman = function (allowed_types) {
-            User.get_user().then(function (response) {
+            CurrentUser.get().then(function (response) {
                 if (_(allowed_types).size() === 0
                     || (_(allowed_types).indexOf(response.data.profil_actif.type) === -1
                         && !(response.data.profil_actif.admin))) {
@@ -3134,10 +3134,10 @@ angular.module('cahierDeTextesClientApp')
     }
 ]);
 angular.module('cahierDeTextesClientApp')
-    .service('log', ['$http', '$state', 'APP_PATH', 'User', 'URL_ENT',
-    function ($http, $state, APP_PATH, User, URL_ENT) {
+    .service('log', ['$http', '$state', 'APP_PATH', 'CurrentUser', 'URL_ENT',
+    function ($http, $state, APP_PATH, CurrentUser, URL_ENT) {
         this.add = function (app, url, params) {
-            User.get_user()
+            CurrentUser.get()
                 .then(function (response) {
                 var user = response.data;
                 $http.post(URL_ENT + "/api/logs", {
