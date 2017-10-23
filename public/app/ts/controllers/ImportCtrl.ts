@@ -529,10 +529,10 @@ angular.module('cahierDeTextesClientApp')
       };
       // FIXME
       $scope.unmatch_this = function(item, uai) {
-        Matchable.$delete({
+        Matchable.delete({
           uai: uai,
           hash_item: hash_me(item)
-        })
+        }).$promise
           .then(function() {
             item.laclasse = null;
             update_creneaux_readiness();
