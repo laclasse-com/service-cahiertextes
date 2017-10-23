@@ -432,53 +432,55 @@ angular.module('cahierDeTextesClientApp')
     .controller('AssignementsCtrl', ['$scope', '$sce', '$timeout', 'toastr', '$state', 'moment',
     'APP_PATH', 'URL_DOCS', 'API', 'Annuaire', 'Devoirs', 'Cours', 'CreneauxEmploiDuTemps', 'User',
     function ($scope, $sce, $timeout, toastr, $state, moment, APP_PATH, URL_DOCS, API, Annuaire, Devoirs, Cours, CreneauxEmploiDuTemps, User) {
-        $scope.affiche_faits = false;
-        $scope.tri_ascendant = true;
-        $scope.popup_ouverte = false;
-        $scope.matiere_selected = null;
+        var ctrl = $scope;
+        ctrl.affiche_faits = false;
+        ctrl.tri_ascendant = true;
+        ctrl.popup_ouverte = false;
+        ctrl.matiere_selected = null;
         var getCours = _.memoize(function (id) {
             return Cours.get({ id: id });
         });
         var getCreneauxEmploiDuTemps = _.memoize(function (id) {
             return CreneauxEmploiDuTemps.get({ id: id });
         });
-        $scope.filter_data = function (matiere) {
+        ctrl.filter_data = function (matiere) {
             if (_(matiere).isNull()) {
-                $scope.devoirs = $scope.all_devoirs;
+                ctrl.devoirs = ctrl.all_devoirs;
             }
             else {
-                $scope.devoirs = _($scope.all_devoirs).select(function (devoir) {
+                ctrl.devoirs = _(ctrl.all_devoirs).select(function (devoir) {
                     return devoir.creneau_emploi_du_temps.matiere_id == matiere.id;
                 });
             }
         };
-        $scope.period_offset = 0;
+        ctrl.period_offset = 0;
         var nb_mois_depuis_septembre = Math.abs(9 - (moment().month() + 1));
-        $scope.period_offsets_list = _.range(nb_mois_depuis_septembre, (10 - nb_mois_depuis_septembre) * -1, -1)
+        ctrl.period_offsets_list = _.range(nb_mois_depuis_septembre, (10 - nb_mois_depuis_septembre) * -1, -1)
             .map(function (offset) {
             return {
                 offset: offset,
                 label: offset == 0 ? 'ce mois' : moment().add(offset * -1, 'months').fromNow()
             };
         });
-        $scope.incr_offset = function () { $scope.period_offset++; };
-        $scope.decr_offset = function () { $scope.period_offset--; };
-        $scope.reset_offset = function () { $scope.period_offset = 0; };
+        ctrl.incr_offset = function () { ctrl.period_offset++; };
+        ctrl.decr_offset = function () { ctrl.period_offset--; };
+        ctrl.reset_offset = function () { ctrl.period_offset = 0; };
         User.get_user()
             .then(function (response) {
-            $scope.current_user = response.data;
+            ctrl.current_user = response.data;
             var retrieve_data = function () {
-                $scope.from_date = moment().subtract($scope.period_offset, 'months').subtract(2, 'weeks').toDate();
-                $scope.to_date = moment().subtract($scope.period_offset, 'months').add(2, 'weeks').toDate();
+                ctrl.from_date = moment().subtract(ctrl.period_offset, 'months').subtract(2, 'weeks').toDate();
+                ctrl.to_date = moment().subtract(ctrl.period_offset, 'months').add(2, 'weeks').toDate();
                 API.query_devoirs({
-                    'date_due>': $scope.from_date,
-                    'date_due<': $scope.to_date,
-                    'groups_ids[]': $scope.current_user.profil_actif.type === 'TUT' ? _($scope.current_user.enfant_actif.enfant.groups).pluck('group_id') : _($scope.current_user.groups).pluck('group_id'),
-                    uid: $scope.current_user.profil_actif.type === 'TUT' ? $scope.current_user.enfant_actif.child_id : $scope.current_user.id
+                    'date_due>': ctrl.from_date,
+                    'date_due<': ctrl.to_date,
+                    'groups_ids[]': ctrl.current_user.profil_actif.type === 'TUT' ? _(ctrl.current_user.enfant_actif.enfant.groups).pluck('group_id') : _(ctrl.current_user.groups).pluck('group_id'),
+                    'uid': ctrl.current_user.profil_actif.type === 'TUT' ? ctrl.current_user.enfant_actif.child_id : ctrl.current_user.id,
+                    'check_done': ctrl.current_user.profil_actif.type === 'ELV'
                 })
                     .$promise.then(function (response) {
-                    $scope.matieres = {};
-                    $scope.all_devoirs = _(response).map(function (devoir) {
+                    ctrl.matieres = {};
+                    ctrl.all_devoirs = _(response).map(function (devoir) {
                         devoir.cours = getCours(devoir.cours_id);
                         devoir.creneau_emploi_du_temps = getCreneauxEmploiDuTemps(devoir.creneau_emploi_du_temps_id);
                         devoir.creneau_emploi_du_temps.$promise
@@ -486,7 +488,7 @@ angular.module('cahierDeTextesClientApp')
                             Annuaire.get_subject(devoir.creneau_emploi_du_temps.matiere_id)
                                 .then(function (response) {
                                 devoir.matiere = response.data;
-                                $scope.matieres[devoir.matiere.id] = devoir.matiere;
+                                ctrl.matieres[devoir.matiere.id] = devoir.matiere;
                             });
                         });
                         _(devoir.ressources).each(function (ressource) {
@@ -494,10 +496,10 @@ angular.module('cahierDeTextesClientApp')
                         });
                         return devoir;
                     });
-                    $scope.filter_data($scope.matiere_selected);
+                    ctrl.filter_data(ctrl.matiere_selected);
                 });
             };
-            $scope.$watch('period_offset', function () {
+            ctrl.$watch('period_offset', function () {
                 retrieve_data();
             });
         });
@@ -801,6 +803,9 @@ angular.module('cahierDeTextesClientApp')
             sort_creneaux_by: function (criteria) {
                 $scope.ui.sortCreneauxBy = $scope.ui.sortCreneauxBy[0] === criteria[0] ? _(criteria).map(function (sub_criteria) { return '-' + sub_criteria; }) : criteria;
             }
+        };
+        $scope.step_backward = function () {
+            $scope.step--;
         };
         $scope.beautify_semainier = function (semainier) {
             var bsemainier = Utils.padEnd(semainier.toString(2), 53, '0');
@@ -1199,10 +1204,10 @@ angular.module('cahierDeTextesClientApp')
             });
         };
         $scope.unmatch_this = function (item, uai) {
-            Matchable.$delete({
+            Matchable.delete({
                 uai: uai,
                 hash_item: hash_me(item)
-            })
+            }).$promise
                 .then(function () {
                 item.laclasse = null;
                 update_creneaux_readiness();

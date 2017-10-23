@@ -6,13 +6,12 @@ module CahierDeTextesApp
       module Devoirs
         def self.registered( app )
           app.get '/api/devoirs/?' do
-            if params['uid']
-              halt( 401, '401 Unauthorized' ) unless ( user['id'] == params['uid'] ) ||
-                                                     ( user_active_profile['type'] == 'TUT' &&
-                                                       !user['children'].find { |child| child['child_id'] == params['uid'] }.nil? )
-            end
+            halt( 401, '401 Unauthorized' ) unless !params.key?('uid') || ( ( user['id'] == params['uid'] ) ||
+                                                                            ( user_active_profile['type'] == 'TUT' &&
+                                                                              !user['children'].find { |child| child['child_id'] == params['uid'] }.nil? ) )
 
             query = Devoir
+
             query = query.where( creneau_emploi_du_temps_id: params['creneaux_ids']) if params.key?( 'creneaux_ids' )
 
             query = query.where( creneau_emploi_du_temps_id: CreneauEmploiDuTemps.where( regroupement_id: params['groups_ids'] ).select(:id).all.map(&:id) ) if params.key?( 'groups_ids' )
@@ -27,7 +26,7 @@ module CahierDeTextesApp
 
             data = query.naked.all
 
-            if params['uid']
+            if params.key?('uid') && params.key?('check_done') && params['check_done'] == 'true'
               data.each do |devoir|
                 dti = DevoirTodoItem[ devoir_id: devoir[:id], eleve_id: params['uid'] ]
                 devoir[:date_fait] = dti.date_fait unless dti.nil?
