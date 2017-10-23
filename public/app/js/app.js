@@ -371,9 +371,9 @@ angular.module('cahierDeTextesClientApp')
                 ctrl.app_path = APP_PATH;
                 ctrl.display_time_estimation = false;
                 ctrl.devoir.contenu = $sce.trustAsHtml(ctrl.devoir.contenu);
-                API.get_type_de_devoir(ctrl.devoir.type_devoir_id).$promise
+                API.get_type_de_devoir(ctrl.devoir.type_devoir_id)
                     .then(function (response) {
-                    ctrl.devoir.type_devoir = response;
+                    ctrl.devoir.type_devoir = response.data;
                 });
                 _(ctrl.devoir.ressources).each(function (ressource) {
                     ressource.url = $sce.trustAsResourceUrl(URL_DOCS + "/api/connector?cmd=file&target=" + ressource.hash);
@@ -1715,7 +1715,10 @@ angular.module('cahierDeTextesClientApp')
             ctrl.estimation_leave = function (d) {
                 ctrl.estimation_over(d, d.temps_estime);
             };
-            ctrl.types_de_devoir = API.query_types_de_devoir();
+            API.query_types_de_devoir()
+                .then(function (response) {
+                ctrl.types_de_devoir = response.data;
+            });
             init_cours_existant = function (cours) {
                 ctrl.cours = Cours.get({ id: cours.id });
                 ctrl.cours.$promise.then(function (cours) {
@@ -2778,21 +2781,6 @@ angular.module('cahierDeTextesClientApp')
             }
         });
     }])
-    .factory('CahiersDeTextes', ['$resource', 'APP_PATH',
-    function ($resource, APP_PATH) {
-        return $resource(APP_PATH + "/api/cahiers_de_textes/:id", { id: '@id' }, {
-            bulk: {
-                method: 'POST',
-                isArray: true,
-                url: APP_PATH + "/api/cahiers_de_textes/bulk",
-                params: { cahiers_de_textes: '@cahiers_de_textes' }
-            }
-        });
-    }])
-    .factory('TypesDeDevoir', ['$resource', 'APP_PATH',
-    function ($resource, APP_PATH) {
-        return $resource(APP_PATH + "/api/types_de_devoir/:id", { id: '@id' });
-    }])
     .factory('Matchable', ['$resource', 'APP_PATH',
     function ($resource, APP_PATH) {
         return $resource(APP_PATH + "/api/matchables/:uai/:hash_item", {
@@ -2802,8 +2790,8 @@ angular.module('cahierDeTextesClientApp')
         });
     }]);
 angular.module('cahierDeTextesClientApp')
-    .service('API', ['$http', 'APP_PATH', 'StatistiquesRegroupements', 'Cours', 'CreneauxEmploiDuTemps', 'Devoirs', 'EmploisDuTemps', 'Enseignants', 'Etablissements', 'TypesDeDevoir',
-    function ($http, APP_PATH, StatistiquesRegroupements, Cours, CreneauxEmploiDuTemps, Devoirs, EmploisDuTemps, Enseignants, Etablissements, TypesDeDevoir) {
+    .service('API', ['$http', 'APP_PATH', 'StatistiquesRegroupements', 'Cours', 'CreneauxEmploiDuTemps', 'Devoirs', 'EmploisDuTemps', 'Enseignants', 'Etablissements',
+    function ($http, APP_PATH, StatistiquesRegroupements, Cours, CreneauxEmploiDuTemps, Devoirs, EmploisDuTemps, Enseignants, Etablissements) {
         this.get_etablissement = function (params) {
             return Etablissements.get(params);
         };
@@ -2811,10 +2799,10 @@ angular.module('cahierDeTextesClientApp')
             return StatistiquesRegroupements.query(params);
         };
         this.query_types_de_devoir = _.memoize(function () {
-            return TypesDeDevoir.query();
+            return $http.get(APP_PATH + "/api/types_de_devoir");
         });
         this.get_type_de_devoir = _.memoize(function (id) {
-            return TypesDeDevoir.get({ id: id });
+            return $http.get(APP_PATH + "/api/types_de_devoir/" + id);
         });
         this.query_emplois_du_temps = function () {
             return EmploisDuTemps.query();

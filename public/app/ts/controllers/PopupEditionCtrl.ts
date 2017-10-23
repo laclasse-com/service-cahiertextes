@@ -359,7 +359,10 @@ angular.module('cahierDeTextesClientApp')
           ctrl.estimation_over(d, d.temps_estime);
         };
 
-        ctrl.types_de_devoir = API.query_types_de_devoir();
+        API.query_types_de_devoir()
+          .then(function(response) {
+            ctrl.types_de_devoir = response.data;
+          });
 
         init_cours_existant = function(cours) {
           ctrl.cours = Cours.get({ id: cours.id });

@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module( 'cahierDeTextesClientApp' )
-  .component( 'displayDevoir',
+angular.module('cahierDeTextesClientApp')
+  .component('displayDevoir',
   {
     bindings: { devoir: '=' },
     template: '<div ng:class="{ \'type1\': $ctrl.devoir.type_devoir_id === 1,' +
@@ -22,23 +22,23 @@ angular.module( 'cahierDeTextesClientApp' )
     '      </div>' +
     '    </div>' +
     '</div>',
-    controller: [ '$sce', 'URL_DOCS', 'APP_PATH', 'API',
-      function( $sce, URL_DOCS, APP_PATH, API ) {
+    controller: ['$sce', 'URL_DOCS', 'APP_PATH', 'API',
+      function($sce, URL_DOCS, APP_PATH, API) {
         let ctrl = this;
 
         ctrl.$onInit = function() {
           ctrl.app_path = APP_PATH;
           ctrl.display_time_estimation = false;
 
-          ctrl.devoir.contenu = $sce.trustAsHtml( ctrl.devoir.contenu );
-          API.get_type_de_devoir( ctrl.devoir.type_devoir_id ).$promise
-            .then( function( response ) {
-              ctrl.devoir.type_devoir = response;
-            } );
+          ctrl.devoir.contenu = $sce.trustAsHtml(ctrl.devoir.contenu);
+          API.get_type_de_devoir(ctrl.devoir.type_devoir_id)
+            .then(function(response) {
+              ctrl.devoir.type_devoir = response.data;
+            });
 
-          _( ctrl.devoir.ressources ).each( function( ressource ) {
-            ressource.url = $sce.trustAsResourceUrl( `${ URL_DOCS }/api/connector?cmd=file&target=${ ressource.hash }` );
-          } );
+          _(ctrl.devoir.ressources).each(function(ressource) {
+            ressource.url = $sce.trustAsResourceUrl(`${URL_DOCS}/api/connector?cmd=file&target=${ressource.hash}`);
+          });
         };
       }]
-  } );
+  });
