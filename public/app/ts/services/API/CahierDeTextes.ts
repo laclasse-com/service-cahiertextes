@@ -90,15 +90,6 @@ angular.module('cahierDeTextesClientApp')
       };
     }])
 
-  .factory('StatistiquesRegroupements', ['$resource', 'APP_PATH',
-    function($resource, APP_PATH) {
-      return $resource(`${APP_PATH}/api/etablissements/:uai/statistiques/regroupements/:id`,
-        {
-          uai: '@uai',
-          id: '@id'
-        });
-    }])
-
   .factory('Cours',
   ['$resource', 'APP_PATH',
     function($resource, APP_PATH) {
@@ -192,16 +183,6 @@ angular.module('cahierDeTextesClientApp')
         });
     }])
 
-  .factory('Enseignants',
-  ['$resource', 'APP_PATH',
-    function($resource, APP_PATH) {
-      return $resource(`${APP_PATH}/api/etablissements/:uai/statistiques/enseignants/:enseignant_id`,
-        {
-          uai: '@uai',
-          enseignant_id: '@enseignant_id'
-        });
-    }])
-
   .factory('Etablissements',
   ['$resource', 'APP_PATH',
     function($resource, APP_PATH) {
@@ -237,14 +218,14 @@ angular.module('cahierDeTextesClientApp')
 
 angular.module('cahierDeTextesClientApp')
   .service('API',
-  ['$http', 'APP_PATH', 'StatistiquesRegroupements', 'CreneauxEmploiDuTemps', 'Cours', 'Devoirs', 'Enseignants', 'Etablissements',
-    function($http, APP_PATH, StatistiquesRegroupements, CreneauxEmploiDuTemps, Cours, Devoirs, Enseignants, Etablissements) {
+  ['$http', 'APP_PATH', 'CreneauxEmploiDuTemps', 'Cours', 'Devoirs', 'Etablissements',
+    function($http, APP_PATH, CreneauxEmploiDuTemps, Cours, Devoirs, Etablissements) {
       this.get_etablissement = function(params) {
         return Etablissements.get(params);
       };
 
-      this.query_statistiques_regroupements = function(params) {
-        return StatistiquesRegroupements.query(params);
+      this.query_statistiques_regroupements = function(uai) {
+        return $http.get(`${APP_PATH}/api/etablissements/${uai}/statistiques/regroupements`)
       };
 
       this.query_types_de_devoir = _.memoize(function() {
@@ -277,11 +258,11 @@ angular.module('cahierDeTextesClientApp')
         });
       };
 
-      this.query_enseignants = function(params) {
-        return Enseignants.query(params);
+      this.query_enseignants = function(uai) {
+        return $http.get(`${APP_PATH}/api/etablissements/${uai}/statistiques/enseignants`)
       };
-      this.get_enseignant = function(params) {
-        return Enseignants.get(params);
+      this.get_enseignant = function(uai, enseignant_id) {
+        return $http.get(`${APP_PATH}/api/etablissements/${uai}/statistiques/enseignants/${enseignant_id}`)
       };
 
       this.get_cours = function(params) {

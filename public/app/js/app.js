@@ -650,14 +650,11 @@ angular.module('cahierDeTextesClientApp')
                     .compact()
                     .value();
             });
-            return API.get_enseignant({
-                enseignant_id: $scope.enseignant_id,
-                uai: $scope.current_user.profil_actif.structure_id
-            }).$promise;
+            return API.get_enseignant($scope.current_user.profil_actif.structure_id, $scope.enseignant_id);
         })
             .then(function success(response) {
             var _2_semaines_avant = moment().subtract(2, 'weeks');
-            $scope.raw_data = _(response.saisies).map(function (saisie, index) {
+            $scope.raw_data = _(response.data.saisies).map(function (saisie, index) {
                 saisie.index = index;
                 saisie.cours = new Cours(saisie.cours);
                 saisie.regroupement_id = parseInt(saisie.regroupement_id);
@@ -728,9 +725,9 @@ angular.module('cahierDeTextesClientApp')
             });
             $scope.selected_regroupements = $scope.regroupements;
         });
-        API.query_enseignants({ uai: current_user.profil_actif.structure_id }).$promise
+        API.query_enseignants(current_user.profil_actif.structure_id)
             .then(function success(response) {
-            $scope.raw_data = response;
+            $scope.raw_data = response.data;
             return Annuaire.get_users(_($scope.raw_data).pluck('enseignant_id'));
         })
             .then(function (response) {
@@ -956,7 +953,7 @@ angular.module('cahierDeTextesClientApp')
                     regroupement.displayed_label = regroupement.name;
                 });
                 toastr.info('traitement des données des regroupements');
-                return API.query_statistiques_regroupements({ uai: current_user.profil_actif.structure_id }).$promise;
+                return API.query_statistiques_regroupements(current_user.profil_actif.structure_id);
             }, handle_error)
                 .then(function success(response) {
                 _($scope.pronote.Classes[0].Classe)
@@ -970,7 +967,7 @@ angular.module('cahierDeTextesClientApp')
                         }
                     }
                     regroupement.edit = _(regroupement.laclasse).isUndefined();
-                    var creneaux_laclasse = _(regroupement.laclasse).isUndefined() ? undefined : _(response).findWhere({ regroupement_id: "" + regroupement.laclasse.id });
+                    var creneaux_laclasse = _(regroupement.laclasse).isUndefined() ? undefined : _(response.data).findWhere({ regroupement_id: "" + regroupement.laclasse.id });
                     regroupement.existing_creneaux = _(creneaux_laclasse).isUndefined() ? 0 : creneaux_laclasse.creneaux_emploi_du_temps.vides.length + creneaux_laclasse.creneaux_emploi_du_temps.pleins.length;
                     if (!regroupement.edit) {
                         regroupement.laclasse.displayed_label = regroupement.laclasse.libelle_aaf;
@@ -2657,13 +2654,6 @@ angular.module('cahierDeTextesClientApp')
             return $http.put(APP_PATH + "/api/users/current/parametres", { parameters: JSON.stringify(parametres) });
         };
     }])
-    .factory('StatistiquesRegroupements', ['$resource', 'APP_PATH',
-    function ($resource, APP_PATH) {
-        return $resource(APP_PATH + "/api/etablissements/:uai/statistiques/regroupements/:id", {
-            uai: '@uai',
-            id: '@id'
-        });
-    }])
     .factory('Cours', ['$resource', 'APP_PATH',
     function ($resource, APP_PATH) {
         return $resource(APP_PATH + "/api/cours/:id", { id: '@id' }, {
@@ -2745,13 +2735,6 @@ angular.module('cahierDeTextesClientApp')
             }
         });
     }])
-    .factory('Enseignants', ['$resource', 'APP_PATH',
-    function ($resource, APP_PATH) {
-        return $resource(APP_PATH + "/api/etablissements/:uai/statistiques/enseignants/:enseignant_id", {
-            uai: '@uai',
-            enseignant_id: '@enseignant_id'
-        });
-    }])
     .factory('Etablissements', ['$resource', 'APP_PATH',
     function ($resource, APP_PATH) {
         return $resource(APP_PATH + "/api/etablissements/:uai", { uai: '@uai' });
@@ -2776,13 +2759,13 @@ angular.module('cahierDeTextesClientApp')
         });
     }]);
 angular.module('cahierDeTextesClientApp')
-    .service('API', ['$http', 'APP_PATH', 'StatistiquesRegroupements', 'CreneauxEmploiDuTemps', 'Cours', 'Devoirs', 'Enseignants', 'Etablissements',
-    function ($http, APP_PATH, StatistiquesRegroupements, CreneauxEmploiDuTemps, Cours, Devoirs, Enseignants, Etablissements) {
+    .service('API', ['$http', 'APP_PATH', 'CreneauxEmploiDuTemps', 'Cours', 'Devoirs', 'Etablissements',
+    function ($http, APP_PATH, CreneauxEmploiDuTemps, Cours, Devoirs, Etablissements) {
         this.get_etablissement = function (params) {
             return Etablissements.get(params);
         };
-        this.query_statistiques_regroupements = function (params) {
-            return StatistiquesRegroupements.query(params);
+        this.query_statistiques_regroupements = function (uai) {
+            return $http.get(APP_PATH + "/api/etablissements/" + uai + "/statistiques/regroupements");
         };
         this.query_types_de_devoir = _.memoize(function () {
             return $http.get(APP_PATH + "/api/types_de_devoir");
@@ -2811,11 +2794,11 @@ angular.module('cahierDeTextesClientApp')
                 }
             });
         };
-        this.query_enseignants = function (params) {
-            return Enseignants.query(params);
+        this.query_enseignants = function (uai) {
+            return $http.get(APP_PATH + "/api/etablissements/" + uai + "/statistiques/enseignants");
         };
-        this.get_enseignant = function (params) {
-            return Enseignants.get(params);
+        this.get_enseignant = function (uai, enseignant_id) {
+            return $http.get(APP_PATH + "/api/etablissements/" + uai + "/statistiques/enseignants/" + enseignant_id);
         };
         this.get_cours = function (params) {
             return Cours.get(params);

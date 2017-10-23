@@ -202,7 +202,7 @@ angular.module('cahierDeTextesClientApp')
 
             toastr.info('traitement des données des regroupements');
             // 3.3 Classes et Groupes
-            return API.query_statistiques_regroupements({ uai: current_user.profil_actif.structure_id }).$promise;
+            return API.query_statistiques_regroupements(current_user.profil_actif.structure_id);
           },
           handle_error
           )
@@ -221,7 +221,7 @@ angular.module('cahierDeTextesClientApp')
                 }
 
                 regroupement.edit = _(regroupement.laclasse).isUndefined();
-                let creneaux_laclasse = _(regroupement.laclasse).isUndefined() ? undefined : _(response).findWhere({ regroupement_id: "" + regroupement.laclasse.id });
+                let creneaux_laclasse = _(regroupement.laclasse).isUndefined() ? undefined : _(response.data).findWhere({ regroupement_id: "" + regroupement.laclasse.id });
                 regroupement.existing_creneaux = _(creneaux_laclasse).isUndefined() ? 0 : creneaux_laclasse.creneaux_emploi_du_temps.vides.length + creneaux_laclasse.creneaux_emploi_du_temps.pleins.length;
 
                 if (!regroupement.edit) {
