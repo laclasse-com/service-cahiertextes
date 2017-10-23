@@ -259,11 +259,6 @@
                                             <span ng:if="ui.sortCreneauxBy == ['-Matiere']">↓</span>
                                         </th>
                                         <th>
-                                            <a ng:click="ui.sort_creneaux_by( ['Professeur'] )">enseignant(s)</a>
-                                            <span ng:if="ui.sortCreneauxBy == ['Professeur']">↑</span>
-                                            <span ng:if="ui.sortCreneauxBy == ['-Professeur']">↓</span>
-                                        </th>
-                                        <th>
                                             <a ng:click="ui.sort_creneaux_by( ['Classe','Groupe'] )">regroupement(s)</a>
                                             <span ng:if="ui.sortCreneauxBy == ['Classe','Groupe']">↑</span>
                                             <span ng:if="ui.sortCreneauxBy == ['-Classe','-Groupe']">↓</span>
@@ -298,9 +293,6 @@
                                         </td>
                                         <td ng:class="{'ko rouge': !creneau.readiness.matiere }">
                                             <span ng:if="creneau.Matiere">{{pronote.matieres[ creneau.Matiere.Ident ].displayed_label}}</span>
-                                        </td>
-                                        <td ng:class="{'ko rouge': !creneau.readiness.enseignant }">
-                                            <span ng:if="creneau.Professeur">{{pronote.enseignants[ creneau.Professeur.Ident ].displayed_label}} <sup uib-tooltip-html="beautify_semainier( creneau.Professeur.Semaines )" tooltip-trigger="'click'">({{creneau.Professeur.Semaines}})</sup></span>
                                         </td>
                                         <td ng:class="{'ko rouge': !creneau.readiness.classe && !creneau.readiness.groupe_eleve }">
                                             <span ng:if="creneau.Classe">{{pronote.classes[ creneau.Classe.Ident ].Nom}} <sup uib-tooltip-html="beautify_semainier( creneau.Classe.Semaines )" tooltip-trigger="'click'">({{creneau.Classe.Semaines}})</sup></span>
