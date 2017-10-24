@@ -57,18 +57,22 @@ angular.module('cahierDeTextesClientApp')
             .each(function(regroupement) {
               let filled = regroupement.length;
               let validated = _(regroupement).where({ valide: true }).length;
-              let nom_regroupement = regroupement[0].group.name;
 
-              $scope.graphiques.multiBarChart.data[0].values.push({
-                key: nom_regroupement,
-                x: nom_regroupement,
-                y: filled - validated
-              });
-              $scope.graphiques.multiBarChart.data[1].values.push({
-                key: nom_regroupement,
-                x: nom_regroupement,
-                y: validated
-              });
+              Annuaire.get_group(regroupement[0].regroupement_id)
+                .then(function success(response) {
+                  _(regroupement).each(function(regroupement) { regroupement.group = response.data; });
+
+                  $scope.graphiques.multiBarChart.data[0].values.push({
+                    key: regroupement[0].group.name,
+                    x: regroupement[0].group.name,
+                    y: filled - validated
+                  });
+                  $scope.graphiques.multiBarChart.data[1].values.push({
+                    key: regroupement[0].group.name,
+                    x: regroupement[0].group.name,
+                    y: validated
+                  });
+                });
 
               $scope.graphiques.pieChart.data[0].value += filled - validated;
               $scope.graphiques.pieChart.data[1].value += validated;
@@ -139,7 +143,7 @@ angular.module('cahierDeTextesClientApp')
       };
 
       // Récupération et consommation des données
-      Annuaire.get($scope.enseignant_id)
+      Annuaire.get_user($scope.enseignant_id)
         .then(function(response) {
           $scope.enseignant = response.data;
 
@@ -189,13 +193,6 @@ angular.module('cahierDeTextesClientApp')
             saisie.matiere = _($scope.enseignant.liste_matieres).findWhere({ id: saisie.matiere_id });
             if (_(saisie.matiere).isUndefined()) {
               saisie.matiere = Annuaire.get_subject(saisie.matiere_id);
-            }
-            saisie.group = _($scope.enseignant.liste_regroupements).findWhere({ id: saisie.regroupement_id });
-            if (_(saisie.group).isUndefined()) {
-              Annuaire.get_group(saisie.regroupement_id)
-                .then(function success(response) {
-                  saisie.group = response.data;
-                });
             }
 
             return saisie;

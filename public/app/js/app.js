@@ -553,16 +553,19 @@ angular.module('cahierDeTextesClientApp')
                     .each(function (regroupement) {
                     var filled = regroupement.length;
                     var validated = _(regroupement).where({ valide: true }).length;
-                    var nom_regroupement = regroupement[0].group.name;
-                    $scope.graphiques.multiBarChart.data[0].values.push({
-                        key: nom_regroupement,
-                        x: nom_regroupement,
-                        y: filled - validated
-                    });
-                    $scope.graphiques.multiBarChart.data[1].values.push({
-                        key: nom_regroupement,
-                        x: nom_regroupement,
-                        y: validated
+                    Annuaire.get_group(regroupement[0].regroupement_id)
+                        .then(function success(response) {
+                        _(regroupement).each(function (regroupement) { regroupement.group = response.data; });
+                        $scope.graphiques.multiBarChart.data[0].values.push({
+                            key: regroupement[0].group.name,
+                            x: regroupement[0].group.name,
+                            y: filled - validated
+                        });
+                        $scope.graphiques.multiBarChart.data[1].values.push({
+                            key: regroupement[0].group.name,
+                            x: regroupement[0].group.name,
+                            y: validated
+                        });
                     });
                     $scope.graphiques.pieChart.data[0].value += filled - validated;
                     $scope.graphiques.pieChart.data[1].value += validated;
@@ -621,7 +624,7 @@ angular.module('cahierDeTextesClientApp')
                 }
             }, function cancel() { });
         };
-        Annuaire.get($scope.enseignant_id)
+        Annuaire.get_user($scope.enseignant_id)
             .then(function (response) {
             $scope.enseignant = response.data;
             $scope.enseignant.get_actual_groups()
@@ -663,13 +666,6 @@ angular.module('cahierDeTextesClientApp')
                 saisie.matiere = _($scope.enseignant.liste_matieres).findWhere({ id: saisie.matiere_id });
                 if (_(saisie.matiere).isUndefined()) {
                     saisie.matiere = Annuaire.get_subject(saisie.matiere_id);
-                }
-                saisie.group = _($scope.enseignant.liste_regroupements).findWhere({ id: saisie.regroupement_id });
-                if (_(saisie.group).isUndefined()) {
-                    Annuaire.get_group(saisie.regroupement_id)
-                        .then(function success(response) {
-                        saisie.group = response.data;
-                    });
                 }
                 return saisie;
             });
@@ -728,7 +724,7 @@ angular.module('cahierDeTextesClientApp')
         API.query_enseignants(current_user.profil_actif.structure_id)
             .then(function success(response) {
             $scope.raw_data = response.data;
-            return Annuaire.gets(_($scope.raw_data).pluck('enseignant_id'));
+            return Annuaire.get_users(_($scope.raw_data).pluck('enseignant_id'));
         })
             .then(function (response) {
             var enseignants_details = _(response.data).indexBy('id');
@@ -2554,7 +2550,7 @@ angular.module('cahierDeTextesClientApp')
                 return $q.resolve(response);
             });
         });
-        service.get = _.memoize(function (user_id) {
+        service.get_user = _.memoize(function (user_id) {
             return $http.get(URL_ENT + "/api/users/" + user_id)
                 .then(function (response) {
                 response.data.profil_actif = _(response.data.profiles).findWhere({ active: true });
@@ -2573,7 +2569,7 @@ angular.module('cahierDeTextesClientApp')
                 return response;
             });
         });
-        service.gets = _.memoize(function (users_ids) {
+        service.get_users = _.memoize(function (users_ids) {
             return $http.get(URL_ENT + "/api/users/", { params: { 'id[]': users_ids } });
         });
     }
@@ -2608,7 +2604,7 @@ angular.module('cahierDeTextesClientApp')
                     .value();
                 if (response.data.enfants.length > 0) {
                     var promises = response.data.enfants.map(function (child) {
-                        return Annuaire.get(child.child_id)
+                        return Annuaire.get_user(child.child_id)
                             .then(function (user) {
                             child.enfant = user.data;
                         });
@@ -2654,26 +2650,6 @@ angular.module('cahierDeTextesClientApp')
             return $http.put(APP_PATH + "/api/users/current/parametres", { parameters: JSON.stringify(parametres) });
         };
     }])
-    .factory('Cours', ['$resource', 'APP_PATH',
-    function ($resource, APP_PATH) {
-        return $resource(APP_PATH + "/api/cours/:id", { id: '@id' }, {
-            update: { method: 'PUT' },
-            valide: {
-                method: 'PUT',
-                url: APP_PATH + "/api/cours/:id/valide"
-            },
-            copie: {
-                method: 'PUT',
-                url: APP_PATH + "/api/cours/:id/copie/regroupement/:regroupement_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date/:date",
-                params: {
-                    id: '@id',
-                    regroupement_id: '@regroupement_id',
-                    creneau_emploi_du_temps_id: '@creneau_emploi_du_temps_id',
-                    date: '@date'
-                }
-            }
-        });
-    }])
     .factory('CreneauxEmploiDuTemps', ['$resource', 'APP_PATH',
     function ($resource, APP_PATH) {
         return $resource(APP_PATH + "/api/creneaux_emploi_du_temps/:id", {
@@ -2708,6 +2684,26 @@ angular.module('cahierDeTextesClientApp')
                 params: {
                     ids: '@ids',
                     date_creneau: '@date_creneau'
+                }
+            }
+        });
+    }])
+    .factory('Cours', ['$resource', 'APP_PATH',
+    function ($resource, APP_PATH) {
+        return $resource(APP_PATH + "/api/cours/:id", { id: '@id' }, {
+            update: { method: 'PUT' },
+            valide: {
+                method: 'PUT',
+                url: APP_PATH + "/api/cours/:id/valide"
+            },
+            copie: {
+                method: 'PUT',
+                url: APP_PATH + "/api/cours/:id/copie/regroupement/:regroupement_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date/:date",
+                params: {
+                    id: '@id',
+                    regroupement_id: '@regroupement_id',
+                    creneau_emploi_du_temps_id: '@creneau_emploi_du_temps_id',
+                    date: '@date'
                 }
             }
         });

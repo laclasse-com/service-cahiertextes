@@ -33,7 +33,7 @@ angular.module('cahierDeTextesClientApp')
 
             if (response.data.enfants.length > 0) {
               let promises = response.data.enfants.map(function(child) {
-                return Annuaire.get(child.child_id)
+                return Annuaire.get_user(child.child_id)
                   .then(function(user) {
                     child.enfant = user.data;
                   });
@@ -90,30 +90,6 @@ angular.module('cahierDeTextesClientApp')
       };
     }])
 
-  .factory('Cours',
-  ['$resource', 'APP_PATH',
-    function($resource, APP_PATH) {
-      return $resource(`${APP_PATH}/api/cours/:id`,
-        { id: '@id' },
-        {
-          update: { method: 'PUT' },
-          valide: {
-            method: 'PUT',
-            url: `${APP_PATH}/api/cours/:id/valide`
-          },
-          copie: {
-            method: 'PUT',
-            url: `${APP_PATH}/api/cours/:id/copie/regroupement/:regroupement_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date/:date`,
-            params: {
-              id: '@id',
-              regroupement_id: '@regroupement_id',
-              creneau_emploi_du_temps_id: '@creneau_emploi_du_temps_id',
-              date: '@date'
-            }
-          }
-        });
-    }])
-
   .factory('CreneauxEmploiDuTemps',
   ['$resource', 'APP_PATH',
     function($resource, APP_PATH) {
@@ -151,6 +127,30 @@ angular.module('cahierDeTextesClientApp')
             params: {
               ids: '@ids',
               date_creneau: '@date_creneau'
+            }
+          }
+        });
+    }])
+
+  .factory('Cours',
+  ['$resource', 'APP_PATH',
+    function($resource, APP_PATH) {
+      return $resource(`${APP_PATH}/api/cours/:id`,
+        { id: '@id' },
+        {
+          update: { method: 'PUT' },
+          valide: {
+            method: 'PUT',
+            url: `${APP_PATH}/api/cours/:id/valide`
+          },
+          copie: {
+            method: 'PUT',
+            url: `${APP_PATH}/api/cours/:id/copie/regroupement/:regroupement_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date/:date`,
+            params: {
+              id: '@id',
+              regroupement_id: '@regroupement_id',
+              creneau_emploi_du_temps_id: '@creneau_emploi_du_temps_id',
+              date: '@date'
             }
           }
         });
