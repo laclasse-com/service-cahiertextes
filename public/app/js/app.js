@@ -2173,7 +2173,6 @@ angular.module('cahierDeTextesClientApp')
         };
         var filter_by_matieres = function (raw_data, subjects_ids, active) {
             return !active ? raw_data : _(raw_data).filter(function (creneau) {
-                console.log(creneau);
                 return _(subjects_ids).contains(creneau.matiere_id) || creneau.matiere_id == '';
             });
         };
@@ -2825,29 +2824,44 @@ angular.module('cahierDeTextesClientApp')
             }
             return $http.get(URL_DOCS + "/api/connector", { params: params });
         });
-        Documents.get_ctxt_folder_hash = _.memoize(function (classe) {
-            var structure, structure_root, classes_root, classe_root, cdt_root;
-            return Annuaire.get_structure(classe.structure_id)
-                .then(function success(response) {
-                structure = response.data;
-                return Documents.list_files();
-            })
-                .then(function success(response) {
-                structure_root = _(response.data.files).findWhere({ phash: null, name: structure.name });
-                return Documents.list_files(structure_root.hash);
-            })
-                .then(function success(response) {
-                classes_root = _(response.data.files).findWhere({ phash: structure_root.hash, name: 'classes' });
-                return Documents.list_files(classes_root.hash);
-            })
-                .then(function success(response) {
-                classe_root = _(response.data.files).findWhere({ phash: classes_root.hash, name: classe.name });
-                return Documents.list_files(classe_root.hash);
-            })
-                .then(function success(response) {
-                cdt_root = _(response.data.files).findWhere({ phash: classe_root.hash, name: 'Cahier de textes.ct' });
-                return cdt_root.hash;
-            });
+        Documents.get_ctxt_folder_hash = _.memoize(function (regroupement) {
+            console.log(regroupement);
+            var structure, structure_root, regroupements_root, regroupement_root, cdt_root;
+            var error_handler = function error(response) { return $q.reject(response); };
+            switch (regroupement.type) {
+                case 'CLS':
+                case 'GRP':
+                    return Annuaire.get_structure(regroupement.structure_id)
+                        .then(function success(response) {
+                        structure = response.data;
+                        return Documents.list_files();
+                    }, error_handler)
+                        .then(function success(response) {
+                        structure_root = _(response.data.files).findWhere({ phash: null, name: structure.name });
+                        return Documents.list_files(structure_root.hash);
+                    }, error_handler)
+                        .then(function success(response) {
+                        regroupements_root = _(response.data.files).findWhere({ phash: structure_root.hash, name: regroupement.type == 'CLS' ? 'classes' : 'groupes' });
+                        return Documents.list_files(regroupements_root.hash);
+                    }, error_handler)
+                        .then(function success(response) {
+                        regroupement_root = _(response.data.files).findWhere({ phash: regroupements_root.hash, name: regroupement.name });
+                        return Documents.list_files(regroupement_root.hash);
+                    }, error_handler)
+                        .then(function success(response) {
+                        cdt_root = _(response.data.files).findWhere({ phash: regroupement_root.hash, name: 'Cahier de textes.ct' });
+                        return cdt_root.hash;
+                    }, error_handler);
+                case 'GPL':
+                    return Documents.list_files()
+                        .then(function success(response) {
+                        console.log(response);
+                        regroupement_root = _(response.data.files).findWhere({ phash: null, name: regroupement.name });
+                        console.log(regroupement_root);
+                        return regroupement_root.hash;
+                    }, error_handler);
+                default: console.log('unknown group type');
+            }
         });
         Documents.ajout_au_cahier_de_textes = function (classe, node) {
             return Documents.get_ctxt_folder_hash(classe)
