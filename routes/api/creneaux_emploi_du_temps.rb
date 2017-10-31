@@ -9,11 +9,11 @@ module CahierDeTextesApp
             query = CreneauEmploiDuTemps
 
             query = query.where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" ) ) unless params.key?( 'no_year_restriction')
-            query = query.where( Sequel.lit( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{Date.parse( params['date'] )}')" ) ) if params.key?('date') && !params.key?( 'include_deleted')
+            query = query.where( Sequel.lit( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{Date.parse( params['date<'] )}')" ) ) if params.key?('date>') && !params.key?( 'include_deleted')
             query = query.where( regroupement_id: params['groups_ids'] ) if params.key?( 'groups_ids' )
             query = query.where( matiere_id: params['subjects_ids'] ) if params.key?( 'subjects_ids' )
             query = query.where( etablissement_id: params['structure_id'] ) if params.key?( 'structure_id' )
-            query = query.where( etablissement_id: params['import_id'] ) if params.key?( 'import_id' )
+            query = query.where( import_id: params['import_id'] ) if params.key?( 'import_id' )
 
             data = query.naked.all
 
