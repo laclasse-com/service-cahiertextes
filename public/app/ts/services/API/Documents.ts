@@ -5,13 +5,13 @@ angular.module('cahierDeTextesClientApp')
   ['$http', '$q', 'URL_DOCS', 'Annuaire',
     function($http, $q, URL_DOCS, Annuaire) {
       let Documents = this;
+      let cdt_folder_name = 'Cahier de textes.ct';
 
       Documents.list_files = _.memoize(function(root) {
         let params = {
           cmd: 'open',
           target: ''
         };
-
         if (root == undefined) {
           params.tree = 1;
         } else {
@@ -20,7 +20,16 @@ angular.module('cahierDeTextesClientApp')
         return $http.get(`${URL_DOCS}/api/connector`, { params: params });
       });
 
-      Documents.get_ctxt_folder_hash = _.memoize(function(regroupement) {
+      Documents.mkdir = function(parent_hash, name) {
+        let params = {
+          cmd: 'mkdir',
+          target: parent_hash,
+          name: name
+        };
+        return $http.get(`${URL_DOCS}/api/connector`, { params: params });
+      }
+
+      Documents.get_ctxt_folder_hash = function(regroupement) {
         let structure,
           structure_root,
           regroupements_root,
@@ -54,26 +63,39 @@ angular.module('cahierDeTextesClientApp')
                 return Documents.list_files(regroupement_root.hash);
               }, error_handler)
               .then(function success(response) {
-                cdt_root = _(response.data.files).findWhere({ phash: regroupement_root.hash, name: 'Cahier de textes.ct' });
+                cdt_root = _(response.data.files).findWhere({ phash: regroupement_root.hash, name: cdt_folder_name });
 
-                return cdt_root.hash;
+                if (cdt_root == undefined) {
+                  return Documents.mkdir(regroupement_root.hash, cdt_folder_name)
+                    .then(function success(response) {
+                      return response.data.added[0].hash;
+                    }, error_handler)
+                } else {
+                  return cdt_root.hash;
+                }
               }, error_handler);
           case 'GPL':
             return Documents.list_files()
               .then(function success(response) {
                 regroupement_root = _(response.data.files).findWhere({ phash: null, name: regroupement.name });
 
-                return regroupement_root.hash;
-                //   return Documents.list_files(regroupement_root.hash);
-                // }, error_handler)
-                // .then(function success(response) {
-                //   cdt_root = _(response.data.files).findWhere({ phash: regroupement_root.hash, name: 'Cahier de textes.ct' });
+                return Documents.list_files(regroupement_root.hash);
+              }, error_handler)
+              .then(function success(response) {
+                cdt_root = _(response.data.files).findWhere({ phash: regroupement_root.hash, name: cdt_folder_name });
 
-                //   return cdt_root.hash;
+                if (cdt_root == undefined) {
+                  return Documents.mkdir(regroupement_root.hash, cdt_folder_name)
+                    .then(function success(response) {
+                      return response.data.added[0].hash;
+                    }, error_handler)
+                } else {
+                  return cdt_root.hash;
+                }
               }, error_handler);
           default: console.log('unknown group type');
         }
-      });
+      };
 
       Documents.ajout_au_cahier_de_textes = function(classe, node) {
         return Documents.get_ctxt_folder_hash(classe)
