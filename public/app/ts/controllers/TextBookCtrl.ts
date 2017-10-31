@@ -184,7 +184,7 @@ angular.module('cahierDeTextesClientApp')
       };
       let filter_by_matieres = function(raw_data, subjects_ids, active) {
         return !active ? raw_data : _(raw_data).filter(function(creneau) {
-          return _(subjects_ids).contains(creneau.matiere_id);
+          return _(subjects_ids).contains(creneau.matiere_id) || creneau.matiere_id == '';
         });
       };
 
