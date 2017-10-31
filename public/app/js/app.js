@@ -2173,7 +2173,8 @@ angular.module('cahierDeTextesClientApp')
         };
         var filter_by_matieres = function (raw_data, subjects_ids, active) {
             return !active ? raw_data : _(raw_data).filter(function (creneau) {
-                return _(subjects_ids).contains(creneau.matiere_id);
+                console.log(creneau);
+                return _(subjects_ids).contains(creneau.matiere_id) || creneau.matiere_id == '';
             });
         };
         if ($scope.current_user.profil_actif.type === 'TUT') {
@@ -2625,7 +2626,7 @@ angular.module('cahierDeTextesClientApp')
                     return promise
                         .then(function (groups) {
                         response.data.actual_groups = _(groups.data).select(function (group) {
-                            return group.structure_id === response.data.profil_actif.structure_id;
+                            return (group.structure_id == response.data.profil_actif.structure_id) || (group.type == 'GPL');
                         });
                         return $q.resolve(response.data.actual_groups);
                     });

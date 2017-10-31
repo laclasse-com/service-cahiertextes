@@ -55,7 +55,7 @@ angular.module('cahierDeTextesClientApp')
               return promise
                 .then(function(groups) {
                   response.data.actual_groups = _(groups.data).select(function(group) {
-                    return group.structure_id === response.data.profil_actif.structure_id;
+                    return (group.structure_id == response.data.profil_actif.structure_id) || (group.type == 'GPL');
                   });
 
                   return $q.resolve(response.data.actual_groups);
