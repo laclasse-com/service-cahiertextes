@@ -1560,8 +1560,23 @@ angular.module('cahierDeTextesClientApp')
         ];
         _(ctrl.templates_semainier).findWhere({ label: 'Réinitialiser' }).apply();
         ctrl.fermer = function () {
-            if (ctrl.cours.deleted) {
+            if (ctrl.cours && ctrl.cours.deleted) {
                 Documents.rm(_(ctrl.cours.ressources).pluck('hash'));
+            }
+            var clean_ressources_devoirs = function (devoirs) {
+                if (devoirs) {
+                    _.chain(devoirs)
+                        .where({ deleted: true })
+                        .each(function (devoir) {
+                        Documents.rm(_(devoir.ressources).pluck('hash'));
+                    });
+                }
+            };
+            if (ctrl.cours) {
+                clean_ressources_devoirs(ctrl.cours.devoirs);
+            }
+            if (ctrl.devoirs) {
+                clean_ressources_devoirs(ctrl.devoirs);
             }
             $uibModalInstance.close(ctrl);
         };
@@ -1881,6 +1896,7 @@ angular.module('cahierDeTextesClientApp')
                 });
             };
             ctrl.remove_ressource = function (item, hash) {
+                Documents.rm([hash]);
                 item.ressources = _(item.ressources).reject(function (ressource) {
                     return ressource.hash == hash;
                 });
@@ -2837,11 +2853,16 @@ angular.module('cahierDeTextesClientApp')
             return $http.get(URL_DOCS + "/api/connector", { params: params });
         };
         Documents.rm = function (hashes) {
-            var params = {
-                cmd: 'rm',
-                'targets[]': hashes
-            };
-            return $http.get(URL_DOCS + "/api/connector", { params: params });
+            if (!_(hashes).isEmpty()) {
+                var params = {
+                    cmd: 'rm',
+                    'targets[]': hashes
+                };
+                return $http.get(URL_DOCS + "/api/connector", { params: params });
+            }
+            else {
+                return $q.reject('nothing to do');
+            }
         };
         Documents.get_ctxt_folder_hash = function (regroupement) {
             var structure, structure_root, regroupements_root, regroupement_root, cdt_root;

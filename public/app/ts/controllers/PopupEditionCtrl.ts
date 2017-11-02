@@ -188,8 +188,25 @@ angular.module('cahierDeTextesClientApp')
 
       // helpers
       ctrl.fermer = function() {
-        if (ctrl.cours.deleted) {
+        if (ctrl.cours && ctrl.cours.deleted) {
           Documents.rm(_(ctrl.cours.ressources).pluck('hash'));
+        }
+
+        let clean_ressources_devoirs = function(devoirs) {
+          if (devoirs) {
+            _.chain(devoirs)
+              .where({ deleted: true })
+              .each(function(devoir) {
+                Documents.rm(_(devoir.ressources).pluck('hash'));
+              });
+          }
+        }
+
+        if (ctrl.cours) {
+          clean_ressources_devoirs(ctrl.cours.devoirs);
+        }
+        if (ctrl.devoirs) {
+          clean_ressources_devoirs(ctrl.devoirs);
         }
 
         $uibModalInstance.close(ctrl);
@@ -564,6 +581,7 @@ angular.module('cahierDeTextesClientApp')
         };
 
         ctrl.remove_ressource = function(item, hash) {
+          Documents.rm([hash]);
           item.ressources = _(item.ressources).reject(function(ressource) {
             return ressource.hash == hash;
           });
