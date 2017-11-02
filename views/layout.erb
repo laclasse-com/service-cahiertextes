@@ -84,7 +84,8 @@
                                                 C: <%=CahierDeTextesApp::Utils::Holidays.get( 'C', CahierDeTextesApp::Utils::Holidays.year_rentree )%> } )
               .config( [ '$compileProvider',
                          function( $compileProvider ) {
-                             $compileProvider.debugInfoEnabled( <%= ENV['RACK_ENV'] == 'development' %> );
+                             //$compileProvider.debugInfoEnabled( <%= ENV['RACK_ENV'] == 'development' %> );
+                             $compileProvider.debugInfoEnabled( true );
                          } ] );
       </script>
 
