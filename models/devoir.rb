@@ -7,6 +7,14 @@ class Devoir < Sequel::Model( :devoirs )
   one_to_many :devoir_todo_items
   many_to_one :cours
 
+  def to_deep_hash
+    hash = to_hash
+
+    hash[:ressources] = ressources.map(&:to_hash)
+
+    hash
+  end
+
   def fait_par!( eleve_id )
     add_devoir_todo_item( eleve_id: eleve_id, date_fait: Time.now )
   end

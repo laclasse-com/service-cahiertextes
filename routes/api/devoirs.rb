@@ -24,7 +24,7 @@ module CahierDeTextesApp
 
             query = query.where( Sequel.~( Sequel.qualify( 'devoirs', 'deleted' ) ) ) unless params.key?( 'include_deleted')
 
-            data = query.naked.all
+            data = query.naked.all.map(&:to_deep_hash)
 
             if params.key?('uid') && params.key?('check_done') && params['check_done'] == 'true'
               data.each do |devoir|
@@ -42,7 +42,7 @@ module CahierDeTextesApp
 
             halt( 404, 'Devoir inconnu' ) if devoir.nil? || ( devoir.deleted && devoir.date_modification < UNDELETE_TIME_WINDOW.minutes.ago )
 
-            hd = devoir.to_hash
+            hd = devoir.to_deep_hash
             if params['uid']
               dti = DevoirTodoItem[ devoir_id: devoir.id, eleve_id: user['id'] ]
               hd[:date_fait] = dti.date_fait unless dti.nil?
@@ -90,7 +90,7 @@ module CahierDeTextesApp
 
             devoir.modifie( body )
 
-            json( devoir.to_hash )
+            json( devoir.to_deep_hash )
           end
 
           app.put '/api/devoirs/:id/?' do
@@ -105,7 +105,7 @@ module CahierDeTextesApp
 
             devoir.modifie( body )
 
-            json( devoir.to_hash )
+            json( devoir.to_deep_hash )
           end
 
           app.put '/api/devoirs/:id/fait/?' do
@@ -115,7 +115,7 @@ module CahierDeTextesApp
 
             devoir.toggle_fait( user )
 
-            hd = devoir.to_hash
+            hd = devoir.to_deep_hash
             dti = DevoirTodoItem[ devoir_id: devoir.id, eleve_id: user['id'] ]
             hd[:date_fait] = dti.date_fait unless dti.nil?
             hd[:fait] = !dti.nil?
@@ -130,7 +130,7 @@ module CahierDeTextesApp
 
             devoir.toggle_deleted
 
-            json( devoir.to_hash )
+            json( devoir.to_deep_hash )
           end
 
           app.put '/api/devoirs/:id/copie/cours/:cours_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date_due/:date_due' do
@@ -144,7 +144,7 @@ module CahierDeTextesApp
 
             devoir.copie( params['cours_id'], params['creneau_emploi_du_temps_id'], params['date_due'] )
 
-            json( devoir.to_hash )
+            json( devoir.to_deep_hash )
           end
         end
       end
