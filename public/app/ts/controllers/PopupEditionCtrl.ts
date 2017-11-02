@@ -188,6 +188,10 @@ angular.module('cahierDeTextesClientApp')
 
       // helpers
       ctrl.fermer = function() {
+        if (ctrl.cours.deleted) {
+          Documents.rm(_(ctrl.cours.ressources).pluck('hash'));
+        }
+
         $uibModalInstance.close(ctrl);
       };
 

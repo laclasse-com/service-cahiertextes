@@ -1560,6 +1560,9 @@ angular.module('cahierDeTextesClientApp')
         ];
         _(ctrl.templates_semainier).findWhere({ label: 'Réinitialiser' }).apply();
         ctrl.fermer = function () {
+            if (ctrl.cours.deleted) {
+                Documents.rm(_(ctrl.cours.ressources).pluck('hash'));
+            }
             $uibModalInstance.close(ctrl);
         };
         ctrl.effacer_creneau = function () {
@@ -2833,6 +2836,13 @@ angular.module('cahierDeTextesClientApp')
             };
             return $http.get(URL_DOCS + "/api/connector", { params: params });
         };
+        Documents.rm = function (hashes) {
+            var params = {
+                cmd: 'rm',
+                'targets[]': hashes
+            };
+            return $http.get(URL_DOCS + "/api/connector", { params: params });
+        };
         Documents.get_ctxt_folder_hash = function (regroupement) {
             var structure, structure_root, regroupements_root, regroupement_root, cdt_root;
             var error_handler = function error(response) { return $q.reject(response); };
@@ -2876,11 +2886,9 @@ angular.module('cahierDeTextesClientApp')
                     }, error_handler)
                         .then(function success(response) {
                         cdt_root = _(response.data.files).findWhere({ phash: regroupement_root.hash, name: cdt_folder_name });
-                        console.log(cdt_root);
                         if (cdt_root == undefined) {
                             return Documents.mkdir(regroupement_root.hash, cdt_folder_name)
                                 .then(function success(response) {
-                                console.log(response);
                                 return response.data.added[0].hash;
                             }, error_handler);
                         }
