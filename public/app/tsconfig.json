@@ -15,7 +15,7 @@
         "ts/components/*.ts",
         "ts/controllers/*.ts",
         "ts/directives/*.ts",
-        "ts/services/API/*.ts",
+        "ts/resources/*.ts",
         "ts/services/*.ts",
     ],
 }
