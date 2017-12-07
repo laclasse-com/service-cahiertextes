@@ -5,12 +5,12 @@ angular.module('cahierDeTextesClientApp')
   {
     bindings: { sp: '<' },
     template: '<h5>Séquence pédagogique du {{$ctrl.sp.date_cours | amDateFormat:\'dddd D MMMM\'}}</h5>' +
-      '<div class="alert alert-default" ta-bind ng:bind-html="$ctrl.sp.contenu"></div>' +
-      '<ul ng:if="sp.ressources.length > 0">' +
-      '  <li ng:repeat="ressource in sp.ressources">' +
-      '    <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>' +
-      '  </li>' +
-      '</ul>'
+    '<div class="alert alert-default" ta-bind ng:model="$ctrl.sp.contenu"></div>' +
+    '<ul ng:if="sp.ressources.length > 0">' +
+    '  <li ng:repeat="ressource in sp.ressources">' +
+    '    <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>' +
+    '  </li>' +
+    '</ul>'
     ,
     controller: ['$sce', 'URL_DOCS',
       function($sce, URL_DOCS) {
