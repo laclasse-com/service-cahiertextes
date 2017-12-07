@@ -357,7 +357,7 @@ angular.module('cahierDeTextesClientApp')
         '    <h5><i class="picto" ng:style="{\'background-image\':\'url(\' + $ctrl.app_path + \'/app/node_modules/laclasse-common-client/images/picto_matiere.svg)\'}"></i> {{$ctrl.devoir.matiere.name}} </h5>' +
         '    <h6><i class="picto" ng:style="{\'background-image\':\'url(\' + $ctrl.app_path + \'/app/node_modules/laclasse-common-client/images/picto_devoir.svg)\'}"></i> {{$ctrl.devoir.type_devoir.description}} : </h6>' +
         '    <span ng:if="$ctrl.display_time_estimation && $ctrl.devoir.temps_estime > 0"><i class="picto" ng:style="{\'background-image\':\'url(\' + $ctrl.app_path + \'/app/node_modules/laclasse-common-client/images/picto_temps.svg)\'}"></i> Temps estimé : <em>{{$ctrl.devoir.temps_estime * 5}} minutes</em></span>' +
-        '    <div class="alert alert-default" ng:bind-html="$ctrl.devoir.contenu"></div>' +
+        '    <div class="alert alert-default" ta-bind ng:bind-html="$ctrl.devoir.contenu"></div>' +
         '    <div class="row col-md-12 ressources">' +
         '      <div class="attached-document" ng:repeat="ressource in $ctrl.devoir.ressources">' +
         '        <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>' +
@@ -385,7 +385,7 @@ angular.module('cahierDeTextesClientApp')
     .component('displaySequencePedagogique', {
     bindings: { sp: '<' },
     template: '<h5>Séquence pédagogique du {{$ctrl.sp.date_cours | amDateFormat:\'dddd D MMMM\'}}</h5>' +
-        '<div class="alert alert-default" ng:bind-html="$ctrl.sp.contenu"></div>' +
+        '<div class="alert alert-default" ta-bind ng:bind-html="$ctrl.sp.contenu"></div>' +
         '<ul ng:if="sp.ressources.length > 0">' +
         '  <li ng:repeat="ressource in sp.ressources">' +
         '    <a target="_blank" href="{{ressource.url}}">{{ressource.name}}</a>' +
