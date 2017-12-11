@@ -24,7 +24,7 @@ module CahierDeTextesApp
 
             query = query.where( Sequel.~( Sequel.qualify( 'devoirs', 'deleted' ) ) ) unless params.key?( 'include_deleted')
 
-            data = query.naked.all.map(&:to_deep_hash)
+            data = query.all.map(&:to_deep_hash)
 
             if params.key?('uid') && params.key?('check_done') && params['check_done'] == 'true'
               data.each do |devoir|
