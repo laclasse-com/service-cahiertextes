@@ -34,14 +34,14 @@ module ProNote
     encrypted_edt_export_file = Nokogiri::XML( encrypted_xml )
 
     crypted_wrapped_data = Base64.decode64( encrypted_edt_export_file.search( 'PARTENAIRE' )
-                                                                     .find do |part|
-                                              part.attributes[ 'NOM' ].value == PRONOTE[:nom_integrateur]
-                                            end
+                                                                     .find { |part| part.attributes['NOM'].value == PRONOTE[:nom_integrateur] }
                                                                      .text )
 
     decrypted_wrapped_data = decrypt_wrapped_data( crypted_wrapped_data, PRONOTE[:cle_integrateur] )
-    aes_secret_key = decrypted_wrapped_data[ 0..16 ]
-    aes_iv = decrypted_wrapped_data[ 16..32 ]
+    p decrypted_wrapped_data
+    p decrypted_wrapped_data.length
+    aes_secret_key = decrypted_wrapped_data[0..16]
+    aes_iv = decrypted_wrapped_data[16..32]
 
     crypted_payload = Base64.decode64( encrypted_edt_export_file.search( 'CONTENU' ).first.text )
 

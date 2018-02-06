@@ -4,7 +4,11 @@
         "declaration": false,
         "removeComments": true,
         "sourceMap": false,
-        "outFile": "js/app.js"
+        "outFile": "js/app.js",
+        "lib": [
+            "dom",
+            "es2016"
+        ],
     },
     "include": [
         "ts/app.ts",

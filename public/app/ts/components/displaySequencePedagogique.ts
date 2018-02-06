@@ -17,7 +17,7 @@ angular.module('cahierDeTextesClientApp')
         let ctrl = this;
 
         ctrl.$onInit = function() {
-          if (typeof ctrl.sp.contenu == String) {
+          if (ctrl.sp.contenu instanceof String) {
             ctrl.sp.contenu = $sce.trustAsHtml(ctrl.sp.contenu);
           }
           _(ctrl.sp.ressources).each(function(ressource) {

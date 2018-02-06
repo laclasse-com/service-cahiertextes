@@ -397,7 +397,7 @@ angular.module('cahierDeTextesClientApp')
 
             cours.devoirs = _.chain(cours.devoirs)
               .select(function(devoir) {
-                return _.chain(devoirs).findWhere({ id: devoir.id }).isUndefined().value();
+                return _(devoirs).findWhere({ id: devoir.id }) == undefined;
               })
               .map(function(devoir) {
                 return Devoirs.get({ id: devoir.id });
@@ -421,7 +421,7 @@ angular.module('cahierDeTextesClientApp')
 
             $q.all(ctrl.devoirs).then(function() {
               ctrl.cours.devoirs = _(ctrl.cours.devoirs).filter(function(devoir) {
-                return _.chain(ctrl.devoirs).findWhere({ id: devoir.id }).isUndefined().value();
+                return _(ctrl.devoirs).findWhere({ id: devoir.id }) == undefined;
               });
             });
 

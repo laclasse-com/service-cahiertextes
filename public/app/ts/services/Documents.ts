@@ -10,7 +10,8 @@ angular.module('cahierDeTextesClientApp')
       Documents.list_files = _.memoize(function(root) {
         let params = {
           cmd: 'open',
-          target: ''
+          target: '',
+          tree: null
         };
         if (root == undefined) {
           params.tree = 1;

@@ -139,7 +139,6 @@ DEPENDENCIES
   pry
   puma
   rack
-  rake
   reek
   rest-client
   rspec
@@ -153,4 +152,4 @@ DEPENDENCIES
   xml-simple
 
 BUNDLED WITH
-   1.14.3
+   1.16.0

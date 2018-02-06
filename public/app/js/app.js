@@ -395,7 +395,7 @@ angular.module('cahierDeTextesClientApp')
         function ($sce, URL_DOCS) {
             var ctrl = this;
             ctrl.$onInit = function () {
-                if (typeof ctrl.sp.contenu == String) {
+                if (ctrl.sp.contenu instanceof String) {
                     ctrl.sp.contenu = $sce.trustAsHtml(ctrl.sp.contenu);
                 }
                 _(ctrl.sp.ressources).each(function (ressource) {
@@ -1128,6 +1128,7 @@ angular.module('cahierDeTextesClientApp')
                         .value();
                 };
                 var regroupements = preprocess_cahiers_de_textes($scope.pronote.classes);
+                console.log($scope.pronote.groupes_eleves);
                 regroupements.push(preprocess_cahiers_de_textes($scope.pronote.groupes_eleves));
                 regroupements = _(regroupements).flatten();
                 return $http.post(APP_PATH + "/api/cahiers_de_textes/bulk", { cahiers_de_textes: regroupements });
@@ -1154,7 +1155,11 @@ angular.module('cahierDeTextesClientApp')
                         jour_de_la_semaine: parseInt(creneau.Jour),
                         heure_debut: heure_debut.toISOString(),
                         heure_fin: heure_debut.add(parseInt(creneau.NombrePlaces) * parseInt($scope.pronote.GrilleHoraire[0].DureePlace), 'minutes').toISOString(),
-                        matiere_id: $scope.pronote.matieres[creneau.Matiere.Ident].laclasse.id
+                        matiere_id: $scope.pronote.matieres[creneau.Matiere.Ident].laclasse.id,
+                        salle_id: null,
+                        semainier_salle: null,
+                        regroupement_id: null,
+                        semainier_regroupement: null
                     };
                     if (_(creneau).has('Salle')) {
                         pre_creneau.salle_id = _($scope.report.salles).find({ identifiant: creneau.Salle.Ident }).id;
@@ -1739,7 +1744,7 @@ angular.module('cahierDeTextesClientApp')
                     }
                     cours.devoirs = _.chain(cours.devoirs)
                         .select(function (devoir) {
-                        return _.chain(devoirs).findWhere({ id: devoir.id }).isUndefined().value();
+                        return _(devoirs).findWhere({ id: devoir.id }) == undefined;
                     })
                         .map(function (devoir) {
                         return Devoirs.get({ id: devoir.id });
@@ -1760,7 +1765,7 @@ angular.module('cahierDeTextesClientApp')
                     });
                     $q.all(ctrl.devoirs).then(function () {
                         ctrl.cours.devoirs = _(ctrl.cours.devoirs).filter(function (devoir) {
-                            return _.chain(ctrl.devoirs).findWhere({ id: devoir.id }).isUndefined().value();
+                            return _(ctrl.devoirs).findWhere({ id: devoir.id }) == undefined;
                         });
                     });
                     ctrl.cours.$promise.then(function () {
@@ -2764,7 +2769,8 @@ angular.module('cahierDeTextesClientApp')
         Documents.list_files = _.memoize(function (root) {
             var params = {
                 cmd: 'open',
-                target: ''
+                target: '',
+                tree: null
             };
             if (root == undefined) {
                 params.tree = 1;
@@ -3152,13 +3158,11 @@ angular.module('cahierDeTextesClientApp')
                         .value();
                 });
                 response.data.profil_actif = _(response.data.profils).findWhere({ active: true });
-                response.data.profil_actif.admin = !_.chain(response.data.profils)
+                response.data.profil_actif.admin = _(response.data.profils)
                     .findWhere({
                     structure_id: response.data.profil_actif.structure_id,
                     type: 'ADM'
-                })
-                    .isUndefined()
-                    .value();
+                }) != undefined;
                 if (response.data.enfants.length > 0) {
                     var promises = response.data.enfants.map(function (child) {
                         return Annuaire.get_user(child.child_id)
