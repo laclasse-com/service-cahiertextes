@@ -116,7 +116,7 @@
     </uib-tab>
 
     <uib-tab index="2" select="step = 2" disable="step < 1">
-        <uib-tab-heading><h1>3. Lancer l'import.</h1> </uib-tab-heading>
+        <uib-tab-heading><h1>3. Lancer<br> l'import.</h1> </uib-tab-heading>
 
         <div class="panel panel-default col-md-3">
             <div class="panel-heading">explications</div>
@@ -317,7 +317,6 @@
                                             <span ng:if="creneau.ready"> <i class="glyphicon glyphicon-ok" title="Aucun problème"></i> </span>
 
                                             <span ng:if="!creneau.readiness.matiere"> <i class="glyphicon glyphicon-book" title="Matière inconnue"></i> </span>
-                                            <span ng:if="!creneau.readiness.enseignant"> <i class="glyphicon glyphicon-user" title="Enseignant inconnu"></i> </span>
                                             <span ng:if="!creneau.readiness.classe && !creneau.readiness.groupe_eleve"> <i class="glyphicon glyphicon-education" title="Classe/Groupe inconnu"></i> </span>
                                         </td>
                                     </tr>
@@ -327,6 +326,6 @@
                     </uib-accordion>
                 </div>
             </div>
-            </div>
+        </div>
     </uib-tab>
 </uib-tabset>
