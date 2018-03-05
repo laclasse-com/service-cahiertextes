@@ -2,6 +2,9 @@
 
 require 'rubygems'
 require 'bundler'
+require 'yaml'
+
+Bundler.require( :default, ENV['RACK_ENV'].to_sym )     # require tout les gems définis dans Gemfile
 
 require_relative './config/init'
 
@@ -11,8 +14,6 @@ DB = Sequel.mysql2( DB_CONFIG[:name],
 
 Sequel.extension( :migration )
 Sequel::Model.plugin( :json_serializer )
-
-Bundler.require( :default, ENV['RACK_ENV'].to_sym )     # require tout les gems définis dans Gemfile
 
 require_relative './lib/utils/holidays'
 
