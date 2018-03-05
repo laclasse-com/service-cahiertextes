@@ -1,0 +1,7 @@
+adapter: mysql2
+host: localhost
+name: CahierDeTextes
+database: CahierDeTextes
+username: root
+password:
+charset: utf8
