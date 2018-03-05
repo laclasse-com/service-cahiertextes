@@ -16,13 +16,13 @@ before_script:
   - cp config/options.rb.sample config/options.rb
   - mysql -e 'create database CahierDeTextes;'
   - bundle install
-  - bundle exec rake db:migrate
+  - make db-migrate
 
 script:
   - "bundle exec rspec ./spec/api ./spec/models ./spec/lib"
   - "bundle exec rubocop -D"
 #  - "bundle exec reek --sort-by smelliness *.rb api lib migrations models routes views tasks spec"
-  - "bundle exec rake preprocess_assets:production"
+  - "make"
 
 gemfile:
   - Gemfile
