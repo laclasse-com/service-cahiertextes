@@ -11,6 +11,7 @@ describe CreneauEmploiDuTemps do
                                             fin: Time.parse( '15:00' ),
                                             jour_de_la_semaine: @jour_de_la_semaine,
                                             matiere_id: '',
+                                            regroupement_id: 0,
                                             etablissement_id: @etablissement.id )
     @salle = Salle.create( etablissement_id: @etablissement.id,
                            identifiant: 'test' )

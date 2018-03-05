@@ -9,7 +9,6 @@ require 'rspec/matchers' # required by equivalent-xml custom matcher `be_equival
 require 'equivalent-xml'
 
 require_relative '../config/options'
-require_relative '../config/database'
 
 require_relative '../app'
 

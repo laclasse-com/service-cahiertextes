@@ -43,6 +43,7 @@ describe CahierDeTextes do
       cedt.add_cour( sp )
 
       d = Devoir.create( creneau_emploi_du_temps_id: cedt.id,
+                         enseignant_id: "enseignant_#{i + 1}",
                          cours_id: sp.id,
                          type_devoir_id: TypeDevoir.first.id,
                          date_due: Date.parse( "#{Time.now.year}-09-01" ) + i.day + 1.week,
