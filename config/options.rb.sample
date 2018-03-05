@@ -1,10 +1,8 @@
-# -*- encoding: utf-8 -*-
-
 # Fenêtre de temps en minutes durant laquelle les cours et devoirs effacés restent accessibles par les APIs get
 UNDELETE_TIME_WINDOW = 5
 
 # development ou production
-ENV[ 'RACK_ENV' ] = 'development'
+ENV['RACK_ENV'] = 'development'
 
 # niveau de log de l'application
 LOG_LEVEL = ''.freeze # Logger::INFO
