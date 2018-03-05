@@ -1,17 +1,15 @@
-# -*- coding: utf-8 -*-
-
 require 'spec_helper'
 
 describe CahierDeTextes do
   before :each do
     TableCleaner.new( DB, [] ).clean
 
-    [ [ 'DS', 'Devoir surveillé' ],
-      [ 'DM', 'Devoir à la maison' ],
-      [ 'Leçon', 'Leçon à apprendre' ],
-      [ 'Exposé', 'Exposé à préparer' ],
-      [ 'Recherche', 'Recherche à faire' ],
-      [ 'Travail', 'Travail à faire' ] ].each do |type_devoir|
+    [['DS', 'Devoir surveillé'],
+     ['DM', 'Devoir à la maison'],
+     ['Leçon', 'Leçon à apprendre'],
+     ['Exposé', 'Exposé à préparer'],
+     ['Recherche', 'Recherche à faire'],
+     ['Travail', 'Travail à faire']].each do |type_devoir|
       TypeDevoir.create( label: type_devoir.first,
                          description: type_devoir.last )
     end

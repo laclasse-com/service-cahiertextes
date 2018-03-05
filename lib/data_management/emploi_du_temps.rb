@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 module DataManagement
   module EmploiDuTemps
     module_function
@@ -17,7 +15,7 @@ module DataManagement
 
       query.all
            .map do |creneau|
-        ( debut .. fin ).select { |day| day.wday == creneau.jour_de_la_semaine && creneau.semainier[ day.cweek ] == 1 }
+        ( debut .. fin ).select { |day| day.wday == creneau.jour_de_la_semaine && creneau.semainier[day.cweek] == 1 }
                         .map do |day|
           { regroupement_id: creneau.regroupement_id,
             creneau_emploi_du_temps_id: creneau.id,

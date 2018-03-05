@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 require_relative '../models/models'
 
 require_relative './data_management/accessors'

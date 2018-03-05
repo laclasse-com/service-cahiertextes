@@ -1,5 +1,3 @@
-# coding: utf-8
-
 require 'nokogiri'
 # modified from http://stackoverflow.com/questions/1230741/convert-a-nokogiri-document-to-a-ruby-hash/1231297#1231297
 
@@ -18,8 +16,8 @@ class Hash
       result_hash = {}
 
       attributes = {}
-      node.attributes.keys.each do |key|
-        attributes[ node.attributes[ key ].name.to_sym ] = node.attributes[ key ].value
+      node.attributes.each_key do |key|
+        attributes[ node.attributes[key].name.to_sym ] = node.attributes[key].value
       end
 
       return attributes if node.children.empty?
@@ -31,13 +29,13 @@ class Hash
           unless child.next_sibling || child.previous_sibling
             return result if attributes.empty?
 
-            result_hash[ child.name.to_sym ] = result
+            result_hash[child.name.to_sym] = result
           end
         else
-          result_hash[ child.name.to_sym ] = [] unless result_hash[ child.name.to_sym ]
-          result_hash[ child.name.to_sym ] = [ result_hash[ child.name.to_sym ] ] unless result_hash[ child.name.to_sym ].is_a?( Object::Array )
+          result_hash[child.name.to_sym] = [] unless result_hash[child.name.to_sym]
+          result_hash[ child.name.to_sym ] = [result_hash[child.name.to_sym]] unless result_hash[child.name.to_sym].is_a?( Object::Array )
 
-          result_hash[ child.name.to_sym ] << result
+          result_hash[child.name.to_sym] << result
         end
       end
 

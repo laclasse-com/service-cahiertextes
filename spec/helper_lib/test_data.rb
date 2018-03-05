@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 def load_test_data( dbdump = 'spec/fixtures/db_dump.sql' )
   system "mysql -u #{DB_CONFIG[:user]} #{DB_CONFIG[:password].empty? ? '' : '-p' + DB_CONFIG[:password]} #{DB_CONFIG[:name]} < #{dbdump}"
 end
@@ -18,7 +16,7 @@ def generate_test_data
         STDERR.putc '.'
 
         next unless rand > 0.25
-        creneau_emploi_du_temps = CreneauEmploiDuTemps.where(matiere_id: CreneauEmploiDuTemps[ creneau.creneau_emploi_du_temps_id ].matiere_id)
+        creneau_emploi_du_temps = CreneauEmploiDuTemps.where(matiere_id: CreneauEmploiDuTemps[creneau.creneau_emploi_du_temps_id].matiere_id)
                                                       .where(jour_de_la_semaine: Date.tomorrow.wday)
                                                       .join(:creneaux_emploi_du_temps_enseignants, creneau_emploi_du_temps_id: :id)
                                                       .where(enseignant_id: cours.enseignant_id)

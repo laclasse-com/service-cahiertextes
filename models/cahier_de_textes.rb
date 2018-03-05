@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 require_relative '../lib/utils/date_rentree'
 
 class CahierDeTextes < Sequel::Model( :cahiers_de_textes )

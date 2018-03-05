@@ -1,5 +1,3 @@
-# coding: utf-8
-
 Sequel.migration do
   change do
     create_table!(:etablissements) do
@@ -103,12 +101,12 @@ Sequel.migration do
       String :label, null: false
       String :description
     end
-    [ [ 'DS', 'Devoir surveillé' ],
-      [ 'DM', 'Devoir à la maison' ],
-      [ 'Leçon', 'Leçon à apprendre' ],
-      [ 'Exposé', 'Exposé à préparer' ],
-      [ 'Recherche', 'Recherche à faire' ],
-      [ 'Travail', 'Travail à faire' ] ].each do |type_devoir|
+    [['DS', 'Devoir surveillé'],
+     ['DM', 'Devoir à la maison'],
+     ['Leçon', 'Leçon à apprendre'],
+     ['Exposé', 'Exposé à préparer'],
+     ['Recherche', 'Recherche à faire'],
+     ['Travail', 'Travail à faire']].each do |type_devoir|
       self[:types_devoir].insert( %i[label description], type_devoir )
     end
 

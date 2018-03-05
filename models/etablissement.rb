@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 require_relative '../lib/utils/date_rentree'
 
 class Etablissement < Sequel::Model( :etablissements )
@@ -16,7 +14,7 @@ class Etablissement < Sequel::Model( :etablissements )
 
     etab['groups'].map do |group|
       cdt = CahierDeTextes[ regroupement_id: group['id'] ]
-      cdt = CahierDeTextes.create( date_creation: Time.now, regroupement_id: group[ 'id' ] ) if cdt.nil?
+      cdt = CahierDeTextes.create( date_creation: Time.now, regroupement_id: group['id'] ) if cdt.nil?
       cdt.statistiques
     end
   end
@@ -53,7 +51,7 @@ class Etablissement < Sequel::Model( :etablissements )
                         .where( deleted: false )
                         .where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" ) )
                         .all
-        creneau = CreneauEmploiDuTemps[ cours.creneau_emploi_du_temps_id ]
+        creneau = CreneauEmploiDuTemps[cours.creneau_emploi_du_temps_id]
 
         { mois: cours.date_cours.month,
           regroupement_id: creneau.regroupement_id,

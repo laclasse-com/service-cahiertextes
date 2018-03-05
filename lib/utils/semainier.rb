@@ -1,7 +1,3 @@
-# encoding: utf-8
-
-# -*- coding: utf-8 -*-
-
 module CahierDeTextesApp
   module Utils
     module Semainier

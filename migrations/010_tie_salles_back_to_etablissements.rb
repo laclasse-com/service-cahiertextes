@@ -1,5 +1,3 @@
-# coding: utf-8
-
 Sequel.migration do
   up do
     alter_table( :salles ) do

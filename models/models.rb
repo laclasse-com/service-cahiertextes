@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 require 'sequel'
 require 'sequel/extensions/migration'
 

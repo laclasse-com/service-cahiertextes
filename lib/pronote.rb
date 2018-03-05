@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 require 'nokogiri'
 require 'base64'
 require 'openssl'

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 class Devoir < Sequel::Model( :devoirs )
   many_to_many :ressources
   many_to_one :creneau_emploi_du_temps

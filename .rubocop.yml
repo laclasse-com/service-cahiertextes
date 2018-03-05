@@ -21,7 +21,7 @@ Style/AsciiIdentifiers:
 Style/CommandLiteral:
   Enabled: false
 
-Style/VariableName:
+Naming/VariableName:
   Enabled: false
 
 Layout/SpaceInsideBrackets:
@@ -67,6 +67,9 @@ Metrics/PerceivedComplexity:
   Enabled: false
 
 Metrics/ModuleLength:
+  Enabled: false
+
+Style/DateTime:
   Enabled: false
 
 inherit_from: .rubocop_todo.yml

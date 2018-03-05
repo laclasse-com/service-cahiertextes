@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 require_relative '../../lib/pronote'
 require_relative '../../lib/utils/xml_to_hash'
 require_relative '../../models/import'

@@ -1,7 +1,3 @@
-# encoding: utf-8
-
-# -*- coding: utf-8 -*-
-
 require 'open-uri'
 require 'icalendar'
 
@@ -27,15 +23,15 @@ module CahierDeTextesApp
           # puts "e.description : #{e.dtstart.to_date.cweek} ; #{e.dtend.nil? ? '-' : e.dtend.to_date.cweek}"
 
           start_week_offset = ( e.description.downcase.include?( 'rentrée' ) ? ( e.dtstart.to_date.cwday == 1 ? -1 : 0 ) : 1 ) # rubocop:disable Style/NestedTernaryOperator
-          [ e.dtstart.to_date.cweek + start_week_offset,
-            e.dtend.nil? ? nil : e.dtend.to_date.cweek ]
+          [e.dtstart.to_date.cweek + start_week_offset,
+           e.dtend.nil? ? nil : e.dtend.to_date.cweek]
         end.flatten.compact
 
         # add summer holidays' weeks
         holidays_weeks.concat( ( holidays_weeks.last .. holidays_weeks.first ).to_a )
 
         holidays_weeks.sort.uniq
-      rescue => e
+      rescue StandardError => e
         puts e.message
         puts e.backtrace
 

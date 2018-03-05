@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 module Uglify
   module_function
 

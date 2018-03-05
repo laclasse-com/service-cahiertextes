@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # Example usage:
 # cleaner = TableCleaner.new DB, [:spatial_ref_sys]
 # cleaner.clean

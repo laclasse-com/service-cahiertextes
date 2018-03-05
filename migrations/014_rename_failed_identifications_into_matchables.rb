@@ -1,5 +1,3 @@
-# coding: utf-8
-
 Sequel.migration do
   change do
     DB[:failed_identifications].delete

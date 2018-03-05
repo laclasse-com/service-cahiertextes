@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
-
 require_relative '../lib/utils/holidays'
 
 module SemainierMixin
   def present_pour_la_semaine?( semaine )
-    semainier[ semaine ] == 1
+    semainier[semaine] == 1
   end
 end
 
@@ -61,7 +59,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
 
   # attach cours and devoirs to this creneau and destroy other_creneau
   def merge( creneau_id )
-    other_creneau = CreneauEmploiDuTemps[ creneau_id ]
+    other_creneau = CreneauEmploiDuTemps[creneau_id]
     return false if other_creneau.nil?
 
     other_creneau.cours.each do |cours|
@@ -116,7 +114,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
       ( date_debut .. date_fin )
         .select { |day| day.wday == c.jour_de_la_semaine }
         .map do |jour|
-        next unless c.semainier[ jour.cweek ] == 1
+        next unless c.semainier[jour.cweek] == 1
         { id: c.id,
           creneau_emploi_du_temps_id: c.id,
           start: Time.new( jour.year, jour.month, jour.mday, c.debut.hour, c.debut.min ).iso8601,
@@ -136,14 +134,14 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
   end
 
   def update_salle( salle_id, semainier_salle )
-    creneau_salle = CreneauEmploiDuTempsSalle[ creneau_emploi_du_temps_id: id, salle_id: salle_id ]
+    creneau_salle = CreneauEmploiDuTempsSalle[creneau_emploi_du_temps_id: id, salle_id: salle_id]
     if creneau_salle.nil?
-      salle = Salle[ salle_id ]
+      salle = Salle[salle_id]
       return nil if salle.nil?
 
       add_salle( salle )
 
-      creneau_salle = CreneauEmploiDuTempsSalle[ creneau_emploi_du_temps_id: id, salle_id: salle_id ]
+      creneau_salle = CreneauEmploiDuTempsSalle[creneau_emploi_du_temps_id: id, salle_id: salle_id]
     end
 
     creneau_salle.update( semainier: semainier_salle ) unless semainier_salle.nil?

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 module DataManagement
   module Accessors
     module_function
