@@ -38,8 +38,7 @@ module ProNote
                                                                      .text )
 
     decrypted_wrapped_data = decrypt_wrapped_data( crypted_wrapped_data, PRONOTE[:cle_integrateur] )
-    p decrypted_wrapped_data
-    p decrypted_wrapped_data.length
+
     aes_secret_key = decrypted_wrapped_data[0..16]
     aes_iv = decrypted_wrapped_data[16..32]
 
