@@ -1,5 +1,7 @@
 # coding: utf-8
 
+require 'json'
+
 Sequel.migration do
   up do
     create_table!(:users_parameters) do
