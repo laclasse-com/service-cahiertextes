@@ -43,7 +43,6 @@
     "google-closure-compiler-js": "^20170910.0.0",
     "jquery": "^3.2.1",
     "laclasse-common-client": "git+https://github.com/laclasse-com/laclasse-common-client.git",
-    "less": "^2.7.3",
     "moment-timezone": "^0.5.13",
     "ng-color-picker": "git+https://github.com/cycojesus/ng-color-picker.git",
     "sizzle": "^2.3.3",
