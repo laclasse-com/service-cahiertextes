@@ -15,16 +15,13 @@ Style/UnneededInterpolation:
 Layout/SpaceInsidePercentLiteralDelimiters:
   Enabled: false
 
-Style/AsciiIdentifiers:
+Naming/AsciiIdentifiers:
   Enabled: false
 
 Style/CommandLiteral:
   Enabled: false
 
 Naming/VariableName:
-  Enabled: false
-
-Layout/SpaceInsideBrackets:
   Enabled: false
 
 Layout/SpaceInsideHashLiteralBraces:
@@ -57,7 +54,7 @@ Metrics/LineLength:
 Metrics/MethodLength:
   Max: 200
 
-Lint/BlockAlignment:
+Layout/BlockAlignment:
   Enabled: false
 
 Metrics/CyclomaticComplexity:

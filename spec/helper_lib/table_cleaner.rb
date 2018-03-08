@@ -2,8 +2,8 @@
 # cleaner = TableCleaner.new DB, [:spatial_ref_sys]
 # cleaner.clean
 class TableCleaner
-  def initialize( db, excluded_tables )
-    @db = db
+  def initialize( database, excluded_tables )
+    @db = database
     @excluded_tables = excluded_tables
   end
 

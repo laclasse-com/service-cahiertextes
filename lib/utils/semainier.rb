@@ -43,8 +43,8 @@ module CahierDeTextesApp
         (1..53).to_a.map { |i| holidays_weeks.include?( i ) ? '0' : '1' }.join.reverse.to_i( 2 )
       end
 
-      def activate_semaine( semainier, n )
-        semainier | 2**n
+      def activate_semaine( semainier, week_number )
+        semainier | 2**week_number
       end
     end
   end

@@ -9,9 +9,9 @@ module CahierDeTextesApp
       def get( zone, year_rentree )
         raise( ArgumentError, 'Valid zones are ["A", "B", "C"]' ) unless %w[A B C].include?( zone )
 
-        uri = "http://www.education.gouv.fr/download.php?file=http://cache.media.education.gouv.fr/ics/Calendrier_Scolaire_Zone_#{zone}.ics"
+        uri = URI.parse( "http://www.education.gouv.fr/download.php?file=http://cache.media.education.gouv.fr/ics/Calendrier_Scolaire_Zone_#{zone}.ics" )
 
-        ics = Icalendar::Calendar.parse( open( uri ) ).first
+        ics = Icalendar::Calendar.parse( uri.open ).first
         description_rentrée_enseignants = ics.events.first.description
         this_year = false
 
