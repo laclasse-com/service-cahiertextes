@@ -31,9 +31,13 @@
                 <span class="glyphicon glyphicon-cog"></span> Préférences
             </button>
             <ul uib-dropdown-menu class="uib-dropdown-menu user-preferences" role="menu">
+                <li ng:if="current_user.admin"><a class="btn btn-warning"
+                                                  ui:sref="import">
+                    <span class="glyphicon glyphicon-import"></span> Import Pronote
+                </a></li>
+                <li ng:if="current_user.admin" class="divider"></li>
                 <li><label><checkbox ng:model="current_user.parametrage_cahier_de_textes.affichage_week_ends"
                                      ng:change="save_and_reload()"></checkbox> Afficher les week-ends</label></li>
-                <li class="divider"></li>
                 <li><label><checkbox ng:model="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir"
                                      ng:change="save_and_reload()"></checkbox> Afficher les types de devoirs</label></li
             </ul>

@@ -1282,81 +1282,71 @@ angular.module('cahierDeTextesClientApp')
         CurrentUser.get()
             .then(function (response) {
             var user = response.data;
-            switch (user.profil_actif.type) {
-                case 'DIR':
-                    ctrl.tabs = [{
-                            heading: 'Validation des saisies par enseignant',
-                            uisref: 'enseignants',
-                            css_class: 'glyphicon glyphicon-user',
-                            active: true
-                        },
-                        {
-                            heading: 'Emplois du Temps',
-                            uisref: 'emploi_du_temps',
-                            css_class: 'glyphicon glyphicon-calendar',
-                            active: false
-                        },
-                        {
-                            heading: 'Import Pronote',
-                            uisref: 'import',
-                            css_class: 'glyphicon glyphicon-import',
-                            active: false
-                        }];
-                    break;
-                case 'ENS':
-                    ctrl.tabs = [{
-                            heading: 'Cahier de textes',
-                            uisref: 'emploi_du_temps',
-                            css_class: 'glyphicon glyphicon-calendar',
-                            active: true
-                        },
-                        {
-                            heading: 'Statistiques',
-                            uisref: 'stats',
-                            css_class: 'glyphicon glyphicon-stats',
-                            active: false
-                        }];
-                    break;
-                case 'TUT':
-                case 'ELV':
-                    ctrl.tabs = [{
-                            heading: 'Emploi du temps',
-                            uisref: 'emploi_du_temps',
-                            css_class: 'glyphicon glyphicon-calendar',
-                            active: true
-                        },
-                        {
-                            heading: 'Liste des devoirs',
-                            uisref: 'devoirs',
-                            css_class: 'glyphicon glyphicon-list',
-                            active: false
-                        }];
-                    break;
-                case 'ADM':
-                    ctrl.tabs = [{
-                            heading: 'Emplois du Temps',
-                            uisref: 'emploi_du_temps',
-                            css_class: 'glyphicon glyphicon-calendar',
-                            active: true
-                        },
-                        {
-                            heading: 'Import Pronote',
-                            uisref: 'import',
-                            css_class: 'glyphicon glyphicon-import',
-                            active: false
-                        }];
-                    break;
-                case 'EVS':
-                    ctrl.tabs = [{
-                            heading: 'Emplois du Temps',
-                            uisref: 'emploi_du_temps',
-                            css_class: 'glyphicon glyphicon-calendar',
-                            active: true
-                        }];
-                    break;
-                default:
-                    ctrl.tabs = [];
-            }
+            ctrl.tabs = _.chain(user.profiles)
+                .pluck('type')
+                .uniq()
+                .map(function (type) {
+                switch (type) {
+                    case 'DIR':
+                        return [{
+                                heading: 'Validation des saisies par enseignant',
+                                uisref: 'enseignants',
+                                css_class: 'glyphicon glyphicon-user',
+                                active: true
+                            },
+                            {
+                                heading: 'Emplois du Temps',
+                                uisref: 'emploi_du_temps',
+                                css_class: 'glyphicon glyphicon-calendar',
+                                active: false
+                            }];
+                    case 'ENS':
+                        return [{
+                                heading: 'Cahier de textes',
+                                uisref: 'emploi_du_temps',
+                                css_class: 'glyphicon glyphicon-calendar',
+                                active: true
+                            },
+                            {
+                                heading: 'Statistiques',
+                                uisref: 'stats',
+                                css_class: 'glyphicon glyphicon-stats',
+                                active: false
+                            }];
+                    case 'TUT':
+                    case 'ELV':
+                        return [{
+                                heading: 'Emploi du temps',
+                                uisref: 'emploi_du_temps',
+                                css_class: 'glyphicon glyphicon-calendar',
+                                active: true
+                            },
+                            {
+                                heading: 'Liste des devoirs',
+                                uisref: 'devoirs',
+                                css_class: 'glyphicon glyphicon-list',
+                                active: false
+                            }];
+                    case 'ADM':
+                        return [{
+                                heading: 'Emplois du Temps',
+                                uisref: 'emploi_du_temps',
+                                css_class: 'glyphicon glyphicon-calendar',
+                                active: true
+                            }];
+                    case 'EVS':
+                        return [{
+                                heading: 'Emplois du Temps',
+                                uisref: 'emploi_du_temps',
+                                css_class: 'glyphicon glyphicon-calendar',
+                                active: true
+                            }];
+                }
+            })
+                .flatten()
+                .compact()
+                .uniq(function (tab) { return tab.uisref; })
+                .value();
             _(ctrl.tabs).each(function (tab) {
                 tab.active = tab.uisref == $state.current.name;
             });
@@ -3163,6 +3153,7 @@ angular.module('cahierDeTextesClientApp')
                     structure_id: response.data.profil_actif.structure_id,
                     type: 'ADM'
                 }) != undefined;
+                response.data.admin = _.chain(response.data.profils).pluck('type').contains('ADM').value();
                 if (response.data.enfants.length > 0) {
                     var promises = response.data.enfants.map(function (child) {
                         return Annuaire.get_user(child.child_id)
