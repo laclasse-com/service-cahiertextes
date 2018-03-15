@@ -202,7 +202,7 @@ angular.module('cahierDeTextesClientApp')
 
                 toastr.info('traitement des données des regroupements');
                 // 3.3 Classes et Groupes
-                return API.query_statistiques_regroupements(current_user.profil_actif.structure_id);
+                return API.query_statistiques_regroupements($scope.pronote.UAI);
               },
               handle_error
             )

@@ -27,8 +27,6 @@ angular.module('cahierDeTextesClientApp')
                   type: 'ADM'
                 }) != undefined;
 
-              response.data.admin = _.chain(response.data.profils).pluck('type').contains('ADM').value();
-
               if (response.data.enfants.length > 0) {
                 let promises = response.data.enfants.map(function(child) {
                   return Annuaire.get_user(child.child_id)
@@ -74,16 +72,33 @@ angular.module('cahierDeTextesClientApp')
               };
 
               // Voir quel est le profil
-              response.data.is = function(type) {
-                return this.profil_actif.type == type;
+              response.data.is_x_in_structure = _.memoize(function(types, structure_id) {
+                return _.chain(response.data.profiles)
+                  .select((profil) => structure_id == undefined || profil.structure_id == structure_id)
+                  .pluck('type')
+                  .intersection(types)
+                  .value()
+                  .length > 0;
+              });
+
+              response.data.is = function(types) {
+                return response.data.is_x_in_structure(types, undefined);
               };
 
-              return response;
-            });
-        });
+              response.data.is_x_for_group = function(types, group_id) {
+                let profiles = response.data.groups.filter((group) => group.group_id == group_id)
 
-        this.update_parameters = function(parametres) {
-          return $http.put(`${APP_PATH}/api/users/current/parametres`,
-            { parameters: JSON.stringify(parametres) });
-        };
+                return profiles.length > 0 ||
+                  _.chain(profiles).pluck('type').intersection(types).value().length > 0
+              }
+            };
+
+          return response;
+        });
+      });
+
+this.update_parameters = function(parametres) {
+  return $http.put(`${APP_PATH}/api/users/current/parametres`,
+    { parameters: JSON.stringify(parametres) });
+};
       }])

@@ -476,7 +476,7 @@ angular.module('cahierDeTextesClientApp')
                     'date_due<': ctrl.to_date,
                     'groups_ids[]': ctrl.current_user.profil_actif.type === 'TUT' ? _(ctrl.current_user.enfant_actif.enfant.groups).pluck('group_id') : _(ctrl.current_user.groups).pluck('group_id'),
                     'uid': ctrl.current_user.profil_actif.type === 'TUT' ? ctrl.current_user.enfant_actif.child_id : ctrl.current_user.id,
-                    'check_done': ctrl.current_user.profil_actif.type === 'ELV'
+                    'check_done': ctrl.current_user.is(['ELV'])
                 })
                     .$promise.then(function (response) {
                     ctrl.matieres = {};
@@ -949,7 +949,7 @@ angular.module('cahierDeTextesClientApp')
                     regroupement.displayed_label = regroupement.name;
                 });
                 toastr.info('traitement des données des regroupements');
-                return API.query_statistiques_regroupements(current_user.profil_actif.structure_id);
+                return API.query_statistiques_regroupements($scope.pronote.UAI);
             }, handle_error)
                 .then(function success(response) {
                 _($scope.pronote.Classes[0].Classe)
@@ -2979,22 +2979,15 @@ angular.module('cahierDeTextesClientApp')
     function ($state, CurrentUser) {
         this.doorman = function (allowed_types) {
             CurrentUser.get().then(function (response) {
-                if (_(allowed_types).size() === 0
-                    || (_(allowed_types).indexOf(response.data.profil_actif.type) === -1
-                        && !(response.data.profil_actif.admin))) {
+                if (allowed_types.length == 0
+                    || (_.chain(allowed_types).intersection(_(response.data.profiles).pluck('type')).isEmpty().value()
+                        && !(response.data.is(['ADM'])))) {
                     var stateName = '404';
-                    switch (response.data.profil_actif.type) {
-                        case 'DIR':
-                            stateName = 'enseignants';
-                            break;
-                        case 'ADM':
-                        case 'EVS':
-                        case 'ENS':
-                        case 'DOC':
-                        case 'TUT':
-                        case 'ELV':
-                            stateName = 'emploi_du_temps';
-                            break;
+                    if (response.data.is(['DIR'])) {
+                        stateName = 'enseignants';
+                    }
+                    else {
+                        stateName = 'emploi_du_temps';
                     }
                     $state.go(stateName, $state.params, { reload: true, inherit: true, notify: true });
                 }
@@ -3153,7 +3146,6 @@ angular.module('cahierDeTextesClientApp')
                     structure_id: response.data.profil_actif.structure_id,
                     type: 'ADM'
                 }) != undefined;
-                response.data.admin = _.chain(response.data.profils).pluck('type').contains('ADM').value();
                 if (response.data.enfants.length > 0) {
                     var promises = response.data.enfants.map(function (child) {
                         return Annuaire.get_user(child.child_id)
@@ -3192,8 +3184,16 @@ angular.module('cahierDeTextesClientApp')
                         return $q.resolve(response.data.actual_subjects);
                     });
                 };
-                response.data.is = function (type) {
-                    return this.profil_actif.type == type;
+                response.data.is_in_structure = _.memoize(function (types, structure_id) {
+                    return _.chain(response.data.profiles)
+                        .select(function (profil) { return structure_id == undefined || profil.structure_id == structure_id; })
+                        .pluck('type')
+                        .intersection(types)
+                        .value()
+                        .length > 0;
+                });
+                response.data.is = function (types) {
+                    return response.data.is_in_structure(types, undefined);
                 };
                 return response;
             });

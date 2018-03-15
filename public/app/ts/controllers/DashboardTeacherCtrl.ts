@@ -9,7 +9,7 @@ angular.module('cahierDeTextesClientApp')
         $scope.mois = _($locale.DATETIME_FORMATS.MONTH).toArray();
         $scope.scope = $scope;
         $scope.moisCourant = null;
-        $scope.montre_valides = current_user.profil_actif.type !== 'DIR';
+        $scope.montre_valides = !current_user.is(['DIR']);
         $scope.nb_saisies_visables = 0;
         $scope.current_user = current_user;
         $scope.enseignant_id = _($stateParams).has('enseignant_id') ? $stateParams.enseignant_id : $scope.current_user.id;
