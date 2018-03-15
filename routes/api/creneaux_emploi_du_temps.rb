@@ -7,7 +7,7 @@ module CahierDeTextesApp
             query = CreneauEmploiDuTemps
 
             query = query.where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" ) ) unless params.key?( 'no_year_restriction')
-            query = query.where( Sequel.lit( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{Date.parse( params['date<'] )}')" ) ) if params.key?('date>') && !params.key?( 'include_deleted')
+            query = query.where( Sequel.lit( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{Date.parse( params['date<'] )}')" ) ) if params.key?('date<') && !params.key?( 'include_deleted')
             query = query.where( regroupement_id: params['groups_ids'] ) if params.key?( 'groups_ids' )
             query = query.where( matiere_id: params['subjects_ids'] ) if params.key?( 'subjects_ids' )
             query = query.where( etablissement_id: params['structure_id'] ) if params.key?( 'structure_id' )
@@ -15,9 +15,12 @@ module CahierDeTextesApp
 
             data = query.naked.all
 
-            #   if params.key?('date<') && params.key?('date>')
-            #     data = data.select
-            #   end
+            if params.key?('date<') && params.key?('date>')
+              data = data.select do |creneau|
+                # ( !creneau.deleted || ( from > creneau.date_suppression && creneau.date_suppression > to ) ) &&
+                ( (Date.parse(params['date>']) .. Date.parse(params['date<'])).reduce(true) { |memo, day| memo && (day.wday == creneau.jour_de_la_semaine && creneau.semainier[day.cweek] == 1) } )
+              end
+            end
 
             json( data )
           end
