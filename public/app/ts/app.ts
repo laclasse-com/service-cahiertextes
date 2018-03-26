@@ -1,6 +1,7 @@
 'use strict';
 
-angular.module( 'cahierDeTextesClientApp', [ 'angularMoment',
+angular.module('cahierDeTextesClientApp', [
+  'angularMoment',
   'chieffancypants.loadingBar',
   'ngAnimate',
   'ngColorPicker',
@@ -10,11 +11,12 @@ angular.module( 'cahierDeTextesClientApp', [ 'angularMoment',
   'ngTouch',
   'nvd3',
   'textAngular',
-  'uiSwitch',
   'toastr',
   'ui.bootstrap',
   'ui.bootstrap.dropdown',
   'ui.calendar',
   'ui.checkbox',
   'ui.router',
-  'ui.select' ] );
+  'ui.select',
+  'uiSwitch',
+]);
