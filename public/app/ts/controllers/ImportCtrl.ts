@@ -154,12 +154,8 @@ angular.module('cahierDeTextesClientApp')
         };
 
         // ACTIONS
-        let load_data = function(fichier) {
-          $scope.pronote = false;
-          $scope.matcheable_data = [];
-          let handle_error = function(response) {
-            return $q.reject(response);
-          };
+        let decrypt_file = (fichier) => {
+          $scope.pronote = [];
 
           toastr.info('Déchiffrage du fichier');
           return fileUpload.uploadFileToUrl(fichier, `${APP_PATH}/api/import/pronote/decrypt`)
@@ -167,14 +163,68 @@ angular.module('cahierDeTextesClientApp')
               function success(response) {
                 // 1. Récupérer le fichier Pronote décrypté
                 $scope.pronote = response.data;
-                $scope.pronote.GrilleHoraire[0].DureePlace = parseInt($scope.pronote.GrilleHoraire[0].DureePlace);
+                return $q.resolve($scope.pronote);
+              });
+        };
 
-                toastr.info('récupération des données de l\'établissement');
-                // 2. Récupérer toutes les infos de l'établissement et toutes les matières
-                return Etablissements.get({ uai: $scope.pronote.UAI }).$promise;
-              },
-              handle_error
-            )
+        let select_structure = () => {
+          if ($scope.pronote.Etablissements != undefined) {
+            $scope.etab_uai = $scope.pronote.Etablissements[0].Etablissement[0].Numero;
+
+            if ($scope.pronote.Etablissements[0].Etablissement.length > 1) {
+              return swal({
+                title: 'Choisissez un établissement',
+                input: 'select',
+                inputOptions: _($scope.pronote.Etablissements[0].Etablissement.map((etab) => [etab.Numero, etab.Nom])).object(),
+                inputPlaceholder: 'Choisissez un établissement',
+                showCancelButton: false
+              }).then(function(result) {
+                $scope.etab_uai = result.value;
+                return $q.resolve($scope.etab_uai);
+              })
+            } else {
+              return $q.resolve($scope.etab_uai);
+            }
+          } else {
+            return $q.resolve($scope.pronote.UAI);
+          }
+        };
+
+        let filter_structure = () => {
+          let data = $scope.pronote;
+
+          if ($scope.pronote.Etablissements != undefined && $scope.pronote.Etablissements[0].Etablissement.length > 1) {
+            toastr.info('Filtrage des données de l\'établissement sélectionné');
+            let uai = $scope.etab_uai;
+            let etab_id = data.Etablissements[0].Etablissement.filter((etab) => etab.Numero == uai)[0].Ident;
+
+            data.Classes[0].Classe = data.Classes[0].Classe.filter((classe) => classe.Etablissement.map((e) => e.Ident).includes(etab_id));
+            let classes_ids = data.Classes[0].Classe.map((classe) => classe.Ident);
+            let parties_de_classes_ids = _.flatten(data.Classes[0].Classe.map((classe) => classe.PartieDeClasse.map((pdc) => pdc.Ident)));
+
+            data.Groupes[0].Groupe = data.Groupes[0].Groupe.filter((groupe) => _(groupe.PartieDeClasse.map((pdc) => pdc.Ident)).difference(parties_de_classes_ids).length == 0);
+            let groupes_ids = data.Groupes[0].Groupe.map((groupe) => groupe.Ident);
+
+            data.Cours[0].Cours = data.Cours[0].Cours.filter((creneau) => (creneau.Classe == undefined || classes_ids.includes(creneau.Classe.Ident)) && (creneau.Groupe == undefined || classes_ids.includes(creneau.Groupe.Ident)));
+
+            $scope.pronote = data;
+          }
+
+          return $q.resolve(data);
+        };
+
+        let load_data = () => {
+          $scope.matcheable_data = [];
+
+          let handle_error = function(response) {
+            return $q.reject(response);
+          };
+
+          $scope.pronote.GrilleHoraire[0].DureePlace = parseInt($scope.pronote.GrilleHoraire[0].DureePlace);
+
+          toastr.info('récupération des données de l\'établissement');
+          // 2. Récupérer toutes les infos de l'établissement et toutes les matières
+          return Etablissements.get({ uai: $scope.pronote.UAI }).$promise
             .then(
               function success(response) {
                 $scope.etablissement_summary = response;
@@ -382,6 +432,38 @@ angular.module('cahierDeTextesClientApp')
             );
         };
 
+        $scope.process_load = function(fichier) {
+          swal({
+            title: "Déchiffrage du fichier...",
+            text: "traitement en cours",
+            type: "info",
+            showLoaderOnConfirm: true,
+            onOpen: function() {
+              swal.clickConfirm();
+            },
+            preConfirm: function() {
+              return new Promise(function(resolve) {
+                decrypt_file(fichier)
+                  .then(select_structure)
+                  .then(filter_structure)
+                  .then(load_data)
+                  .then(() => { swal.closeModal(); },
+                    (response) => {
+                      swal.closeModal();
+                      swal({
+                        title: 'Erreur :(',
+                        text: response.data.error,
+                        type: 'error'
+                      });
+
+                    }
+                  );
+              });
+            },
+            allowOutsideClick: false
+          });
+        };
+
         let import_data = function() {
           let started_at = moment();
           let import_id = null;
@@ -432,7 +514,7 @@ angular.module('cahierDeTextesClientApp')
                     .value();
                 };
                 let regroupements = preprocess_cahiers_de_textes($scope.pronote.classes);
-                console.log($scope.pronote.groupes_eleves)
+
                 regroupements.push(preprocess_cahiers_de_textes($scope.pronote.groupes_eleves));
                 regroupements = _(regroupements).flatten();
 
@@ -544,38 +626,6 @@ angular.module('cahierDeTextesClientApp')
             });
         };
 
-        $scope.process_load = function(fichier) {
-          swal({
-            title: "Chargement des données...",
-            text: "traitement en cours",
-            type: "info",
-            showLoaderOnConfirm: true,
-            onOpen: function() {
-              swal.clickConfirm();
-            },
-            preConfirm: function() {
-              return new Promise(function(resolve) {
-                load_data(fichier).then(
-                  function success(response) {
-                    swal.closeModal();
-                  },
-                  function error(response) {
-                    console.log(response);
-                    swal.closeModal();
-                    swal({
-                      title: 'Erreur :(',
-                      text: response.data.error,
-                      type: 'error'
-                    });
-
-                  }
-                );
-              });
-            },
-            allowOutsideClick: false
-          });
-        };
-
         $scope.validate_matches = function() {
           $scope.step++;
         };
@@ -603,7 +653,6 @@ angular.module('cahierDeTextesClientApp')
                     });
                   },
                   function error(response) {
-                    console.log(response);
                     swal.closeModal();
                     swal({
                       title: 'Erreur :(',

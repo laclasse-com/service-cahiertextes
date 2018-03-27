@@ -34,17 +34,22 @@ module CahierDeTextesApp
             halt( 500, 'Le fichier n\'est pas un fichier XML valide.' ) if %r{^(application|text)/xml;.*}.match( FileMagic.new(FileMagic::MAGIC_MIME).file( params[:file][:tempfile].path ) ).nil?
 
             json( File.open( params[:file][:tempfile] ) do |xml|
-                    uai = ProNote.extract_from_xml( xml, 'UAI' )
+                    nxml = Nokogiri::XML( xml )
 
-                    halt( 401, '401 Unauthorized' ) unless user_is_profile_in_structure?( 'ADM', uai )
+                    crypted = nxml.search( 'CLES' ).empty?
 
-                    hash = Hash.from_xml( ProNote.decrypt_xml(  File.open( params[:file][:tempfile] ) ) )[:ExportEmploiDuTemps]
+                    if crypted
+                      uai = nxml.search( 'UAI' ).children.text
 
-                    %w[ Eleves Etiquettes MotifsAbsence Absences Professeurs Personnels Materiels ].each { |key| hash.delete key.to_sym }
+                      halt( 401, '401 Unauthorized' ) unless user_is_profile_in_structure?( 'ADM', uai )
 
-                    File.open( params[:file][:tempfile] ) do |xmlagain|
-                      hash[:DateHeureImport] = ProNote.extract_from_xml( xmlagain, 'DATEHEURE' )
-                      hash[:Hash] = ProNote.extract_from_xml( xmlagain, 'VERIFICATION' )
+                      hash = Hash.from_xml( ProNote.decrypt_xml( File.open( params[:file][:tempfile] ) ) )[:ExportEmploiDuTemps]
+                    else
+                      hash = Hash.from_xml( File.open( params[:file][:tempfile] ) )[:ExportEmploiDuTemps]
+                    end
+
+                    %w[ Eleves Etiquettes MotifsAbsence Absences Professeurs Personnels Materiels Nomenclatures Responsables ].each do |key|
+                      hash.delete( key.to_sym )
                     end
 
                     hash

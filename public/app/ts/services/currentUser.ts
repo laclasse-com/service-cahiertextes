@@ -89,16 +89,15 @@ angular.module('cahierDeTextesClientApp')
                 let profiles = response.data.groups.filter((group) => group.group_id == group_id)
 
                 return profiles.length > 0 ||
-                  _.chain(profiles).pluck('type').intersection(types).value().length > 0
-              }
-            };
+                  _.chain(profiles).pluck('type').intersection(types).value().length > 0;
+              };
 
-          return response;
+              return response;
+            });
         });
-      });
 
-this.update_parameters = function(parametres) {
-  return $http.put(`${APP_PATH}/api/users/current/parametres`,
-    { parameters: JSON.stringify(parametres) });
-};
+        this.update_parameters = function(parametres) {
+          return $http.put(`${APP_PATH}/api/users/current/parametres`,
+            { parameters: JSON.stringify(parametres) });
+        };
       }])
