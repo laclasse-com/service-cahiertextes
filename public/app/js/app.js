@@ -1462,7 +1462,6 @@ angular.module('cahierDeTextesClientApp')
         ctrl.mode_edition_creneau = ctrl.creneau.en_creation;
         ctrl.creneau.regroupement_id = parseInt(ctrl.creneau.regroupement_id);
         ctrl.creneau.previous_regroupement_id = ctrl.creneau.regroupement_id;
-        ctrl.creneau.vierge = _(creneau.vierge).isUndefined();
         ctrl.selected_regroupement = _(ctrl.creneau.regroupement_id).isUndefined() ? _(ctrl.classes).first() : _(ctrl.classes).findWhere({ id: parseInt(ctrl.creneau.regroupement_id) });
         ctrl.selected_matiere = _(ctrl.creneau.matiere_id).isEmpty() ? _(ctrl.matieres).first() : _(ctrl.matieres).findWhere({ id: ctrl.creneau.matiere_id });
         if (ctrl.creneau.en_creation) {

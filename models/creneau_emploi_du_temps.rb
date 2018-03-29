@@ -22,11 +22,8 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
   many_to_one :import, class: :Import, key: :import_id
 
   def toggle_deleted( date_suppression )
-    if deleted
-      update( deleted: false, date_suppression: nil )
-    else
-      update( deleted: true, date_suppression: date_suppression )
-    end
+    update( deleted: !deleted, date_suppression: deleted ? nil : date_suppression )
+
     save
   end
 
@@ -37,10 +34,10 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
     h
   end
 
-  def to_deep_hash( _date_debut, _date_fin, _expand )
+  def detailed( _date_debut, _date_fin, details )
     h = to_hash
-    h[:salles] = salles
-    h[:vierge] = cours.count.zero? && devoirs.count.zero?
+
+    details.each { |detail| h[ detail.to_sym ] = send( detail ) if self.class.method_defined?( detail ) }
 
     h
   end
@@ -125,8 +122,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
           jour_de_la_semaine: c.jour_de_la_semaine,
           matiere_id: c.matiere_id,
           regroupement_id: c.regroupement_id,
-          semainier: c.semainier,
-          vierge: cours.count.zero? && devoirs.count.zero? }
+          semainier: c.semainier }
       end
     end
          .flatten

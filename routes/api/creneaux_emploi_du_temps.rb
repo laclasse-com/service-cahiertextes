@@ -6,7 +6,7 @@ module CahierDeTextesApp
           app.get '/api/creneaux_emploi_du_temps/?' do
             query = CreneauEmploiDuTemps
 
-            query = query.where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" ) ) unless params.key?( 'no_year_restriction')
+            query = query.where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" ) ) unless params.key?( 'no_year_restriction' )
             query = query.where( Sequel.lit( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{Date.parse( params['date<'] )}')" ) ) if params.key?('date<') && !params.key?( 'include_deleted')
             query = query.where( regroupement_id: params['groups_ids'] ) if params.key?( 'groups_ids' )
             query = query.where( matiere_id: params['subjects_ids'] ) if params.key?( 'subjects_ids' )
@@ -30,9 +30,7 @@ module CahierDeTextesApp
 
             halt( 404, 'Créneau inconnu' ) if creneau.nil?
 
-            expand = !params['expand'].nil? && params['expand'] && !params['debut'].nil? && !params['fin'].nil?
-
-            json( creneau.to_deep_hash( params['debut'], params['fin'], expand ) )
+            json( creneau.detailed( params['debut'], params['fin'], %w[salles cours devoirs] ) )
           end
 
           app.get '/api/creneaux_emploi_du_temps/:id/similaires/?' do
