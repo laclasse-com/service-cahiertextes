@@ -36,7 +36,7 @@ module CahierDeTextesApp
             json( File.open( params[:file][:tempfile] ) do |xml|
                     nxml = Nokogiri::XML( xml )
 
-                    crypted = nxml.search( 'CLES' ).empty?
+                    crypted = !nxml.search( 'CLES' ).empty?
 
                     if crypted
                       uai = nxml.search( 'UAI' ).children.text
