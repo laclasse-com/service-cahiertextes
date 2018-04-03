@@ -205,7 +205,7 @@ angular.module('cahierDeTextesClientApp')
             data.Groupes[0].Groupe = data.Groupes[0].Groupe.filter((groupe) => _(groupe.PartieDeClasse.map((pdc) => pdc.Ident)).difference(parties_de_classes_ids).length == 0);
             let groupes_ids = data.Groupes[0].Groupe.map((groupe) => groupe.Ident);
 
-            data.Cours[0].Cours = data.Cours[0].Cours.filter((creneau) => (creneau.Classe == undefined || classes_ids.includes(creneau.Classe.Ident)) && (creneau.Groupe == undefined || classes_ids.includes(creneau.Groupe.Ident)));
+            data.Cours[0].Cours = data.Cours[0].Cours.filter((creneau) => (creneau.Classe != undefined || creneau.Groupe != undefined || creneau.PartieDeClasse != undefined) && ((creneau.Classe != undefined && _.intersection(classes_ids, _(creneau.Classe).pluck("Ident")).length > 0) || (creneau.Groupe != undefined && _.intersection(groupes_ids, _(creneau.Groupe).pluck("Ident")).length > 0) || (creneau.PartieDeClasse != undefined && _.intersection(parties_de_classes_ids, _(creneau.PartieDeClasse).pluck("Ident")).length > 0)));
 
             $scope.pronote = data;
           }
