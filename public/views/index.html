@@ -11,10 +11,11 @@
         </a>
 
         <select class="pull-right choix-enfant"
-                ng:if="current_user.enfants.length > 0"
-                ng:options="enfant as enfant.enfant.firstname+' '+enfant.enfant.lastname for enfant in current_user.enfants track by enfant.enfant.id"
+                ng:if="current_user.children.length > 0"
+                ng:options="child as child.user.firstname+' '+child.user.lastname for child in current_user.children track by child.user.id"
                 ng:model="current_user.enfant_actif"
-                ng:change="reload()"></select>
+                ng:change="reload()">
+        </select>
     </div>
 </header>
 

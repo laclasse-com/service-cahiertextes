@@ -5,7 +5,7 @@ angular.module('cahierDeTextesClientApp')
         this.get = _.memoize(function() {
           return $http.get(`${APP_PATH}/api/users/current`)
             .then(function(response) {
-              _(response.data.profils).each(function(profil) {
+              _(response.data.profiles).each(function(profil) {
                 // Liste des regroupements liées au profil
                 profil.regroupements = _.chain(response.data.regroupements)
                   .filter(function(classe) { return classe.etablissement_code == profil.structure_id; })
@@ -20,22 +20,19 @@ angular.module('cahierDeTextesClientApp')
                   .reject(function(item) { return _.isUndefined(item.id); })
                   .value();
               });
-              response.data.profil_actif = _(response.data.profils).findWhere({ active: true });
-              response.data.profil_actif.admin = _(response.data.profils)
+              response.data.profil_actif = _(response.data.profiles).findWhere({ active: true });
+              response.data.profil_actif.admin = _(response.data.profiles)
                 .findWhere({
                   structure_id: response.data.profil_actif.structure_id,
                   type: 'ADM'
                 }) != undefined;
 
-              if (response.data.enfants.length > 0) {
-                let promises = response.data.enfants.map(function(child) {
+              if (response.data.children.length > 0) {
+                response.data.children.map(function(child) {
                   return Annuaire.get_user(child.child_id)
                     .then(function(user) {
-                      child.enfant = user.data;
+                      child.user = user.data;
                     });
-                });
-                $q.all(promises).then(function() {
-                  response.data.enfant_actif = response.data.enfants[0];
                 });
               }
 

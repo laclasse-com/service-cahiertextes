@@ -54,18 +54,6 @@ module LaClasse
 
         utilisateur[ 'parametrage_cahier_de_textes' ] = JSON.parse( parametres[:parameters] )
 
-        all_matieres = JSON.parse( RestClient::Request.execute( method: :get,
-                                                                url: "#{URL_ENT}/api/subjects",
-                                                                user: ANNUAIRE[:app_id],
-                                                                password: ANNUAIRE[:api_key] ) )
-
-        utilisateur['enfants'] = utilisateur['children']
-        utilisateur[ 'profils' ] = utilisateur['profiles'].map do |profil|
-          profil['matieres'] = all_matieres
-
-          profil
-        end
-
         utilisateur
       end
     end

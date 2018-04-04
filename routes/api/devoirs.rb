@@ -4,9 +4,8 @@ module CahierDeTextesApp
       module Devoirs
         def self.registered( app )
           app.get '/api/devoirs/?' do
-            halt( 401, '401 Unauthorized' ) unless !params.key?('uid') || ( ( user['id'] == params['uid'] ) ||
-                                                                            ( user_active_profile['type'] == 'TUT' &&
-                                                                              !user['children'].find { |child| child['child_id'] == params['uid'] }.nil? ) )
+            halt( 401, '401 Unauthorized' ) unless !params.key?('uid') || ( user['id'] == params['uid'] ||
+                                                                            !user['children'].find { |child| child['child_id'] == params['uid'] }.nil? )
 
             query = Devoir
 
