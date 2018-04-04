@@ -71,6 +71,14 @@ angular.module('cahierDeTextesClientApp')
                   });
               };
 
+              response.data.get_structures_ids = _.memoize((desired_types) => {
+                return _.chain(response.data.profiles)
+                  .select((profil) => desired_types == undefined || desired_types.includes(profil.type))
+                  .pluck("structure_id")
+                  .uniq()
+                  .value();
+              });
+
               // Voir quel est le profil
               response.data.is_x_in_structure = _.memoize(function(types, structure_id) {
                 return _.chain(response.data.profiles)

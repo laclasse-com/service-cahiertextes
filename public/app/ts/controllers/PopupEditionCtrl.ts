@@ -389,7 +389,7 @@ angular.module('cahierDeTextesClientApp')
             // ctrl.cours = new Cours( cours );
 
             ctrl.cours.$promise.then(function(cours) {
-              ctrl.cours.editable = _(ctrl.cours.date_validation).isNull() && _(['ENS', 'DOC']).includes(ctrl.current_user.profil_actif.type) && ctrl.cours.enseignant_id === ctrl.current_user.id;
+              ctrl.cours.editable = _(ctrl.cours.date_validation).isNull() && ctrl.current_user.is(['ENS', 'DOC']) && ctrl.cours.enseignant_id === ctrl.current_user.id;
               if (!ctrl.cours.editable) {
                 ctrl.cours.contenu = $sce.trustAsHtml(ctrl.cours.contenu);
               }
@@ -729,8 +729,8 @@ angular.module('cahierDeTextesClientApp')
           }
 
           ctrl.creneau.mine = ctrl.creneau.en_creation || _.chain(ctrl.current_user.profil_actif.matieres).pluck('id').include(ctrl.creneau.matiere_id).value();
-          ctrl.creneau.can_add_homework = _(['ENS', 'DOC']).includes(ctrl.current_user.profil_actif.type) && _.chain(ctrl.current_user.profil_actif.matieres).pluck('id').include(ctrl.creneau.matiere_id).value();
-          ctrl.creneau.etranger = !ctrl.current_user.profil_actif.admin && !ctrl.creneau.en_creation && !ctrl.creneau.mine;
+          ctrl.creneau.can_add_homework = ctrl.current_user.is(['ENS', 'DOC']) && _.chain(ctrl.current_user.profil_actif.matieres).pluck('id').include(ctrl.creneau.matiere_id).value();
+          ctrl.creneau.etranger = !ctrl.current_user.is(['ADM']) && !ctrl.creneau.en_creation && !ctrl.creneau.mine;
 
           if (_(cours).isNull()) {
             if (!ctrl.creneau.etranger) {

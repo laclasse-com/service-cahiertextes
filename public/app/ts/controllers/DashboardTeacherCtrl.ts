@@ -91,7 +91,7 @@ angular.module('cahierDeTextesClientApp')
         };
 
         $scope.valide = function(saisie) {
-          if (current_user.profil_actif.type === 'DIR') {
+          if (current_user.is(['DIR'])) {
             let disable_toastr = _(saisie).has('disable_toastr');
             saisie.cours.$valide().then(function(response) {
               saisie.valide = !_(response.date_validation).isNull();
@@ -152,7 +152,7 @@ angular.module('cahierDeTextesClientApp')
                 $scope.enseignant.liste_regroupements = _.chain(response)
                   .select(function(group) {
                     return group.type !== 'GPL'
-                      && group.structure_id === $scope.current_user.profil_actif.structure_id;
+                      && $scope.current_user.get_structures_ids().includes(group.structure_id);
                   })
                   .uniq(function(group) { return group.id; })
                   .compact()

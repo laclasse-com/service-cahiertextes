@@ -583,7 +583,7 @@ angular.module('cahierDeTextesClientApp')
             $scope.graphiques.populate($scope.raw_data);
         };
         $scope.valide = function (saisie) {
-            if (current_user.profil_actif.type === 'DIR') {
+            if (current_user.is(['DIR'])) {
                 var disable_toastr_1 = _(saisie).has('disable_toastr');
                 saisie.cours.$valide().then(function (response) {
                     saisie.valide = !_(response.date_validation).isNull();
@@ -634,7 +634,7 @@ angular.module('cahierDeTextesClientApp')
                 $scope.enseignant.liste_regroupements = _.chain(response)
                     .select(function (group) {
                     return group.type !== 'GPL'
-                        && group.structure_id === $scope.current_user.profil_actif.structure_id;
+                        && $scope.current_user.get_structures_ids().includes(group.structure_id);
                 })
                     .uniq(function (group) { return group.id; })
                     .compact()
@@ -960,8 +960,8 @@ angular.module('cahierDeTextesClientApp')
                 var classes_ids_1 = data.Classes[0].Classe.map(function (classe) { return classe.Ident; });
                 var parties_de_classes_ids_1 = _.flatten(data.Classes[0].Classe.map(function (classe) { return classe.PartieDeClasse.map(function (pdc) { return pdc.Ident; }); }));
                 data.Groupes[0].Groupe = data.Groupes[0].Groupe.filter(function (groupe) { return _(groupe.PartieDeClasse.map(function (pdc) { return pdc.Ident; })).difference(parties_de_classes_ids_1).length == 0; });
-                var groupes_ids = data.Groupes[0].Groupe.map(function (groupe) { return groupe.Ident; });
-                data.Cours[0].Cours = data.Cours[0].Cours.filter(function (creneau) { return (creneau.Classe == undefined || classes_ids_1.includes(creneau.Classe.Ident)) && (creneau.Groupe == undefined || classes_ids_1.includes(creneau.Groupe.Ident)); });
+                var groupes_ids_1 = data.Groupes[0].Groupe.map(function (groupe) { return groupe.Ident; });
+                data.Cours[0].Cours = data.Cours[0].Cours.filter(function (creneau) { return (creneau.Classe != undefined || creneau.Groupe != undefined || creneau.PartieDeClasse != undefined) && ((creneau.Classe != undefined && _.intersection(classes_ids_1, _(creneau.Classe).pluck("Ident")).length > 0) || (creneau.Groupe != undefined && _.intersection(groupes_ids_1, _(creneau.Groupe).pluck("Ident")).length > 0) || (creneau.PartieDeClasse != undefined && _.intersection(parties_de_classes_ids_1, _(creneau.PartieDeClasse).pluck("Ident")).length > 0)); });
                 $scope.pronote = data;
             }
             return $q.resolve(data);
@@ -1770,7 +1770,7 @@ angular.module('cahierDeTextesClientApp')
             init_cours_existant = function (cours) {
                 ctrl.cours = Cours.get({ id: cours.id });
                 ctrl.cours.$promise.then(function (cours) {
-                    ctrl.cours.editable = _(ctrl.cours.date_validation).isNull() && _(['ENS', 'DOC']).includes(ctrl.current_user.profil_actif.type) && ctrl.cours.enseignant_id === ctrl.current_user.id;
+                    ctrl.cours.editable = _(ctrl.cours.date_validation).isNull() && ctrl.current_user.is(['ENS', 'DOC']) && ctrl.cours.enseignant_id === ctrl.current_user.id;
                     if (!ctrl.cours.editable) {
                         ctrl.cours.contenu = $sce.trustAsHtml(ctrl.cours.contenu);
                     }
@@ -2062,8 +2062,8 @@ angular.module('cahierDeTextesClientApp')
                 delete ctrl.jours[6];
             }
             ctrl.creneau.mine = ctrl.creneau.en_creation || _.chain(ctrl.current_user.profil_actif.matieres).pluck('id').include(ctrl.creneau.matiere_id).value();
-            ctrl.creneau.can_add_homework = _(['ENS', 'DOC']).includes(ctrl.current_user.profil_actif.type) && _.chain(ctrl.current_user.profil_actif.matieres).pluck('id').include(ctrl.creneau.matiere_id).value();
-            ctrl.creneau.etranger = !ctrl.current_user.profil_actif.admin && !ctrl.creneau.en_creation && !ctrl.creneau.mine;
+            ctrl.creneau.can_add_homework = ctrl.current_user.is(['ENS', 'DOC']) && _.chain(ctrl.current_user.profil_actif.matieres).pluck('id').include(ctrl.creneau.matiere_id).value();
+            ctrl.creneau.etranger = !ctrl.current_user.is(['ADM']) && !ctrl.creneau.en_creation && !ctrl.creneau.mine;
             if (_(cours).isNull()) {
                 if (!ctrl.creneau.etranger) {
                     ctrl.cours = create_cours(creneau);
@@ -2082,14 +2082,14 @@ angular.module('cahierDeTextesClientApp')
     function ($scope, moment, $state, $q, $locale, APP_PATH, SEMAINES_VACANCES, ZONE, PopupsCreneau, CreneauxEmploiDuTemps, Utils, Annuaire, CurrentUser, API, current_user) {
         $scope.scope = $scope;
         $scope.current_user = current_user;
-        if ($scope.current_user.profil_actif.type === 'TUT' && _($scope.current_user.enfant_actif).isUndefined()) {
+        if ($scope.current_user.is(['TUT']) && _($scope.current_user.enfant_actif).isUndefined()) {
             $scope.current_user.enfant_actif = $scope.current_user.enfants[0];
         }
         $scope.zone = ZONE;
         $scope.emploi_du_temps = angular.element('#emploi_du_temps');
         var popup_ouverte = false;
         var first_load = true;
-        $scope.uniquement_mes_creneaux = !_(['EVS', 'DIR', 'ADM']).contains($scope.current_user.profil_actif.type);
+        $scope.uniquement_mes_creneaux = !$scope.current_user.is(['EVS', 'DIR', 'ADM']);
         var set_preferred_view = function (view) {
             $scope.current_user.parametrage_cahier_de_textes.preferredView = view;
             CurrentUser.update_parameters($scope.current_user.parametrage_cahier_de_textes);
@@ -2098,10 +2098,10 @@ angular.module('cahierDeTextesClientApp')
             set_preferred_view('timetableWeek');
         }
         $scope.filter_data = function (raw_data) {
-            if (_(['EVS', 'DIR', 'ADM']).contains($scope.current_user.profil_actif.type)) {
+            if ($scope.current_user.is(['EVS', 'DIR', 'ADM'])) {
                 return filter_by_regroupement(raw_data, $scope.selected_regroupements);
             }
-            else if (_(['ENS', 'DOC']).contains($scope.current_user.profil_actif.type)) {
+            else if ($scope.current_user.is(['ENS', 'DOC'])) {
                 return filter_by_matieres(filter_by_regroupement(raw_data, $scope.selected_regroupements), $scope.current_user.extract_subjects_ids(), $scope.uniquement_mes_creneaux);
             }
             else {
@@ -2162,21 +2162,21 @@ angular.module('cahierDeTextesClientApp')
                             fc_event.className = 'edt-devoir-note-maison';
                             break;
                         default:
-                            if ($scope.current_user.profil_actif.type === 'ELV') {
+                            if ($scope.current_user.is(['ELV'])) {
                                 fc_event.className = _.chain(event.devoirs).pluck('fait').contains(true).value() ? 'edt-devoir-fait' : 'edt-devoir-a-faire';
                             }
                     }
                 }
                 else {
                     fc_event.className = 'edt-cours';
-                    if (!_(event.cours).isNull() && !_(event.cours.date_validation).isNull() && ($scope.current_user.profil_actif.type === 'ENS' && $scope.current_user.profil_actif.type === 'DOC')) {
+                    if (!_(event.cours).isNull() && !_(event.cours.date_validation).isNull() && $scope.current_user.is(['ENS', 'DOC'])) {
                         fc_event.className += '-valide';
                     }
                     else if (!_(event.cours).isNull()) {
                         fc_event.className += '-saisie';
                     }
                 }
-                if (((_(['ELV', 'TUT', 'EVS', 'DIR', 'ADM']).contains($scope.current_user.profil_actif.type)) && _(event.cours).isNull() && _(event.devoirs).isEmpty())) {
+                if ($scope.current_user.is(['ELV', 'TUT', 'EVS', 'DIR', 'ADM']) && _(event.cours).isNull() && _(event.devoirs).isEmpty()) {
                     fc_event.className += ' unclickable-event';
                 }
                 else {
@@ -2191,24 +2191,22 @@ angular.module('cahierDeTextesClientApp')
             $scope.calendar.events[0] = to_fullcalendar_events($scope.filter_data($scope.raw_data));
         };
         var retrieve_data = function (from_date, to_date) {
-            if ($scope.current_user.profil_actif.type != 'TUT' || $scope.current_user.enfant_actif) {
-                API.get_emploi_du_temps(from_date, to_date, $scope.current_user.profil_actif.structure_id, $scope.current_user.profil_actif.type === 'TUT' ? $scope.current_user.enfant_actif.child_id : null)
-                    .then(function success(response) {
-                    $scope.raw_data = response.data;
-                    var groups_ids = _.chain($scope.raw_data).pluck('regroupement_id').uniq().value();
-                    var subjects_ids = _.chain($scope.raw_data).pluck('matiere_id').uniq().value();
-                    var promise = _(groups_ids).isEmpty() ? $q.resolve([]) : Annuaire.get_groups(groups_ids);
-                    promise
-                        .then(function (response) {
-                        $scope.current_period_groups = response.data;
-                        return Annuaire.get_subjects(subjects_ids);
-                    })
-                        .then(function (response) {
-                        $scope.subjects = response.data;
-                        $scope.refresh_calendar();
-                    });
+            API.get_emploi_du_temps(from_date, to_date, $scope.current_user.enfant_actif == undefined ? null : $scope.current_user.enfant_actif.child_id)
+                .then(function success(response) {
+                $scope.raw_data = response.data;
+                var groups_ids = _.chain($scope.raw_data).pluck('regroupement_id').uniq().value();
+                var subjects_ids = _.chain($scope.raw_data).pluck('matiere_id').uniq().value();
+                var promise = _(groups_ids).isEmpty() ? $q.resolve([]) : Annuaire.get_groups(groups_ids);
+                promise
+                    .then(function (response) {
+                    $scope.current_period_groups = response.data;
+                    return Annuaire.get_subjects(subjects_ids);
+                })
+                    .then(function (response) {
+                    $scope.subjects = response.data;
+                    $scope.refresh_calendar();
                 });
-            }
+            });
         };
         $scope.current_user.get_actual_groups()
             .then(function (actual_groups) {
@@ -2232,30 +2230,14 @@ angular.module('cahierDeTextesClientApp')
                 return _(subjects_ids).contains(creneau.matiere_id) || creneau.matiere_id == '';
             });
         };
-        if ($scope.current_user.profil_actif.type === 'TUT') {
-            if ($scope.current_user.enfants.length == 0) {
-                swal({
-                    title: 'Erreur',
-                    text: 'Aucun enfant configuré pour ce profil.',
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonColor: '#ff6b55',
-                    confirmButtonText: 'Fermer'
-                });
-            }
-            else {
-                $scope.uid_enfant_actif = $scope.current_user.enfant_actif.child_id;
-                $scope.reload_data = popup_callback;
-            }
-        }
-        var can_edit = _(['ENS', 'DOC', 'DIR', 'ADM']).contains($scope.current_user.profil_actif.type) || $scope.current_user.profil_actif.admin;
+        var can_edit = $scope.current_user.is(['ENS', 'DOC', 'DIR', 'ADM']);
         $scope.calendar = {
             options: {
                 lang: 'fr',
                 locale: 'fr',
                 height: 600,
                 header: {
-                    left: _(['ENS', 'DOC']).contains($scope.current_user.profil_actif.type) ? 'timetableWeek,textbookWeek' : '',
+                    left: $scope.current_user.is(['ENS', 'DOC']) ? 'timetableWeek,textbookWeek' : '',
                     center: 'title',
                     right: 'today prev,next'
                 },
@@ -2305,7 +2287,7 @@ angular.module('cahierDeTextesClientApp')
                 },
                 eventRender: function (event, element, view) {
                     var elt_fc_content = element.find('.fc-content');
-                    if (!_(['ELV', 'TUT']).contains($scope.current_user.profil_actif.type)) {
+                    if (!$scope.current_user.is(['ELV', 'TUT'])) {
                         if (event.temps_estime > 0) {
                             var class_couleur = '';
                             if (event.temps_estime < 4) {
@@ -2338,7 +2320,7 @@ angular.module('cahierDeTextesClientApp')
                             event_content_1 += "<fieldset>\n< legend > Devoirs < /legend>";
                             event_content_1 += '<ul class="col-md-6 devoirs">';
                             _(event.details.devoirs).each(function (assignement) {
-                                var additional_classes = $scope.current_user.profil_actif.type === 'ELV' ? (assignement.fait ? 'fait' : 'a-faire') : '';
+                                var additional_classes = $scope.current_user.is(['ELV']) ? (assignement.fait ? 'fait' : 'a-faire') : '';
                                 event_content_1 += "  <li class=\"devoir type" + assignement.type_devoir_id + " " + additional_classes + "\">";
                                 if ($scope.current_user.parametrage_cahier_de_textes.affichage_types_de_devoir) {
                                     event_content_1 += "    <span class=\"type\">" + assignement.type_devoir_description + "</span>";
@@ -2353,7 +2335,7 @@ angular.module('cahierDeTextesClientApp')
                     }
                 },
                 eventClick: function (event) {
-                    if (_(['ENS', 'DOC']).contains($scope.current_user.profil_actif.type) || $scope.current_user.profil_actif.admin) {
+                    if ($scope.current_user.is(['ENS', 'DOC', 'ADM'])) {
                         if (!popup_ouverte) {
                             CreneauxEmploiDuTemps.get({ id: event.details.creneau_emploi_du_temps_id })
                                 .$promise
@@ -2680,7 +2662,6 @@ angular.module('cahierDeTextesClientApp')
                 params: {
                     debut: from,
                     fin: to,
-                    uai: uai,
                     uid: uid
                 }
             });
@@ -3226,6 +3207,13 @@ angular.module('cahierDeTextesClientApp')
                         return $q.resolve(response.data.actual_subjects);
                     });
                 };
+                response.data.get_structures_ids = _.memoize(function (desired_types) {
+                    return _.chain(response.data.profiles)
+                        .select(function (profil) { return desired_types == undefined || desired_types.includes(profil.type); })
+                        .pluck("structure_id")
+                        .uniq()
+                        .value();
+                });
                 response.data.is_x_in_structure = _.memoize(function (types, structure_id) {
                     return _.chain(response.data.profiles)
                         .select(function (profil) { return structure_id == undefined || profil.structure_id == structure_id; })
