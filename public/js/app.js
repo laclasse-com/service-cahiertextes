@@ -261,11 +261,11 @@ angular.module('cahierDeTextesClientApp')
         $stateProvider
             .state('404', {
             url: '404',
-            templateUrl: APP_PATH + "/app/views/404.html"
+            templateUrl: APP_PATH + "/views/404.html"
         })
             .state('index', {
             url: '/',
-            templateUrl: APP_PATH + "/app/views/index.html",
+            templateUrl: APP_PATH + "/views/index.html",
             controller: 'IndexCtrl',
             resolve: {
                 auth: ['Redirection', function (Redirection) { Redirection.doorman(['ADM', 'DIR', 'ENS', 'DOC', 'ELV', 'TUT', 'EVS']); }],
@@ -277,7 +277,7 @@ angular.module('cahierDeTextesClientApp')
             url: 'emploi_du_temps',
             views: {
                 'content': {
-                    templateUrl: APP_PATH + "/app/views/textbook.html",
+                    templateUrl: APP_PATH + "/views/textbook.html",
                     controller: 'TextBookCtrl'
                 }
             }
@@ -288,7 +288,7 @@ angular.module('cahierDeTextesClientApp')
             resolve: { auth: ['Redirection', function (Redirection) { Redirection.doorman(['ELV', 'TUT']); }] },
             views: {
                 'content': {
-                    templateUrl: APP_PATH + "/app/views/assignements.html",
+                    templateUrl: APP_PATH + "/views/assignements.html",
                     controller: 'AssignementsCtrl'
                 }
             }
@@ -299,7 +299,7 @@ angular.module('cahierDeTextesClientApp')
             resolve: { auth: ['Redirection', function (Redirection) { Redirection.doorman(['DIR', 'ADM']); }] },
             views: {
                 'content': {
-                    templateUrl: APP_PATH + "/app/views/import.html",
+                    templateUrl: APP_PATH + "/views/import.html",
                     controller: 'ImportCtrl'
                 }
             }
@@ -310,7 +310,7 @@ angular.module('cahierDeTextesClientApp')
             resolve: { auth: ['Redirection', function (Redirection) { Redirection.doorman(['DIR']); }] },
             views: {
                 'content': {
-                    templateUrl: APP_PATH + "/app/views/dashboard_teachers.html",
+                    templateUrl: APP_PATH + "/views/dashboard_teachers.html",
                     controller: 'DashboardTeachersCtrl'
                 }
             }
@@ -321,7 +321,7 @@ angular.module('cahierDeTextesClientApp')
             resolve: { auth: ['Redirection', function (Redirection) { Redirection.doorman(['DIR']); }] },
             views: {
                 'content': {
-                    templateUrl: APP_PATH + "/app/views/dashboard_teacher.html",
+                    templateUrl: APP_PATH + "/views/dashboard_teacher.html",
                     controller: 'DashboardTeacherCtrl'
                 }
             }
@@ -332,7 +332,7 @@ angular.module('cahierDeTextesClientApp')
             resolve: { auth: ['Redirection', function (Redirection) { Redirection.doorman(['ENS', 'DOC']); }] },
             views: {
                 'content': {
-                    templateUrl: APP_PATH + "/app/views/dashboard_teacher.html",
+                    templateUrl: APP_PATH + "/views/dashboard_teacher.html",
                     controller: 'DashboardTeacherCtrl'
                 }
             }
@@ -356,9 +356,9 @@ angular.module('cahierDeTextesClientApp')
         ' \'type6\': $ctrl.devoir.type_devoir_id === 6,' +
         ' \'fait\': $ctrl.devoir.fait,' +
         ' \'a-faire\': !$ctrl.devoir.fait }">' +
-        '    <h5><i class="picto" ng:style="{\'background-image\':\'url(\' + $ctrl.app_path + \'/app/node_modules/laclasse-common-client/images/picto_matiere.svg)\'}"></i> {{$ctrl.devoir.matiere.name}} </h5>' +
-        '    <h6><i class="picto" ng:style="{\'background-image\':\'url(\' + $ctrl.app_path + \'/app/node_modules/laclasse-common-client/images/picto_devoir.svg)\'}"></i> {{$ctrl.devoir.type_devoir.description}} : </h6>' +
-        '    <span ng:if="$ctrl.display_time_estimation && $ctrl.devoir.temps_estime > 0"><i class="picto" ng:style="{\'background-image\':\'url(\' + $ctrl.app_path + \'/app/node_modules/laclasse-common-client/images/picto_temps.svg)\'}"></i> Temps estimé : <em>{{$ctrl.devoir.temps_estime * 5}} minutes</em></span>' +
+        '    <h5><i class="picto" ng:style="{\'background-image\':\'url(\' + $ctrl.app_path + \'/node_modules/laclasse-common-client/images/picto_matiere.svg)\'}"></i> {{$ctrl.devoir.matiere.name}} </h5>' +
+        '    <h6><i class="picto" ng:style="{\'background-image\':\'url(\' + $ctrl.app_path + \'/node_modules/laclasse-common-client/images/picto_devoir.svg)\'}"></i> {{$ctrl.devoir.type_devoir.description}} : </h6>' +
+        '    <span ng:if="$ctrl.display_time_estimation && $ctrl.devoir.temps_estime > 0"><i class="picto" ng:style="{\'background-image\':\'url(\' + $ctrl.app_path + \'/node_modules/laclasse-common-client/images/picto_temps.svg)\'}"></i> Temps estimé : <em>{{$ctrl.devoir.temps_estime * 5}} minutes</em></span>' +
         '    <div class="alert alert-default" ta-bind ng:model="$ctrl.devoir.contenu"></div>' +
         '    <div class="row col-md-12 ressources">' +
         '      <div class="attached-document" ng:repeat="ressource in $ctrl.devoir.ressources">' +
@@ -2657,12 +2657,14 @@ angular.module('cahierDeTextesClientApp')
         this.get_type_de_devoir = _.memoize(function (id) {
             return $http.get(APP_PATH + "/api/types_de_devoir/" + id);
         });
-        this.get_emploi_du_temps = function (from, to, uai, uid) {
+        this.get_emploi_du_temps = function (from, to, uid, groups_ids, subjects_ids) {
             return $http.get(APP_PATH + "/api/emplois_du_temps", {
                 params: {
                     debut: from,
                     fin: to,
-                    uid: uid
+                    uid: uid,
+                    "groups_ids[]": groups_ids,
+                    "subjects_ids[]": subjects_ids
                 }
             });
         };
@@ -2971,7 +2973,7 @@ angular.module('cahierDeTextesClientApp')
         };
         this.edition = function (raw_data, matieres, classes, creneau, cours, devoirs, popup_callback, popup_ouverte) {
             open_modal({
-                templateUrl: APP_PATH + "/app/views/popup_edition.html",
+                templateUrl: APP_PATH + "/views/popup_edition.html",
                 controller: 'PopupEditionCtrl',
                 resolve: {
                     raw_data: function () { return raw_data; },
@@ -2986,7 +2988,7 @@ angular.module('cahierDeTextesClientApp')
         };
         this.display = function (titre, cours, devoirs, popup_callback, popup_ouverte) {
             open_modal({
-                templateUrl: APP_PATH + "/app/views/popup_display.html",
+                templateUrl: APP_PATH + "/views/popup_display.html",
                 controller: 'PopupDisplayCtrl',
                 resolve: {
                     titre: function () { return titre; },

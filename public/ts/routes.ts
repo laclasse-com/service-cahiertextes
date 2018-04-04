@@ -9,13 +9,13 @@ angular.module( 'cahierDeTextesClientApp' )
         // 404 /////////////////////////////////////////////////////////////////
         .state( '404', {
           url: '404',
-          templateUrl: `${ APP_PATH }/app/views/404.html`
+          templateUrl: `${ APP_PATH }/views/404.html`
         } )
         // index ///////////////////////////////////////////////////////////////
         .state( 'index',
         {
           url: '/',
-          templateUrl: `${ APP_PATH }/app/views/index.html`,
+          templateUrl: `${ APP_PATH }/views/index.html`,
           controller: 'IndexCtrl',
           resolve: {
             auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ADM', 'DIR', 'ENS', 'DOC', 'ELV', 'TUT', 'EVS' ] ); }],
@@ -28,7 +28,7 @@ angular.module( 'cahierDeTextesClientApp' )
           url: 'emploi_du_temps',
           views: {
             'content': {
-              templateUrl: `${ APP_PATH }/app/views/textbook.html`,
+              templateUrl: `${ APP_PATH }/views/textbook.html`,
               controller: 'TextBookCtrl'
             }
           }
@@ -40,7 +40,7 @@ angular.module( 'cahierDeTextesClientApp' )
           resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ELV', 'TUT' ] ); }] },
           views: {
             'content': {
-              templateUrl: `${ APP_PATH }/app/views/assignements.html`,
+              templateUrl: `${ APP_PATH }/views/assignements.html`,
               controller: 'AssignementsCtrl'
             }
           }
@@ -52,7 +52,7 @@ angular.module( 'cahierDeTextesClientApp' )
           resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR', 'ADM' ] ); }] },
           views: {
             'content': {
-              templateUrl: `${ APP_PATH }/app/views/import.html`,
+              templateUrl: `${ APP_PATH }/views/import.html`,
               controller: 'ImportCtrl'
             }
           }
@@ -64,7 +64,7 @@ angular.module( 'cahierDeTextesClientApp' )
           resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); }] },
           views: {
             'content': {
-              templateUrl: `${ APP_PATH }/app/views/dashboard_teachers.html`,
+              templateUrl: `${ APP_PATH }/views/dashboard_teachers.html`,
               controller: 'DashboardTeachersCtrl'
             }
           }
@@ -76,7 +76,7 @@ angular.module( 'cahierDeTextesClientApp' )
           resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'DIR' ] ); }] },
           views: {
             'content': {
-              templateUrl: `${ APP_PATH }/app/views/dashboard_teacher.html`,
+              templateUrl: `${ APP_PATH }/views/dashboard_teacher.html`,
               controller: 'DashboardTeacherCtrl'
             }
           }
@@ -88,7 +88,7 @@ angular.module( 'cahierDeTextesClientApp' )
           resolve: { auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ENS', 'DOC' ] ); }] },
           views: {
             'content': {
-              templateUrl: `${ APP_PATH }/app/views/dashboard_teacher.html`,
+              templateUrl: `${ APP_PATH }/views/dashboard_teacher.html`,
               controller: 'DashboardTeacherCtrl'
             }
           }

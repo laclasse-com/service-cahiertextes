@@ -6,4 +6,4 @@ service de cahier de textes pour l'ENT. Ce service peut-eêtre alimenté par les
 
 Documentation API
 =================
-Accessible @ http://localhost:9292/ct/app/bower_components/swagger-ui/dist/index.html
+Accessible @ http://localhost:9292/ct/bower_components/swagger-ui/dist/index.html
