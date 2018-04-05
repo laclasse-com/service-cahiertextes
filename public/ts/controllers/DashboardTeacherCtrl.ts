@@ -6,23 +6,26 @@ angular.module('cahierDeTextesClientApp')
       'API', 'Cours', 'Annuaire', 'current_user', 'PIECHART_DEFINITION', 'MULTIBARCHART_DEFINITION',
       function($scope, $stateParams, $q, $locale, $timeout, moment, toastr,
         API, Cours, Annuaire, current_user, PIECHART_DEFINITION, MULTIBARCHART_DEFINITION) {
-        $scope.mois = _($locale.DATETIME_FORMATS.MONTH).toArray();
-        $scope.scope = $scope;
-        $scope.moisCourant = null;
-        $scope.montre_valides = !current_user.is(['DIR']);
-        $scope.nb_saisies_visables = 0;
-        $scope.current_user = current_user;
-        $scope.enseignant_id = _($stateParams).has('enseignant_id') ? $stateParams.enseignant_id : $scope.current_user.id;
+        let ctrl = $scope;
+        ctrl.$ctrl = ctrl;
+
+        ctrl.mois = _($locale.DATETIME_FORMATS.MONTH).toArray();
+        ctrl.scope = ctrl;
+        ctrl.moisCourant = null;
+        ctrl.montre_valides = !current_user.is(['DIR']);
+        ctrl.nb_saisies_visables = 0;
+        ctrl.current_user = current_user;
+        ctrl.enseignant_id = _($stateParams).has('enseignant_id') ? $stateParams.enseignant_id : ctrl.current_user.id;
 
         let calc_nb_saisies_visables = function(saisies) {
           return _(saisies).select(<any>{ recent: false, valide: false }).length;
         };
 
-        $scope.detail_regroupement = function(group_id) {
-          _($scope.enseignant.liste_regroupements).findWhere({ id: group_id });
+        ctrl.detail_regroupement = function(group_id) {
+          _(ctrl.enseignant.liste_regroupements).findWhere({ id: group_id });
         };
 
-        $scope.filter_saisie = function(montre_valides, mois, selected_regroupements) {
+        ctrl.filter_saisie = function(montre_valides, mois, selected_regroupements) {
           return function(saisie) {
             return (montre_valides || _(saisie.cours.date_validation).isNull())
               && (_(mois).isNull() || saisie.mois == mois)
@@ -31,11 +34,11 @@ angular.module('cahierDeTextesClientApp')
         };
 
         // Graphiques
-        $scope.graphiques = {
+        ctrl.graphiques = {
           pieChart: angular.copy(PIECHART_DEFINITION),
           multiBarChart: angular.copy(MULTIBARCHART_DEFINITION),
           populate: function(data) {
-            $scope.graphiques.multiBarChart.data = [{
+            ctrl.graphiques.multiBarChart.data = [{
               key: 'saisies non visées',
               values: []
             },
@@ -43,7 +46,7 @@ angular.module('cahierDeTextesClientApp')
               key: 'saisies visées',
               values: []
             }];
-            $scope.graphiques.pieChart.data = [{
+            ctrl.graphiques.pieChart.data = [{
               label: 'saisies non visées',
               value: 0
             },
@@ -62,49 +65,49 @@ angular.module('cahierDeTextesClientApp')
                   .then(function success(response) {
                     _(regroupement).each(function(regroupement) { regroupement.group = response.data; });
 
-                    $scope.graphiques.multiBarChart.data[0].values.push({
+                    ctrl.graphiques.multiBarChart.data[0].values.push({
                       key: regroupement[0].group.name,
                       x: regroupement[0].group.name,
                       y: filled - validated
                     });
-                    $scope.graphiques.multiBarChart.data[1].values.push({
+                    ctrl.graphiques.multiBarChart.data[1].values.push({
                       key: regroupement[0].group.name,
                       x: regroupement[0].group.name,
                       y: validated
                     });
                   });
 
-                $scope.graphiques.pieChart.data[0].value += filled - validated;
-                $scope.graphiques.pieChart.data[1].value += validated;
+                ctrl.graphiques.pieChart.data[0].value += filled - validated;
+                ctrl.graphiques.pieChart.data[1].value += validated;
               });
           }
         };
 
-        $scope.select_all_regroupements = function() {
-          $scope.selected_regroupements = $scope.enseignant.liste_regroupements;
-          $scope.graphiques.populate($scope.raw_data);
+        ctrl.select_all_regroupements = function() {
+          ctrl.selected_regroupements = ctrl.enseignant.liste_regroupements;
+          ctrl.graphiques.populate(ctrl.raw_data);
         };
 
-        $scope.select_no_regroupements = function() {
-          $scope.selected_regroupements = [];
-          $scope.graphiques.populate($scope.raw_data);
+        ctrl.select_no_regroupements = function() {
+          ctrl.selected_regroupements = [];
+          ctrl.graphiques.populate(ctrl.raw_data);
         };
 
-        $scope.valide = function(saisie) {
+        ctrl.valide = function(saisie) {
           if (current_user.is(['DIR'])) {
             let disable_toastr = _(saisie).has('disable_toastr');
             saisie.cours.$valide().then(function(response) {
               saisie.valide = !_(response.date_validation).isNull();
 
-              if (!$scope.montre_valides && !_(response.date_validation).isNull()) {
+              if (!ctrl.montre_valides && !_(response.date_validation).isNull()) {
                 let date_validation_holder = response.date_validation;
                 response.date_validation = null;
 
                 $timeout(function() { response.date_validation = date_validation_holder; }, 3000);
               }
 
-              $scope.nb_saisies_visables = calc_nb_saisies_visables($scope.raw_data);
-              $scope.graphiques.populate($scope.raw_data);
+              ctrl.nb_saisies_visables = calc_nb_saisies_visables(ctrl.raw_data);
+              ctrl.graphiques.populate(ctrl.raw_data);
 
               if (!disable_toastr) {
                 toastr.success(`Séquence pédagogique ${(saisie.valide ? '' : 'dé-')}visée.`,
@@ -114,7 +117,7 @@ angular.module('cahierDeTextesClientApp')
           }
         };
 
-        $scope.valide_all = function() {
+        ctrl.valide_all = function() {
           swal({
             title: 'Tout viser ?',
             text: 'Cette action va viser toutes les saisies actuellement affichées à l\'écran.',
@@ -126,11 +129,11 @@ angular.module('cahierDeTextesClientApp')
           })
             .then(function confirm() {
               let counter = 0;
-              _.chain($scope.raw_data)
+              _.chain(ctrl.raw_data)
                 .reject(function(saisie) { return saisie.valide || saisie.recent; })
                 .each(function(saisie) {
                   saisie.disable_toastr = true;
-                  $scope.valide(saisie);
+                  ctrl.valide(saisie);
                   counter++;
                 });
               if (counter > 0) {
@@ -143,46 +146,46 @@ angular.module('cahierDeTextesClientApp')
         };
 
         // Récupération et consommation des données
-        Annuaire.get_user($scope.enseignant_id)
+        Annuaire.get_user(ctrl.enseignant_id)
           .then(function(response) {
-            $scope.enseignant = response.data;
+            ctrl.enseignant = response.data;
 
-            $scope.enseignant.get_actual_groups()
+            ctrl.enseignant.get_actual_groups()
               .then(function(response) {
-                $scope.enseignant.liste_regroupements = _.chain(response)
+                ctrl.enseignant.liste_regroupements = _.chain(response)
                   .select(function(group) {
                     return group.type !== 'GPL'
-                      && $scope.current_user.get_structures_ids().includes(group.structure_id);
+                      && ctrl.current_user.get_structures_ids().includes(group.structure_id);
                   })
                   .uniq(function(group) { return group.id; })
                   .compact()
                   .value();
 
-                $scope.enseignant.prof_principal = _.chain($scope.enseignant.groups)
+                ctrl.enseignant.prof_principal = _.chain(ctrl.enseignant.groups)
                   .where({ type: 'PRI' })
                   .pluck('group_id')
                   .map(function(group_id) {
-                    return _($scope.enseignant.liste_regroupements).findWhere({ id: group_id });
+                    return _(ctrl.enseignant.liste_regroupements).findWhere({ id: group_id });
                   })
                   .value();
 
-                $scope.select_all_regroupements();
+                ctrl.select_all_regroupements();
               });
 
-            $scope.enseignant.get_actual_subjects()
+            ctrl.enseignant.get_actual_subjects()
               .then(function(response) {
-                $scope.enseignant.liste_matieres = _.chain(response)
+                ctrl.enseignant.liste_matieres = _.chain(response)
                   .uniq(function(subject) { return subject.id; })
                   .compact()
                   .value();
               });
 
-            return API.get_enseignant($scope.current_user.profil_actif.structure_id, $scope.enseignant_id);
+            return API.get_enseignant(ctrl.current_user.profil_actif.structure_id, ctrl.enseignant_id);
           })
           .then(function success(response) {
             let _2_semaines_avant = moment().subtract(2, 'weeks');
 
-            $scope.raw_data = _(response.data.saisies).map(function(saisie, index) {
+            ctrl.raw_data = _(response.data.saisies).map(function(saisie, index) {
               // on référence l'index d'origine dans chaque élément pour propager la validation
               saisie.index = index;
               saisie.cours = new Cours(saisie.cours);
@@ -190,7 +193,7 @@ angular.module('cahierDeTextesClientApp')
               saisie.month = moment(saisie.cours.date_cours).month();
               saisie.recent = moment(saisie.cours.date_cours).isAfter(_2_semaines_avant);
 
-              saisie.matiere = _($scope.enseignant.liste_matieres).findWhere({ id: saisie.matiere_id });
+              saisie.matiere = _(ctrl.enseignant.liste_matieres).findWhere({ id: saisie.matiere_id });
               if (_(saisie.matiere).isUndefined()) {
                 saisie.matiere = Annuaire.get_subject(saisie.matiere_id);
               }
@@ -198,7 +201,7 @@ angular.module('cahierDeTextesClientApp')
               return saisie;
             });
 
-            $scope.graphiques.populate($scope.raw_data);
-            $scope.nb_saisies_visables = calc_nb_saisies_visables($scope.raw_data);
+            ctrl.graphiques.populate(ctrl.raw_data);
+            ctrl.nb_saisies_visables = calc_nb_saisies_visables(ctrl.raw_data);
           });
       }]);

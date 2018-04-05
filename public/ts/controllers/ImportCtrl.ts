@@ -10,29 +10,32 @@ angular.module('cahierDeTextesClientApp')
         APP_PATH, SEMAINES_VACANCES, ZONE, VERSION,
         Annuaire, Utils, Etablissements, CreneauxEmploiDuTemps, API, Matchable,
         current_user) {
-        $scope.scope = $scope;
-        $scope.jours_de_la_semaine = $locale.DATETIME_FORMATS.DAY;
-        $scope.annee = $locale.DATETIME_FORMATS.MONTH;
-        $scope.fichier = null;
-        $scope.display_all = false;
-        $scope.step = 0;
-        $scope.report = {};
+        let ctrl = $scope;
+        ctrl.$ctrl = ctrl;
 
-        $scope.ui = {
+        ctrl.scope = ctrl;
+        ctrl.jours_de_la_semaine = $locale.DATETIME_FORMATS.DAY;
+        ctrl.annee = $locale.DATETIME_FORMATS.MONTH;
+        ctrl.fichier = null;
+        ctrl.display_all = false;
+        ctrl.step = 0;
+        ctrl.report = {};
+
+        ctrl.ui = {
           show_detailed_creneaux: false,
           display_ready: true,
           display_problems: true,
           sortCreneauxBy: ['Jour'],
           sort_creneaux_by: function(criteria) {
-            $scope.ui.sortCreneauxBy = $scope.ui.sortCreneauxBy[0] === criteria[0] ? _(criteria).map(function(sub_criteria) { return '-' + sub_criteria; }) : criteria;
+            ctrl.ui.sortCreneauxBy = ctrl.ui.sortCreneauxBy[0] === criteria[0] ? _(criteria).map(function(sub_criteria) { return '-' + sub_criteria; }) : criteria;
           }
         };
 
-        $scope.step_backward = function() {
-          $scope.step--;
+        ctrl.step_backward = function() {
+          ctrl.step--;
         }
 
-        $scope.beautify_semainier = function(semainier) {
+        ctrl.beautify_semainier = function(semainier) {
           let bsemainier = Utils.padEnd(semainier.toString(2), 53, '0');
 
           return '<div class="semainier-tooltip gris1">' +
@@ -59,7 +62,7 @@ angular.module('cahierDeTextesClientApp')
             '<div class="clearfix"></div></div>';
         };
 
-        $scope.filter_creneau = function(options, criteria) {
+        ctrl.filter_creneau = function(options, criteria) {
           return function(creneau) {
             if (!options.display_problems && !creneau.ready) { return false; }
             if (!options.display_ready && creneau.ready) { return false; }
@@ -105,35 +108,35 @@ angular.module('cahierDeTextesClientApp')
 
         // ********** counters
         let update_counters = function() {
-          let filtered_creneaux = $filter('filter')($scope.creneaux, $scope.filter_creneau($scope.ui, $scope.selected));
-          $scope.counters = {};
+          let filtered_creneaux = $filter('filter')(ctrl.creneaux, ctrl.filter_creneau(ctrl.ui, ctrl.selected));
+          ctrl.counters = {};
 
-          $scope.counters.creneaux = $scope.creneaux.length;
-          $scope.counters.creneaux_broken = _($scope.pronote.Cours[0].Cours).select(function(cours) { return !_(cours).has('Matiere') || !_(cours).has('Professeur') || (!_(cours).has('Classe') && !_(cours).has('Groupe')); }).length;
-          $scope.counters.creneaux_not_ready = _($scope.creneaux).where({ ready: false }).length;
-          $scope.counters.creneaux_ready = $scope.counters.creneaux - $scope.counters.creneaux_not_ready;
+          ctrl.counters.creneaux = ctrl.creneaux.length;
+          ctrl.counters.creneaux_broken = _(ctrl.pronote.Cours[0].Cours).select(function(cours) { return !_(cours).has('Matiere') || !_(cours).has('Professeur') || (!_(cours).has('Classe') && !_(cours).has('Groupe')); }).length;
+          ctrl.counters.creneaux_not_ready = _(ctrl.creneaux).where({ ready: false }).length;
+          ctrl.counters.creneaux_ready = ctrl.counters.creneaux - ctrl.counters.creneaux_not_ready;
 
-          $scope.counters.filtered_creneaux = filtered_creneaux.length;
-          $scope.counters.filtered_creneaux_not_ready = _(filtered_creneaux).where({ ready: false }).length;
-          $scope.counters.filtered_creneaux_ready = $scope.counters.filtered_creneaux - $scope.counters.filtered_creneaux_not_ready;
+          ctrl.counters.filtered_creneaux = filtered_creneaux.length;
+          ctrl.counters.filtered_creneaux_not_ready = _(filtered_creneaux).where({ ready: false }).length;
+          ctrl.counters.filtered_creneaux_ready = ctrl.counters.filtered_creneaux - ctrl.counters.filtered_creneaux_not_ready;
 
-          $scope.counters.percent_creneaux_ready = $scope.counters.filtered_creneaux_ready / $scope.counters.filtered_creneaux;
+          ctrl.counters.percent_creneaux_ready = ctrl.counters.filtered_creneaux_ready / ctrl.counters.filtered_creneaux;
         };
         // ********** /counters
 
         // ********** readiness
         let update_creneaux_readiness = function() {
-          _($scope.creneaux).each(function(creneau) {
+          _(ctrl.creneaux).each(function(creneau) {
             creneau.readiness = {
-              matiere: !_($scope.pronote.matieres[creneau.Matiere.Ident]).isUndefined()
-                && !_($scope.pronote.matieres[creneau.Matiere.Ident].laclasse).isUndefined(),
+              matiere: !_(ctrl.pronote.matieres[creneau.Matiere.Ident]).isUndefined()
+                && !_(ctrl.pronote.matieres[creneau.Matiere.Ident].laclasse).isUndefined(),
               salle: !_(creneau.Salle).isUndefined(),
               classe: _(creneau).has('Classe')
-                && !_($scope.pronote.classes[creneau.Classe.Ident]).isUndefined()
-                && !_($scope.pronote.classes[creneau.Classe.Ident].laclasse).isUndefined(),
+                && !_(ctrl.pronote.classes[creneau.Classe.Ident]).isUndefined()
+                && !_(ctrl.pronote.classes[creneau.Classe.Ident].laclasse).isUndefined(),
               groupe_eleve: _(creneau).has('Groupe')
-                && !_($scope.pronote.groupes_eleves[creneau.Groupe.Ident]).isUndefined()
-                && !_($scope.pronote.groupes_eleves[creneau.Groupe.Ident].laclasse).isUndefined()
+                && !_(ctrl.pronote.groupes_eleves[creneau.Groupe.Ident]).isUndefined()
+                && !_(ctrl.pronote.groupes_eleves[creneau.Groupe.Ident].laclasse).isUndefined()
             };
 
             creneau.ready = creneau.readiness.matiere && (creneau.readiness.classe || creneau.readiness.groupe_eleve);
@@ -155,47 +158,47 @@ angular.module('cahierDeTextesClientApp')
 
         // ACTIONS
         let decrypt_file = (fichier) => {
-          $scope.pronote = [];
+          ctrl.pronote = [];
 
           toastr.info('Déchiffrage du fichier');
           return fileUpload.uploadFileToUrl(fichier, `${APP_PATH}/api/import/pronote/decrypt`)
             .then(
               function success(response) {
                 // 1. Récupérer le fichier Pronote décrypté
-                $scope.pronote = response.data;
-                return $q.resolve($scope.pronote);
+                ctrl.pronote = response.data;
+                return $q.resolve(ctrl.pronote);
               });
         };
 
         let select_structure = () => {
-          if ($scope.pronote.Etablissements != undefined) {
-            $scope.etab_uai = $scope.pronote.Etablissements[0].Etablissement[0].Numero;
+          if (ctrl.pronote.Etablissements != undefined) {
+            ctrl.etab_uai = ctrl.pronote.Etablissements[0].Etablissement[0].Numero;
 
-            if ($scope.pronote.Etablissements[0].Etablissement.length > 1) {
+            if (ctrl.pronote.Etablissements[0].Etablissement.length > 1) {
               return swal({
                 title: 'Choisissez un établissement',
                 input: 'select',
-                inputOptions: _($scope.pronote.Etablissements[0].Etablissement.map((etab) => [etab.Numero, etab.Nom])).object(),
+                inputOptions: _(ctrl.pronote.Etablissements[0].Etablissement.map((etab) => [etab.Numero, etab.Nom])).object(),
                 inputPlaceholder: 'Choisissez un établissement',
                 showCancelButton: false
               }).then(function(result) {
-                $scope.etab_uai = result.value;
-                return $q.resolve($scope.etab_uai);
+                ctrl.etab_uai = result.value;
+                return $q.resolve(ctrl.etab_uai);
               })
             } else {
-              return $q.resolve($scope.etab_uai);
+              return $q.resolve(ctrl.etab_uai);
             }
           } else {
-            return $q.resolve($scope.pronote.UAI);
+            return $q.resolve(ctrl.pronote.UAI);
           }
         };
 
         let filter_structure = () => {
-          let data = $scope.pronote;
+          let data = ctrl.pronote;
 
-          if ($scope.pronote.Etablissements != undefined && $scope.pronote.Etablissements[0].Etablissement.length > 1) {
+          if (ctrl.pronote.Etablissements != undefined && ctrl.pronote.Etablissements[0].Etablissement.length > 1) {
             toastr.info('Filtrage des données de l\'établissement sélectionné');
-            let uai = $scope.etab_uai;
+            let uai = ctrl.etab_uai;
             let etab_id = data.Etablissements[0].Etablissement.filter((etab) => etab.Numero == uai)[0].Ident;
 
             data.Classes[0].Classe = data.Classes[0].Classe.filter((classe) => classe.Etablissement.map((e) => e.Ident).includes(etab_id));
@@ -207,66 +210,66 @@ angular.module('cahierDeTextesClientApp')
 
             data.Cours[0].Cours = data.Cours[0].Cours.filter((creneau) => (creneau.Classe != undefined || creneau.Groupe != undefined || creneau.PartieDeClasse != undefined) && ((creneau.Classe != undefined && _.intersection(classes_ids, _(creneau.Classe).pluck("Ident")).length > 0) || (creneau.Groupe != undefined && _.intersection(groupes_ids, _(creneau.Groupe).pluck("Ident")).length > 0) || (creneau.PartieDeClasse != undefined && _.intersection(parties_de_classes_ids, _(creneau.PartieDeClasse).pluck("Ident")).length > 0)));
 
-            $scope.pronote = data;
+            ctrl.pronote = data;
           }
 
           return $q.resolve(data);
         };
 
         let load_data = () => {
-          $scope.matcheable_data = [];
+          ctrl.matcheable_data = [];
 
           let handle_error = function(response) {
             return $q.reject(response);
           };
 
-          $scope.pronote.GrilleHoraire[0].DureePlace = parseInt($scope.pronote.GrilleHoraire[0].DureePlace);
+          ctrl.pronote.GrilleHoraire[0].DureePlace = parseInt(ctrl.pronote.GrilleHoraire[0].DureePlace);
 
           toastr.info('récupération des données de l\'établissement');
           // 2. Récupérer toutes les infos de l'établissement et toutes les matières
-          return Etablissements.get({ uai: $scope.pronote.UAI }).$promise
+          return Etablissements.get({ uai: ctrl.pronote.UAI }).$promise
             .then(
               function success(response) {
-                $scope.etablissement_summary = response;
-                _($scope.etablissement_summary.imports).each(function(i) { i.date_import = new Date(i.date_import); });
+                ctrl.etablissement_summary = response;
+                _(ctrl.etablissement_summary.imports).each(function(i) { i.date_import = new Date(i.date_import); });
 
-                return Annuaire.get_structure($scope.pronote.UAI);
+                return Annuaire.get_structure(ctrl.pronote.UAI);
               },
               handle_error
             )
             .then(
               function success(response) {
-                $scope.etablissement = {
+                ctrl.etablissement = {
                   classes: _(response.data.groups).where({ type: 'CLS' }),
                   groupes_eleves: _(response.data.groups).select(<any>{ type: 'GRP' })
                 };
 
-                _($scope.etablissement.groupes_eleves).each(function(regroupement) {
+                _(ctrl.etablissement.groupes_eleves).each(function(regroupement) {
                   regroupement.libelle_aaf = regroupement.name.toUpperCase();
                   regroupement.displayed_label = regroupement.name;
                 });
-                _($scope.etablissement.classes).each(function(regroupement) {
+                _(ctrl.etablissement.classes).each(function(regroupement) {
                   regroupement.libelle_aaf = regroupement.name.toUpperCase();
                   regroupement.displayed_label = regroupement.name;
                 });
 
                 toastr.info('traitement des données des regroupements');
                 // 3.3 Classes et Groupes
-                return API.query_statistiques_regroupements($scope.pronote.UAI);
+                return API.query_statistiques_regroupements(ctrl.pronote.UAI);
               },
               handle_error
             )
             .then(
               function success(response) {
-                _($scope.pronote.Classes[0].Classe)
+                _(ctrl.pronote.Classes[0].Classe)
                   .each(function(regroupement) {
                     regroupement.displayed_label = regroupement.Nom;
-                    regroupement.laclasse = _($scope.etablissement.classes).findWhere({ libelle_aaf: regroupement.Nom.toUpperCase() });
+                    regroupement.laclasse = _(ctrl.etablissement.classes).findWhere({ libelle_aaf: regroupement.Nom.toUpperCase() });
 
                     if (_(regroupement.laclasse).isUndefined()) {
-                      let matched = _($scope.etablissement_summary.matchables).findWhere({ hash_item: hash_me(regroupement) });
+                      let matched = _(ctrl.etablissement_summary.matchables).findWhere({ hash_item: hash_me(regroupement) });
                       if (!_(matched).isUndefined()) {
-                        regroupement.laclasse = _($scope.etablissement.classes).findWhere({ id: matched.id_annuaire });
+                        regroupement.laclasse = _(ctrl.etablissement.classes).findWhere({ id: matched.id_annuaire });
                       }
                     }
 
@@ -279,15 +282,15 @@ angular.module('cahierDeTextesClientApp')
                     }
                   });
 
-                _($scope.pronote.Groupes[0].Groupe)
+                _(ctrl.pronote.Groupes[0].Groupe)
                   .each(function(regroupement) {
                     regroupement.displayed_label = regroupement.Nom;
-                    regroupement.laclasse = _($scope.etablissement.groupes_eleves).findWhere({ libelle_aaf: regroupement.Nom.toUpperCase() });
+                    regroupement.laclasse = _(ctrl.etablissement.groupes_eleves).findWhere({ libelle_aaf: regroupement.Nom.toUpperCase() });
 
                     if (_(regroupement.laclasse).isUndefined()) {
-                      let matched = _($scope.etablissement_summary.matchables).findWhere({ hash_item: hash_me(regroupement) });
+                      let matched = _(ctrl.etablissement_summary.matchables).findWhere({ hash_item: hash_me(regroupement) });
                       if (!_(matched).isUndefined()) {
-                        regroupement.laclasse = _($scope.etablissement.groupes_eleves).findWhere({ id: matched.id_annuaire });
+                        regroupement.laclasse = _(ctrl.etablissement.groupes_eleves).findWhere({ id: matched.id_annuaire });
                       }
                     }
 
@@ -302,7 +305,7 @@ angular.module('cahierDeTextesClientApp')
 
                 toastr.info('traitement des données des cours');
                 // 4. treating Cours
-                $scope.creneaux = _.chain($scope.pronote.Cours[0].Cours)
+                ctrl.creneaux = _.chain(ctrl.pronote.Cours[0].Cours)
                   .map(function(cours) {
                     return _.chain(cours.Matiere).map(function(matiere) {
                       let compute_cours = function(type_regroupement) {
@@ -313,16 +316,16 @@ angular.module('cahierDeTextesClientApp')
 
                           if (type_regroupement === 'Classe') {
                             this_cours.Classe = regroupement;
-                            this_cours.Classe.Semaines = Utils.fix_semainier_pronote(this_cours.Classe.Semaines, $scope.pronote.AnneeScolaire[0].DateDebut);
+                            this_cours.Classe.Semaines = Utils.fix_semainier_pronote(this_cours.Classe.Semaines, ctrl.pronote.AnneeScolaire[0].DateDebut);
                           } else {
                             this_cours.Groupe = regroupement;
-                            this_cours.Groupe.Semaines = Utils.fix_semainier_pronote(this_cours.Groupe.Semaines, $scope.pronote.AnneeScolaire[0].DateDebut);
+                            this_cours.Groupe.Semaines = Utils.fix_semainier_pronote(this_cours.Groupe.Semaines, ctrl.pronote.AnneeScolaire[0].DateDebut);
                           }
 
                           if (_(cours).has('Salle')) {
                             return _(cours.Salle).map(function(salle) {
                               this_cours.Salle = salle;
-                              this_cours.Salle.Semaines = Utils.fix_semainier_pronote(this_cours.Salle.Semaines, $scope.pronote.AnneeScolaire[0].DateDebut);
+                              this_cours.Salle.Semaines = Utils.fix_semainier_pronote(this_cours.Salle.Semaines, ctrl.pronote.AnneeScolaire[0].DateDebut);
 
                               return this_cours;
                             });
@@ -342,20 +345,20 @@ angular.module('cahierDeTextesClientApp')
                   .flatten()
                   .value();
 
-                $scope.pronote.classes = Utils.groupByKey($scope.pronote.Classes[0].Classe, 'Ident');
-                $scope.pronote.salles = Utils.groupByKey($scope.pronote.Salles[0].Salle, 'Ident');
-                $scope.pronote.plages_horaires = Utils.groupByKey($scope.pronote.GrilleHoraire[0].PlacesParJour[0].Place, 'Numero');
-                $scope.pronote.groupes_eleves = Utils.groupByKey($scope.pronote.Groupes[0].Groupe, 'Ident');
+                ctrl.pronote.classes = Utils.groupByKey(ctrl.pronote.Classes[0].Classe, 'Ident');
+                ctrl.pronote.salles = Utils.groupByKey(ctrl.pronote.Salles[0].Salle, 'Ident');
+                ctrl.pronote.plages_horaires = Utils.groupByKey(ctrl.pronote.GrilleHoraire[0].PlacesParJour[0].Place, 'Numero');
+                ctrl.pronote.groupes_eleves = Utils.groupByKey(ctrl.pronote.Groupes[0].Groupe, 'Ident');
 
-                $scope.matcheable_data.push({
+                ctrl.matcheable_data.push({
                   title: 'Classes',
-                  pronote: $scope.pronote.classes,
-                  annuaire: $scope.etablissement.classes
+                  pronote: ctrl.pronote.classes,
+                  annuaire: ctrl.etablissement.classes
                 });
-                $scope.matcheable_data.push({
+                ctrl.matcheable_data.push({
                   title: 'Groupes d\'élèves',
-                  pronote: $scope.pronote.groupes_eleves,
-                  annuaire: $scope.etablissement.groupes_eleves
+                  pronote: ctrl.pronote.groupes_eleves,
+                  annuaire: ctrl.etablissement.groupes_eleves
                 });
 
                 toastr.info('Récupération des matieres');
@@ -366,7 +369,7 @@ angular.module('cahierDeTextesClientApp')
             )
             .then(
               function success(response) {
-                $scope.matieres = _(response.data).map(function(matiere) {
+                ctrl.matieres = _(response.data).map(function(matiere) {
                   if (_(matiere.name).isNull()) {
                     matiere.name = '';
                   }
@@ -377,17 +380,17 @@ angular.module('cahierDeTextesClientApp')
                 });
 
                 // 3. Matcher les 2
-                _($scope.pronote.Matieres[0].Matiere)
+                _(ctrl.pronote.Matieres[0].Matiere)
                   .each(function(matiere) {
                     matiere.displayed_label = matiere.Libelle;
-                    matiere.laclasse = _($scope.matieres).findWhere({ name: matiere.Libelle.toUpperCase() });
+                    matiere.laclasse = _(ctrl.matieres).findWhere({ name: matiere.Libelle.toUpperCase() });
 
                     if (_(matiere.laclasse).isUndefined()) {
 
                       if (_(matiere.laclasse).isUndefined()) {
-                        let matched = _($scope.etablissement_summary.matchables).findWhere({ hash_item: hash_me(matiere) });
+                        let matched = _(ctrl.etablissement_summary.matchables).findWhere({ hash_item: hash_me(matiere) });
                         if (!_(matched).isUndefined()) {
-                          matiere.laclasse = _($scope.matieres).findWhere({ id: matched.id_annuaire });
+                          matiere.laclasse = _(ctrl.matieres).findWhere({ id: matched.id_annuaire });
                         }
                       }
                     }
@@ -398,41 +401,41 @@ angular.module('cahierDeTextesClientApp')
                     }
                   });
 
-                $scope.pronote.matieres = Utils.groupByKey($scope.pronote.Matieres[0].Matiere, 'Ident');
-                $scope.matcheable_data.push({
+                ctrl.pronote.matieres = Utils.groupByKey(ctrl.pronote.Matieres[0].Matiere, 'Ident');
+                ctrl.matcheable_data.push({
                   title: 'Matières',
-                  pronote: $scope.pronote.matieres,
-                  annuaire: $scope.matieres
+                  pronote: ctrl.pronote.matieres,
+                  annuaire: ctrl.matieres
                 });
 
-                _($scope.matcheable_data).each(function(dataset) {
+                _(ctrl.matcheable_data).each(function(dataset) {
                   dataset.total = function() { return _(dataset.pronote).size(); };
                   dataset.unmatched = function() { return _(dataset.pronote).where({ laclasse: undefined }).length; };
                   dataset.percent_valid = function() { return (dataset.total() - dataset.unmatched()) / dataset.total(); };
                 });
 
-                $scope.selected = {
-                  matieres: $scope.pronote.Matieres[0].Matiere,
-                  classes: _($scope.pronote.Classes[0].Classe).where({ existing_creneaux: 0 }),
-                  groupes: _($scope.pronote.Groupes[0].Groupe).where({ existing_creneaux: 0 })
+                ctrl.selected = {
+                  matieres: ctrl.pronote.Matieres[0].Matiere,
+                  classes: _(ctrl.pronote.Classes[0].Classe).where({ existing_creneaux: 0 }),
+                  groupes: _(ctrl.pronote.Groupes[0].Groupe).where({ existing_creneaux: 0 })
                 };
 
                 update_creneaux_readiness();
 
-                $scope.$watchCollection('selected', function() { update_counters(); });
+                ctrl.$watchCollection('selected', function() { update_counters(); });
               },
               handle_error
             )
             .then(
               function success(response) {
-                $scope.step++;
+                ctrl.step++;
                 return $q.resolve(true);
               },
               handle_error
             );
         };
 
-        $scope.process_load = function(fichier) {
+        ctrl.process_load = function(fichier) {
           swal({
             title: "Déchiffrage du fichier...",
             text: "traitement en cours",
@@ -472,24 +475,24 @@ angular.module('cahierDeTextesClientApp')
             return $q.reject(response);
           };
 
-          $scope.report = {};
+          ctrl.report = {};
 
-          let creneaux_emploi_du_temps = _($scope.creneaux).select(function(creneau) {
+          let creneaux_emploi_du_temps = _(ctrl.creneaux).select(function(creneau) {
             return creneau.ready && creneau.is_displayed;
           });
 
           // Log import
-          return $http.post(`${APP_PATH}/api/import/log/start/?uai=${$scope.pronote.UAI}`, { uai: $scope.pronote.UAI, type: 'client ' + VERSION, comment: '' })
+          return $http.post(`${APP_PATH}/api/import/log/start/?uai=${ctrl.pronote.UAI}`, { uai: ctrl.pronote.UAI, type: 'client ' + VERSION, comment: '' })
             .then(
               function success(response) {
                 import_id = response.data.id;
 
                 // Create Etablissement
                 let ct_etablissement = new Etablissements({
-                  uai: $scope.pronote.UAI,
-                  date_premier_jour_premiere_semaine: new Date($scope.pronote.AnneeScolaire[0].DatePremierJourSemaine1),
-                  debut_annee_scolaire: new Date($scope.pronote.AnneeScolaire[0].DateDebut),
-                  fin_annee_scolaire: new Date($scope.pronote.AnneeScolaire[0].DateFin)
+                  uai: ctrl.pronote.UAI,
+                  date_premier_jour_premiere_semaine: new Date(ctrl.pronote.AnneeScolaire[0].DatePremierJourSemaine1),
+                  debut_annee_scolaire: new Date(ctrl.pronote.AnneeScolaire[0].DateDebut),
+                  fin_annee_scolaire: new Date(ctrl.pronote.AnneeScolaire[0].DateFin)
                 });
                 return ct_etablissement.$save();
               },
@@ -497,7 +500,7 @@ angular.module('cahierDeTextesClientApp')
             )
             .then(
               function success(response) {
-                $scope.report.etablissement = response;
+                ctrl.report.etablissement = response;
 
                 // Create CahierDeTextes
                 let preprocess_cahiers_de_textes = function(liste_regroupements) {
@@ -507,15 +510,15 @@ angular.module('cahierDeTextesClientApp')
                       return {
                         label: regroupement.laclasse.libelle_aaf,
                         regroupement_id: regroupement.laclasse.id,
-                        debut_annee_scolaire: new Date($scope.pronote.AnneeScolaire[0].DateDebut),
-                        fin_annee_scolaire: new Date($scope.pronote.AnneeScolaire[0].DateFin)
+                        debut_annee_scolaire: new Date(ctrl.pronote.AnneeScolaire[0].DateDebut),
+                        fin_annee_scolaire: new Date(ctrl.pronote.AnneeScolaire[0].DateFin)
                       };
                     })
                     .value();
                 };
-                let regroupements = preprocess_cahiers_de_textes($scope.pronote.classes);
+                let regroupements = preprocess_cahiers_de_textes(ctrl.pronote.classes);
 
-                regroupements.push(preprocess_cahiers_de_textes($scope.pronote.groupes_eleves));
+                regroupements.push(preprocess_cahiers_de_textes(ctrl.pronote.groupes_eleves));
                 regroupements = _(regroupements).flatten();
 
                 return $http.post(`${APP_PATH}/api/cahiers_de_textes/bulk`, { cahiers_de_textes: regroupements });
@@ -524,14 +527,14 @@ angular.module('cahierDeTextesClientApp')
             )
             .then(
               function success(response) {
-                $scope.report.cahiers_de_textes = response.data;
+                ctrl.report.cahiers_de_textes = response.data;
 
                 // Create Salle
                 toastr.info('Création des salles');
-                let salles_to_import = _($scope.pronote.salles)
+                let salles_to_import = _(ctrl.pronote.salles)
                   .map(function(salle) {
                     return {
-                      uai: $scope.pronote.UAI,
+                      uai: ctrl.pronote.UAI,
                       identifiant: salle.Ident,
                       nom: salle.Nom
                     };
@@ -543,18 +546,18 @@ angular.module('cahierDeTextesClientApp')
             )
             .then(
               function success(response) {
-                $scope.report.salles = response.data;
+                ctrl.report.salles = response.data;
 
                 // Create Creneaux
                 let creneaux_to_import = creneaux_emploi_du_temps.map(function(creneau) {
-                  let heure_debut = Utils.libelleHeure_to_Moment($scope.pronote.plages_horaires[creneau.NumeroPlaceDebut].LibelleHeureDebut);
+                  let heure_debut = Utils.libelleHeure_to_Moment(ctrl.pronote.plages_horaires[creneau.NumeroPlaceDebut].LibelleHeureDebut);
 
                   let pre_creneau = {
                     import_id: import_id,
                     jour_de_la_semaine: parseInt(creneau.Jour),
                     heure_debut: heure_debut.toISOString(),
-                    heure_fin: heure_debut.add(parseInt(creneau.NombrePlaces) * parseInt($scope.pronote.GrilleHoraire[0].DureePlace), 'minutes').toISOString(),
-                    matiere_id: $scope.pronote.matieres[creneau.Matiere.Ident].laclasse.id,
+                    heure_fin: heure_debut.add(parseInt(creneau.NombrePlaces) * parseInt(ctrl.pronote.GrilleHoraire[0].DureePlace), 'minutes').toISOString(),
+                    matiere_id: ctrl.pronote.matieres[creneau.Matiere.Ident].laclasse.id,
                     salle_id: null,
                     semainier_salle: null,
                     regroupement_id: null,
@@ -562,15 +565,15 @@ angular.module('cahierDeTextesClientApp')
                   };
 
                   if (_(creneau).has('Salle')) {
-                    pre_creneau.salle_id = _($scope.report.salles).find({ identifiant: creneau.Salle.Ident }).id;
+                    pre_creneau.salle_id = _(ctrl.report.salles).find({ identifiant: creneau.Salle.Ident }).id;
                     pre_creneau.semainier_salle = parseInt(creneau.Salle.Semaines);
                   }
 
                   if (_(creneau).has('Classe')) {
-                    pre_creneau.regroupement_id = $scope.pronote.classes[creneau.Classe.Ident].laclasse.id;
+                    pre_creneau.regroupement_id = ctrl.pronote.classes[creneau.Classe.Ident].laclasse.id;
                     pre_creneau.semainier_regroupement = parseInt(creneau.Classe.Semaines);
                   } else {
-                    pre_creneau.regroupement_id = $scope.pronote.groupes_eleves[creneau.Groupe.Ident].laclasse.id;
+                    pre_creneau.regroupement_id = ctrl.pronote.groupes_eleves[creneau.Groupe.Ident].laclasse.id;
                     pre_creneau.semainier_regroupement = parseInt(creneau.Groupe.Semaines);
                   }
 
@@ -583,8 +586,8 @@ angular.module('cahierDeTextesClientApp')
                 while (creneaux_to_import.length > 0) {
                   promises.push($http.post(`${APP_PATH}/api/creneaux_emploi_du_temps/bulk/`,
                     {
-                      uai: $scope.pronote.UAI,
-                      creneaux_emploi_du_temps: creneaux_to_import.splice(0, 500)
+                    uai: ctrl.pronote.UAI,
+                    creneaux_emploi_du_temps: creneaux_to_import.splice(0, 500)
                     }));
                 }
 
@@ -594,15 +597,15 @@ angular.module('cahierDeTextesClientApp')
             )
             .then(
               function success(response) {
-                $scope.report.creneaux = _.chain(response).pluck('data').flatten().value();
+                ctrl.report.creneaux = _.chain(response).pluck('data').flatten().value();
 
-                return $q.resolve($scope.report);
+                return $q.resolve(ctrl.report);
               },
               handle_error
             );
         };
 
-        $scope.match_this = function(item, uai) {
+        ctrl.match_this = function(item, uai) {
           let laclasse_id = _(item.laclasse).has('ent_id') ? item.laclasse.ent_id : item.laclasse.id;
 
           let m = new Matchable({
@@ -615,7 +618,7 @@ angular.module('cahierDeTextesClientApp')
           });
         };
         // FIXME
-        $scope.unmatch_this = function(item, uai) {
+        ctrl.unmatch_this = function(item, uai) {
           Matchable.delete({
             uai: uai,
             hash_item: hash_me(item)
@@ -626,11 +629,11 @@ angular.module('cahierDeTextesClientApp')
             });
         };
 
-        $scope.validate_matches = function() {
-          $scope.step++;
+        ctrl.validate_matches = function() {
+          ctrl.step++;
         };
 
-        $scope.process_import = function() {
+        ctrl.process_import = function() {
           swal({
             title: "Import des données...",
             text: "traitement en cours",
@@ -645,7 +648,7 @@ angular.module('cahierDeTextesClientApp')
                 import_data().then(
                   function success(response) {
                     swal.closeModal();
-                    $scope.step = 0;
+                    ctrl.step = 0;
                     swal({
                       title: "Import terminé",
                       html: "",

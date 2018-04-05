@@ -5,15 +5,18 @@ angular.module( 'cahierDeTextesClientApp' )
   [ '$scope', '$sce', '$uibModalInstance', 'toastr', 'APP_PATH', 'Cours', 'Devoirs', 'CurrentUser',
     'titre', 'cours', 'devoirs',
     function( $scope, $sce, $uibModalInstance, toastr, APP_PATH, Cours, Devoirs, CurrentUser,
-      matiere, cours, devoirs ) {
-      $scope.app_path = APP_PATH;
-      $scope.matiere = matiere;
-      $scope.date = null;
+              matiere, cours, devoirs ) {
+      let ctrl = $scope;
+      ctrl.$ctrl = ctrl;
+
+      ctrl.app_path = APP_PATH;
+      ctrl.matiere = matiere;
+      ctrl.date = null;
 
       if ( !_( cours ).isNull() ) {
-        $scope.cours = new Cours( cours );
+        ctrl.cours = new Cours( cours );
 
-        $scope.date = $scope.cours.date_cours;
+        ctrl.date = ctrl.cours.date_cours;
         _( cours.devoirs ).each( function( devoir ) {
           devoir.tooltip = devoir.contenu;
           if ( devoir.temps_estime > 0 ) {
@@ -23,20 +26,20 @@ angular.module( 'cahierDeTextesClientApp' )
         } );
       }
 
-      $scope.devoirs = devoirs.map( function( devoir ) {
+      ctrl.devoirs = devoirs.map( function( devoir ) {
         devoir.matiere = matiere;
         return new Devoirs( devoir );
       } );
 
-      if ( _( $scope.date ).isNull() && !_( $scope.devoirs ).isEmpty() ) {
-        $scope.date = $scope.devoirs[ 0 ].date_due;
+      if ( _( ctrl.date ).isNull() && !_( ctrl.devoirs ).isEmpty() ) {
+        ctrl.date = ctrl.devoirs[ 0 ].date_due;
       }
 
-      $scope.fermer = function() {
-        $uibModalInstance.close( $scope );
+      ctrl.fermer = function() {
+        $uibModalInstance.close( ctrl );
       };
 
       CurrentUser.get().then( function( response ) {
-        $scope.current_user = response.data;
+        ctrl.current_user = response;
       } );
     }] );

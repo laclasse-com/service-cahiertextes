@@ -87,7 +87,7 @@ angular.module('cahierDeTextesClientApp')
 
         CurrentUser.get()
           .then(function(response) {
-            ctrl.current_user = response.data;
+            ctrl.current_user = response;
 
             ctrl.$watch('period_offset', function() {
               retrieve_data();

@@ -4,15 +4,18 @@ angular.module( 'cahierDeTextesClientApp' )
   .controller( 'HeaderCtrl',
   [ '$scope', '$state', 'CurrentUser', 'Redirection', '$sce', 'URL_DOCS',
     function( $scope, $state, CurrentUser, Redirection, $sce, URL_DOCS ) {
-      $scope.load_docs = window.location.hostname !== 'localhost';
+      let ctrl = $scope;
+      ctrl.$ctrl = ctrl;
 
-      $scope.URL_DOCS_login = $sce.trustAsResourceUrl( `${ URL_DOCS }/login` );
-      $scope.embedded = window != window.top;
+      ctrl.load_docs = window.location.hostname !== 'localhost';
+
+      ctrl.URL_DOCS_login = $sce.trustAsResourceUrl( `${ URL_DOCS }/login` );
+      ctrl.embedded = window != window.top;
       CurrentUser.get().then( function( response ) {
-        $scope.current_user = response.data;
+        ctrl.current_user = response;
       } );
 
-      $scope.reload = function() {
+      ctrl.reload = function() {
         // Changement du profil actif dans l'annuaire
         // Rechargement de l'application
         Redirection.doorman( [] );

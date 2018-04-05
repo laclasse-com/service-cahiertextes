@@ -8,7 +8,7 @@ angular.module('cahierDeTextesClientApp')
 
         CurrentUser.get()
           .then(function(response) {
-            let user = response.data;
+            let user = response;
 
             ctrl.tabs = _.chain(user.profiles)
               .pluck('type')

@@ -169,9 +169,7 @@ angular.module('cahierDeTextesClientApp')
               let elt_fc_content_title = element.find('.fc-list-item-title');
               if (elt_fc_content_title.length > 0
                 && (!_(event.details.cours).isNull() || !_(event.details.devoirs).isEmpty())) {
-                let event_content = `${elt_fc_content_title.html()}
-              <br>
-<div class="col-md-6 sequence-pedagogique">`;
+                let event_content = `${elt_fc_content_title.html()}<br><div class="col-md-6 sequence-pedagogique">`;
 
                 if (!_(event.details.cours).isNull()) {
                   event_content += `
@@ -223,9 +221,13 @@ ${assignement.contenu}
                       ctrl.current_user.get_actual_subjects()
                         .then(function(actual_subjects) {
                           PopupsCreneau.edition(ctrl.raw_data,
-                            actual_subjects, ctrl.current_user.actual_groups,
-                            creneau_selectionne, event.details.cours, event.details.devoirs,
-                            popup_callback, popup_ouverte);
+                                                actual_subjects,
+                                                ctrl.current_user.actual_groups,
+                                                creneau_selectionne,
+                                                event.details.cours,
+                                                event.details.devoirs,
+                                                popup_callback,
+                                                popup_ouverte);
                         });
                     });
                 }

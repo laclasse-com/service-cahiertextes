@@ -19,7 +19,7 @@ angular.module( 'cahierDeTextesClientApp' )
           controller: 'IndexCtrl',
           resolve: {
             auth: [ 'Redirection', function( Redirection ) { Redirection.doorman( [ 'ADM', 'DIR', 'ENS', 'DOC', 'ELV', 'TUT', 'EVS' ] ); }],
-            current_user: [ 'CurrentUser', function( CurrentUser ) { return CurrentUser.get().then( function( response ) { return response.data; } ); }]
+            current_user: [ 'CurrentUser', function( CurrentUser ) { return CurrentUser.get().then( function( response ) { return response; } ); }]
           }
         } )
         .state( 'emploi_du_temps',
