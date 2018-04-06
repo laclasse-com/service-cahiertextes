@@ -4,12 +4,12 @@ angular.module('cahierDeTextesClientApp')
   .controller('ImportCtrl',
     ['$scope', '$http', '$locale', '$sce', '$filter', 'fileUpload', 'moment', 'toastr', '$q',
       'APP_PATH', 'SEMAINES_VACANCES', 'ZONE', 'VERSION',
-      'Annuaire', 'Utils', 'Etablissements', 'CreneauxEmploiDuTemps', 'API', 'Matchable',
-      'current_user',
+      'Annuaire', 'Utils', 'CreneauxEmploiDuTemps', 'API', 'Matchable',
+     'current_user',
       function($scope, $http, $locale, $sce, $filter, fileUpload, moment, toastr, $q,
         APP_PATH, SEMAINES_VACANCES, ZONE, VERSION,
-        Annuaire, Utils, Etablissements, CreneauxEmploiDuTemps, API, Matchable,
-        current_user) {
+        Annuaire, Utils, CreneauxEmploiDuTemps, API, Matchable,
+               current_user) {
         let ctrl = $scope;
         ctrl.$ctrl = ctrl;
 
@@ -227,10 +227,10 @@ angular.module('cahierDeTextesClientApp')
 
           toastr.info('récupération des données de l\'établissement');
           // 2. Récupérer toutes les infos de l'établissement et toutes les matières
-          return Etablissements.get({ uai: ctrl.pronote.UAI }).$promise
+          return $http.get(`${APP_PATH}/api/etablissements/${ctrl.pronote.UAI}`)
             .then(
               function success(response) {
-                ctrl.etablissement_summary = response;
+                ctrl.etablissement_summary = response.data;
                 _(ctrl.etablissement_summary.imports).each(function(i) { i.date_import = new Date(i.date_import); });
 
                 return Annuaire.get_structure(ctrl.pronote.UAI);
@@ -262,55 +262,55 @@ angular.module('cahierDeTextesClientApp')
             .then(
               function success(response) {
                 _(ctrl.pronote.Classes[0].Classe)
-                  .each(function(regroupement) {
-                    regroupement.displayed_label = regroupement.Nom;
-                    regroupement.laclasse = _(ctrl.etablissement.classes).findWhere({ libelle_aaf: regroupement.Nom.toUpperCase() });
+                .each(function(regroupement) {
+                  regroupement.displayed_label = regroupement.Nom;
+                  regroupement.laclasse = _(ctrl.etablissement.classes).findWhere({ libelle_aaf: regroupement.Nom.toUpperCase() });
 
-                    if (_(regroupement.laclasse).isUndefined()) {
-                      let matched = _(ctrl.etablissement_summary.matchables).findWhere({ hash_item: hash_me(regroupement) });
-                      if (!_(matched).isUndefined()) {
-                        regroupement.laclasse = _(ctrl.etablissement.classes).findWhere({ id: matched.id_annuaire });
-                      }
+                  if (_(regroupement.laclasse).isUndefined()) {
+                    let matched = _(ctrl.etablissement_summary.matchables).findWhere({ hash_item: hash_me(regroupement) });
+                    if (!_(matched).isUndefined()) {
+                      regroupement.laclasse = _(ctrl.etablissement.classes).findWhere({ id: matched.id_annuaire });
                     }
+                  }
 
-                    regroupement.edit = _(regroupement.laclasse).isUndefined();
-                    let creneaux_laclasse = _(regroupement.laclasse).isUndefined() ? undefined : _(response.data).findWhere({ regroupement_id: "" + regroupement.laclasse.id });
-                    regroupement.existing_creneaux = _(creneaux_laclasse).isUndefined() ? 0 : creneaux_laclasse.creneaux_emploi_du_temps.vides.length + creneaux_laclasse.creneaux_emploi_du_temps.pleins.length;
+             regroupement.edit = _(regroupement.laclasse).isUndefined();
+             let creneaux_laclasse = _(regroupement.laclasse).isUndefined() ? undefined : _(response.data).findWhere({ regroupement_id: "" + regroupement.laclasse.id });
+             regroupement.existing_creneaux = _(creneaux_laclasse).isUndefined() ? 0 : creneaux_laclasse.creneaux_emploi_du_temps.vides.length + creneaux_laclasse.creneaux_emploi_du_temps.pleins.length;
 
-                    if (!regroupement.edit) {
-                      regroupement.laclasse.displayed_label = regroupement.laclasse.libelle_aaf;
-                    }
-                  });
+             if (!regroupement.edit) {
+               regroupement.laclasse.displayed_label = regroupement.laclasse.libelle_aaf;
+             }
+           });
 
-                _(ctrl.pronote.Groupes[0].Groupe)
-                  .each(function(regroupement) {
-                    regroupement.displayed_label = regroupement.Nom;
-                    regroupement.laclasse = _(ctrl.etablissement.groupes_eleves).findWhere({ libelle_aaf: regroupement.Nom.toUpperCase() });
+         _(ctrl.pronote.Groupes[0].Groupe)
+           .each(function(regroupement) {
+             regroupement.displayed_label = regroupement.Nom;
+             regroupement.laclasse = _(ctrl.etablissement.groupes_eleves).findWhere({ libelle_aaf: regroupement.Nom.toUpperCase() });
 
-                    if (_(regroupement.laclasse).isUndefined()) {
-                      let matched = _(ctrl.etablissement_summary.matchables).findWhere({ hash_item: hash_me(regroupement) });
-                      if (!_(matched).isUndefined()) {
-                        regroupement.laclasse = _(ctrl.etablissement.groupes_eleves).findWhere({ id: matched.id_annuaire });
-                      }
-                    }
+             if (_(regroupement.laclasse).isUndefined()) {
+               let matched = _(ctrl.etablissement_summary.matchables).findWhere({ hash_item: hash_me(regroupement) });
+               if (!_(matched).isUndefined()) {
+                 regroupement.laclasse = _(ctrl.etablissement.groupes_eleves).findWhere({ id: matched.id_annuaire });
+               }
+             }
 
-                    regroupement.edit = _(regroupement.laclasse).isUndefined();
-                    let creneaux_laclasse = _(regroupement.laclasse).isUndefined() ? undefined : _(response).findWhere({ regroupement_id: "" + regroupement.laclasse.id });
-                    regroupement.existing_creneaux = _(creneaux_laclasse).isUndefined() ? 0 : creneaux_laclasse.creneaux_emploi_du_temps.vides.length + creneaux_laclasse.creneaux_emploi_du_temps.pleins.length;
+             regroupement.edit = _(regroupement.laclasse).isUndefined();
+             let creneaux_laclasse = _(regroupement.laclasse).isUndefined() ? undefined : _(response).findWhere({ regroupement_id: "" + regroupement.laclasse.id });
+             regroupement.existing_creneaux = _(creneaux_laclasse).isUndefined() ? 0 : creneaux_laclasse.creneaux_emploi_du_temps.vides.length + creneaux_laclasse.creneaux_emploi_du_temps.pleins.length;
 
-                    if (!regroupement.edit) {
-                      regroupement.laclasse.displayed_label = regroupement.laclasse.libelle_aaf;
-                    }
-                  });
+             if (!regroupement.edit) {
+               regroupement.laclasse.displayed_label = regroupement.laclasse.libelle_aaf;
+             }
+           });
 
-                toastr.info('traitement des données des cours');
-                // 4. treating Cours
-                ctrl.creneaux = _.chain(ctrl.pronote.Cours[0].Cours)
-                  .map(function(cours) {
-                    return _.chain(cours.Matiere).map(function(matiere) {
-                      let compute_cours = function(type_regroupement) {
-                        return function(regroupement) {
-                          let this_cours = angular.copy(cours);
+         toastr.info('traitement des données des cours');
+         // 4. treating Cours
+         ctrl.creneaux = _.chain(ctrl.pronote.Cours[0].Cours)
+           .map(function(cours) {
+             return _.chain(cours.Matiere).map(function(matiere) {
+               let compute_cours = function(type_regroupement) {
+                 return function(regroupement) {
+                   let this_cours = angular.copy(cours);
                           this_cours.is_displayed = true;
                           this_cours.Matiere = matiere;
 
@@ -487,20 +487,17 @@ angular.module('cahierDeTextesClientApp')
               function success(response) {
                 import_id = response.data.id;
 
-                // Create Etablissement
-                let ct_etablissement = new Etablissements({
-                  uai: ctrl.pronote.UAI,
-                  date_premier_jour_premiere_semaine: new Date(ctrl.pronote.AnneeScolaire[0].DatePremierJourSemaine1),
-                  debut_annee_scolaire: new Date(ctrl.pronote.AnneeScolaire[0].DateDebut),
-                  fin_annee_scolaire: new Date(ctrl.pronote.AnneeScolaire[0].DateFin)
-                });
-                return ct_etablissement.$save();
+                return $http.post( `${APP_PATH}/api/etablissements/${ctrl.pronote.UAI}`,
+                                   { uai: ctrl.pronote.UAI,
+                                     date_premier_jour_premiere_semaine: new Date(ctrl.pronote.AnneeScolaire[0].DatePremierJourSemaine1),
+                                     debut_annee_scolaire: new Date(ctrl.pronote.AnneeScolaire[0].DateDebut),
+                                     fin_annee_scolaire: new Date(ctrl.pronote.AnneeScolaire[0].DateFin) });
               },
               handle_error
             )
             .then(
               function success(response) {
-                ctrl.report.etablissement = response;
+                ctrl.report.etablissement = response.data;
 
                 // Create CahierDeTextes
                 let preprocess_cahiers_de_textes = function(liste_regroupements) {
