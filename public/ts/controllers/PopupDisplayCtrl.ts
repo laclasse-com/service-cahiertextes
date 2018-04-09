@@ -3,7 +3,7 @@
 angular.module( 'cahierDeTextesClientApp' )
   .controller( 'PopupDisplayCtrl',
   [ '$scope', '$sce', '$uibModalInstance', 'toastr', 'APP_PATH', 'Cours', 'Devoirs', 'CurrentUser',
-    'titre', 'cours', 'devoirs',
+    'matiere', 'cours', 'devoirs',
     function( $scope, $sce, $uibModalInstance, toastr, APP_PATH, Cours, Devoirs, CurrentUser,
               matiere, cours, devoirs ) {
       let ctrl = $scope;

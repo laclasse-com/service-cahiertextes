@@ -24,7 +24,7 @@
         <div class="col-md-6">
             <label>Choisir la matière :</label>
             <select ng:model="scope.selected_matiere"
-                    ng:options="matiere as matiere.name for matiere in matieres | orderBy:['name']"
+                    ng:options="matiere as matiere.name for matiere in $ctrl.current_user.actual_subjects | orderBy:['name']"
                     ng:required="true">
             </select>
         </div>
@@ -127,8 +127,7 @@
                             </div>
 
                             <div uib-dropdown class="uib-dropdown" ng:if="!creneau.etranger">
-                                <button uib-dropdown-toggle class="btn btn-sm btn-default uib-dropdown-toggle pull-right" role="button" data-toggle="uib-dropdown" data-target="#" href=""
-                                        ng:class="{'disabled': faulty_docs_app}">
+                                <button uib-dropdown-toggle class="btn btn-sm btn-default uib-dropdown-toggle pull-right" role="button" data-toggle="uib-dropdown" data-target="#" href="">
                                     <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
                                 </button>
                                 <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng:click="$event.stopPropagation()">
@@ -236,8 +235,7 @@
                                     </div>
 
                                     <div uib-dropdown class="uib-dropdown" ng:if="!creneau.etranger">
-                                        <button uib-dropdown-toggle class="btn btn-sm btn-default uib-dropdown-toggle pull-right" role="button" data-toggle="uib-dropdown" data-target="#" href=""
-                                                ng:class="{'disabled': faulty_docs_app}">
+                                        <button uib-dropdown-toggle class="btn btn-sm btn-default uib-dropdown-toggle pull-right" role="button" data-toggle="uib-dropdown" data-target="#" href="">
                                             <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
                                         </button>
                                         <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng:click="$event.stopPropagation()">
@@ -343,8 +341,7 @@
                             </div>
 
                             <div uib-dropdown class="uib-dropdown" ng:if="!creneau.etranger">
-                                <button uib-dropdown-toggle class="btn btn-sm btn-default uib-dropdown-toggle pull-right" role="button" data-toggle="uib-dropdown" data-target="#" href=""
-                                        ng:class="{'disabled': faulty_docs_app}">
+                                <button uib-dropdown-toggle class="btn btn-sm btn-default uib-dropdown-toggle pull-right" role="button" data-toggle="uib-dropdown" data-target="#" href="">
                                     <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
                                 </button>
                                 <div uib-dropdown-menu class="uib-dropdown-menu" role="menu" ng:click="$event.stopPropagation()">
@@ -412,7 +409,7 @@
                     </ul>
                     <select class="col-md-3 pull-left"
                             ng:model="scope.selected_regroupement_id_duplication"
-                            ng:options="classe.id as classe.name for classe in classes">
+                            ng:options="classe.id as classe.name for classe in $ctrl.current_user.actual_groups">
                         <option value="" selected>Toutes les classes</option>
                     </select>
                     <select ng:required

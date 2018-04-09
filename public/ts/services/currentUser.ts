@@ -97,8 +97,6 @@ angular.module('cahierDeTextesClientApp')
                   _.chain(profiles).pluck('type').intersection(types).value().length > 0;
               };
 
-              console.log(response)
-
               return response.data;
             });
         });
