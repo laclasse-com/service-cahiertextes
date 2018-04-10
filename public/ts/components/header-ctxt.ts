@@ -113,6 +113,7 @@ template: `<header ng:class="{'embedded': $ctrl.embedded}">
               ng:options="child as child.user.firstname+' '+child.user.lastname for child in $ctrl.current_user.children track by child.user.id"
               ng:model="$ctrl.current_user.enfant_actif"
               ng:change="$ctrl.reload()">
+        <option value="" disabled selected>Vos enfants...</option>
       </select>
       <button class="btn btn-warning" ng:click="$ctrl.current_user.enfant_actif = null; $ctrl.reload()">⌫</button>
     </div>
