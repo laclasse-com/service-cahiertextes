@@ -1,43 +1,20 @@
 <div class="modal-header">
-    <h3>{{date | date : 'fullDate' }}<span ng:if="creneau.salles.length > 0">, salle {{creneau.salles[0].nom}}</span></h3>
-    <h4>{{matiere.name}}</h4>
+    <h3>{{$ctrl.date | date : 'fullDate' }}<span ng:if="$ctrl.creneau.salles.length > 0">, salle {{$ctrl.creneau.salles[0].nom}}</span></h3>
+    <h4>{{$ctrl.matiere.name}}</h4>
 </div>
 
 <div class="modal-body">
 
-    <uib-tabset active="devoirs.length > 0 ? 0 : 1">
+    <uib-tabset active="$ctrl.default_active_tab">
 
-        <uib-tab ng:if="devoirs.length > 0" heading="Travail à faire" index="0">
-            <div ng:repeat="devoir in devoirs"
-                 class="devoir col-md-12" >
-                <div class="col-md-8">
-                    <display-devoir devoir="devoir"></display-devoir>
-                </div>
-                <div class="col-md-4">
-                    <ul>
-                        <li class="clickable"
-                            tooltip-trigger="'click'"
-                            tooltip-placement="right"
-                            uib-tooltip-html="devoir.cours.contenu">
-                            <span><i class="picto" ng:style="{'background-image':'url(' + app_path + '/node_modules/laclasse-common-client/images/picto_cours.svg)'}"></i> Séquence pédagogique : <em>{{devoir.cours.date_cours | date : 'dd/MM'}}</em></span>
-                        </li>
-                    </ul>
-                    <switch-devoir devoir="devoir"
-                                   ng:if="current_user.is( ['ELV'] )" ></switch-devoir>
-
-                </div>
-            </div>
-            <div class="clearfix"></div>
-        </uib-tab>
-
-        <uib-tab heading="Séquence pédagogique" index="1">
+        <uib-tab heading="Séquence pédagogique" index="1" disable="!$ctrl.cours">
             <div class="col-md-8">
-                <display-sequence-pedagogique sp="cours" ng:if="cours.contenu" ></display-sequence-pedagogique>
+                <display-sequence-pedagogique sp="cours" ng:if="$ctrl.cours.contenu" ></display-sequence-pedagogique>
             </div>
 
             <div class="col-md-4">
                 <ul>
-                    <li class="clickable" ng:repeat="devoir in cours.devoirs"
+                    <li class="clickable" ng:repeat="devoir in $ctrl.cours.devoirs"
                         tooltip-trigger="'click'"
                         tooltip-placement="right"
                         uib-tooltip-html="devoir.tooltip"
@@ -49,11 +26,35 @@
 
             <div class="clearfix"></div>
         </uib-tab>
+
+        <uib-tab heading="Travail à faire" index="0" disable="$ctrl.devoirs.length == 0">
+            <div ng:repeat="devoir in $ctrl.devoirs"
+                 class="devoir col-md-12" >
+                <div class="col-md-8">
+                    <display-devoir devoir="devoir"></display-devoir>
+                </div>
+                <div class="col-md-4">
+                    <ul>
+                        <li class="clickable"
+                            tooltip-trigger="'click'"
+                            tooltip-placement="right"
+                            uib-tooltip-html="devoir.cours.contenu">
+                            <span><i class="picto" ng:style="{'background-image':'url(' + $ctrl.app_path + '/node_modules/laclasse-common-client/images/picto_cours.svg)'}"></i> Séquence pédagogique : <em>{{devoir.cours.date_cours | date : 'dd/MM'}}</em></span>
+                        </li>
+                    </ul>
+                    <switch-devoir devoir="devoir"
+                                   ng:if="$ctrl.current_user.is( ['ELV'] )" ></switch-devoir>
+
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </uib-tab>
+
     </uib-tabset>
 </div>
 
 <div class="modal-footer">
-    <button class="btn btn-default btn-sm pull-right" ng:click="fermer()">
+    <button class="btn btn-default btn-sm pull-right" ng:click="$ctrl.fermer()">
         <span class="glyphicon glyphicon-remove-sign"></span> Fermer
     </button>
 </div>

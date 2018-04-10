@@ -1439,6 +1439,7 @@ angular.module('cahierDeTextesClientApp')
         ctrl.fermer = function () {
             $uibModalInstance.close(ctrl);
         };
+        ctrl.default_active_tab = ctrl.devoirs.length > 0 ? 0 : 1;
         CurrentUser.get().then(function (response) {
             ctrl.current_user = response;
         });
