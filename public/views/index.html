@@ -1,48 +1,7 @@
-<header ng:controller="HeaderCtrl"
-        ng:class="{'embedded': embedded}">
-
-    <div class="onglets">
-        <a class="btn"
-           ng:repeat="tab in tabs"
-           ui:sref="{{tab.uisref}}"
-           ng:class="{'btn-warning': tab.active, 'btn-default': !tab.active}"
-           ng:click="set_active_tab( tab.uisref )">
-            <span class="{{tab.css_class}}"></span> {{tab.heading}}
-        </a>
-
-        <select class="pull-right choix-enfant"
-                ng:if="current_user.children.length > 0"
-                ng:options="child as child.user.firstname+' '+child.user.lastname for child in current_user.children track by child.user.id"
-                ng:model="current_user.enfant_actif"
-                ng:change="reload()">
-        </select>
-    </div>
-</header>
-
+<header-ctxt />
 
 <div id="ui-view-content"
      ui-view="content"
-     ng:class="{'embedded': embedded}"></div>
+     ng:class="{'embedded': $ctrl.embedded}"></div>
 
-<footer class="col-md-12"
-        ng:controller="FooterCtrl" ng:cloak>
-    <div class="pull-left">
-        <div class="btn-group" uib-dropdown>
-            <button uib-dropdown-toggle type="button" class="btn btn-xs btn-default uib-dropdown-toggle">
-                <span class="glyphicon glyphicon-cog"></span> Préférences
-            </button>
-            <ul uib-dropdown-menu class="uib-dropdown-menu user-preferences" role="menu">
-                <li ng:if="current_user.is(['ADM'])"><a class="btn btn-warning"
-                                                        ui:sref="import">
-                    <span class="glyphicon glyphicon-import"></span> Import Pronote
-                </a></li>
-                <li ng:if="current_user.is(['ADM'])" class="divider"></li>
-                <li><label><checkbox ng:model="current_user.parametrage_cahier_de_textes.affichage_week_ends"
-                                     ng:change="save_and_reload()"></checkbox> Afficher les week-ends</label></li>
-                <li><label><checkbox ng:model="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir"
-                                     ng:change="save_and_reload()"></checkbox> Afficher les types de devoirs</label></li
-            </ul>
-        </div>
-    </div>
-    <a href="https://github.com/laclasse-com/service-cahiertextes" class="pull-right">version {{version}}</a>
-</footer>
+<footer-ctxt />

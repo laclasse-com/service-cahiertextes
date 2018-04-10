@@ -407,6 +407,110 @@ angular.module('cahierDeTextesClientApp')
         }]
 });
 angular.module('cahierDeTextesClientApp')
+    .component('footerCtxt', { controller: ['$state', '$stateParams', 'VERSION', 'CurrentUser',
+        function ($state, $stateParams, VERSION, CurrentUser) {
+            var ctrl = this;
+            ctrl.version = VERSION;
+            CurrentUser.get().then(function (response) {
+                ctrl.current_user = response;
+                ctrl.save_and_reload = function () {
+                    CurrentUser.update_parameters(ctrl.current_user.parametrage_cahier_de_textes)
+                        .then(function () {
+                        $state.transitionTo($state.current, $stateParams, { reload: true, inherit: true, notify: true });
+                    });
+                };
+            });
+        }],
+    template: "\n<footer class=\"col-md-12\" ng:cloak>\n  <div class=\"pull-left\">\n    <div class=\"btn-group\" uib-dropdown>\n      <button uib-dropdown-toggle type=\"button\" class=\"btn btn-xs btn-default uib-dropdown-toggle\">\n        <span class=\"glyphicon glyphicon-cog\"></span> Pr\u00E9f\u00E9rences\n      </button>\n      <ul uib-dropdown-menu class=\"uib-dropdown-menu user-preferences\" role=\"menu\">\n        <li ng:if=\"$ctrl.current_user.is(['ADM'])\"><a class=\"btn btn-warning\"\n                                                      ui:sref=\"import\">\n            <span class=\"glyphicon glyphicon-import\"></span> Import Pronote\n        </a></li>\n        <li ng:if=\"$ctrl.current_user.is(['ADM'])\" class=\"divider\"></li>\n        <li><label><checkbox ng:model=\"$ctrl.current_user.parametrage_cahier_de_textes.affichage_week_ends\"\n                             ng:change=\"$ctrl.save_and_reload()\"></checkbox> Afficher les week-ends</label></li>\n        <li><label><checkbox ng:model=\"$ctrl.current_user.parametrage_cahier_de_textes.affichage_types_de_devoir\"\n                             ng:change=\"$ctrl.save_and_reload()\"></checkbox> Afficher les types de devoirs</label></li\n                                                                                                                    </ul>\n    </div>\n  </div>\n  <a href=\"https://github.com/laclasse-com/service-cahiertextes\" class=\"pull-right\">version {{$ctrl.version}}</a>\n</footer>\n" });
+angular.module('cahierDeTextesClientApp')
+    .component('headerCtxt', { controller: ['$state', 'CurrentUser', 'Redirection', '$sce',
+        function ($state, CurrentUser, Redirection, $sce) {
+            var ctrl = this;
+            ctrl.embedded = window != window.top;
+            ctrl.reload = function () {
+                Redirection.doorman([]);
+            };
+            CurrentUser.get().then(function (response) {
+                ctrl.current_user = response;
+                ctrl.tabs = _.chain(ctrl.current_user.profiles)
+                    .pluck('type')
+                    .uniq()
+                    .map(function (type) {
+                    switch (type) {
+                        case 'DIR':
+                            return [{
+                                    heading: 'Validation des saisies par enseignant',
+                                    uisref: 'enseignants',
+                                    css_class: 'glyphicon glyphicon-user',
+                                    active: true
+                                },
+                                {
+                                    heading: 'Emplois du Temps',
+                                    uisref: 'emploi_du_temps',
+                                    css_class: 'glyphicon glyphicon-calendar',
+                                    active: false
+                                }];
+                        case 'ENS':
+                            return [{
+                                    heading: 'Cahier de textes',
+                                    uisref: 'emploi_du_temps',
+                                    css_class: 'glyphicon glyphicon-calendar',
+                                    active: true
+                                },
+                                {
+                                    heading: 'Statistiques',
+                                    uisref: 'stats',
+                                    css_class: 'glyphicon glyphicon-stats',
+                                    active: false
+                                }];
+                        case 'TUT':
+                        case 'ELV':
+                            return [{
+                                    heading: 'Emploi du temps',
+                                    uisref: 'emploi_du_temps',
+                                    css_class: 'glyphicon glyphicon-calendar',
+                                    active: true
+                                },
+                                {
+                                    heading: 'Liste des devoirs',
+                                    uisref: 'devoirs',
+                                    css_class: 'glyphicon glyphicon-list',
+                                    active: false
+                                }];
+                        case 'ADM':
+                            return [{
+                                    heading: 'Emplois du Temps',
+                                    uisref: 'emploi_du_temps',
+                                    css_class: 'glyphicon glyphicon-calendar',
+                                    active: true
+                                }];
+                        case 'EVS':
+                            return [{
+                                    heading: 'Emplois du Temps',
+                                    uisref: 'emploi_du_temps',
+                                    css_class: 'glyphicon glyphicon-calendar',
+                                    active: true
+                                }];
+                    }
+                })
+                    .flatten()
+                    .compact()
+                    .uniq(function (tab) { return tab.uisref; })
+                    .value();
+                _(ctrl.tabs).each(function (tab) {
+                    tab.active = tab.uisref == $state.current.name;
+                });
+                ctrl.set_active_tab = function (uisref) {
+                    _(ctrl.tabs).each(function (tab) {
+                        tab.active = tab.uisref == uisref;
+                    });
+                };
+                ctrl.set_active_tab(ctrl.tabs[0].uisref);
+                $state.go(ctrl.tabs[0].uisref);
+            });
+        }],
+    template: "<header ng:class=\"{'embedded': $ctrl.embedded}\">\n\n  <div class=\"onglets\">\n    <a class=\"btn\"\n       ng:repeat=\"tab in $ctrl.tabs\"\n       ui:sref=\"{{tab.uisref}}\"\n       ng:class=\"{'btn-warning': tab.active, 'btn-default': !tab.active}\"\n       ng:click=\"$ctrl.set_active_tab( tab.uisref )\">\n      <span class=\"{{tab.css_class}}\"></span> {{tab.heading}}\n    </a>\n\n    <div class=\"pull-right\" ng:if=\"$ctrl.current_user.children.length > 0\">\n      <select class=\"choix-enfant\"\n              ng:options=\"child as child.user.firstname+' '+child.user.lastname for child in $ctrl.current_user.children track by child.user.id\"\n              ng:model=\"$ctrl.current_user.enfant_actif\"\n              ng:change=\"$ctrl.reload()\">\n      </select>\n      <button class=\"btn btn-warning\" ng:click=\"$ctrl.current_user.enfant_actif = null; $ctrl.reload()\">\u232B</button>\n    </div>\n  </div>\n</header>\n" });
+angular.module('cahierDeTextesClientApp')
     .component('switchDevoir', {
     bindings: { devoir: '=' },
     template: '<span switch' +
@@ -436,7 +540,6 @@ angular.module('cahierDeTextesClientApp')
     function ($scope, $sce, $timeout, toastr, $state, moment, APP_PATH, URL_DOCS, API, Annuaire, Devoirs, Cours, CreneauxEmploiDuTemps, CurrentUser) {
         var ctrl = $scope;
         ctrl.$ctrl = ctrl;
-        ctrl.affiche_faits = false;
         ctrl.tri_ascendant = true;
         ctrl.matiere_selected = null;
         var getCours = _.memoize(function (id) {
@@ -468,15 +571,20 @@ angular.module('cahierDeTextesClientApp')
         ctrl.decr_offset = function () { ctrl.period_offset--; };
         ctrl.reset_offset = function () { ctrl.period_offset = 0; };
         var retrieve_data = function () {
+            if (ctrl.parent && ctrl.current_user.enfant_actif == undefined) {
+                return;
+            }
             ctrl.from_date = moment().subtract(ctrl.period_offset, 'months').subtract(2, 'weeks').toDate();
             ctrl.to_date = moment().subtract(ctrl.period_offset, 'months').add(2, 'weeks').toDate();
-            API.query_devoirs({
+            var params = {
                 'date_due>': ctrl.from_date,
                 'date_due<': ctrl.to_date,
-                'groups_ids[]': ctrl.current_user.enfant_actif ? _(ctrl.current_user.enfant_actif.enfant.groups).pluck('group_id') : _(ctrl.current_user.groups).pluck('group_id'),
-                'uid': ctrl.current_user.enfant_actif ? ctrl.current_user.enfant_actif.child_id : ctrl.current_user.id,
+                'groups_ids[]': ctrl.parent ? _(ctrl.current_user.enfant_actif.user.groups).pluck('group_id') : _(ctrl.current_user.groups).pluck('group_id'),
+                'uid': ctrl.parent ? ctrl.current_user.enfant_actif.child_id : ctrl.current_user.id,
                 'check_done': ctrl.current_user.is(['ELV'])
-            })
+            };
+            console.log(params);
+            API.query_devoirs(params)
                 .$promise.then(function (response) {
                 ctrl.matieres = {};
                 ctrl.all_devoirs = _(response).map(function (devoir) {
@@ -501,6 +609,8 @@ angular.module('cahierDeTextesClientApp')
         CurrentUser.get()
             .then(function (response) {
             ctrl.current_user = response;
+            ctrl.parent = ctrl.current_user.children.length > 0;
+            ctrl.affiche_faits = !ctrl.parent;
             ctrl.$watch('period_offset', function () {
                 retrieve_data();
             });
@@ -753,37 +863,6 @@ angular.module('cahierDeTextesClientApp')
                 ctrl.individualCharts.add(enseignant);
             });
         });
-    }]);
-angular.module('cahierDeTextesClientApp')
-    .controller('FooterCtrl', ['$scope', '$state', '$stateParams', '$sce', 'VERSION', 'CurrentUser',
-    function ($scope, $state, $stateParams, $sce, VERSION, CurrentUser) {
-        var ctrl = $scope;
-        ctrl.$ctrl = ctrl;
-        ctrl.version = VERSION;
-        CurrentUser.get().then(function (response) {
-            ctrl.current_user = response;
-            ctrl.save_and_reload = function () {
-                CurrentUser.update_parameters(ctrl.current_user.parametrage_cahier_de_textes)
-                    .then(function () {
-                    $state.transitionTo($state.current, $stateParams, { reload: true, inherit: true, notify: true });
-                });
-            };
-        });
-    }]);
-angular.module('cahierDeTextesClientApp')
-    .controller('HeaderCtrl', ['$scope', '$state', 'CurrentUser', 'Redirection', '$sce', 'URL_DOCS',
-    function ($scope, $state, CurrentUser, Redirection, $sce, URL_DOCS) {
-        var ctrl = $scope;
-        ctrl.$ctrl = ctrl;
-        ctrl.load_docs = window.location.hostname !== 'localhost';
-        ctrl.URL_DOCS_login = $sce.trustAsResourceUrl(URL_DOCS + "/login");
-        ctrl.embedded = window != window.top;
-        CurrentUser.get().then(function (response) {
-            ctrl.current_user = response;
-        });
-        ctrl.reload = function () {
-            Redirection.doorman([]);
-        };
     }]);
 angular.module('cahierDeTextesClientApp')
     .controller('ImportCtrl', ['$scope', '$http', '$locale', '$sce', '$filter', 'fileUpload', 'moment', 'toastr', '$q',
@@ -1326,88 +1405,11 @@ angular.module('cahierDeTextesClientApp')
         };
     }]);
 angular.module('cahierDeTextesClientApp')
-    .controller('IndexCtrl', ['$scope', '$state', 'CurrentUser',
-    function ($scope, $state, CurrentUser) {
+    .controller('IndexCtrl', ['$scope',
+    function ($scope) {
         var ctrl = $scope;
-        CurrentUser.get()
-            .then(function (response) {
-            var user = response;
-            ctrl.tabs = _.chain(user.profiles)
-                .pluck('type')
-                .uniq()
-                .map(function (type) {
-                switch (type) {
-                    case 'DIR':
-                        return [{
-                                heading: 'Validation des saisies par enseignant',
-                                uisref: 'enseignants',
-                                css_class: 'glyphicon glyphicon-user',
-                                active: true
-                            },
-                            {
-                                heading: 'Emplois du Temps',
-                                uisref: 'emploi_du_temps',
-                                css_class: 'glyphicon glyphicon-calendar',
-                                active: false
-                            }];
-                    case 'ENS':
-                        return [{
-                                heading: 'Cahier de textes',
-                                uisref: 'emploi_du_temps',
-                                css_class: 'glyphicon glyphicon-calendar',
-                                active: true
-                            },
-                            {
-                                heading: 'Statistiques',
-                                uisref: 'stats',
-                                css_class: 'glyphicon glyphicon-stats',
-                                active: false
-                            }];
-                    case 'TUT':
-                    case 'ELV':
-                        return [{
-                                heading: 'Emploi du temps',
-                                uisref: 'emploi_du_temps',
-                                css_class: 'glyphicon glyphicon-calendar',
-                                active: true
-                            },
-                            {
-                                heading: 'Liste des devoirs',
-                                uisref: 'devoirs',
-                                css_class: 'glyphicon glyphicon-list',
-                                active: false
-                            }];
-                    case 'ADM':
-                        return [{
-                                heading: 'Emplois du Temps',
-                                uisref: 'emploi_du_temps',
-                                css_class: 'glyphicon glyphicon-calendar',
-                                active: true
-                            }];
-                    case 'EVS':
-                        return [{
-                                heading: 'Emplois du Temps',
-                                uisref: 'emploi_du_temps',
-                                css_class: 'glyphicon glyphicon-calendar',
-                                active: true
-                            }];
-                }
-            })
-                .flatten()
-                .compact()
-                .uniq(function (tab) { return tab.uisref; })
-                .value();
-            _(ctrl.tabs).each(function (tab) {
-                tab.active = tab.uisref == $state.current.name;
-            });
-            ctrl.set_active_tab = function (uisref) {
-                _(ctrl.tabs).each(function (tab) {
-                    tab.active = tab.uisref == uisref;
-                });
-            };
-            ctrl.set_active_tab(ctrl.tabs[0].uisref);
-            $state.go(ctrl.tabs[0].uisref);
-        });
+        ctrl.$ctrl = ctrl;
+        ctrl.embedded = window != window.top;
     }]);
 angular.module('cahierDeTextesClientApp')
     .controller('PopupDisplayCtrl', ['$scope', '$sce', '$uibModalInstance', 'toastr', 'APP_PATH', 'Cours', 'Devoirs', 'CurrentUser',
