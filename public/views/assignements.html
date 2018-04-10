@@ -24,7 +24,7 @@
             <button class="btn btn-default" ng:click="decr_offset()"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
 
             <div class="pull-right options">
-                <label><checkbox ng:model="$ctrl.affiche_faits"></checkbox> Afficher les devoirs déjà faits</label>
+                <label ng:if="!$ctrl.parent"><checkbox ng:model="$ctrl.affiche_faits"></checkbox> Afficher les devoirs déjà faits</label>
                 <label><checkbox ng:model="$ctrl.tri_ascendant"></checkbox> Tri ascendant</label>
             </div>
         </div>

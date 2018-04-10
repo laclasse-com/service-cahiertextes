@@ -7,6 +7,8 @@ module CahierDeTextesApp
             halt( 401, '401 Unauthorized' ) unless !params.key?('uid') || ( user['id'] == params['uid'] ||
                                                                             !user['children'].find { |child| child['child_id'] == params['uid'] }.nil? )
 
+            return [] if (!params.key?('groups_ids') || params['groups_ids'].empty?) && (!params.key?('creneaux_ids') || params['creneaux_ids'].empty?)
+
             query = Devoir
 
             query = query.where( creneau_emploi_du_temps_id: params['creneaux_ids']) if params.key?( 'creneaux_ids' )

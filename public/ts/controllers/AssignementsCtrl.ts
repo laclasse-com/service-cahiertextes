@@ -9,7 +9,6 @@ angular.module('cahierDeTextesClientApp')
         let ctrl = $scope;
         ctrl.$ctrl = ctrl;
 
-        ctrl.affiche_faits = false;
         ctrl.tri_ascendant = true;
         ctrl.matiere_selected = null;
 
@@ -49,16 +48,20 @@ angular.module('cahierDeTextesClientApp')
         ctrl.reset_offset = function() { ctrl.period_offset = 0; };
 
         let retrieve_data = function() {
+          if (ctrl.parent && ctrl.current_user.enfant_actif == undefined) {
+            return;
+          }
+
           ctrl.from_date = moment().subtract(ctrl.period_offset, 'months').subtract(2, 'weeks').toDate();
           ctrl.to_date = moment().subtract(ctrl.period_offset, 'months').add(2, 'weeks').toDate();
 
-          API.query_devoirs({
+          API.query_devoirs( {
             'date_due>': ctrl.from_date,
             'date_due<': ctrl.to_date,
-            'groups_ids[]': ctrl.current_user.enfant_actif ? _(ctrl.current_user.enfant_actif.enfant.groups).pluck('group_id') : _(ctrl.current_user.groups).pluck('group_id'),
-            'uid': ctrl.current_user.enfant_actif ? ctrl.current_user.enfant_actif.child_id : ctrl.current_user.id,
+            'groups_ids[]': ctrl.parent ? _(ctrl.current_user.enfant_actif.user.groups).pluck('group_id') : _(ctrl.current_user.groups).pluck('group_id'),
+            'uid': ctrl.parent ? ctrl.current_user.enfant_actif.child_id : ctrl.current_user.id,
             'check_done': ctrl.current_user.is(['ELV'])
-          })
+          } )
             .$promise.then(function(response) {
               ctrl.matieres = {};
 
@@ -88,6 +91,9 @@ angular.module('cahierDeTextesClientApp')
         CurrentUser.get()
           .then(function(response) {
             ctrl.current_user = response;
+
+            ctrl.parent = ctrl.current_user.children.length > 0;
+            ctrl.affiche_faits = ctrl.parent;
 
             ctrl.$watch('period_offset', function() {
               retrieve_data();

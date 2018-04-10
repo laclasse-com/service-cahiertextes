@@ -576,15 +576,13 @@ angular.module('cahierDeTextesClientApp')
             }
             ctrl.from_date = moment().subtract(ctrl.period_offset, 'months').subtract(2, 'weeks').toDate();
             ctrl.to_date = moment().subtract(ctrl.period_offset, 'months').add(2, 'weeks').toDate();
-            var params = {
+            API.query_devoirs({
                 'date_due>': ctrl.from_date,
                 'date_due<': ctrl.to_date,
                 'groups_ids[]': ctrl.parent ? _(ctrl.current_user.enfant_actif.user.groups).pluck('group_id') : _(ctrl.current_user.groups).pluck('group_id'),
                 'uid': ctrl.parent ? ctrl.current_user.enfant_actif.child_id : ctrl.current_user.id,
                 'check_done': ctrl.current_user.is(['ELV'])
-            };
-            console.log(params);
-            API.query_devoirs(params)
+            })
                 .$promise.then(function (response) {
                 ctrl.matieres = {};
                 ctrl.all_devoirs = _(response).map(function (devoir) {
@@ -610,7 +608,7 @@ angular.module('cahierDeTextesClientApp')
             .then(function (response) {
             ctrl.current_user = response;
             ctrl.parent = ctrl.current_user.children.length > 0;
-            ctrl.affiche_faits = !ctrl.parent;
+            ctrl.affiche_faits = ctrl.parent;
             ctrl.$watch('period_offset', function () {
                 retrieve_data();
             });
