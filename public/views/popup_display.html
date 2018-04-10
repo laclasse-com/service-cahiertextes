@@ -5,9 +5,9 @@
 
 <div class="modal-body">
 
-    <uib-tabset>
+    <uib-tabset active="devoirs.length > 0 ? 0 : 1">
 
-        <uib-tab ng:if="devoirs.length > 0" heading="Travail à faire">
+        <uib-tab ng:if="devoirs.length > 0" heading="Travail à faire" index="0">
             <div ng:repeat="devoir in devoirs"
                  class="devoir col-md-12" >
                 <div class="col-md-8">
@@ -30,7 +30,7 @@
             <div class="clearfix"></div>
         </uib-tab>
 
-        <uib-tab heading="Séquence pédagogique">
+        <uib-tab heading="Séquence pédagogique" index="1">
             <div class="col-md-8">
                 <display-sequence-pedagogique sp="cours" ng:if="cours.contenu" ></display-sequence-pedagogique>
             </div>
