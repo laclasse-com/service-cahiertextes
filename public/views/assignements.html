@@ -20,8 +20,8 @@
                     ng:model="$ctrl.period_offset"
                     ng:options="period.offset as period.label for period in $ctrl.period_offsets_list">
             </select>
-            <button class="btn btn-default" ng:click="incr_offset()"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></button>
-            <button class="btn btn-default" ng:click="decr_offset()"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
+            <button class="btn btn-default" ng:click="$ctrl.incr_offset()"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></button>
+            <button class="btn btn-default" ng:click="$ctrl.decr_offset()"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
 
             <div class="pull-right options">
                 <label ng:if="!$ctrl.parent"><checkbox ng:model="$ctrl.affiche_faits"></checkbox> Afficher les devoirs déjà faits</label>
@@ -58,6 +58,6 @@
         <div class="clearfix"></div>
     </li>
 </ul>
-<span class="no-data" ng:if="$ctrl.devoirs.length === 0">
+<span class="no-data" ng:if="$ctrl.devoirs.length == 0">
     Aucun devoir trouvé pour cette période.
 </span>
