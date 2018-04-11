@@ -5,16 +5,16 @@ angular.module('cahierDeTextesClientApp')
     ['$state', 'CurrentUser',
       function($state, CurrentUser) {
         this.doorman = function(allowed_types) {
-          CurrentUser.get().then(function(response) {
+          CurrentUser.get().then(function(user) {
             if (allowed_types.length == 0
-                || (_.chain(allowed_types).intersection(_(response.profiles).pluck('type')).isEmpty().value()
-                    && !(response.is(['ADM']))
-                 )
+                || (_.chain(allowed_types).intersection(_(user.profiles).pluck('type')).isEmpty().value()
+                    && !(user.is(['ADM']))
+                   )
             ) {
               // traiter le raffraichissement de l'app en fonction du changement de profil actif
               let stateName = '404';
 
-              if (response.is(['DIR'])) {
+              if (user.is(['DIR'])) {
                 stateName = 'enseignants';
               } else {
                 stateName = 'emploi_du_temps';

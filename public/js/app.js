@@ -765,18 +765,19 @@ angular.module('cahierDeTextesClientApp')
                     .compact()
                     .value();
             });
-            return API.get_enseignant(ctrl.current_user.profil_actif.structure_id, ctrl.enseignant_id);
+            return API.get_enseignant(ctrl.current_user.get_structures_ids(), ctrl.enseignant_id);
         })
             .then(function success(response) {
+            console.log(response);
             var _2_semaines_avant = moment().subtract(2, 'weeks');
-            ctrl.raw_data = _(response.data.saisies).map(function (saisie, index) {
+            ctrl.raw_data = response.saisies.map(function (saisie, index) {
                 saisie.index = index;
                 saisie.cours = new Cours(saisie.cours);
                 saisie.regroupement_id = parseInt(saisie.regroupement_id);
                 saisie.month = moment(saisie.cours.date_cours).month();
                 saisie.recent = moment(saisie.cours.date_cours).isAfter(_2_semaines_avant);
                 saisie.matiere = _(ctrl.enseignant.liste_matieres).findWhere({ id: saisie.matiere_id });
-                if (_(saisie.matiere).isUndefined()) {
+                if (saisie.matiere == undefined) {
                     saisie.matiere = Annuaire.get_subject(saisie.matiere_id);
                 }
                 return saisie;
@@ -790,7 +791,6 @@ angular.module('cahierDeTextesClientApp')
     function ($scope, $locale, $q, API, Annuaire, current_user, PIECHART_DEFINITION) {
         var ctrl = $scope;
         ctrl.$ctrl = ctrl;
-        ctrl.scope = ctrl;
         ctrl.select_all_regroupements = function () {
             ctrl.selected_regroupements = ctrl.regroupements;
             ctrl.filter_data();
@@ -828,16 +828,14 @@ angular.module('cahierDeTextesClientApp')
                 ctrl.individualCharts.enseignants.push(chart);
             }
         };
-        Annuaire.get_groups_of_structures([current_user.profil_actif.structure_id])
+        Annuaire.get_groups_of_structures(current_user.get_structures_ids())
             .then(function success(response) {
-            ctrl.regroupements = _(response.data).reject(function (group) {
-                return group.type === 'GPL';
-            });
+            ctrl.regroupements = response.data.filter(function (group) { return group.type != 'GPL'; });
             ctrl.selected_regroupements = ctrl.regroupements;
         });
-        API.query_enseignants(current_user.profil_actif.structure_id)
+        API.query_enseignants(current_user.get_structures_ids())
             .then(function success(response) {
-            ctrl.raw_data = response.data;
+            ctrl.raw_data = response;
             return Annuaire.get_users(_(ctrl.raw_data).pluck('enseignant_id'));
         })
             .then(function (response) {
@@ -2629,18 +2627,19 @@ angular.module('cahierDeTextesClientApp')
         return $resource(APP_PATH + "/api/salles/:id", { id: '@id' });
     }]);
 angular.module('cahierDeTextesClientApp')
-    .service('API', ['$http', 'APP_PATH', 'CreneauxEmploiDuTemps', 'Cours', 'Devoirs',
-    function ($http, APP_PATH, CreneauxEmploiDuTemps, Cours, Devoirs) {
-        this.query_statistiques_regroupements = function (uai) {
+    .service('API', ['$http', '$q', 'APP_PATH', 'CreneauxEmploiDuTemps', 'Cours', 'Devoirs',
+    function ($http, $q, APP_PATH, CreneauxEmploiDuTemps, Cours, Devoirs) {
+        var API = this;
+        API.query_statistiques_regroupements = function (uai) {
             return $http.get(APP_PATH + "/api/etablissements/" + uai + "/statistiques/regroupements");
         };
-        this.query_types_de_devoir = _.memoize(function () {
+        API.query_types_de_devoir = _.memoize(function () {
             return $http.get(APP_PATH + "/api/types_de_devoir");
         });
-        this.get_type_de_devoir = _.memoize(function (id) {
+        API.get_type_de_devoir = _.memoize(function (id) {
             return $http.get(APP_PATH + "/api/types_de_devoir/" + id);
         });
-        this.get_emploi_du_temps = function (from, to, uid, groups_ids, subjects_ids) {
+        API.get_emploi_du_temps = function (from, to, uid, groups_ids, subjects_ids) {
             return $http.get(APP_PATH + "/api/emplois_du_temps", {
                 params: {
                     debut: from,
@@ -2651,10 +2650,10 @@ angular.module('cahierDeTextesClientApp')
                 }
             });
         };
-        this.get_creneau_emploi_du_temps = function (params) {
+        API.get_creneau_emploi_du_temps = function (params) {
             return CreneauxEmploiDuTemps.get(params);
         };
-        this.get_creneaux_emploi_du_temps_similaires = function (params) {
+        API.get_creneaux_emploi_du_temps_similaires = function (params) {
             return $http.get(APP_PATH + "/api/creneaux_emploi_du_temps/" + params.id + "/similaires", {
                 params: {
                     debut: params.debut,
@@ -2662,19 +2661,28 @@ angular.module('cahierDeTextesClientApp')
                 }
             });
         };
-        this.query_enseignants = function (uai) {
-            return $http.get(APP_PATH + "/api/etablissements/" + uai + "/statistiques/enseignants");
+        API.query_enseignants = function (uais) {
+            return $q.all(uais.map(function (uai) { return $http.get(APP_PATH + "/api/etablissements/" + uai + "/statistiques/enseignants"); }))
+                .then(function (responses) { return _.chain(responses).pluck("data").flatten().value(); });
         };
-        this.get_enseignant = function (uai, enseignant_id) {
-            return $http.get(APP_PATH + "/api/etablissements/" + uai + "/statistiques/enseignants/" + enseignant_id);
+        API.get_enseignant = function (uais, enseignant_id) {
+            return $q.all(uais.map(function (uai) { return $http.get(APP_PATH + "/api/etablissements/" + uai + "/statistiques/enseignants/" + enseignant_id); }))
+                .then(function (responses) {
+                var response = _.chain(responses)
+                    .pluck("data")
+                    .flatten()
+                    .value();
+                return { enseignant_id: response[0].enseignant_id,
+                    saisies: _.chain(response).pluck("saisies").flatten().value() };
+            });
         };
-        this.get_cours = function (params) {
+        API.get_cours = function (params) {
             return Cours.get(params);
         };
-        this.query_devoirs = function (params) {
+        API.query_devoirs = function (params) {
             return Devoirs.query(params);
         };
-        this.get_devoir = function (params) {
+        API.get_devoir = function (params) {
             return Devoirs.get(params);
         };
     }
@@ -2738,7 +2746,6 @@ angular.module('cahierDeTextesClientApp')
         service.get_user = _.memoize(function (user_id) {
             return $http.get(URL_ENT + "/api/users/" + user_id)
                 .then(function (response) {
-                response.data.profil_actif = _(response.data.profiles).findWhere({ active: true });
                 response.data.get_actual_groups = function () {
                     return service.get_groups(_(response.data.groups).pluck('group_id'))
                         .then(function (groups) {
@@ -2986,12 +2993,12 @@ angular.module('cahierDeTextesClientApp')
     .service('Redirection', ['$state', 'CurrentUser',
     function ($state, CurrentUser) {
         this.doorman = function (allowed_types) {
-            CurrentUser.get().then(function (response) {
+            CurrentUser.get().then(function (user) {
                 if (allowed_types.length == 0
-                    || (_.chain(allowed_types).intersection(_(response.profiles).pluck('type')).isEmpty().value()
-                        && !(response.is(['ADM'])))) {
+                    || (_.chain(allowed_types).intersection(_(user.profiles).pluck('type')).isEmpty().value()
+                        && !(user.is(['ADM'])))) {
                     var stateName = '404';
-                    if (response.is(['DIR'])) {
+                    if (user.is(['DIR'])) {
                         stateName = 'enseignants';
                     }
                     else {
@@ -3134,8 +3141,9 @@ angular.module('cahierDeTextesClientApp')
         this.get = _.memoize(function () {
             return $http.get(APP_PATH + "/api/users/current")
                 .then(function (response) {
-                _(response.data.profiles).each(function (profil) {
-                    profil.regroupements = _.chain(response.data.regroupements)
+                var current_user = response.data;
+                _(current_user.profiles).each(function (profil) {
+                    profil.regroupements = _.chain(current_user.regroupements)
                         .filter(function (classe) { return classe.etablissement_code == profil.structure_id; })
                         .map(function (classe) {
                         return {
@@ -3148,71 +3156,63 @@ angular.module('cahierDeTextesClientApp')
                         .reject(function (item) { return _.isUndefined(item.id); })
                         .value();
                 });
-                response.data.profil_actif = _(response.data.profiles).findWhere({ active: true });
-                response.data.profil_actif.admin = _(response.data.profiles)
-                    .findWhere({
-                    structure_id: response.data.profil_actif.structure_id,
-                    type: 'ADM'
-                }) != undefined;
-                if (response.data.children.length > 0) {
-                    response.data.children.map(function (child) {
+                if (current_user.children.length > 0) {
+                    current_user.children.map(function (child) {
                         return Annuaire.get_user(child.child_id)
                             .then(function (user) {
                             child.user = user.data;
                         });
                     });
                 }
-                response.data.get_actual_groups = function () {
-                    var groups_ids = _.chain(response.data.groups).pluck('group_id').uniq().value();
+                current_user.get_actual_groups = function () {
+                    var groups_ids = _.chain(current_user.groups).pluck('group_id').uniq().value();
                     var promise = $q.resolve([]);
-                    if (_(['EVS', 'DIR', 'ADM']).contains(response.data.profil_actif.type) || response.data.profil_actif.admin) {
-                        promise = Annuaire.get_groups_of_structures([response.data.profil_actif.structure_id]);
+                    if (current_user.is(['EVS', 'DIR', 'ADM'])) {
+                        promise = Annuaire.get_groups_of_structures(current_user.get_structures_ids());
                     }
                     else {
                         promise = Annuaire.get_groups(groups_ids);
                     }
                     return promise
                         .then(function (groups) {
-                        response.data.actual_groups = _(groups.data).select(function (group) {
-                            return (group.structure_id == response.data.profil_actif.structure_id) || (group.type == 'GPL');
-                        });
-                        return $q.resolve(response.data.actual_groups);
+                        current_user.actual_groups = groups.data;
+                        return $q.resolve(current_user.actual_groups);
                     });
                 };
-                response.data.extract_subjects_ids = function () {
-                    return _.chain(response.data.groups).pluck('subject_id').uniq().value();
+                current_user.extract_subjects_ids = function () {
+                    return _.chain(current_user.groups).pluck('subject_id').uniq().value();
                 };
-                response.data.get_actual_subjects = function () {
-                    return Annuaire.get_subjects(response.data.extract_subjects_ids())
+                current_user.get_actual_subjects = function () {
+                    return Annuaire.get_subjects(current_user.extract_subjects_ids())
                         .then(function (subjects) {
-                        response.data.actual_subjects = subjects.data;
-                        return $q.resolve(response.data.actual_subjects);
+                        current_user.actual_subjects = subjects.data;
+                        return $q.resolve(current_user.actual_subjects);
                     });
                 };
-                response.data.get_structures_ids = _.memoize(function (desired_types) {
-                    return _.chain(response.data.profiles)
+                current_user.get_structures_ids = _.memoize(function (desired_types) {
+                    return _.chain(current_user.profiles)
                         .select(function (profil) { return desired_types == undefined || desired_types.includes(profil.type); })
                         .pluck("structure_id")
                         .uniq()
                         .value();
                 });
-                response.data.is_x_in_structure = _.memoize(function (types, structure_id) {
-                    return _.chain(response.data.profiles)
+                current_user.is_x_in_structure = _.memoize(function (types, structure_id) {
+                    return _.chain(current_user.profiles)
                         .select(function (profil) { return structure_id == undefined || profil.structure_id == structure_id; })
                         .pluck('type')
                         .intersection(types)
                         .value()
                         .length > 0;
                 });
-                response.data.is = function (types) {
-                    return response.data.is_x_in_structure(types, undefined);
+                current_user.is = function (types) {
+                    return current_user.is_x_in_structure(types, undefined);
                 };
-                response.data.is_x_for_group = function (types, group_id) {
-                    var profiles = response.data.groups.filter(function (group) { return group.group_id == group_id; });
+                current_user.is_x_for_group = function (types, group_id) {
+                    var profiles = current_user.groups.filter(function (group) { return group.group_id == group_id; });
                     return profiles.length > 0 ||
                         _.chain(profiles).pluck('type').intersection(types).value().length > 0;
                 };
-                return response.data;
+                return current_user;
             });
         });
         this.update_parameters = function (parametres) {
@@ -3224,12 +3224,12 @@ angular.module('cahierDeTextesClientApp')
     function ($http, $state, APP_PATH, CurrentUser, URL_ENT) {
         this.add = function (app, url, params) {
             CurrentUser.get()
-                .then(function (response) {
-                $http.post(URL_ENT + "/api/logs", {
-                    application_id: app,
-                    user_id: response.id,
-                    structure_id: response.profil_actif.structure_id,
-                    profil_id: response.profil_actif.type,
+                .then(function (current_user) {
+                current_user.profil_actif = _(current_user.profiles).findWhere({ active: true });
+                $http.post(URL_ENT + "/api/logs", { application_id: app,
+                    user_id: current_user.id,
+                    structure_id: current_user.profil_actif.structure_id,
+                    profil_id: current_user.profil_actif.type,
                     url: (_(url).isNull() ? APP_PATH + $state.current.url : url).substr(0, 1023),
                     params: _(params).isNull() ? _($state.params).map(function (value, key) { return key + "=" + value; }).join('&') : params
                 })

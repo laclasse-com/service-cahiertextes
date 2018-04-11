@@ -180,12 +180,13 @@ angular.module('cahierDeTextesClientApp')
                   .value();
               });
 
-            return API.get_enseignant(ctrl.current_user.profil_actif.structure_id, ctrl.enseignant_id);
+            return API.get_enseignant(ctrl.current_user.get_structures_ids(), ctrl.enseignant_id);
           })
           .then(function success(response) {
+            console.log(response)
             let _2_semaines_avant = moment().subtract(2, 'weeks');
 
-            ctrl.raw_data = _(response.data.saisies).map(function(saisie, index) {
+            ctrl.raw_data = response.saisies.map(function(saisie, index) {
               // on référence l'index d'origine dans chaque élément pour propager la validation
               saisie.index = index;
               saisie.cours = new Cours(saisie.cours);
@@ -194,7 +195,7 @@ angular.module('cahierDeTextesClientApp')
               saisie.recent = moment(saisie.cours.date_cours).isAfter(_2_semaines_avant);
 
               saisie.matiere = _(ctrl.enseignant.liste_matieres).findWhere({ id: saisie.matiere_id });
-              if (_(saisie.matiere).isUndefined()) {
+              if (saisie.matiere == undefined) {
                 saisie.matiere = Annuaire.get_subject(saisie.matiere_id);
               }
 

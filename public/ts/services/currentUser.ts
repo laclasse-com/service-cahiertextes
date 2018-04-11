@@ -1,34 +1,29 @@
 angular.module('cahierDeTextesClientApp')
   .service('CurrentUser',
     ['$http', '$q', 'APP_PATH', 'Annuaire',
-      function($http, $q, APP_PATH, Annuaire) {
+     function($http, $q, APP_PATH, Annuaire) {
         this.get = _.memoize(function() {
           return $http.get(`${APP_PATH}/api/users/current`)
             .then(function(response) {
-              _(response.data.profiles).each(function(profil) {
+              let current_user = response.data;
+              _(current_user.profiles).each(function(profil) {
                 // Liste des regroupements liées au profil
-                profil.regroupements = _.chain(response.data.regroupements)
+                profil.regroupements = _.chain(current_user.regroupements)
                   .filter(function(classe) { return classe.etablissement_code == profil.structure_id; })
                   .map(function(classe) {
                     return {
-                      id: classe.id,
-                      libelle: classe.name,
-                      type: classe.type
-                    };
-                  })
-                  .uniq(function(item) { return item.id; })
-                  .reject(function(item) { return _.isUndefined(item.id); })
-                  .value();
-              });
-              response.data.profil_actif = _(response.data.profiles).findWhere({ active: true });
-              response.data.profil_actif.admin = _(response.data.profiles)
-                .findWhere({
-                  structure_id: response.data.profil_actif.structure_id,
-                  type: 'ADM'
-                }) != undefined;
+                        id: classe.id,
+                        libelle: classe.name,
+                        type: classe.type
+                      };
+                    })
+                    .uniq(function(item) { return item.id; })
+                    .reject(function(item) { return _.isUndefined(item.id); })
+                    .value();
+                });
 
-              if (response.data.children.length > 0) {
-                response.data.children.map(function(child) {
+              if (current_user.children.length > 0) {
+                current_user.children.map(function(child) {
                   return Annuaire.get_user(child.child_id)
                     .then(function(user) {
                       child.user = user.data;
@@ -36,40 +31,38 @@ angular.module('cahierDeTextesClientApp')
                 });
               }
 
-              response.data.get_actual_groups = function() {
-                let groups_ids = _.chain(response.data.groups).pluck('group_id').uniq().value();
+              current_user.get_actual_groups = function() {
+                let groups_ids = _.chain(current_user.groups).pluck('group_id').uniq().value();
                 let promise = $q.resolve([]);
-                if (_(['EVS', 'DIR', 'ADM']).contains(response.data.profil_actif.type) || response.data.profil_actif.admin) {
-                  promise = Annuaire.get_groups_of_structures([response.data.profil_actif.structure_id]);
+                if (current_user.is(['EVS', 'DIR', 'ADM'])) {
+                  promise = Annuaire.get_groups_of_structures(current_user.get_structures_ids());
                 } else {
                   promise = Annuaire.get_groups(groups_ids);
                 }
 
                 return promise
                   .then(function(groups) {
-                    response.data.actual_groups = _(groups.data).select(function(group) {
-                      return (group.structure_id == response.data.profil_actif.structure_id) || (group.type == 'GPL');
-                    });
+                    current_user.actual_groups = groups.data;
 
-                    return $q.resolve(response.data.actual_groups);
+                    return $q.resolve(current_user.actual_groups);
                   });
               };
 
-              response.data.extract_subjects_ids = function() {
-                return _.chain(response.data.groups).pluck('subject_id').uniq().value();
+              current_user.extract_subjects_ids = function() {
+                return _.chain(current_user.groups).pluck('subject_id').uniq().value();
               };
 
-              response.data.get_actual_subjects = function() {
-                return Annuaire.get_subjects(response.data.extract_subjects_ids())
+              current_user.get_actual_subjects = function() {
+                return Annuaire.get_subjects(current_user.extract_subjects_ids())
                   .then(function(subjects) {
-                    response.data.actual_subjects = subjects.data;
+                    current_user.actual_subjects = subjects.data;
 
-                    return $q.resolve(response.data.actual_subjects);
+                    return $q.resolve(current_user.actual_subjects);
                   });
               };
 
-              response.data.get_structures_ids = _.memoize((desired_types) => {
-                return _.chain(response.data.profiles)
+              current_user.get_structures_ids = _.memoize((desired_types) => {
+                return _.chain(current_user.profiles)
                   .select((profil) => desired_types == undefined || desired_types.includes(profil.type))
                   .pluck("structure_id")
                   .uniq()
@@ -77,8 +70,8 @@ angular.module('cahierDeTextesClientApp')
               });
 
               // Voir quel est le profil
-              response.data.is_x_in_structure = _.memoize(function(types, structure_id) {
-                return _.chain(response.data.profiles)
+              current_user.is_x_in_structure = _.memoize(function(types, structure_id) {
+                return _.chain(current_user.profiles)
                   .select((profil) => structure_id == undefined || profil.structure_id == structure_id)
                   .pluck('type')
                   .intersection(types)
@@ -86,18 +79,18 @@ angular.module('cahierDeTextesClientApp')
                   .length > 0;
               });
 
-              response.data.is = function(types) {
-                return response.data.is_x_in_structure(types, undefined);
+              current_user.is = function(types) {
+                return current_user.is_x_in_structure(types, undefined);
               };
 
-              response.data.is_x_for_group = function(types, group_id) {
-                let profiles = response.data.groups.filter((group) => group.group_id == group_id)
+              current_user.is_x_for_group = function(types, group_id) {
+                let profiles = current_user.groups.filter((group) => group.group_id == group_id)
 
                 return profiles.length > 0 ||
                   _.chain(profiles).pluck('type').intersection(types).value().length > 0;
               };
 
-              return response.data;
+              return current_user;
             });
         });
 

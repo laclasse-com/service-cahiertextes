@@ -7,8 +7,6 @@ angular.module('cahierDeTextesClientApp')
       let ctrl = $scope;
       ctrl.$ctrl = ctrl;
 
-      ctrl.scope = ctrl;
-
       ctrl.select_all_regroupements = function() {
         ctrl.selected_regroupements = ctrl.regroupements;
         ctrl.filter_data();
@@ -52,19 +50,17 @@ angular.module('cahierDeTextesClientApp')
         }
       };
 
-      Annuaire.get_groups_of_structures([current_user.profil_actif.structure_id])
+      Annuaire.get_groups_of_structures(current_user.get_structures_ids())
         .then(function success(response) {
-          ctrl.regroupements = _(response.data).reject(function(group) {
-            return group.type === 'GPL';
-          });
+          ctrl.regroupements = response.data.filter(function(group) { return group.type != 'GPL'; });
 
           ctrl.selected_regroupements = ctrl.regroupements;
         });
 
       // Récupération et consommation des données
-      API.query_enseignants(current_user.profil_actif.structure_id)
+      API.query_enseignants(current_user.get_structures_ids())
         .then(function success(response) {
-          ctrl.raw_data = response.data;
+          ctrl.raw_data = response;
 
           return Annuaire.get_users(_(ctrl.raw_data).pluck('enseignant_id'));
         })

@@ -72,8 +72,6 @@ angular.module('cahierDeTextesClientApp')
       service.get_user = _.memoize(function(user_id) {
         return $http.get(`${URL_ENT}/api/users/${user_id}`)
           .then(function(response) {
-            response.data.profil_actif = _(response.data.profiles).findWhere({ active: true });
-
             response.data.get_actual_groups = function() {
               return service.get_groups(_(response.data.groups).pluck('group_id'))
                 .then(function(groups) {
