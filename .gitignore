@@ -6,3 +6,4 @@
 spec/fixtures/UDT*
 /*.sql
 /public/app/js/templates/*.ts
+/config/database.yml
