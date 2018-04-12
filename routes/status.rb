@@ -31,14 +31,39 @@ module CahierDeTextesApp
         app.get '/status/report/?' do
           content_type :json
 
-          json( nb_etablissements: Etablissement.count,
-                nb_cahiers_de_textes: CahierDeTextes.count,
-                nb_sequences_pedagogiques: Cours.count,
-                nb_devoirs: Devoir.count,
-                nb_devoirs_faits: DevoirTodoItem.count,
-                nb_ressources: Ressource.count,
-                nb_utilisateurs_actifs: UserParameters.count,
-                nb_creneaux_emploi_du_temps: CreneauEmploiDuTemps.count )
+          if params.key?('from') && params.key?('to')
+            json(
+              nb_etablissements: Etablissement.count,
+              nb_cahiers_de_textes: CahierDeTextes.count,
+              nb_sequences_pedagogiques: Cours
+                .where( Sequel.lit( "DATE_FORMAT( date_cours, '%Y-%m-%d') >= '#{Date.parse( params['from'] )}'" ) )
+                .where( Sequel.lit( "DATE_FORMAT( date_cours, '%Y-%m-%d') <= '#{Date.parse( params['to'] )}'" ) )
+                .count,
+              nb_devoirs: Devoir
+                .where( Sequel.lit( "DATE_FORMAT( date_due, '%Y-%m-%d') >= '#{Date.parse( params['from'] )}'" ) )
+                .where( Sequel.lit( "DATE_FORMAT( date_due, '%Y-%m-%d') <= '#{Date.parse( params['to'] )}'" ) )
+                .count,
+              nb_devoirs_faits: DevoirTodoItem
+                .where( Sequel.lit( "DATE_FORMAT( date_fait, '%Y-%m-%d') >= '#{Date.parse( params['from'] )}'" ) )
+                .where( Sequel.lit( "DATE_FORMAT( date_fait, '%Y-%m-%d') <= '#{Date.parse( params['to'] )}'" ) )
+                .count,
+              # nb_ressources: Ressource.count,
+              nb_utilisateurs_actifs: UserParameters
+                .where( Sequel.lit( "DATE_FORMAT( date_connexion, '%Y-%m-%d') >= '#{Date.parse( params['from'] )}'" ) )
+                .where( Sequel.lit( "DATE_FORMAT( date_connexion, '%Y-%m-%d') <= '#{Date.parse( params['to'] )}'" ) )
+                .count,
+              nb_creneaux_emploi_du_temps: CreneauEmploiDuTemps.count
+            )
+          else
+            json( nb_etablissements: Etablissement.count,
+                  nb_cahiers_de_textes: CahierDeTextes.count,
+                  nb_sequences_pedagogiques: Cours.count,
+                  nb_devoirs: Devoir.count,
+                  nb_devoirs_faits: DevoirTodoItem.count,
+                  nb_ressources: Ressource.count,
+                  nb_utilisateurs_actifs: UserParameters.count,
+                  nb_creneaux_emploi_du_temps: CreneauEmploiDuTemps.count )
+          end
         end
       end
     end
