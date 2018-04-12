@@ -45,6 +45,7 @@ class Devoir < Sequel::Model( :devoirs )
                                     contenu: contenu,
                                     date_due: date_due,
                                     temps_estime: temps_estime,
+                                    enseignant_id: enseignant_id,
                                     date_creation: Time.now )
 
     ressources.each do |ressource|
