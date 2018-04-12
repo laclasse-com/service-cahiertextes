@@ -45,7 +45,7 @@ angular.module('cahierDeTextesClientApp')
         ctrl.next = function() { ctrl.emploi_du_temps.fullCalendar('next'); };
 
         ctrl.select_all_regroupements = function() {
-          ctrl.selected_regroupements = ctrl.current_user.actual_groups;
+          ctrl.selected_regroupements = ctrl.groups;
           ctrl.refresh_calendar();
         };
 
@@ -60,18 +60,22 @@ angular.module('cahierDeTextesClientApp')
         };
 
         // configuration du composant calendrier
-        ctrl.current_user.get_actual_groups()
-          .then(function(actual_groups) {
-            if (ctrl.uniquement_mes_creneaux) {
-              ctrl.selected_regroupements = ctrl.current_user.actual_groups;
-            } else {
-              ctrl.selected_regroupements = [ctrl.current_user.actual_groups[0]];
-            }
-          });
 
-        ctrl.extraEventSignature = function(event) {
-          return '' + event.matiere;
-        };
+        if (ctrl.current_user.is(['EVS', 'DIR', 'ADM'])) {
+          Annuaire.get_groups_of_structures(current_user.get_structures_ids())
+            .then(function(groups) {
+              ctrl.groups = groups.data;
+              ctrl.selected_regroupements = [ ctrl.groups[0] ];
+            });
+        } else {
+          ctrl.current_user.get_actual_groups()
+            .then(function(actual_groups) {
+              ctrl.groups = actual_groups;
+              ctrl.selected_regroupements = ctrl.groups;
+            });
+        }
+
+        ctrl.extraEventSignature = (event) => `${event.matiere}`;
 
         let filter_by_regroupement = function(raw_data, selected_regroupements) {
           return _(raw_data).filter(function(creneau) {

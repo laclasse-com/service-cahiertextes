@@ -32,13 +32,9 @@ angular.module('cahierDeTextesClientApp')
               }
 
               current_user.get_actual_groups = function() {
-                let groups_ids = _.chain(current_user.groups).pluck('group_id').uniq().value();
                 let promise = $q.resolve([]);
-                if (current_user.is(['EVS', 'DIR', 'ADM'])) {
-                  promise = Annuaire.get_groups_of_structures(current_user.get_structures_ids());
-                } else {
-                  promise = Annuaire.get_groups(groups_ids);
-                }
+                let groups_ids = _.chain(current_user.groups).pluck('group_id').uniq().value();
+                promise = Annuaire.get_groups(groups_ids);
 
                 return promise
                   .then(function(groups) {

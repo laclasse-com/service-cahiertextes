@@ -1449,9 +1449,56 @@ angular.module('cahierDeTextesClientApp')
     'cours', 'devoirs', 'creneau', 'raw_data',
     function ($scope, $filter, $q, $sce, $uibModalInstance, $locale, toastr, moment, APP_PATH, URL_DOCS, SEMAINES_VACANCES, ZONE, POPUP_ACTIONS, LOCALHOST, Documents, API, CreneauxEmploiDuTemps, Cours, Devoirs, CurrentUser, Utils, Annuaire, cours, devoirs, creneau, raw_data) {
         var ctrl = $scope;
-        ctrl.scope = ctrl;
+        ctrl.$ctrl = ctrl;
         var do_nothing = function () { };
-        var init_cours_existant = function (cours) { };
+        var init_cours_existant = function (cours) {
+            ctrl.cours = Cours.get({ id: cours.id });
+            ctrl.cours.$promise.then(function (cours) {
+                ctrl.cours.editable = _(ctrl.cours.date_validation).isNull() && ctrl.current_user.is(['ENS', 'DOC']) && ctrl.cours.enseignant_id === ctrl.current_user.id;
+                if (!ctrl.cours.editable) {
+                    ctrl.cours.contenu = $sce.trustAsHtml(ctrl.cours.contenu);
+                }
+                cours.devoirs = _.chain(cours.devoirs)
+                    .select(function (devoir) {
+                    return _(devoirs).findWhere({ id: devoir.id }) == undefined;
+                })
+                    .map(function (devoir) {
+                    return Devoirs.get({ id: devoir.id });
+                })
+                    .value();
+                _(cours.devoirs).each(function (devoir) {
+                    devoir.$promise.then(function (d) {
+                        ctrl.estimation_leave(d);
+                        d.tooltip = "<em>" + $filter('amDateFormat')(d.date_due, 'dddd D MMMM YYYY') + "</em><hr />" + d.contenu;
+                        if (d.temps_estime > 0) {
+                            d.tooltip = "<span><i class=\"picto temps\"></i>" + d.temps_estime * 5 + " minutes</span><hr />" + d.tooltip;
+                        }
+                        d.tooltip = $sce.trustAsHtml("<div>" + d.tooltip + "</div>");
+                        if (!ctrl.creneau.mine) {
+                            d.contenu = $sce.trustAsHtml(d.contenu);
+                        }
+                    });
+                });
+                $q.all(ctrl.devoirs).then(function () {
+                    ctrl.cours.devoirs = _(ctrl.cours.devoirs).filter(function (devoir) {
+                        return _(ctrl.devoirs).findWhere({ id: devoir.id }) == undefined;
+                    });
+                });
+                ctrl.cours.$promise.then(function () {
+                    _(ctrl.cours.ressources).each(function (ressource) {
+                        ressource.url = $sce.trustAsResourceUrl(URL_DOCS + "/api/connector?cmd=file&target=" + ressource.hash);
+                    });
+                });
+                _(ctrl.cours.devoirs).each(function (devoir) {
+                    devoir.$promise.then(function () {
+                        _(devoir.ressources).each(function (ressource) {
+                            ressource.url = $sce.trustAsResourceUrl(URL_DOCS + "/api/connector?cmd=file&target=" + ressource.hash);
+                        });
+                    });
+                });
+            });
+            ctrl.cours.create = false;
+        };
         ctrl.formateCreneau = function (creneau) {
             var label = '';
             if (_(creneau).has('start')) {
@@ -1511,19 +1558,11 @@ angular.module('cahierDeTextesClientApp')
             })
                 .then(function () {
                 ctrl.creneau = creneau;
+                ctrl.creneau.mine = ctrl.creneau.en_creation || (_.chain(ctrl.current_user.actual_subjects).pluck('id').include(ctrl.creneau.matiere_id).value() && _.chain(ctrl.current_user.actual_groups).pluck('id').include(ctrl.creneau.regroupement_id).value());
                 ctrl.creneau.jour_de_la_semaine = '' + ctrl.creneau.jour_de_la_semaine;
                 ctrl.mode_edition_creneau = ctrl.creneau.en_creation;
                 ctrl.creneau.regroupement_id = parseInt(ctrl.creneau.regroupement_id);
                 ctrl.creneau.previous_regroupement_id = ctrl.creneau.regroupement_id;
-                ctrl.selected_regroupement = _(ctrl.creneau.regroupement_id).isUndefined() ? _(ctrl.current_user.actual_groups).first() : _(ctrl.current_user.actual_groups).findWhere({ id: parseInt(ctrl.creneau.regroupement_id) });
-                ctrl.selected_matiere = _(ctrl.creneau.matiere_id).isEmpty() ? _(ctrl.current_user.actual_subjects).first() : _(ctrl.current_user.actual_subjects).findWhere({ id: ctrl.creneau.matiere_id });
-                if (!_(ctrl.creneau.matiere_id).isEmpty() && ctrl.selected_matiere == undefined) {
-                    Annuaire.get_subject(ctrl.creneau.matiere_id)
-                        .then(function (response) {
-                        console.log(response);
-                        ctrl.selected_matiere = response.data;
-                    });
-                }
                 if (ctrl.creneau.en_creation) {
                     ctrl.creneau.tmp_heure_debut = ctrl.correctTimeZoneToGMT(ctrl.creneau.heure_debut);
                     ctrl.creneau.tmp_heure_fin = ctrl.correctTimeZoneToGMT(ctrl.creneau.heure_fin);
@@ -1538,11 +1577,32 @@ angular.module('cahierDeTextesClientApp')
                 ctrl.creneau.tmp_heure_debut = moment(ctrl.creneau.tmp_heure_debut);
                 ctrl.creneau.tmp_heure_fin = moment(ctrl.creneau.tmp_heure_fin);
                 ctrl.creneau.n_week = moment(ctrl.creneau.tmp_heure_debut).week();
-                ctrl.creneau.mine = ctrl.creneau.en_creation || _.chain(ctrl.current_user.actual_subjects).pluck('id').include(ctrl.creneau.matiere_id).value();
-                ctrl.creneau.can_add_homework = ctrl.current_user.is(['ENS', 'DOC']) && _.chain(ctrl.current_user.actual_subjects).pluck('id').include(ctrl.creneau.matiere_id).value();
-                ctrl.creneau.etranger = !ctrl.current_user.is(['ADM']) && !ctrl.creneau.en_creation && !ctrl.creneau.mine;
-                if (_(cours).isNull()) {
-                    if (!ctrl.creneau.etranger) {
+                if (ctrl.current_user.is(['ADM', 'DIR', 'EVS'])) {
+                    Annuaire.get_groups_of_structures(ctrl.current_user.get_structures_ids())
+                        .then(function (groups) {
+                        ctrl.groups = groups.data;
+                        ctrl.selected_regroupement = ctrl.creneau.regroupement_id == undefined ? ctrl.groups[0] : _(ctrl.groups).findWhere({ id: parseInt(ctrl.creneau.regroupement_id) });
+                    });
+                    Annuaire.query_subjects()
+                        .then(function (subjects) {
+                        ctrl.subjects = subjects.data;
+                        ctrl.selected_matiere = _(ctrl.creneau.matiere_id).isEmpty() ? ctrl.subjects[0] : _(ctrl.subjects).findWhere({ id: ctrl.creneau.matiere_id });
+                    });
+                }
+                else {
+                    ctrl.groups = ctrl.current_user.actual_groups;
+                    ctrl.subjects = ctrl.current_user.actual_subjects;
+                    ctrl.selected_regroupement = ctrl.creneau.regroupement_id == undefined ? ctrl.groups[0] : _(ctrl.groups).findWhere({ id: parseInt(ctrl.creneau.regroupement_id) });
+                    ctrl.selected_matiere = _(ctrl.creneau.matiere_id).isEmpty() ? ctrl.subjects[0] : _(ctrl.subjects).findWhere({ id: ctrl.creneau.matiere_id });
+                }
+                if (!_(ctrl.creneau.matiere_id).isEmpty() && ctrl.selected_matiere == undefined) {
+                    Annuaire.get_subject(ctrl.creneau.matiere_id)
+                        .then(function (response) {
+                        ctrl.selected_matiere = response.data;
+                    });
+                }
+                if (cours == null) {
+                    if (ctrl.creneau.mine) {
                         ctrl.cours = create_cours(creneau);
                         ctrl.cours.editable = true;
                     }
@@ -1790,7 +1850,6 @@ angular.module('cahierDeTextesClientApp')
                     }
                     $q.all(promesses).then(ctrl.fermer);
                 };
-                var init_cours_existant = function (cours) { };
                 if (!ctrl.creneau.en_creation) {
                     ctrl.estimation_over = function (d, value) {
                         d.overValue = value;
@@ -1803,65 +1862,14 @@ angular.module('cahierDeTextesClientApp')
                         .then(function (response) {
                         ctrl.types_de_devoir = response.data;
                     });
-                    init_cours_existant = function (cours) {
-                        ctrl.cours = Cours.get({ id: cours.id });
-                        ctrl.cours.$promise.then(function (cours) {
-                            ctrl.cours.editable = _(ctrl.cours.date_validation).isNull() && ctrl.current_user.is(['ENS', 'DOC']) && ctrl.cours.enseignant_id === ctrl.current_user.id;
-                            if (!ctrl.cours.editable) {
-                                ctrl.cours.contenu = $sce.trustAsHtml(ctrl.cours.contenu);
-                            }
-                            cours.devoirs = _.chain(cours.devoirs)
-                                .select(function (devoir) {
-                                return _(devoirs).findWhere({ id: devoir.id }) == undefined;
-                            })
-                                .map(function (devoir) {
-                                return Devoirs.get({ id: devoir.id });
-                            })
-                                .value();
-                            _(cours.devoirs).each(function (devoir) {
-                                devoir.$promise.then(function (d) {
-                                    ctrl.estimation_leave(d);
-                                    d.tooltip = "<em>" + $filter('amDateFormat')(d.date_due, 'dddd D MMMM YYYY') + "</em><hr />" + d.contenu;
-                                    if (d.temps_estime > 0) {
-                                        d.tooltip = "<span><i class=\"picto temps\"></i>" + d.temps_estime * 5 + " minutes</span><hr />" + d.tooltip;
-                                    }
-                                    d.tooltip = $sce.trustAsHtml("<div>" + d.tooltip + "</div>");
-                                    if (ctrl.creneau.etranger) {
-                                        d.contenu = $sce.trustAsHtml(d.contenu);
-                                    }
-                                });
-                            });
-                            $q.all(ctrl.devoirs).then(function () {
-                                ctrl.cours.devoirs = _(ctrl.cours.devoirs).filter(function (devoir) {
-                                    return _(ctrl.devoirs).findWhere({ id: devoir.id }) == undefined;
-                                });
-                            });
-                            ctrl.cours.$promise.then(function () {
-                                _(ctrl.cours.ressources).each(function (ressource) {
-                                    ressource.url = $sce.trustAsResourceUrl(URL_DOCS + "/api/connector?cmd=file&target=" + ressource.hash);
-                                });
-                            });
-                            _(ctrl.cours.devoirs).each(function (devoir) {
-                                devoir.$promise.then(function () {
-                                    _(devoir.ressources).each(function (ressource) {
-                                        ressource.url = $sce.trustAsResourceUrl(URL_DOCS + "/api/connector?cmd=file&target=" + ressource.hash);
-                                    });
-                                });
-                            });
-                        });
-                        ctrl.cours.create = false;
-                    };
-                    ctrl.devoirs = devoirs.map(function (devoir) {
-                        var devoir_from_DB = Devoirs.get({ id: devoir.id });
-                        return devoir_from_DB;
-                    });
+                    ctrl.devoirs = devoirs.map(function (devoir) { return Devoirs.get({ id: devoir.id }); });
                     _(ctrl.devoirs).each(function (devoir) {
                         devoir.$promise.then(function () {
                             ctrl.estimation_leave(devoir);
                             _(devoir.ressources).each(function (ressource) {
                                 ressource.url = $sce.trustAsResourceUrl(URL_DOCS + "/api/connector?cmd=file&target=" + ressource.hash);
                             });
-                            if (ctrl.creneau.etranger) {
+                            if (!ctrl.creneau.mine) {
                                 devoir.contenu = $sce.trustAsHtml(devoir.contenu);
                             }
                         });
@@ -2093,6 +2101,7 @@ angular.module('cahierDeTextesClientApp')
                 }
             });
         });
+        console.log(ctrl);
     }]);
 angular.module('cahierDeTextesClientApp')
     .controller('TextBookCtrl', ['$scope', 'moment', '$state', '$q', '$locale',
@@ -2128,7 +2137,7 @@ angular.module('cahierDeTextesClientApp')
         ctrl.prev = function () { ctrl.emploi_du_temps.fullCalendar('prev'); };
         ctrl.next = function () { ctrl.emploi_du_temps.fullCalendar('next'); };
         ctrl.select_all_regroupements = function () {
-            ctrl.selected_regroupements = ctrl.current_user.actual_groups;
+            ctrl.selected_regroupements = ctrl.groups;
             ctrl.refresh_calendar();
         };
         ctrl.select_no_regroupements = function () {
@@ -2139,18 +2148,21 @@ angular.module('cahierDeTextesClientApp')
             var view = ctrl.emploi_du_temps.fullCalendar('getView');
             retrieve_data(view.start.toDate(), view.end.toDate());
         };
-        ctrl.current_user.get_actual_groups()
-            .then(function (actual_groups) {
-            if (ctrl.uniquement_mes_creneaux) {
-                ctrl.selected_regroupements = ctrl.current_user.actual_groups;
-            }
-            else {
-                ctrl.selected_regroupements = [ctrl.current_user.actual_groups[0]];
-            }
-        });
-        ctrl.extraEventSignature = function (event) {
-            return '' + event.matiere;
-        };
+        if (ctrl.current_user.is(['EVS', 'DIR', 'ADM'])) {
+            Annuaire.get_groups_of_structures(current_user.get_structures_ids())
+                .then(function (groups) {
+                ctrl.groups = groups.data;
+                ctrl.selected_regroupements = [ctrl.groups[0]];
+            });
+        }
+        else {
+            ctrl.current_user.get_actual_groups()
+                .then(function (actual_groups) {
+                ctrl.groups = actual_groups;
+                ctrl.selected_regroupements = ctrl.groups;
+            });
+        }
+        ctrl.extraEventSignature = function (event) { return "" + event.matiere; };
         var filter_by_regroupement = function (raw_data, selected_regroupements) {
             return _(raw_data).filter(function (creneau) {
                 return _.chain(selected_regroupements).pluck('id').contains(parseInt(creneau.regroupement_id)).value();
@@ -3165,14 +3177,9 @@ angular.module('cahierDeTextesClientApp')
                     });
                 }
                 current_user.get_actual_groups = function () {
-                    var groups_ids = _.chain(current_user.groups).pluck('group_id').uniq().value();
                     var promise = $q.resolve([]);
-                    if (current_user.is(['EVS', 'DIR', 'ADM'])) {
-                        promise = Annuaire.get_groups_of_structures(current_user.get_structures_ids());
-                    }
-                    else {
-                        promise = Annuaire.get_groups(groups_ids);
-                    }
+                    var groups_ids = _.chain(current_user.groups).pluck('group_id').uniq().value();
+                    promise = Annuaire.get_groups(groups_ids);
                     return promise
                         .then(function (groups) {
                         current_user.actual_groups = groups.data;

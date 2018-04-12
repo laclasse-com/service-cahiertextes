@@ -11,7 +11,7 @@
                         {{$item.name}}
                     </span>
                 </ui-select-match>
-                <ui-select-choices repeat="classe in $ctrl.current_user.actual_groups | orderBy:['type','name']"
+                <ui-select-choices repeat="classe in $ctrl.groups | orderBy:['type','name']"
                                    group-by="'full_type'">
                     <span class="label" ng:class="{'label-success': classe.type === 'GRP', 'label-info': classe.type === 'CLS', 'label-warning': classe.type === 'GPL' }">
                         {{classe.name}}

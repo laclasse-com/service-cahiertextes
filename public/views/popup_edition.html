@@ -14,23 +14,23 @@
     <div class="edition-creneau"
          ng:if="mode_edition_creneau">
         <div class="col-md-6">
-            <label>Choisir la classe/le groupe :</label>
-            <select ng:model="scope.selected_regroupement"
-                    ng:options="classe as classe.name group by classe.type for classe in classes | orderBy:['type','name']"
+            <label>Classe/Groupe :</label>
+            <select ng:model="$ctrl.selected_regroupement"
+                    ng:options="classe as classe.name group by classe.type for classe in $ctrl.groups | orderBy:['type','name']"
                     ng:required="true">
             </select>
         </div>
 
         <div class="col-md-6">
-            <label>Choisir la matière :</label>
-            <select ng:model="scope.selected_matiere"
-                    ng:options="matiere as matiere.name for matiere in $ctrl.current_user.actual_subjects | orderBy:['name']"
+            <label>Matière :</label>
+            <select ng:model="$ctrl.selected_matiere"
+                    ng:options="matiere as matiere.name for matiere in $ctrl.subjects | orderBy:['name']"
                     ng:required="true">
             </select>
         </div>
 
         <div class="col-md-12 horaire">
-            <label>Choisir l'horaire :</label>
+            <label>Horaire :</label>
             <select ng:options="index as jour for (index, jour) in jours"
                     ng:model="creneau.jour_de_la_semaine">
             </select>
@@ -60,7 +60,7 @@
             </div>
         </div>
         <div class="col-md-12">
-            <label>Choisir les semaines actives :</label>
+            <label>Semaines actives :</label>
             <div class="btn-group templates-semainier">
                 <button class="btn btn-xs"
                         ng:repeat="template in templates_semainier"
@@ -108,16 +108,17 @@
                 <div class="col-md-9 contenu">
                     <div class="panel panel-default">
 
-                        <div data-text-angular
-                             class="panel-body"
+                        <div class="panel-body"
+                             data-text-angular
                              ng:model="cours.contenu"
                              ng:change="is_dirty( cours )"
-                             ng:if="cours.editable && !cours.deleted" ></div>
+                             ng:if="creneau.mine && cours.editable && !cours.deleted" ></div>
                         <div class="panel-body"
                              ng:bind-html="cours.contenu"
-                             ng:if="!cours.editable && !cours.deleted" ></div>
+                             ng:if="!cours.deleted && (!creneau.mine || !cours.editable)" ></div>
                         <div class="panel-body deleted"
                              ng:if="cours.deleted" >(Séquence pédagogique supprimée)</div>
+
                         <div class="panel-footer ressources" ng:if="!cours.deleted">
                             <div class="row">
                                 <div class="attached-document" ng:repeat="ressource in cours.ressources">
@@ -126,7 +127,7 @@
                                 </div>
                             </div>
 
-                            <div uib-dropdown class="uib-dropdown" ng:if="!creneau.etranger">
+                            <div uib-dropdown class="uib-dropdown" ng:if="creneau.mine">
                                 <button uib-dropdown-toggle class="btn btn-sm btn-default uib-dropdown-toggle pull-right" role="button" data-toggle="uib-dropdown" data-target="#" href="">
                                     <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
                                 </button>
@@ -164,7 +165,7 @@
                 <div class="col-md-3" ng:if="cours.id">
                     <button type="button" class="btn btn-xs btn-danger pull-right supprimer"
                             ng:click="effacer_cours(  )"
-                            ng:if="cours.id && ( cours.deleted || ( !creneau.etranger && cours.editable ) )" >
+                            ng:if="cours.id && ( creneau.mine && ( cours.deleted || cours.editable ) )" >
                         <span ng:if="!cours.deleted"><span class="glyphicon glyphicon-trash"></span> Supprimer</span>
                         <span ng:if="cours.deleted"><span class="glyphicon glyphicon-trash"></span> Annuler la suppression</span>
                     </button>
@@ -177,7 +178,7 @@
                 </div>
                 <div class="panel-body">
                     <button class="btn btn-default ajout-devoir"
-                            ng:if="creneau.can_add_homework"
+                            ng:if="creneau.mine"
                             ng:click="ajout_devoir( cours.devoirs, 'next' )">
                         <span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
                     </button>
@@ -187,7 +188,7 @@
                         <div class="row">
                             <div class="col-md-9"
                                  ng:if="!devoir.deleted">
-                                <div class="panel-heading enseignant-saisie" ng:if="!creneau.etranger">
+                                <div class="panel-heading enseignant-saisie" ng:if="creneau.mine">
                                     <label class="col-md-6" ng:if="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir">Type de travail :
                                         <select ng:required="true"
                                                 ng:change="is_dirty( devoir )"
@@ -218,13 +219,13 @@
                                     </div>
                                     <div class="clearfix"></div>
                                 </div>
-                                <text-angular class="panel-body" ng:model="devoir.contenu" ng:change="is_dirty( devoir )" ng:if="!creneau.etranger"></text-angular>
+                                <text-angular class="panel-body" ng:model="devoir.contenu" ng:change="is_dirty( devoir )" ng:if="creneau.mine"></text-angular>
 
-                                <div class="panel-heading enseignant-saisie" ng:if="creneau.etranger">
+                                <div class="panel-heading enseignant-saisie" ng:if="!creneau.mine">
                                     <label ng:if="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir">Type de travail : <em>{{devoir.type_devoir.description}}</em></label>
                                     <label ng:if="devoir.temps_estime">Temps de travail estimé : <em>{{devoir.temps_estime * 5}} min</em></label>
                                 </div>
-                                <div class="panel-body" ng:bind-html="devoir.contenu" ng:if="creneau.etranger"></div>
+                                <div class="panel-body" ng:bind-html="devoir.contenu" ng:if="!creneau.mine"></div>
 
                                 <div class="panel-footer ressources">
                                     <div class="row">
@@ -234,7 +235,7 @@
                                         </div>
                                     </div>
 
-                                    <div uib-dropdown class="uib-dropdown" ng:if="!creneau.etranger">
+                                    <div uib-dropdown class="uib-dropdown" ng:if="creneau.mine">
                                         <button uib-dropdown-toggle class="btn btn-sm btn-default uib-dropdown-toggle pull-right" role="button" data-toggle="uib-dropdown" data-target="#" href="">
                                             <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
                                         </button>
@@ -264,7 +265,7 @@
                             <div class="col-md-3">
                                 <button type="button" class="btn btn-xs btn-danger pull-right supprimer"
                                         ng:click="effacer_devoir( devoir )"
-                                        ng:if="devoir.id && !creneau.etranger && !devoir.cours.deleted">
+                                        ng:if="devoir.id && creneau.mine && !devoir.cours.deleted">
                                     <span ng:if="!devoir.deleted"><span class="glyphicon glyphicon-trash"></span> Supprimer</span>
                                     <span ng:if="devoir.deleted"><span class="glyphicon glyphicon-trash"></span> Annuler la suppression</span>
                                 </button>
@@ -283,7 +284,7 @@
 
             <button class="btn btn-default ajout-devoir"
                     ng:click="ajout_devoir( devoirs, creneau )"
-                    ng:if="creneau.can_add_homework">
+                    ng:if="creneau.mine">
                 <span class="glyphicon glyphicon-plus-sign"></span> Ajouter un devoir
             </button>
             <div class="clearfix"></div>
@@ -295,7 +296,7 @@
                     <div class="col-md-9"
                          ng:if="!devoir.deleted">
 
-                        <div class="panel-heading enseignant-saisie" ng:if="!creneau.etranger">
+                        <div class="panel-heading enseignant-saisie" ng:if="creneau.mine">
                             <label class="col-md-12" ng:if="current_user.parametrage_cahier_de_textes.affichage_types_de_devoir">Type de travail :
                                 <select ng:required="true"
                                         ng:change="is_dirty( devoir )"
@@ -324,13 +325,13 @@
                         <text-angular class="panel-body"
                                       ng:model="devoir.contenu"
                                       ng:change="is_dirty( devoir )"
-                                      ng:if="!creneau.etranger"></text-angular>
+                                      ng:if="creneau.mine"></text-angular>
 
-                        <div class="panel-heading enseignant-saisie" ng:if="creneau.etranger">
+                        <div class="panel-heading enseignant-saisie" ng:if="!creneau.mine">
                             <label>Type de travail : <em>{{devoir.type_devoir.description}}</em></label>
                             <label ng:if="devoir.temps_estime">Temps de travail estimé : <em>{{devoir.temps_estime * 5}} min</em></label>
                         </div>
-                        <div class="panel-body" ng:bind-html="devoir.contenu" ng:if="creneau.etranger"></div>
+                        <div class="panel-body" ng:bind-html="devoir.contenu" ng:if="!creneau.mine"></div>
 
                         <div class="panel-footer ressources">
                             <div class="row">
@@ -340,7 +341,7 @@
                                 </div>
                             </div>
 
-                            <div uib-dropdown class="uib-dropdown" ng:if="!creneau.etranger">
+                            <div uib-dropdown class="uib-dropdown" ng:if="creneau.mine">
                                 <button uib-dropdown-toggle class="btn btn-sm btn-default uib-dropdown-toggle pull-right" role="button" data-toggle="uib-dropdown" data-target="#" href="">
                                     <span class="glyphicon glyphicon-plus-sign"></span> Ajouter une ressource
                                 </button>
@@ -382,7 +383,7 @@
                     <div class="col-md-3">
                         <button type="button" class="btn btn-xs btn-danger pull-right supprimer"
                                 ng:click="effacer_devoir( devoir )"
-                                ng:if="devoir.id && !creneau.etranger && !devoir.cours.deleted">
+                                ng:if="devoir.id && creneau.mine && !devoir.cours.deleted">
                             <span ng:if="!devoir.deleted"><span class="glyphicon glyphicon-trash"></span> Supprimer</span>
                             <span ng:if="devoir.deleted"><span class="glyphicon glyphicon-trash"></span> Annuler la suppression</span>
                         </button>
@@ -408,7 +409,7 @@
                         <li ng:bind-html="cours.contenu"></li>
                     </ul>
                     <select class="col-md-3 pull-left"
-                            ng:model="scope.selected_regroupement_id_duplication"
+                            ng:model="$ctrl.selected_regroupement_id_duplication"
                             ng:options="classe.id as classe.name for classe in $ctrl.current_user.actual_groups">
                         <option value="" selected>Toutes les classes</option>
                     </select>
@@ -451,30 +452,30 @@
 
 <div class="modal-footer">
     <button type="button" class="btn btn-sm btn-warning pull-left"
-            ng:if="!creneau.etranger && mode_edition_creneau && dirty"
+            ng:if="( creneau.mine || $ctrl.current_user.is(['ADM', 'DIR']) ) && mode_edition_creneau && dirty"
             ng:click="effacer_creneau()">
         <span class="glyphicon glyphicon-trash"></span> Supprimer le créneau
     </button>
 
     <button type="button" class="btn btn-sm btn-default pull-left"
             ng:click="switch_to_creneau_edition()"
-            ng:if="!creneau.etranger && !mode_edition_creneau" >
+            ng:if="( creneau.mine || $ctrl.current_user.is(['ADM', 'DIR']) ) && !mode_edition_creneau" >
         <span><span class="glyphicon glyphicon-edit"></span> Modifier le créneau</span>
     </button>
 
     <button type="button" class="btn btn-sm btn-default pull-left"
             ng:click="switch_to_duplication_mode()"
-            ng:if="!creneau.etranger && cours.contenu && !mode_edition_creneau && !mode_duplication && creneaux_similaires.length > 0 && !dirty" >
+            ng:if="creneau.mine && cours.contenu && !mode_edition_creneau && !mode_duplication && creneaux_similaires.length > 0 && !dirty" >
         <span><span class="glyphicon glyphicon-transfer"></span> Copier à d'autres créneaux</span>
     </button>
 
     <button type="button" class="btn btn-sm btn-default"
             ng:click="switch_to_modification_mode()"
-            ng:if="mode_duplication || mode_edition_creneau && !creneau.en_creation" >
+            ng:if="!creneau.en_creation && ( mode_duplication || mode_edition_creneau )" >
         <span><span class="glyphicon glyphicon-transfer"></span> Revenir en modification</span>
     </button>
 
-    <button type="button" class="btn btn-sm btn-success pull-right" ng:click="valider()" ng:if="!creneau.etranger && dirty || (mode_edition_creneau && scope.selected_regroupement)">
+    <button type="button" class="btn btn-sm btn-success pull-right" ng:click="valider()" ng:if="creneau.mine && dirty || (mode_edition_creneau && $ctrl.selected_regroupement)">
         <span class="glyphicon glyphicon-ok-sign"></span> Valider
     </button>
     <button type="button" class="btn btn-sm btn-default pull-right" ng:click="annuler()">
