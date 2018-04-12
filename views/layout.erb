@@ -88,9 +88,7 @@
                 .constant( 'APP_PATH', '<%=APP_PATH%>' )
                 .constant( 'URL_ENT', '<%=URL_ENT%>' )
                 .constant( 'URL_DOCS', '<%=URL_DOCS%>' )
-                .constant( 'SEMAINES_VACANCES', { A: <%=CahierDeTextesApp::Utils::Holidays.get( 'A', CahierDeTextesApp::Utils::Holidays.year_rentree )%>,
-                                                  B: <%=CahierDeTextesApp::Utils::Holidays.get( 'B', CahierDeTextesApp::Utils::Holidays.year_rentree )%>,
-                                                  C: <%=CahierDeTextesApp::Utils::Holidays.get( 'C', CahierDeTextesApp::Utils::Holidays.year_rentree )%> } )
+                .constant( 'SEMAINES_VACANCES', { A: <%=CahierDeTextesApp::Utils::Holidays.get( 'A' )%> } )
                 .config( [ '$compileProvider',
                            function( $compileProvider ) {
                                //$compileProvider.debugInfoEnabled( <%= ENV['RACK_ENV'] == 'development' %> );
