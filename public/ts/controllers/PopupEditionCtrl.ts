@@ -753,6 +753,4 @@ angular.module('cahierDeTextesClientApp')
 
                      });
                  });
-
-                 console.log(ctrl)
                }]);

@@ -183,7 +183,6 @@ angular.module('cahierDeTextesClientApp')
             return API.get_enseignant(ctrl.current_user.get_structures_ids(), ctrl.enseignant_id);
           })
           .then(function success(response) {
-            console.log(response)
             let _2_semaines_avant = moment().subtract(2, 'weeks');
 
             ctrl.raw_data = response.saisies.map(function(saisie, index) {

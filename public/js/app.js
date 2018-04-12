@@ -768,7 +768,6 @@ angular.module('cahierDeTextesClientApp')
             return API.get_enseignant(ctrl.current_user.get_structures_ids(), ctrl.enseignant_id);
         })
             .then(function success(response) {
-            console.log(response);
             var _2_semaines_avant = moment().subtract(2, 'weeks');
             ctrl.raw_data = response.saisies.map(function (saisie, index) {
                 saisie.index = index;
@@ -2101,7 +2100,6 @@ angular.module('cahierDeTextesClientApp')
                 }
             });
         });
-        console.log(ctrl);
     }]);
 angular.module('cahierDeTextesClientApp')
     .controller('TextBookCtrl', ['$scope', 'moment', '$state', '$q', '$locale',
