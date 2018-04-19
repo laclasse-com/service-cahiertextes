@@ -139,7 +139,7 @@ angular.module('cahierDeTextesClientApp')
                      })
                      .then(function() {
                        ctrl.creneau = creneau;
-                       ctrl.creneau.mine = ctrl.creneau.en_creation || ( _.chain(ctrl.current_user.actual_subjects).pluck('id').include(ctrl.creneau.matiere_id).value() && _.chain(ctrl.current_user.actual_groups).pluck('id').include(ctrl.creneau.regroupement_id).value() );
+                       ctrl.creneau.mine = ctrl.creneau.en_creation || ( _.chain(ctrl.current_user.actual_subjects).pluck('id').intersection([ ctrl.creneau.matiere_id, "primaire" ]).value().length > 0 && _.chain(ctrl.current_user.actual_groups).pluck('id').include(ctrl.creneau.regroupement_id).value() );
                        ctrl.creneau.jour_de_la_semaine = '' + ctrl.creneau.jour_de_la_semaine;
                        ctrl.mode_edition_creneau = ctrl.creneau.en_creation;
                        ctrl.creneau.regroupement_id = parseInt(ctrl.creneau.regroupement_id);
