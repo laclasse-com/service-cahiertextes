@@ -12,10 +12,11 @@ module ProNote
   end
 
   def decrypt_payload( data, aes_secret_key, aes_iv )
-    aes = OpenSSL::Cipher.new 'AES-128-CBC'
+    aes = OpenSSL::Cipher.new( 'AES-128-CBC' )
     aes.decrypt
-    aes.key = aes_secret_key
-    aes.iv = aes_iv
+
+    aes.key = aes_secret_key[0..15]
+    aes.iv = aes_iv[0..15]
 
     aes.update( data ) + aes.final
   end
