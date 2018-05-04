@@ -14,14 +14,14 @@ APP_PATH = '/ct'.freeze
 LANG = 'fr'.freeze
 
 # Url de l'ENT
-URL_ENT = 'http://localhost/annuaire'.freeze
+URL_ENT = 'http://localhost'.freeze
 
 # Url des Docs
 URL_DOCS = 'http://localhost/docs'.freeze
 
 SSL = true
 
-ANNUAIRE = { url: 'http://localhost/annuaire/api',
+ANNUAIRE = { url: 'http://localhost/api',
              app_id: 'CTXT',
              api_key: 'Clé secrete de signature des requetes REST' }.freeze
 
