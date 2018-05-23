@@ -40,7 +40,6 @@
     "es5-shim": "^4.5.9",
     "font-awesome": "^4.6.3",
     "fullcalendar": "^3.9.0",
-    "google-closure-compiler-js": "latest",
     "jquery": "^3.3.1",
     "laclasse-common-client": "git+https://github.com/laclasse-com/laclasse-common-client.git",
     "moment": "^2.22.0",
