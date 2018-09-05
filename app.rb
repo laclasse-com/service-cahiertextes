@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'rubygems'
 require 'bundler'
 require 'yaml'
@@ -30,7 +31,6 @@ require_relative './models/user_parameters'
 require_relative './lib/helpers/auth'
 require_relative './lib/helpers/user'
 
-require_relative './routes/index'
 require_relative './routes/status'
 require_relative './routes/api/cahiers_de_textes'
 require_relative './routes/api/cours'
@@ -81,7 +81,6 @@ module CahierDeTextesApp
       login! env['REQUEST_PATH'] unless logged?
     end
 
-    register CahierDeTextesApp::Routes::Index
     register CahierDeTextesApp::Routes::Status
 
     register CahierDeTextesApp::Routes::Api::CahiersDeTextes

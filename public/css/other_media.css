@@ -1,7 +1,0 @@
-@media print {
-    header,
-    footer,
-    .cahier-de-textes .actions {
-        display: none;
-    }
-}
