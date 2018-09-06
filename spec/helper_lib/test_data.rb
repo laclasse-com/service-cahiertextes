@@ -1,9 +1,6 @@
-def load_test_data( dbdump = 'spec/fixtures/db_dump.sql' )
-  system "mysql -u #{DB_CONFIG[:user]} #{DB_CONFIG[:password].empty? ? '' : '-p' + DB_CONFIG[:password]} #{DB_CONFIG[:name]} < #{dbdump}"
-end
-
+# coding: utf-8
 def generate_test_data
-  CahierDeTextes.all.each do |cahier_de_textes|
+    TextBook.all.each do |cahier_de_textes|
     12.times do |month|
       rand( 2..4 ).times do
         creneau = CreneauEmploiDuTempsEnseignant.all.sample

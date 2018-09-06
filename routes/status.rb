@@ -35,7 +35,7 @@ module CahierDeTextesApp
           if params.key?('from') && params.key?('to')
             json(
               nb_etablissements: Structure.count,
-              nb_cahiers_de_textes: CahierDeTextes.count,
+              nb_cahiers_de_textes: TextBook.count,
               nb_sequences_pedagogiques: Cours
                 .where( Sequel.lit( "DATE_FORMAT( date_cours, '%Y-%m-%d') >= '#{Date.parse( params['from'] )}'" ) )
                 .where( Sequel.lit( "DATE_FORMAT( date_cours, '%Y-%m-%d') <= '#{Date.parse( params['to'] )}'" ) )
@@ -57,7 +57,7 @@ module CahierDeTextesApp
             )
           else
             json( nb_structures: Structure.count,
-                  nb_cahiers_de_textes: CahierDeTextes.count,
+                  nb_cahiers_de_textes: TextBook.count,
                   nb_sequences_pedagogiques: Cours.count,
                   nb_devoirs: Devoir.count,
                   nb_devoirs_faits: DevoirTodoItem.count,

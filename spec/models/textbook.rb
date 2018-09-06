@@ -1,7 +1,7 @@
 # coding: utf-8
 require 'spec_helper'
 
-describe CahierDeTextes do
+describe TextBook do
   before :each do
     TableCleaner.new( DB, [] ).clean
 
@@ -30,11 +30,11 @@ describe CahierDeTextes do
 
       next unless (i + 1).even?
 
-      ct = CahierDeTextes.create( date_creation: Time.now,
-                                  regroupement_id: i + 1 )
+      ct = TextBook.create( ctime: Time.now,
+                            group_id: i + 1 )
 
       sp = Cours.create( creneau_emploi_du_temps_id: cedt.id,
-                         cahier_de_textes_id: ct.id,
+                         textbook_id: ct.id,
                          enseignant_id: "enseignant_#{i + 1}",
                          date_cours: Date.parse( "#{Time.now.year}-09-01" ) + i.day,
                          date_creation: Time.now,
@@ -53,8 +53,8 @@ describe CahierDeTextes do
   end
 
   it 'Calcule les statistiques du cahier de textes d\'un regroupement' do
-    stats = CahierDeTextes.first.statistiques
+    stats = TextBook.first.statistiques
 
-    expect( stats[:regroupement_id] ).to eq '2'
+    expect( stats[:group_id] ).to eq '2'
   end
 end

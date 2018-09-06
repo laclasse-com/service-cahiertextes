@@ -1,3 +1,4 @@
+# coding: utf-8
 module CahierDeTextesApp
   module Routes
     module Api
@@ -76,7 +77,7 @@ module CahierDeTextesApp
                            .first
               if cours.nil?
                 cours = Cours.create( enseignant_id: user['id'],
-                                      cahier_de_textes_id: DataManagement::Accessors.create_or_get( CahierDeTextes, regroupement_id: creneau.regroupement_id ).id,
+                                      textbook_id: DataManagement::Accessors.create_or_get( TextBook, regroupement_id: creneau.regroupement_id ).id,
                                       creneau_emploi_du_temps_id: creneau.id,
                                       date_cours: body['date_due'],
                                       date_creation: Time.now,

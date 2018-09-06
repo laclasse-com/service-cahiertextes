@@ -16,7 +16,7 @@ Sequel::Model.plugin( :json_serializer )
 
 require_relative './lib/utils/holidays'
 
-require_relative './models/cahier_de_textes'
+require_relative './models/textbook'
 require_relative './models/cours'
 require_relative './models/creneau_emploi_du_temps'
 require_relative './models/devoir'
@@ -32,7 +32,7 @@ require_relative './lib/helpers/auth'
 require_relative './lib/helpers/user'
 
 require_relative './routes/status'
-require_relative './routes/api/cahiers_de_textes'
+require_relative './routes/api/textbooks'
 require_relative './routes/api/cours'
 require_relative './routes/api/creneaux_emploi_du_temps'
 require_relative './routes/api/devoirs'
@@ -83,7 +83,7 @@ module CahierDeTextesApp
 
     register CahierDeTextesApp::Routes::Status
 
-    register CahierDeTextesApp::Routes::Api::CahiersDeTextes
+    register CahierDeTextesApp::Routes::Api::TextBooks
     register CahierDeTextesApp::Routes::Api::CoursAPI
     register CahierDeTextesApp::Routes::Api::CreneauxEmploiDuTemps
     register CahierDeTextesApp::Routes::Api::Devoirs

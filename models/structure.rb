@@ -13,9 +13,9 @@ class Structure < Sequel::Model( :structures )
                                                     password: ANNUAIRE[:api_key] ) )
 
     etab['groups'].map do |group|
-      cdt = CahierDeTextes[ regroupement_id: group['id'] ]
-      cdt = CahierDeTextes.create( date_creation: Time.now, regroupement_id: group['id'] ) if cdt.nil?
-      cdt.statistiques
+      textbook = TextBook[ regroupement_id: group['id'] ]
+      textbook = TextBook.create( date_creation: Time.now, regroupement_id: group['id'] ) if textbook.nil?
+      textbook.statistiques
     end
   end
 

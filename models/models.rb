@@ -11,7 +11,7 @@ require_relative './salle'
 require_relative './creneau_emploi_du_temps'
 
 # Cahier de textes
-require_relative './cahier_de_textes'
+require_relative './textbook'
 require_relative './ressource'
 
 # Séquences pédagogiques
