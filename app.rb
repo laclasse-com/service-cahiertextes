@@ -89,10 +89,11 @@ module CahierDeTextesApp
     register CahierDeTextesApp::Routes::Api::Devoirs
     register CahierDeTextesApp::Routes::Api::EmploisDuTemps
     register CahierDeTextesApp::Routes::Api::Etablissements
-    register CahierDeTextesApp::Routes::Api::ImportAPI
-    register CahierDeTextesApp::Routes::Api::Matchables
     register CahierDeTextesApp::Routes::Api::Salles
     register CahierDeTextesApp::Routes::Api::TypesDeDevoir
+
+    register CahierDeTextesApp::Routes::Api::ImportAPI
+    register CahierDeTextesApp::Routes::Api::Matchables
 
     register CahierDeTextesApp::Routes::Api::UsersAPI
     register CahierDeTextesApp::Routes::Api::UserParametersAPI
