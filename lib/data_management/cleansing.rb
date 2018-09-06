@@ -26,8 +26,8 @@ module DataManagement
 
                 timeslots.each do |c|
                     c.enseignants.each(&:destroy)
-                    c.salles.each do |salle|
-                        c.remove_salle( salle )
+                    c.locations.each do |location|
+                        c.remove_location( location )
                     end
                 end
 

@@ -6,16 +6,16 @@ module ActiveWeeksMixin
   end
 end
 
-class TimeslotSalle < Sequel::Model( :timeslots_salles )
+class TimeslotLocation < Sequel::Model( :timeslots_locations )
   unrestrict_primary_key
   include ActiveWeeksMixin
 
   many_to_one :timeslot
-  many_to_one :salle
+  many_to_one :location
 end
 
 class Timeslot < Sequel::Model( :timeslots )
-  many_to_many :salles, class: :Salle, join_table: :timeslots_salles
+  many_to_many :locations, class: :Location, join_table: :timeslots_locations
   one_to_many :cours, class: :Cours
   one_to_many :devoirs
   many_to_one :structures, class: :Structure, key: :structure_id
@@ -127,18 +127,18 @@ class Timeslot < Sequel::Model( :timeslots )
          .compact
   end
 
-  def update_salle( salle_id, active_weeks_salle )
-    timeslot_salle = TimeslotSalle[timeslot_id: id, salle_id: salle_id]
-    if timeslot_salle.nil?
-      salle = Salle[salle_id]
-      return nil if salle.nil?
+  def update_location( location_id, active_weeks_location )
+    timeslot_location = TimeslotLocation[timeslot_id: id, location_id: location_id]
+    if timeslot_location.nil?
+      location = Location[location_id]
+      return nil if location.nil?
 
-      add_salle( salle )
+      add_location( location )
 
-      timeslot_salle = TimeslotSalle[timeslot_id: id, salle_id: salle_id]
+      timeslot_location = TimeslotLocation[timeslot_id: id, location_id: location_id]
     end
 
-    timeslot_salle.update( active_weeks: active_weeks_salle ) unless active_weeks_salle.nil?
+    timeslot_location.update( active_weeks: active_weeks_location ) unless active_weeks_location.nil?
   end
 
   def modifie( params )
@@ -153,7 +153,7 @@ class Timeslot < Sequel::Model( :timeslots )
 
     save
 
-    update_salle( params['salle_id'], params['active_weeks_salle'] ) if params.key?( 'salle_id' )
+    update_location( params['location_id'], params['active_weeks_location'] ) if params.key?( 'location_id' )
   rescue StandardError => e
     puts "Can't do that with #{self}"
     puts e.message
@@ -163,7 +163,7 @@ class Timeslot < Sequel::Model( :timeslots )
   def deep_destroy
     remove_all_cours
     remove_all_devoirs
-    remove_all_salles
+    remove_all_locations
 
     destroy
   end

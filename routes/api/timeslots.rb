@@ -30,7 +30,7 @@ module CahierDeTextesApp
 
                         halt( 404, 'Créneau inconnu' ) if timeslot.nil?
 
-                        json( timeslot.detailed( params['start'], params['end'], %w[salles cours devoirs] ) )
+                        json( timeslot.detailed( params['start'], params['end'], %w[locations cours devoirs] ) )
                     end
 
                     app.get '/api/timeslots/:id/similaires/?' do

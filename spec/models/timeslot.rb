@@ -5,26 +5,26 @@ describe Timeslot do
         @structure = Structure.create( UAI: 'test012345Z' )
         @weekday = rand( 1..5 )
         @timeslot = Timeslot.create( ctime: Time.now,
-                                    start_time: Time.parse( '14:00' ),
-                                    end_time: Time.parse( '15:00' ),
-                                    weekday: @weekday,
-                                    subject_id: '',
-                                    group_id: 0,
-                                    structure_id: @structure.id )
-        @salle = Salle.create( structure_id: @structure.id,
-                               identifiant: 'test' )
+                                     start_time: Time.parse( '14:00' ),
+                                     end_time: Time.parse( '15:00' ),
+                                     weekday: @weekday,
+                                     subject_id: '',
+                                     group_id: 0,
+                                     structure_id: @structure.id )
+        @location = Location.create( structure_id: @structure.id,
+                                     label: 'test' )
     end
     after :each do
-        @timeslot.remove_all_salles
+        @timeslot.remove_all_locations
         @timeslot.destroy
-        @salle.destroy
+        @location.destroy
         @structure.destroy
     end
 
     it 'creates a placeholder creneau' do
         expect( @timeslot ).to_not be_nil
         expect( @timeslot.group_id ).to eq 0
-        expect( @timeslot.salles ).to be_empty
+        expect( @timeslot.locations ).to be_empty
         expect( @timeslot.cours ).to be_empty
         expect( @timeslot.devoirs ).to be_empty
         expect( @timeslot.start_time.iso8601.split('+').first.split('T').last ).to eq '14:00:00'
@@ -62,7 +62,7 @@ describe Timeslot do
 
     it 'def modifie( params ) # hours as Time' do
         @timeslot.modifie( 'start_time' => Time.parse( '10:02' ),
-                          'end_time' => Time.parse( '21:09' ) )
+                           'end_time' => Time.parse( '21:09' ) )
         expect( @timeslot.start_time.iso8601.split('+').first.split('T').last ).to eq '10:02:00'
         expect( @timeslot.end_time.iso8601.split('+').first.split('T').last ).to eq '21:09:00'
     end
@@ -88,33 +88,33 @@ describe Timeslot do
         expect( @timeslot.group_id ).to eq 999_999
 
         @timeslot.modifie( 'group_id' => 999_999,
-                          'active_weeks_group' => 123)
+                           'active_weeks_group' => 123)
         expect( @timeslot.group_id ).to eq 999_999
         expect( @timeslot.active_weeks ).to eq 123
     end
 
-    it 'def modifie( params ) # add salle' do
-        @timeslot.modifie( 'salle_id' => @salle.id )
-        expect( @timeslot.salles.count ).to eq 1
-        expect( TimeslotSalle[ timeslot_id: @timeslot.id,
-                               salle_id: @salle.id ] ).to_not be nil
-        expect( TimeslotSalle[ timeslot_id: @timeslot.id,
-                               salle_id: @salle.id ].active_weeks ).to eq 2**52 - 1
+    it 'def modifie( params ) # add location' do
+        @timeslot.modifie( 'location_id' => @location.id )
+        expect( @timeslot.locations.count ).to eq 1
+        expect( TimeslotLocation[ timeslot_id: @timeslot.id,
+                                  location_id: @location.id ] ).to_not be nil
+        expect( TimeslotLocation[ timeslot_id: @timeslot.id,
+                                  location_id: @location.id ].active_weeks ).to eq 2**52 - 1
     end
 
-    it 'def modifie( params ) # change salle' do
-        @timeslot.modifie( 'salle_id' => @salle.id )
-        expect( @timeslot.salles.count ).to eq 1
-        expect( TimeslotSalle[ timeslot_id: @timeslot.id,
-                               salle_id: @salle.id ] ).to_not be nil
-        expect( TimeslotSalle[ timeslot_id: @timeslot.id,
-                               salle_id: @salle.id ].active_weeks ).to eq 2**52 - 1
-        @timeslot.modifie( 'salle_id' => @salle.id,
-                          'active_weeks_salle' => 123)
-        expect( @timeslot.salles.count ).to eq 1
-        expect( TimeslotSalle[ timeslot_id: @timeslot.id,
-                               salle_id: @salle.id ] ).to_not be nil
-        expect( TimeslotSalle[ timeslot_id: @timeslot.id,
-                               salle_id: @salle.id ].active_weeks ).to eq 123
+    it 'def modifie( params ) # change location' do
+        @timeslot.modifie( 'location_id' => @location.id )
+        expect( @timeslot.locations.count ).to eq 1
+        expect( TimeslotLocation[ timeslot_id: @timeslot.id,
+                                  location_id: @location.id ] ).to_not be nil
+        expect( TimeslotLocation[ timeslot_id: @timeslot.id,
+                                  location_id: @location.id ].active_weeks ).to eq 2**52 - 1
+        @timeslot.modifie( 'location_id' => @location.id,
+                           'active_weeks_location' => 123)
+        expect( @timeslot.locations.count ).to eq 1
+        expect( TimeslotLocation[ timeslot_id: @timeslot.id,
+                                  location_id: @location.id ] ).to_not be nil
+        expect( TimeslotLocation[ timeslot_id: @timeslot.id,
+                                  location_id: @location.id ].active_weeks ).to eq 123
     end
 end

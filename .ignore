@@ -1,2 +1,3 @@
 *.sql
 docs-projet/
+spec/fixtures/

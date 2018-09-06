@@ -25,7 +25,7 @@ require_relative './models/import'
 require_relative './models/matchable'
 require_relative './models/models'
 require_relative './models/ressource'
-require_relative './models/salle'
+require_relative './models/location'
 require_relative './models/user_parameters'
 
 require_relative './lib/helpers/auth'
@@ -40,7 +40,7 @@ require_relative './routes/api/emplois_du_temps'
 require_relative './routes/api/structures'
 require_relative './routes/api/import'
 require_relative './routes/api/matchables'
-require_relative './routes/api/salles'
+require_relative './routes/api/locations'
 require_relative './routes/api/types_de_devoirs'
 require_relative './routes/api/users'
 require_relative './routes/api/user_parameters'
@@ -89,7 +89,7 @@ module CahierDeTextesApp
     register CahierDeTextesApp::Routes::Api::Devoirs
     register CahierDeTextesApp::Routes::Api::EmploisDuTemps
     register CahierDeTextesApp::Routes::Api::Structures
-    register CahierDeTextesApp::Routes::Api::Salles
+    register CahierDeTextesApp::Routes::Api::Locations
     register CahierDeTextesApp::Routes::Api::TypesDeDevoir
 
     register CahierDeTextesApp::Routes::Api::ImportAPI

@@ -3,7 +3,7 @@ require_relative '../lib/utils/date_rentree'
 class Structure < Sequel::Model( :structures )
   one_to_many :timeslots
   one_to_many :imports
-  one_to_many :salles
+  one_to_many :locations
   one_to_many :matchables
 
   def statistiques_regroupements
