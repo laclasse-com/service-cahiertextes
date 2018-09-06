@@ -10,9 +10,9 @@ module CahierDeTextesApp
                                                                      UAI: params['uai'] )
 
             hstructure = structure.to_hash
-            hstructure[:nb_creneaux] = CreneauEmploiDuTemps.where( structure_id: structure.id )
-                                                               .where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" ) )
-                                                               .count
+            hstructure[:nb_timeslots] = Timeslot.where( structure_id: structure.id )
+                                                .where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" ) )
+                                                .count
             hstructure[:imports] = structure.imports.map(&:to_hash)
             hstructure[:matchables] = structure.matchables.map(&:to_hash)
 

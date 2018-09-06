@@ -1,0 +1,170 @@
+require_relative '../lib/utils/holidays'
+
+module ActiveWeeksMixin
+  def present_pour_la_semaine?( week )
+    active_weeks[week] == 1
+  end
+end
+
+class TimeslotSalle < Sequel::Model( :timeslots_salles )
+  unrestrict_primary_key
+  include ActiveWeeksMixin
+
+  many_to_one :timeslot
+  many_to_one :salle
+end
+
+class Timeslot < Sequel::Model( :timeslots )
+  many_to_many :salles, class: :Salle, join_table: :timeslots_salles
+  one_to_many :cours, class: :Cours
+  one_to_many :devoirs
+  many_to_one :structures, class: :Structure, key: :structure_id
+  many_to_one :import, class: :Import, key: :import_id
+
+  def toggle_deleted( date_suppression )
+    update( deleted: !deleted, dtime: deleted ? nil : date_suppression )
+
+    save
+  end
+
+  def to_hash
+    h = super
+    h.each { |k, v| h[k] = v.iso8601 if v.is_a?( Time ) }
+
+    h
+  end
+
+  def detailed( _date_start, _date_end, details )
+    h = to_hash
+
+    details.each { |detail| h[ detail.to_sym ] = send( detail ) if self.class.method_deended?( detail ) }
+
+    h
+  end
+
+  def duplicates
+    Timeslot
+      .select_append( :timeslots__id___id )
+      .where( Sequel.~( timeslots__id: id ) )
+      .where( subject_id: subject_id )
+      .where( weekday: weekday )
+      .where( group_id: group_id )
+      .where( active_weeks: active_weeks )
+      .where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" ) )
+      .where( deleted: false )
+  end
+
+  # attach cours and devoirs to this timeslot and destroy other_timeslot
+  def merge( timeslot_id )
+    other_timeslot = Timeslot[timeslot_id]
+    return false if other_timeslot.nil?
+
+    other_timeslot.cours.each do |cours|
+      cours.update( timeslot_id: id )
+      cours.save
+    end
+    other_timeslot.devoirs.each do |devoir|
+      devoir.update( timeslot_id: id )
+      devoir.save
+    end
+  end
+
+  def merge_twins
+    return [] if deleted
+
+    duplicates.select(:timeslot__id)
+              .naked
+              .all
+              .map do |twin_id|
+      twin = Timeslot[ twin_id[:id] ]
+      next if twin.deleted
+
+      merge( twin.id )
+
+      twin.id
+    end
+  end
+
+  def merge_and_destroy_twins( truly_destroy = false )
+    merge_twins.map do |twin_id|
+      if truly_destroy
+        Timeslot[twin_id].deep_destroy
+      else
+        Timeslot[twin_id].toggle_deleted( Time.now )
+      end
+
+      twin_id
+    end
+  end
+
+  def similaires( groups_ids, date_start, date_end )
+    date_start = Date.parse( date_start )
+    date_end = Date.parse( date_end )
+    query = Timeslot.where( subject_id: subject_id )
+                    .where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" ) )
+                    .where( Sequel.lit( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( dtime, '%Y-%m-%d') >= '#{end_time}')" ) )
+
+    query = query.where( group_id: groups_ids ) unless groups_ids.nil?
+
+    query.all
+         .map do |c|
+      ( date_start .. date_end )
+        .select { |day| day.wday == c.weekday }
+        .map do |jour|
+        next unless c.active_weeks[jour.cweek] == 1
+        { id: c.id,
+          timeslot_id: c.id,
+          start_time: Time.new( jour.year, jour.month, jour.mday, c.start_time.hour, c.start_time.min ).iso8601,
+          end_time: Time.new( jour.year, jour.month, jour.mday, c.end_time.hour, c.end_time.min ).iso8601,
+          has_cours: c.cours.count { |cours| cours.date_cours == jour } > 0,
+          weekday: c.weekday,
+          subject_id: c.subject_id,
+          group_id: c.group_id,
+          active_weeks: c.active_weeks }
+      end
+    end
+         .flatten
+         .compact
+  end
+
+  def update_salle( salle_id, active_weeks_salle )
+    timeslot_salle = TimeslotSalle[timeslot_id: id, salle_id: salle_id]
+    if timeslot_salle.nil?
+      salle = Salle[salle_id]
+      return nil if salle.nil?
+
+      add_salle( salle )
+
+      timeslot_salle = TimeslotSalle[timeslot_id: id, salle_id: salle_id]
+    end
+
+    timeslot_salle.update( active_weeks: active_weeks_salle ) unless active_weeks_salle.nil?
+  end
+
+  def modifie( params )
+    update( start_time: params['start_time'] ) if params.key?( 'start_time' )
+    update( end_time: params['end_time'] ) if params.key?( 'end_time' )
+
+    update( subject_id: params['subject_id'] ) if params.key?( 'subject_id' )
+    update( import_id: params['import_id'] ) if params.key?( 'import_id' )
+    update( weekday: params['weekday'] ) if params.key?( 'weekday' )
+    update( group_id: params['group_id'] ) if params.key?( 'group_id' )
+    update( active_weeks: params['active_weeks_group'] ) if params.key?( 'active_weeks_group' )
+
+    save
+
+    update_salle( params['salle_id'], params['active_weeks_salle'] ) if params.key?( 'salle_id' )
+  rescue StandardError => e
+    puts "Can't do that with #{self}"
+    puts e.message
+    puts e.backtrace
+  end
+
+  def deep_destroy
+    remove_all_cours
+    remove_all_devoirs
+    remove_all_salles
+
+    destroy
+  end
+end

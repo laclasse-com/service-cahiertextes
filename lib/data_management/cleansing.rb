@@ -1,43 +1,44 @@
+# coding: utf-8
 module DataManagement
-  # Fonctions de nettoyage des données
-  module Cleansing
-    module_function
+    # Fonctions de nettoyage des données
+    module Cleansing
+        module_function
 
-    module Creneaux
-      module_function
+        module Timeslots
+            module_function
 
-      def unfinished
-        CreneauEmploiDuTemps
-          .where( matiere_id: '' )
-          .where( regroupement_id: nil )
-          .all
-          .select { |c| c.date_creation < 1.week.ago }
-          .each do |c|
-          c.enseignants.each(&:destroy)
-          c.destroy
+            def unfinished
+                Timeslot
+                    .where( subject_id: '' )
+                    .where( group_id: nil )
+                    .all
+                    .select { |c| c.ctime < 1.week.ago }
+                    .each do |c|
+                    c.enseignants.each(&:destroy)
+                    c.destroy
+                end
+            end
+
+            def deleted_and_unused
+                timeslots = Timeslot.where( deleted: true )
+                                    .all
+                                    .select { |c| c.cours.empty? && c.devoirs.empty? }
+
+                timeslots.each do |c|
+                    c.enseignants.each(&:destroy)
+                    c.salles.each do |salle|
+                        c.remove_salle( salle )
+                    end
+                end
+
+                timeslots.each(&:destroy)
+            end
         end
-      end
 
-      def deleted_and_unused
-        creneaux = CreneauEmploiDuTemps.where( deleted: true )
-                                       .all
-                                       .select { |c| c.cours.empty? && c.devoirs.empty? }
-
-        creneaux.each do |c|
-          c.enseignants.each(&:destroy)
-          c.salles.each do |salle|
-            c.remove_salle( salle )
-          end
+        def orphan_ressources
+            Ressource.all
+                     .select { |r| r.cours.empty? && r.devoirs.empty? }
+                     .each(&:destroy)
         end
-
-        creneaux.each(&:destroy)
-      end
     end
-
-    def orphan_ressources
-      Ressource.all
-               .select { |r| r.cours.empty? && r.devoirs.empty? }
-               .each(&:destroy)
-    end
-  end
 end

@@ -1,6 +1,6 @@
 class Devoir < Sequel::Model( :devoirs )
   many_to_many :ressources
-  many_to_one :creneau_emploi_du_temps
+  many_to_one :timeslot
   many_to_one :type_devoir
   one_to_many :devoir_todo_items
   many_to_one :cours
@@ -38,10 +38,10 @@ class Devoir < Sequel::Model( :devoirs )
     fait_par?( user['id'] ) ? a_faire_par!( user['id'] ) : fait_par!( user['id'] )
   end
 
-  def copie( cours_id, creneau_emploi_du_temps_id, date_due )
+  def copie( cours_id, timeslot_id, date_due )
     nouveau_devoir = Devoir.create( cours_id: cours_id,
                                     type_devoir_id: type_devoir_id,
-                                    creneau_emploi_du_temps_id: creneau_emploi_du_temps_id,
+                                    timeslot_id: timeslot_id,
                                     contenu: contenu,
                                     date_due: date_due,
                                     temps_estime: temps_estime,
@@ -55,7 +55,7 @@ class Devoir < Sequel::Model( :devoirs )
 
   def modifie( params )
     self.date_due = params['date_due']
-    self.creneau_emploi_du_temps_id = params['creneau_emploi_du_temps_id']
+    self.tmieslot_id = params['timeslot_id']
     self.type_devoir_id = params['type_devoir_id']
     self.contenu = params['contenu']
     self.temps_estime = params['temps_estime'] unless params['temps_estime'].nil?

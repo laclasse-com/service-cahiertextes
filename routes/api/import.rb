@@ -12,11 +12,11 @@ module CahierDeTextesApp
             json( Import[ params[:id] ] )
           end
 
-          app.get '/api/import/:id/creneaux/?' do
+          app.get '/api/import/:id/timeslots/?' do
             import = Import[ params[:id] ]
 
-            json( CreneauEmploiDuTemps.where( etablissement_id: import.etablissement_id )
-                                      .where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= DATE_FORMAT( import.date_import, '%Y-%m-%d') AND DATE_FORMAT( date_creation, '%Y-%m-%d') < '#{import.date_import + 10.minutes}'" ) )
+            json( Timeslot.where( structure_id: import.structure_id )
+                                      .where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= DATE_FORMAT( import.date_import, '%Y-%m-%d') AND DATE_FORMAT( ctime, '%Y-%m-%d') < '#{import.date_import + 10.minutes}'" ) )
                                       .all )
           end
 

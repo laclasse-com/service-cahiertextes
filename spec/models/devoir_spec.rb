@@ -41,7 +41,7 @@ describe Devoir do
     expect( 1 ).to eq 1
   end
 
-  it 'copie( cours_id, creneau_emploi_du_temps_id, date_due )' do
+  it 'copie( cours_id, timeslot_id, date_due )' do
     STDERR.puts 'FIXME'
     expect( 1 ).to eq 1
   end

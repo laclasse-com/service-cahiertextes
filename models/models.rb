@@ -8,7 +8,7 @@ Sequel::Model.plugin :json_serializer
 # Emploi du temps
 require_relative './structure'
 require_relative './salle'
-require_relative './creneau_emploi_du_temps'
+require_relative './timeslot'
 
 # Cahier de textes
 require_relative './textbook'

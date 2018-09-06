@@ -1,8 +1,7 @@
 class Salle < Sequel::Model( :salles )
   many_to_one :structures
-  many_to_many :creneaux_emploi_du_temps,
-               class: :CreneauEmploiDuTemps,
-               join_table: :creneaux_emploi_du_temps_salles,
+  many_to_many :timeslots,
+               join_table: :timeslots_salles,
                left_key: :salle_id,
-               right_key: :creneau_emploi_du_temps_id
+               right_key: :timeslot_id
 end

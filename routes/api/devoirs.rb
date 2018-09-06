@@ -8,13 +8,13 @@ module CahierDeTextesApp
             halt( 401, '401 Unauthorized' ) unless !params.key?('uid') || ( user['id'] == params['uid'] ||
                                                                             !user['children'].find { |child| child['child_id'] == params['uid'] }.nil? )
 
-            return [] if (!params.key?('groups_ids') || params['groups_ids'].empty?) && (!params.key?('creneaux_ids') || params['creneaux_ids'].empty?)
+            return [] if (!params.key?('groups_ids') || params['groups_ids'].empty?) && (!params.key?('timeslots_ids') || params['timeslots_ids'].empty?)
 
             query = Devoir
 
-            query = query.where( creneau_emploi_du_temps_id: params['creneaux_ids']) if params.key?( 'creneaux_ids' )
+            query = query.where( timeslot_id: params['timeslots_ids']) if params.key?( 'timeslots_ids' )
 
-            query = query.where( creneau_emploi_du_temps_id: CreneauEmploiDuTemps.where( regroupement_id: params['groups_ids'] ).select(:id).all.map(&:id) ) if params.key?( 'groups_ids' )
+            query = query.where( timeslot_id: Timeslot.where( regroupement_id: params['groups_ids'] ).select(:id).all.map(&:id) ) if params.key?( 'groups_ids' )
 
             query = query.where( cours_id: params['cours_ids']) if params.key?( 'cours_ids' )
 
@@ -57,12 +57,12 @@ module CahierDeTextesApp
             request.body.rewind
             body = JSON.parse( request.body.read )
 
-            creneau = CreneauEmploiDuTemps[ body['creneau_emploi_du_temps_id'] ]
-            halt( 409, 'Créneau invalide' ) if creneau.nil?
+            timeslot = Timeslot[ body['timeslot_id'] ]
+            halt( 409, 'Créneau invalide' ) if timeslot.nil?
 
             devoir = Devoir.create( enseignant_id: user['id'],
                                     type_devoir_id: body['type_devoir_id'],
-                                    creneau_emploi_du_temps_id: creneau.id,
+                                    timeslot_id: timeslot.id,
                                     contenu: body['contenu'],
                                     date_due: body['date_due'],
                                     temps_estime: body['temps_estime'],
@@ -71,14 +71,14 @@ module CahierDeTextesApp
             if body['cours_id'] && !body['cours_id'].nil?
               devoir.update( cours_id: body['cours_id'] )
             else
-              cours = Cours.where( creneau_emploi_du_temps_id: creneau.id )
+              cours = Cours.where( timeslot_id: timeslot.id )
                            .where( date_cours: body['date_due'] )
                            .where( deleted: false )
                            .first
               if cours.nil?
                 cours = Cours.create( enseignant_id: user['id'],
-                                      textbook_id: DataManagement::Accessors.create_or_get( TextBook, regroupement_id: creneau.regroupement_id ).id,
-                                      creneau_emploi_du_temps_id: creneau.id,
+                                      textbook_id: DataManagement::Accessors.create_or_get( TextBook, regroupement_id: timeslot.regroupement_id ).id,
+                                      timeslot_id: timeslot.id,
                                       date_cours: body['date_due'],
                                       date_creation: Time.now,
                                       contenu: '' )
@@ -133,7 +133,7 @@ module CahierDeTextesApp
             json( devoir.to_deep_hash )
           end
 
-          app.put '/api/devoirs/:id/copie/cours/:cours_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date_due/:date_due' do
+          app.put '/api/devoirs/:id/copie/cours/:cours_id/timeslot/:timeslot_id/date_due/:date_due' do
             user_needs_to_be( %w[ ENS DOC ] )
 
             # request.body.rewind
@@ -142,7 +142,7 @@ module CahierDeTextesApp
             devoir = Devoir[ params['id'] ]
             halt( 404, 'Devoir inconnu' ) if devoir.nil?
 
-            devoir.copie( params['cours_id'], params['creneau_emploi_du_temps_id'], params['date_due'] )
+            devoir.copie( params['cours_id'], params['timeslot_id'], params['date_due'] )
 
             json( devoir.to_deep_hash )
           end

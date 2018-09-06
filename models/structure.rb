@@ -1,7 +1,7 @@
 require_relative '../lib/utils/date_rentree'
 
 class Structure < Sequel::Model( :structures )
-  one_to_many :creneaux_emploi_du_temps, class: :CreneauEmploiDuTemps
+  one_to_many :timeslots
   one_to_many :imports
   one_to_many :salles
   one_to_many :matchables
@@ -51,25 +51,25 @@ class Structure < Sequel::Model( :structures )
                         .where( deleted: false )
                         .where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" ) )
                         .all
-        creneau = CreneauEmploiDuTemps[cours.creneau_emploi_du_temps_id]
+        timeslot = Timeslot[cours.timeslot_id]
 
         { mois: cours.date_cours.month,
-          regroupement_id: creneau.regroupement_id,
-          matiere_id: creneau.matiere_id,
+          regroupement_id: timeslot.group_id,
+          matiere_id: timeslot.subject_id,
           cours: cours,
           devoirs: devoirs,
           valide: !cours.date_validation.nil? }
       end }
   end
 
-  # def merge_all_twin_creneaux( truly_destroy = false )
+  # def merge_all_twin_timeslotx( truly_destroy = false )
   #   merged_twins = []
-  #   creneaux_emploi_du_temps_dataset.where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" ) )
+  #   timeslotx_emploi_du_temps_dataset.where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" ) )
   #                                   .all
-  #                                   .each do |creneau|
-  #     next if merged_twins.include?( creneau.id )
+  #                                   .each do |timeslot|
+  #     next if merged_twins.include?( timeslot.id )
 
-  #     merged_twins += creneau.merge_and_destroy_twins( truly_destroy )
+  #     merged_twins += timeslot.merge_and_destroy_twins( truly_destroy )
   #     merged_twins.flatten!
   #   end
 

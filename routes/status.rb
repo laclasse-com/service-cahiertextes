@@ -53,7 +53,7 @@ module CahierDeTextesApp
                 .where( Sequel.lit( "DATE_FORMAT( date_connexion, '%Y-%m-%d') >= '#{Date.parse( params['from'] )}'" ) )
                 .where( Sequel.lit( "DATE_FORMAT( date_connexion, '%Y-%m-%d') <= '#{Date.parse( params['to'] )}'" ) )
                 .count,
-              nb_creneaux_emploi_du_temps: CreneauEmploiDuTemps.count
+              nb_timeslots: Timeslot.count
             )
           else
             json( nb_structures: Structure.count,
@@ -63,7 +63,7 @@ module CahierDeTextesApp
                   nb_devoirs_faits: DevoirTodoItem.count,
                   nb_ressources: Ressource.count,
                   nb_utilisateurs_actifs: UserParameters.count,
-                  nb_creneaux_emploi_du_temps: CreneauEmploiDuTemps.count )
+                  nb_timeslots: Timeslot.count )
           end
         end
       end

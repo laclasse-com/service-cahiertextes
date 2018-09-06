@@ -1,3 +1,4 @@
+# coding: utf-8
 require_relative '../../models/cours'
 
 module CahierDeTextesApp
@@ -9,11 +10,11 @@ module CahierDeTextesApp
             query = Cours
 
             query = query.where( enseignant_id: params['enseignants_ids'] ) if params.key?( 'enseignants_ids' )
-            query = query.where( creneau_emploi_du_temps_id: params['creneaux_ids']) if params.key?( 'creneaux_ids' )
+            query = query.where( timeslot_id: params['timeslots_ids']) if params.key?( 'timeslots_ids' )
             query = query.where( Sequel.lit( "DATE_FORMAT( date_cours, '%Y-%m-%d') = '#{Date.parse( params['date_cours'] )}'" ) ) if params.key?( 'date_cours' )
             query = query.where( Sequel.lit( "DATE_FORMAT( date_cours, '%Y-%m-%d') >= '#{Date.parse( params['date_cours>'] )}'" ) ) if params.key?( 'date_cours>' )
             query = query.where( Sequel.lit( "DATE_FORMAT( date_cours, '%Y-%m-%d') <= '#{Date.parse( params['date_cours<'] )}'" ) ) if params.key?( 'date_cours<' )
-            query = query.where( creneau_emploi_du_temps_id: CreneauEmploiDuTemps.where( regroupement_id: params['groups_ids'] ).select(:id).all.map(&:id) ) if params.key?( 'groups_ids' )
+            query = query.where( timeslot_id: Timeslot.where( regroupement_id: params['groups_ids'] ).select(:id).all.map(&:id) ) if params.key?( 'groups_ids' )
 
             json( query.naked.all )
           end
@@ -31,12 +32,12 @@ module CahierDeTextesApp
 
             user_needs_to_be( %w[ ENS DOC ] )
 
-            creneau = CreneauEmploiDuTemps[ body['creneau_emploi_du_temps_id'] ]
-            halt( 409, 'Créneau invalide' ) if creneau.nil?
+            timeslot = Timeslot[ body['timeslot_id'] ]
+            halt( 409, 'Créneau invalide' ) if timeslot.nil?
 
             cours = Cours.create( enseignant_id: user['id'],
-                                  cahier_de_textes_id: DataManagement::Accessors.create_or_get( CahierDeTextes, regroupement_id: creneau.regroupement_id ).id,
-                                  creneau_emploi_du_temps_id: creneau.id,
+                                  cahier_de_textes_id: DataManagement::Accessors.create_or_get( CahierDeTextes, regroupement_id: timeslot.regroupement_id ).id,
+                                  timeslot_id: timeslot.id,
                                   date_cours: body['date_cours'].to_s,
                                   date_creation: Time.now,
                                   contenu: '' )
@@ -73,14 +74,14 @@ module CahierDeTextesApp
             json( cours.to_deep_hash )
           end
 
-          app.put '/api/cours/:id/copie/regroupement/:regroupement_id/creneau_emploi_du_temps/:creneau_emploi_du_temps_id/date/:date/?' do
+          app.put '/api/cours/:id/copie/regroupement/:regroupement_id/timeslot/:timeslot_id/date/:date/?' do
             user_needs_to_be( %w[ ENS DOC ] )
 
             cours = Cours[ id: params['id'] ]
 
             halt( 404, 'Cours inconnu' ) if cours.nil?
 
-            nouveau_cours = cours.copie( params['regroupement_id'], params['creneau_emploi_du_temps_id'], params['date'] )
+            nouveau_cours = cours.copie( params['regroupement_id'], params['timeslot_id'], params['date'] )
 
             hash = cours.to_deep_hash
             hash[:copie_id] = nouveau_cours[:id]

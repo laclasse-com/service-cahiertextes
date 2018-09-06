@@ -1,6 +1,6 @@
 class Cours < Sequel::Model( :cours )
   many_to_many :ressources
-  many_to_one :creneau_emploi_du_temps
+  many_to_one :timeslot
   many_to_one :textbook
   one_to_many :devoirs
 
@@ -52,16 +52,16 @@ class Cours < Sequel::Model( :cours )
     save
   end
 
-  def copie( regroupement_id, creneau_emploi_du_temps_id, date_cours )
-    textbook = TextBook.where( regroupement_id: regroupement_id ).first
-    textbook = TextBook.create( date_creation: Time.now, regroupement_id: regroupement_id ) if textbook.nil?
+  def copie( group_id, timeslot_id, date_cours )
+    textbook = TextBook.where( group_id: group_id ).first
+    textbook = TextBook.create( date_creation: Time.now, group_id: group_id ) if textbook.nil?
 
     target_cours = Cours.where( textbook_id: textbook.id,
-                                creneau_emploi_du_temps_id: creneau_emploi_du_temps_id,
+                                timeslot_id: timeslot_id,
                                 date_cours: date_cours ).first
     if target_cours.nil?
       target_cours = Cours.create( textbook_id: textbook.id,
-                                   creneau_emploi_du_temps_id: creneau_emploi_du_temps_id,
+                                   timeslot_id: timeslot_id,
                                    date_cours: date_cours,
                                    date_creation: Time.now,
                                    contenu: contenu,

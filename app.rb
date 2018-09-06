@@ -18,7 +18,7 @@ require_relative './lib/utils/holidays'
 
 require_relative './models/textbook'
 require_relative './models/cours'
-require_relative './models/creneau_emploi_du_temps'
+require_relative './models/timeslot'
 require_relative './models/devoir'
 require_relative './models/structure'
 require_relative './models/import'
@@ -34,7 +34,7 @@ require_relative './lib/helpers/user'
 require_relative './routes/status'
 require_relative './routes/api/textbooks'
 require_relative './routes/api/cours'
-require_relative './routes/api/creneaux_emploi_du_temps'
+require_relative './routes/api/timeslots'
 require_relative './routes/api/devoirs'
 require_relative './routes/api/emplois_du_temps'
 require_relative './routes/api/structures'
@@ -85,7 +85,7 @@ module CahierDeTextesApp
 
     register CahierDeTextesApp::Routes::Api::TextBooks
     register CahierDeTextesApp::Routes::Api::CoursAPI
-    register CahierDeTextesApp::Routes::Api::CreneauxEmploiDuTemps
+    register CahierDeTextesApp::Routes::Api::Timeslots
     register CahierDeTextesApp::Routes::Api::Devoirs
     register CahierDeTextesApp::Routes::Api::EmploisDuTemps
     register CahierDeTextesApp::Routes::Api::Structures
