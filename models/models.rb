@@ -12,7 +12,7 @@ require_relative './timeslot'
 
 # Cahier de textes
 require_relative './textbook'
-require_relative './ressource'
+require_relative './resource'
 
 # Séquences pédagogiques
 require_relative './cours'

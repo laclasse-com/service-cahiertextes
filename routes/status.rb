@@ -48,7 +48,7 @@ module CahierDeTextesApp
                 .where( Sequel.lit( "DATE_FORMAT( date_fait, '%Y-%m-%d') >= '#{Date.parse( params['from'] )}'" ) )
                 .where( Sequel.lit( "DATE_FORMAT( date_fait, '%Y-%m-%d') <= '#{Date.parse( params['to'] )}'" ) )
                 .count,
-              # nb_ressources: Ressource.count,
+              # nb_resources: Resource.count,
               nb_utilisateurs_actifs: UserParameters
                 .where( Sequel.lit( "DATE_FORMAT( date_connexion, '%Y-%m-%d') >= '#{Date.parse( params['from'] )}'" ) )
                 .where( Sequel.lit( "DATE_FORMAT( date_connexion, '%Y-%m-%d') <= '#{Date.parse( params['to'] )}'" ) )
@@ -61,7 +61,7 @@ module CahierDeTextesApp
                   nb_sequences_pedagogiques: Cours.count,
                   nb_devoirs: Devoir.count,
                   nb_devoirs_faits: DevoirTodoItem.count,
-                  nb_ressources: Ressource.count,
+                  nb_resources: Resource.count,
                   nb_utilisateurs_actifs: UserParameters.count,
                   nb_timeslots: Timeslot.count )
           end

@@ -1,5 +1,5 @@
 class Devoir < Sequel::Model( :devoirs )
-  many_to_many :ressources
+  many_to_many :resources
   many_to_one :timeslot
   many_to_one :type_devoir
   one_to_many :devoir_todo_items
@@ -8,7 +8,7 @@ class Devoir < Sequel::Model( :devoirs )
   def to_deep_hash
     hash = to_hash
 
-    hash[:ressources] = ressources.map(&:to_hash)
+    hash[:resources] = resources.map(&:to_hash)
 
     hash
   end
@@ -48,8 +48,8 @@ class Devoir < Sequel::Model( :devoirs )
                                     enseignant_id: enseignant_id,
                                     date_creation: Time.now )
 
-    ressources.each do |ressource|
-      nouveau_devoir.add_ressource ressource
+    resources.each do |resource|
+      nouveau_devoir.add_resource resource
     end
   end
 
@@ -62,12 +62,12 @@ class Devoir < Sequel::Model( :devoirs )
     self.cours_id = params['cours_id'] unless params['cours_id'].nil?
     self.enseignant_id = params['enseignant_id'] unless params['enseignant_id'].nil?
 
-    if params['ressources']
-      remove_all_ressources
+    if params['resources']
+      remove_all_resources
 
-      params['ressources'].each do |ressource|
-        add_ressource( DataManagement::Accessors.create_or_get( Ressource, name: ressource['name'],
-                                                                           hash: ressource['hash'] ) )
+      params['resources'].each do |resource|
+        add_resource( DataManagement::Accessors.create_or_get( Resource, name: resource['name'],
+                                                                           hash: resource['hash'] ) )
       end
     end
 
@@ -81,7 +81,7 @@ class TypeDevoir < Sequel::Model( :types_devoir )
   one_to_many :devoirs
 end
 
-class DevoirRessource < Sequel::Model( :devoirs_ressources )
+class DevoirResource < Sequel::Model( :devoirs_resources )
 end
 
 class DevoirTodoItem < Sequel::Model( :devoir_todo_items )

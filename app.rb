@@ -24,7 +24,7 @@ require_relative './models/structure'
 require_relative './models/import'
 require_relative './models/matchable'
 require_relative './models/models'
-require_relative './models/ressource'
+require_relative './models/resource'
 require_relative './models/location'
 require_relative './models/user_parameters'
 

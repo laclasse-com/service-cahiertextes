@@ -35,8 +35,8 @@ module DataManagement
             end
         end
 
-        def orphan_ressources
-            Ressource.all
+        def orphan_resources
+            Resource.all
                      .select { |r| r.cours.empty? && r.devoirs.empty? }
                      .each(&:destroy)
         end

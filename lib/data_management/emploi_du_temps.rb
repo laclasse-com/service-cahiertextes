@@ -27,7 +27,7 @@ module DataManagement
                                     .select { |cours| cours[:deleted] == false && cours.date_cours == day }
                                     .map do |cours|
                           hcours = cours.to_hash
-                          hcours[:ressources] = cours.ressources.map(&:to_hash)
+                          hcours[:resources] = cours.resources.map(&:to_hash)
 
                           hcours
                       end
@@ -36,7 +36,7 @@ module DataManagement
                                       .select { |devoir| devoir[:deleted] == false && devoir.date_due == day }
                                       .map do |devoir|
                           hdevoir = devoir.to_hash
-                          hdevoir[:ressources] = devoir.ressources.map(&:to_hash)
+                          hdevoir[:resources] = devoir.resources.map(&:to_hash)
                           hdevoir[:type_devoir_description] = devoir.type_devoir.description
 
                           hdevoir[:fait] = devoir.fait_par?( eleve_id ) unless eleve_id.nil?

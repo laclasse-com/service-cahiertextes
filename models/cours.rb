@@ -1,5 +1,5 @@
 class Cours < Sequel::Model( :cours )
-  many_to_many :ressources
+  many_to_many :resources
   many_to_one :timeslot
   many_to_one :textbook
   one_to_many :devoirs
@@ -7,10 +7,10 @@ class Cours < Sequel::Model( :cours )
   def to_deep_hash
     hash = to_hash
 
-    hash[:ressources] = ressources.map(&:to_hash)
+    hash[:resources] = resources.map(&:to_hash)
     hash[:devoirs] = devoirs.select { |devoir| !devoir.deleted || devoir.date_modification > UNDELETE_TIME_WINDOW.minutes.ago }
     hash[:devoirs].each do |devoir|
-      devoir[:ressources] = devoir.ressources.map(&:to_hash)
+      devoir[:resources] = devoir.resources.map(&:to_hash)
     end
     hash[:devoirs] = hash[:devoirs].map(&:to_hash)
 
@@ -41,11 +41,11 @@ class Cours < Sequel::Model( :cours )
     self.contenu = params['contenu']
     self.date_modification = Time.now
 
-    if params['ressources']
-      remove_all_ressources
-      params['ressources'].each do |ressource|
-        add_ressource( DataManagement::Accessors.create_or_get( Ressource, name: ressource['name'],
-                                                                           hash: ressource['hash'] ) )
+    if params['resources']
+      remove_all_resources
+      params['resources'].each do |resource|
+        add_resource( DataManagement::Accessors.create_or_get( Resource, name: resource['name'],
+                                                                           hash: resource['hash'] ) )
       end
     end
 
@@ -67,13 +67,13 @@ class Cours < Sequel::Model( :cours )
                                    contenu: contenu,
                                    enseignant_id: enseignant_id )
     end
-    ressources.each do |ressource|
-      target_cours.add_ressource( ressource )
+    resources.each do |resource|
+      target_cours.add_resource( resource )
     end
 
     target_cours
   end
 end
 
-class CoursRessource < Sequel::Model( :cours_ressources )
+class CoursResource < Sequel::Model( :cours_resources )
 end
