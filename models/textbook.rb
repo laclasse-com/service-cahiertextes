@@ -12,7 +12,7 @@ class TextBook < Sequel::Model( :textbooks )
 
   def statistiques
       { group_id: group_id,
-        timeslots: { vides: timeslots.select { |timeslot| timeslot.sessions.empty? && timeslot.devoirs.empty? }.map( &:id ),
-                     pleins: timeslots.select { |timeslot| !timeslot.sessions.empty? || !timeslot.devoirs.empty? }.map( &:id ) } }
+        timeslots: { vides: timeslots.select { |timeslot| timeslot.sessions.empty? && timeslot.assignments.empty? }.map( &:id ),
+                     pleins: timeslots.select { |timeslot| !timeslot.sessions.empty? || !timeslot.assignments.empty? }.map( &:id ) } }
   end
 end

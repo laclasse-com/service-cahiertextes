@@ -19,7 +19,7 @@ require_relative './lib/utils/holidays'
 require_relative './models/textbook'
 require_relative './models/session'
 require_relative './models/timeslot'
-require_relative './models/devoir'
+require_relative './models/assignment'
 require_relative './models/structure'
 require_relative './models/import'
 require_relative './models/matchable'
@@ -35,13 +35,13 @@ require_relative './routes/status'
 require_relative './routes/api/textbooks'
 require_relative './routes/api/sessions'
 require_relative './routes/api/timeslots'
-require_relative './routes/api/devoirs'
+require_relative './routes/api/assignments'
 require_relative './routes/api/emplois_du_temps'
 require_relative './routes/api/structures'
 require_relative './routes/api/import'
 require_relative './routes/api/matchables'
 require_relative './routes/api/locations'
-require_relative './routes/api/types_de_devoirs'
+require_relative './routes/api/assignment_types'
 require_relative './routes/api/users'
 require_relative './routes/api/user_parameters'
 
@@ -86,11 +86,11 @@ module CahierDeTextesApp
     register CahierDeTextesApp::Routes::Api::TextBooks
     register CahierDeTextesApp::Routes::Api::Sessions
     register CahierDeTextesApp::Routes::Api::Timeslots
-    register CahierDeTextesApp::Routes::Api::Devoirs
+    register CahierDeTextesApp::Routes::Api::Assignments
     register CahierDeTextesApp::Routes::Api::EmploisDuTemps
     register CahierDeTextesApp::Routes::Api::Structures
     register CahierDeTextesApp::Routes::Api::Locations
-    register CahierDeTextesApp::Routes::Api::TypesDeDevoir
+    register CahierDeTextesApp::Routes::Api::AssignmentTypes
 
     register CahierDeTextesApp::Routes::Api::ImportAPI
     register CahierDeTextesApp::Routes::Api::Matchables

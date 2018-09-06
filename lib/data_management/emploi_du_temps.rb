@@ -32,17 +32,17 @@ module DataManagement
                           hsession
                       end
                                     .first,
-                      devoirs: timeslot.devoirs
-                                      .select { |devoir| devoir[:deleted] == false && devoir.date_due == day }
-                                      .map do |devoir|
-                          hdevoir = devoir.to_hash
-                          hdevoir[:resources] = devoir.resources.map(&:to_hash)
-                          hdevoir[:type_devoir_description] = devoir.type_devoir.description
+                      assignments: timeslot.assignments
+                                      .select { |assignment| assignment[:deleted] == false && assignment.date_due == day }
+                                      .map do |assignment|
+                          hassignment = assignment.to_hash
+                          hassignment[:resources] = assignment.resources.map(&:to_hash)
+                          hassignment[:type_assignment_description] = assignment.type_assignment.description
 
-                          hdevoir[:fait] = devoir.fait_par?( eleve_id ) unless eleve_id.nil?
-                          hdevoir[:date_fait] = devoir.fait_le( eleve_id ) if hdevoir[:fait]
+                          hassignment[:fait] = assignment.fait_par?( eleve_id ) unless eleve_id.nil?
+                          hassignment[:date_fait] = assignment.fait_le( eleve_id ) if hassignment[:fait]
 
-                          hdevoir
+                          hassignment
                       end }
                 end
             end

@@ -17,8 +17,8 @@ require_relative './resource'
 # Séquences pédagogiques
 require_relative './session'
 
-# Devoirs
-require_relative './devoir'
+# Assignments
+require_relative './assignment'
 
 # Données non identifiable par l'annuaire lors des imports (Pronote, UDT, ...)
 require_relative './matchable'

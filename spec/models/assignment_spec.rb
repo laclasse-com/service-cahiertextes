@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Devoir do
+describe Assignment do
   it 'to_deep_hash( user = nil )' do
     STDERR.puts 'FIXME'
     expect( 1 ).to eq 1

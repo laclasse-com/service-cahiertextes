@@ -63,7 +63,7 @@ module CahierDeTextesApp
             saisies = structure.saisies_enseignant( params['enseignant_id'] )
             saisies[:saisies] = saisies[:saisies].map do |saisie|
               saisie[:sessions] = saisie[:sessions].to_hash
-              saisie[:devoirs] = saisie[:devoirs].map(&:to_hash)
+              saisie[:assignments] = saisie[:assignments].map(&:to_hash)
 
               saisie
             end

@@ -2,17 +2,17 @@ class Session < Sequel::Model( :sessions )
   many_to_many :resources
   many_to_one :timeslot
   many_to_one :textbook
-  one_to_many :devoirs
+  one_to_many :assignments
 
   def to_deep_hash
     hash = to_hash
 
     hash[:resources] = resources.map(&:to_hash)
-    hash[:devoirs] = devoirs.select { |devoir| !devoir.deleted || devoir.date_modification > UNDELETE_TIME_WINDOW.minutes.ago }
-    hash[:devoirs].each do |devoir|
-      devoir[:resources] = devoir.resources.map(&:to_hash)
+    hash[:assignments] = assignments.select { |assignment| !assignment.deleted || assignment.date_modification > UNDELETE_TIME_WINDOW.minutes.ago }
+    hash[:assignments].each do |assignment|
+      assignment[:resources] = assignment.resources.map(&:to_hash)
     end
-    hash[:devoirs] = hash[:devoirs].map(&:to_hash)
+    hash[:assignments] = hash[:assignments].map(&:to_hash)
 
     hash
   end
@@ -21,13 +21,13 @@ class Session < Sequel::Model( :sessions )
     update( deleted: !deleted, date_modification: Time.now )
     save
 
-    devoirs.each do |devoir|
+    assignments.each do |assignment|
       if deleted
-        devoir.update( deleted: deleted, date_modification: Time.now )
-      elsif devoir.date_modification <= UNDELETE_TIME_WINDOW.minutes.ago
-        devoir.update( deleted: deleted, date_modification: Time.now )
+        assignment.update( deleted: deleted, date_modification: Time.now )
+      elsif assignment.date_modification <= UNDELETE_TIME_WINDOW.minutes.ago
+        assignment.update( deleted: deleted, date_modification: Time.now )
       end
-      devoir.save
+      assignment.save
     end
   end
 

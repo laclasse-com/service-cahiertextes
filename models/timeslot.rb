@@ -17,7 +17,7 @@ end
 class Timeslot < Sequel::Model( :timeslots )
   many_to_many :locations, class: :Location, join_table: :timeslots_locations
   one_to_many :sessions
-  one_to_many :devoirs
+  one_to_many :assignments
   many_to_one :structures, class: :Structure, key: :structure_id
   many_to_one :import, class: :Import, key: :import_id
 
@@ -54,7 +54,7 @@ class Timeslot < Sequel::Model( :timeslots )
       .where( deleted: false )
   end
 
-  # attach session and devoirs to this timeslot and destroy other_timeslot
+  # attach session and assignments to this timeslot and destroy other_timeslot
   def merge( timeslot_id )
     other_timeslot = Timeslot[timeslot_id]
     return false if other_timeslot.nil?
@@ -63,9 +63,9 @@ class Timeslot < Sequel::Model( :timeslots )
       session.update( timeslot_id: id )
       session.save
     end
-    other_timeslot.devoirs.each do |devoir|
-      devoir.update( timeslot_id: id )
-      devoir.save
+    other_timeslot.assignments.each do |assignment|
+      assignment.update( timeslot_id: id )
+      assignment.save
     end
   end
 
@@ -162,7 +162,7 @@ class Timeslot < Sequel::Model( :timeslots )
 
   def deep_destroy
     remove_all_sessions
-    remove_all_devoirs
+    remove_all_assignments
     remove_all_locations
 
     destroy

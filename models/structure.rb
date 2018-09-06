@@ -47,7 +47,7 @@ class Structure < Sequel::Model( :structures )
                     .where( deleted: false )
                     .where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" ) )
                     .map do |session|
-        devoirs = Devoir.where(session_id: session.id)
+        assignments = Assignment.where(session_id: session.id)
                         .where( deleted: false )
                         .where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" ) )
                         .all
@@ -57,7 +57,7 @@ class Structure < Sequel::Model( :structures )
           group_id: timeslot.group_id,
           subject_id: timeslot.subject_id,
           sessions: sessions,
-          devoirs: devoirs,
+          assignments: assignments,
           valide: !session.vtime.nil? }
       end }
   end

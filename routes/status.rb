@@ -40,11 +40,11 @@ module CahierDeTextesApp
                 .where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') >= '#{Date.parse( params['from'] )}'" ) )
                 .where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') <= '#{Date.parse( params['to'] )}'" ) )
                 .count,
-              nb_devoirs: Devoir
+              nb_assignments: Assignment
                 .where( Sequel.lit( "DATE_FORMAT( date_due, '%Y-%m-%d') >= '#{Date.parse( params['from'] )}'" ) )
                 .where( Sequel.lit( "DATE_FORMAT( date_due, '%Y-%m-%d') <= '#{Date.parse( params['to'] )}'" ) )
                 .count,
-              nb_devoirs_faits: DevoirTodoItem
+              nb_assignments_faits: AssignmentTodoItem
                 .where( Sequel.lit( "DATE_FORMAT( date_fait, '%Y-%m-%d') >= '#{Date.parse( params['from'] )}'" ) )
                 .where( Sequel.lit( "DATE_FORMAT( date_fait, '%Y-%m-%d') <= '#{Date.parse( params['to'] )}'" ) )
                 .count,
@@ -55,8 +55,8 @@ module CahierDeTextesApp
             json( nb_structures: Structure.count,
                   nb_textbooks: TextBook.count,
                   nb_sessions: Session.count,
-                  nb_devoirs: Devoir.count,
-                  nb_devoirs_faits: DevoirTodoItem.count,
+                  nb_assignments: Assignment.count,
+                  nb_assignments_marked_done: AssignmentDoneMarker.count,
                   nb_resources: Resource.count,
                   nb_timeslots: Timeslot.count )
           end
