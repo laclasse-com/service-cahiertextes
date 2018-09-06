@@ -1,3 +1,4 @@
+# coding: utf-8
 module CahierDeTextesApp
   module Routes
     module Api
@@ -44,7 +45,7 @@ module CahierDeTextesApp
           app.post '/api/creneaux_emploi_du_temps/?' do
             user_needs_to_be( %w[ ENS DOC ] )
 
-            etablissement = DataManagement::Accessors.create_or_get( Etablissement,
+            etablissement = DataManagement::Accessors.create_or_get( Structure,
                                                                      UAI: user_active_profile['structure_id'] )
 
             creneau = CreneauEmploiDuTemps.create( date_creation: Time.now,
@@ -64,7 +65,7 @@ module CahierDeTextesApp
             request.body.rewind
             body = JSON.parse( request.body.read )
 
-            etablissement = DataManagement::Accessors.create_or_get( Etablissement,
+            etablissement = DataManagement::Accessors.create_or_get( Structure,
                                                                      UAI: body['uai'] )
 
             json( body['creneaux_emploi_du_temps'].map do |creneau|

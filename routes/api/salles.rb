@@ -1,3 +1,4 @@
+# coding: utf-8
 module CahierDeTextesApp
   module Routes
     module Api
@@ -15,13 +16,13 @@ module CahierDeTextesApp
           end
 
           app.post '/api/salles/?' do
-            etablissement = Etablissement.where(uai: params[:uai]).first
-            halt( 404, "Établissement #{params[:uai]} inconnu" ) if etablissement.nil?
+            structure = Structure.where(uai: params[:uai]).first
+            halt( 404, "Établissement #{params[:uai]} inconnu" ) if structure.nil?
 
             salle = DataManagement::Accessors.create_or_get( Salle,
                                                              identifiant: params[:identifiant] )
             salle.update( nom: params[:nom],
-                          etablissement_id: etablissement.id )
+                          structure_id: structure.id )
             salle.save
 
             json( salle )
@@ -34,13 +35,13 @@ module CahierDeTextesApp
             body = JSON.parse( request.body.read )
 
             json( body['salles'].map do |salle|
-                    etablissement = Etablissement.where(uai: salle['uai']).first
-                    halt( 404, "Établissement #{params[:uai]} inconnu" ) if etablissement.nil?
+                    structure = Structure.where(uai: salle['uai']).first
+                    halt( 404, "Établissement #{params[:uai]} inconnu" ) if structure.nil?
 
                     new_salle = DataManagement::Accessors.create_or_get( Salle,
                                                                          identifiant: salle['identifiant'] )
                     new_salle.update( nom: salle['nom'],
-                                      etablissement_id: etablissement.id )
+                                      structure_id: structure.id )
                     new_salle.save
 
                     new_salle.to_hash
@@ -53,11 +54,11 @@ module CahierDeTextesApp
             halt( 404, "Salle #{params[:id]} inconnue" ) if salle.nil?
 
             if params.key? :uai
-              etablissement = Etablissement.where(uai: params[:uai]).first
+              structure = Structure.where(uai: params[:uai]).first
 
-              halt( 404, "Établissement #{params[:uai]} inconnu" ) if etablissement.nil?
+              halt( 404, "Établissement #{params[:uai]} inconnu" ) if structure.nil?
 
-              salle.etablissement_id = params[:uai]
+              salle.structure_id = params[:uai]
             end
             salle.identifiant = params[:identifiant] if params.key? :identifiant
             salle.nom = params[:nom] if params.key? :nom

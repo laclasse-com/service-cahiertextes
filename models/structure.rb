@@ -1,6 +1,6 @@
 require_relative '../lib/utils/date_rentree'
 
-class Etablissement < Sequel::Model( :etablissements )
+class Structure < Sequel::Model( :structures )
   one_to_many :creneaux_emploi_du_temps, class: :CreneauEmploiDuTemps
   one_to_many :imports
   one_to_many :salles

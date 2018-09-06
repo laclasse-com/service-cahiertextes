@@ -1,3 +1,4 @@
+# coding: utf-8
 module CahierDeTextesApp
   module Routes
     module Status
@@ -33,7 +34,7 @@ module CahierDeTextesApp
 
           if params.key?('from') && params.key?('to')
             json(
-              nb_etablissements: Etablissement.count,
+              nb_etablissements: Structure.count,
               nb_cahiers_de_textes: CahierDeTextes.count,
               nb_sequences_pedagogiques: Cours
                 .where( Sequel.lit( "DATE_FORMAT( date_cours, '%Y-%m-%d') >= '#{Date.parse( params['from'] )}'" ) )
@@ -55,7 +56,7 @@ module CahierDeTextesApp
               nb_creneaux_emploi_du_temps: CreneauEmploiDuTemps.count
             )
           else
-            json( nb_etablissements: Etablissement.count,
+            json( nb_structures: Structure.count,
                   nb_cahiers_de_textes: CahierDeTextes.count,
                   nb_sequences_pedagogiques: Cours.count,
                   nb_devoirs: Devoir.count,

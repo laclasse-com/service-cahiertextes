@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'sequel'
 require 'sequel/extensions/migration'
 
@@ -5,7 +6,7 @@ require 'sequel/extensions/migration'
 Sequel::Model.plugin :json_serializer
 
 # Emploi du temps
-require_relative './etablissement'
+require_relative './structure'
 require_relative './salle'
 require_relative './creneau_emploi_du_temps'
 

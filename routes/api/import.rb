@@ -1,3 +1,4 @@
+# coding: utf-8
 require_relative '../../lib/pronote'
 require_relative '../../lib/utils/xml_to_hash'
 require_relative '../../models/import'
@@ -20,11 +21,11 @@ module CahierDeTextesApp
           end
 
           app.post '/api/import/log/start/?' do
-            etablissement = Etablissement.where(uai: params[:uai]).first
+            etablissement = Structure.where(uai: params[:uai]).first
 
-            halt( 404, "Établissement #{params[:uai]} inconnu" ) if etablissement.nil?
+            halt( 404, "Établissement #{params[:uai]} inconnu" ) if structure.nil?
 
-            json( Import.create( etablissement_id: etablissement.id,
+            json( Import.create( structure_id: structure.id,
                                  date_import: Sequel::SQLTime.now,
                                  type: params.key?( :type ) ? params[:type] : '',
                                  comment: params.key?( :comment ) ? params[:comment] : '' ).to_hash )

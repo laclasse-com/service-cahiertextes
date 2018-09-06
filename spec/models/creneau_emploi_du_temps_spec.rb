@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe CreneauEmploiDuTemps do
   before :each do
-    @etablissement = Etablissement.create( UAI: 'test012345Z' )
+    @structure = Structure.create( UAI: 'test012345Z' )
     @jour_de_la_semaine = rand( 1..5 )
     @creneau = CreneauEmploiDuTemps.create( date_creation: Time.now,
                                             debut: Time.parse( '14:00' ),
@@ -10,15 +10,15 @@ describe CreneauEmploiDuTemps do
                                             jour_de_la_semaine: @jour_de_la_semaine,
                                             matiere_id: '',
                                             regroupement_id: 0,
-                                            etablissement_id: @etablissement.id )
-    @salle = Salle.create( etablissement_id: @etablissement.id,
+                                            structure_id: @structure.id )
+    @salle = Salle.create( structure_id: @structure.id,
                            identifiant: 'test' )
   end
   after :each do
     @creneau.remove_all_salles
     @creneau.destroy
     @salle.destroy
-    @etablissement.destroy
+    @structure.destroy
   end
 
   it 'creates a placeholder creneau' do
@@ -31,7 +31,7 @@ describe CreneauEmploiDuTemps do
     expect( @creneau.fin.iso8601.split('+').first.split('T').last ).to eq '15:00:00'
     expect( @creneau.jour_de_la_semaine ).to eq @jour_de_la_semaine
     expect( @creneau.matiere_id ).to be_empty
-    expect( @creneau.etablissement_id ).to eq @etablissement.id
+    expect( @creneau.structure_id ).to eq @structure.id
   end
 
   it 'def toggle_deleted( date_suppression )' do

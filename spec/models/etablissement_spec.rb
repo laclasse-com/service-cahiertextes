@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Etablissement do
+describe Structure do
   it 'statistiques_classes' do
     STDERR.puts 'FIXME'
     expect( 1 ).to eq 1

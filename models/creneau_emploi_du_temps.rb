@@ -18,7 +18,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
   many_to_many :salles, class: :Salle, join_table: :creneaux_emploi_du_temps_salles
   one_to_many :cours, class: :Cours
   one_to_many :devoirs
-  many_to_one :etablissement, class: :Etablissement, key: :etablissement_id
+  many_to_one :structures, class: :Structure, key: :structure_id
   many_to_one :import, class: :Import, key: :import_id
 
   def toggle_deleted( date_suppression )

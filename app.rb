@@ -20,7 +20,7 @@ require_relative './models/cahier_de_textes'
 require_relative './models/cours'
 require_relative './models/creneau_emploi_du_temps'
 require_relative './models/devoir'
-require_relative './models/etablissement'
+require_relative './models/structure'
 require_relative './models/import'
 require_relative './models/matchable'
 require_relative './models/models'
@@ -37,7 +37,7 @@ require_relative './routes/api/cours'
 require_relative './routes/api/creneaux_emploi_du_temps'
 require_relative './routes/api/devoirs'
 require_relative './routes/api/emplois_du_temps'
-require_relative './routes/api/etablissements'
+require_relative './routes/api/structures'
 require_relative './routes/api/import'
 require_relative './routes/api/matchables'
 require_relative './routes/api/salles'
@@ -88,7 +88,7 @@ module CahierDeTextesApp
     register CahierDeTextesApp::Routes::Api::CreneauxEmploiDuTemps
     register CahierDeTextesApp::Routes::Api::Devoirs
     register CahierDeTextesApp::Routes::Api::EmploisDuTemps
-    register CahierDeTextesApp::Routes::Api::Etablissements
+    register CahierDeTextesApp::Routes::Api::Structures
     register CahierDeTextesApp::Routes::Api::Salles
     register CahierDeTextesApp::Routes::Api::TypesDeDevoir
 
