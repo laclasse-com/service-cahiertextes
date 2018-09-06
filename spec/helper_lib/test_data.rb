@@ -7,7 +7,7 @@ def generate_test_data
 
         cours = Cours.create( cahier_de_textes_id: cahier_de_textes.id,
                               creneau_emploi_du_temps_id: creneau.creneau_emploi_du_temps_id,
-                              date_cours: "#{Time.now.year}-#{month + 1}-29",
+                              date: "#{Time.now.year}-#{month + 1}-29",
                               contenu: 'Exemple de séquence pédagogique.',
                               enseignant_id: creneau.enseignant_id )
         STDERR.putc '.'

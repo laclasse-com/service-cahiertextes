@@ -44,9 +44,9 @@ module Routes
                             .where( Sequel.lit( "DATE_FORMAT( date_due, '%Y-%m-%d') >= '#{Date.parse( params['from'] )}'" ) )
                             .where( Sequel.lit( "DATE_FORMAT( date_due, '%Y-%m-%d') <= '#{Date.parse( params['to'] )}'" ) )
                             .count,
-                        nb_assignments_faits: AssignmentTodoItem
-                            .where( Sequel.lit( "DATE_FORMAT( date_fait, '%Y-%m-%d') >= '#{Date.parse( params['from'] )}'" ) )
-                            .where( Sequel.lit( "DATE_FORMAT( date_fait, '%Y-%m-%d') <= '#{Date.parse( params['to'] )}'" ) )
+                        nb_assignments_done: AssignmentTodoItem
+                            .where( Sequel.lit( "DATE_FORMAT( rtime, '%Y-%m-%d') >= '#{Date.parse( params['from'] )}'" ) )
+                            .where( Sequel.lit( "DATE_FORMAT( rtime, '%Y-%m-%d') <= '#{Date.parse( params['to'] )}'" ) )
                             .count,
                         # nb_resources: Resource.count,
                         nb_timeslots: Timeslot.count

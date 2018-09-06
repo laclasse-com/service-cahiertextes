@@ -8,7 +8,7 @@ module Routes
                     query = Timeslot
 
                     query = query.where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{Utils.date_rentree}'" ) ) unless params.key?( 'no_year_restriction' )
-                    query = query.where( Sequel.lit( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{Date.parse( params['date<'] )}')" ) ) if params.key?('date<') && !params.key?( 'include_deleted')
+                    query = query.where( Sequel.lit( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( dtime, '%Y-%m-%d') >= '#{Date.parse( params['date<'] )}')" ) ) if params.key?('date<') && !params.key?( 'include_deleted')
                     query = query.where( group_id: params['groups_ids'] ) if params.key?( 'groups_ids' )
                     query = query.where( subject_id: params['subjects_ids'] ) if params.key?( 'subjects_ids' )
                     query = query.where( structure_id: params['structure_id'] ) if params.key?( 'structure_id' )
@@ -103,7 +103,7 @@ module Routes
                     if timeslot.subject_id.empty? && timeslot.sessions.empty? && timeslot.assignments.empty?
                         timeslot.deep_destroy
                     else
-                        timeslot.toggle_deleted( params['date_timeslot'] )
+                        timeslot.toggle_deleted( params['dtime'] )
                     end
 
                     json( timeslot.to_hash )

@@ -1,3 +1,4 @@
 *.sql
 docs-projet/
-spec/fixtures/
+spec/
+migrations/

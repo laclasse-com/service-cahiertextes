@@ -20,7 +20,7 @@ module Routes
 
                 app.get '/api/sessions/:id/?' do
                     session = Session[ id: params['id'] ]
-                    halt( 404, 'Session inconnu' ) if session.nil? || ( session.deleted && session.date_modification < UNDELETE_TIME_WINDOW.minutes.ago )
+                    halt( 404, 'Session inconnu' ) if session.nil? || ( session.deleted && session.mtime < UNDELETE_TIME_WINDOW.minutes.ago )
 
                     json( session.to_deep_hash )
                 end
@@ -38,7 +38,7 @@ module Routes
                                               cahier_de_textes_id: DataManagement::Accessors.create_or_get( CahierDeTextes, regroupement_id: timeslot.regroupement_id ).id,
                                               timeslot_id: timeslot.id,
                                               date_session: body['date_session'].to_s,
-                                              date_creation: Time.now,
+                                              ctime: Time.now,
                                               contenu: '' )
 
                     session.modifie( body )
@@ -55,7 +55,7 @@ module Routes
                     session = Session[ id: params['id'] ]
 
                     halt( 404, 'Session inconnu' ) if session.nil?
-                    halt( 401, 'Session visé non modifiable' ) unless session.date_validation.nil?
+                    halt( 401, 'Session visé non modifiable' ) unless session.vtime.nil?
 
                     session.modifie( body )
 
@@ -93,7 +93,7 @@ module Routes
 
                     session = Session[ id: params['id'] ]
                     halt( 404, 'Session inconnu' ) if session.nil?
-                    halt( 401, 'Session visé non modifiable' ) unless session.date_validation.nil?
+                    halt( 401, 'Session visé non modifiable' ) unless session.vtime.nil?
 
                     session.toggle_deleted
 

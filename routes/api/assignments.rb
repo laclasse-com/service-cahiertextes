@@ -29,8 +29,8 @@ module Routes
                     if params.key?('uid') && params.key?('check_done') && params['check_done'] == 'true'
                         data.each do |assignment|
                             dti = AssignmentTodoItem[ assignment_id: assignment[:id], eleve_id: params['uid'] ]
-                            assignment[:date_fait] = dti.date_fait unless dti.nil?
-                            assignment[:fait] = !dti.nil?
+                            assignment[:rtime] = dti.rtime unless dti.nil?
+                            assignment[:done] = !dti.nil?
                         end
                     end
 
@@ -40,12 +40,12 @@ module Routes
                 app.get '/api/assignments/:id/?' do
                     assignment = Assignment[ params['id'] ]
 
-                    halt( 404, 'Assignment inconnu' ) if assignment.nil? || ( assignment.deleted && assignment.date_modification < UNDELETE_TIME_WINDOW.minutes.ago )
+                    halt( 404, 'Assignment inconnu' ) if assignment.nil? || ( assignment.deleted && assignment.mtime < UNDELETE_TIME_WINDOW.minutes.ago )
 
                     hd = assignment.to_deep_hash
                     if params['uid']
                         dti = AssignmentTodoItem[ assignment_id: assignment.id, eleve_id: user['id'] ]
-                        hd[:date_fait] = dti.date_fait unless dti.nil?
+                        hd[:rtime] = dti.rtime unless dti.nil?
                     end
 
                     json( hd )
@@ -66,7 +66,7 @@ module Routes
                                                     contenu: body['contenu'],
                                                     date_due: body['date_due'],
                                                     temps_estime: body['temps_estime'],
-                                                    date_creation: Time.now )
+                                                    ctime: Time.now )
 
                     if body['session_id'] && !body['session_id'].nil?
                         assignment.update( session_id: body['session_id'] )
@@ -80,7 +80,7 @@ module Routes
                                                       textbook_id: DataManagement::Accessors.create_or_get( TextBook, regroupement_id: timeslot.regroupement_id ).id,
                                                       timeslot_id: timeslot.id,
                                                       date_session: body['date_due'],
-                                                      date_creation: Time.now,
+                                                      ctime: Time.now,
                                                       contenu: '' )
                         end
                         assignment.update( session_id: session.id )
@@ -108,17 +108,17 @@ module Routes
                     json( assignment.to_deep_hash )
                 end
 
-                app.put '/api/assignments/:id/fait/?' do
+                app.put '/api/assignments/:id/done/?' do
                     user_needs_to_be( %w[ ELV ] )
 
                     assignment = Assignment[ params['id'] ]
 
-                    assignment.toggle_fait( user )
+                    assignment.toggle_done( user )
 
                     hd = assignment.to_deep_hash
                     dti = AssignmentTodoItem[ assignment_id: assignment.id, eleve_id: user['id'] ]
-                    hd[:date_fait] = dti.date_fait unless dti.nil?
-                    hd[:fait] = !dti.nil?
+                    hd[:rtime] = dti.rtime unless dti.nil?
+                    hd[:done] = !dti.nil?
 
                     json( hd )
                 end

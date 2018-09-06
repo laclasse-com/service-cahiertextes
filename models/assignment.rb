@@ -14,7 +14,7 @@ class Assignment < Sequel::Model( :assignments )
     end
 
     def done_by!( eleve_id )
-        add_assignment_done_marker( eleve_id: eleve_id, date_fait: Time.now )
+        add_assignment_done_marker( eleve_id: eleve_id, rtime: Time.now )
     end
 
     def done_by?( eleve_id )
@@ -22,7 +22,7 @@ class Assignment < Sequel::Model( :assignments )
     end
 
     def done_on_the( eleve_id )
-        assignment_done_markers_dataset.where(eleve_id: eleve_id).first[:date_fait]
+        assignment_done_markers_dataset.where(eleve_id: eleve_id).first[:rtime]
     end
 
     def to_do_by!( eleve_id )
@@ -30,11 +30,11 @@ class Assignment < Sequel::Model( :assignments )
     end
 
     def toggle_deleted
-        update( deleted: !deleted, date_modification: Time.now )
+        update( deleted: !deleted, mtime: Time.now )
         save
     end
 
-    def toggle_fait( user )
+    def toggle_done( user )
         done_by?( user['id'] ) ? a_faire_par!( user['id'] ) : done_by!( user['id'] )
     end
 
@@ -71,7 +71,7 @@ class Assignment < Sequel::Model( :assignments )
             end
         end
 
-        self.date_modification = Time.now
+        self.mtime = Time.now
 
         save
     end

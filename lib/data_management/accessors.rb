@@ -6,7 +6,7 @@ module DataManagement
       objet = model_class.where( params ).first
 
       if objet.nil?
-        params[:date_creation] = Time.now if model_class.method_defined?( :date_creation )
+        params[:ctime] = Time.now if model_class.method_defined?( :ctime )
         objet = model_class.create( params )
       end
 

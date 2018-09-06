@@ -15,7 +15,7 @@ module Routes
                     import = Import[ params[:id] ]
 
                     json( Timeslot.where( structure_id: import.structure_id )
-                                  .where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= DATE_FORMAT( import.date_import, '%Y-%m-%d') AND DATE_FORMAT( ctime, '%Y-%m-%d') < '#{import.date_import + 10.minutes}'" ) )
+                                  .where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= DATE_FORMAT( import.ctime, '%Y-%m-%d') AND DATE_FORMAT( ctime, '%Y-%m-%d') < '#{import.ctime + 10.minutes}'" ) )
                                   .all )
                 end
 
@@ -25,7 +25,7 @@ module Routes
                     halt( 404, "Établissement #{params[:uai]} inconnu" ) if structure.nil?
 
                     json( Import.create( structure_id: structure.id,
-                                         date_import: Sequel::SQLTime.now,
+                                         ctime: Sequel::SQLTime.now,
                                          type: params.key?( :type ) ? params[:type] : '',
                                          comment: params.key?( :comment ) ? params[:comment] : '' ).to_hash )
                 end

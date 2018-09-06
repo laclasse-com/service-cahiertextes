@@ -21,8 +21,8 @@ class Timeslot < Sequel::Model( :timeslots )
   many_to_one :structures, class: :Structure, key: :structure_id
   many_to_one :import, class: :Import, key: :import_id
 
-  def toggle_deleted( date_suppression )
-    update( deleted: !deleted, dtime: deleted ? nil : date_suppression )
+  def toggle_deleted( dtime )
+    update( deleted: !deleted, dtime: deleted ? nil : dtime )
 
     save
   end

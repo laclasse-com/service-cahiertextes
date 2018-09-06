@@ -45,11 +45,11 @@ class Structure < Sequel::Model( :structures )
     { author_id: author_id,
       saisies: Session.where( author_id: author_id )
                     .where( deleted: false )
-                    .where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{Utils.date_rentree}'" ) )
+                    .where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{Utils.date_rentree}'" ) )
                     .map do |session|
         assignments = Assignment.where(session_id: session.id)
                         .where( deleted: false )
-                        .where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{Utils.date_rentree}'" ) )
+                        .where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{Utils.date_rentree}'" ) )
                         .all
         timeslot = Timeslot[session.timeslot_id]
 
@@ -64,7 +64,7 @@ class Structure < Sequel::Model( :structures )
 
   # def merge_all_twin_timeslots( truly_destroy = false )
   #   merged_twins = []
-  #   timeslots_dataset.where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{Utils.date_rentree}'" ) )
+  #   timeslots_dataset.where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{Utils.date_rentree}'" ) )
   #                                   .all
   #                                   .each do |timeslot|
   #     next if merged_twins.include?( timeslot.id )

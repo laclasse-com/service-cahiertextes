@@ -25,8 +25,8 @@ describe TextBook do
                                           matiere_id: '001122',
                                           regroupement_id: i + 1,
                                           deleted: false,
-                                          date_creation: Time.now,
-                                          date_suppression: nil )
+                                          ctime: Time.now,
+                                          dtime: nil )
 
       next unless (i + 1).even?
 
@@ -46,7 +46,7 @@ describe TextBook do
                          session_id: sp.id,
                          type_devoir_id: TypeDevoir.first.id,
                          date_due: Date.parse( "#{Time.now.year}-09-01" ) + i.day + 1.week,
-                         date_creation: Time.now,
+                         ctime: Time.now,
                          contenu: 'Devoir de test' )
       cedt.add_devoir( d )
     end

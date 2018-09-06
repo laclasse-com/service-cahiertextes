@@ -9,8 +9,8 @@ module DataManagement
 
             # Nota Bene: semainiers callés sur l'année civile
             query = Timeslot.where( group_id: groups_ids )
-                            .where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{Utils.date_rentree}'" ) )
-                            .where( Sequel.lit( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{fin}')" ) )
+                            .where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{Utils.date_rentree}'" ) )
+                            .where( Sequel.lit( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( dtime, '%Y-%m-%d') >= '#{fin}')" ) )
 
             query = query.where( matiere_id: subjects_ids ) unless subjects_ids.nil?
 
@@ -39,8 +39,8 @@ module DataManagement
                           hassignment[:resources] = assignment.resources.map(&:to_hash)
                           hassignment[:type_assignment_description] = assignment.type_assignment.description
 
-                          hassignment[:fait] = assignment.fait_par?( eleve_id ) unless eleve_id.nil?
-                          hassignment[:date_fait] = assignment.fait_le( eleve_id ) if hassignment[:fait]
+                          hassignment[:done] = assignment.done_by?( eleve_id ) unless eleve_id.nil?
+                          hassignment[:rtime] = assignment.done_on_the( eleve_id ) if hassignment[:done]
 
                           hassignment
                       end }
