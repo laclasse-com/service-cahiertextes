@@ -16,7 +16,7 @@ end
 
 class Timeslot < Sequel::Model( :timeslots )
   many_to_many :locations, class: :Location, join_table: :timeslots_locations
-  one_to_many :cours, class: :Cours
+  one_to_many :sessions
   one_to_many :devoirs
   many_to_one :structures, class: :Structure, key: :structure_id
   many_to_one :import, class: :Import, key: :import_id
@@ -54,14 +54,14 @@ class Timeslot < Sequel::Model( :timeslots )
       .where( deleted: false )
   end
 
-  # attach cours and devoirs to this timeslot and destroy other_timeslot
+  # attach session and devoirs to this timeslot and destroy other_timeslot
   def merge( timeslot_id )
     other_timeslot = Timeslot[timeslot_id]
     return false if other_timeslot.nil?
 
-    other_timeslot.cours.each do |cours|
-      cours.update( timeslot_id: id )
-      cours.save
+    other_timeslot.sessions.each do |session|
+      session.update( timeslot_id: id )
+      session.save
     end
     other_timeslot.devoirs.each do |devoir|
       devoir.update( timeslot_id: id )
@@ -116,7 +116,7 @@ class Timeslot < Sequel::Model( :timeslots )
           timeslot_id: c.id,
           start_time: Time.new( jour.year, jour.month, jour.mday, c.start_time.hour, c.start_time.min ).iso8601,
           end_time: Time.new( jour.year, jour.month, jour.mday, c.end_time.hour, c.end_time.min ).iso8601,
-          has_cours: c.cours.count { |cours| cours.date_cours == jour } > 0,
+          has_session: c.session.count { |session| session.date_session == jour } > 0,
           weekday: c.weekday,
           subject_id: c.subject_id,
           group_id: c.group_id,
@@ -161,7 +161,7 @@ class Timeslot < Sequel::Model( :timeslots )
   end
 
   def deep_destroy
-    remove_all_cours
+    remove_all_sessions
     remove_all_devoirs
     remove_all_locations
 

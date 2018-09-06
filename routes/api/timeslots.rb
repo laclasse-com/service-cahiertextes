@@ -30,7 +30,7 @@ module CahierDeTextesApp
 
                         halt( 404, 'Créneau inconnu' ) if timeslot.nil?
 
-                        json( timeslot.detailed( params['start'], params['end'], %w[locations cours devoirs] ) )
+                        json( timeslot.detailed( params['start'], params['end'], %w[locations sessions devoirs] ) )
                     end
 
                     app.get '/api/timeslots/:id/similaires/?' do
@@ -100,7 +100,7 @@ module CahierDeTextesApp
 
                         halt( 404, 'Créneau inconnu' ) if timeslot.nil?
 
-                        if timeslot.subject_id.empty? && timeslot.cours.empty? && timeslot.devoirs.empty?
+                        if timeslot.subject_id.empty? && timeslot.sessions.empty? && timeslot.devoirs.empty?
                             timeslot.deep_destroy
                         else
                             timeslot.toggle_deleted( params['date_timeslot'] )

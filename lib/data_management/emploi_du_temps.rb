@@ -23,13 +23,13 @@ module DataManagement
                       subject_id: timeslot.subject_id,
                       start: Time.new( day.year, day.month, day.mday, timeslot.start.hour, timeslot.start.min ).iso8601,
                       end: Time.new( day.year, day.month, day.mday, timeslot.end.hour, timeslot.end.min ).iso8601,
-                      cours: timeslot.cours
-                                    .select { |cours| cours[:deleted] == false && cours.date_cours == day }
-                                    .map do |cours|
-                          hcours = cours.to_hash
-                          hcours[:resources] = cours.resources.map(&:to_hash)
+                      session: timeslot.session
+                                    .select { |session| session[:deleted] == false && session.date_session == day }
+                                    .map do |session|
+                          hsession = session.to_hash
+                          hsession[:resources] = session.resources.map(&:to_hash)
 
-                          hcours
+                          hsession
                       end
                                     .first,
                       devoirs: timeslot.devoirs

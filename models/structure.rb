@@ -6,31 +6,31 @@ class Structure < Sequel::Model( :structures )
   one_to_many :locations
   one_to_many :matchables
 
-  def statistiques_regroupements
+  def statistiques_groups
     etab = JSON.parse( RestClient::Request.execute( method: :get,
                                                     url: "#{URL_ENT}/api/structures/#{values[:UAI]}",
                                                     user: ANNUAIRE[:app_id],
                                                     password: ANNUAIRE[:api_key] ) )
 
     etab['groups'].map do |group|
-      textbook = TextBook[ regroupement_id: group['id'] ]
-      textbook = TextBook.create( date_creation: Time.now, regroupement_id: group['id'] ) if textbook.nil?
+      textbook = TextBook[ group_id: group['id'] ]
+      textbook = TextBook.create( ctime: Time.now, group_id: group['id'] ) if textbook.nil?
       textbook.statistiques
     end
   end
 
-  def statistiques_enseignants
+  def statistiques_authors
     JSON.parse( RestClient::Request.execute( method: :get,
                                              url: "#{URL_ENT}/api/profiles/?type=ENS&structure_id=#{values[:UAI]}",
                                              user: ANNUAIRE[:app_id],
                                              password: ANNUAIRE[:api_key] ) )
-        .map do |enseignant|
-      { enseignant_id: enseignant['user_id'],
-        classes: saisies_enseignant( enseignant['user_id'] )[:saisies]
-          .group_by { |s| s[:regroupement_id] }
-          .map do |regroupement_id, regroupement_saisies|
-          { regroupement_id: regroupement_id,
-            statistiques: regroupement_saisies
+        .map do |author|
+      { author_id: author['user_id'],
+        classes: saisies_author( author['user_id'] )[:saisies]
+          .group_by { |s| s[:group_id] }
+          .map do |group_id, group_saisies|
+          { group_id: group_id,
+            statistiques: group_saisies
               .group_by { |rs| rs[:mois] }
               .map do |mois, mois_saisies|
               { month: mois,
@@ -41,30 +41,30 @@ class Structure < Sequel::Model( :structures )
     end
   end
 
-  def saisies_enseignant( enseignant_id )
-    { enseignant_id: enseignant_id,
-      saisies: Cours.where( enseignant_id: enseignant_id )
+  def saisies_author( author_id )
+    { author_id: author_id,
+      saisies: Session.where( author_id: author_id )
                     .where( deleted: false )
                     .where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" ) )
-                    .map do |cours|
-        devoirs = Devoir.where(cours_id: cours.id)
+                    .map do |session|
+        devoirs = Devoir.where(session_id: session.id)
                         .where( deleted: false )
                         .where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" ) )
                         .all
-        timeslot = Timeslot[cours.timeslot_id]
+        timeslot = Timeslot[session.timeslot_id]
 
-        { mois: cours.date_cours.month,
-          regroupement_id: timeslot.group_id,
-          matiere_id: timeslot.subject_id,
-          cours: cours,
+        { month: session.date.month,
+          group_id: timeslot.group_id,
+          subject_id: timeslot.subject_id,
+          sessions: sessions,
           devoirs: devoirs,
-          valide: !cours.date_validation.nil? }
+          valide: !session.vtime.nil? }
       end }
   end
 
-  # def merge_all_twin_timeslotx( truly_destroy = false )
+  # def merge_all_twin_timeslots( truly_destroy = false )
   #   merged_twins = []
-  #   timeslotx_emploi_du_temps_dataset.where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" ) )
+  #   timeslots_dataset.where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" ) )
   #                                   .all
   #                                   .each do |timeslot|
   #     next if merged_twins.include?( timeslot.id )

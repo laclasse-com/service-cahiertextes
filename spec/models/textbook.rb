@@ -33,17 +33,17 @@ describe TextBook do
       ct = TextBook.create( ctime: Time.now,
                             group_id: i + 1 )
 
-      sp = Cours.create( creneau_emploi_du_temps_id: cedt.id,
+      sp = Session.create( timeslot_id: cedt.id,
                          textbook_id: ct.id,
-                         enseignant_id: "enseignant_#{i + 1}",
-                         date_cours: Date.parse( "#{Time.now.year}-09-01" ) + i.day,
-                         date_creation: Time.now,
-                         contenu: 'Séquence pédagogique de test' )
+                         author_id: "enseignant_#{i + 1}",
+                         date: Date.parse( "#{Time.now.year}-09-01" ) + i.day,
+                         ctime: Time.now,
+                         content: 'Séquence pédagogique de test' )
       cedt.add_cour( sp )
 
       d = Devoir.create( creneau_emploi_du_temps_id: cedt.id,
                          enseignant_id: "enseignant_#{i + 1}",
-                         cours_id: sp.id,
+                         session_id: sp.id,
                          type_devoir_id: TypeDevoir.first.id,
                          date_due: Date.parse( "#{Time.now.year}-09-01" ) + i.day + 1.week,
                          date_creation: Time.now,

@@ -16,7 +16,7 @@ module CahierDeTextesApp
 
             query = query.where( timeslot_id: Timeslot.where( regroupement_id: params['groups_ids'] ).select(:id).all.map(&:id) ) if params.key?( 'groups_ids' )
 
-            query = query.where( cours_id: params['cours_ids']) if params.key?( 'cours_ids' )
+            query = query.where( session_id: params['session_ids']) if params.key?( 'session_ids' )
 
             query = query.where( Sequel.lit( "DATE_FORMAT( date_due, '%Y-%m-%d') >= '#{Date.parse( params['date_due>'] )}'" ) ) if params.key?( 'date_due>' )
 
@@ -68,22 +68,22 @@ module CahierDeTextesApp
                                     temps_estime: body['temps_estime'],
                                     date_creation: Time.now )
 
-            if body['cours_id'] && !body['cours_id'].nil?
-              devoir.update( cours_id: body['cours_id'] )
+            if body['session_id'] && !body['session_id'].nil?
+              devoir.update( session_id: body['session_id'] )
             else
-              cours = Cours.where( timeslot_id: timeslot.id )
-                           .where( date_cours: body['date_due'] )
+              session = Session.where( timeslot_id: timeslot.id )
+                           .where( date_session: body['date_due'] )
                            .where( deleted: false )
                            .first
-              if cours.nil?
-                cours = Cours.create( enseignant_id: user['id'],
+              if session.nil?
+                session = Session.create( enseignant_id: user['id'],
                                       textbook_id: DataManagement::Accessors.create_or_get( TextBook, regroupement_id: timeslot.regroupement_id ).id,
                                       timeslot_id: timeslot.id,
-                                      date_cours: body['date_due'],
+                                      date_session: body['date_due'],
                                       date_creation: Time.now,
                                       contenu: '' )
               end
-              devoir.update( cours_id: cours.id )
+              devoir.update( session_id: session.id )
             end
 
             params['enseignant_id'] = user['id']
@@ -133,7 +133,7 @@ module CahierDeTextesApp
             json( devoir.to_deep_hash )
           end
 
-          app.put '/api/devoirs/:id/copie/cours/:cours_id/timeslot/:timeslot_id/date_due/:date_due' do
+          app.put '/api/devoirs/:id/copie/session/:session_id/timeslot/:timeslot_id/date_due/:date_due' do
             user_needs_to_be( %w[ ENS DOC ] )
 
             # request.body.rewind
@@ -142,7 +142,7 @@ module CahierDeTextesApp
             devoir = Devoir[ params['id'] ]
             halt( 404, 'Devoir inconnu' ) if devoir.nil?
 
-            devoir.copie( params['cours_id'], params['timeslot_id'], params['date_due'] )
+            devoir.copie( params['session!_id'], params['timeslot_id'], params['date_due'] )
 
             json( devoir.to_deep_hash )
           end

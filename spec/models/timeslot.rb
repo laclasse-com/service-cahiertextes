@@ -25,7 +25,7 @@ describe Timeslot do
         expect( @timeslot ).to_not be_nil
         expect( @timeslot.group_id ).to eq 0
         expect( @timeslot.locations ).to be_empty
-        expect( @timeslot.cours ).to be_empty
+        expect( @timeslot.sessions ).to be_empty
         expect( @timeslot.devoirs ).to be_empty
         expect( @timeslot.start_time.iso8601.split('+').first.split('T').last ).to eq '14:00:00'
         expect( @timeslot.end_time.iso8601.split('+').first.split('T').last ).to eq '15:00:00'

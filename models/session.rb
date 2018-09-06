@@ -1,4 +1,4 @@
-class Cours < Sequel::Model( :cours )
+class Session < Sequel::Model( :sessions )
   many_to_many :resources
   many_to_one :timeslot
   many_to_one :textbook
@@ -52,28 +52,28 @@ class Cours < Sequel::Model( :cours )
     save
   end
 
-  def copie( group_id, timeslot_id, date_cours )
+  def copie( group_id, timeslot_id, date_session )
     textbook = TextBook.where( group_id: group_id ).first
     textbook = TextBook.create( date_creation: Time.now, group_id: group_id ) if textbook.nil?
 
-    target_cours = Cours.where( textbook_id: textbook.id,
+    target_session = Session.where( textbook_id: textbook.id,
                                 timeslot_id: timeslot_id,
-                                date_cours: date_cours ).first
-    if target_cours.nil?
-      target_cours = Cours.create( textbook_id: textbook.id,
+                                date_session: date_session ).first
+    if target_session.nil?
+      target_session = Session.create( textbook_id: textbook.id,
                                    timeslot_id: timeslot_id,
-                                   date_cours: date_cours,
+                                   date_session: date_session,
                                    date_creation: Time.now,
                                    contenu: contenu,
                                    enseignant_id: enseignant_id )
     end
     resources.each do |resource|
-      target_cours.add_resource( resource )
+      target_session.add_resource( resource )
     end
 
-    target_cours
+    target_session
   end
 end
 
-class CoursResource < Sequel::Model( :cours_resources )
+class SessionResource < Sequel::Model( :sessions_resources )
 end

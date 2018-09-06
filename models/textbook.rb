@@ -1,7 +1,7 @@
 require_relative '../lib/utils/date_rentree'
 
 class TextBook < Sequel::Model( :textbooks )
-  one_to_many :cours, class: :Cours
+  one_to_many :sessions
 
   def timeslots
       Timeslot.where( group_id: group_id )
@@ -12,7 +12,7 @@ class TextBook < Sequel::Model( :textbooks )
 
   def statistiques
       { group_id: group_id,
-        timeslots: { vides: timeslots.select { |timeslot| timeslot.cours.empty? && timeslot.devoirs.empty? }.map( &:id ),
-                     pleins: timeslots.select { |timeslot| !timeslot.cours.empty? || !timeslot.devoirs.empty? }.map( &:id ) } }
+        timeslots: { vides: timeslots.select { |timeslot| timeslot.sessions.empty? && timeslot.devoirs.empty? }.map( &:id ),
+                     pleins: timeslots.select { |timeslot| !timeslot.sessions.empty? || !timeslot.devoirs.empty? }.map( &:id ) } }
   end
 end

@@ -15,7 +15,7 @@ require_relative './textbook'
 require_relative './resource'
 
 # Séquences pédagogiques
-require_relative './cours'
+require_relative './session'
 
 # Devoirs
 require_relative './devoir'

@@ -22,7 +22,7 @@ module DataManagement
             def deleted_and_unused
                 timeslots = Timeslot.where( deleted: true )
                                     .all
-                                    .select { |c| c.cours.empty? && c.devoirs.empty? }
+                                    .select { |c| c.sessions.empty? && c.devoirs.empty? }
 
                 timeslots.each do |c|
                     c.enseignants.each(&:destroy)
@@ -37,7 +37,7 @@ module DataManagement
 
         def orphan_resources
             Resource.all
-                     .select { |r| r.cours.empty? && r.devoirs.empty? }
+                     .select { |r| r.sessions.empty? && r.devoirs.empty? }
                      .each(&:destroy)
         end
     end

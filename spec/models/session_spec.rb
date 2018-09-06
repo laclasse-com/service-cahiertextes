@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Cours do
+describe Session do
   it 'to_deep_hash' do
     STDERR.puts 'FIXME'
     expect( 1 ).to eq 1
@@ -21,7 +21,7 @@ describe Cours do
     expect( 1 ).to eq 1
   end
 
-  it 'copie( regroupement_id, creneau_emploi_du_temps_id, date_cours )' do
+  it 'copie( group_id, timeslot_id, date )' do
     STDERR.puts 'FIXME'
     expect( 1 ).to eq 1
   end
