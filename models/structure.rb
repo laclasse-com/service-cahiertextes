@@ -6,7 +6,7 @@ class Structure < Sequel::Model( :structures )
   one_to_many :locations
   one_to_many :matchables
 
-  def statistiques_groups
+  def statistics_groups
     etab = JSON.parse( RestClient::Request.execute( method: :get,
                                                     url: "#{URL_ENT}/api/structures/#{values[:UAI]}",
                                                     user: ANNUAIRE[:app_id],
@@ -15,11 +15,11 @@ class Structure < Sequel::Model( :structures )
     etab['groups'].map do |group|
       textbook = TextBook[ group_id: group['id'] ]
       textbook = TextBook.create( ctime: Time.now, group_id: group['id'] ) if textbook.nil?
-      textbook.statistiques
+      textbook.statistics
     end
   end
 
-  def statistiques_authors
+  def statistics_authors
     JSON.parse( RestClient::Request.execute( method: :get,
                                              url: "#{URL_ENT}/api/profiles/?type=ENS&structure_id=#{values[:UAI]}",
                                              user: ANNUAIRE[:app_id],
@@ -30,7 +30,7 @@ class Structure < Sequel::Model( :structures )
           .group_by { |s| s[:group_id] }
           .map do |group_id, group_saisies|
           { group_id: group_id,
-            statistiques: group_saisies
+            statistics: group_saisies
               .group_by { |rs| rs[:mois] }
               .map do |mois, mois_saisies|
               { month: mois,
@@ -45,11 +45,11 @@ class Structure < Sequel::Model( :structures )
     { author_id: author_id,
       saisies: Session.where( author_id: author_id )
                     .where( deleted: false )
-                    .where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" ) )
+                    .where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{Utils.date_rentree}'" ) )
                     .map do |session|
         assignments = Assignment.where(session_id: session.id)
                         .where( deleted: false )
-                        .where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" ) )
+                        .where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{Utils.date_rentree}'" ) )
                         .all
         timeslot = Timeslot[session.timeslot_id]
 
@@ -64,7 +64,7 @@ class Structure < Sequel::Model( :structures )
 
   # def merge_all_twin_timeslots( truly_destroy = false )
   #   merged_twins = []
-  #   timeslots_dataset.where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" ) )
+  #   timeslots_dataset.where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{Utils.date_rentree}'" ) )
   #                                   .all
   #                                   .each do |timeslot|
   #     next if merged_twins.include?( timeslot.id )

@@ -9,7 +9,7 @@ module DataManagement
 
             # Nota Bene: semainiers callés sur l'année civile
             query = Timeslot.where( group_id: groups_ids )
-                            .where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{CahierDeTextesApp::Utils.date_rentree}'" ) )
+                            .where( Sequel.lit( "DATE_FORMAT( date_creation, '%Y-%m-%d') >= '#{Utils.date_rentree}'" ) )
                             .where( Sequel.lit( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( date_suppression, '%Y-%m-%d') >= '#{fin}')" ) )
 
             query = query.where( matiere_id: subjects_ids ) unless subjects_ids.nil?

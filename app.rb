@@ -46,8 +46,7 @@ require_relative './routes/api/users'
 require_relative './routes/api/user_parameters'
 
 # Application Sinatra servant de base
-module CahierDeTextesApp
-  class CdTServer < Sinatra::Base
+class CdTServer < Sinatra::Base
     helpers Sinatra::Helpers
     helpers Sinatra::Cookies
 
@@ -55,47 +54,46 @@ module CahierDeTextesApp
     helpers LaClasse::Helpers::User
 
     configure :production, :development do
-      set :protection, true
-      set :protection, except: :frame_options
-      set :show_exceptions, false
+        set :protection, true
+        set :protection, except: :frame_options
+        set :show_exceptions, false
     end
 
     not_found do
-      "Page non trouvée\n"
+        "Page non trouvée\n"
     end
 
     error do
-      status 500
+        status 500
 
-      log_exception env['sinatra.error']
-      'Erreur Interne au serveur'
+        log_exception env['sinatra.error']
+        'Erreur Interne au serveur'
     end
 
     ##### routes #################################################################
 
     before do
-      cache_control :no_cache
+        cache_control :no_cache
 
-      pass if request.path =~ %r{#{APP_PATH}/status/}
+        pass if request.path =~ %r{#{APP_PATH}/status/}
 
-      login! env['REQUEST_PATH'] unless logged?
+        login! env['REQUEST_PATH'] unless logged?
     end
 
-    register CahierDeTextesApp::Routes::Status
+    register Routes::Status
 
-    register CahierDeTextesApp::Routes::Api::TextBooks
-    register CahierDeTextesApp::Routes::Api::Sessions
-    register CahierDeTextesApp::Routes::Api::Timeslots
-    register CahierDeTextesApp::Routes::Api::Assignments
-    register CahierDeTextesApp::Routes::Api::EmploisDuTemps
-    register CahierDeTextesApp::Routes::Api::Structures
-    register CahierDeTextesApp::Routes::Api::Locations
-    register CahierDeTextesApp::Routes::Api::AssignmentTypes
+    register Routes::Api::TextBooks
+    register Routes::Api::Sessions
+    register Routes::Api::Timeslots
+    register Routes::Api::Assignments
+    register Routes::Api::EmploisDuTemps
+    register Routes::Api::Structures
+    register Routes::Api::Locations
+    register Routes::Api::AssignmentTypes
 
-    register CahierDeTextesApp::Routes::Api::ImportAPI
-    register CahierDeTextesApp::Routes::Api::Matchables
+    register Routes::Api::ImportAPI
+    register Routes::Api::Matchables
 
-    register CahierDeTextesApp::Routes::Api::UsersAPI
-    register CahierDeTextesApp::Routes::Api::UserParametersAPI
-  end
+    register Routes::Api::UsersAPI
+    register Routes::Api::UserParametersAPI
 end

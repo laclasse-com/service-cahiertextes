@@ -52,8 +52,8 @@ describe TextBook do
     end
   end
 
-  it 'Calcule les statistiques du cahier de textes d\'un regroupement' do
-    stats = TextBook.first.statistiques
+  it 'Calcule les statistics du cahier de textes d\'un regroupement' do
+    stats = TextBook.first.statistics
 
     expect( stats[:group_id] ).to eq '2'
   end
