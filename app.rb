@@ -1,4 +1,6 @@
 # coding: utf-8
+# frozen_string_literal: true
+
 require 'rubygems'
 require 'bundler'
 require 'yaml'
@@ -14,7 +16,10 @@ DB = Sequel.mysql2( DB_CONFIG[:name],
 Sequel.extension( :migration )
 Sequel::Model.plugin( :json_serializer )
 
-require_relative './lib/utils/holidays'
+# Uncomment this if you want to log all DB queries
+# DB.loggers << Logger.new($stdout)
+
+require_relative './lib/utils'
 
 require_relative './models/textbook'
 require_relative './models/session'
@@ -49,6 +54,7 @@ require_relative './routes/api/user_parameters'
 class CdTServer < Sinatra::Base
     helpers Sinatra::Helpers
     helpers Sinatra::Cookies
+    helpers Sinatra::Param
 
     helpers LaClasse::Helpers::Auth
     helpers LaClasse::Helpers::User
@@ -75,9 +81,11 @@ class CdTServer < Sinatra::Base
     before do
         cache_control :no_cache
 
-        pass if request.path =~ %r{#{APP_PATH}/status/}
+        request.path.match( %r{#{APP_PATH}/(status|__sinatra__)[/]?.*} ) do
+            pass
+        end
 
-        login! env['REQUEST_PATH'] unless logged?
+        login!( request.path ) unless logged?
     end
 
     register Routes::Status
@@ -86,7 +94,6 @@ class CdTServer < Sinatra::Base
     register Routes::Api::Sessions
     register Routes::Api::Timeslots
     register Routes::Api::Assignments
-    register Routes::Api::EmploisDuTemps
     register Routes::Api::Structures
     register Routes::Api::Locations
     register Routes::Api::AssignmentTypes

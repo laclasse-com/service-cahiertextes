@@ -1,4 +1,4 @@
-require_relative '../lib/utils/date_rentree'
+require_relative '../lib/utils'
 
 class TextBook < Sequel::Model( :textbooks )
   one_to_many :sessions

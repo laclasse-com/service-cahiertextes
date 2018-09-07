@@ -13,6 +13,7 @@ gem 'rubyzip'
 gem 'sequel'
 gem 'sinatra'
 gem 'sinatra-contrib'
+gem 'sinatra-param'
 gem 'xml-simple'
 
 group :development do

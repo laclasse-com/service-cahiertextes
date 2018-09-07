@@ -26,6 +26,10 @@ module Routes
                 end
 
                 app.get '/api/timeslots/:id/?' do
+                    # {
+                    param :id, Integer, required: true
+                    # }
+
                     timeslot = Timeslot[ id: params['id'] ]
 
                     halt( 404, 'Créneau inconnu' ) if timeslot.nil?
@@ -33,15 +37,30 @@ module Routes
                     json( timeslot.detailed( params['start'], params['end'], %w[locations sessions assignments] ) )
                 end
 
-                app.get '/api/timeslots/:id/similaires/?' do
+                app.get '/api/timeslots/:id/similar/?' do
+                    # {
+                    param :id, Integer, required: true
+                    param :groups_ids, Array, required: true
+                    param :start, Date, required: true
+                    param :end, Date, required: true
+                    # }
+
                     timeslot = Timeslot[ id: params['id'] ]
 
                     halt( 404, 'Créneau inconnu' ) if timeslot.nil?
 
-                    json( timeslot.similaires( params['groups_ids'], params['start'], params['end'] ) )
+                    json( timeslot.similar( params['groups_ids'], params['start'], params['end'] ) )
                 end
 
                 app.post '/api/timeslots/?' do
+                    # {
+                    param :group_id, Integer, required: true
+                    param :subject_id, Integer, required: true
+                    param :weekday, Integer, required: true
+                    param :start, Date, required: true
+                    param :end, Date, required: true
+                    # }
+
                     user_needs_to_be( %w[ ENS DOC ] )
 
                     structure = DataManagement::Accessors.create_or_get( Structure,
@@ -55,19 +74,20 @@ module Routes
                                                 group_id: params['group_id'],
                                                 structure_id: structure.id )
 
-                    timeslot.modifie( params )
+                    timeslot.modify( params )
 
                     json( timeslot.to_hash )
                 end
 
                 app.post '/api/timeslots/bulk/?' do
-                    request.body.rewind
-                    body = JSON.parse( request.body.read )
+                    # {
+                    param :timeslots, Array, required: true
+                    # }
 
                     structure = DataManagement::Accessors.create_or_get( Structure,
-                                                                         UAI: body['uai'] )
+                                                                         UAI: params['uai'] )
 
-                    json( body['timeslots'].map do |timeslot|
+                    json( params['timeslots'].map do |timeslot|
                               new_timeslot = Timeslot.create( ctime: Time.now,
                                                               start: timeslot['start'],
                                                               end: timeslot['end'],
@@ -75,25 +95,34 @@ module Routes
                                                               subject_id: timeslot['subject_id'],
                                                               group_id: timeslot['group_id'],
                                                               structure_id: structure.id )
-                              new_timeslot.modifie( timeslot )
+                              new_timeslot.modify( timeslot )
 
                               new_timeslot.to_hash
                           end )
                 end
 
                 app.put '/api/timeslots/:id/?' do
+                    # {
+                    param :id, Integer, required: true
+                    # }
+
                     user_needs_to_be( %w[ ENS DOC ] )
 
                     timeslot = Timeslot[ params['id'] ]
 
                     halt( 404, 'Créneau inconnu' ) if timeslot.nil?
 
-                    timeslot.modifie( params )
+                    timeslot.modify( params )
 
                     json( timeslot.to_hash )
                 end
 
                 app.delete '/api/timeslots/:id/?' do
+                    # {
+                    param :id, Integer, required: true
+                    param :dtime, DateTime, required: true
+                    # }
+
                     user_needs_to_be( %w[ ENS DOC ] )
 
                     timeslot = Timeslot[ params['id'] ]

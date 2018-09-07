@@ -1,4 +1,4 @@
-require_relative '../lib/utils/date_rentree'
+require_relative '../lib/utils'
 
 class Structure < Sequel::Model( :structures )
   one_to_many :timeslots
@@ -26,24 +26,24 @@ class Structure < Sequel::Model( :structures )
                                              password: ANNUAIRE[:api_key] ) )
         .map do |author|
       { author_id: author['user_id'],
-        classes: saisies_author( author['user_id'] )[:saisies]
+        classes: sessions_author( author['user_id'] )[:sessions]
           .group_by { |s| s[:group_id] }
-          .map do |group_id, group_saisies|
+          .map do |group_id, group_sessions|
           { group_id: group_id,
-            statistics: group_saisies
+            statistics: group_sessions
               .group_by { |rs| rs[:mois] }
-              .map do |mois, mois_saisies|
+              .map do |mois, mois_sessions|
               { month: mois,
-                validated: mois_saisies.count { |s| s[:valide] },
-                filled: mois_saisies.count }
+                validated: mois_sessions.count { |s| s[:valide] },
+                filled: mois_sessions.count }
             end }
         end }
     end
   end
 
-  def saisies_author( author_id )
+  def sessions_author( author_id )
     { author_id: author_id,
-      saisies: Session.where( author_id: author_id )
+      sessions: Session.where( author_id: author_id )
                     .where( deleted: false )
                     .where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{Utils.date_rentree}'" ) )
                     .map do |session|

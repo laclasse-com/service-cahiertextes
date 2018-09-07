@@ -7,6 +7,10 @@ module Routes
                 end
 
                 app.get '/api/assignment_types/:id/?' do
+                    #{
+                    param :id, Integer, required: true
+                    # }
+
                     assignment_type = AssignmentType[ params[:id] ]
                     halt( 404, "AssignmentType #{params[:id]} inconnu" ) if assignment_type.nil?
 

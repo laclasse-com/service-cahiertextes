@@ -3,7 +3,7 @@ class Assignment < Sequel::Model( :assignments )
     many_to_one :timeslot
     many_to_one :assignment_type
     one_to_many :assignment_done_markers
-    many_to_one :sessions
+    many_to_one :session
 
     def to_deep_hash
         hash = to_hash
@@ -13,20 +13,20 @@ class Assignment < Sequel::Model( :assignments )
         hash
     end
 
-    def done_by!( eleve_id )
-        add_assignment_done_marker( eleve_id: eleve_id, rtime: Time.now )
+    def done_by!( author_id )
+        add_assignment_done_marker( author_id: author_id, rtime: Time.now )
     end
 
-    def done_by?( eleve_id )
-        assignment_done_markers_dataset.where(eleve_id: eleve_id).count > 0
+    def done_by?( author_id )
+        assignment_done_markers_dataset.where(author_id: author_id).count > 0
     end
 
-    def done_on_the( eleve_id )
-        assignment_done_markers_dataset.where(eleve_id: eleve_id).first[:rtime]
+    def done_on_the( author_id )
+        assignment_done_markers_dataset.where(author_id: author_id).first[:rtime]
     end
 
-    def to_do_by!( eleve_id )
-        assignment_done_markers_dataset.where(eleve_id: eleve_id).destroy
+    def to_be_done_by!( author_id )
+        assignment_done_markers_dataset.where(author_id: author_id).destroy
     end
 
     def toggle_deleted
@@ -35,10 +35,10 @@ class Assignment < Sequel::Model( :assignments )
     end
 
     def toggle_done( user )
-        done_by?( user['id'] ) ? a_faire_par!( user['id'] ) : done_by!( user['id'] )
+        done_by?( user['id'] ) ? to_be_done_by!( user['id'] ) : done_by!( user['id'] )
     end
 
-    def copie( session_id, timeslot_id, date_due )
+    def copy( session_id, timeslot_id, date_due )
         new_assignment = Assignment.create( session_id: session_id,
                                             assignment_type_id: assignment_type_id,
                                             timeslot_id: timeslot_id,
@@ -53,7 +53,7 @@ class Assignment < Sequel::Model( :assignments )
         end
     end
 
-    def modifie( params )
+    def modify( params )
         self.date_due = params['date_due']
         self.timeslot_id = params['timeslot_id']
         self.assignment_type_id = params['assignment_type_id']

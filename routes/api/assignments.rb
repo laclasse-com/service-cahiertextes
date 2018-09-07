@@ -28,7 +28,7 @@ module Routes
 
                     if params.key?('uid') && params.key?('check_done') && params['check_done'] == 'true'
                         data.each do |assignment|
-                            dti = AssignmentTodoItem[ assignment_id: assignment[:id], eleve_id: params['uid'] ]
+                            dti = AssignmentTodoItem[ assignment_id: assignment[:id], author_id: params['uid'] ]
                             assignment[:rtime] = dti.rtime unless dti.nil?
                             assignment[:done] = !dti.nil?
                         end
@@ -38,13 +38,17 @@ module Routes
                 end
 
                 app.get '/api/assignments/:id/?' do
+                    # {
+                    param :id, Integer, required: true
+                    # }
+
                     assignment = Assignment[ params['id'] ]
 
                     halt( 404, 'Assignment inconnu' ) if assignment.nil? || ( assignment.deleted && assignment.mtime < UNDELETE_TIME_WINDOW.minutes.ago )
 
                     hd = assignment.to_deep_hash
                     if params['uid']
-                        dti = AssignmentTodoItem[ assignment_id: assignment.id, eleve_id: user['id'] ]
+                        dti = AssignmentTodoItem[ assignment_id: assignment.id, author_id: user['id'] ]
                         hd[:rtime] = dti.rtime unless dti.nil?
                     end
 
@@ -52,63 +56,75 @@ module Routes
                 end
 
                 app.post '/api/assignments/?' do
+                    # {
+                    param :timeslot_id, Integer, required: true
+                    param :assignment_type_id, Integer, required: true
+                    param :content, String, required: true
+                    param :date_due, Date, required: true
+                    param :time_estimate, Integer, required: true
+
+                    param :session_id, Integer, required: false
+                    # }
+
                     user_needs_to_be( %w[ ENS DOC ] )
 
-                    request.body.rewind
-                    body = JSON.parse( request.body.read )
-
-                    timeslot = Timeslot[ body['timeslot_id'] ]
+                    timeslot = Timeslot[ params['timeslot_id'] ]
                     halt( 409, 'Créneau invalide' ) if timeslot.nil?
 
                     assignment = Assignment.create( enseignant_id: user['id'],
-                                                    type_assignment_id: body['type_assignment_id'],
+                                                    assignment_type_id: params['assignment_type_id'],
                                                     timeslot_id: timeslot.id,
-                                                    contenu: body['contenu'],
-                                                    date_due: body['date_due'],
-                                                    temps_estime: body['temps_estime'],
+                                                    content: params['content'],
+                                                    date_due: params['date_due'],
+                                                    time_estimate: params['time_estimate'],
                                                     ctime: Time.now )
 
-                    if body['session_id'] && !body['session_id'].nil?
-                        assignment.update( session_id: body['session_id'] )
+                    if params['session_id'] && !params['session_id'].nil?
+                        assignment.update( session_id: params['session_id'] )
                     else
                         session = Session.where( timeslot_id: timeslot.id )
-                                         .where( date_session: body['date_due'] )
+                                         .where( date_session: params['date_due'] )
                                          .where( deleted: false )
                                          .first
                         if session.nil?
                             session = Session.create( enseignant_id: user['id'],
                                                       textbook_id: DataManagement::Accessors.create_or_get( TextBook, regroupement_id: timeslot.regroupement_id ).id,
                                                       timeslot_id: timeslot.id,
-                                                      date_session: body['date_due'],
+                                                      date_session: params['date_due'],
                                                       ctime: Time.now,
-                                                      contenu: '' )
+                                                      content: '' )
                         end
                         assignment.update( session_id: session.id )
                     end
 
-                    params['enseignant_id'] = user['id']
+                    params['author_id'] = user['id']
 
-                    assignment.modifie( body )
+                    assignment.modify( params )
 
                     json( assignment.to_deep_hash )
                 end
 
                 app.put '/api/assignments/:id/?' do
-                    user_needs_to_be( %w[ ENS DOC ] )
+                    # {
+                    param :id, Integer, required: true
+                    # }
 
-                    request.body.rewind
-                    body = JSON.parse( request.body.read )
+                    user_needs_to_be( %w[ ENS DOC ] )
 
                     assignment = Assignment[ params['id'] ]
                     halt( 404, 'Assignment inconnu' ) if assignment.nil?
                     params['enseignant_id'] = user['id']
 
-                    assignment.modifie( body )
+                    assignment.modify( params )
 
                     json( assignment.to_deep_hash )
                 end
 
                 app.put '/api/assignments/:id/done/?' do
+                    # {
+                    param :id, Integer, required: true
+                    # }
+
                     user_needs_to_be( %w[ ELV ] )
 
                     assignment = Assignment[ params['id'] ]
@@ -116,7 +132,7 @@ module Routes
                     assignment.toggle_done( user )
 
                     hd = assignment.to_deep_hash
-                    dti = AssignmentTodoItem[ assignment_id: assignment.id, eleve_id: user['id'] ]
+                    dti = AssignmentTodoItem[ assignment_id: assignment.id, author_id: user['id'] ]
                     hd[:rtime] = dti.rtime unless dti.nil?
                     hd[:done] = !dti.nil?
 
@@ -124,6 +140,10 @@ module Routes
                 end
 
                 app.delete '/api/assignments/:id/?' do
+                    # {
+                    param :id, Integer, required: true
+                    # }
+
                     user_needs_to_be( %w[ ENS DOC ] )
 
                     assignment = Assignment[ params['id'] ]
@@ -133,16 +153,20 @@ module Routes
                     json( assignment.to_deep_hash )
                 end
 
-                app.put '/api/assignments/:id/copie/session/:session_id/timeslot/:timeslot_id/date_due/:date_due' do
-                    user_needs_to_be( %w[ ENS DOC ] )
+                app.put '/api/assignments/:id/copy/session/:session_id/timeslot/:timeslot_id/date_due/:date_due' do
+                    # {
+                    param :id, Integer, required: true
+                    param :session_id, Integer, required: true
+                    param :timeslot_id, Integer, required: true
+                    param :date_due, Date, required: true
+                    # }
 
-                    # request.body.rewind
-                    # body = JSON.parse( request.body.read )
+                    user_needs_to_be( %w[ ENS DOC ] )
 
                     assignment = Assignment[ params['id'] ]
                     halt( 404, 'Assignment inconnu' ) if assignment.nil?
 
-                    assignment.copie( params['session!_id'], params['timeslot_id'], params['date_due'] )
+                    assignment.copy( params['session_id'], params['timeslot_id'], params['date_due'] )
 
                     json( assignment.to_deep_hash )
                 end

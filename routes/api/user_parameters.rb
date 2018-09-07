@@ -13,13 +13,12 @@ module Routes
                 end
 
                 app.put '/api/users/current/parametres/?' do
-                    request.body.rewind
-                    body = JSON.parse( request.body.read )
+                    param :parameters, String, required: true
 
                     parameters = DataManagement::Accessors.create_or_get( UserParameters,
                                                                           uid: session['user'] )
 
-                    parameters.update( parameters: body['parameters'] )
+                    parameters.update( parameters: params['parameters'] )
                     parameters.save
 
                     json( parameters.to_hash )

@@ -1,6 +1,6 @@
 # coding: utf-8
 require_relative '../../lib/pronote'
-require_relative '../../lib/utils/xml_to_hash'
+require_relative '../../lib/xml_to_hash'
 require_relative '../../models/import'
 
 module Routes
@@ -8,11 +8,19 @@ module Routes
         module ImportAPI
             def self.registered( app )
                 app.get '/api/import/:id/?' do
-                    json( Import[ params[:id] ] )
+                    # {
+                    param :id, Integer, required: true
+                    # }
+
+                    json( Import[ params['id'] ] )
                 end
 
                 app.get '/api/import/:id/timeslots/?' do
-                    import = Import[ params[:id] ]
+                    # {
+                    param :id, Integer, required: true
+                    # }
+
+                    import = Import[ params['id'] ]
 
                     json( Timeslot.where( structure_id: import.structure_id )
                                   .where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= DATE_FORMAT( import.ctime, '%Y-%m-%d') AND DATE_FORMAT( ctime, '%Y-%m-%d') < '#{import.ctime + 10.minutes}'" ) )
@@ -20,7 +28,13 @@ module Routes
                 end
 
                 app.post '/api/import/log/start/?' do
-                    etablissement = Structure.where(uai: params[:uai]).first
+                    # {
+                    param :uai, String, required: true
+                    param :type, String, required: false
+                    param :comment, String, required: false
+                    # }
+
+                    etablissement = Structure.where(uai: params['uai']).first
 
                     halt( 404, "Établissement #{params[:uai]} inconnu" ) if structure.nil?
 
@@ -31,6 +45,10 @@ module Routes
                 end
 
                 app.post '/api/import/pronote/decrypt' do
+                    # {
+                    # param :file, required: true
+                    # }
+
                     halt( 500, 'Le fichier n\'est pas un fichier XML valide.' ) if %r{^(application|text)/xml;.*}.match( FileMagic.new(FileMagic::MAGIC_MIME).file( params[:file][:tempfile].path ) ).nil?
 
                     json( File.open( params[:file][:tempfile] ) do |xml|

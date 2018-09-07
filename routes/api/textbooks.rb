@@ -3,6 +3,13 @@ module Routes
         module TextBooks
             def self.registered( app )
                 app.post '/api/textbooks/?' do
+                    # {
+                    param :group_id, Integer, required: true
+                    param :label, String, required: true
+                    param :schoolyear_start, Date, required: true
+                    param :schoolyear_end, Date, required: true
+                    # }
+
                     user_needs_to_be( %w[ ADM DIR ] )
 
                     ct = DataManagement::Accessors.create_or_get( TextBook,
@@ -16,12 +23,13 @@ module Routes
                 end
 
                 app.post '/api/textbooks/bulk/?' do
+                    # {
+                    param :textbooks, Array, required: true
+                    # }
+
                     user_needs_to_be( %w[ ADM DIR ] )
 
-                    request.body.rewind
-                    body = JSON.parse( request.body.read )
-
-                    json( body['textbooks'].map do |ct|
+                    json( params['textbooks'].map do |ct|
                               new_ct = DataManagement::Accessors.create_or_get( TextBook,
                                                                                 group_id: ct['group_id'])
                               new_ct.update( schoolyear_start: ct['schoolyear_start'],

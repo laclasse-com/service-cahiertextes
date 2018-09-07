@@ -40,4 +40,12 @@ module Utils
             DateTime.now.month > 6 ? DateTime.now.year : DateTime.now.year - 1
         end
     end
+
+    def date_rentree
+        Date.parse( "#{Date.today.month > 8 ? Date.today.year : Date.today.year - 1}-08-15" )
+    end
+
+  def deep_dup( thing )
+    Marshal.load( Marshal.dump( thing ) )
+  end
 end

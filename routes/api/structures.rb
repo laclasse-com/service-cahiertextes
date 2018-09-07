@@ -5,6 +5,10 @@ module Routes
         module Structures
             def self.registered( app )
                 app.get '/api/structures/:uai/?' do
+                    # {
+                    param :uai, String, required: true
+                    # }
+
                     # TODO: check if exists in annuaire
                     structure = DataManagement::Accessors.create_or_get( Structure,
                                                                          UAI: params['uai'] )
@@ -20,10 +24,17 @@ module Routes
                 end
 
                 app.post '/api/structures/:uai/?' do
+                    # {
+                    param :uai, String, required: true
+                    param :schoolyear_start, Date, required: true
+                    param :schoolyear_end, Date, required: true
+                    param :first_day_of_first_week, Date, required: true
+                    # }
+
                     structure = DataManagement::Accessors.create_or_get( Structure,
                                                                          UAI: params['uai'] )
 
-                    structure.schoolyear_start = params['schoolyear_start'] if params.key?( 'debut_annee_scolaire' )
+                    structure.schoolyear_start = params['schoolyear_start'] if params.key?( 'schoolyear_start' )
                     structure.schoolyear_end = params['schoolyear_end'] if params.key?( 'schoolyear_end' )
                     structure.first_day_of_first_week = params['first_day_of_first_week'] if params.key?( 'first_day_of_first_week' )
                     structure.save
@@ -32,6 +43,10 @@ module Routes
                 end
 
                 app.get '/api/structures/:uai/statistics/groups/?' do
+                    # {
+                    param :uai, String, required: true
+                    # }
+
                     structure = Structure[ uai: params['uai'] ]
 
                     halt( 404, "Établissement #{params['uai']} inconnu" ) if structure.nil?
@@ -40,6 +55,11 @@ module Routes
                 end
 
                 app.get '/api/structures/:uai/statistics/groups/:group_id/?' do
+                    # {
+                    param :uai, String, required: true
+                    param :group_id, Integer, required: true
+                    # }
+
                     cahier_de_textes = CahierDeTextes[ regroupement_id: params['group_id'] ]
 
                     halt( 404, "Classe #{params['group_id']} inconnue dans l'établissement #{params['uai']}" ) if cahier_de_textes.nil?
@@ -47,7 +67,11 @@ module Routes
                     json cahier_de_textes.statistics.to_hash
                 end
 
-                app.get '/api/structures/:uai/statistics/enseignants/?' do
+                app.get '/api/structures/:uai/statistics/teachers/?' do
+                    # {
+                    param :uai, String, required: true
+                    # }
+
                     structure = Structure[ uai: params['uai'] ]
 
                     halt( 404, "Établissement #{params['uai']} inconnu" ) if structure.nil?
@@ -55,20 +79,25 @@ module Routes
                     json structure.statistics_enseignants
                 end
 
-                app.get '/api/structures/:uai/statistics/enseignants/:enseignant_id/?' do
+                app.get '/api/structures/:uai/statistics/teachers/:teacher_id/?' do
+                    # {
+                    param :uai, String, required: true
+                    param :teacher_id, String, required: true
+                    # }
+
                     structure = Structure[ uai: params['uai'] ]
 
                     halt( 404, "Établissement #{params['uai']} inconnu" ) if structure.nil?
 
-                    saisies = structure.saisies_enseignant( params['enseignant_id'] )
-                    saisies[:saisies] = saisies[:saisies].map do |saisie|
-                        saisie[:sessions] = saisie[:sessions].to_hash
-                        saisie[:assignments] = saisie[:assignments].map(&:to_hash)
+                    sessions = structure.sessions_author( params['teacher_id'] )
+                    sessions[:sessions] = sessions[:sessions].map do |session|
+                        session[:sessions] = session[:sessions].to_hash
+                        session[:assignments] = session[:assignments].map(&:to_hash)
 
-                        saisie
+                        session
                     end
 
-                    json( saisies )
+                    json( sessions )
                 end
             end
         end

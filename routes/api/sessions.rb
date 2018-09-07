@@ -19,6 +19,10 @@ module Routes
                 end
 
                 app.get '/api/sessions/:id/?' do
+                    # {
+                    param :id, Integer, required: true
+                    # }
+
                     session = Session[ id: params['id'] ]
                     halt( 404, 'Session inconnu' ) if session.nil? || ( session.deleted && session.mtime < UNDELETE_TIME_WINDOW.minutes.ago )
 
@@ -26,29 +30,32 @@ module Routes
                 end
 
                 app.post '/api/sessions/?' do
-                    request.body.rewind
-                    body = JSON.parse( request.body.read )
+                    # {
+                    param :timeslot_id, Integer, required: true
+                    param :date, Date, required: true
+                    # }
 
                     user_needs_to_be( %w[ ENS DOC ] )
 
-                    timeslot = Timeslot[ body['timeslot_id'] ]
+                    timeslot = Timeslot[ params['timeslot_id'] ]
                     halt( 409, 'Créneau invalide' ) if timeslot.nil?
 
-                    session = Session.create( enseignant_id: user['id'],
-                                              cahier_de_textes_id: DataManagement::Accessors.create_or_get( CahierDeTextes, regroupement_id: timeslot.regroupement_id ).id,
+                    session = Session.create( author_id: user['id'],
+                                              textbook_id: DataManagement::Accessors.create_or_get( TextBook, group_id: timeslot.group_id ).id,
                                               timeslot_id: timeslot.id,
-                                              date_session: body['date_session'].to_s,
+                                              date: params['date'].to_s,
                                               ctime: Time.now,
-                                              contenu: '' )
+                                              content: '' )
 
-                    session.modifie( body )
+                    session.modify( body )
 
                     json( session.to_deep_hash )
                 end
 
                 app.put '/api/sessions/:id/?' do
-                    request.body.rewind
-                    body = JSON.parse( request.body.read )
+                    # {
+                    param :id, Integer, required: true
+                    # }
 
                     user_needs_to_be( %w[ ENS DOC ] )
 
@@ -57,12 +64,16 @@ module Routes
                     halt( 404, 'Session inconnu' ) if session.nil?
                     halt( 401, 'Session visé non modifiable' ) unless session.vtime.nil?
 
-                    session.modifie( body )
+                    session.modify( params )
 
                     json( session.to_deep_hash )
                 end
 
                 app.put '/api/sessions/:id/valide/?' do
+                    # {
+                    param :id, Integer, required: true
+                    # }
+
                     user_needs_to_be( %w[ DIR ] )
 
                     session = Session[ id: params['id'] ]
@@ -73,22 +84,33 @@ module Routes
                     json( session.to_deep_hash )
                 end
 
-                app.put '/api/sessions/:id/copie/regroupement/:regroupement_id/timeslot/:timeslot_id/date/:date/?' do
+                app.put '/api/sessions/:id/copy/group/:group_id/timeslot/:timeslot_id/date/:date/?' do
+                    # {
+                    param :id, Integer, required: true
+                    param :group_id, Integer, required: true
+                    param :timeslot_id, Integer, required: true
+                    param :date, Date, required: true
+                    # }
+
                     user_needs_to_be( %w[ ENS DOC ] )
 
                     session = Session[ id: params['id'] ]
 
                     halt( 404, 'Session inconnu' ) if session.nil?
 
-                    nouveau_session = session.copie( params['regroupement_id'], params['timeslot_id'], params['date'] )
+                    new_session = session.copy( params['group_id'], params['timeslot_id'], params['date'] )
 
                     hash = session.to_deep_hash
-                    hash[:copie_id] = nouveau_session[:id]
+                    hash[:copy_id] = new_session[:id]
 
                     json( hash )
                 end
 
                 app.delete '/api/sessions/:id/?' do
+                    # {
+                    param :id, Integer, required: true
+                    # }
+
                     user_needs_to_be( %w[ ENS DOC ] )
 
                     session = Session[ id: params['id'] ]
