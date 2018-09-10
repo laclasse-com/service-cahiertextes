@@ -16,9 +16,6 @@ script:
   - "bundle exec rspec ./spec/api ./spec/models ./spec/lib"
   - "bundle exec rubocop -D"
 
-gemfile:
-  - Gemfile
-
 services:
   - mysql
 
