@@ -28,7 +28,6 @@ require_relative './models/assignment'
 require_relative './models/structure'
 require_relative './models/import'
 require_relative './models/matchable'
-require_relative './models/models'
 require_relative './models/resource'
 require_relative './models/location'
 require_relative './models/user_parameters'
@@ -36,12 +35,10 @@ require_relative './models/user_parameters'
 require_relative './lib/helpers/auth'
 require_relative './lib/helpers/user'
 
-require_relative './routes/status'
 require_relative './routes/api/textbooks'
 require_relative './routes/api/sessions'
 require_relative './routes/api/timeslots'
 require_relative './routes/api/assignments'
-require_relative './routes/api/emplois_du_temps'
 require_relative './routes/api/structures'
 require_relative './routes/api/import'
 require_relative './routes/api/matchables'
@@ -86,8 +83,6 @@ class CdTServer < Sinatra::Base
 
         login!( request.path ) unless logged?
     end
-
-    register Routes::Status
 
     register Routes::Api::TextBooks
     register Routes::Api::Sessions
