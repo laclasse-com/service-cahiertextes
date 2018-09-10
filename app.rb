@@ -47,7 +47,6 @@ require_relative './routes/api/import'
 require_relative './routes/api/matchables'
 require_relative './routes/api/locations'
 require_relative './routes/api/assignment_types'
-require_relative './routes/api/users'
 require_relative './routes/api/user_parameters'
 
 # Application Sinatra servant de base
@@ -101,6 +100,5 @@ class CdTServer < Sinatra::Base
     register Routes::Api::ImportAPI
     register Routes::Api::Matchables
 
-    register Routes::Api::UsersAPI
     register Routes::Api::UserParametersAPI
 end
