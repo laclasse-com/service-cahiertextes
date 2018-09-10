@@ -1,15 +1,9 @@
 language: ruby
 
-sudo: true
+sudo: false
 
 rvm:
-  - "2.2.5"
-
-before_install:
-  - sudo apt-get install libmagic-dev
-  - gem update --system
-  - gem --version
-  - gem install rspec
+  - "2.5.1"
 
 before_script:
   - cp config/database.yml.sample config/database.yml
@@ -21,8 +15,6 @@ before_script:
 script:
   - "bundle exec rspec ./spec/api ./spec/models ./spec/lib"
   - "bundle exec rubocop -D"
-#  - "bundle exec reek --sort-by smelliness *.rb api lib migrations models routes views tasks spec"
-  - "make"
 
 gemfile:
   - Gemfile
@@ -32,7 +24,6 @@ services:
 
 branches:
   only:
-    # - master
     - develop
 
 notifications:
