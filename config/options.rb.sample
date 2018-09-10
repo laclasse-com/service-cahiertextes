@@ -7,19 +7,19 @@ UNDELETE_TIME_WINDOW = 5
 ENV['RACK_ENV'] = 'development'
 
 # niveau de log de l'application
-LOG_LEVEL = ''.freeze # Logger::INFO
+LOG_LEVEL = '' # Logger::INFO
 
 # Mapping HAProxy de l'application, ex : '/v3/docs'
-APP_PATH = '/ct'.freeze
+APP_PATH = '/ct'
 
 # Langage par défaut de l'application
-LANG = 'fr'.freeze
+LANG = 'fr'
 
 # Url de l'ENT
-URL_ENT = 'http://localhost'.freeze
+URL_ENT = 'http://localhost'
 
 # Url des Docs
-URL_DOCS = 'http://localhost/docs'.freeze
+URL_DOCS = 'http://localhost/docs'
 
 SSL = true
 
