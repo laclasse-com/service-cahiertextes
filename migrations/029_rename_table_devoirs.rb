@@ -31,4 +31,4 @@ Sequel.migration do
         end
     end
 end
-puts "029_rename_table_devoirs.rb"
+puts '029_rename_table_devoirs.rb'

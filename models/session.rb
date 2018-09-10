@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Session < Sequel::Model( :sessions )
     many_to_many :resources
     many_to_one :timeslot
@@ -44,14 +46,14 @@ class Session < Sequel::Model( :sessions )
             remove_all_resources
             params['resources'].each do |resource|
                 add_resource( DataManagement::Accessors.create_or_get( Resource, name: resource['name'],
-                                                                       hash: resource['hash'] ) )
+                                                                                 hash: resource['hash'] ) )
             end
         end
 
         save
     end
 
-    def copy( group_id, timeslot_id, date_session )
+    def copy( _group_id, timeslot_id, date_session )
         target_session = Session.where( timeslot_id: timeslot_id,
                                         date_session: date_session ).first
         if target_session.nil?

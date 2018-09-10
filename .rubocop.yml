@@ -6,6 +6,9 @@ AllCops:
     - tasks/**/*
     - Guardfile
 
+Layout/IndentationWidth:
+  Width: 4
+
 Style/SymbolArray:
   Enabled: false
 

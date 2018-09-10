@@ -1,4 +1,5 @@
-# coding: utf-8
+# frozen_string_literal: true
+
 module DataManagement
     # Fonctions de nettoyage des données
     module Cleansing
@@ -37,8 +38,8 @@ module DataManagement
 
         def orphan_resources
             Resource.all
-                     .select { |r| r.sessions.empty? && r.assignments.empty? }
-                     .each(&:destroy)
+                    .select { |r| r.sessions.empty? && r.assignments.empty? }
+                    .each(&:destroy)
         end
     end
 end

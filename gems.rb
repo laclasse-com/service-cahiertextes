@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 
 gem 'activesupport'
@@ -17,8 +19,8 @@ gem 'sinatra-param'
 gem 'xml-simple'
 
 group :development do
-  gem 'equivalent-xml'
-  gem 'reek'
-  gem 'rspec'
-  gem 'rubocop'
+    gem 'equivalent-xml'
+    gem 'reek'
+    gem 'rspec'
+    gem 'rubocop'
 end

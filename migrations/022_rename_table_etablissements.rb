@@ -27,4 +27,4 @@ Sequel.migration do
         end
     end
 end
-puts "022_rename_table_etablissements.rb"
+puts '022_rename_table_etablissements.rb'

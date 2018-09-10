@@ -13,9 +13,9 @@ Sequel.migration do
         DB[:structures].all.each do |structure|
             tables.each do |table|
                 alter_table( table ) do
-                    DB[ table ].where( structure_id: structure[:id] )
-                               .update( structure_uai: structure[:UAI] )
-                end
+                      DB[ table ].where( structure_id: structure[:id] )
+                                 .update( structure_uai: structure[:UAI] )
+                  end
             end
         end
 
@@ -31,4 +31,4 @@ Sequel.migration do
         drop_table :structures
     end
 end
-puts "032_drop_table_structure.rb"
+puts '032_drop_table_structure.rb'

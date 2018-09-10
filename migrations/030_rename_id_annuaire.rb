@@ -7,4 +7,4 @@ Sequel.migration do
         end
     end
 end
-puts "030_rename_id_annuaire.rb"
+puts '030_rename_id_annuaire.rb'

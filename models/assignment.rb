@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Assignment < Sequel::Model( :assignments )
     many_to_many :resources
     many_to_one :timeslot
@@ -18,7 +20,7 @@ class Assignment < Sequel::Model( :assignments )
     end
 
     def done_by?( author_id )
-        assignment_done_markers_dataset.where(author_id: author_id).count > 0
+        assignment_done_markers_dataset.where(author_id: author_id).count.positive?
     end
 
     def done_on_the( author_id )
@@ -67,7 +69,7 @@ class Assignment < Sequel::Model( :assignments )
 
             params['resources'].each do |resource|
                 add_resource( DataManagement::Accessors.create_or_get( Resource, name: resource['name'],
-                                                                       hash: resource['hash'] ) )
+                                                                                 hash: resource['hash'] ) )
             end
         end
 

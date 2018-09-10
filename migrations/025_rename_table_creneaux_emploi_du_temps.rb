@@ -31,4 +31,4 @@ Sequel.migration do
         end
     end
 end
-puts "025_rename_table_creneaux_emploi_du_temps.rb"
+puts '025_rename_table_creneaux_emploi_du_temps.rb'

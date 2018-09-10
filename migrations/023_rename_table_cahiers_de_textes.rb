@@ -16,4 +16,4 @@ Sequel.migration do
         end
     end
 end
-puts "023_rename_table_cahiers_de_textes.rb"
+puts '023_rename_table_cahiers_de_textes.rb'

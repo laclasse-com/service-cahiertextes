@@ -1,4 +1,4 @@
-# coding: utf-8
+# frozen_string_literal: true
 
 module Routes
     module Api
@@ -22,7 +22,7 @@ module Routes
                     #     textbook.statistics
                     # end
 
-                    "FIXME"
+                    'FIXME'
                 end
 
                 app.get '/api/statistics/structures/:structure_id/groups/:group_id/?' do
@@ -37,7 +37,7 @@ module Routes
 
                     # json cahier_de_textes.statistics.to_hash
 
-                    "FIXME"
+                    'FIXME'
                 end
 
                 app.get '/api/statistics/structures/:structure_id/teachers/?' do
@@ -68,7 +68,7 @@ module Routes
                     #       end }
                     # end
 
-                    "FIXME"
+                    'FIXME'
                 end
 
                 app.get '/api/statistics/structures/:structure_id/teachers/:teacher_id/?' do
@@ -105,7 +105,7 @@ module Routes
 
                     # json( sessions )
 
-                    "FIXME"
+                    'FIXME'
                 end
             end
         end

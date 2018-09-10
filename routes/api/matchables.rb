@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Routes
     module Api
         module Matchables
@@ -47,7 +49,7 @@ module Routes
 
                     fi = Matchable[ structure_id: params['structure_id'],
                                     hash_item: params['hash_item'] ]
-                    fi.destroy unless fi.nil?
+                    fi&.destroy
 
                     nil
                 end

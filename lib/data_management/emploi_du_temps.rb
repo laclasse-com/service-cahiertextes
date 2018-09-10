@@ -1,4 +1,5 @@
-# coding: utf-8
+# frozen_string_literal: true
+
 module DataManagement
     module EmploiDuTemps
         module_function
@@ -24,26 +25,26 @@ module DataManagement
                       start: Time.new( day.year, day.month, day.mday, timeslot.start.hour, timeslot.start.min ).iso8601,
                       end: Time.new( day.year, day.month, day.mday, timeslot.end.hour, timeslot.end.min ).iso8601,
                       session: timeslot.session
-                                    .select { |session| session[:deleted] == false && session.date_session == day }
-                                    .map do |session|
-                          hsession = session.to_hash
-                          hsession[:resources] = session.resources.map(&:to_hash)
+                                       .select { |session| session[:deleted] == false && session.date_session == day }
+                                       .map do |session|
+                            hsession = session.to_hash
+                            hsession[:resources] = session.resources.map(&:to_hash)
 
-                          hsession
-                      end
-                                    .first,
+                            hsession
+                        end
+                                       .first,
                       assignments: timeslot.assignments
-                                      .select { |assignment| assignment[:deleted] == false && assignment.date_due == day }
-                                      .map do |assignment|
-                          hassignment = assignment.to_hash
-                          hassignment[:resources] = assignment.resources.map(&:to_hash)
-                          hassignment[:type_assignment_description] = assignment.type_assignment.description
+                                           .select { |assignment| assignment[:deleted] == false && assignment.date_due == day }
+                                           .map do |assignment|
+                            hassignment = assignment.to_hash
+                            hassignment[:resources] = assignment.resources.map(&:to_hash)
+                            hassignment[:type_assignment_description] = assignment.type_assignment.description
 
-                          hassignment[:done] = assignment.done_by?( eleve_id ) unless eleve_id.nil?
-                          hassignment[:rtime] = assignment.done_on_the( eleve_id ) if hassignment[:done]
+                            hassignment[:done] = assignment.done_by?( eleve_id ) unless eleve_id.nil?
+                            hassignment[:rtime] = assignment.done_on_the( eleve_id ) if hassignment[:done]
 
-                          hassignment
-                      end }
+                            hassignment
+                        end }
                 end
             end
                  .flatten

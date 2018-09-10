@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../lib/utils'
 
 class TimeslotLocation < Sequel::Model( :timeslots_locations )
@@ -104,11 +106,12 @@ class Timeslot < Sequel::Model( :timeslots )
                 .select { |day| day.wday == c.weekday }
                 .map do |jour|
                 next unless c.active_weeks[jour.cweek] == 1
+
                 { id: c.id,
                   timeslot_id: c.id,
                   start_time: Time.new( jour.year, jour.month, jour.mday, c.start_time.hour, c.start_time.min ).iso8601,
                   end_time: Time.new( jour.year, jour.month, jour.mday, c.end_time.hour, c.end_time.min ).iso8601,
-                  has_session: c.session.count { |session| session.date_session == jour } > 0,
+                  has_session: c.session.count { |session| session.date_session == jour }.positive?,
                   weekday: c.weekday,
                   subject_id: c.subject_id,
                   group_id: c.group_id,

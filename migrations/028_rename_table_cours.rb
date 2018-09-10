@@ -24,4 +24,4 @@ Sequel.migration do
         end
     end
 end
-puts "028_rename_table_cours.rb"
+puts '028_rename_table_cours.rb'

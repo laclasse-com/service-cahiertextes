@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative './app'
 
 STDERR.puts "#{ENV['RACK_ENV']} environment"
@@ -7,5 +9,5 @@ use Rack::NestedParams
 use Rack::PostBodyContentTypeParser
 
 map "#{APP_PATH}/" do
-  run CdTServer
+    run CdTServer
 end

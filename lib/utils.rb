@@ -1,4 +1,5 @@
-# coding: utf-8
+# frozen_string_literal: true
+
 require 'open-uri'
 require 'icalendar'
 
@@ -45,7 +46,7 @@ module Utils
         Date.parse( "#{Date.today.month > 8 ? Date.today.year : Date.today.year - 1}-08-15" )
     end
 
-  def deep_dup( thing )
-    Marshal.load( Marshal.dump( thing ) )
-  end
+    def deep_dup( thing )
+        Marshal.load( Marshal.dump( thing ) )
+    end
 end

@@ -17,4 +17,4 @@ Sequel.migration do
         end
     end
 end
-puts "027_rename_table_ressources.rb"
+puts '027_rename_table_ressources.rb'

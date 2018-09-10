@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Routes
     module Api
         module AssignmentTypes
@@ -7,7 +9,7 @@ module Routes
                 end
 
                 app.get '/api/assignment_types/:id/?' do
-                    #{
+                    # {
                     param :id, Integer, required: true
                     # }
 

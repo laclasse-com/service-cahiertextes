@@ -14,4 +14,4 @@ Sequel.migration do
         end
     end
 end
-puts "031_drop_column_schoolyear_and_fdofw.rb"
+puts '031_drop_column_schoolyear_and_fdofw.rb'

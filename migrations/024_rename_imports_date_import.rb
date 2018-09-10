@@ -7,4 +7,4 @@ Sequel.migration do
         end
     end
 end
-puts "024_rename_imports_date_import.rb"
+puts '024_rename_imports_date_import.rb'

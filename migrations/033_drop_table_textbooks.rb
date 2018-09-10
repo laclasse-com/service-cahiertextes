@@ -9,4 +9,4 @@ Sequel.migration do
         drop_table :textbooks
     end
 end
-puts "033_drop_table_textbooks.rb"
+puts '033_drop_table_textbooks.rb'
