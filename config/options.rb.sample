@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Fenêtre de temps en minutes durant laquelle les cours et devoirs effacés restent accessibles par les APIs get
 UNDELETE_TIME_WINDOW = 5
 
