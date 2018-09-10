@@ -11,7 +11,6 @@ class Timeslot < Sequel::Model( :timeslots )
     many_to_many :locations, class: :Location, join_table: :timeslots_locations
     one_to_many :sessions
     one_to_many :assignments
-    many_to_one :structures, class: :Structure, key: :structure_id
     many_to_one :import, class: :Import, key: :import_id
 
     def toggle_deleted( dtime )

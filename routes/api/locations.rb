@@ -21,18 +21,15 @@ module Routes
 
                 app.post '/api/locations/?' do
                     # {
-                    param :uai, String, required: true
+                    param :structure_id, String, required: true
                     param :name, String, required: true
                     param :label, String, required: true
                     # }
 
-                    structure = Structure.where(uai: params['uai']).first
-                    halt( 404, "Établissement #{params[:uai]} inconnu" ) if structure.nil?
-
                     location = DataManagement::Accessors.create_or_get( Location,
                                                                         label: params['label'] )
                     location.update( name: params['name'],
-                                     structure_id: structure.id )
+                                     structure_id: params['structure_id'] )
                     location.save
 
                     json( location )
@@ -46,13 +43,10 @@ module Routes
                     user_needs_to_be( %w[ ADM DIR ] )
 
                     json( params['locations'].map do |location|
-                              structure = Structure.where(uai: location['uai']).first
-                              halt( 404, "Établissement #{params[:uai]} inconnu" ) if structure.nil?
-
                               new_location = DataManagement::Accessors.create_or_get( Location,
                                                                                       label: location['label'] )
                               new_location.update( nom: location['nom'],
-                                                   structure_id: structure.id )
+                                                   structure_id: location['structure_id'] )
                               new_location.save
 
                               new_location.to_hash
@@ -62,7 +56,7 @@ module Routes
                 app.put '/api/locations/:id/?' do
                     # {
                     param :id, Integer, require: true
-                    param :uai, String, required: true
+                    param :structure_id, String, required: true
                     param :name, String, required: true
                     param :label, String, required: true
                     # }
@@ -71,11 +65,7 @@ module Routes
 
                     halt( 404, "Location #{params[:id]} inconnue" ) if location.nil?
 
-                    structure = Structure.where(uai: params['uai']).first
-
-                    halt( 404, "Établissement #{params['uai']} inconnu" ) if structure.nil?
-
-                    location.structure_id = structure.id
+                    location.structure_id = params['structure_id']
 
                     location.label = params['label']
                     location.nom = params['name']

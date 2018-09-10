@@ -63,16 +63,13 @@ module Routes
 
                     user_needs_to_be( %w[ ENS DOC ] )
 
-                    structure = DataManagement::Accessors.create_or_get( Structure,
-                                                                         UAI: user_active_profile['structure_id'] )
-
                     timeslot = Timeslot.create( ctime: Time.now,
                                                 start: params['start'],
                                                 end: params['end'],
                                                 weekday: params['weekday'].to_i - 1,
                                                 subject_id: params['subject_id'],
                                                 group_id: params['group_id'],
-                                                structure_id: structure.id )
+                                                structure_id: user_active_profile['structure_id'] )
 
                     timeslot.modify( params )
 
@@ -84,9 +81,6 @@ module Routes
                     param :timeslots, Array, required: true
                     # }
 
-                    structure = DataManagement::Accessors.create_or_get( Structure,
-                                                                         UAI: params['uai'] )
-
                     json( params['timeslots'].map do |timeslot|
                               new_timeslot = Timeslot.create( ctime: Time.now,
                                                               start: timeslot['start'],
@@ -94,7 +88,7 @@ module Routes
                                                               weekday: timeslot['weekday'] - 1,
                                                               subject_id: timeslot['subject_id'],
                                                               group_id: timeslot['group_id'],
-                                                              structure_id: structure.id )
+                                                              structure_id: params['structure_id'] )
                               new_timeslot.modify( timeslot )
 
                               new_timeslot.to_hash

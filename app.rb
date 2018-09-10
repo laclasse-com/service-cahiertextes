@@ -25,7 +25,6 @@ require_relative './models/textbook'
 require_relative './models/session'
 require_relative './models/timeslot'
 require_relative './models/assignment'
-require_relative './models/structure'
 require_relative './models/import'
 require_relative './models/matchable'
 require_relative './models/resource'
@@ -39,7 +38,7 @@ require_relative './routes/api/textbooks'
 require_relative './routes/api/sessions'
 require_relative './routes/api/timeslots'
 require_relative './routes/api/assignments'
-require_relative './routes/api/structures'
+require_relative './routes/api/statistics'
 require_relative './routes/api/import'
 require_relative './routes/api/matchables'
 require_relative './routes/api/locations'
@@ -88,12 +87,13 @@ class CdTServer < Sinatra::Base
     register Routes::Api::Sessions
     register Routes::Api::Timeslots
     register Routes::Api::Assignments
-    register Routes::Api::Structures
     register Routes::Api::Locations
     register Routes::Api::AssignmentTypes
 
     register Routes::Api::ImportAPI
     register Routes::Api::Matchables
+
+    register Routes::Api::Statistics
 
     register Routes::Api::UserParametersAPI
 end

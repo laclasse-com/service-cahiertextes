@@ -29,16 +29,12 @@ module Routes
 
                 app.post '/api/import/log/start/?' do
                     # {
-                    param :uai, String, required: true
+                    param :structure_id, String, required: true
                     param :type, String, required: false
                     param :comment, String, required: false
                     # }
 
-                    etablissement = Structure.where(uai: params['uai']).first
-
-                    halt( 404, "Établissement #{params[:uai]} inconnu" ) if structure.nil?
-
-                    json( Import.create( structure_id: structure.id,
+                    json( Import.create( structure_id: params['structure_id'],
                                          ctime: Sequel::SQLTime.now,
                                          type: params.key?( :type ) ? params[:type] : '',
                                          comment: params.key?( :comment ) ? params[:comment] : '' ).to_hash )
