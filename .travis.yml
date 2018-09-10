@@ -2,9 +2,6 @@ language: ruby
 
 sudo: false
 
-rvm:
-  - "2.5.1"
-
 before_script:
   - cp config/database.yml.sample config/database.yml
   - cp config/options.rb.sample config/options.rb
