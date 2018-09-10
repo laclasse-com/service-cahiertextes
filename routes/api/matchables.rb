@@ -33,7 +33,7 @@ module Routes
                     # {
                     param :uai, String, required: true
                     param :hash_item, String, required: true
-                    param :id_annuaire, String, required: true
+                    param :known_id, String, required: true
                     # }
 
                     etab = Structure[ UAI: params['uai'] ]
@@ -42,7 +42,7 @@ module Routes
                     fi = Matchable[ structure_id: etab.id, hash_item: params['hash_item'] ]
                     fi = Matchable.create( structure_id: etab.id, hash_item: params['hash_item'] ) if fi.nil?
 
-                    fi.update( id_annuaire: params['id_annuaire'] )
+                    fi.update( known_id: params['known_id'] )
                     fi.save
 
                     json( fi.to_hash )
