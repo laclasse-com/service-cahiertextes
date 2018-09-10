@@ -41,7 +41,6 @@ module Routes
                     halt( 409, 'Créneau invalide' ) if timeslot.nil?
 
                     session = Session.create( author_id: user['id'],
-                                              textbook_id: DataManagement::Accessors.create_or_get( TextBook, group_id: timeslot.group_id ).id,
                                               timeslot_id: timeslot.id,
                                               date: params['date'].to_s,
                                               ctime: Time.now,

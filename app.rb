@@ -21,7 +21,6 @@ Sequel::Model.plugin( :json_serializer )
 
 require_relative './lib/utils'
 
-require_relative './models/textbook'
 require_relative './models/session'
 require_relative './models/timeslot'
 require_relative './models/assignment'
@@ -34,7 +33,6 @@ require_relative './models/user_parameters'
 require_relative './lib/helpers/auth'
 require_relative './lib/helpers/user'
 
-require_relative './routes/api/textbooks'
 require_relative './routes/api/sessions'
 require_relative './routes/api/timeslots'
 require_relative './routes/api/assignments'
@@ -83,12 +81,12 @@ class CdTServer < Sinatra::Base
         login!( request.path ) unless logged?
     end
 
-    register Routes::Api::TextBooks
-    register Routes::Api::Sessions
     register Routes::Api::Timeslots
+    register Routes::Api::Sessions
     register Routes::Api::Assignments
-    register Routes::Api::Locations
+
     register Routes::Api::AssignmentTypes
+    register Routes::Api::Locations
 
     register Routes::Api::ImportAPI
     register Routes::Api::Matchables

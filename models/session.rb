@@ -1,7 +1,6 @@
 class Session < Sequel::Model( :sessions )
     many_to_many :resources
     many_to_one :timeslot
-    many_to_one :textbook
     one_to_many :assignments
 
     def to_deep_hash
@@ -53,15 +52,10 @@ class Session < Sequel::Model( :sessions )
     end
 
     def copy( group_id, timeslot_id, date_session )
-        textbook = TextBook.where( group_id: group_id ).first
-        textbook = TextBook.create( ctime: Time.now, group_id: group_id ) if textbook.nil?
-
-        target_session = Session.where( textbook_id: textbook.id,
-                                        timeslot_id: timeslot_id,
+        target_session = Session.where( timeslot_id: timeslot_id,
                                         date_session: date_session ).first
         if target_session.nil?
-            target_session = Session.create( textbook_id: textbook.id,
-                                             timeslot_id: timeslot_id,
+            target_session = Session.create( timeslot_id: timeslot_id,
                                              date_session: date_session,
                                              ctime: Time.now,
                                              content: content,

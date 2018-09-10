@@ -88,7 +88,6 @@ module Routes
                                          .first
                         if session.nil?
                             session = Session.create( enseignant_id: user['id'],
-                                                      textbook_id: DataManagement::Accessors.create_or_get( TextBook, regroupement_id: timeslot.regroupement_id ).id,
                                                       timeslot_id: timeslot.id,
                                                       date_session: params['date_due'],
                                                       ctime: Time.now,
