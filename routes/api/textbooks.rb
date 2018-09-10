@@ -6,17 +6,13 @@ module Routes
                     # {
                     param :group_id, Integer, required: true
                     param :label, String, required: true
-                    param :schoolyear_start, Date, required: true
-                    param :schoolyear_end, Date, required: true
                     # }
 
                     user_needs_to_be( %w[ ADM DIR ] )
 
                     ct = DataManagement::Accessors.create_or_get( TextBook,
                                                                   group_id: params['group_id'])
-                    ct.update( schoolyear_start: params['schoolyear_start'],
-                               schoolyear_end: params['schoolyear_end'],
-                               label: params['label'] )
+                    ct.update( label: params['label'] )
                     ct.save
 
                     json( ct )
@@ -32,9 +28,7 @@ module Routes
                     json( params['textbooks'].map do |ct|
                               new_ct = DataManagement::Accessors.create_or_get( TextBook,
                                                                                 group_id: ct['group_id'])
-                              new_ct.update( schoolyear_start: ct['schoolyear_start'],
-                                             schoolyear_end: ct['schoolyear_end'],
-                                             label: ct['label'] )
+                              new_ct.update( label: ct['label'] )
                               new_ct.save
 
                               new_ct.to_hash

@@ -26,17 +26,11 @@ module Routes
                 app.post '/api/structures/:uai/?' do
                     # {
                     param :uai, String, required: true
-                    param :schoolyear_start, Date, required: true
-                    param :schoolyear_end, Date, required: true
-                    param :first_day_of_first_week, Date, required: true
                     # }
 
                     structure = DataManagement::Accessors.create_or_get( Structure,
                                                                          UAI: params['uai'] )
 
-                    structure.schoolyear_start = params['schoolyear_start'] if params.key?( 'schoolyear_start' )
-                    structure.schoolyear_end = params['schoolyear_end'] if params.key?( 'schoolyear_end' )
-                    structure.first_day_of_first_week = params['first_day_of_first_week'] if params.key?( 'first_day_of_first_week' )
                     structure.save
 
                     json structure.to_hash
