@@ -1,3 +1,4 @@
+# coding: utf-8
 # frozen_string_literal: true
 
 module Routes
@@ -108,34 +109,29 @@ module Routes
                     param :id, Integer, required: true
                     # }
 
-                    user_needs_to_be( %w[ ENS DOC ] )
-
                     assignment = Assignment[ params['id'] ]
                     halt( 404, 'Assignment inconnu' ) if assignment.nil?
-                    params['enseignant_id'] = user['id']
 
-                    assignment.modify( params )
+                    if params.key?( 'done' )
+                        user_needs_to_be( %w[ ELV ] )
+
+                        assignment.done_by?( user['id'] ) ? assignment.to_be_done_by!( user['id'] ) : assignment.done_by!( user['id'] )
+
+                        hd = assignment.to_deep_hash
+                        dti = AssignmentTodoItem[ assignment_id: assignment.id, author_id: user['id'] ]
+                        hd[:rtime] = dti.rtime unless dti.nil?
+                        hd[:done] = !dti.nil?
+
+                        json( hd )
+                    else
+                        user_needs_to_be( %w[ ENS DOC ] )
+
+                        params['enseignant_id'] = user['id']
+
+                        assignment.modify( params )
+                    end
 
                     json( assignment.to_deep_hash )
-                end
-
-                app.put '/api/assignments/:id/done/?' do
-                    # {
-                    param :id, Integer, required: true
-                    # }
-
-                    user_needs_to_be( %w[ ELV ] )
-
-                    assignment = Assignment[ params['id'] ]
-
-                    assignment.toggle_done( user )
-
-                    hd = assignment.to_deep_hash
-                    dti = AssignmentTodoItem[ assignment_id: assignment.id, author_id: user['id'] ]
-                    hd[:rtime] = dti.rtime unless dti.nil?
-                    hd[:done] = !dti.nil?
-
-                    json( hd )
                 end
 
                 app.delete '/api/assignments/:id/?' do
@@ -147,7 +143,8 @@ module Routes
 
                     assignment = Assignment[ params['id'] ]
 
-                    assignment.toggle_deleted
+                    assignment.update( deleted: !assignment.deleted, mtime: Time.now )
+                    assignment.save
 
                     json( assignment.to_deep_hash )
                 end

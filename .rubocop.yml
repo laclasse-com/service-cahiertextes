@@ -21,6 +21,9 @@ Layout/SpaceInsidePercentLiteralDelimiters:
 Layout/SpaceInsideReferenceBrackets:
   Enabled: false
 
+Layout/SpaceInsideArrayLiteralBrackets:
+  Enabled: false
+
 Naming/AsciiIdentifiers:
   Enabled: false
 

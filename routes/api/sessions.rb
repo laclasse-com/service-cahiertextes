@@ -1,3 +1,4 @@
+# coding: utf-8
 # frozen_string_literal: true
 
 require_relative '../../models/session'
@@ -57,29 +58,21 @@ module Routes
                     param :id, Integer, required: true
                     # }
 
-                    user_needs_to_be( %w[ ENS DOC ] )
-
                     session = Session[ id: params['id'] ]
 
                     halt( 404, 'Session inconnu' ) if session.nil?
                     halt( 401, 'Session visé non modifiable' ) unless session.vtime.nil?
 
-                    session.modify( params )
+                    if params.key?( 'validated' )
+                        user_needs_to_be( %w[ DIR ] )
 
-                    json( session.to_deep_hash )
-                end
+                        session.vtime = session.vtime.nil? ? Time.now : nil
 
-                app.put '/api/sessions/:id/valide/?' do
-                    # {
-                    param :id, Integer, required: true
-                    # }
-
-                    user_needs_to_be( %w[ DIR ] )
-
-                    session = Session[ id: params['id'] ]
-                    halt( 404, 'Session inconnu' ) if session.nil?
-
-                    session.toggle_validated
+                        session.save
+                    else
+                        user_needs_to_be( %w[ ENS DOC ] )
+                        session.modify( params )
+                    end
 
                     json( session.to_deep_hash )
                 end
@@ -117,7 +110,17 @@ module Routes
                     halt( 404, 'Session inconnu' ) if session.nil?
                     halt( 401, 'Session visé non modifiable' ) unless session.vtime.nil?
 
-                    session.toggle_deleted
+                    session.update( deleted: !session.deleted, mtime: Time.now )
+                    session.save
+
+                    session.assignments.each do |assignment|
+                        if session.deleted
+                            assignment.update( deleted: session.deleted, mtime: Time.now )
+                        elsif assignment.mtime <= UNDELETE_TIME_WINDOW.minutes.ago
+                            assignment.update( deleted: session.deleted, mtime: Time.now )
+                        end
+                        assignment.save
+                    end
 
                     json( session.to_deep_hash )
                 end

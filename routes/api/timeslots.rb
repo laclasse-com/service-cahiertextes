@@ -1,3 +1,4 @@
+# coding: utf-8
 # frozen_string_literal: true
 
 module Routes
@@ -54,45 +55,45 @@ module Routes
 
                 app.post '/api/timeslots/?' do
                     # {
-                    param :group_id, Integer, required: true
-                    param :subject_id, Integer, required: true
-                    param :weekday, Integer, required: true
-                    param :start, Date, required: true
-                    param :end, Date, required: true
+                    param :group_id, Integer
+                    param :subject_id, Integer
+                    param :weekday, Integer
+                    param :start, Date
+                    param :end, Date
+
+                    param :timeslots, Array
+
+                    one_of :timeslots, :group_id
                     # }
 
-                    user_needs_to_be( %w[ ENS DOC ] )
+                    user_needs_to_be( %w[ ENS DOC ADM DIR ] )
 
-                    timeslot = Timeslot.create( ctime: Time.now,
-                                                start: params['start'],
-                                                end: params['end'],
-                                                weekday: params['weekday'].to_i - 1,
-                                                subject_id: params['subject_id'],
-                                                group_id: params['group_id'],
-                                                structure_id: user_active_profile['structure_id'] )
+                    single = !params.key?( 'timeslots' )
 
-                    timeslot.modify( params )
+                    if single
+                        params['timeslots'] = [ { weekday: params['weekday'],
+                                                  start: params['start'],
+                                                  end: params['end'],
+                                                  group_id: params['group_id'],
+                                                  subject_id: params['subject_id'] } ]
+                    end
 
-                    json( timeslot.to_hash )
-                end
+                    result = params['timeslots'].map do |timeslot|
+                        new_timeslot = Timeslot.create( ctime: Time.now,
+                                                        start: timeslot['start'],
+                                                        end: timeslot['end'],
+                                                        weekday: timeslot['weekday'] - 1,
+                                                        subject_id: timeslot['subject_id'],
+                                                        group_id: timeslot['group_id'],
+                                                        structure_id: params['structure_id'] )
+                        new_timeslot.modify( timeslot )
 
-                app.post '/api/timeslots/bulk/?' do
-                    # {
-                    param :timeslots, Array, required: true
-                    # }
+                        new_timeslot.to_hash
+                    end
 
-                    json( params['timeslots'].map do |timeslot|
-                              new_timeslot = Timeslot.create( ctime: Time.now,
-                                                              start: timeslot['start'],
-                                                              end: timeslot['end'],
-                                                              weekday: timeslot['weekday'] - 1,
-                                                              subject_id: timeslot['subject_id'],
-                                                              group_id: timeslot['group_id'],
-                                                              structure_id: params['structure_id'] )
-                              new_timeslot.modify( timeslot )
+                    result = result.first if single
 
-                              new_timeslot.to_hash
-                          end )
+                    json( result )
                 end
 
                 app.put '/api/timeslots/:id/?' do
@@ -126,7 +127,9 @@ module Routes
                     if timeslot.subject_id.empty? && timeslot.sessions.empty? && timeslot.assignments.empty?
                         timeslot.deep_destroy
                     else
-                        timeslot.toggle_deleted( params['dtime'] )
+                        timeslot.update( deleted: !timeslot.deleted, dtime: deleted ? nil : params['dtime'] )
+
+                        timeslot.save
                     end
 
                     json( timeslot.to_hash )

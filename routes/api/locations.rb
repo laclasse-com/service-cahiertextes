@@ -21,36 +21,38 @@ module Routes
 
                 app.post '/api/locations/?' do
                     # {
-                    param :structure_id, String, required: true
-                    param :name, String, required: true
-                    param :label, String, required: true
-                    # }
+                    param :structure_id
+                    param :label, String
+                    param :name, String
 
-                    location = DataManagement::Accessors.create_or_get( Location,
-                                                                        label: params['label'] )
-                    location.update( name: params['name'],
-                                     structure_id: params['structure_id'] )
-                    location.save
+                    param :locations, Array
 
-                    json( location )
-                end
-
-                app.post '/api/locations/bulk/?' do
-                    # {
-                    param :locations, Array, required: true
+                    one_of :label, :locations
                     # }
 
                     user_needs_to_be( %w[ ADM DIR ] )
 
-                    json( params['locations'].map do |location|
-                              new_location = DataManagement::Accessors.create_or_get( Location,
-                                                                                      label: location['label'] )
-                              new_location.update( nom: location['nom'],
-                                                   structure_id: location['structure_id'] )
-                              new_location.save
+                    single = !params.key?( 'locations' )
+                    if single
+                        params['locations'] = [ { structure_id: params['structure_id'],
+                                                  label: params['label'],
+                                                  name: params['name'] } ]
+                    end
 
-                              new_location.to_hash
-                          end )
+                    result = json( params['locations'].map do |location|
+                                       new_location = DataManagement::Accessors.create_or_get( Location,
+                                                                                               structure_id: location['structure_id'],
+                                                                                               label: location['label'] )
+
+                                       new_location.name = location['name']
+                                       new_location.save
+
+                                       new_location.to_hash
+                                   end )
+
+                    result = result.first if single
+
+                    json( result.to_hash )
                 end
 
                 app.put '/api/locations/:id/?' do
@@ -68,7 +70,7 @@ module Routes
                     location.structure_id = params['structure_id']
 
                     location.label = params['label']
-                    location.nom = params['name']
+                    location.name = params['name']
                     location.save
 
                     json( location )

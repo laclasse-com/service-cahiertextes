@@ -18,26 +18,6 @@ class Session < Sequel::Model( :sessions )
         hash
     end
 
-    def toggle_deleted
-        update( deleted: !deleted, mtime: Time.now )
-        save
-
-        assignments.each do |assignment|
-            if deleted
-                assignment.update( deleted: deleted, mtime: Time.now )
-            elsif assignment.mtime <= UNDELETE_TIME_WINDOW.minutes.ago
-                assignment.update( deleted: deleted, mtime: Time.now )
-            end
-            assignment.save
-        end
-    end
-
-    def toggle_validated
-        self.vtime = vtime.nil? ? Time.now : nil
-
-        save
-    end
-
     def modify( params )
         self.content = params['content']
         self.mtime = Time.now

@@ -31,15 +31,6 @@ class Assignment < Sequel::Model( :assignments )
         assignment_done_markers_dataset.where(author_id: author_id).destroy
     end
 
-    def toggle_deleted
-        update( deleted: !deleted, mtime: Time.now )
-        save
-    end
-
-    def toggle_done( user )
-        done_by?( user['id'] ) ? to_be_done_by!( user['id'] ) : done_by!( user['id'] )
-    end
-
     def copy( session_id, timeslot_id, date_due )
         new_assignment = Assignment.create( session_id: session_id,
                                             assignment_type_id: assignment_type_id,

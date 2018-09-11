@@ -15,12 +15,6 @@ class Timeslot < Sequel::Model( :timeslots )
     one_to_many :assignments
     many_to_one :import, class: :Import, key: :import_id
 
-    def toggle_deleted( dtime )
-        update( deleted: !deleted, dtime: deleted ? nil : dtime )
-
-        save
-    end
-
     def to_hash
         h = super
         h.each { |k, v| h[k] = v.iso8601 if v.is_a?( Time ) }
@@ -34,61 +28,6 @@ class Timeslot < Sequel::Model( :timeslots )
         details.each { |detail| h[ detail.to_sym ] = send( detail ) if self.class.method_deended?( detail ) }
 
         h
-    end
-
-    def duplicates
-        Timeslot
-            .select_append( :timeslots__id___id )
-            .where( Sequel.~( timeslots__id: id ) )
-            .where( subject_id: subject_id )
-            .where( weekday: weekday )
-            .where( group_id: group_id )
-            .where( active_weeks: active_weeks )
-            .where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{Utils.date_rentree}'" ) )
-            .where( deleted: false )
-    end
-
-    # attach session and assignments to this timeslot and destroy other_timeslot
-    def merge( timeslot_id )
-        other_timeslot = Timeslot[timeslot_id]
-        return false if other_timeslot.nil?
-
-        other_timeslot.sessions.each do |session|
-            session.update( timeslot_id: id )
-            session.save
-        end
-        other_timeslot.assignments.each do |assignment|
-            assignment.update( timeslot_id: id )
-            assignment.save
-        end
-    end
-
-    def merge_twins
-        return [] if deleted
-
-        duplicates.select(:timeslot__id)
-                  .naked
-                  .all
-                  .map do |twin_id|
-            twin = Timeslot[ twin_id[:id] ]
-            next if twin.deleted
-
-            merge( twin.id )
-
-            twin.id
-        end
-    end
-
-    def merge_and_destroy_twins( truly_destroy = false )
-        merge_twins.map do |twin_id|
-            if truly_destroy
-                Timeslot[twin_id].deep_destroy
-            else
-                Timeslot[twin_id].toggle_deleted( Time.now )
-            end
-
-            twin_id
-        end
     end
 
     def similar( groups_ids, date_start, date_end )
