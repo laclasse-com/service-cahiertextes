@@ -31,6 +31,7 @@ require_relative './models/user_parameters'
 
 require_relative './lib/helpers/auth'
 require_relative './lib/helpers/user'
+require_relative './lib/helpers/stats'
 
 require_relative './routes/api/sessions'
 require_relative './routes/api/timeslots'
@@ -50,6 +51,7 @@ class CdTServer < Sinatra::Base
 
     helpers LaClasse::Helpers::Auth
     helpers LaClasse::Helpers::User
+    helpers LaClasse::Helpers::Stats
 
     configure :production, :development do
         set :protection, true
