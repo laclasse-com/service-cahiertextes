@@ -33,7 +33,7 @@ module LaClasse
                         ts_req = ts_req.where(group_id: groups_ids) unless groups_ids.nil?
                         ts_req = ts_req.where(subject_id: subjects_ids) unless subjects_ids.nil?
 
-                        req = req.where(timeslot_id: ts_req) )
+                        req = req.where(timeslot_id: ts_req)
                     end
 
                     req
