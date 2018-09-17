@@ -6,6 +6,19 @@ module Routes
         module Assignments
             def self.registered( app )
                 app.get '/api/assignments/?' do
+                    # {
+                    param 'enseignants_ids', Array
+                    param 'timeslots_ids', Array
+                    param 'groups_ids', Array
+                    param 'sessions_ids', Array
+                    param 'date_due', Date
+                    param 'date_due<', Date
+                    param 'date_due>', Date
+                    param 'include_deleted', Boolean
+                    param 'check_done', Boolean
+                    param 'uid', String
+                    # }
+
                     halt( 401, '401 Unauthorized' ) unless !params.key?('uid') || ( user['id'] == params['uid'] ||
                                                                                     !user['children'].find { |child| child['child_id'] == params['uid'] }.nil? )
 
@@ -40,7 +53,7 @@ module Routes
 
                 app.get '/api/assignments/:id/?' do
                     # {
-                    param :id, Integer, required: true
+                    param 'id', Integer, required: true
                     # }
 
                     assignment = Assignment[ params['id'] ]
@@ -58,13 +71,13 @@ module Routes
 
                 app.post '/api/assignments/?' do
                     # {
-                    param :timeslot_id, Integer, required: true
-                    param :assignment_type_id, Integer, required: true
-                    param :content, String, required: true
-                    param :date_due, Date, required: true
-                    param :time_estimate, Integer, required: true
+                    param 'timeslot_id', Integer, required: true
+                    param 'assignment_type_id', Integer, required: true
+                    param 'content', String, required: true
+                    param 'date_due', Date, required: true
+                    param 'time_estimate', Integer, required: true
 
-                    param :session_id, Integer, required: false
+                    param 'session_id', Integer, required: false
                     # }
 
                     user_needs_to_be( %w[ ENS DOC ] )
@@ -106,7 +119,7 @@ module Routes
 
                 app.put '/api/assignments/:id/?' do
                     # {
-                    param :id, Integer, required: true
+                    param 'id', Integer, required: true
                     # }
 
                     assignment = Assignment[ params['id'] ]
@@ -136,7 +149,7 @@ module Routes
 
                 app.delete '/api/assignments/:id/?' do
                     # {
-                    param :id, Integer, required: true
+                    param 'id', Integer, required: true
                     # }
 
                     user_needs_to_be( %w[ ENS DOC ] )
@@ -149,12 +162,12 @@ module Routes
                     json( assignment.to_deep_hash )
                 end
 
-                app.put '/api/assignments/:id/copy/session/:session_id/timeslot/:timeslot_id/date_due/:date_due' do
+                app.post '/api/assignments/:id/copy/session/:session_id/timeslot/:timeslot_id/date_due/:date_due' do
                     # {
-                    param :id, Integer, required: true
-                    param :session_id, Integer, required: true
-                    param :timeslot_id, Integer, required: true
-                    param :date_due, Date, required: true
+                    param 'id', Integer, required: true
+                    param 'session_id', Integer, required: true
+                    param 'timeslot_id', Integer, required: true
+                    param 'date_due', Date, required: true
                     # }
 
                     user_needs_to_be( %w[ ENS DOC ] )
@@ -162,9 +175,20 @@ module Routes
                     assignment = Assignment[ params['id'] ]
                     halt( 404, 'Assignment inconnu' ) if assignment.nil?
 
-                    assignment.copy( params['session_id'], params['timeslot_id'], params['date_due'] )
+                    new_assignment = Assignment.create( session_id: params['session_id'],
+                                                        assignment_type_id: assignment.assignment_type_id,
+                                                        timeslot_id: params['timeslot_id'],
+                                                        content: assignment.content,
+                                                        date_due: params['date_due'],
+                                                        time_estimate: assignment.time_estimate,
+                                                        author_id: assignment.author_id,
+                                                        ctime: Time.now )
 
-                    json( assignment.to_deep_hash )
+                    assignment.resources.each do |resource|
+                        new_assignment.add_resource( resource )
+                    end
+
+                    json( new_assignment.to_deep_hash )
                 end
             end
         end

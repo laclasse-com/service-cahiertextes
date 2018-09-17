@@ -1,3 +1,4 @@
+# coding: utf-8
 # frozen_string_literal: true
 
 module Routes
@@ -6,106 +7,80 @@ module Routes
             def self.registered( app )
                 app.get '/api/statistics/structures/:structure_id/groups/?' do
                     # {
-                    param :structure_id, String, required: true
+                    param 'structure_id', String, required: true
                     # }
 
-                    # etab = JSON.parse( RestClient::Request.execute( method: :get,
-                    #                                                 url: "#{URL_ENT}/api/structures/#{values[:UAI]}",
-                    #                                                 user: ANNUAIRE[:app_id],
-                    #                                                 password: ANNUAIRE[:api_key] ) )
+                    etab = JSON.parse( RestClient::Request.execute( method: :get,
+                                                                    url: "#{URL_ENT}/api/structures/#{values[:UAI]}",
+                                                                    user: ANNUAIRE[:app_id],
+                                                                    password: ANNUAIRE[:api_key] ) )
 
-                    # halt( 404, "Établissement #{params['structure_id']} inconnu" ) if etab.nil?
+                    halt( 404, "Établissement #{params['structure_id']} inconnu" ) if etab.nil?
 
-                    # json etab['groups'].map do |group|
-                    #     textbook = TextBook[ group_id: group['id'] ]
-                    #     textbook = TextBook.create( ctime: Time.now, group_id: group['id'] ) if textbook.nil?
-                    #     textbook.statistics
-                    # end
-
-                    'FIXME'
+                    result = {}
+                    json etab['groups'].each do |group|
+                        result[ group['id'] ] = group_stats( group['id'] )
+                    end
                 end
 
                 app.get '/api/statistics/structures/:structure_id/groups/:group_id/?' do
                     # {
-                    param :structure_id, String, required: true
-                    param :group_id, Integer, required: true
+                    param 'structure_id', String, required: true
+                    param 'group_id', Integer, required: true
                     # }
 
-                    # cahier_de_textes = CahierDeTextes[ regroupement_id: params['group_id'] ]
-
-                    # halt( 404, "Classe #{params['group_id']} inconnue dans l'établissement #{params['structure_id']}" ) if cahier_de_textes.nil?
-
-                    # json cahier_de_textes.statistics.to_hash
-
-                    'FIXME'
+                    json( group_stats( params['group_id'] ) )
                 end
 
                 app.get '/api/statistics/structures/:structure_id/teachers/?' do
                     # {
-                    param :structure_id, String, required: true
+                    param 'structure_id', String, required: true
+                    param 'from', Date
+                    param 'to', Date
+                    param 'groups_ids', Array
+                    param 'subjects_ids', Array
                     # }
 
-                    # teachers = JSON.parse( RestClient::Request.execute( method: :get,
-                    #                                                     url: "#{URL_ENT}/api/profiles/?type=ENS&structure_id=#{values[:UAI]}",
-                    #                                                     user: ANNUAIRE[:app_id],
-                    #                                                     password: ANNUAIRE[:api_key] ) )
+                    teachers = JSON.parse( RestClient::Request.execute( method: :get,
+                                                                        url: "#{URL_ENT}/api/profiles/?type=ENS&structure_id=#{values[:UAI]}",
+                                                                        user: ANNUAIRE[:app_id],
+                                                                        password: ANNUAIRE[:api_key] ) )
 
-                    # halt( 404, "Établissement #{params['structure_id']} inconnu" ) if teachers.nil?
+                    halt( 404, "Établissement #{params['structure_id']} inconnu" ) if teachers.nil?
 
-                    # json teachers.map do |author|
-                    #     { author_id: author['user_id'],
-                    #       classes: sessions_author( author['user_id'] )[:sessions]
-                    #           .group_by { |s| s[:group_id] }
-                    #           .map do |group_id, group_sessions|
-                    #           { group_id: group_id,
-                    #             statistics: group_sessions
-                    #                 .group_by { |rs| rs[:mois] }
-                    #                 .map do |mois, mois_sessions|
-                    #                 { month: mois,
-                    #                   validated: mois_sessions.count { |s| s[:valide] },
-                    #                   filled: mois_sessions.count }
-                    #             end }
-                    #       end }
-                    # end
+                    result = {}
+                    teachers.each do |teacher|
+                        stats = teacher_stats( teacher.id,
+                                               nil,
+                                               params['from'],
+                                               params['to'],
+                                               params['subjects_ids'],
+                                               params['groups_ids'] ) )
 
-                    'FIXME'
+                        result[ teacher.id ] = { validated: stats[:sessions].count { |s| !s.vtime.nil? }.
+                                                 filled: stats[:sessions].count { |s| s.vtime.nil? } }
+                    end
+
+                    json( result )
                 end
 
                 app.get '/api/statistics/structures/:structure_id/teachers/:teacher_id/?' do
                     # {
-                    param :structure_id, String, required: true
-                    param :teacher_id, String, required: true
+                    param 'structure_id', String, required: true
+                    param 'teacher_id', String, required: true
+                    param 'validated', Boolean
+                    param 'from', Date
+                    param 'to', Date
+                    param 'groups_ids', Array
+                    param 'subjects_ids', Array
                     # }
 
-                    # sessions = { author_id: params['teacher_id'],
-                    #              sessions: Session.where( author_id: params['teacher_id'] )
-                    #                               .where( deleted: false )
-                    #                               .where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{Utils.date_rentree}'" ) )
-                    #                               .map do |session|
-                    #                  assignments = Assignment.where(session_id: session.id)
-                    #                                          .where( deleted: false )
-                    #                                          .where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{Utils.date_rentree}'" ) )
-                    #                                          .all
-                    #                  timeslot = Timeslot[session.timeslot_id]
-
-                    #                  { month: session.date.month,
-                    #                    group_id: timeslot.group_id,
-                    #                    subject_id: timeslot.subject_id,
-                    #                    sessions: sessions,
-                    #                    assignments: assignments,
-                    #                    valide: !session.vtime.nil? }
-                    #              end }
-
-                    # sessions[:sessions] = sessions[:sessions].map do |session|
-                    #     session[:sessions] = session[:sessions].to_hash
-                    #     session[:assignments] = session[:assignments].map(&:to_hash)
-
-                    #     session
-                    # end
-
-                    # json( sessions )
-
-                    'FIXME'
+                    json( teacher_stats( params['teacher_id'],
+                                         params['validated'],
+                                         params['from'],
+                                         params['to'],
+                                         params['subjects_ids'],
+                                         params['groups_ids'] ) )
                 end
             end
         end

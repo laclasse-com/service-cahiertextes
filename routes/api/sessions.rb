@@ -8,13 +8,22 @@ module Routes
         module Sessions
             def self.registered( app )
                 app.get '/api/sessions/?' do
+                    # {
+                    param 'enseignants_ids', Array
+                    param 'timeslots_ids', Array
+                    param 'groups_ids', Array
+                    param 'date', Date
+                    param 'date<', Date
+                    param 'date>', Date
+                    # }
+
                     query = Session
 
                     query = query.where( enseignant_id: params['enseignants_ids'] ) if params.key?( 'enseignants_ids' )
                     query = query.where( timeslot_id: params['timeslots_ids']) if params.key?( 'timeslots_ids' )
-                    query = query.where( Sequel.lit( "DATE_FORMAT( date_session, '%Y-%m-%d') = '#{Date.parse( params['date_session'] )}'" ) ) if params.key?( 'date_session' )
-                    query = query.where( Sequel.lit( "DATE_FORMAT( date_session, '%Y-%m-%d') >= '#{Date.parse( params['date_session>'] )}'" ) ) if params.key?( 'date_session>' )
-                    query = query.where( Sequel.lit( "DATE_FORMAT( date_session, '%Y-%m-%d') <= '#{Date.parse( params['date_session<'] )}'" ) ) if params.key?( 'date_session<' )
+                    query = query.where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') = '#{Date.parse( params['date'] )}'" ) ) if params.key?( 'date' )
+                    query = query.where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') >= '#{Date.parse( params['date>'] )}'" ) ) if params.key?( 'date>' )
+                    query = query.where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') <= '#{Date.parse( params['date<'] )}'" ) ) if params.key?( 'date<' )
                     query = query.where( timeslot_id: Timeslot.where( regroupement_id: params['groups_ids'] ).select(:id).all.map(&:id) ) if params.key?( 'groups_ids' )
 
                     json( query.naked.all )
@@ -22,7 +31,7 @@ module Routes
 
                 app.get '/api/sessions/:id/?' do
                     # {
-                    param :id, Integer, required: true
+                    param 'id', Integer, required: true
                     # }
 
                     session = Session[ id: params['id'] ]
@@ -33,8 +42,8 @@ module Routes
 
                 app.post '/api/sessions/?' do
                     # {
-                    param :timeslot_id, Integer, required: true
-                    param :date, Date, required: true
+                    param 'timeslot_id', Integer, required: true
+                    param 'date', Date, required: true
                     # }
 
                     user_needs_to_be( %w[ ENS DOC ] )
@@ -55,7 +64,7 @@ module Routes
 
                 app.put '/api/sessions/:id/?' do
                     # {
-                    param :id, Integer, required: true
+                    param 'id', Integer, required: true
                     # }
 
                     session = Session[ id: params['id'] ]
@@ -77,31 +86,9 @@ module Routes
                     json( session.to_deep_hash )
                 end
 
-                app.put '/api/sessions/:id/copy/group/:group_id/timeslot/:timeslot_id/date/:date/?' do
-                    # {
-                    param :id, Integer, required: true
-                    param :group_id, Integer, required: true
-                    param :timeslot_id, Integer, required: true
-                    param :date, Date, required: true
-                    # }
-
-                    user_needs_to_be( %w[ ENS DOC ] )
-
-                    session = Session[ id: params['id'] ]
-
-                    halt( 404, 'Session inconnu' ) if session.nil?
-
-                    new_session = session.copy( params['group_id'], params['timeslot_id'], params['date'] )
-
-                    hash = session.to_deep_hash
-                    hash[:copy_id] = new_session[:id]
-
-                    json( hash )
-                end
-
                 app.delete '/api/sessions/:id/?' do
                     # {
-                    param :id, Integer, required: true
+                    param 'id', Integer, required: true
                     # }
 
                     user_needs_to_be( %w[ ENS DOC ] )
@@ -123,6 +110,35 @@ module Routes
                     end
 
                     json( session.to_deep_hash )
+                end
+
+                app.post '/api/sessions/:id/copy/group/:group_id/timeslot/:timeslot_id/date/:date/?' do
+                    # {
+                    param 'id', Integer, required: true
+                    param 'timeslot_id', Integer, required: true
+                    param 'date', Date, required: true
+                    # }
+
+                    user_needs_to_be( %w[ ENS DOC ] )
+
+                    session = Session[ id: params['id'] ]
+
+                    halt( 404, 'Session inconnu' ) if session.nil?
+
+                    halt( 403, 'Existing session' ) unless Session.where( timeslot_id: params['timeslot_id'],
+                                                                          date: params['date'] ).count.zero?
+
+                    target_session = Session.create( timeslot_id: params['timeslot_id'],
+                                                     date: params['date'],
+                                                     ctime: Time.now,
+                                                     content: session.content,
+                                                     enseignant_id: session.enseignant_id )
+
+                    session.resources.each do |resource|
+                        target_session.add_resource( resource )
+                    end
+
+                    json( target_session.to_deep_hash )
                 end
             end
         end

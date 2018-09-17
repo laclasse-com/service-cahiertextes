@@ -6,7 +6,7 @@ module Routes
             def self.registered( app )
                 app.get '/api/matchables/:structure_id/?' do
                     # {
-                    param :structure_id, String, required: true
+                    param 'structure_id', String, required: true
                     # }
 
                     json( Matchable.where( structure_id: params['structure_id'] ).all )
@@ -14,8 +14,8 @@ module Routes
 
                 app.get '/api/matchables/:structure_id/:hash_item/?' do
                     # {
-                    param :structure_id, String, required: true
-                    param :hash_item, String, required: true
+                    param 'structure_id', String, required: true
+                    param 'hash_item', String, required: true
                     # }
 
                     fi = Matchable[ structure_id: params['structure_id'],
@@ -27,9 +27,9 @@ module Routes
 
                 app.post '/api/matchables/:structure_id/:hash_item/?' do
                     # {
-                    param :structure_id, String, required: true
-                    param :hash_item, String, required: true
-                    param :known_id, String, required: true
+                    param 'structure_id', String, required: true
+                    param 'hash_item', String, required: true
+                    param 'known_id', String, required: true
                     # }
 
                     fi = Matchable[ structure_id: params['structure_id'], hash_item: params['hash_item'] ]
@@ -43,8 +43,8 @@ module Routes
 
                 app.delete '/api/matchables/:structure_id/:hash_item/?' do
                     # {
-                    param :structure_id, String, required: true
-                    param :hash_item, String, required: true
+                    param 'structure_id', String, required: true
+                    param 'hash_item', String, required: true
                     # }
 
                     fi = Matchable[ structure_id: params['structure_id'],

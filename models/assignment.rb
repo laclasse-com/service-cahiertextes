@@ -31,21 +31,6 @@ class Assignment < Sequel::Model( :assignments )
         assignment_done_markers_dataset.where(author_id: author_id).destroy
     end
 
-    def copy( session_id, timeslot_id, date_due )
-        new_assignment = Assignment.create( session_id: session_id,
-                                            assignment_type_id: assignment_type_id,
-                                            timeslot_id: timeslot_id,
-                                            content: content,
-                                            date_due: date_due,
-                                            time_estimate: time_estimate,
-                                            author_id: author_id,
-                                            ctime: Time.now )
-
-        resources.each do |resource|
-            new_assignment.add_resource( resource )
-        end
-    end
-
     def modify( params )
         self.date_due = params['date_due']
         self.timeslot_id = params['timeslot_id']

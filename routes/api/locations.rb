@@ -5,29 +5,43 @@ module Routes
         module Locations
             def self.registered( app )
                 app.get '/api/locations/?' do
-                    json( Locations.all )
+                    # {
+                    param 'structure_id', String
+                    param 'label', String
+                    param 'name', String
+                    # }
+
+                    user_needs_to_be( %w[ ADM DIR ] )
+
+                    query = Location
+
+                    query = query.where( structure_id: params['structure_id'] ) if params.key?( 'structure_id' )
+                    query = query.where( label: params['label'] ) if params.key?( 'label' )
+                    query = query.where( name: params['name'] ) if params.key?( 'name' )
+
+                    json( query.all )
                 end
 
                 app.get '/api/locations/:id/?' do
                     # {
-                    param :id, Integer, required: true
+                    param 'id', Integer, required: true
                     # }
 
                     location = Location[ params['id'] ]
-                    halt( 404, "Location #{params[:id]} inconnue" ) if location.nil?
+                    halt( 404, "Location #{params['id']} inconnue" ) if location.nil?
 
                     json( location )
                 end
 
                 app.post '/api/locations/?' do
                     # {
-                    param :structure_id
-                    param :label, String
-                    param :name, String
+                    param 'structure_id', String
+                    param 'label', String
+                    param 'name', String
 
-                    param :locations, Array
+                    param 'locations', Array
 
-                    one_of :label, :locations
+                    one_of 'label', 'locations'
                     # }
 
                     user_needs_to_be( %w[ ADM DIR ] )
@@ -57,15 +71,15 @@ module Routes
 
                 app.put '/api/locations/:id/?' do
                     # {
-                    param :id, Integer, require: true
-                    param :structure_id, String, required: true
-                    param :name, String, required: true
-                    param :label, String, required: true
+                    param 'id', Integer, require: true
+                    param 'structure_id', String, required: true
+                    param 'name', String, required: true
+                    param 'label', String, required: true
                     # }
 
                     location = Location[ params['id'] ]
 
-                    halt( 404, "Location #{params[:id]} inconnue" ) if location.nil?
+                    halt( 404, "Location #{params['id']} inconnue" ) if location.nil?
 
                     location.structure_id = params['structure_id']
 
@@ -78,7 +92,7 @@ module Routes
 
                 app.delete '/api/locations/:id/?' do
                     # {
-                    param :id, Integer, require: true
+                    param 'id', Integer, require: true
                     # }
 
                     location = Location[ params['id'] ]

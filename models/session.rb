@@ -19,8 +19,9 @@ class Session < Sequel::Model( :sessions )
     end
 
     def modify( params )
-        self.content = params['content']
         self.mtime = Time.now
+
+        self.content = params['content']
 
         if params['resources']
             remove_all_resources
@@ -31,23 +32,6 @@ class Session < Sequel::Model( :sessions )
         end
 
         save
-    end
-
-    def copy( _group_id, timeslot_id, date_session )
-        target_session = Session.where( timeslot_id: timeslot_id,
-                                        date_session: date_session ).first
-        if target_session.nil?
-            target_session = Session.create( timeslot_id: timeslot_id,
-                                             date_session: date_session,
-                                             ctime: Time.now,
-                                             content: content,
-                                             enseignant_id: enseignant_id )
-        end
-        resources.each do |resource|
-            target_session.add_resource( resource )
-        end
-
-        target_session
     end
 end
 

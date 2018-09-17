@@ -6,6 +6,17 @@ module Routes
         module Timeslots
             def self.registered( app )
                 app.get '/api/timeslots/?' do
+                    # {
+                    param 'no_year_restriction', Boolean
+                    param 'include_deleted', Boolean
+                    param 'date<', Date
+                    param 'date>', Date
+                    param 'groups_ids', Array
+                    param 'subjects_ids', Array
+                    param 'structure_id', String
+                    param 'import_id', Integer
+                    # }
+
                     query = Timeslot
 
                     query = query.where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{Utils.date_rentree}'" ) ) unless params.key?( 'no_year_restriction' )
@@ -28,7 +39,9 @@ module Routes
 
                 app.get '/api/timeslots/:id/?' do
                     # {
-                    param :id, Integer, required: true
+                    param 'id', Integer, required: true
+                    param 'start', Date
+                    param 'end', Date
                     # }
 
                     timeslot = Timeslot[ id: params['id'] ]
@@ -38,30 +51,15 @@ module Routes
                     json( timeslot.detailed( params['start'], params['end'], %w[locations sessions assignments] ) )
                 end
 
-                app.get '/api/timeslots/:id/similar/?' do
-                    # {
-                    param :id, Integer, required: true
-                    param :groups_ids, Array, required: true
-                    param :start, Date, required: true
-                    param :end, Date, required: true
-                    # }
-
-                    timeslot = Timeslot[ id: params['id'] ]
-
-                    halt( 404, 'Créneau inconnu' ) if timeslot.nil?
-
-                    json( timeslot.similar( params['groups_ids'], params['start'], params['end'] ) )
-                end
-
                 app.post '/api/timeslots/?' do
                     # {
-                    param :group_id, Integer
-                    param :subject_id, Integer
-                    param :weekday, Integer
-                    param :start, Date
-                    param :end, Date
+                    param 'group_id', Integer
+                    param 'subject_id', Integer
+                    param 'weekday', Integer
+                    param 'start', Date
+                    param 'end', Date
 
-                    param :timeslots, Array
+                    param 'timeslots', Array
 
                     one_of :timeslots, :group_id
                     # }
@@ -98,7 +96,15 @@ module Routes
 
                 app.put '/api/timeslots/:id/?' do
                     # {
-                    param :id, Integer, required: true
+                    param 'id', Integer, required: true
+
+                    param 'group_id', Integer
+                    param 'subject_id', Integer
+                    param 'weekday', Integer
+                    param 'start', Date
+                    param 'end', Date
+
+                    any_of :group_id, :subject_id, :weekday, :start, :end
                     # }
 
                     user_needs_to_be( %w[ ENS DOC ] )
@@ -114,8 +120,8 @@ module Routes
 
                 app.delete '/api/timeslots/:id/?' do
                     # {
-                    param :id, Integer, required: true
-                    param :dtime, DateTime, required: true
+                    param 'id', Integer, required: true
+                    param 'dtime', DateTime, required: true
                     # }
 
                     user_needs_to_be( %w[ ENS DOC ] )
@@ -133,6 +139,21 @@ module Routes
                     end
 
                     json( timeslot.to_hash )
+                end
+
+                app.get '/api/timeslots/:id/similar/?' do
+                    # {
+                    param 'id', Integer, required: true
+                    param 'groups_ids', Array, required: true
+                    param 'start', Date, required: true
+                    param 'end', Date, required: true
+                    # }
+
+                    timeslot = Timeslot[ id: params['id'] ]
+
+                    halt( 404, 'Créneau inconnu' ) if timeslot.nil?
+
+                    json( timeslot.similar( params['groups_ids'], params['start'], params['end'] ) )
                 end
             end
         end

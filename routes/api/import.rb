@@ -10,7 +10,7 @@ module Routes
             def self.registered( app )
                 app.get '/api/import/:id/?' do
                     # {
-                    param :id, Integer, required: true
+                    param 'id', Integer, required: true
                     # }
 
                     json( Import[ params['id'] ] )
@@ -18,7 +18,7 @@ module Routes
 
                 app.get '/api/import/:id/timeslots/?' do
                     # {
-                    param :id, Integer, required: true
+                    param 'id', Integer, required: true
                     # }
 
                     import = Import[ params['id'] ]
@@ -30,25 +30,25 @@ module Routes
 
                 app.post '/api/import/log/start/?' do
                     # {
-                    param :structure_id, String, required: true
-                    param :type, String, required: false
-                    param :comment, String, required: false
+                    param 'structure_id', String, required: true
+                    param 'type', String, required: false
+                    param 'comment', String, required: false
                     # }
 
                     json( Import.create( structure_id: params['structure_id'],
                                          ctime: Sequel::SQLTime.now,
-                                         type: params.key?( :type ) ? params[:type] : '',
-                                         comment: params.key?( :comment ) ? params[:comment] : '' ).to_hash )
+                                         type: params.key?( 'type' ) ? params['type'] : '',
+                                         comment: params.key?( 'comment' ) ? params['comment'] : '' ).to_hash )
                 end
 
                 app.post '/api/import/pronote/decrypt' do
                     # {
-                    # param :file, required: true
+                    # param 'file', required: true
                     # }
 
-                    # halt( 500, 'Le fichier n\'est pas un fichier XML valide.' ) if %r{^(application|text)/xml;.*}.match( FileMagic.new(FileMagic::MAGIC_MIME).file( params[:file][:tempfile].path ) ).nil?
+                    # halt( 500, 'Le fichier n\'est pas un fichier XML valide.' ) if %r{^(application|text)/xml;.*}.match( FileMagic.new(FileMagic::MAGIC_MIME).file( params['file']['tempfile'].path ) ).nil?
 
-                    json( File.open( params[:file][:tempfile] ) do |xml|
+                    json( File.open( params['file']['tempfile'] ) do |xml|
                               nxml = Nokogiri::XML( xml )
 
                               crypted = !nxml.search( 'CLES' ).empty?
@@ -58,9 +58,9 @@ module Routes
 
                                   halt( 401, '401 Unauthorized' ) unless user_is_profile_in_structure?( 'ADM', uai )
 
-                                  hash = Hash.from_xml( ProNote.decrypt_xml( File.open( params[:file][:tempfile] ) ) )[:ExportEmploiDuTemps]
+                                  hash = Hash.from_xml( ProNote.decrypt_xml( File.open( params['file']['tempfile'] ) ) )[:ExportEmploiDuTemps]
                               else
-                                  hash = Hash.from_xml( File.open( params[:file][:tempfile] ) )[:ExportEmploiDuTemps]
+                                  hash = Hash.from_xml( File.open( params['file']['tempfile'] ) )[:ExportEmploiDuTemps]
                               end
 
                               %w[ Eleves Etiquettes MotifsAbsence Absences Professeurs Personnels Materiels Nomenclatures Responsables ].each do |key|

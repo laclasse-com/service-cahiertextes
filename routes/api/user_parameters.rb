@@ -15,7 +15,7 @@ module Routes
                 end
 
                 app.put '/api/users/current/parametres/?' do
-                    param :parameters, String, required: true
+                    param 'parameters', String, required: true
 
                     parameters = DataManagement::Accessors.create_or_get( UserParameters,
                                                                           uid: session['user'] )
