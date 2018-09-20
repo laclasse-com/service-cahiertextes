@@ -19,6 +19,7 @@ gem 'xml-simple'
 
 group :development do
     gem 'equivalent-xml'
+    gem 'rack-test'
     gem 'reek'
     gem 'rspec'
     gem 'rubocop'

@@ -55,9 +55,9 @@ module Routes
                                                params['from'],
                                                params['to'],
                                                params['subjects_ids'],
-                                               params['groups_ids'] ) )
+                                               params['groups_ids'] )
 
-                        result[ teacher.id ] = { validated: stats[:sessions].count { |s| !s.vtime.nil? }.
+                        result[ teacher.id ] = { validated: stats[:sessions].count { |s| !s.vtime.nil? },
                                                  filled: stats[:sessions].count { |s| s.vtime.nil? } }
                     end
 

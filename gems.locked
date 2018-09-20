@@ -57,6 +57,8 @@ GEM
     rack (2.0.5)
     rack-protection (2.0.3)
       rack
+    rack-test (1.1.0)
+      rack (>= 1.0, < 3)
     rainbow (3.0.0)
     reek (5.0.2)
       codeclimate-engine-rb (~> 0.4.0)
@@ -133,6 +135,7 @@ DEPENDENCIES
   pry
   puma
   rack
+  rack-test
   reek
   rest-client
   rspec
