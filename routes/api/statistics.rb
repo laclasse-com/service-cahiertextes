@@ -68,7 +68,7 @@ module Routes
                     # {
                     param 'structure_id', String, required: true
                     param 'teacher_id', String, required: true
-                    param 'validated', Boolean
+                    param 'validated', :boolean
                     param 'from', Date
                     param 'to', Date
                     param 'groups_ids', Array

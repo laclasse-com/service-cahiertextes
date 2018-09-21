@@ -1,7 +1,6 @@
-# coding: utf-8
 # frozen_string_literal: true
 
-require_relative './test_setup'
+require_relative '../../test_setup'
 
 require_relative '../../../models/user_parameters'
 

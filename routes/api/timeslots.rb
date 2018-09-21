@@ -7,8 +7,8 @@ module Routes
             def self.registered( app )
                 app.get '/api/timeslots/?' do
                     # {
-                    param 'no_year_restriction', Boolean
-                    param 'include_deleted', Boolean
+                    param 'no_year_restriction', :boolean
+                    param 'include_deleted', :boolean
                     param 'date<', Date
                     param 'date>', Date
                     param 'groups_ids', Array
@@ -40,24 +40,24 @@ module Routes
                 app.get '/api/timeslots/:id/?' do
                     # {
                     param 'id', Integer, required: true
-                    param 'start', Date
-                    param 'end', Date
+                    param 'start_time', Date
+                    param 'end_time', Date
                     # }
 
                     timeslot = Timeslot[ id: params['id'] ]
 
                     halt( 404, 'Créneau inconnu' ) if timeslot.nil?
 
-                    json( timeslot.detailed( params['start'], params['end'], %w[locations sessions assignments] ) )
+                    json( timeslot.detailed( params['start_time'], params['end_time'], %w[locations sessions assignments] ) )
                 end
 
                 app.post '/api/timeslots/?' do
                     # {
                     param 'group_id', Integer
-                    param 'subject_id', Integer
+                    param 'subject_id', String
                     param 'weekday', Integer
-                    param 'start', Date
-                    param 'end', Date
+                    param 'start_time', DateTime
+                    param 'end_time', DateTime
 
                     param 'timeslots', Array
 
@@ -70,20 +70,21 @@ module Routes
 
                     if single
                         params['timeslots'] = [ { weekday: params['weekday'],
-                                                  start: params['start'],
-                                                  end: params['end'],
+                                                  start_time: params['start_time'],
+                                                  end_time: params['end_time'],
                                                   group_id: params['group_id'],
-                                                  subject_id: params['subject_id'] } ]
+                                                  subject_id: params['subject_id'],
+                                                  structure_id: params['structure_id']} ]
                     end
 
                     result = params['timeslots'].map do |timeslot|
                         new_timeslot = Timeslot.create( ctime: Time.now,
-                                                        start: timeslot['start'],
-                                                        end: timeslot['end'],
-                                                        weekday: timeslot['weekday'] - 1,
+                                                        start_time: timeslot['start_time'],
+                                                        end_time: timeslot['end_time'],
+                                                        weekday: timeslot['weekday'],
                                                         subject_id: timeslot['subject_id'],
                                                         group_id: timeslot['group_id'],
-                                                        structure_id: params['structure_id'] )
+                                                        structure_id: timeslot['structure_id'] )
                         new_timeslot.modify( timeslot )
 
                         new_timeslot.to_hash
@@ -99,12 +100,12 @@ module Routes
                     param 'id', Integer, required: true
 
                     param 'group_id', Integer
-                    param 'subject_id', Integer
+                    param 'subject_id', String
                     param 'weekday', Integer
-                    param 'start', Date
-                    param 'end', Date
+                    param 'start_time', DateTime
+                    param 'end_time', DateTime
 
-                    any_of :group_id, :subject_id, :weekday, :start, :end
+                    any_of :group_id, :subject_id, :weekday, :start_time, :end_time
                     # }
 
                     user_needs_to_be( %w[ ENS DOC ] )
@@ -130,13 +131,9 @@ module Routes
 
                     halt( 404, 'Créneau inconnu' ) if timeslot.nil?
 
-                    if timeslot.subject_id.empty? && timeslot.sessions.empty? && timeslot.assignments.empty?
-                        timeslot.deep_destroy
-                    else
-                        timeslot.update( deleted: !timeslot.deleted, dtime: deleted ? nil : params['dtime'] )
+                    timeslot.update( deleted: !timeslot.deleted, dtime: timeslot.deleted ? nil : params['dtime'] )
 
-                        timeslot.save
-                    end
+                    timeslot.save
 
                     json( timeslot.to_hash )
                 end
@@ -145,15 +142,15 @@ module Routes
                     # {
                     param 'id', Integer, required: true
                     param 'groups_ids', Array, required: true
-                    param 'start', Date, required: true
-                    param 'end', Date, required: true
+                    param 'start_time', Date, required: true
+                    param 'end_time', Date, required: true
                     # }
 
                     timeslot = Timeslot[ id: params['id'] ]
 
                     halt( 404, 'Créneau inconnu' ) if timeslot.nil?
 
-                    json( timeslot.similar( params['groups_ids'], params['start'], params['end'] ) )
+                    json( timeslot.similar( params['groups_ids'], params['start_time'], params['end_time'] ) )
                 end
             end
         end

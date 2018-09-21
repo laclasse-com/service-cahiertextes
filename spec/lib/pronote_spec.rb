@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+# require 'spec_helper'
+
+require_relative '../../config/options'
+require_relative '../../lib/pronote'
+
+require 'rspec/matchers' # required by equivalent-xml custom matcher `be_equivalent_to`
+require 'equivalent-xml'
 
 describe ProNote do
-    before :each do
-        TableCleaner.new( DB, [] ).clean
-    end
-
     it 'extract the UAI from the XML file' do
         uai = ProNote.extract_from_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ), 'UAI' )
 

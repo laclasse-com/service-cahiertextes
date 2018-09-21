@@ -14,8 +14,8 @@ module Routes
                     param 'date_due', Date
                     param 'date_due<', Date
                     param 'date_due>', Date
-                    param 'include_deleted', Boolean
-                    param 'check_done', Boolean
+                    param 'include_deleted', :boolean
+                    param 'check_done', :boolean
                     param 'uid', String
                     # }
 

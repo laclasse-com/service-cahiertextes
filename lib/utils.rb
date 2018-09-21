@@ -1,9 +1,12 @@
+# coding: utf-8
 # frozen_string_literal: true
 
 require 'open-uri'
 require 'icalendar'
 
 module Utils
+    module_function
+
     module Holidays
         module_function
 

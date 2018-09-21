@@ -19,3 +19,15 @@ module LaClasse
         end
     end
 end
+
+module LaClasse
+    module Helpers
+        module User
+            def user_needs_to_be( _profile_types, _uid = nil )
+                true
+            end
+        end
+    end
+end
+
+MOCK_UAI = '0699999Z'

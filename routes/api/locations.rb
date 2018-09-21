@@ -19,7 +19,7 @@ module Routes
                     query = query.where( label: params['label'] ) if params.key?( 'label' )
                     query = query.where( name: params['name'] ) if params.key?( 'name' )
 
-                    json( query.all )
+                    json( query.naked.all )
                 end
 
                 app.get '/api/locations/:id/?' do
@@ -53,20 +53,20 @@ module Routes
                                                   name: params['name'] } ]
                     end
 
-                    result = json( params['locations'].map do |location|
-                                       new_location = DataManagement::Accessors.create_or_get( Location,
-                                                                                               structure_id: location['structure_id'],
-                                                                                               label: location['label'] )
+                    result = params['locations'].map do |location|
+                        new_location = DataManagement::Accessors.create_or_get( Location,
+                                                                                structure_id: location['structure_id'],
+                                                                                label: location['label'] )
 
-                                       new_location.name = location['name']
-                                       new_location.save
+                        new_location.name = location['name']
+                        new_location.save
 
-                                       new_location.to_hash
-                                   end )
+                        new_location.to_hash
+                    end
 
                     result = result.first if single
 
-                    json( result.to_hash )
+                    json( result )
                 end
 
                 app.put '/api/locations/:id/?' do
@@ -99,7 +99,9 @@ module Routes
 
                     halt( 404, "Location #{params['id']} inconnue" ) if location.nil?
 
-                    json( location.destroy )
+                    location&.destroy
+
+                    nil
                 end
             end
         end

@@ -25,7 +25,7 @@ class Timeslot < Sequel::Model( :timeslots )
     def detailed( _date_start, _date_end, details )
         h = to_hash
 
-        details.each { |detail| h[ detail.to_sym ] = send( detail ) if self.class.method_deended?( detail ) }
+        details.each { |detail| h[ detail.to_sym ] = send( detail ) if self.class.method_defined?( detail ) }
 
         h
     end
