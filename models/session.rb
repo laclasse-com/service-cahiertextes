@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Session < Sequel::Model( :sessions )
-    many_to_many :resources
+    many_to_many :resources, join_table: :sessions_resources
     many_to_one :timeslot
     one_to_many :assignments
 
@@ -21,7 +21,8 @@ class Session < Sequel::Model( :sessions )
     def modify( params )
         self.mtime = Time.now
 
-        self.content = params['content']
+        self.content = params['content'] if params.key?( 'content' )
+        self.date = params['date'] if params.key?( 'date' )
 
         if params['resources']
             remove_all_resources

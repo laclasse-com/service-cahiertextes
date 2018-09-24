@@ -8,26 +8,6 @@ module Routes
     module Api
         module ImportAPI
             def self.registered( app )
-                app.get '/api/import/:id/?' do
-                    # {
-                    param 'id', Integer, required: true
-                    # }
-
-                    json( Import[ params['id'] ] )
-                end
-
-                app.get '/api/import/:id/timeslots/?' do
-                    # {
-                    param 'id', Integer, required: true
-                    # }
-
-                    import = Import[ params['id'] ]
-
-                    json( Timeslot.where( structure_id: import.structure_id )
-                                  .where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= DATE_FORMAT( import.ctime, '%Y-%m-%d') AND DATE_FORMAT( ctime, '%Y-%m-%d') < '#{import.ctime + 10.minutes}'" ) )
-                                  .all )
-                end
-
                 app.post '/api/import/log/start/?' do
                     # {
                     param 'structure_id', String, required: true
@@ -36,7 +16,7 @@ module Routes
                     # }
 
                     json( Import.create( structure_id: params['structure_id'],
-                                         ctime: Sequel::SQLTime.now,
+                                         ctime: DateTime.now,
                                          type: params.key?( 'type' ) ? params['type'] : '',
                                          comment: params.key?( 'comment' ) ? params['comment'] : '' ).to_hash )
                 end

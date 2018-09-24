@@ -9,7 +9,7 @@ module Routes
             def self.registered( app )
                 app.get '/api/sessions/?' do
                     # {
-                    param 'enseignants_ids', Array
+                    param 'authors_ids', Array
                     param 'timeslots_ids', Array
                     param 'groups_ids', Array
                     param 'date', Date
@@ -19,12 +19,12 @@ module Routes
 
                     query = Session
 
-                    query = query.where( enseignant_id: params['enseignants_ids'] ) if params.key?( 'enseignants_ids' )
+                    query = query.where( author_id: params['authors_ids'] ) if params.key?( 'authors_ids' )
                     query = query.where( timeslot_id: params['timeslots_ids']) if params.key?( 'timeslots_ids' )
-                    query = query.where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') = '#{Date.parse( params['date'] )}'" ) ) if params.key?( 'date' )
-                    query = query.where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') >= '#{Date.parse( params['date>'] )}'" ) ) if params.key?( 'date>' )
-                    query = query.where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') <= '#{Date.parse( params['date<'] )}'" ) ) if params.key?( 'date<' )
-                    query = query.where( timeslot_id: Timeslot.where( regroupement_id: params['groups_ids'] ).select(:id).all.map(&:id) ) if params.key?( 'groups_ids' )
+                    query = query.where( date: params['date'] ) if params.key?( 'date' )
+                    query = query.where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') >= '#{params['date>']}'" ) ) if params.key?( 'date>' )
+                    query = query.where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') <= '#{params['date<']}'" ) ) if params.key?( 'date<' )
+                    query = query.where( timeslot_id: Timeslot.where( group_id: params['groups_ids'] ).select(:id).all.map(&:id) ) if params.key?( 'groups_ids' )
 
                     json( query.naked.all )
                 end
@@ -44,6 +44,7 @@ module Routes
                     # {
                     param 'timeslot_id', Integer, required: true
                     param 'date', Date, required: true
+                    param 'content', String
                     # }
 
                     user_needs_to_be( %w[ ENS DOC ] )
@@ -57,7 +58,7 @@ module Routes
                                               ctime: Time.now,
                                               content: '' )
 
-                    session.modify( body )
+                    session.modify( params )
 
                     json( session.to_deep_hash )
                 end
@@ -65,21 +66,28 @@ module Routes
                 app.put '/api/sessions/:id/?' do
                     # {
                     param 'id', Integer, required: true
+                    param 'date', Date
+                    param 'content', String
+                    param 'vtime', DateTime
+                    param 'validated', :boolean
                     # }
 
                     session = Session[ id: params['id'] ]
 
-                    halt( 404, 'Session inconnu' ) if session.nil?
-                    halt( 401, 'Session visé non modifiable' ) unless session.vtime.nil?
+                    halt( 404, 'Session inconnus' ) if session.nil?
 
-                    if params.key?( 'validated' )
+                    if params.key?( 'validated' ) && ( !params['validated'] || params.key?( 'vtime' ) )
                         user_needs_to_be( %w[ DIR ] )
 
-                        session.vtime = session.vtime.nil? ? Time.now : nil
+                        session.vtime = nil
+                        session.vtime = params['vtime'] if params['validated'] && params.key?( 'vtime' )
 
                         session.save
                     else
                         user_needs_to_be( %w[ ENS DOC ] )
+
+                        halt( 401, 'Session visée non modifiable' ) unless session.vtime.nil?
+
                         session.modify( params )
                     end
 
@@ -132,7 +140,7 @@ module Routes
                                                      date: params['date'],
                                                      ctime: Time.now,
                                                      content: session.content,
-                                                     enseignant_id: session.enseignant_id )
+                                                     author_id: session.author_id )
 
                     session.resources.each do |resource|
                         target_session.add_resource( resource )

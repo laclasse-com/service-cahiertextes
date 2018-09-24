@@ -4,7 +4,7 @@ require_relative '../../test_setup'
 
 require_relative '../../../models/user_parameters'
 
-describe 'CdTServer' do
+describe 'Routes::Api::UserParametersAPI' do
     include Rack::Test::Methods
 
     def app

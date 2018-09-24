@@ -4,7 +4,7 @@ require_relative '../../test_setup'
 
 require_relative '../../../models/matchable'
 
-describe 'CdTServer' do
+describe 'Routes::Api::Matchables' do
     include Rack::Test::Methods
 
     def app

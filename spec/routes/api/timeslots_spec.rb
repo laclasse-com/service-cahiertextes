@@ -4,7 +4,7 @@ require_relative '../../test_setup'
 
 require_relative '../../../models/timeslot'
 
-describe 'CdTServer' do
+describe 'Routes::Api::Timeslots' do
     include Rack::Test::Methods
 
     def app
@@ -18,6 +18,11 @@ describe 'CdTServer' do
     MOCK_SUBJECT_ID = "SUBJECT_ID"
 
     tid = -1
+
+    before :all do
+        Session.where( timeslot_id: Timeslot.where( structure_id: MOCK_UAI ).select( :id ) ).destroy
+        Timeslot.where( structure_id: MOCK_UAI ).destroy
+    end
 
     it 'creates multiple Timeslots' do
         post '/api/timeslots/', timeslots: [ { structure_id: MOCK_UAI,
@@ -86,7 +91,7 @@ describe 'CdTServer' do
         get "/api/timeslots", structure_id: MOCK_UAI
 
         body = JSON.parse( last_response.body )
-        cohort = Timeslot.where(structure_id: MOCK_UAI)
+        cohort = Timeslot.where(structure_id: MOCK_UAI).where( Sequel.~( :deleted ) )
         expect( body.length ).to eq cohort.count
     end
 
@@ -94,7 +99,7 @@ describe 'CdTServer' do
         get "/api/timeslots", groups_ids: [ MOCK_GROUP_ID ]
 
         body = JSON.parse( last_response.body )
-        cohort = Timeslot.where(group_id: [ MOCK_GROUP_ID ])
+        cohort = Timeslot.where(group_id: [ MOCK_GROUP_ID ]).where( Sequel.~( :deleted ) )
         expect( body.length ).to eq cohort.count
     end
 
@@ -102,7 +107,7 @@ describe 'CdTServer' do
         get "/api/timeslots", subjects_ids: [ MOCK_SUBJECT_ID ]
 
         body = JSON.parse( last_response.body )
-        cohort = Timeslot.where(subject_id: [ MOCK_SUBJECT_ID ])
+        cohort = Timeslot.where(subject_id: [ MOCK_SUBJECT_ID ]).where( Sequel.~( :deleted ) )
         expect( body.length ).to eq cohort.count
     end
 
@@ -116,8 +121,15 @@ describe 'CdTServer' do
         cohort = Timeslot.where(structure_id: MOCK_UAI)
                          .where(group_id: [ MOCK_GROUP_ID ])
                          .where(subject_id: [ MOCK_SUBJECT_ID ])
+                         .where( Sequel.~( :deleted ) )
         expect( body.length ).to eq cohort.count
     end
+
+    # TODO: include_deleted
+    # TODO: no_year_restriction
+    # TODO: date>
+    # TODO: date<
+    # TODO: import_id
 
     it 'modifies a Timeslot' do
         put "/api/timeslots/#{tid}",

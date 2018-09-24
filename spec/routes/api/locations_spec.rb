@@ -4,7 +4,7 @@ require_relative '../../test_setup'
 
 require_relative '../../../models/location'
 
-describe 'CdTServer' do
+describe 'Routes::Api::Locations' do
     include Rack::Test::Methods
 
     def app

@@ -4,7 +4,7 @@ require_relative '../../test_setup'
 
 require_relative '../../../models/assignment'
 
-describe 'CdTServer' do
+describe 'Routes::Api::AssignmentTypes' do
     include Rack::Test::Methods
 
     def app

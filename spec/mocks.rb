@@ -23,6 +23,12 @@ end
 module LaClasse
     module Helpers
         module User
+            module_function
+
+            def user
+                { 'id' => "VZZ69999"}
+            end
+
             def user_needs_to_be( _profile_types, _uid = nil )
                 true
             end
