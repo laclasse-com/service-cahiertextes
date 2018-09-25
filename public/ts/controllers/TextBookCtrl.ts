@@ -61,21 +61,21 @@ angular.module('cahierDeTextesClientApp')
 
         // configuration du composant calendrier
 
-        if (ctrl.current_user.is(['EVS', 'DIR', 'ADM'])) {
-          Annuaire.get_groups_of_structures(current_user.get_structures_ids())
-            .then(function(groups) {
-              ctrl.groups = groups.data;
-              ctrl.selected_regroupements = [ ctrl.groups[0] ];
-            });
-        } else {
+        if (!ctrl.current_user.is(['EVS', 'DIR', 'ADM'])) {
           ctrl.current_user.get_actual_groups()
             .then(function(actual_groups) {
               ctrl.groups = actual_groups;
               ctrl.selected_regroupements = ctrl.groups;
             });
+        } else {
+            Annuaire.get_groups_of_structures(current_user.get_structures_ids())
+                .then(function(groups) {
+                    ctrl.groups = groups.data;
+                    ctrl.selected_regroupements = [ ctrl.groups[0] ];
+                });
         }
 
-        ctrl.extraEventSignature = (event) => `${event.matiere}`;
+          ctrl.extraEventSignature = (event) => `${event.matiere}`;
 
         let filter_by_regroupement = function(raw_data, selected_regroupements) {
           return _(raw_data).filter(function(creneau) {
