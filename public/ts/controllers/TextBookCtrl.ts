@@ -68,7 +68,7 @@ angular.module('cahierDeTextesClientApp')
                       if (ctrl.current_user.is(['ENS'])) {
                           ctrl.current_user.get_actual_groups()
                               .then(function(actual_groups) {
-                                  ctrl.selected_regroupements = ctrl.groups;
+                                  ctrl.selected_regroupements = actual_groups;
                               });
 
                       } else {
