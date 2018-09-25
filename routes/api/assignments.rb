@@ -7,7 +7,7 @@ module Routes
             def self.registered( app )
                 app.get '/api/assignments/?' do
                     # {
-                    param 'enseignants_ids', Array
+                    param 'authors_ids', Array
                     param 'timeslots_ids', Array
                     param 'groups_ids', Array
                     param 'sessions_ids', Array
@@ -85,7 +85,7 @@ module Routes
                     timeslot = Timeslot[ params['timeslot_id'] ]
                     halt( 409, 'Créneau invalide' ) if timeslot.nil?
 
-                    assignment = Assignment.create( enseignant_id: user['id'],
+                    assignment = Assignment.create( author_id: user['id'],
                                                     assignment_type_id: params['assignment_type_id'],
                                                     timeslot_id: timeslot.id,
                                                     content: params['content'],
@@ -97,13 +97,13 @@ module Routes
                         assignment.update( session_id: params['session_id'] )
                     else
                         session = Session.where( timeslot_id: timeslot.id )
-                                         .where( date_session: params['date_due'] )
+                                         .where( date: params['date_due'] )
                                          .where( deleted: false )
                                          .first
                         if session.nil?
-                            session = Session.create( enseignant_id: user['id'],
+                            session = Session.create( author_id: user['id'],
                                                       timeslot_id: timeslot.id,
-                                                      date_session: params['date_due'],
+                                                      date: params['date_due'],
                                                       ctime: Time.now,
                                                       content: '' )
                         end
@@ -120,6 +120,14 @@ module Routes
                 app.put '/api/assignments/:id/?' do
                     # {
                     param 'id', Integer, required: true
+                    param 'timeslot_id', Integer
+                    param 'assignment_type_id', Integer
+                    param 'content', String
+                    param 'date_due', Date
+                    param 'time_estimate', Integer
+
+                    param 'session_id', Integer
+                    param 'done', :boolean
                     # }
 
                     assignment = Assignment[ params['id'] ]
@@ -131,7 +139,7 @@ module Routes
                         assignment.done_by?( user['id'] ) ? assignment.to_be_done_by!( user['id'] ) : assignment.done_by!( user['id'] )
 
                         hd = assignment.to_deep_hash
-                        dti = AssignmentTodoItem[ assignment_id: assignment.id, author_id: user['id'] ]
+                        dti = AssignmentDoneMarker[ assignment_id: assignment.id, author_id: user['id'] ]
                         hd[:rtime] = dti.rtime unless dti.nil?
                         hd[:done] = !dti.nil?
 
@@ -139,7 +147,7 @@ module Routes
                     else
                         user_needs_to_be( %w[ ENS DOC ] )
 
-                        params['enseignant_id'] = user['id']
+                        params['author_id'] = user['id']
 
                         assignment.modify( params )
                     end

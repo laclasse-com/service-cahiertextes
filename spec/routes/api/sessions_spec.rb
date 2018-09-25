@@ -2,8 +2,6 @@
 
 require_relative '../../test_setup'
 
-require_relative '../../../models/session'
-
 describe 'Routes::Api::Sessions' do
     include Rack::Test::Methods
 
@@ -164,5 +162,9 @@ describe 'Routes::Api::Sessions' do
         expect( body['timeslot_id'] ).to eq ts.id
         # expect( body['date'] ).to eq MOCK_DATE.strftime("%F")
         # expect( body['content'] ).to eq "#{MOCK_CONTENT}#{MOCK_CONTENT}"
+    end
+
+    it 'copies a session to a different timeslot' do
+        expect( false ).to be true
     end
 end

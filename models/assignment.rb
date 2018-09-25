@@ -32,13 +32,13 @@ class Assignment < Sequel::Model( :assignments )
     end
 
     def modify( params )
-        self.date_due = params['date_due']
-        self.timeslot_id = params['timeslot_id']
-        self.assignment_type_id = params['assignment_type_id']
-        self.content = params['content']
-        self.time_estimate = params['time_estimate'] unless params['time_estimate'].nil?
-        self.session_id = params['session_id'] unless params['session_id'].nil?
-        self.author_id = params['author_id'] unless params['author_id'].nil?
+        self.date_due = params['date_due'] if params.key?( 'date_due' )
+        self.timeslot_id = params['timeslot_id'] if params.key?( 'timeslot_id' )
+        self.assignment_type_id = params['assignment_type_id'] if params.key?( 'assignment_type_id' )
+        self.content = params['content'] if params.key?( 'content' )
+        self.time_estimate = params['time_estimate'] if params.key?( 'time_estimate' )
+        self.session_id = params['session_id'] if params.key?( 'session_id' )
+        self.author_id = params['author_id'] if params.key?( 'author_id' )
 
         if params['resources']
             remove_all_resources

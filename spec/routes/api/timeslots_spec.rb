@@ -2,8 +2,6 @@
 
 require_relative '../../test_setup'
 
-require_relative '../../../models/timeslot'
-
 describe 'Routes::Api::Timeslots' do
     include Rack::Test::Methods
 
@@ -20,6 +18,8 @@ describe 'Routes::Api::Timeslots' do
     tid = -1
 
     before :all do
+        AssignmentDoneMarker.where( assignment_id: Assignment.where( timeslot_id: Timeslot.where( structure_id: MOCK_UAI ).select( :id ) ).select(:id) ).destroy
+        Assignment.where( timeslot_id: Timeslot.where( structure_id: MOCK_UAI ).select( :id ) ).destroy
         Session.where( timeslot_id: Timeslot.where( structure_id: MOCK_UAI ).select( :id ) ).destroy
         Timeslot.where( structure_id: MOCK_UAI ).destroy
     end

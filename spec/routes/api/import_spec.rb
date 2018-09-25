@@ -2,8 +2,6 @@
 
 require_relative '../../test_setup'
 
-require_relative '../../../models/import'
-
 describe 'Routes::Api::ImportAPI' do
     include Rack::Test::Methods
 
@@ -28,9 +26,7 @@ describe 'Routes::Api::ImportAPI' do
         import.destroy
     end
 
-    it 'decrypts a Pronote file' do
-        puts "    FIXME"
-
-        true
-    end
+    # it 'decrypts a Pronote file' do
+    #     false
+    # end
 end

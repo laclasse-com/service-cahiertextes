@@ -2,8 +2,6 @@
 
 require_relative '../../test_setup'
 
-require_relative '../../../models/assignment'
-
 describe 'Routes::Api::AssignmentTypes' do
     include Rack::Test::Methods
 

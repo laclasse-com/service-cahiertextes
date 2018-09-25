@@ -2,8 +2,6 @@
 
 require_relative '../../test_setup'
 
-require_relative '../../../models/user_parameters'
-
 describe 'Routes::Api::UserParametersAPI' do
     include Rack::Test::Methods
 

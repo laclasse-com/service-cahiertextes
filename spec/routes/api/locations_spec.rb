@@ -2,8 +2,6 @@
 
 require_relative '../../test_setup'
 
-require_relative '../../../models/location'
-
 describe 'Routes::Api::Locations' do
     include Rack::Test::Methods
 
