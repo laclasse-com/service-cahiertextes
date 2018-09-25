@@ -2149,18 +2149,26 @@ angular.module('cahierDeTextesClientApp')
             var view = ctrl.emploi_du_temps.fullCalendar('getView');
             retrieve_data(view.start.toDate(), view.end.toDate());
         };
-        if (!ctrl.current_user.is(['EVS', 'DIR', 'ADM'])) {
+        if (ctrl.current_user.is(['EVS', 'DIR', 'ADM'])) {
+            Annuaire.get_groups_of_structures(current_user.get_structures_ids())
+                .then(function (groups) {
+                ctrl.groups = groups.data;
+                if (ctrl.current_user.is(['ENS'])) {
+                    ctrl.current_user.get_actual_groups()
+                        .then(function (actual_groups) {
+                        ctrl.selected_regroupements = ctrl.groups;
+                    });
+                }
+                else {
+                    ctrl.selected_regroupements = [ctrl.groups[0]];
+                }
+            });
+        }
+        else {
             ctrl.current_user.get_actual_groups()
                 .then(function (actual_groups) {
                 ctrl.groups = actual_groups;
                 ctrl.selected_regroupements = ctrl.groups;
-            });
-        }
-        else {
-            Annuaire.get_groups_of_structures(current_user.get_structures_ids())
-                .then(function (groups) {
-                ctrl.groups = groups.data;
-                ctrl.selected_regroupements = [ctrl.groups[0]];
             });
         }
         ctrl.extraEventSignature = function (event) { return "" + event.matiere; };
