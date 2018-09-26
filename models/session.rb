@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
 class Session < Sequel::Model( :sessions )
-    many_to_many :resources, join_table: :sessions_resources
+    many_to_many :attachments, join_table: :sessions_attachments
     many_to_one :timeslot
     one_to_many :assignments
 
     def to_deep_hash
         hash = to_hash
 
-        hash[:resources] = resources.map(&:to_hash)
+        hash[:attachments] = attachments.map(&:to_hash)
         hash[:assignments] = assignments.select { |assignment| !assignment.deleted || assignment.mtime > UNDELETE_TIME_WINDOW.minutes.ago }
         hash[:assignments].each do |assignment|
-            assignment[:resources] = assignment.resources.map(&:to_hash)
+            assignment[:attachments] = assignment.attachments.map(&:to_hash)
         end
         hash[:assignments] = hash[:assignments].map(&:to_hash)
 
@@ -24,11 +24,12 @@ class Session < Sequel::Model( :sessions )
         self.content = params['content'] if params.key?( 'content' )
         self.date = params['date'] if params.key?( 'date' )
 
-        if params['resources']
-            remove_all_resources
-            params['resources'].each do |resource|
-                add_resource( DataManagement::Accessors.create_or_get( Resource, name: resource['name'],
-                                                                                 hash: resource['hash'] ) )
+        if params['attachments']
+            remove_all_attachments
+            params['attachments'].each do |attachment|
+                add_attachment( DataManagement::Accessors.create_or_get( Attachment,
+                                                                         name: attachment['name'],
+                                                                         hash: attachment['hash'] ) )
             end
         end
 
@@ -36,5 +37,5 @@ class Session < Sequel::Model( :sessions )
     end
 end
 
-class SessionResource < Sequel::Model( :sessions_resources )
+class SessionAttachment < Sequel::Model( :sessions_attachments )
 end

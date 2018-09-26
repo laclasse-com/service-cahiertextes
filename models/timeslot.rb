@@ -2,15 +2,15 @@
 
 require_relative '../lib/utils'
 
-class TimeslotLocation < Sequel::Model( :timeslots_locations )
+class TimeslotResource < Sequel::Model( :timeslots_resources )
     unrestrict_primary_key
 
     many_to_one :timeslot
-    many_to_one :location
+    many_to_one :resource
 end
 
 class Timeslot < Sequel::Model( :timeslots )
-    many_to_many :locations, class: :Location, join_table: :timeslots_locations
+    many_to_many :resources, class: :Resource, join_table: :timeslots_resources
     one_to_many :sessions
     one_to_many :assignments
     many_to_one :import, class: :Import, key: :import_id
@@ -61,18 +61,18 @@ class Timeslot < Sequel::Model( :timeslots )
              .compact
     end
 
-    def update_location( location_id, active_weeks_location )
-        timeslot_location = TimeslotLocation[timeslot_id: id, location_id: location_id]
-        if timeslot_location.nil?
-            location = Location[location_id]
-            return nil if location.nil?
+    def update_resource( resource_id, active_weeks_resource )
+        timeslot_resource = TimeslotResource[timeslot_id: id, resource_id: resource_id]
+        if timeslot_resource.nil?
+            resource = Resource[resource_id]
+            return nil if resource.nil?
 
-            add_location( location )
+            add_resource( resource )
 
-            timeslot_location = TimeslotLocation[timeslot_id: id, location_id: location_id]
+            timeslot_resource = TimeslotResource[timeslot_id: id, resource_id: resource_id]
         end
 
-        timeslot_location.update( active_weeks: active_weeks_location ) unless active_weeks_location.nil?
+        timeslot_resource.update( active_weeks: active_weeks_resource ) unless active_weeks_resource.nil?
     end
 
     def modify( params )
@@ -87,7 +87,7 @@ class Timeslot < Sequel::Model( :timeslots )
 
         save
 
-        update_location( params['location_id'], params['active_weeks_location'] ) if params.key?( 'location_id' )
+        update_resource( params['resource_id'], params['active_weeks_resource'] ) if params.key?( 'resource_id' )
     rescue StandardError => e
         puts "Can't do that with #{self}"
         puts e.message
@@ -97,7 +97,7 @@ class Timeslot < Sequel::Model( :timeslots )
     def deep_destroy
         remove_all_sessions
         remove_all_assignments
-        remove_all_locations
+        remove_all_resources
 
         destroy
     end

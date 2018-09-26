@@ -1,3 +1,4 @@
+# coding: utf-8
 # frozen_string_literal: true
 
 module DataManagement
@@ -27,8 +28,8 @@ module DataManagement
 
                 timeslots.each do |c|
                     c.enseignants.each(&:destroy)
-                    c.locations.each do |location|
-                        c.remove_location( location )
+                    c.resources.each do |resource|
+                        c.remove_resource( resource )
                     end
                 end
 
@@ -36,10 +37,10 @@ module DataManagement
             end
         end
 
-        def orphan_resources
-            Resource.all
-                    .select { |r| r.sessions.empty? && r.assignments.empty? }
-                    .each(&:destroy)
+        def orphan_attachments
+            Attachment.all
+                      .select { |r| r.sessions.empty? && r.assignments.empty? }
+                      .each(&:destroy)
         end
     end
 end

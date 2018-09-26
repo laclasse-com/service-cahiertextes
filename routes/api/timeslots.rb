@@ -48,7 +48,7 @@ module Routes
 
                     halt( 404, 'Créneau inconnu' ) if timeslot.nil?
 
-                    json( timeslot.detailed( params['start_time'], params['end_time'], %w[locations sessions assignments] ) )
+                    json( timeslot.detailed( params['start_time'], params['end_time'], %w[resources sessions assignments] ) )
                 end
 
                 app.post '/api/timeslots/?' do

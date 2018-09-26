@@ -142,8 +142,8 @@ module Routes
                                                      content: session.content,
                                                      author_id: session.author_id )
 
-                    session.resources.each do |resource|
-                        target_session.add_resource( resource )
+                    session.attachments.each do |attachment|
+                        target_session.add_attachment( attachment )
                     end
 
                     json( target_session.to_deep_hash )

@@ -1,3 +1,4 @@
+# coding: utf-8
 # frozen_string_literal: true
 
 require 'rubygems'
@@ -25,8 +26,8 @@ require_relative './models/timeslot'
 require_relative './models/assignment'
 require_relative './models/import'
 require_relative './models/matchable'
+require_relative './models/attachment'
 require_relative './models/resource'
-require_relative './models/location'
 require_relative './models/user_parameters'
 
 require_relative './lib/helpers/auth'
@@ -39,7 +40,7 @@ require_relative './routes/api/assignments'
 require_relative './routes/api/statistics'
 require_relative './routes/api/import'
 require_relative './routes/api/matchables'
-require_relative './routes/api/locations'
+require_relative './routes/api/resources'
 require_relative './routes/api/assignment_types'
 require_relative './routes/api/user_parameters'
 
@@ -87,7 +88,7 @@ class CdTServer < Sinatra::Base
     register Routes::Api::Assignments
 
     register Routes::Api::AssignmentTypes
-    register Routes::Api::Locations
+    register Routes::Api::Resources
 
     register Routes::Api::ImportAPI
     register Routes::Api::Matchables

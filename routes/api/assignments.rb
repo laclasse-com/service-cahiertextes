@@ -192,8 +192,8 @@ module Routes
                                                         author_id: assignment.author_id,
                                                         ctime: Time.now )
 
-                    assignment.resources.each do |resource|
-                        new_assignment.add_resource( resource )
+                    assignment.attachments.each do |attachment|
+                        new_assignment.add_attachment( attachment )
                     end
 
                     json( new_assignment.to_deep_hash )

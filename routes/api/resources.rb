@@ -2,9 +2,9 @@
 
 module Routes
     module Api
-        module Locations
+        module Resources
             def self.registered( app )
-                app.get '/api/locations/?' do
+                app.get '/api/resources/?' do
                     # {
                     param 'structure_id', String
                     param 'label', String
@@ -13,7 +13,7 @@ module Routes
 
                     user_needs_to_be( %w[ ADM DIR ] )
 
-                    query = Location
+                    query = Resource
 
                     query = query.where( structure_id: params['structure_id'] ) if params.key?( 'structure_id' )
                     query = query.where( label: params['label'] ) if params.key?( 'label' )
@@ -22,46 +22,46 @@ module Routes
                     json( query.naked.all )
                 end
 
-                app.get '/api/locations/:id/?' do
+                app.get '/api/resources/:id/?' do
                     # {
                     param 'id', Integer, required: true
                     # }
 
-                    location = Location[ params['id'] ]
-                    halt( 404, "Location #{params['id']} inconnue" ) if location.nil?
+                    resource = Resource[ params['id'] ]
+                    halt( 404, "Resource #{params['id']} inconnue" ) if resource.nil?
 
-                    json( location )
+                    json( resource )
                 end
 
-                app.post '/api/locations/?' do
+                app.post '/api/resources/?' do
                     # {
                     param 'structure_id', String
                     param 'label', String
                     param 'name', String
 
-                    param 'locations', Array
+                    param 'resources', Array
 
-                    one_of 'label', 'locations'
+                    one_of 'label', 'resources'
                     # }
 
                     user_needs_to_be( %w[ ADM DIR ] )
 
-                    single = !params.key?( 'locations' )
+                    single = !params.key?( 'resources' )
                     if single
-                        params['locations'] = [ { structure_id: params['structure_id'],
+                        params['resources'] = [ { structure_id: params['structure_id'],
                                                   label: params['label'],
                                                   name: params['name'] } ]
                     end
 
-                    result = params['locations'].map do |location|
-                        new_location = DataManagement::Accessors.create_or_get( Location,
-                                                                                structure_id: location['structure_id'],
-                                                                                label: location['label'] )
+                    result = params['resources'].map do |resource|
+                        new_resource = DataManagement::Accessors.create_or_get( Resource,
+                                                                                structure_id: resource['structure_id'],
+                                                                                label: resource['label'] )
 
-                        new_location.name = location['name']
-                        new_location.save
+                        new_resource.name = resource['name']
+                        new_resource.save
 
-                        new_location.to_hash
+                        new_resource.to_hash
                     end
 
                     result = result.first if single
@@ -69,7 +69,7 @@ module Routes
                     json( result )
                 end
 
-                app.put '/api/locations/:id/?' do
+                app.put '/api/resources/:id/?' do
                     # {
                     param 'id', Integer, require: true
                     param 'structure_id', String, required: true
@@ -77,29 +77,29 @@ module Routes
                     param 'label', String, required: true
                     # }
 
-                    location = Location[ params['id'] ]
+                    resource = Resource[ params['id'] ]
 
-                    halt( 404, "Location #{params['id']} inconnue" ) if location.nil?
+                    halt( 404, "Resource #{params['id']} inconnue" ) if resource.nil?
 
-                    location.structure_id = params['structure_id']
+                    resource.structure_id = params['structure_id']
 
-                    location.label = params['label']
-                    location.name = params['name']
-                    location.save
+                    resource.label = params['label']
+                    resource.name = params['name']
+                    resource.save
 
-                    json( location )
+                    json( resource )
                 end
 
-                app.delete '/api/locations/:id/?' do
+                app.delete '/api/resources/:id/?' do
                     # {
                     param 'id', Integer, require: true
                     # }
 
-                    location = Location[ params['id'] ]
+                    resource = Resource[ params['id'] ]
 
-                    halt( 404, "Location #{params['id']} inconnue" ) if location.nil?
+                    halt( 404, "Resource #{params['id']} inconnue" ) if resource.nil?
 
-                    location&.destroy
+                    resource&.destroy
 
                     nil
                 end

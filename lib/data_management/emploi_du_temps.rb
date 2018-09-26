@@ -1,3 +1,4 @@
+# coding: utf-8
 # frozen_string_literal: true
 
 module DataManagement
@@ -28,7 +29,7 @@ module DataManagement
                                        .select { |session| session[:deleted] == false && session.date_session == day }
                                        .map do |session|
                             hsession = session.to_hash
-                            hsession[:resources] = session.resources.map(&:to_hash)
+                            hsession[:attachments] = session.attachments.map(&:to_hash)
 
                             hsession
                         end
@@ -37,7 +38,7 @@ module DataManagement
                                            .select { |assignment| assignment[:deleted] == false && assignment.date_due == day }
                                            .map do |assignment|
                             hassignment = assignment.to_hash
-                            hassignment[:resources] = assignment.resources.map(&:to_hash)
+                            hassignment[:attachments] = assignment.attachments.map(&:to_hash)
                             hassignment[:type_assignment_description] = assignment.type_assignment.description
 
                             hassignment[:done] = assignment.done_by?( eleve_id ) unless eleve_id.nil?

@@ -2,7 +2,7 @@
 
 require_relative '../../test_setup'
 
-describe 'Routes::Api::Locations' do
+describe 'Routes::Api::Resources' do
     include Rack::Test::Methods
 
     def app
@@ -14,78 +14,78 @@ describe 'Routes::Api::Locations' do
 
     lid = -1
 
-    it 'creates multiple Locations' do
-        post '/api/locations/', locations: [ { structure_id: MOCK_UAI, label: MOCK_LABEL, name: MOCK_NAME },
+    it 'creates multiple Resources' do
+        post '/api/resources/', resources: [ { structure_id: MOCK_UAI, label: MOCK_LABEL, name: MOCK_NAME },
                                              { structure_id: "#{MOCK_UAI}2", label: "#{MOCK_LABEL}2", name: "#{MOCK_NAME}2" } ]
 
         body = JSON.parse( last_response.body )
         expect( body.length ).to eq 2
 
-        Location.where(id: body.map { |l| l['id'] }).destroy
+        Resource.where(id: body.map { |l| l['id'] }).destroy
     end
 
-    it 'creates a Location' do
-        post '/api/locations/', structure_id: MOCK_UAI, label: MOCK_LABEL, name: MOCK_NAME
+    it 'creates a Resource' do
+        post '/api/resources/', structure_id: MOCK_UAI, label: MOCK_LABEL, name: MOCK_NAME
 
         body = JSON.parse( last_response.body )
         lid = body['id']
-        expect( body.length ).to eq Location.columns.count
+        expect( body.length ).to eq Resource.columns.count
         expect( body['structure_id'] ).to eq MOCK_UAI
         expect( body['label'] ).to eq MOCK_LABEL
         expect( body['name'] ).to eq MOCK_NAME
     end
 
-    it 'gets a Location by id' do
-        get "/api/locations/#{lid}"
+    it 'gets a Resource by id' do
+        get "/api/resources/#{lid}"
 
         body = JSON.parse( last_response.body )
         expect( body['id'] ).to eq lid
-        expect( body.length ).to eq Location.columns.count
+        expect( body.length ).to eq Resource.columns.count
         expect( body['structure_id'] ).to eq MOCK_UAI
         expect( body['label'] ).to eq MOCK_LABEL
         expect( body['name'] ).to eq MOCK_NAME
     end
 
-    it 'gets Locations by structure_id' do
-        get "/api/locations", structure_id: MOCK_UAI
+    it 'gets Resources by structure_id' do
+        get "/api/resources", structure_id: MOCK_UAI
 
         body = JSON.parse( last_response.body )
-        cohort = Location.where(structure_id: MOCK_UAI)
+        cohort = Resource.where(structure_id: MOCK_UAI)
         expect( body.length ).to eq cohort.count
     end
 
-    it 'gets Locations by label' do
-        get "/api/locations", label: MOCK_UAI
+    it 'gets Resources by label' do
+        get "/api/resources", label: MOCK_UAI
 
         body = JSON.parse( last_response.body )
-        cohort = Location.where(label: MOCK_UAI)
+        cohort = Resource.where(label: MOCK_UAI)
         expect( body.length ).to eq cohort.count
     end
 
-    it 'gets Locations by name' do
-        get "/api/locations", name: MOCK_UAI
+    it 'gets Resources by name' do
+        get "/api/resources", name: MOCK_UAI
 
         body = JSON.parse( last_response.body )
-        cohort = Location.where(name: MOCK_UAI)
+        cohort = Resource.where(name: MOCK_UAI)
         expect( body.length ).to eq cohort.count
     end
 
-    it 'modifies a Location' do
-        put "/api/locations/#{lid}", structure_id: "#{MOCK_UAI}#{MOCK_UAI}", label: "#{MOCK_LABEL}#{MOCK_LABEL}", name: "#{MOCK_NAME}#{MOCK_NAME}"
+    it 'modifies a Resource' do
+        put "/api/resources/#{lid}", structure_id: "#{MOCK_UAI}#{MOCK_UAI}", label: "#{MOCK_LABEL}#{MOCK_LABEL}", name: "#{MOCK_NAME}#{MOCK_NAME}"
 
         body = JSON.parse( last_response.body )
         lid = body['id']
-        expect( body.length ).to eq Location.columns.count
+        expect( body.length ).to eq Resource.columns.count
         expect( body['id'] ).to eq lid
         expect( body['structure_id'] ).to eq "#{MOCK_UAI}#{MOCK_UAI}"
         expect( body['label'] ).to eq "#{MOCK_LABEL}#{MOCK_LABEL}"
         expect( body['name'] ).to eq "#{MOCK_NAME}#{MOCK_NAME}"
     end
 
-    it 'deletes a Location by id' do
-        delete "/api/locations/#{lid}"
+    it 'deletes a Resource by id' do
+        delete "/api/resources/#{lid}"
 
         expect( last_response.body ).to eq ''
-        expect( Location[id: lid] ).to be nil
+        expect( Resource[id: lid] ).to be nil
     end
 end
