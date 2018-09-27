@@ -72,6 +72,36 @@ describe 'Routes::Api::Timeslots' do
         expect( body['weekday'] ).to eq MOCK_WEEKDAY
         expect( body['start_time'] ).to eq MOCK_START_TIME
         expect( body['end_time'] ).to eq MOCK_END_TIME
+        expect( body['import_id'] ).to be nil
+    end
+
+    it 'creates a Timeslot as part of importing' do
+        import = Import.create( ctime: Time.now,
+                                type: "test",
+                                structure_id: MOCK_UAI,
+                                author_id: LaClasse::Helpers::User.user['id'] )
+        post '/api/timeslots/',
+             structure_id: MOCK_UAI,
+             group_id: MOCK_GROUP_ID,
+             subject_id: MOCK_SUBJECT_ID,
+             weekday: MOCK_WEEKDAY,
+             start_time: MOCK_START_TIME,
+             end_time: MOCK_END_TIME,
+             import_id: import.id
+
+        body = JSON.parse( last_response.body )
+
+        expect( body.length ).to eq Timeslot.columns.count
+        expect( body['structure_id'] ).to eq MOCK_UAI
+        expect( body['group_id'] ).to eq MOCK_GROUP_ID
+        expect( body['subject_id'] ).to eq MOCK_SUBJECT_ID
+        expect( body['weekday'] ).to eq MOCK_WEEKDAY
+        expect( body['start_time'] ).to eq MOCK_START_TIME
+        expect( body['end_time'] ).to eq MOCK_END_TIME
+        expect( body['import_id'] ).to eq import.id
+
+        Timeslot[body['id']]&.destroy
+        import&.destroy
     end
 
     it 'gets a Timeslot by id' do

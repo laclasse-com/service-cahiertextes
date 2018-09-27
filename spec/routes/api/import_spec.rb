@@ -12,7 +12,7 @@ describe 'Routes::Api::ImportAPI' do
     it 'records a new import' do
         nb_imports_before = Import.count
 
-        post '/api/import/log/start/', structure_id: MOCK_UAI, type: "pronote", comment: "unit-test"
+        post '/api/import/log/start/', structure_id: MOCK_UAI, type: "pronote"
 
         body = JSON.parse( last_response.body )
         import = Import.last
@@ -21,7 +21,7 @@ describe 'Routes::Api::ImportAPI' do
         expect( Import.count ).to eq nb_imports_before + 1
         expect( import.structure_id ).to eq MOCK_UAI
         expect( import.type ).to eq "pronote"
-        expect( import.comment ).to eq "unit-test"
+        expect( import.author_id ).to eq LaClasse::Helpers::User.user['id']
 
         import.destroy
     end

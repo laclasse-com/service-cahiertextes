@@ -11,14 +11,13 @@ module Routes
                 app.post '/api/import/log/start/?' do
                     # {
                     param 'structure_id', String, required: true
-                    param 'type', String, required: false
-                    param 'comment', String, required: false
+                    param 'type', String, required: true
                     # }
 
                     json( Import.create( structure_id: params['structure_id'],
                                          ctime: DateTime.now,
                                          type: params.key?( 'type' ) ? params['type'] : '',
-                                         comment: params.key?( 'comment' ) ? params['comment'] : '' ).to_hash )
+                                         author_id: user['id'] ) )
                 end
 
                 app.post '/api/import/pronote/decrypt' do

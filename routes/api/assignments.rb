@@ -170,12 +170,12 @@ module Routes
                     json( assignment.to_deep_hash )
                 end
 
-                app.post '/api/assignments/:id/copy/session/:session_id/timeslot/:timeslot_id/date_due/:date_due' do
+                app.post '/api/assignments/:id/copy_to/timeslot/:timeslot_id/date_due/:date_due/session/:session_id' do
                     # {
                     param 'id', Integer, required: true
-                    param 'session_id', Integer, required: true
                     param 'timeslot_id', Integer, required: true
                     param 'date_due', Date, required: true
+                    param 'session_id', Integer, required: true
                     # }
 
                     user_needs_to_be( %w[ ENS DOC ] )
@@ -183,9 +183,9 @@ module Routes
                     assignment = Assignment[ params['id'] ]
                     halt( 404, 'Assignment inconnu' ) if assignment.nil?
 
-                    new_assignment = Assignment.create( session_id: params['session_id'],
-                                                        assignment_type_id: assignment.assignment_type_id,
+                    new_assignment = Assignment.create( assignment_type_id: assignment.assignment_type_id,
                                                         timeslot_id: params['timeslot_id'],
+                                                        session_id: params['session_id'],
                                                         content: assignment.content,
                                                         date_due: params['date_due'],
                                                         time_estimate: assignment.time_estimate,

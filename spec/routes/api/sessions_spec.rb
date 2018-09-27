@@ -112,8 +112,8 @@ describe 'Routes::Api::Sessions' do
         put "/api/sessions/#{sid}", date: MOCK_DATE.end_of_year, content: "#{MOCK_CONTENT}#{MOCK_CONTENT}"
 
         body = JSON.parse( last_response.body )
-        lid = body['id']
-        expect( body['id'] ).to eq lid
+        sid = body['id']
+        expect( body['id'] ).to eq sid
         expect( body['timeslot_id'] ).to eq ts.id
         expect( body['date'] ).to eq MOCK_DATE.end_of_year.strftime("%F")
         expect( body['content'] ).to eq "#{MOCK_CONTENT}#{MOCK_CONTENT}"
@@ -125,8 +125,8 @@ describe 'Routes::Api::Sessions' do
         put "/api/sessions/#{sid}", validated: true
 
         body = JSON.parse( last_response.body )
-        lid = body['id']
-        expect( body['id'] ).to eq lid
+        sid = body['id']
+        expect( body['id'] ).to eq sid
         expect( body['deleted'] ).to be false
         expect( body['vtime'] ).to be nil
     end
@@ -136,8 +136,8 @@ describe 'Routes::Api::Sessions' do
         put "/api/sessions/#{sid}", validated: true, vtime: vtime
 
         body = JSON.parse( last_response.body )
-        lid = body['id']
-        expect( body['id'] ).to eq lid
+        sid = body['id']
+        expect( body['id'] ).to eq sid
         expect( body['deleted'] ).to be false
         expect( body['vtime'] ).to eq vtime.to_s
     end
@@ -146,10 +146,29 @@ describe 'Routes::Api::Sessions' do
         put "/api/sessions/#{sid}", validated: false
 
         body = JSON.parse( last_response.body )
-        lid = body['id']
-        expect( body['id'] ).to eq lid
+        sid = body['id']
+        expect( body['id'] ).to eq sid
         expect( body['deleted'] ).to be false
         expect( body['vtime'] ).to be nil
+    end
+
+    it 'copies a session to a different timeslot' do
+        ts2 = Timeslot.create( structure_id: MOCK_UAI,
+                               group_id: 111_111,
+                               subject_id: "SUBJECT_ID",
+                               weekday: Time.now.wday + 1,
+                               start_time: Time.now.strftime( "2000-01-01T%H:00:00+01:00" ),
+                               end_time: Time.now.strftime( "2000-01-01T%H:30:00+01:00" ) )
+
+        copy_date = DateTime.now + 1.day
+
+        post "/api/sessions/#{sid}/copy_to/timeslot/#{ts2.id}/date/#{copy_date}"
+        # body = JSON.parse( last_response.body )
+
+        expect( ts2.sessions.length ).to eq 1
+        expect( ts2.sessions.first.id ).to_not eq sid
+        expect( ts2.sessions.first.timeslot_id ).to eq ts2.id
+        expect( ts2.sessions.first.author_id ).to eq Session[sid].author_id
     end
 
     it 'deletes a Session by id' do
@@ -162,9 +181,5 @@ describe 'Routes::Api::Sessions' do
         expect( body['timeslot_id'] ).to eq ts.id
         # expect( body['date'] ).to eq MOCK_DATE.strftime("%F")
         # expect( body['content'] ).to eq "#{MOCK_CONTENT}#{MOCK_CONTENT}"
-    end
-
-    it 'copies a session to a different timeslot' do
-        expect( false ).to be true
     end
 end

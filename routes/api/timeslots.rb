@@ -53,6 +53,8 @@ module Routes
 
                 app.post '/api/timeslots/?' do
                     # {
+                    param 'import_id', Integer
+
                     param 'group_id', Integer
                     param 'subject_id', String
                     param 'weekday', Integer
@@ -85,7 +87,10 @@ module Routes
                                                         subject_id: timeslot['subject_id'],
                                                         group_id: timeslot['group_id'],
                                                         structure_id: timeslot['structure_id'] )
-                        new_timeslot.modify( timeslot )
+
+                        new_timeslot.update( import_id: params['import_id'] ) if params.key?( 'import_id' )
+
+                        # new_timeslot.modify( timeslot )
 
                         new_timeslot.to_hash
                     end

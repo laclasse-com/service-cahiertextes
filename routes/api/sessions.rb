@@ -120,7 +120,7 @@ module Routes
                     json( session.to_deep_hash )
                 end
 
-                app.post '/api/sessions/:id/copy/group/:group_id/timeslot/:timeslot_id/date/:date/?' do
+                app.post '/api/sessions/:id/copy_to/timeslot/:timeslot_id/date/:date/?' do
                     # {
                     param 'id', Integer, required: true
                     param 'timeslot_id', Integer, required: true

@@ -146,6 +146,29 @@ describe 'Routes::Api::Assignments' do
     end
 
     it 'copies an assignment to a different timeslot/session' do
-        expect( false ).to be true
+        ts2 = Timeslot.create( structure_id: MOCK_UAI,
+                               group_id: 111_111,
+                               subject_id: "SUBJECT_ID",
+                               weekday: Time.now.wday + 1,
+                               start_time: Time.now.strftime( "2000-01-01T%H:00:00+01:00" ),
+                               end_time: Time.now.strftime( "2000-01-01T%H:30:00+01:00" ) )
+
+        copy_date = DateTime.now + 1.day
+
+        session2 = Session.create( timeslot_id: ts2.id,
+                                   author_id: LaClasse::Helpers::User.user['id'],
+                                   date: DateTime.now,
+                                   content: "test session",
+                                   ctime: DateTime.now )
+
+        ts2.add_session( session )
+
+        post "/api/assignments/#{aid}/copy_to/timeslot/#{ts2.id}/date_due/#{copy_date}/session/#{session2.id}"
+
+        expect( ts2.assignments.length ).to eq 1
+        expect( ts2.assignments.first.id ).to_not eq aid
+        expect( ts2.assignments.first.timeslot_id ).to eq ts2.id
+        expect( ts2.assignments.first.session_id ).to eq session2.id
+        expect( ts2.assignments.first.author_id ).to eq Assignment[aid].author_id
     end
 end
