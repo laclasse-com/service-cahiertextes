@@ -140,7 +140,7 @@ describe 'Routes::Api::Assignments' do
 
         body = JSON.parse( last_response.body )
 
-        expect( body['deleted'] ).to be true
+        expect( body['dtime'] ).to_not be nil
         expect( body['id'] ).to eq aid
         expect( body['timeslot_id'] ).to eq ts.id
     end

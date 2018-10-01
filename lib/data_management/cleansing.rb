@@ -22,7 +22,7 @@ module DataManagement
             end
 
             def deleted_and_unused
-                timeslots = Timeslot.where( deleted: true )
+                timeslots = Timeslot.where( Sequel.~( dtime: nil ) )
                                     .all
                                     .select { |c| c.sessions.empty? && c.assignments.empty? }
 

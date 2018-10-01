@@ -12,7 +12,7 @@ module DataManagement
             # Nota Bene: semainiers callés sur l'année civile
             query = Timeslot.where( group_id: groups_ids )
                             .where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{Utils.date_rentree}'" ) )
-                            .where( Sequel.lit( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( dtime, '%Y-%m-%d') >= '#{fin}')" ) )
+                            .where( Sequel.lit( "`dtime` IS NULL OR DATE_FORMAT( dtime, '%Y-%m-%d') >= '#{fin}'" ) )
 
             query = query.where( matiere_id: subjects_ids ) unless subjects_ids.nil?
 
@@ -26,7 +26,7 @@ module DataManagement
                       start: Time.new( day.year, day.month, day.mday, timeslot.start.hour, timeslot.start.min ).iso8601,
                       end: Time.new( day.year, day.month, day.mday, timeslot.end.hour, timeslot.end.min ).iso8601,
                       session: timeslot.session
-                                       .select { |session| session[:deleted] == false && session.date_session == day }
+                                       .select { |session| session[:dtime].nil? && session.date == day }
                                        .map do |session|
                             hsession = session.to_hash
                             hsession[:attachments] = session.attachments.map(&:to_hash)
@@ -35,7 +35,7 @@ module DataManagement
                         end
                                        .first,
                       assignments: timeslot.assignments
-                                           .select { |assignment| assignment[:deleted] == false && assignment.date_due == day }
+                                           .select { |assignment| assignment[:dtime].nil? && assignment.date_due == day }
                                            .map do |assignment|
                             hassignment = assignment.to_hash
                             hassignment[:attachments] = assignment.attachments.map(&:to_hash)

@@ -37,7 +37,7 @@ module Routes
                     # }
 
                     session = Session[ id: params['id'] ]
-                    halt( 404, 'Session inconnu' ) if session.nil? || ( session.deleted && session.mtime < UNDELETE_TIME_WINDOW.minutes.ago )
+                    halt( 404, 'Session inconnu' ) if session.nil? || ( !session.dtime.nil? && session.dtime < UNDELETE_TIME_WINDOW.minutes.ago )
 
                     json( session.to_deep_hash )
                 end
@@ -107,15 +107,12 @@ module Routes
                     halt( 404, 'Session inconnu' ) if session.nil?
                     halt( 401, 'Session visé non modifiable' ) unless session.vtime.nil?
 
-                    session.update( deleted: !session.deleted, mtime: Time.now )
+                    session.update( dtime: session.dtime.nil? ? Time.now : nil, mtime: Time.now )
                     session.save
 
-                    session.assignments.each do |assignment|
-                        if session.deleted
-                            assignment.update( deleted: session.deleted, mtime: Time.now )
-                        elsif assignment.mtime <= UNDELETE_TIME_WINDOW.minutes.ago
-                            assignment.update( deleted: session.deleted, mtime: Time.now )
-                        end
+                    session.assignments.select { |assignment| !session.dtime.nil? || assignment.dtime <= UNDELETE_TIME_WINDOW.minutes.ago }
+                                       .each do |assignment|
+                        assignment.update( dtime: session.dtime, mtime: Time.now )
                         assignment.save
                     end
 

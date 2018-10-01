@@ -20,7 +20,7 @@ module Routes
                     query = Timeslot
 
                     query = query.where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{Utils.date_rentree}'" ) ) unless params.key?( 'no_year_restriction' )
-                    query = query.where( Sequel.lit( "`deleted` IS FALSE OR (`deleted` IS TRUE AND DATE_FORMAT( dtime, '%Y-%m-%d') >= '#{Date.parse( params['date<'] )}')" ) ) if params.key?('date<') && !params.key?( 'include_deleted')
+                    query = query.where( Sequel.lit( "`dtime` IS NULL OR DATE_FORMAT( dtime, '%Y-%m-%d') >= '#{Date.parse( params['date<'] )}'" ) ) if params.key?('date<') && !params.key?( 'include_deleted')
                     query = query.where( group_id: params['groups_ids'] ) if params.key?( 'groups_ids' )
                     query = query.where( subject_id: params['subjects_ids'] ) if params.key?( 'subjects_ids' )
                     query = query.where( structure_id: params['structure_id'] ) if params.key?( 'structure_id' )
@@ -136,7 +136,7 @@ module Routes
 
                     halt( 404, 'Créneau inconnu' ) if timeslot.nil?
 
-                    timeslot.update( deleted: !timeslot.deleted, dtime: timeslot.deleted ? nil : params['dtime'] )
+                    timeslot.update( dtime: timeslot.dtime.nil? ? params['dtime'] : nil )
 
                     timeslot.save
 

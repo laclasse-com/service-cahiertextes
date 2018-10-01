@@ -49,7 +49,7 @@ describe 'Routes::Api::Sessions' do
         expect( body['timeslot_id'] ).to eq ts.id
         expect( body['date'] ).to eq MOCK_DATE.strftime("%F")
         expect( body['content'] ).to eq MOCK_CONTENT
-        expect( body['deleted'] ).to be false
+        expect( body['dtime'] ).to be nil
     end
 
     it 'gets Sessions by timeslot_id' do
@@ -117,7 +117,7 @@ describe 'Routes::Api::Sessions' do
         expect( body['timeslot_id'] ).to eq ts.id
         expect( body['date'] ).to eq MOCK_DATE.end_of_year.strftime("%F")
         expect( body['content'] ).to eq "#{MOCK_CONTENT}#{MOCK_CONTENT}"
-        expect( body['deleted'] ).to be false
+        expect( body['dtime'] ).to be nil
         expect( body['vtime'] ).to be nil
     end
 
@@ -127,7 +127,7 @@ describe 'Routes::Api::Sessions' do
         body = JSON.parse( last_response.body )
         sid = body['id']
         expect( body['id'] ).to eq sid
-        expect( body['deleted'] ).to be false
+        expect( body['dtime'] ).to be nil
         expect( body['vtime'] ).to be nil
     end
 
@@ -138,7 +138,7 @@ describe 'Routes::Api::Sessions' do
         body = JSON.parse( last_response.body )
         sid = body['id']
         expect( body['id'] ).to eq sid
-        expect( body['deleted'] ).to be false
+        expect( body['dtime'] ).to be nil
         expect( body['vtime'] ).to eq vtime.to_s
     end
 
@@ -148,7 +148,7 @@ describe 'Routes::Api::Sessions' do
         body = JSON.parse( last_response.body )
         sid = body['id']
         expect( body['id'] ).to eq sid
-        expect( body['deleted'] ).to be false
+        expect( body['dtime'] ).to be nil
         expect( body['vtime'] ).to be nil
     end
 
@@ -176,7 +176,7 @@ describe 'Routes::Api::Sessions' do
 
         body = JSON.parse( last_response.body )
 
-        expect( body['deleted'] ).to be true
+        expect( body['dtime'] ).to_not be nil
         expect( body['id'] ).to eq sid
         expect( body['timeslot_id'] ).to eq ts.id
         # expect( body['date'] ).to eq MOCK_DATE.strftime("%F")

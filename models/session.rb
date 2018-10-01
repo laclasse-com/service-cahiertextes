@@ -9,7 +9,7 @@ class Session < Sequel::Model( :sessions )
         hash = to_hash
 
         hash[:attachments] = attachments.map(&:to_hash)
-        hash[:assignments] = assignments.select { |assignment| !assignment.deleted || assignment.mtime > UNDELETE_TIME_WINDOW.minutes.ago }
+        hash[:assignments] = assignments.select { |assignment| assignment.dtime.nil? || assignment.dtime > UNDELETE_TIME_WINDOW.minutes.ago }
         hash[:assignments].each do |assignment|
             assignment[:attachments] = assignment.attachments.map(&:to_hash)
         end

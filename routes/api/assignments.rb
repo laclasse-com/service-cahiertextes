@@ -36,7 +36,7 @@ module Routes
 
                     query = query.where( Sequel.lit( "DATE_FORMAT( date_due, '%Y-%m-%d') <= '#{Date.parse( params['date_due<'] )}'" ) ) if params.key?( 'date_due<' )
 
-                    query = query.where( Sequel.~( Sequel.qualify( 'assignments', 'deleted' ) ) ) unless params.key?( 'include_deleted')
+                    query = query.where( dtime: nil ) unless params.key?( 'include_deleted')
 
                     data = query.all.map(&:to_deep_hash)
 
@@ -58,7 +58,7 @@ module Routes
 
                     assignment = Assignment[ params['id'] ]
 
-                    halt( 404, 'Assignment inconnu' ) if assignment.nil? || ( assignment.deleted && assignment.mtime < UNDELETE_TIME_WINDOW.minutes.ago )
+                    halt( 404, 'Assignment inconnu' ) if assignment.nil? || ( !assignment.dtime.nil? && assignment.dtime < UNDELETE_TIME_WINDOW.minutes.ago )
 
                     hd = assignment.to_deep_hash
                     if params['uid']
@@ -90,7 +90,7 @@ module Routes
                     else
                         session = Session.where( timeslot_id: timeslot.id )
                                          .where( date: params['date_due'] )
-                                         .where( deleted: false )
+                                         .where( dtime: nil )
                                          .first
                         if session.nil?
                             session = Session.create( author_id: user['id'],
@@ -164,7 +164,7 @@ module Routes
 
                     assignment = Assignment[ params['id'] ]
 
-                    assignment.update( deleted: !assignment.deleted, mtime: Time.now )
+                    assignment.update( dtime: assignment.dtime.nil? ? Time.now : nil, mtime: Time.now )
                     assignment.save
 
                     json( assignment.to_deep_hash )

@@ -121,7 +121,7 @@ describe 'Routes::Api::Timeslots' do
         get "/api/timeslots", structure_id: MOCK_UAI
 
         body = JSON.parse( last_response.body )
-        cohort = Timeslot.where(structure_id: MOCK_UAI).where( Sequel.~( :deleted ) )
+        cohort = Timeslot.where(structure_id: MOCK_UAI).where( dtime: nil )
         expect( body.length ).to eq cohort.count
     end
 
@@ -129,7 +129,7 @@ describe 'Routes::Api::Timeslots' do
         get "/api/timeslots", groups_ids: [ MOCK_GROUP_ID ]
 
         body = JSON.parse( last_response.body )
-        cohort = Timeslot.where(group_id: [ MOCK_GROUP_ID ]).where( Sequel.~( :deleted ) )
+        cohort = Timeslot.where(group_id: [ MOCK_GROUP_ID ]).where( dtime: nil )
         expect( body.length ).to eq cohort.count
     end
 
@@ -137,7 +137,7 @@ describe 'Routes::Api::Timeslots' do
         get "/api/timeslots", subjects_ids: [ MOCK_SUBJECT_ID ]
 
         body = JSON.parse( last_response.body )
-        cohort = Timeslot.where(subject_id: [ MOCK_SUBJECT_ID ]).where( Sequel.~( :deleted ) )
+        cohort = Timeslot.where(subject_id: [ MOCK_SUBJECT_ID ]).where( dtime: nil )
         expect( body.length ).to eq cohort.count
     end
 
@@ -151,7 +151,7 @@ describe 'Routes::Api::Timeslots' do
         cohort = Timeslot.where(structure_id: MOCK_UAI)
                          .where(group_id: [ MOCK_GROUP_ID ])
                          .where(subject_id: [ MOCK_SUBJECT_ID ])
-                         .where( Sequel.~( :deleted ) )
+                         .where( dtime: nil )
         expect( body.length ).to eq cohort.count
     end
 
@@ -182,6 +182,6 @@ describe 'Routes::Api::Timeslots' do
     it 'deletes a Timeslot by id' do
         delete "/api/timeslots/#{tid}", dtime: Time.now
 
-        expect( Timeslot[id: tid].deleted ).to be true
+        expect( Timeslot[id: tid].dtime ).to_not be nil
     end
 end
