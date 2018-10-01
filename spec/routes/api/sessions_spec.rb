@@ -85,26 +85,26 @@ describe 'Routes::Api::Sessions' do
     end
 
     it 'gets Sessions by date>' do
-        get "/api/sessions", 'date>' => MOCK_DATE.beginning_of_month
+        get "/api/sessions", 'date>' => MOCK_DATE.beginning_of_year
 
         body = JSON.parse( last_response.body )
-        cohort = Session.where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') >= '#{MOCK_DATE.beginning_of_month}'" ) )
+        cohort = Session.where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') >= '#{MOCK_DATE.beginning_of_year}'" ) )
         expect( body.length ).to eq cohort.count
     end
 
     it 'gets Sessions by date<' do
-        get "/api/sessions", 'date<' => MOCK_DATE.end_of_month
+        get "/api/sessions", 'date<' => MOCK_DATE.end_of_year
 
         body = JSON.parse( last_response.body )
-        cohort = Session.where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') <= '#{MOCK_DATE.end_of_month}'" ) )
+        cohort = Session.where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') <= '#{MOCK_DATE.end_of_year}'" ) )
         expect( body.length ).to eq cohort.count
     end
 
     it 'gets Sessions by date> and date<' do
-        get "/api/sessions", 'date>' => MOCK_DATE.beginning_of_month, 'date<' => MOCK_DATE.end_of_month
+        get "/api/sessions", 'date>' => MOCK_DATE.beginning_of_year, 'date<' => MOCK_DATE.end_of_year
 
         body = JSON.parse( last_response.body )
-        cohort = Session.where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') >= '#{MOCK_DATE.beginning_of_month}'" ) ).where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') <= '#{MOCK_DATE.end_of_month}'" ) )
+        cohort = Session.where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') >= '#{MOCK_DATE.beginning_of_year}'" ) ).where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') <= '#{MOCK_DATE.end_of_year}'" ) )
         expect( body.length ).to eq cohort.count
     end
 

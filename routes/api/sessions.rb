@@ -13,8 +13,10 @@ module Routes
                     param 'timeslots_ids', Array
                     param 'groups_ids', Array
                     param 'date', Date
-                    param 'date<', Date
                     param 'date>', Date
+                    param 'date<', Date
+
+                    any_of 'authors_ids', 'timeslots_ids', 'groups_ids', 'date', 'date>', 'date<'
                     # }
 
                     query = Session
@@ -25,7 +27,7 @@ module Routes
                     query = query.where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') >= '#{params['date>']}'" ) ) if params.key?( 'date>' )
                     query = query.where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') <= '#{params['date<']}'" ) ) if params.key?( 'date<' )
                     query = query.where( timeslot_id: Timeslot.where( group_id: params['groups_ids'] ).select(:id).all.map(&:id) ) if params.key?( 'groups_ids' )
-
+p query
                     json( query.naked.all )
                 end
 

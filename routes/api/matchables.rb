@@ -33,9 +33,15 @@ module Routes
                     # }
 
                     fi = Matchable[ structure_id: params['structure_id'], hash_item: params['hash_item'] ]
-                    fi = Matchable.create( structure_id: params['structure_id'], hash_item: params['hash_item'] ) if fi.nil?
 
-                    fi.update( known_id: params['known_id'] )
+                    if fi.nil?
+                        fi = Matchable.create( structure_id: params['structure_id'],
+                                               hash_item: params['hash_item'],
+                                               known_id: params['known_id'] )
+                    else
+                        fi.update( known_id: params['known_id'] )
+                    end
+
                     fi.save
 
                     json( fi.to_hash )

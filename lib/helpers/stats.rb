@@ -11,21 +11,21 @@ module LaClasse
                 timeslots = Timeslot.where(group_id: group_id).all
 
                 { timeslots: { empty: timeslots.select { |timeslot| timeslot.sessions.empty? && timeslot.assignments.empty? }.map( &:id ),
-                               filled: timeslots.select { |creneau| !timeslot.sessions.empty? || !timeslot.assignments.empty? }.map( &:id ) } }
+                               filled: timeslots.select { |timeslot| !timeslot.sessions.empty? || !timeslot.assignments.empty? }.map( &:id ) } }
             end
 
             def teacher_stats( teacher_id, validated = nil, from = nil, to = nil, subjects_ids = nil, groups_ids = nil )
-                def request( model )
+                request = lambda( model ) {
                     req = model.where( author_id: teacher_id )
-                    req = req.where( :date > from ) unless from.nil?
-                    req = req.where( :date < to ) unless to.nil?
+                    req = req.where( from < :date ) unless from.nil?
+                    req = req.where( to > :date ) unless to.nil?
 
                     unless validated.nil?
-                        if validated
-                            req = req.where( vtime: nil )
-                        else
-                            req = req.where( Sequel.~( vtime: nil ) )
-                        end
+                        req = if validated
+                                  req.where( vtime: nil )
+                              else
+                                  req.where( Sequel.~( vtime: nil ) )
+                              end
                     end
 
                     unless groups_ids.nil? && subjects_ids.nil?
@@ -37,10 +37,10 @@ module LaClasse
                     end
 
                     req
-                end
+                }
 
-                { sessions: request( Session ).naked.all,
-                  assignments: request( Assignment ).naked.all }
+                { sessions: request.call( Session ).naked.all,
+                  assignments: request.call( Assignment ).naked.all }
             end
         end
     end

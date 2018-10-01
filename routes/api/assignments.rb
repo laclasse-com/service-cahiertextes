@@ -85,16 +85,8 @@ module Routes
                     timeslot = Timeslot[ params['timeslot_id'] ]
                     halt( 409, 'Créneau invalide' ) if timeslot.nil?
 
-                    assignment = Assignment.create( author_id: user['id'],
-                                                    assignment_type_id: params['assignment_type_id'],
-                                                    timeslot_id: timeslot.id,
-                                                    content: params['content'],
-                                                    date_due: params['date_due'],
-                                                    time_estimate: params['time_estimate'],
-                                                    ctime: Time.now )
-
                     if params['session_id'] && !params['session_id'].nil?
-                        assignment.update( session_id: params['session_id'] )
+                        session_id = params['session_id']
                     else
                         session = Session.where( timeslot_id: timeslot.id )
                                          .where( date: params['date_due'] )
@@ -107,10 +99,18 @@ module Routes
                                                       ctime: Time.now,
                                                       content: '' )
                         end
-                        assignment.update( session_id: session.id )
+                        session_id = session.id
                     end
 
-                    params['author_id'] = user['id']
+                    assignment = Assignment.create( author_id: user['id'],
+                                                    assignment_type_id: params['assignment_type_id'],
+                                                    timeslot_id: timeslot.id,
+                                                    session_id: session_id,
+                                                    author_id: user['id'],
+                                                    content: params['content'],
+                                                    date_due: params['date_due'],
+                                                    time_estimate: params['time_estimate'],
+                                                    ctime: Time.now )
 
                     assignment.modify( params )
 
