@@ -30,7 +30,10 @@ module Routes
 
                     if params.key?('date<') && params.key?('date>')
                         data = data.select do |timeslot|
-                            ( (Date.parse(params['date>']) .. Date.parse(params['date<'])).reduce(true) { |memo, day| memo && (day.wday == timeslot.weekday && timeslot.active_weeks[day.cweek] == 1) } )
+                            ( Date.parse( params['date>'] ) .. Date.parse( params['date<'] ) )
+                                .reduce( true ) do |memo, day|
+                                memo && ( day.wday == timeslot.weekday && timeslot.active_weeks[day.cweek] == 1 )
+                            end
                         end
                     end
 

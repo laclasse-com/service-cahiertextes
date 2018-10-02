@@ -1,4 +1,3 @@
-# coding: utf-8
 # frozen_string_literal: true
 
 require 'rubygems'
@@ -42,6 +41,7 @@ require_relative './routes/api/import'
 require_relative './routes/api/matchables'
 require_relative './routes/api/resources'
 require_relative './routes/api/assignment_types'
+require_relative './routes/api/resource_types'
 require_relative './routes/api/user_parameters'
 
 # Application Sinatra servant de base
@@ -89,6 +89,7 @@ class CdTServer < Sinatra::Base
 
     register Routes::Api::AssignmentTypes
     register Routes::Api::Resources
+    register Routes::Api::ResourceTypes
 
     register Routes::Api::ImportAPI
     register Routes::Api::Matchables

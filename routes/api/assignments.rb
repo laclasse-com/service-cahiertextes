@@ -17,6 +17,8 @@ module Routes
                     param 'include_deleted', :boolean
                     param 'check_done', :boolean
                     param 'uid', String
+
+                    any_of 'authors_ids', 'timeslots_ids', 'groups_ids', 'sessions_ids', 'date_due', 'date_due<', 'date_due>', 'include_deleted', 'check_done', 'uid'
                     # }
 
                     halt( 401, '401 Unauthorized' ) unless !params.key?('uid') || ( user['id'] == params['uid'] ||
@@ -28,7 +30,7 @@ module Routes
 
                     query = query.where( timeslot_id: params['timeslots_ids']) if params.key?( 'timeslots_ids' )
 
-                    query = query.where( timeslot_id: Timeslot.where( regroupement_id: params['groups_ids'] ).select(:id).all.map(&:id) ) if params.key?( 'groups_ids' )
+                    query = query.where( timeslot_id: Timeslot.where( group_id: params['groups_ids'] ).select(:id).all.map(&:id) ) if params.key?( 'groups_ids' )
 
                     query = query.where( session_id: params['session_ids']) if params.key?( 'session_ids' )
 
@@ -77,7 +79,7 @@ module Routes
                     param 'date_due', Date, required: true
                     param 'time_estimate', Integer, required: true
 
-                    param 'session_id', Integer, required: false
+                    param 'session_id', Integer
                     # }
 
                     user_needs_to_be( %w[ ENS DOC ] )
@@ -120,12 +122,12 @@ module Routes
                 app.put '/api/assignments/:id/?' do
                     # {
                     param 'id', Integer, required: true
+
                     param 'timeslot_id', Integer
                     param 'assignment_type_id', Integer
                     param 'content', String
                     param 'date_due', Date
                     param 'time_estimate', Integer
-
                     param 'session_id', Integer
                     param 'done', :boolean
                     # }
