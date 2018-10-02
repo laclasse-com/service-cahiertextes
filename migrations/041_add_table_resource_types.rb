@@ -16,6 +16,7 @@ Sequel.migration do
         alter_table( :resources ) do
             add_foreign_key :resource_type_id, :resource_types, null: true
         end
+        DB[:resources].update(resource_type_id: DB[:resource_types].all.first[:id])
     end
 end
 puts 'applying 041_add_table_resource_types.rb'

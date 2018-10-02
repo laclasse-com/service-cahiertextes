@@ -15,6 +15,7 @@ Sequel.migration do
         alter_table( :imports ) do
             add_foreign_key :import_type_id, :import_types, null: true
         end
+        DB[:imports].update(import_type_id: DB[:import_types].all.first[:id])
     end
 end
 puts 'applying 042_add_table_import_types.rb'

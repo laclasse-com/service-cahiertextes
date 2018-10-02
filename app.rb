@@ -43,6 +43,7 @@ require_relative './routes/api/resources'
 require_relative './routes/api/assignment_types'
 require_relative './routes/api/resource_types'
 require_relative './routes/api/import_types'
+require_relative './routes/api/attachment_types'
 require_relative './routes/api/user_parameters'
 
 # Application Sinatra servant de base
@@ -92,6 +93,7 @@ class CdTServer < Sinatra::Base
     register Routes::Api::Resources
     register Routes::Api::ResourceTypes
     register Routes::Api::ImportTypes
+    register Routes::Api::AttachmentTypes
 
     register Routes::Api::ImportAPI
     register Routes::Api::Matchables
