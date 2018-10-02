@@ -14,7 +14,7 @@ module DataManagement
                             .where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{Utils.date_rentree}'" ) )
                             .where( Sequel.lit( "`dtime` IS NULL OR DATE_FORMAT( dtime, '%Y-%m-%d') >= '#{fin}'" ) )
 
-            query = query.where( matiere_id: subjects_ids ) unless subjects_ids.nil?
+            query = query.where( subject_id: subjects_ids ) unless subjects_ids.nil?
 
             query.all
                  .map do |timeslot|
@@ -23,8 +23,8 @@ module DataManagement
                     { group_id: timeslot.group_id,
                       timeslot_id: timeslot.id,
                       subject_id: timeslot.subject_id,
-                      start: Time.new( day.year, day.month, day.mday, timeslot.start.hour, timeslot.start.min ).iso8601,
-                      end: Time.new( day.year, day.month, day.mday, timeslot.end.hour, timeslot.end.min ).iso8601,
+                      start_time: Time.new( day.year, day.month, day.mday, timeslot.start.hour, timeslot.start.min ).iso8601,
+                      end_time: Time.new( day.year, day.month, day.mday, timeslot.end.hour, timeslot.end.min ).iso8601,
                       session: timeslot.session
                                        .select { |session| session[:dtime].nil? && session.date == day }
                                        .map do |session|
@@ -39,7 +39,7 @@ module DataManagement
                                            .map do |assignment|
                             hassignment = assignment.to_hash
                             hassignment[:attachments] = assignment.attachments.map(&:to_hash)
-                            hassignment[:type_assignment_description] = assignment.type_assignment.description
+                            hassignment[:assignment_type_description] = assignment.assignment_type.description
 
                             hassignment[:done] = assignment.done_by?( eleve_id ) unless eleve_id.nil?
                             hassignment[:rtime] = assignment.done_on_the( eleve_id ) if hassignment[:done]
