@@ -9,9 +9,6 @@ describe 'Routes::Api::Resources' do
         CdTServer.new
     end
 
-    MOCK_LABEL = 'label'
-    MOCK_NAME = 'name'
-
     lid = -1
 
     it 'creates multiple Resources' do

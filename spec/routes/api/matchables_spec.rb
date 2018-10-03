@@ -9,9 +9,6 @@ describe 'Routes::Api::Matchables' do
         CdTServer.new
     end
 
-    MOCK_HASH = 'hash'
-    MOCK_KNOWN_ID = 'known_id'
-
     it 'creates a Matchable' do
         post "/api/matchables/#{MOCK_UAI}/#{MOCK_HASH}", known_id: MOCK_KNOWN_ID
 

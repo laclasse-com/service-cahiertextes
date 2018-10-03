@@ -25,9 +25,6 @@ describe 'Routes::Api::Sessions' do
         ts&.destroy
     end
 
-    MOCK_DATE = DateTime.now
-    MOCK_CONTENT = 'test session'
-
     sid = -1
 
     it 'creates a Session' do

@@ -9,12 +9,6 @@ describe 'Routes::Api::Timeslots' do
         CdTServer.new
     end
 
-    MOCK_WEEKDAY = Time.now.wday
-    MOCK_START_TIME = Time.now.strftime( "2000-01-01T%H:00:00+01:00" )
-    MOCK_END_TIME = Time.now.strftime( "2000-01-01T%H:30:00+01:00" )
-    MOCK_GROUP_ID = 999_999
-    MOCK_SUBJECT_ID = "SUBJECT_ID"
-
     tid = -1
 
     before :all do

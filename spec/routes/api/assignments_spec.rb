@@ -14,16 +14,16 @@ describe 'Routes::Api::Assignments' do
 
     before( :all ) do
         ts = Timeslot.create( structure_id: MOCK_UAI,
-                              group_id: 999_999,
-                              subject_id: "SUBJECT_ID",
-                              weekday: Time.now.wday,
-                              start_time: Time.now.strftime( "2000-01-01T%H:00:00+01:00" ),
-                              end_time: Time.now.strftime( "2000-01-01T%H:30:00+01:00" ) )
+                              group_id: MOCK_GROUP_ID,
+                              subject_id: MOCK_SUBJECT_ID,
+                              weekday: MOCK_WEEKDAY,
+                              start_time: MOCK_START_TIME,
+                              end_time: MOCK_END_TIME )
 
         session = Session.create( timeslot_id: ts.id,
                                   author_id: LaClasse::Helpers::User.user['id'],
                                   date: DateTime.now,
-                                  content: "test session",
+                                  content: MOCK_CONTENT,
                                   ctime: DateTime.now )
 
         ts.add_session( session )
@@ -37,10 +37,6 @@ describe 'Routes::Api::Assignments' do
         ts.sessions.each(&:destroy)
         ts&.destroy
     end
-
-    MOCK_DATE = DateTime.now
-    MOCK_ASSIGNMENT_TYPE_ID = AssignmentType.first.id
-    MOCK_CONTENT = "test assignment"
 
     aid = nil
 
@@ -147,8 +143,8 @@ describe 'Routes::Api::Assignments' do
 
     it 'copies an assignment to a different timeslot/session' do
         ts2 = Timeslot.create( structure_id: MOCK_UAI,
-                               group_id: 111_111,
-                               subject_id: "SUBJECT_ID",
+                               group_id: MOCK_GROUP_ID2,
+                               subject_id: MOCK_SUBJECT_ID,
                                weekday: Time.now.wday + 1,
                                start_time: Time.now.strftime( "2000-01-01T%H:00:00+01:00" ),
                                end_time: Time.now.strftime( "2000-01-01T%H:30:00+01:00" ) )
