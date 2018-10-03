@@ -27,6 +27,8 @@ module Routes
                     query = query.where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') <= '#{params['date<']}'" ) ) if params.key?( 'date<' )
                     query = query.where( timeslot_id: Timeslot.where( group_id: params['groups_ids'] ).select(:id).all.map(&:id) ) if params.key?( 'groups_ids' )
 
+                    # FIXME: rights to see content
+
                     json( query.naked.all )
                 end
 
@@ -37,6 +39,8 @@ module Routes
 
                     session = Session[ id: params['id'] ]
                     halt( 404, 'Session inconnu' ) if session.nil? || ( !session.dtime.nil? && session.dtime < UNDELETE_TIME_WINDOW.minutes.ago )
+
+                    user_needs_to_be_in_group( %w[ELV TUT ENS DIR ADM DOC], session.timeslot.group_id )
 
                     json( session.to_deep_hash )
                 end

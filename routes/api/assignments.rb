@@ -49,6 +49,8 @@ module Routes
                         end
                     end
 
+                    # FIXME: rights to see content
+
                     json( data )
                 end
 
@@ -60,6 +62,8 @@ module Routes
                     assignment = Assignment[ params['id'] ]
 
                     halt( 404, 'Assignment inconnu' ) if assignment.nil? || ( !assignment.dtime.nil? && assignment.dtime < UNDELETE_TIME_WINDOW.minutes.ago )
+
+                    user_needs_to_be_in_group( %w[ELV TUT ENS DIR ADM DOC], assignment.session.timeslot.group_id )
 
                     hd = assignment.to_deep_hash
                     if params['uid']
@@ -134,7 +138,7 @@ module Routes
                     halt( 404, 'Assignment inconnu' ) if assignment.nil?
 
                     if params.key?( 'done' )
-                        user_needs_to_be_in_group( assignment.session.timeslot.group_id )
+                        user_needs_to_be_in_group( %w[ELV], assignment.session.timeslot.group_id )
 
                         assignment.done_by?( user['id'] ) ? assignment.to_be_done_by!( user['id'] ) : assignment.done_by!( user['id'] )
 

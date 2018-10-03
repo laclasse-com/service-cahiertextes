@@ -28,8 +28,8 @@ module LaClasse
                 halt( 401, '401 Unauthorized' ) if user['groups'].select { |profile| profile['type'] == 'ENS' && profile['group_id'] == group_id && profile['subject_id'] == subject_id }.empty?
             end
 
-            def user_needs_to_be_in_group( group_id, _uid = nil )
-                halt( 401, '401 Unauthorized' ) if user['groups'].select { |profile| %w[ELV MBR].include?( profile['type'] ) && profile['group_id'] == group_id }.empty?
+            def user_needs_to_be_in_group( profile_types, group_id, _uid = nil )
+                halt( 401, '401 Unauthorized' ) if user['groups'].select { |profile| profile_types.include?( profile['type'] ) && profile['group_id'] == group_id }.empty?
             end
         end
     end
