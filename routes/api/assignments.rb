@@ -108,7 +108,6 @@ module Routes
                                                     assignment_type_id: params['assignment_type_id'],
                                                     timeslot_id: timeslot.id,
                                                     session_id: session_id,
-                                                    author_id: user['id'],
                                                     content: params['content'],
                                                     date_due: params['date_due'],
                                                     time_estimate: params['time_estimate'],
