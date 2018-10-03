@@ -1,4 +1,3 @@
-# coding: utf-8
 # frozen_string_literal: true
 
 require_relative '../../models/session'
@@ -111,7 +110,7 @@ module Routes
                     session.save
 
                     session.assignments.select { |assignment| !session.dtime.nil? || assignment.dtime <= UNDELETE_TIME_WINDOW.minutes.ago }
-                                       .each do |assignment|
+                           .each do |assignment|
                         assignment.update( dtime: session.dtime, mtime: Time.now )
                         assignment.save
                     end

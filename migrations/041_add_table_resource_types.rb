@@ -8,8 +8,8 @@ Sequel.migration do
             String :label, null: false
             String :description
         end
-        [['Salle', 'Salle'],
-         ['Matériel', 'Matériel']].each do |resource_type|
+        [%w[Salle Salle],
+         %w[Matériel Matériel]].each do |resource_type|
             self[:resource_types].insert( %i[label description], resource_type )
         end
 
