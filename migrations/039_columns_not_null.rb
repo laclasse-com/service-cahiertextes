@@ -37,9 +37,9 @@ Sequel.migration do
         end
 
         # session_id
-        alter_table( :assignments ) do
-            set_column_not_null :session_id
-        end
+        # alter_table( :assignments ) do
+        #     set_column_not_null :session_id
+        # end
 
         # imports.*
         DB[:imports].update( type: "pronote", author_id: "" )
