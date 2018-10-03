@@ -48,10 +48,10 @@ module Routes
                     param 'content', String
                     # }
 
-                    user_needs_to_be( %w[ ENS DOC ] )
-
                     timeslot = Timeslot[ params['timeslot_id'] ]
                     halt( 409, 'Créneau invalide' ) if timeslot.nil?
+
+                    user_needs_to_be( %w[ ENS DOC ], timeslot.structure_id )
 
                     session = Session.create( author_id: user['id'],
                                               timeslot_id: timeslot.id,
@@ -78,14 +78,14 @@ module Routes
                     halt( 404, 'Session inconnus' ) if session.nil?
 
                     if params.key?( 'validated' ) && ( !params['validated'] || params.key?( 'vtime' ) )
-                        user_needs_to_be( %w[ DIR ] )
+                        user_needs_to_be( %w[ DIR ], session.timeslot.structure_id )
 
                         session.vtime = nil
                         session.vtime = params['vtime'] if params['validated'] && params.key?( 'vtime' )
 
                         session.save
                     else
-                        user_needs_to_be( %w[ ENS DOC ] )
+                        user_needs_to_be( %w[ ENS DOC ], session.timeslot.structure_id )
 
                         halt( 401, 'Session visée non modifiable' ) unless session.vtime.nil?
 
@@ -100,11 +100,11 @@ module Routes
                     param 'id', Integer, required: true
                     # }
 
-                    user_needs_to_be( %w[ ENS DOC ] )
-
                     session = Session[ id: params['id'] ]
                     halt( 404, 'Session inconnu' ) if session.nil?
                     halt( 401, 'Session visé non modifiable' ) unless session.vtime.nil?
+
+                    user_needs_to_be( %w[ ENS DOC ], session.timeslot.structure_id )
 
                     session.update( dtime: session.dtime.nil? ? Time.now : nil, mtime: Time.now )
                     session.save
@@ -125,14 +125,12 @@ module Routes
                     param 'date', Date, required: true
                     # }
 
-                    user_needs_to_be( %w[ ENS DOC ] )
-
                     session = Session[ id: params['id'] ]
-
                     halt( 404, 'Session inconnu' ) if session.nil?
-
                     halt( 403, 'Existing session' ) unless Session.where( timeslot_id: params['timeslot_id'],
                                                                           date: params['date'] ).count.zero?
+
+                    user_needs_to_be( %w[ ENS DOC ], session.timeslot.structure_id )
 
                     target_session = Session.create( timeslot_id: params['timeslot_id'],
                                                      date: params['date'],

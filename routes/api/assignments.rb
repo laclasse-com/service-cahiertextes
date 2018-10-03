@@ -81,10 +81,10 @@ module Routes
                     param 'session_id', Integer
                     # }
 
-                    user_needs_to_be( %w[ ENS DOC ] )
-
                     timeslot = Timeslot[ params['timeslot_id'] ]
                     halt( 409, 'Créneau invalide' ) if timeslot.nil?
+
+                    user_needs_to_be( %w[ ENS DOC ], timeslot.structure_id )
 
                     if params['session_id'] && !params['session_id'].nil?
                         session_id = params['session_id']
@@ -134,7 +134,7 @@ module Routes
                     halt( 404, 'Assignment inconnu' ) if assignment.nil?
 
                     if params.key?( 'done' )
-                        user_needs_to_be( %w[ ELV ] )
+                        user_needs_to_be( %w[ ELV ], assignment.session.timeslot.structure_id )
 
                         assignment.done_by?( user['id'] ) ? assignment.to_be_done_by!( user['id'] ) : assignment.done_by!( user['id'] )
 
@@ -145,7 +145,7 @@ module Routes
 
                         json( hd )
                     else
-                        user_needs_to_be( %w[ ENS DOC ] )
+                        user_needs_to_be( %w[ ENS DOC ], assignment.session.timeslot.structure_id )
 
                         params['author_id'] = user['id']
 
@@ -160,9 +160,10 @@ module Routes
                     param 'id', Integer, required: true
                     # }
 
-                    user_needs_to_be( %w[ ENS DOC ] )
-
                     assignment = Assignment[ params['id'] ]
+                    halt( 404, 'Assignment inconnu' ) if assignment.nil?
+
+                    user_needs_to_be( %w[ ENS DOC ], assignment.session.timeslot.structure_id )
 
                     assignment.update( dtime: assignment.dtime.nil? ? Time.now : nil, mtime: Time.now )
                     assignment.save
@@ -178,10 +179,10 @@ module Routes
                     param 'session_id', Integer, required: true
                     # }
 
-                    user_needs_to_be( %w[ ENS DOC ] )
-
                     assignment = Assignment[ params['id'] ]
                     halt( 404, 'Assignment inconnu' ) if assignment.nil?
+
+                    user_needs_to_be( %w[ ENS DOC ], assignment.session.timeslot.structure_id )
 
                     new_assignment = Assignment.create( assignment_type_id: assignment.assignment_type_id,
                                                         timeslot_id: params['timeslot_id'],

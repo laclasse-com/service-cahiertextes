@@ -59,6 +59,7 @@ module Routes
 
                     param 'group_id', Integer
                     param 'subject_id', String
+                    param 'structure_id', String
                     param 'weekday', Integer
                     param 'start_time', DateTime
                     param 'end_time', DateTime
@@ -67,8 +68,6 @@ module Routes
 
                     one_of :timeslots, :group_id
                     # }
-
-                    user_needs_to_be( %w[ ENS DOC ADM DIR ] )
 
                     single = !params.key?( 'timeslots' )
 
@@ -80,6 +79,8 @@ module Routes
                                                   subject_id: params['subject_id'],
                                                   structure_id: params['structure_id']} ]
                     end
+
+                    user_needs_to_be( %w[ ENS DOC ADM ], params['timeslots'].first['structure_id'] )
 
                     result = params['timeslots'].map do |timeslot|
                         new_timeslot = Timeslot.create( ctime: Time.now,
@@ -115,11 +116,10 @@ module Routes
                     any_of :group_id, :subject_id, :weekday, :start_time, :end_time
                     # }
 
-                    user_needs_to_be( %w[ ENS DOC ] )
-
                     timeslot = Timeslot[ params['id'] ]
-
                     halt( 404, 'Créneau inconnu' ) if timeslot.nil?
+
+                    user_needs_to_be( %w[ ENS DOC ADM ], timeslot.structure_id )
 
                     timeslot.modify( params )
 
@@ -132,11 +132,10 @@ module Routes
                     param 'dtime', DateTime, required: true
                     # }
 
-                    user_needs_to_be( %w[ ENS DOC ] )
-
                     timeslot = Timeslot[ params['id'] ]
-
                     halt( 404, 'Créneau inconnu' ) if timeslot.nil?
+
+                    user_needs_to_be( %w[ ENS DOC ADM ], timeslot.structure_id )
 
                     timeslot.update( dtime: timeslot.dtime.nil? ? params['dtime'] : nil )
 

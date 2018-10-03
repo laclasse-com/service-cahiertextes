@@ -11,7 +11,7 @@ module Routes
                     param 'name', String
                     # }
 
-                    user_needs_to_be( %w[ ADM DIR ] )
+                    user_needs_to_be( %w[ ADM ], params['structure_id'] )
 
                     query = Resource
 
@@ -44,7 +44,7 @@ module Routes
                     one_of 'label', 'resources'
                     # }
 
-                    user_needs_to_be( %w[ ADM DIR ] )
+                    user_needs_to_be( %w[ ADM ], params['structure_id'] )
 
                     single = !params.key?( 'resources' )
                     if single
