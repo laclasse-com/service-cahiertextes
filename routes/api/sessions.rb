@@ -51,7 +51,7 @@ module Routes
                     timeslot = Timeslot[ params['timeslot_id'] ]
                     halt( 409, 'Créneau invalide' ) if timeslot.nil?
 
-                    user_needs_to_be( %w[ ENS DOC ], timeslot.structure_id )
+                    user_needs_to_teach_subject_in_group( timeslot.subject_id, timeslot.group_id )
 
                     session = Session.create( author_id: user['id'],
                                               timeslot_id: timeslot.id,
@@ -85,7 +85,7 @@ module Routes
 
                         session.save
                     else
-                        user_needs_to_be( %w[ ENS DOC ], session.timeslot.structure_id )
+                        user_needs_to_teach_subject_in_group( session.timeslot.subject_id, session.timeslot.group_id )
 
                         halt( 401, 'Session visée non modifiable' ) unless session.vtime.nil?
 
@@ -104,7 +104,7 @@ module Routes
                     halt( 404, 'Session inconnu' ) if session.nil?
                     halt( 401, 'Session visé non modifiable' ) unless session.vtime.nil?
 
-                    user_needs_to_be( %w[ ENS DOC ], session.timeslot.structure_id )
+                    user_needs_to_teach_subject_in_group( session.timeslot.subject_id, session.timeslot.group_id )
 
                     session.update( dtime: session.dtime.nil? ? Time.now : nil, mtime: Time.now )
                     session.save
@@ -130,7 +130,8 @@ module Routes
                     halt( 403, 'Existing session' ) unless Session.where( timeslot_id: params['timeslot_id'],
                                                                           date: params['date'] ).count.zero?
 
-                    user_needs_to_be( %w[ ENS DOC ], session.timeslot.structure_id )
+                    user_needs_to_teach_subject_in_group( session.timeslot.subject_id, session.timeslot.group_id )
+                    user_needs_to_teach_subject_in_group( session.timeslot.subject_id, Timeslot[id: params['timeslot_id']].group_id )
 
                     target_session = Session.create( timeslot_id: params['timeslot_id'],
                                                      date: params['date'],

@@ -23,6 +23,14 @@ module LaClasse
                     memo || user_is_profile_in_structure?( profile_type, structure_id, uid )
                 end
             end
+
+            def user_needs_to_teach_subject_in_group( subject_id, group_id, _uid = nil )
+                halt( 401, '401 Unauthorized' ) if user['groups'].select { |profile| profile['type'] == 'ENS' && profile['group_id'] == group_id && profile['subject_id'] == subject_id }.empty?
+            end
+
+            def user_needs_to_be_in_group( group_id, _uid = nil )
+                halt( 401, '401 Unauthorized' ) if user['groups'].select { |profile| %w[ELV MBR].include?( profile['type'] ) && profile['group_id'] == group_id }.empty?
+            end
         end
     end
 end
