@@ -32,7 +32,7 @@ describe 'Routes::Api::Matchables' do
         expect( body['structure_id'] ).to eq MOCK_UAI
     end
 
-    it 'gets al Matchables of a structure' do
+    it 'gets all Matchables of a structure' do
         get "/api/matchables/#{MOCK_UAI}"
 
         body = JSON.parse( last_response.body )
