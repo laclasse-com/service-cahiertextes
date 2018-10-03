@@ -14,6 +14,8 @@ module Routes
                     param 'type', String, required: true
                     # }
 
+                    user_needs_to_be( %w[ADM] )
+
                     json( Import.create( structure_id: params['structure_id'],
                                          ctime: DateTime.now,
                                          type: params.key?( 'type' ) ? params['type'] : '',
@@ -26,6 +28,8 @@ module Routes
                     # }
 
                     # halt( 500, 'Le fichier n\'est pas un fichier XML valide.' ) if %r{^(application|text)/xml;.*}.match( FileMagic.new(FileMagic::MAGIC_MIME).file( params['file']['tempfile'].path ) ).nil?
+
+                    user_needs_to_be( %w[ADM] )
 
                     json( File.open( params['file']['tempfile'] ) do |xml|
                               nxml = Nokogiri::XML( xml )

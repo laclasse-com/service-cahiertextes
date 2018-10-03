@@ -18,6 +18,58 @@ module Routes
 
                     json( assignment_type.to_hash )
                 end
+
+                app.post '/api/assignment_types/?' do
+                    # {
+                    param 'label', String, required: true
+                    param 'description', String
+                    # }
+
+                    user_needs_to_be( %w[TECH] )
+
+                    assignment_type = AssignmentType[ label: params['label'] ]
+                    halt( 403, "AssignmentType #{params['label']} existant" ) unless assignment_type.nil?
+
+                    assignment_type = AssignmentType.create( label: params['label'] )
+                    assignment_type.update( description: params['description'] ) if params.key?( 'description' )
+
+                    json( assignment_type.to_hash )
+                end
+
+                app.put '/api/assignment_types/:id/?' do
+                    # {
+                    param 'id', Integer, required: true
+                    param 'label', String
+                    param 'description', String
+
+                    any_of 'label', 'description'
+                    # }
+
+                    user_needs_to_be( %w[TECH] )
+
+                    assignment_type = AssignmentType[ params['id'] ]
+                    halt( 404, "AssignmentType #{params['id']} inconnu" ) if assignment_type.nil?
+
+                    assignment_type.update( label: params['label'] ) if params.key?( 'label' )
+                    assignment_type.update( description: params['description'] ) if params.key?( 'description' )
+
+                    json( assignment_type.to_hash )
+                end
+
+                app.delete '/api/assignment_types/:id/?' do
+                    # {
+                    param 'id', Integer, required: true
+                    # }
+
+                    user_needs_to_be( %w[TECH] )
+
+                    assignment_type = AssignmentType[ params['id'] ]
+                    halt( 404, "AssignmentType #{params['id']} inconnu" ) if assignment_type.nil?
+
+                    assignment_type&.destroy
+
+                    nil
+                end
             end
         end
     end
