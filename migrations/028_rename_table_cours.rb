@@ -16,11 +16,15 @@ Sequel.migration do
         rename_table( :cours_resources, :sessions_resources )
 
         alter_table( :sessions_resources ) do
+            drop_foreign_key [:cours_id]
             rename_column( :cours_id, :session_id )
+            add_foreign_key [:session_id], :sessions
         end
 
         alter_table( :devoirs ) do
+            drop_foreign_key [:cours_id]
             rename_column( :cours_id, :session_id )
+            add_foreign_key [:session_id], :sessions
         end
     end
 end
