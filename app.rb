@@ -31,12 +31,10 @@ require_relative './models/user_parameters'
 
 require_relative './lib/helpers/auth'
 require_relative './lib/helpers/user'
-require_relative './lib/helpers/stats'
 
 require_relative './routes/api/sessions'
 require_relative './routes/api/timeslots'
 require_relative './routes/api/assignments'
-require_relative './routes/api/statistics'
 require_relative './routes/api/import'
 require_relative './routes/api/matchables'
 require_relative './routes/api/resources'
@@ -54,7 +52,6 @@ class CdTServer < Sinatra::Base
 
     helpers LaClasse::Helpers::Auth
     helpers LaClasse::Helpers::User
-    helpers LaClasse::Helpers::Stats
 
     configure :production, :development do
         set :protection, true
@@ -88,7 +85,6 @@ class CdTServer < Sinatra::Base
     register Routes::Api::Timeslots
     register Routes::Api::Sessions
     register Routes::Api::Assignments
-
     register Routes::Api::AssignmentTypes
     register Routes::Api::Resources
     register Routes::Api::ResourceTypes
@@ -97,8 +93,6 @@ class CdTServer < Sinatra::Base
 
     register Routes::Api::ImportAPI
     register Routes::Api::Matchables
-
-    register Routes::Api::Statistics
 
     register Routes::Api::UserParametersAPI
 end
