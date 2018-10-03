@@ -37,6 +37,7 @@ Sequel.migration do
         end
 
         # session_id
+        DB[:assignments].where(session_id: nil).update(session_id: 0)
         alter_table( :assignments ) do
             set_column_not_null :session_id
         end

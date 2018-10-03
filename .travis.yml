@@ -10,7 +10,7 @@ before_script:
   - make db-migrate
 
 script:
-  - "bundle exec rspec ./spec/routes/api ./spec/lib"
+  - "bundle exec rspec"
   - "bundle exec rubocop -D"
 
 services:
