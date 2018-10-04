@@ -32,7 +32,7 @@ module Routes
                     json( File.open( params['file']['tempfile'] ) do |xml|
                               nxml = Nokogiri::XML( xml )
 
-                              halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ADM], ProNote.extract_from_xml( nxml, 'UAI' ) )
+                              halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ADM], nxml.search( 'UAI' ).children.text )
 
                               crypted = !nxml.search( 'CLES' ).empty?
 

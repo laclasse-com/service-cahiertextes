@@ -36,7 +36,31 @@ describe 'Routes::Api::ImportAPI' do
         import.destroy
     end
 
-    # it 'decrypts a Pronote file' do
-    #     false
-    # end
+    it 'FORBIDS decryption of a Pronote file of another structure' do
+        $mock_user = MOCK_USER_ADM  # rubocop:disable Style/GlobalVars
+
+        post '/api/import/pronote/decrypt',
+             file: Rack::Test::UploadedFile.new( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' )
+
+        expect( last_response.status ).to eq 401
+
+        $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
+    end
+
+    it 'decrypts a Pronote file' do
+        if ENV['TRAVIS']
+            puts 'Travis doesn\'t have the private key to test this'
+        else
+            $mock_user = MOCK_USER_ADM  # rubocop:disable Style/GlobalVars
+            $mock_user['profiles'].first['structure_id'] = '0134567A'  # rubocop:disable Style/GlobalVars
+
+            post '/api/import/pronote/decrypt',
+                 file: Rack::Test::UploadedFile.new( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' )
+
+            body = JSON.parse( last_response.body )
+            expect( body['AnneeScolaire'] ).to_not be nil
+
+            $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
+        end
+    end
 end

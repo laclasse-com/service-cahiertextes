@@ -50,8 +50,4 @@ module ProNote
 
         inflate( decrypted_payload )
     end
-
-    def extract_from_xml( xml, field )
-        Nokogiri::XML( xml ).search( field ).children.text
-    end
 end
