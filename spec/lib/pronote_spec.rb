@@ -9,12 +9,6 @@ require 'rspec/matchers' # required by equivalent-xml custom matcher `be_equival
 require 'equivalent-xml'
 
 describe ProNote do
-    it 'extract the UAI from the XML file' do
-        uai = ProNote.extract_from_xml( File.read( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' ), 'UAI' )
-
-        expect( uai ).to eq '0134567A'
-    end
-
     it 'decrypts the XML file' do
         if ENV['TRAVIS']
             puts 'Travis doesn\'t have the private key to test this'
