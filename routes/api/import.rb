@@ -14,7 +14,7 @@ module Routes
                     param 'type', String, required: true
                     # }
 
-                    user_needs_to_be( %w[ADM], params['structure_id'] )
+                    halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ADM], params['structure_id'] )
 
                     json( Import.create( structure_id: params['structure_id'],
                                          ctime: DateTime.now,
@@ -32,7 +32,7 @@ module Routes
                     json( File.open( params['file']['tempfile'] ) do |xml|
                               nxml = Nokogiri::XML( xml )
 
-                              user_needs_to_be( %w[ADM], ProNote.extract_from_xml( nxml, 'UAI' ) )
+                              halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ADM], ProNote.extract_from_xml( nxml, 'UAI' ) )
 
                               crypted = !nxml.search( 'CLES' ).empty?
 

@@ -40,6 +40,22 @@ describe 'Routes::Api::Assignments' do
 
     aid = nil
 
+    it 'FORBIDS creation when not ENS DOC' do
+        $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
+
+        post '/api/assignments/',
+             timeslot_id: ts.id,
+             session_id: session.id,
+             assignment_type_id: MOCK_ASSIGNMENT_TYPE_ID,
+             content: MOCK_CONTENT,
+             date_due: MOCK_DATE.end_of_week,
+             time_estimate: 5
+
+        expect( last_response.status ).to eq 401
+
+        $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
+    end
+
     it 'creates an assignment' do
         post '/api/assignments/',
              timeslot_id: ts.id,
@@ -73,6 +89,20 @@ describe 'Routes::Api::Assignments' do
         expect( body['date_due'] ).to eq MOCK_DATE.end_of_week.strftime("%F")
         expect( body['content'] ).to eq MOCK_CONTENT
         expect( body['time_estimate'] ).to eq 5
+    end
+
+    it 'FORBIDS update when not ENS DOC' do
+        $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
+
+        put "/api/assignments/#{aid}",
+            assignment_type_id: MOCK_ASSIGNMENT_TYPE_ID + 1,
+            content: "#{MOCK_CONTENT}#{MOCK_CONTENT}",
+            date_due: MOCK_DATE.end_of_month,
+            time_estimate: 15
+
+        expect( last_response.status ).to eq 401
+
+        $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
     end
 
     it 'modifies an assignment' do
@@ -113,6 +143,17 @@ describe 'Routes::Api::Assignments' do
     #     expect( body['time_estimate'] ).to eq 15
     # end
 
+    it 'FORBIDS marking an assignment as done by user NOT ELV' do
+        $mock_user = MOCK_USER_ENS  # rubocop:disable Style/GlobalVars
+
+        put "/api/assignments/#{aid}",
+            done: true
+
+        expect( last_response.status ).to eq 401
+
+        $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
+    end
+
     it 'marks an assignment as done by user' do
         put "/api/assignments/#{aid}",
             done: true
@@ -129,6 +170,16 @@ describe 'Routes::Api::Assignments' do
         body = JSON.parse( last_response.body )
         expect( body['id'] ).to eq aid
         expect( body['rtime'] ).to be nil
+    end
+
+    it 'FORBIDS deletion when not ENS DOC' do
+        $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
+
+        delete "/api/assignments/#{aid}"
+
+        expect( last_response.status ).to eq 401
+
+        $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
     end
 
     it 'deletes an assignment by id' do

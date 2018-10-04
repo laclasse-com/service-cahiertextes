@@ -40,7 +40,7 @@ module Routes
                     session = Session[ id: params['id'] ]
                     halt( 404, 'Session inconnu' ) if session.nil? || ( !session.dtime.nil? && session.dtime < UNDELETE_TIME_WINDOW.minutes.ago )
 
-                    user_needs_to_be_in_group( %w[ELV TUT ENS DIR ADM DOC], session.timeslot.group_id )
+                    halt( 401, '401 Unauthorized' ) unless user_is_x_in_group_g?( %w[ELV TUT ENS DOC], session.timeslot.group_id ) || user_is_x_in_structure_s?( %w[ ADM DIR ], session.timeslot.structure_id )
 
                     json( session.to_deep_hash )
                 end
@@ -55,7 +55,7 @@ module Routes
                     timeslot = Timeslot[ params['timeslot_id'] ]
                     halt( 409, 'Créneau invalide' ) if timeslot.nil?
 
-                    user_needs_to_teach_subject_in_group( timeslot.subject_id, timeslot.group_id )
+                    halt( 401, '401 Unauthorized' ) unless user_teaches_subject_x_in_group_g?( timeslot.subject_id, timeslot.group_id )
 
                     session = Session.create( author_id: user['id'],
                                               timeslot_id: timeslot.id,
@@ -82,14 +82,14 @@ module Routes
                     halt( 404, 'Session inconnus' ) if session.nil?
 
                     if params.key?( 'validated' ) && ( !params['validated'] || params.key?( 'vtime' ) )
-                        user_needs_to_be( %w[ DIR ], session.timeslot.structure_id )
+                        halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ DIR ], session.timeslot.structure_id )
 
                         session.vtime = nil
                         session.vtime = params['vtime'] if params['validated'] && params.key?( 'vtime' )
 
                         session.save
                     else
-                        user_needs_to_teach_subject_in_group( session.timeslot.subject_id, session.timeslot.group_id )
+                        halt( 401, '401 Unauthorized' ) unless session.author_id == user['id'] || user_teaches_subject_x_in_group_g?( session.timeslot.subject_id, session.timeslot.group_id )
 
                         halt( 401, 'Session visée non modifiable' ) unless session.vtime.nil?
 
@@ -108,7 +108,7 @@ module Routes
                     halt( 404, 'Session inconnu' ) if session.nil?
                     halt( 401, 'Session visé non modifiable' ) unless session.vtime.nil?
 
-                    user_needs_to_teach_subject_in_group( session.timeslot.subject_id, session.timeslot.group_id )
+                    halt( 401, '401 Unauthorized' ) unless session.author_id == user['id'] || user_teaches_subject_x_in_group_g?( session.timeslot.subject_id, session.timeslot.group_id )
 
                     session.update( dtime: session.dtime.nil? ? Time.now : nil, mtime: Time.now )
                     session.save
@@ -134,8 +134,8 @@ module Routes
                     halt( 403, 'Existing session' ) unless Session.where( timeslot_id: params['timeslot_id'],
                                                                           date: params['date'] ).count.zero?
 
-                    user_needs_to_teach_subject_in_group( session.timeslot.subject_id, session.timeslot.group_id )
-                    user_needs_to_teach_subject_in_group( session.timeslot.subject_id, Timeslot[id: params['timeslot_id']].group_id )
+                    halt( 401, '401 Unauthorized' ) unless user_teaches_subject_x_in_group_g?( session.timeslot.subject_id, session.timeslot.group_id )
+                    halt( 401, '401 Unauthorized' ) unless user_teaches_subject_x_in_group_g?( session.timeslot.subject_id, Timeslot[id: params['timeslot_id']].group_id )
 
                     target_session = Session.create( timeslot_id: params['timeslot_id'],
                                                      date: params['date'],

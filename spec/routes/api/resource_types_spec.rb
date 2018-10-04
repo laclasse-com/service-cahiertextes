@@ -27,6 +27,16 @@ describe 'Routes::Api::ResourceTypes' do
         expect( body['description'] ).to eq ResourceType[id: 1].description
     end
 
+    it 'FORBIDS creation when not TECH' do
+        $mock_user = MOCK_USER_ENS  # rubocop:disable Style/GlobalVars
+
+        post '/api/resource_types/', label: 'test'
+
+        expect( last_response.status ).to eq 401
+
+        $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
+    end
+
     it 'creates an resource type with just a label' do
         nb_types_before = ResourceType.count
 
@@ -55,6 +65,16 @@ describe 'Routes::Api::ResourceTypes' do
         expect( body['description'] ).to eq 'description'
     end
 
+    it 'FORBIDS update when not TECH' do
+        $mock_user = MOCK_USER_ENS  # rubocop:disable Style/GlobalVars
+
+        put "/api/resource_types/#{rtid}", label: 'test2'
+
+        expect( last_response.status ).to eq 401
+
+        $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
+    end
+
     it 'updates the label' do
         put "/api/resource_types/#{rtid}", label: 'test2'
 
@@ -80,6 +100,16 @@ describe 'Routes::Api::ResourceTypes' do
 
         expect( body['label'] ).to eq 'test3'
         expect( body['description'] ).to eq 'description3'
+    end
+
+    it 'FORBIDS deletion when not TECH' do
+        $mock_user = MOCK_USER_ENS  # rubocop:disable Style/GlobalVars
+
+        delete "/api/resource_types/#{rtid}"
+
+        expect( last_response.status ).to eq 401
+
+        $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
     end
 
     it 'deletes an resource type' do

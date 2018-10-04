@@ -47,6 +47,22 @@ describe 'Routes::Api::Timeslots' do
         Timeslot.where(id: body.map { |t| t['id'] }).destroy
     end
 
+    it 'FORBIDS creation when not ENS, ADM, DOC' do
+        $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
+
+        post '/api/timeslots/',
+             structure_id: MOCK_UAI,
+             group_id: MOCK_GROUP_ID,
+             subject_id: MOCK_SUBJECT_ID,
+             weekday: MOCK_WEEKDAY,
+             start_time: MOCK_START_TIME,
+             end_time: MOCK_END_TIME
+
+        expect( last_response.status ).to eq 401
+
+        $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
+    end
+
     it 'creates a Timeslot' do
         post '/api/timeslots/',
              structure_id: MOCK_UAI,
@@ -96,6 +112,28 @@ describe 'Routes::Api::Timeslots' do
 
         Timeslot[body['id']]&.destroy
         import&.destroy
+    end
+
+    it 'FORBIDS getting a Timeslot from a structure the user does not belong to' do
+        $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
+        $mock_user['profiles'].first['structure_id'] = 'abc'  # rubocop:disable Style/GlobalVars
+
+        get "/api/timeslots/#{tid}"
+
+        expect( last_response.status ).to eq 401
+
+        $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
+    end
+
+    it 'FORBIDS getting a Timeslot from a group the user does not belong to' do
+        $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
+        $mock_user['groups'].first['group_id'] = MOCK_GROUP_ID - 1  # rubocop:disable Style/GlobalVars
+
+        get "/api/timeslots/#{tid}"
+
+        expect( last_response.status ).to eq 401
+
+        $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
     end
 
     it 'gets a Timeslot by id' do
@@ -155,6 +193,21 @@ describe 'Routes::Api::Timeslots' do
     # TODO: date<
     # TODO: import_id
 
+    it 'FORBIDS update when not ENS, ADM, DOC' do
+        $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
+
+        put "/api/timeslots/#{tid}",
+            group_id: MOCK_GROUP_ID + 1,
+            subject_id: "#{MOCK_SUBJECT_ID}2",
+            weekday: MOCK_WEEKDAY + 1,
+            start_time: MOCK_START_TIME,
+            end_time: MOCK_END_TIME
+
+        expect( last_response.status ).to eq 401
+
+        $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
+    end
+
     it 'modifies a Timeslot' do
         put "/api/timeslots/#{tid}",
             group_id: MOCK_GROUP_ID + 1,
@@ -171,6 +224,16 @@ describe 'Routes::Api::Timeslots' do
         expect( body['weekday'] ).to eq MOCK_WEEKDAY + 1
         expect( body['start_time'] ).to eq MOCK_START_TIME
         expect( body['end_time'] ).to eq MOCK_END_TIME
+    end
+
+    it 'FORBIDS deletion when not ENS, ADM, DOC' do
+        $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
+
+        delete "/api/timeslots/#{tid}", dtime: Time.now
+
+        expect( last_response.status ).to eq 401
+
+        $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
     end
 
     it 'deletes a Timeslot by id' do

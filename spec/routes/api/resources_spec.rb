@@ -21,6 +21,16 @@ describe 'Routes::Api::Resources' do
         Resource.where(id: body.map { |l| l['id'] }).destroy
     end
 
+    it 'FORBIDS creation when not TECH' do
+        $mock_user = MOCK_USER_ENS  # rubocop:disable Style/GlobalVars
+
+        post '/api/resources/', structure_id: MOCK_UAI, label: MOCK_LABEL, name: MOCK_NAME
+
+        expect( last_response.status ).to eq 401
+
+        $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
+    end
+
     it 'creates a Resource' do
         post '/api/resources/', structure_id: MOCK_UAI, label: MOCK_LABEL, name: MOCK_NAME
 
@@ -67,16 +77,36 @@ describe 'Routes::Api::Resources' do
         expect( body.length ).to eq cohort.count
     end
 
-    it 'modifies a Resource' do
+    it 'FORBIDS update when not TECH' do
+        $mock_user = MOCK_USER_ENS  # rubocop:disable Style/GlobalVars
+
         put "/api/resources/#{lid}", structure_id: "#{MOCK_UAI}#{MOCK_UAI}", label: "#{MOCK_LABEL}#{MOCK_LABEL}", name: "#{MOCK_NAME}#{MOCK_NAME}"
+
+        expect( last_response.status ).to eq 401
+
+        $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
+    end
+
+    it 'modifies a Resource' do
+        put "/api/resources/#{lid}", structure_id: MOCK_UAI, label: "#{MOCK_LABEL}#{MOCK_LABEL}", name: "#{MOCK_NAME}#{MOCK_NAME}"
 
         body = JSON.parse( last_response.body )
         lid = body['id']
         expect( body.length ).to eq Resource.columns.count
         expect( body['id'] ).to eq lid
-        expect( body['structure_id'] ).to eq "#{MOCK_UAI}#{MOCK_UAI}"
+        expect( body['structure_id'] ).to eq MOCK_UAI
         expect( body['label'] ).to eq "#{MOCK_LABEL}#{MOCK_LABEL}"
         expect( body['name'] ).to eq "#{MOCK_NAME}#{MOCK_NAME}"
+    end
+
+    it 'FORBIDS deletion when not TECH' do
+        $mock_user = MOCK_USER_ENS  # rubocop:disable Style/GlobalVars
+
+        delete "/api/resources/#{lid}"
+
+        expect( last_response.status ).to eq 401
+
+        $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
     end
 
     it 'deletes a Resource by id' do

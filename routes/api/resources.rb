@@ -11,7 +11,7 @@ module Routes
                     param 'name', String
                     # }
 
-                    user_needs_to_be( %w[ ADM ], params['structure_id'] )
+                    halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ADM ], params['structure_id'] )
 
                     query = Resource
 
@@ -44,7 +44,7 @@ module Routes
                     one_of 'label', 'resources'
                     # }
 
-                    user_needs_to_be( %w[ ADM ], params['structure_id'] )
+                    halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ADM ], params['structure_id'] )
 
                     single = !params.key?( 'resources' )
                     if single
@@ -81,6 +81,8 @@ module Routes
 
                     halt( 404, "Resource #{params['id']} inconnue" ) if resource.nil?
 
+                    halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ADM ], params['structure_id'] )
+
                     resource.structure_id = params['structure_id']
 
                     resource.label = params['label']
@@ -98,6 +100,8 @@ module Routes
                     resource = Resource[ params['id'] ]
 
                     halt( 404, "Resource #{params['id']} inconnue" ) if resource.nil?
+
+                    halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ADM ], params['structure_id'] )
 
                     resource&.destroy
 

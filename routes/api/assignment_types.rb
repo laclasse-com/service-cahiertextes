@@ -25,7 +25,7 @@ module Routes
                     param 'description', String
                     # }
 
-                    user_needs_to_be( %w[TECH] )
+                    halt( 401, '401 Unauthorized' ) unless user_is_super_admin?
 
                     assignment_type = AssignmentType[ label: params['label'] ]
                     halt( 403, "AssignmentType #{params['label']} existant" ) unless assignment_type.nil?
@@ -45,7 +45,7 @@ module Routes
                     any_of 'label', 'description'
                     # }
 
-                    user_needs_to_be( %w[TECH] )
+                    halt( 401, '401 Unauthorized' ) unless user_is_super_admin?
 
                     assignment_type = AssignmentType[ params['id'] ]
                     halt( 404, "AssignmentType #{params['id']} inconnu" ) if assignment_type.nil?
@@ -61,7 +61,7 @@ module Routes
                     param 'id', Integer, required: true
                     # }
 
-                    user_needs_to_be( %w[TECH] )
+                    halt( 401, '401 Unauthorized' ) unless user_is_super_admin?
 
                     assignment_type = AssignmentType[ params['id'] ]
                     halt( 404, "AssignmentType #{params['id']} inconnu" ) if assignment_type.nil?

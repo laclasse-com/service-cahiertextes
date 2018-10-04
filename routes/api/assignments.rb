@@ -17,13 +17,11 @@ module Routes
                     param 'check_done', :boolean
                     param 'uid', String
 
-                    any_of 'authors_ids', 'timeslots_ids', 'groups_ids', 'sessions_ids', 'date_due', 'date_due<', 'date_due>', 'include_deleted', 'check_done', 'uid'
+                    any_of 'authors_ids', 'timeslots_ids', 'groups_ids', 'sessions_ids'
                     # }
 
                     halt( 401, '401 Unauthorized' ) unless !params.key?('uid') || ( user['id'] == params['uid'] ||
                                                                                     !user['children'].find { |child| child['child_id'] == params['uid'] }.nil? )
-
-                    return [] if (!params.key?('groups_ids') || params['groups_ids'].empty?) && (!params.key?('timeslots_ids') || params['timeslots_ids'].empty?)
 
                     query = Assignment
 
@@ -63,7 +61,7 @@ module Routes
 
                     halt( 404, 'Assignment inconnu' ) if assignment.nil? || ( !assignment.dtime.nil? && assignment.dtime < UNDELETE_TIME_WINDOW.minutes.ago )
 
-                    user_needs_to_be_in_group( %w[ELV TUT ENS DIR ADM DOC], assignment.session.timeslot.group_id )
+                    halt( 401, '401 Unauthorized' ) unless user_is_x_in_group_g?( %w[ELV TUT ENS DIR ADM DOC], assignment.session.timeslot.group_id )
 
                     hd = assignment.to_deep_hash
                     if params['uid']
@@ -88,7 +86,7 @@ module Routes
                     timeslot = Timeslot[ params['timeslot_id'] ]
                     halt( 409, 'Créneau invalide' ) if timeslot.nil?
 
-                    user_needs_to_teach_subject_in_group( timeslot.subject_id, timeslot.group_id )
+                    halt( 401, '401 Unauthorized' ) unless user_teaches_subject_x_in_group_g?( timeslot.subject_id, timeslot.group_id )
 
                     if params['session_id'] && !params['session_id'].nil?
                         session_id = params['session_id']
@@ -138,7 +136,7 @@ module Routes
                     halt( 404, 'Assignment inconnu' ) if assignment.nil?
 
                     if params.key?( 'done' )
-                        user_needs_to_be_in_group( %w[ELV], assignment.session.timeslot.group_id )
+                        halt( 401, '401 Unauthorized' ) unless user_is_x_in_group_g?( %w[ELV], assignment.session.timeslot.group_id )
 
                         assignment.done_by?( user['id'] ) ? assignment.to_be_done_by!( user['id'] ) : assignment.done_by!( user['id'] )
 
@@ -149,7 +147,7 @@ module Routes
 
                         json( hd )
                     else
-                        user_needs_to_teach_subject_in_group( assignment.session.timeslot.subject_id, assignment.session.timeslot.group_id )
+                        halt( 401, '401 Unauthorized' ) unless assignment.author_id == user['id'] || user_teaches_subject_x_in_group_g?( assignment.session.timeslot.subject_id, assignment.session.timeslot.group_id )
 
                         params['author_id'] = user['id']
 
@@ -167,7 +165,7 @@ module Routes
                     assignment = Assignment[ params['id'] ]
                     halt( 404, 'Assignment inconnu' ) if assignment.nil?
 
-                    user_needs_to_teach_subject_in_group( assignment.session.timeslot.subject_id, assignment.session.timeslot.group_id )
+                    halt( 401, '401 Unauthorized' ) unless assignment.author_id == user['id'] || user_teaches_subject_x_in_group_g?( assignment.session.timeslot.subject_id, assignment.session.timeslot.group_id )
 
                     assignment.update( dtime: assignment.dtime.nil? ? Time.now : nil, mtime: Time.now )
                     assignment.save
@@ -186,8 +184,8 @@ module Routes
                     assignment = Assignment[ params['id'] ]
                     halt( 404, 'Assignment inconnu' ) if assignment.nil?
 
-                    user_needs_to_teach_subject_in_group( assignment.session.timeslot.subject_id, assignment.session.timeslot.group_id )
-                    user_needs_to_teach_subject_in_group( assignment.session.timeslot.subject_id, Timeslot[id: params['timeslot_id']].group_id )
+                    halt( 401, '401 Unauthorized' ) unless user_teaches_subject_x_in_group_g?( assignment.session.timeslot.subject_id, assignment.session.timeslot.group_id )
+                    halt( 401, '401 Unauthorized' ) unless user_teaches_subject_x_in_group_g?( assignment.session.timeslot.subject_id, Timeslot[id: params['timeslot_id']].group_id )
 
                     new_assignment = Assignment.create( assignment_type_id: assignment.assignment_type_id,
                                                         timeslot_id: params['timeslot_id'],

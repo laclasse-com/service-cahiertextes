@@ -47,8 +47,8 @@ module Routes
                     # }
 
                     timeslot = Timeslot[ id: params['id'] ]
-
                     halt( 404, 'Créneau inconnu' ) if timeslot.nil?
+                    halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ELV TUT ENS EVS DOC ADM ], timeslot.structure_id ) && user_is_in_group_g?( timeslot.group_id )
 
                     json( timeslot.detailed( params['start_time'], params['end_time'], %w[resources sessions assignments] ) )
                 end
@@ -80,7 +80,7 @@ module Routes
                                                   structure_id: params['structure_id']} ]
                     end
 
-                    user_needs_to_be( %w[ ENS DOC ADM ], params['timeslots'].first['structure_id'] )
+                    halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ENS DOC ADM ], params['timeslots'].first['structure_id'] )
 
                     result = params['timeslots'].map do |timeslot|
                         new_timeslot = Timeslot.create( ctime: Time.now,
@@ -119,7 +119,7 @@ module Routes
                     timeslot = Timeslot[ params['id'] ]
                     halt( 404, 'Créneau inconnu' ) if timeslot.nil?
 
-                    user_needs_to_be( %w[ ENS DOC ADM ], timeslot.structure_id )
+                    halt( 401, '401 Unauthorized' ) unless user_is_x_in_group_g?( %w[ ENS DOC ], timeslot.group_id ) || user_is_x_in_structure_s?( %w[ ADM ], timeslot.structure_id )
 
                     timeslot.modify( params )
 
@@ -135,7 +135,7 @@ module Routes
                     timeslot = Timeslot[ params['id'] ]
                     halt( 404, 'Créneau inconnu' ) if timeslot.nil?
 
-                    user_needs_to_be( %w[ ENS DOC ADM ], timeslot.structure_id )
+                    halt( 401, '401 Unauthorized' ) unless user_is_x_in_group_g?( %w[ ENS DOC ], timeslot.group_id ) || user_is_x_in_structure_s?( %w[ ADM ], timeslot.structure_id )
 
                     timeslot.update( dtime: timeslot.dtime.nil? ? params['dtime'] : nil )
 
@@ -155,6 +155,7 @@ module Routes
                     timeslot = Timeslot[ id: params['id'] ]
 
                     halt( 404, 'Créneau inconnu' ) if timeslot.nil?
+                    halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ENS DOC ADM ], timeslot.structure_id )
 
                     json( timeslot.similar( params['groups_ids'], params['start_time'], params['end_time'] ) )
                 end

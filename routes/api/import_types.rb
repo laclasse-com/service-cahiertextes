@@ -25,7 +25,7 @@ module Routes
                     param 'description', String
                     # }
 
-                    user_needs_to_be( %w[TECH] )
+                    halt( 401, '401 Unauthorized' ) unless user_is_super_admin?
 
                     import_type = ImportType[ label: params['label'] ]
                     halt( 403, "ImportType #{params['label']} existant" ) unless import_type.nil?
@@ -45,7 +45,7 @@ module Routes
                     any_of 'label', 'description'
                     # }
 
-                    user_needs_to_be( %w[TECH] )
+                    halt( 401, '401 Unauthorized' ) unless user_is_super_admin?
 
                     import_type = ImportType[ params['id'] ]
                     halt( 404, "ImportType #{params['id']} inconnu" ) if import_type.nil?
@@ -61,7 +61,7 @@ module Routes
                     param 'id', Integer, required: true
                     # }
 
-                    user_needs_to_be( %w[TECH] )
+                    halt( 401, '401 Unauthorized' ) unless user_is_super_admin?
 
                     import_type = ImportType[ params['id'] ]
                     halt( 404, "ImportType #{params['id']} inconnu" ) if import_type.nil?
