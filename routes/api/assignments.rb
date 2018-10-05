@@ -55,16 +55,16 @@ module Routes
                 app.get '/api/assignments/:id/?' do
                     # {
                     param 'id', Integer, required: true
+                    param 'check_done', :boolean
                     # }
 
                     assignment = Assignment[ params['id'] ]
 
                     halt( 404, 'Assignment inconnu' ) if assignment.nil? || ( !assignment.dtime.nil? && assignment.dtime < UNDELETE_TIME_WINDOW.minutes.ago )
-
                     halt( 401, '401 Unauthorized' ) unless user_is_x_in_group_g?( %w[ELV TUT ENS DIR ADM DOC], assignment.session.timeslot.group_id )
 
                     hd = assignment.to_deep_hash
-                    if params['uid']
+                    if params.key?('check_done') && params['check_done'] == 'true'
                         dti = AssignmentTodoItem[ assignment_id: assignment.id, author_id: user['id'] ]
                         hd[:rtime] = dti.rtime unless dti.nil?
                     end
@@ -85,7 +85,6 @@ module Routes
 
                     timeslot = Timeslot[ params['timeslot_id'] ]
                     halt( 409, 'Créneau invalide' ) if timeslot.nil?
-
                     halt( 401, '401 Unauthorized' ) unless user_teaches_subject_x_in_group_g?( timeslot.subject_id, timeslot.group_id )
 
                     if params['session_id'] && !params['session_id'].nil?
@@ -164,7 +163,6 @@ module Routes
 
                     assignment = Assignment[ params['id'] ]
                     halt( 404, 'Assignment inconnu' ) if assignment.nil?
-
                     halt( 401, '401 Unauthorized' ) unless assignment.author_id == user['id'] || user_teaches_subject_x_in_group_g?( assignment.session.timeslot.subject_id, assignment.session.timeslot.group_id )
 
                     assignment.update( dtime: assignment.dtime.nil? ? Time.now : nil, mtime: Time.now )
@@ -183,7 +181,6 @@ module Routes
 
                     assignment = Assignment[ params['id'] ]
                     halt( 404, 'Assignment inconnu' ) if assignment.nil?
-
                     halt( 401, '401 Unauthorized' ) unless user_teaches_subject_x_in_group_g?( assignment.session.timeslot.subject_id, assignment.session.timeslot.group_id )
                     halt( 401, '401 Unauthorized' ) unless user_teaches_subject_x_in_group_g?( assignment.session.timeslot.subject_id, Timeslot[id: params['timeslot_id']].group_id )
 
