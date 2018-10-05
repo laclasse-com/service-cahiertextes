@@ -19,7 +19,7 @@ before_install:
 before_script:
   - cp config/database.yml.sample config/database.yml
   - cp config/options.rb.sample config/options.rb
-  - mysql -e 'create database CahierDeTextes;'
+  - mysql -u root -ppassword -e 'create database CahierDeTextes;'
   - bundle install
   - make db-migrate
 
