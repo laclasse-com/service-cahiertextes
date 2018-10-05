@@ -3,5 +3,5 @@ host: localhost
 name: CahierDeTextes
 database: CahierDeTextes
 username: root
-password:
+password: password
 charset: utf8

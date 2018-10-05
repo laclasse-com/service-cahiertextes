@@ -11,8 +11,8 @@ addons:
       - mysql-client
 
 before_install:
-  - sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
-  - sudo mysql_upgrade -u root -p
+  - sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('password') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
+  - sudo mysql_upgrade -u root -p password
   - sudo service mysql restart
   - export TZ=Europe/Paris
 
@@ -27,8 +27,8 @@ script:
   - "bundle exec rspec"
   - "bundle exec rubocop -D"
 
-services:
-  - mysql
+# services:
+#   - mysql
 
 branches:
   only:
