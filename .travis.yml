@@ -16,6 +16,9 @@ before_install:
   - sudo service mysql restart
   - export TZ=Europe/Paris
 
+gemfile:
+  - gems.rb
+
 before_script:
   - cp config/database.yml.sample config/database.yml
   - cp config/options.rb.sample config/options.rb
@@ -26,9 +29,6 @@ before_script:
 script:
   - "bundle exec rspec"
   - "bundle exec rubocop -D"
-
-# services:
-#   - mysql
 
 branches:
   only:
