@@ -10,7 +10,7 @@ module DataManagement
 
             # Nota Bene: semainiers callés sur l'année civile
             query = Timeslot.where( group_id: groups_ids )
-                            .where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{Utils.date_rentree}'" ) )
+                            .where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{Utils.schoolyear_start_date}'" ) )
                             .where( Sequel.lit( "`dtime` IS NULL OR DATE_FORMAT( dtime, '%Y-%m-%d') >= '#{fin}'" ) )
 
             query = query.where( subject_id: subjects_ids ) unless subjects_ids.nil?

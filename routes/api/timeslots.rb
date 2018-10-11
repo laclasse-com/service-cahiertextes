@@ -6,19 +6,20 @@ module Routes
             def self.registered( app )
                 app.get '/api/timeslots/?' do
                     # {
-                    param 'no_year_restriction', :boolean
-                    param 'include_deleted', :boolean
                     param 'date<', Date
                     param 'date>', Date
                     param 'groups_ids', Array
                     param 'subjects_ids', Array
                     param 'structure_id', String
                     param 'import_id', Integer
+
+                    param 'no_year_restriction', :boolean
+                    param 'include_deleted', :boolean
                     # }
 
                     query = Timeslot
 
-                    query = query.where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{Utils.date_rentree}'" ) ) unless params.key?( 'no_year_restriction' )
+                    query = query.where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{Utils.schoolyear_start_date}'" ) ) unless params.key?( 'no_year_restriction' )
                     query = query.where( Sequel.lit( "`dtime` IS NULL OR DATE_FORMAT( dtime, '%Y-%m-%d') >= '#{Date.parse( params['date<'] )}'" ) ) if params.key?('date<') && !params.key?( 'include_deleted')
                     query = query.where( group_id: params['groups_ids'] ) if params.key?( 'groups_ids' )
                     query = query.where( subject_id: params['subjects_ids'] ) if params.key?( 'subjects_ids' )

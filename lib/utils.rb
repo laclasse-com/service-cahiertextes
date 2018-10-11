@@ -44,7 +44,7 @@ module Utils
         end
     end
 
-    def date_rentree
+    def schoolyear_start_date
         Date.parse( "#{Date.today.month > 8 ? Date.today.year : Date.today.year - 1}-08-15" )
     end
 

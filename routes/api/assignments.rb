@@ -24,17 +24,11 @@ module Routes
                                                                                     !user['children'].find { |child| child['child_id'] == params['uid'] }.nil? )
 
                     query = Assignment
-
                     query = query.where( timeslot_id: params['timeslots_ids']) if params.key?( 'timeslots_ids' )
-
                     query = query.where( timeslot_id: Timeslot.where( group_id: params['groups_ids'] ).select(:id).all.map(&:id) ) if params.key?( 'groups_ids' )
-
                     query = query.where( session_id: params['session_ids']) if params.key?( 'session_ids' )
-
                     query = query.where( Sequel.lit( "DATE_FORMAT( date_due, '%Y-%m-%d') >= '#{Date.parse( params['date_due>'] )}'" ) ) if params.key?( 'date_due>' )
-
                     query = query.where( Sequel.lit( "DATE_FORMAT( date_due, '%Y-%m-%d') <= '#{Date.parse( params['date_due<'] )}'" ) ) if params.key?( 'date_due<' )
-
                     query = query.where( dtime: nil ) unless params.key?( 'include_deleted')
 
                     data = query.all.map(&:to_deep_hash)

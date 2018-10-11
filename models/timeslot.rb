@@ -34,7 +34,7 @@ class Timeslot < Sequel::Model( :timeslots )
         date_start = Date.parse( date_start )
         date_end = Date.parse( date_end )
         query = Timeslot.where( subject_id: subject_id )
-                        .where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{Utils.date_rentree}'" ) )
+                        .where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{Utils.schoolyear_start_date}'" ) )
                         .where( Sequel.lit( "`dtime` IS NULL OR DATE_FORMAT( dtime, '%Y-%m-%d') >= '#{end_time}'" ) )
 
         query = query.where( group_id: groups_ids ) unless groups_ids.nil?
