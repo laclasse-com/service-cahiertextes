@@ -6,24 +6,24 @@ require 'icalendar'
 module Utils
     module_function
 
-    module Holidays
+    module Calendar
         module_function
 
-        def get( zone, start_year = year_rentree )
-            raise( ArgumentError, 'Valid zones are ["A", "B", "C"]' ) unless %w[A B C].include?( zone )
+        @@official_calendar = nil # rubocop:disable Style/ClassVars
 
-            uri = URI.parse( "http://www.education.gouv.fr/download.php?file=http://cache.media.education.gouv.fr/ics/Calendrier_Scolaire_Zone_#{zone}.ics" )
+        def holidays( zone, schoolyear_start_year = nil )
+            fetch_official_calendar( zone ) if @@official_calendar.nil?
+            schoolyear_start_year = schoolyear_start_date( zone ).year if schoolyear_start_year.nil?
 
-            ics = Icalendar::Calendar.parse( uri.open ).first
-            description_rentrée_enseignants = ics.events.first.description
+            description_rentrée_enseignants = @@official_calendar.events.first.description
             this_year = false
 
-            holidays_weeks = ics.events.map do |e|
-                this_year = e.dtstart.to_date.year == start_year if e.description == description_rentrée_enseignants
+            holidays_weeks = @@official_calendar.events.map do |e|
+                this_year = e.dtstart.to_date.year == schoolyear_start_year if e.description == description_rentrée_enseignants
 
                 next unless this_year
 
-                start_week_offset = ( e.description.downcase.include?( 'rentrée' ) ? ( e.dtstart.to_date.cwday == 1 ? -1 : 0 ) : 1 ) # rubocop:disable Style/NestedTernaryOperator
+                start_week_offset = ( e.description.downcase.force_encoding('UTF-8').include?( 'rentrée' ) ? ( e.dtstart.to_date.cwday == 1 ? -1 : 0 ) : 1 ) # rubocop:disable Style/NestedTernaryOperator
                 [e.dtstart.to_date.cweek + start_week_offset,
                  e.dtend.nil? ? nil : e.dtend.to_date.cweek - 1]
             end.flatten.compact
@@ -39,13 +39,19 @@ module Utils
             []
         end
 
-        def year_rentree
-            DateTime.now.month > 6 ? DateTime.now.year : DateTime.now.year - 1
-        end
-    end
+        def schoolyear_start_date( zone )
+            fetch_official_calendar( zone ) if @@official_calendar.nil?
 
-    def schoolyear_start_date
-        Date.parse( "#{Date.today.month > 8 ? Date.today.year : Date.today.year - 1}-08-15" )
+            @@official_calendar.events.find { |e| e.description.force_encoding('UTF-8').match?( "^Rentrée.*" ) }.dtstart
+        end
+
+        def fetch_official_calendar( zone )
+            raise( ArgumentError, 'Valid zones are ["A", "B", "C"]' ) unless %w[A B C].include?( zone )
+
+            uri = URI.parse( "http://cache.media.education.gouv.fr/ics/Calendrier_Scolaire_Zone_#{zone}.ics" )
+
+            @@official_calendar = Icalendar::Calendar.parse( uri.open ).first # rubocop:disable Style/ClassVars
+        end
     end
 
     def deep_dup( thing )
