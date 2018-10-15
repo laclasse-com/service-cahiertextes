@@ -10,22 +10,27 @@ describe 'Routes::Api::Sessions' do
     end
 
     ts = nil
+    session = nil
 
-    before( :all ) do
+    before( :each ) do
         ts = Timeslot.create( structure_id: MOCK_UAI,
                               group_id: 999_999,
                               subject_id: "SUBJECT_ID",
                               weekday: Time.now.wday,
                               start_time: Time.now.strftime( "2000-01-01T%H:00:00+01:00" ),
                               end_time: Time.now.strftime( "2000-01-01T%H:30:00+01:00" ) )
+
+        session = Session.create( timeslot_id: ts.id,
+                                  date: MOCK_DATE,
+                                  content: MOCK_CONTENT,
+                                  author_id: LaClasse::Helpers::User.user['id'],
+                                  ctime: Time.now )
     end
 
-    after( :all ) do
+    after( :each ) do
         ts.sessions.each(&:destroy)
         ts&.destroy
     end
-
-    sid = -1
 
     it 'FORBIDS creation when not ENS DOC' do
         $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
@@ -41,7 +46,6 @@ describe 'Routes::Api::Sessions' do
         post '/api/sessions/', timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT
 
         body = JSON.parse( last_response.body )
-        sid = body['id']
         expect( body['timeslot_id'] ).to eq ts.id
         expect( body['date'] ).to eq MOCK_DATE.strftime("%F")
         expect( body['content'] ).to eq MOCK_CONTENT
@@ -52,7 +56,7 @@ describe 'Routes::Api::Sessions' do
         $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
         $mock_user['groups'].first['group_id'] = MOCK_GROUP_ID - 1  # rubocop:disable Style/GlobalVars
 
-        get "/api/sessions/#{sid}"
+        get "/api/sessions/#{session.id}"
 
         expect( last_response.status ).to eq 401
     end
@@ -60,10 +64,10 @@ describe 'Routes::Api::Sessions' do
     it 'ALLOWS getting from a group the user does not belong to but is ADM of structure' do
         $mock_user = MOCK_USER_ADM  # rubocop:disable Style/GlobalVars
 
-        get "/api/sessions/#{sid}"
+        get "/api/sessions/#{session.id}"
 
         body = JSON.parse( last_response.body )
-        expect( body['id'] ).to eq sid
+        expect( body['id'] ).to eq session.id
         expect( body['timeslot_id'] ).to eq ts.id
         expect( body['date'] ).to eq MOCK_DATE.strftime("%F")
         expect( body['content'] ).to eq MOCK_CONTENT
@@ -73,10 +77,10 @@ describe 'Routes::Api::Sessions' do
     it 'ALLOWS getting from a group the user does not belong to but is DIR of structure' do
         $mock_user = MOCK_USER_DIR  # rubocop:disable Style/GlobalVars
 
-        get "/api/sessions/#{sid}"
+        get "/api/sessions/#{session.id}"
 
         body = JSON.parse( last_response.body )
-        expect( body['id'] ).to eq sid
+        expect( body['id'] ).to eq session.id
         expect( body['timeslot_id'] ).to eq ts.id
         expect( body['date'] ).to eq MOCK_DATE.strftime("%F")
         expect( body['content'] ).to eq MOCK_CONTENT
@@ -86,10 +90,10 @@ describe 'Routes::Api::Sessions' do
     it 'gets a Session by id' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
-        get "/api/sessions/#{sid}"
+        get "/api/sessions/#{session.id}"
 
         body = JSON.parse( last_response.body )
-        expect( body['id'] ).to eq sid
+        expect( body['id'] ).to eq session.id
         expect( body['timeslot_id'] ).to eq ts.id
         expect( body['date'] ).to eq MOCK_DATE.strftime("%F")
         expect( body['content'] ).to eq MOCK_CONTENT
@@ -169,7 +173,7 @@ describe 'Routes::Api::Sessions' do
     it 'FORBIDS update when not ENS DOC or author' do
         $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
 
-        put "/api/sessions/#{sid}", date: MOCK_DATE.end_of_year, content: "#{MOCK_CONTENT}#{MOCK_CONTENT}"
+        put "/api/sessions/#{session.id}", date: MOCK_DATE.end_of_year, content: "#{MOCK_CONTENT}#{MOCK_CONTENT}"
 
         expect( last_response.status ).to eq 401
     end
@@ -177,11 +181,11 @@ describe 'Routes::Api::Sessions' do
     it 'modifies a Session' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
-        put "/api/sessions/#{sid}", date: MOCK_DATE.end_of_year, content: "#{MOCK_CONTENT}#{MOCK_CONTENT}"
+        put "/api/sessions/#{session.id}", date: MOCK_DATE.end_of_year, content: "#{MOCK_CONTENT}#{MOCK_CONTENT}"
 
         body = JSON.parse( last_response.body )
-        sid = body['id']
-        expect( body['id'] ).to eq sid
+        session.id = body['id']
+        expect( body['id'] ).to eq session.id
         expect( body['timeslot_id'] ).to eq ts.id
         expect( body['date'] ).to eq MOCK_DATE.end_of_year.strftime("%F")
         expect( body['content'] ).to eq "#{MOCK_CONTENT}#{MOCK_CONTENT}"
@@ -192,11 +196,11 @@ describe 'Routes::Api::Sessions' do
     it 'CANNOT validate a Session without a vtime' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
-        put "/api/sessions/#{sid}", validated: true
+        put "/api/sessions/#{session.id}", validated: true
 
         body = JSON.parse( last_response.body )
-        sid = body['id']
-        expect( body['id'] ).to eq sid
+        session.id = body['id']
+        expect( body['id'] ).to eq session.id
         expect( body['dtime'] ).to be nil
         expect( body['vtime'] ).to be nil
     end
@@ -205,7 +209,7 @@ describe 'Routes::Api::Sessions' do
         $mock_user = MOCK_USER_ADM  # rubocop:disable Style/GlobalVars
 
         vtime = Time.now
-        put "/api/sessions/#{sid}", validated: true, vtime: vtime
+        put "/api/sessions/#{session.id}", validated: true, vtime: vtime
 
         expect( last_response.status ).to eq 401
     end
@@ -214,11 +218,11 @@ describe 'Routes::Api::Sessions' do
         $mock_user = MOCK_USER_DIR  # rubocop:disable Style/GlobalVars
 
         vtime = Time.now
-        put "/api/sessions/#{sid}", validated: true, vtime: vtime
+        put "/api/sessions/#{session.id}", validated: true, vtime: vtime
 
         body = JSON.parse( last_response.body )
-        sid = body['id']
-        expect( body['id'] ).to eq sid
+        session.id = body['id']
+        expect( body['id'] ).to eq session.id
         expect( body['dtime'] ).to be nil
         expect( body['vtime'] ).to eq vtime.to_s
     end
@@ -226,7 +230,7 @@ describe 'Routes::Api::Sessions' do
     it 'CANNOT validates a Session when not DIR' do
         $mock_user = MOCK_USER_ADM  # rubocop:disable Style/GlobalVars
 
-        put "/api/sessions/#{sid}", validated: false
+        put "/api/sessions/#{session.id}", validated: false
 
         expect( last_response.status ).to eq 401
     end
@@ -234,11 +238,11 @@ describe 'Routes::Api::Sessions' do
     it 'invalidates a Session' do
         $mock_user = MOCK_USER_DIR  # rubocop:disable Style/GlobalVars
 
-        put "/api/sessions/#{sid}", validated: false
+        put "/api/sessions/#{session.id}", validated: false
 
         body = JSON.parse( last_response.body )
-        sid = body['id']
-        expect( body['id'] ).to eq sid
+        session.id = body['id']
+        expect( body['id'] ).to eq session.id
         expect( body['dtime'] ).to be nil
         expect( body['vtime'] ).to be nil
     end
@@ -255,19 +259,19 @@ describe 'Routes::Api::Sessions' do
 
         copy_date = DateTime.now + 1.day
 
-        post "/api/sessions/#{sid}/copy_to/timeslot/#{ts2.id}/date/#{copy_date}"
+        post "/api/sessions/#{session.id}/copy_to/timeslot/#{ts2.id}/date/#{copy_date}"
         # body = JSON.parse( last_response.body )
 
         expect( ts2.sessions.length ).to eq 1
-        expect( ts2.sessions.first.id ).to_not eq sid
+        expect( ts2.sessions.first.id ).to_not eq session.id
         expect( ts2.sessions.first.timeslot_id ).to eq ts2.id
-        expect( ts2.sessions.first.author_id ).to eq Session[sid].author_id
+        expect( ts2.sessions.first.author_id ).to eq Session[session.id].author_id
     end
 
     it 'FORBIDS deletion when not ENS DOC or author' do
         $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
 
-        delete "/api/sessions/#{sid}"
+        delete "/api/sessions/#{session.id}"
 
         expect( last_response.status ).to eq 401
     end
@@ -275,12 +279,12 @@ describe 'Routes::Api::Sessions' do
     it 'deletes a Session by id' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
-        delete "/api/sessions/#{sid}"
+        delete "/api/sessions/#{session.id}"
 
         body = JSON.parse( last_response.body )
 
         expect( body['dtime'] ).to_not be nil
-        expect( body['id'] ).to eq sid
+        expect( body['id'] ).to eq session.id
         expect( body['timeslot_id'] ).to eq ts.id
         # expect( body['date'] ).to eq MOCK_DATE.strftime("%F")
         # expect( body['content'] ).to eq "#{MOCK_CONTENT}#{MOCK_CONTENT}"

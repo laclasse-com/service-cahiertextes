@@ -11,8 +11,9 @@ describe 'Routes::Api::Assignments' do
 
     ts = nil
     session = nil
+    assignment = nil
 
-    before( :all ) do
+    before( :each ) do
         ts = Timeslot.create( structure_id: MOCK_UAI,
                               group_id: MOCK_GROUP_ID,
                               subject_id: MOCK_SUBJECT_ID,
@@ -25,11 +26,21 @@ describe 'Routes::Api::Assignments' do
                                   date: DateTime.now,
                                   content: MOCK_CONTENT,
                                   ctime: DateTime.now )
-
         ts.add_session( session )
+
+        assignment = Assignment.create( timeslot_id: ts.id,
+                                        session_id: session.id,
+                                        author_id: LaClasse::Helpers::User.user['id'],
+                                        assignment_type_id: MOCK_ASSIGNMENT_TYPE_ID,
+                                        content: MOCK_CONTENT,
+                                        date_due: MOCK_DATE.end_of_week,
+                                        time_estimate: 5,
+                                        ctime: DateTime.now )
+
+        ts.add_assignment( assignment )
     end
 
-    after( :all ) do
+    after( :each ) do
         ts.assignments.each do |a|
             a.assignment_done_markers.each(&:destroy)
             a.destroy
@@ -37,8 +48,6 @@ describe 'Routes::Api::Assignments' do
         ts.sessions.each(&:destroy)
         ts&.destroy
     end
-
-    aid = nil
 
     it 'FORBIDS creation when not ENS DOC' do
         $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
@@ -66,7 +75,6 @@ describe 'Routes::Api::Assignments' do
              time_estimate: 5
 
         body = JSON.parse( last_response.body )
-        aid = body['id']
         expect( body['timeslot_id'] ).to eq ts.id
         expect( body['assignment_type_id'] ).to eq MOCK_ASSIGNMENT_TYPE_ID
         expect( body['date_due'] ).to eq MOCK_DATE.end_of_week.strftime("%F")
@@ -83,7 +91,6 @@ describe 'Routes::Api::Assignments' do
              time_estimate: 5
 
         body = JSON.parse( last_response.body )
-        aid = body['id']
         expect( body['timeslot_id'] ).to eq ts.id
         expect( body['assignment_type_id'] ).to eq MOCK_ASSIGNMENT_TYPE_ID
         expect( body['date_due'] ).to eq MOCK_DATE.end_of_week.strftime("%F")
@@ -94,7 +101,7 @@ describe 'Routes::Api::Assignments' do
     it 'FORBIDS update when not ENS DOC' do
         $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
 
-        put "/api/assignments/#{aid}",
+        put "/api/assignments/#{assignment.id}",
             assignment_type_id: MOCK_ASSIGNMENT_TYPE_ID + 1,
             content: "#{MOCK_CONTENT}#{MOCK_CONTENT}",
             date_due: MOCK_DATE.end_of_month,
@@ -106,14 +113,14 @@ describe 'Routes::Api::Assignments' do
     end
 
     it 'modifies an assignment' do
-        put "/api/assignments/#{aid}",
+        put "/api/assignments/#{assignment.id}",
             assignment_type_id: MOCK_ASSIGNMENT_TYPE_ID + 1,
             content: "#{MOCK_CONTENT}#{MOCK_CONTENT}",
             date_due: MOCK_DATE.end_of_month,
             time_estimate: 15
 
         body = JSON.parse( last_response.body )
-        expect( body['id'] ).to eq aid
+        expect( body['id'] ).to eq assignment.id
         expect( body['assignment_type_id'] ).to eq MOCK_ASSIGNMENT_TYPE_ID + 1
         expect( body['date_due'] ).to eq MOCK_DATE.end_of_month.strftime("%F")
         expect( body['content'] ).to eq "#{MOCK_CONTENT}#{MOCK_CONTENT}"
@@ -121,14 +128,14 @@ describe 'Routes::Api::Assignments' do
     end
 
     it 'gets an assignment by id' do
-        get "/api/assignments/#{aid}"
+        get "/api/assignments/#{assignment.id}"
 
         body = JSON.parse( last_response.body )
-        expect( body['id'] ).to eq aid
-        expect( body['assignment_type_id'] ).to eq MOCK_ASSIGNMENT_TYPE_ID + 1
-        expect( body['date_due'] ).to eq MOCK_DATE.end_of_month.strftime("%F")
-        expect( body['content'] ).to eq "#{MOCK_CONTENT}#{MOCK_CONTENT}"
-        expect( body['time_estimate'] ).to eq 15
+        expect( body['id'] ).to eq assignment.id
+        expect( body['assignment_type_id'] ).to eq MOCK_ASSIGNMENT_TYPE_ID
+        expect( body['date_due'] ).to eq MOCK_DATE.end_of_week.strftime("%F")
+        expect( body['content'] ).to eq MOCK_CONTENT
+        expect( body['time_estimate'] ).to eq 5
     end
 
     # it 'gets an assignment by timeslots_ids' do
@@ -136,7 +143,7 @@ describe 'Routes::Api::Assignments' do
     #         timeslots_ids: [ ts.id ]
 
     #     body = JSON.parse( last_response.body )
-    #     expect( body['id'] ).to eq aid
+    #     expect( body['id'] ).to eq assignment.id
     #     expect( body['assignment_type_id'] ).to eq MOCK_ASSIGNMENT_TYPE_ID + 1
     #     expect( body['date_due'] ).to eq MOCK_DATE.end_of_month.strftime("%F")
     #     expect( body['content'] ).to eq "#{MOCK_CONTENT}#{MOCK_CONTENT}"
@@ -146,7 +153,7 @@ describe 'Routes::Api::Assignments' do
     it 'FORBIDS marking an assignment as done by user NOT ELV' do
         $mock_user = MOCK_USER_ENS  # rubocop:disable Style/GlobalVars
 
-        put "/api/assignments/#{aid}",
+        put "/api/assignments/#{assignment.id}",
             done: true
 
         expect( last_response.status ).to eq 401
@@ -155,27 +162,27 @@ describe 'Routes::Api::Assignments' do
     end
 
     it 'marks an assignment as done by user' do
-        put "/api/assignments/#{aid}",
+        put "/api/assignments/#{assignment.id}",
             done: true
 
         body = JSON.parse( last_response.body )
-        expect( body['id'] ).to eq aid
+        expect( body['id'] ).to eq assignment.id
         expect( body['rtime'] ).to_not be nil
     end
 
     it 'unmarks an assignment as done by user' do
-        put "/api/assignments/#{aid}",
+        put "/api/assignments/#{assignment.id}",
             done: false
 
         body = JSON.parse( last_response.body )
-        expect( body['id'] ).to eq aid
+        expect( body['id'] ).to eq assignment.id
         expect( body['rtime'] ).to be nil
     end
 
     it 'FORBIDS deletion when not ENS DOC' do
         $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
 
-        delete "/api/assignments/#{aid}"
+        delete "/api/assignments/#{assignment.id}"
 
         expect( last_response.status ).to eq 401
 
@@ -183,12 +190,12 @@ describe 'Routes::Api::Assignments' do
     end
 
     it 'deletes an assignment by id' do
-        delete "/api/assignments/#{aid}"
+        delete "/api/assignments/#{assignment.id}"
 
         body = JSON.parse( last_response.body )
 
         expect( body['dtime'] ).to_not be nil
-        expect( body['id'] ).to eq aid
+        expect( body['id'] ).to eq assignment.id
         expect( body['timeslot_id'] ).to eq ts.id
     end
 
@@ -210,12 +217,12 @@ describe 'Routes::Api::Assignments' do
 
         ts2.add_session( session )
 
-        post "/api/assignments/#{aid}/copy_to/timeslot/#{ts2.id}/date_due/#{copy_date}/session/#{session2.id}"
+        post "/api/assignments/#{assignment.id}/copy_to/timeslot/#{ts2.id}/date_due/#{copy_date}/session/#{session2.id}"
 
         expect( ts2.assignments.length ).to eq 1
-        expect( ts2.assignments.first.id ).to_not eq aid
+        expect( ts2.assignments.first.id ).to_not eq assignment.id
         expect( ts2.assignments.first.timeslot_id ).to eq ts2.id
         expect( ts2.assignments.first.session_id ).to eq session2.id
-        expect( ts2.assignments.first.author_id ).to eq Assignment[aid].author_id
+        expect( ts2.assignments.first.author_id ).to eq Assignment[assignment.id].author_id
     end
 end

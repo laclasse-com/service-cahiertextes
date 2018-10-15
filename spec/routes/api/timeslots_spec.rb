@@ -9,13 +9,23 @@ describe 'Routes::Api::Timeslots' do
         CdTServer.new
     end
 
-    tid = -1
+    timeslot = nil
 
-    before :all do
+    before :each do
+        timeslot = Timeslot.create( structure_id: MOCK_UAI,
+                                    group_id: MOCK_GROUP_ID,
+                                    subject_id: MOCK_SUBJECT_ID,
+                                    weekday: MOCK_WEEKDAY,
+                                    start_time: MOCK_START_TIME,
+                                    end_time: MOCK_END_TIME )
+    end
+
+    after :each do
         AssignmentDoneMarker.where( assignment_id: Assignment.where( timeslot_id: Timeslot.where( structure_id: MOCK_UAI ).select( :id ) ).select(:id) ).destroy
         Assignment.where( timeslot_id: Timeslot.where( structure_id: MOCK_UAI ).select( :id ) ).destroy
         Session.where( timeslot_id: Timeslot.where( structure_id: MOCK_UAI ).select( :id ) ).destroy
-        Timeslot.where( structure_id: MOCK_UAI ).destroy
+        # Timeslot.where( structure_id: MOCK_UAI ).destroy
+        timeslot.destroy
     end
 
     it 'creates multiple Timeslots' do
@@ -73,7 +83,6 @@ describe 'Routes::Api::Timeslots' do
              end_time: MOCK_END_TIME
 
         body = JSON.parse( last_response.body )
-        tid = body['id']
 
         expect( body.length ).to eq Timeslot.columns.count
         expect( body['structure_id'] ).to eq MOCK_UAI
@@ -118,7 +127,7 @@ describe 'Routes::Api::Timeslots' do
         $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
         $mock_user['profiles'].first['structure_id'] = 'abc'  # rubocop:disable Style/GlobalVars
 
-        get "/api/timeslots/#{tid}"
+        get "/api/timeslots/#{timeslot.id}"
 
         expect( last_response.status ).to eq 401
 
@@ -129,7 +138,7 @@ describe 'Routes::Api::Timeslots' do
         $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
         $mock_user['groups'].first['group_id'] = MOCK_GROUP_ID - 1  # rubocop:disable Style/GlobalVars
 
-        get "/api/timeslots/#{tid}"
+        get "/api/timeslots/#{timeslot.id}"
 
         expect( last_response.status ).to eq 401
 
@@ -137,10 +146,10 @@ describe 'Routes::Api::Timeslots' do
     end
 
     it 'gets a Timeslot by id' do
-        get "/api/timeslots/#{tid}"
+        get "/api/timeslots/#{timeslot.id}"
 
         body = JSON.parse( last_response.body )
-        expect( body['id'] ).to eq tid
+        expect( body['id'] ).to eq timeslot.id
         expect( body['structure_id'] ).to eq MOCK_UAI
         expect( body['group_id'] ).to eq MOCK_GROUP_ID
         expect( body['subject_id'] ).to eq MOCK_SUBJECT_ID
@@ -196,7 +205,7 @@ describe 'Routes::Api::Timeslots' do
     it 'FORBIDS update when not ENS, ADM, DOC' do
         $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
 
-        put "/api/timeslots/#{tid}",
+        put "/api/timeslots/#{timeslot.id}",
             group_id: MOCK_GROUP_ID + 1,
             subject_id: "#{MOCK_SUBJECT_ID}2",
             weekday: MOCK_WEEKDAY + 1,
@@ -209,7 +218,7 @@ describe 'Routes::Api::Timeslots' do
     end
 
     it 'modifies a Timeslot' do
-        put "/api/timeslots/#{tid}",
+        put "/api/timeslots/#{timeslot.id}",
             group_id: MOCK_GROUP_ID + 1,
             subject_id: "#{MOCK_SUBJECT_ID}2",
             weekday: MOCK_WEEKDAY + 1,
@@ -217,7 +226,7 @@ describe 'Routes::Api::Timeslots' do
             end_time: MOCK_END_TIME
 
         body = JSON.parse( last_response.body )
-        expect( body['id'] ).to eq tid
+        expect( body['id'] ).to eq timeslot.id
         expect( body['structure_id'] ).to eq MOCK_UAI
         expect( body['group_id'] ).to eq MOCK_GROUP_ID + 1
         expect( body['subject_id'] ).to eq "#{MOCK_SUBJECT_ID}2"
@@ -229,7 +238,7 @@ describe 'Routes::Api::Timeslots' do
     it 'FORBIDS deletion when not ENS, ADM, DOC' do
         $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
 
-        delete "/api/timeslots/#{tid}", dtime: Time.now
+        delete "/api/timeslots/#{timeslot.id}", dtime: Time.now
 
         expect( last_response.status ).to eq 401
 
@@ -237,8 +246,8 @@ describe 'Routes::Api::Timeslots' do
     end
 
     it 'deletes a Timeslot by id' do
-        delete "/api/timeslots/#{tid}", dtime: Time.now
+        delete "/api/timeslots/#{timeslot.id}", dtime: Time.now
 
-        expect( Timeslot[id: tid].dtime ).to_not be nil
+        expect( Timeslot[id: timeslot.id].dtime ).to_not be nil
     end
 end
