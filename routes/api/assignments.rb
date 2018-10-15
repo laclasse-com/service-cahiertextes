@@ -131,7 +131,7 @@ module Routes
                     if params.key?( 'done' )
                         halt( 401, '401 Unauthorized' ) unless user_is_x_in_group_g?( %w[ELV], assignment.session.timeslot.group_id )
 
-                        assignment.done_by?( user['id'] ) ? assignment.to_be_done_by!( user['id'] ) : assignment.done_by!( user['id'] )
+                        !params['done'] || assignment.done_by?( user['id'] ) ? assignment.to_be_done_by!( user['id'] ) : assignment.done_by!( user['id'] )
 
                         hd = assignment.to_deep_hash
                         dti = AssignmentDoneMarker[ assignment_id: assignment.id, author_id: user['id'] ]
