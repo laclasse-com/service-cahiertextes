@@ -15,6 +15,7 @@ module Routes
 
                     param 'no_year_restriction', :boolean
                     param 'include_deleted', :boolean
+                    param 'include_sessions_and_assignments', :boolean
                     # }
 
                     query = Timeslot
@@ -33,6 +34,23 @@ module Routes
                             ( Date.parse( params['date>'] ) .. Date.parse( params['date<'] ) )
                                 .reduce( true ) do |memo, day|
                                 memo && ( day.wday == timeslot.weekday && timeslot.active_weeks[day.cweek] == 1 )
+                            end
+                        end
+
+                        if params.key?('include_sessions_and_assignments')
+                            data = data.map do |timeslot|
+                                # FIXME: copy-pasta from sessions/assignments APIs
+                                timeslot[:sessions] = Session.where( timeslot_id: timeslot[:id] )
+                                                             .where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') >= '#{params['date>']}'" ) )
+                                                             .where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') <= '#{params['date<']}'" ) )
+                                                             .naked
+                                                             .all
+
+                                timeslot[:assignments] = Assignment.where( timeslot_id: timeslot[:id] )
+                                                                   .where( Sequel.lit( "DATE_FORMAT( date_due, '%Y-%m-%d') >= '#{params['date>']}'" ) )
+                                                                   .where( Sequel.lit( "DATE_FORMAT( date_due, '%Y-%m-%d') <= '#{params['date<']}'" ) )
+                                                                   .naked
+                                                                   .all
                             end
                         end
                     end
