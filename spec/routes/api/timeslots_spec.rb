@@ -96,7 +96,7 @@ describe 'Routes::Api::Timeslots' do
 
     it 'creates a Timeslot as part of importing' do
         import = Import.create( ctime: Time.now,
-                                type: "test",
+                                import_type_id: ImportType.first.id,
                                 structure_id: MOCK_UAI,
                                 author_id: LaClasse::Helpers::User.user['id'] )
         post '/api/timeslots/',

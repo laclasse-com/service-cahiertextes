@@ -51,8 +51,7 @@ describe 'Routes::Api::ImportAPI' do
         if ENV['TRAVIS']
             puts 'Travis doesn\'t have the private key to test this'
         else
-            $mock_user = MOCK_USER_ADM  # rubocop:disable Style/GlobalVars
-            $mock_user['profiles'].first['structure_id'] = '0134567A'  # rubocop:disable Style/GlobalVars
+            $mock_user = MOCK_USER_ADM_PRONOTE  # rubocop:disable Style/GlobalVars
 
             post '/api/import/pronote/decrypt',
                  file: Rack::Test::UploadedFile.new( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' )

@@ -20,7 +20,7 @@ module Routes
 
                     query = Timeslot
 
-                    query = query.where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{Utils.schoolyear_start_date}'" ) ) unless params.key?( 'no_year_restriction' )
+                    query = query.where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{Utils::Calendar.schoolyear_start_date( 'A' )}'" ) ) unless params.key?( 'no_year_restriction' )
                     query = query.where( Sequel.lit( "`dtime` IS NULL OR DATE_FORMAT( dtime, '%Y-%m-%d') >= '#{Date.parse( params['date<'] )}'" ) ) if params.key?('date<') && !params.key?( 'include_deleted')
                     query = query.where( group_id: params['groups_ids'] ) if params.key?( 'groups_ids' )
                     query = query.where( subject_id: params['subjects_ids'] ) if params.key?( 'subjects_ids' )
