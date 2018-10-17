@@ -11,6 +11,14 @@ module Utils
 
         @@official_calendar = nil # rubocop:disable Style/ClassVars
 
+        def fetch_official_calendar( zone )
+            raise( ArgumentError, 'Valid zones are ["A", "B", "C"]' ) unless %w[A B C].include?( zone )
+
+            uri = URI.parse( "http://cache.media.education.gouv.fr/ics/Calendrier_Scolaire_Zone_#{zone}.ics" )
+
+            @@official_calendar = Icalendar::Calendar.parse( uri.open ).first # rubocop:disable Style/ClassVars
+        end
+
         def holidays( zone, schoolyear_start_year = nil )
             fetch_official_calendar( zone ) if @@official_calendar.nil?
             schoolyear_start_year = schoolyear_start_date( zone ).year if schoolyear_start_year.nil?
@@ -24,8 +32,8 @@ module Utils
                 next unless this_year
 
                 start_week_offset = ( e.description.downcase.force_encoding('UTF-8').include?( 'rentrée' ) ? ( e.dtstart.to_date.cwday == 1 ? -1 : 0 ) : 1 ) # rubocop:disable Style/NestedTernaryOperator
-                [e.dtstart.to_date.cweek + start_week_offset,
-                 e.dtend.nil? ? nil : e.dtend.to_date.cweek - 1]
+                [ e.dtstart.to_date.cweek + start_week_offset,
+                  e.dtend.nil? ? nil : e.dtend.to_date.cweek - 1 ]
             end.flatten.compact
 
             # add summer holidays' weeks
@@ -43,14 +51,6 @@ module Utils
             fetch_official_calendar( zone ) if @@official_calendar.nil?
 
             @@official_calendar.events.find { |e| e.description.force_encoding('UTF-8').match?( "^Rentrée.*" ) }.dtstart
-        end
-
-        def fetch_official_calendar( zone )
-            raise( ArgumentError, 'Valid zones are ["A", "B", "C"]' ) unless %w[A B C].include?( zone )
-
-            uri = URI.parse( "http://cache.media.education.gouv.fr/ics/Calendrier_Scolaire_Zone_#{zone}.ics" )
-
-            @@official_calendar = Icalendar::Calendar.parse( uri.open ).first # rubocop:disable Style/ClassVars
         end
     end
 
