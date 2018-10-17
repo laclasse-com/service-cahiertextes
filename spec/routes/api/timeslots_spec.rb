@@ -11,6 +11,10 @@ describe 'Routes::Api::Timeslots' do
 
     timeslot = nil
 
+    before :all do
+        Timeslot.where( structure_id: MOCK_UAI ).destroy
+    end
+
     before :each do
         timeslot = Timeslot.create( structure_id: MOCK_UAI,
                                     group_id: MOCK_GROUP_ID,
@@ -162,7 +166,9 @@ describe 'Routes::Api::Timeslots' do
         get "/api/timeslots", structure_id: MOCK_UAI
 
         body = JSON.parse( last_response.body )
-        cohort = Timeslot.where(structure_id: MOCK_UAI).where( dtime: nil )
+        cohort = Timeslot.where(structure_id: MOCK_UAI)
+                         .where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{Utils::Calendar.schoolyear_start_date( 'A' )}'" ) )
+                         .where( dtime: nil )
         expect( body.length ).to eq cohort.count
     end
 
@@ -170,7 +176,9 @@ describe 'Routes::Api::Timeslots' do
         get "/api/timeslots", groups_ids: [ MOCK_GROUP_ID ]
 
         body = JSON.parse( last_response.body )
-        cohort = Timeslot.where(group_id: [ MOCK_GROUP_ID ]).where( dtime: nil )
+        cohort = Timeslot.where(group_id: [ MOCK_GROUP_ID ])
+                         .where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{Utils::Calendar.schoolyear_start_date( 'A' )}'" ) )
+                         .where( dtime: nil )
         expect( body.length ).to eq cohort.count
     end
 
@@ -178,7 +186,9 @@ describe 'Routes::Api::Timeslots' do
         get "/api/timeslots", subjects_ids: [ MOCK_SUBJECT_ID ]
 
         body = JSON.parse( last_response.body )
-        cohort = Timeslot.where(subject_id: [ MOCK_SUBJECT_ID ]).where( dtime: nil )
+        cohort = Timeslot.where(subject_id: [ MOCK_SUBJECT_ID ])
+                         .where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{Utils::Calendar.schoolyear_start_date( 'A' )}'" ) )
+                         .where( dtime: nil )
         expect( body.length ).to eq cohort.count
     end
 
@@ -192,6 +202,7 @@ describe 'Routes::Api::Timeslots' do
         cohort = Timeslot.where(structure_id: MOCK_UAI)
                          .where(group_id: [ MOCK_GROUP_ID ])
                          .where(subject_id: [ MOCK_SUBJECT_ID ])
+                         .where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{Utils::Calendar.schoolyear_start_date( 'A' )}'" ) )
                          .where( dtime: nil )
         expect( body.length ).to eq cohort.count
     end
