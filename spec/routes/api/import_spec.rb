@@ -30,7 +30,7 @@ describe 'Routes::Api::ImportAPI' do
         expect( body.length ).to eq Import.columns.count
         expect( Import.count ).to eq nb_imports_before + 1
         expect( import.structure_id ).to eq MOCK_UAI
-        expect( import.type ).to eq "pronote"
+        expect( import.import_type_id ).to eq ImportType[label: "pronote"]&.id
         expect( import.author_id ).to eq LaClasse::Helpers::User.user['id']
 
         import.destroy

@@ -13,6 +13,7 @@ Sequel.migration do
         end
 
         alter_table( :imports ) do
+            drop_column :type
             add_foreign_key :import_type_id, :import_types, null: true
         end
         DB[:imports].update(import_type_id: DB[:import_types].all.first[:id])
