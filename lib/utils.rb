@@ -57,4 +57,18 @@ module Utils
     def deep_dup( thing )
         Marshal.load( Marshal.dump( thing ) )
     end
+
+    # https://fr.wikipedia.org/wiki/R%C3%A9pertoire_national_des_%C3%A9tablissements
+    def validate_uai( uai )
+        alphabet23 = %w[A B C D E F G H J K L M N P R S T U V W X Y Z]
+
+        return false unless uai.length == 8
+
+        letter = uai[ -1 ]
+        number = uai[ 0..6 ].to_i
+
+        computed_letter = alphabet23[ ( number % 23 ) ]
+
+        letter == computed_letter
+    end
 end

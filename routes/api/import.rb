@@ -27,12 +27,12 @@ module Routes
                     # param 'file', required: true
                     # }
 
-                    # halt( 500, 'Le fichier n\'est pas un fichier XML valide.' ) if %r{^(application|text)/xml;.*}.match( FileMagic.new(FileMagic::MAGIC_MIME).file( params['file']['tempfile'].path ) ).nil?
-
                     json( File.open( params['file']['tempfile'] ) do |xml|
                               nxml = Nokogiri::XML( xml )
+                              uai = nxml.search( 'UAI' ).children.text
 
-                              halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ADM], nxml.search( 'UAI' ).children.text )
+                              halt( 500, 'Le fichier ne contient pas de code UAI valide.' ) unless Utils.validate_uai( uai )
+                              halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ADM], uai )
 
                               crypted = !nxml.search( 'CLES' ).empty?
 
