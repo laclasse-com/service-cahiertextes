@@ -22,7 +22,7 @@ module Routes
                                          author_id: user['id'] ) )
                 end
 
-                app.post '/api/import/pronote/decrypt' do
+                app.post '/api/import/pronote/decrypt/?' do
                     # {
                     # param 'file', required: true
                     # }
