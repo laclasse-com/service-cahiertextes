@@ -112,8 +112,6 @@ module Routes
 
                         new_timeslot.update( import_id: params['import_id'] ) if params.key?( 'import_id' )
 
-                        # new_timeslot.modify( timeslot )
-
                         new_timeslot.to_hash
                     end
 
