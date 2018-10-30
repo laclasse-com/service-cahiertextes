@@ -80,6 +80,17 @@ module Routes
                                   timeslots: hash[:Cours].first[:Cours].map do |timeslot|
                                       start_time = slots_list[ timeslot[:NumeroPlaceDebut].to_i ][:LibelleHeureDebut]
                                       end_time = (Time.parse(start_time) + timeslot[:NombrePlaces].to_i * slot_length_minutes.minutes).iso8601.split('T')[1].split('+').first
+                                      groups = %w[Classe Groupe].map do |group_type|
+                                          !timeslot.key?( group_type.to_sym ) ? [] : timeslot[ group_type.to_sym ].map do |group| # rubocop:disable Style/MultilineTernaryOperator
+                                              {
+                                                  type: group_type,
+                                                  id: group[:Ident].to_i,
+                                                  active_weeks: group[:Semaines].to_i
+                                              }
+                                          end
+                                      end
+                                                                .compact
+                                                                .flatten
 
                                       {
                                           yearly: timeslot[:Annuel] == "1",
@@ -87,24 +98,7 @@ module Routes
                                           start_time: start_time,
                                           end_time: end_time,
                                           subjects_ids: !timeslot.key?(:Matiere) ? -1 : timeslot[:Matiere].map { |subject| subject[:Ident].to_i },
-                                          classes: !timeslot.key?(:Classe) ? [] : timeslot[:Classe].map do |group| # rubocop:disable Style/MultilineTernaryOperator
-                                              {
-                                                  id: group[:Ident].to_i,
-                                                  active_weeks: group[:Semaines].to_i
-                                              }
-                                          end,
-                                          partial_classes: !timeslot.key?(:PartieDeClasse) ? [] : timeslot[:PartieDeClasse].map do |group| # rubocop:disable Style/MultilineTernaryOperator
-                                              {
-                                                  id: group[:Ident].to_i,
-                                                  active_weeks: group[:Semaines].to_i
-                                              }
-                                          end,
-                                          groupes: !timeslot.key?(:Groupe) ? [] : timeslot[:Groupe].map do |group| # rubocop:disable Style/MultilineTernaryOperator
-                                              {
-                                                  id: group[:Ident].to_i,
-                                                  active_weeks: group[:Semaines].to_i
-                                              }
-                                          end,
+                                          groups: groups,
                                           rooms: !timeslot.key?(:Salle) ? [] : timeslot[:Salle].map do |room| # rubocop:disable Style/MultilineTernaryOperator
                                               {
                                                   id: room[:Ident].to_i,
