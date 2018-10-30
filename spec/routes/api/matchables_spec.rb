@@ -10,7 +10,7 @@ describe 'Routes::Api::Matchables' do
     end
 
     it 'creates a Matchable' do
-        post "/api/matchables/#{MOCK_UAI}/#{MOCK_HASH}", known_id: MOCK_KNOWN_ID
+        post "/api/matchables/#{MOCK_UAI}", known_id: MOCK_KNOWN_ID, hash_item: MOCK_HASH
 
         body = JSON.parse( last_response.body )
         expect( body.length ).to eq Matchable.columns.count

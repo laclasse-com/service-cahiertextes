@@ -25,7 +25,7 @@ module Routes
                     json( fi.to_hash )
                 end
 
-                app.post '/api/matchables/:structure_id/:hash_item/?' do
+                app.post '/api/matchables/:structure_id/?' do
                     # {
                     param 'structure_id', String, required: true
                     param 'hash_item', String, required: true
