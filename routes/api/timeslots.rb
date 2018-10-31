@@ -90,18 +90,20 @@ module Routes
 
                     single = !params.key?( 'timeslots' )
 
-                    if single
-                        params['timeslots'] = [ { weekday: params['weekday'],
-                                                  start_time: params['start_time'],
-                                                  end_time: params['end_time'],
-                                                  group_id: params['group_id'],
-                                                  subject_id: params['subject_id'],
-                                                  structure_id: params['structure_id']} ]
-                    end
+                    timeslots = if single
+                                    [ { weekday: params['weekday'],
+                                        start_time: params['start_time'],
+                                        end_time: params['end_time'],
+                                        group_id: params['group_id'],
+                                        subject_id: params['subject_id'],
+                                        structure_id: params['structure_id'] } ]
+                                else
+                                    params['timeslots'].map { |sts| JSON.parse( sts ) } # FIXME: why do I have to JSON.parse this?
+                                end
 
-                    halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ENS DOC ADM ], params['timeslots'].first['structure_id'] )
+                    halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ENS DOC ADM ], timeslots.first['structure_id'] )
 
-                    result = params['timeslots'].map do |timeslot|
+                    result = timeslots.map do |timeslot|
                         new_timeslot = Timeslot.create( ctime: Time.now,
                                                         start_time: timeslot['start_time'],
                                                         end_time: timeslot['end_time'],
