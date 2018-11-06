@@ -75,7 +75,6 @@ module Routes
                 app.post '/api/timeslots/?' do
                     # {
                     param 'import_id', Integer
-
                     param 'group_id', Integer
                     param 'subject_id', String
                     param 'structure_id', String
@@ -96,7 +95,8 @@ module Routes
                                         end_time: params['end_time'],
                                         group_id: params['group_id'],
                                         subject_id: params['subject_id'],
-                                        structure_id: params['structure_id'] } ]
+                                        structure_id: params['structure_id'],
+                                        import_id: params['import_id'] } ]
                                 else
                                     params['timeslots'].map { |sts| JSON.parse( sts ) } # FIXME: why do I have to JSON.parse this?
                                 end
@@ -110,9 +110,8 @@ module Routes
                                                         weekday: timeslot['weekday'],
                                                         subject_id: timeslot['subject_id'],
                                                         group_id: timeslot['group_id'],
-                                                        structure_id: timeslot['structure_id'] )
-
-                        new_timeslot.update( import_id: params['import_id'] ) if params.key?( 'import_id' )
+                                                        structure_id: timeslot['structure_id'],
+                                                        import_id: timeslot['import_id'] )
 
                         new_timeslot.to_hash
                     end
