@@ -9,7 +9,7 @@ module CahierDeTextesApp
       def get( zone, start_year = year_rentree )
         raise( ArgumentError, 'Valid zones are ["A", "B", "C"]' ) unless %w[A B C].include?( zone )
 
-        uri = URI.parse( "http://www.education.gouv.fr/download.php?file=http://cache.media.education.gouv.fr/ics/Calendrier_Scolaire_Zone_#{zone}.ics" )
+        uri = URI.parse( "http://cache.media.education.gouv.fr/ics/Calendrier_Scolaire_Zone_#{zone}.ics" )
 
         ics = Icalendar::Calendar.parse( uri.open ).first
         description_rentrée_enseignants = ics.events.first.description
@@ -20,7 +20,7 @@ module CahierDeTextesApp
 
           next unless this_year
 
-          start_week_offset = ( e.description.downcase.include?( 'rentrée' ) ? ( e.dtstart.to_date.cwday == 1 ? -1 : 0 ) : 1 ) # rubocop:disable Style/NestedTernaryOperator
+          start_week_offset = ( e.description.downcase.force_encoding('UTF-8').include?( 'rentrée' ) ? ( e.dtstart.to_date.cwday == 1 ? -1 : 0 ) : 1 ) # rubocop:disable Style/NestedTernaryOperator
           [e.dtstart.to_date.cweek + start_week_offset,
            e.dtend.nil? ? nil : e.dtend.to_date.cweek - 1]
         end.flatten.compact
