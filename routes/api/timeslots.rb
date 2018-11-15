@@ -21,7 +21,7 @@ module Routes
                     query = Timeslot
 
                     query = query.where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{Utils::Calendar.schoolyear_start_date( 'A' )}'" ) ) unless params.key?( 'no_year_restriction' )
-                    query = query.where( Sequel.lit( "`dtime` IS NULL OR DATE_FORMAT( dtime, '%Y-%m-%d') >= '#{Date.parse( params['date<'] )}'" ) ) if params.key?('date<') && !params.key?( 'include_deleted')
+                    query = query.where( Sequel.lit( "`dtime` IS NULL OR DATE_FORMAT( dtime, '%Y-%m-%d') >= '#{params['date<']}'" ) ) if params.key?('date<') && !params.key?( 'include_deleted')
                     query = query.where( group_id: params['groups_ids'] ) if params.key?( 'groups_ids' )
                     query = query.where( subject_id: params['subjects_ids'] ) if params.key?( 'subjects_ids' )
                     query = query.where( structure_id: params['structure_id'] ) if params.key?( 'structure_id' )
@@ -31,9 +31,9 @@ module Routes
 
                     if params.key?('date<') && params.key?('date>')
                         data = data.select do |timeslot|
-                            ( Date.parse( params['date>'] ) .. Date.parse( params['date<'] ) )
+                            ( params['date<'] .. params['date>'] )
                                 .reduce( true ) do |memo, day|
-                                memo && ( day.wday == timeslot.weekday && timeslot.active_weeks[day.cweek] == 1 )
+                                memo && ( day.wday == timeslot[:weekday] && timeslot[:active_weeks][day.cweek] == 1 )
                             end
                         end
 
@@ -51,11 +51,18 @@ module Routes
                                                                    .where( Sequel.lit( "DATE_FORMAT( date_due, '%Y-%m-%d') <= '#{params['date<']}'" ) )
                                                                    .naked
                                                                    .all
+
+                                timeslot
                             end
                         end
                     end
 
-                    json( data )
+                    json( data.map do |ts|
+                              ts[:start_time] = ts[:start_time].iso8601
+                              ts[:end_time] = ts[:end_time].iso8601
+
+                              ts
+                          end )
                 end
 
                 app.get '/api/timeslots/:id/?' do
@@ -90,15 +97,15 @@ module Routes
                     single = !params.key?( 'timeslots' )
 
                     timeslots = if single
-                                    [ { weekday: params['weekday'],
-                                        start_time: params['start_time'],
-                                        end_time: params['end_time'],
-                                        group_id: params['group_id'],
-                                        subject_id: params['subject_id'],
-                                        structure_id: params['structure_id'],
-                                        import_id: params['import_id'] } ]
+                                    [ { "weekday" => params['weekday'],
+                                        "start_time" => params['start_time'],
+                                        "end_time" => params['end_time'],
+                                        "group_id" => params['group_id'],
+                                        "subject_id" => params['subject_id'],
+                                        "structure_id" => params['structure_id'],
+                                        "import_id" => params['import_id'] } ]
                                 else
-                                    params['timeslots'].map { |sts| JSON.parse( sts ) } # FIXME: why do I have to JSON.parse this?
+                                    params['timeslots']
                                 end
 
                     halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ENS DOC ADM ], timeslots.first['structure_id'] )

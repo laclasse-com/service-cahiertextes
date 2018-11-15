@@ -66,7 +66,7 @@ MOCK_USER_ADM = {
 MOCK_USER_ADM_PRONOTE = {
     'id' => "#{MOCK_UID}1",
     'profiles' => [ { 'type' => 'ADM',
-                      'structure_id' => '0134567A' } ]
+                      'structure_id' => '0134567U' } ]
 }.freeze
 
 MOCK_USER_DIR = {

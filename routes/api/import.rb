@@ -29,6 +29,7 @@ module Routes
 
                     json( File.open( params['file']['tempfile'] ) do |xml|
                               nxml = Nokogiri::XML( xml )
+
                               uai = nxml.search( 'UAI' ).children.text
 
                               halt( 500, 'Le fichier ne contient pas de code UAI valide.' ) unless Utils.validate_uai( uai )

@@ -57,7 +57,9 @@ describe 'Routes::Api::ImportAPI' do
                  file: Rack::Test::UploadedFile.new( 'spec/fixtures/Edt_To_LaclasseCom_0134567A.xml' )
 
             body = JSON.parse( last_response.body )
-            expect( body['AnneeScolaire'] ).to_not be nil
+
+            expect( body['structure_id'] ).to eq "0134567A"
+            expect( body['subjects'] ).to_not be nil
 
             $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
         end

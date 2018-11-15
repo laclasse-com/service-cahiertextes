@@ -49,12 +49,12 @@ module Routes
 
                     single = !params.key?( 'resources' )
                     resources = if single
-                                    [ { structure_id: params['structure_id'],
-                                        label: params['label'],
-                                        name: params['name'],
-                                        import_id: params['import_id'] } ]
+                                    [ { "structure_id" => params['structure_id'],
+                                        "label" => params['label'],
+                                        "name" => params['name'],
+                                        "import_id" => params['import_id'] } ]
                                 else
-                                    params['resources'].map { |r| JSON.parse( r ) }
+                                    params['resources']
                                 end
 
                     result = resources.map do |resource|

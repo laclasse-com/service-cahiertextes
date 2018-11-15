@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ExportEmploiDuTemps xmlns="http://www.index-education.com/exportemploidutemps" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.index-education.com/exportemploidutemps http://telechargement.index-education.com/export/ExportEmploiDuTemps.xsd" Version="1.1" UAI="0134567A">
+<ExportEmploiDuTemps xmlns="http://www.index-education.com/exportemploidutemps" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.index-education.com/exportemploidutemps http://telechargement.index-education.com/export/ExportEmploiDuTemps.xsd" Version="1.1" UAI="0134567U">
   <AnneeScolaire DateDebut="2013-09-03" DateFin="2014-08-31" DatePremierJourSemaine1="2013-09-02"/>
   <GrilleHoraire NombrePlacesParJour="20" DureePlace="30">
     <JoursOuvres>
