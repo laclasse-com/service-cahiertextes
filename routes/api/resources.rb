@@ -39,6 +39,7 @@ module Routes
                     param 'label', String
                     param 'name', String
                     param 'import_id', Integer, required: false
+                    param 'resource_type_id', Integer, required: false
 
                     param 'resources', Array
 
@@ -52,6 +53,7 @@ module Routes
                                     [ { "structure_id" => params['structure_id'],
                                         "label" => params['label'],
                                         "name" => params['name'],
+                                        "resource_type_id" => params['resource_type_id'],
                                         "import_id" => params['import_id'] } ]
                                 else
                                     params['resources']
@@ -63,8 +65,13 @@ module Routes
                                                                                 label: resource['label'] )
 
                         new_resource.name = resource['name']
-                        new_resource.import_id = resource['import_id'] if resource.key?( 'import_id' )
                         new_resource.save
+
+                        import = Import[ id: resource['import_id'] ]
+                        new_resource.add_import( import ) unless import.nil?
+
+                        rt = ResourceType[ id: resource['resource_type_id'] ]
+                        new_resource.add_resource_type( rt ) unless rt.nil?
 
                         new_resource.to_hash
                     end
