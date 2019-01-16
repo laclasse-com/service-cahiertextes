@@ -27,7 +27,7 @@ require_relative './models/import'
 require_relative './models/matchable'
 require_relative './models/attachment'
 require_relative './models/resource'
-require_relative './models/user_parameters'
+require_relative './models/users'
 
 require_relative './lib/helpers/auth'
 require_relative './lib/helpers/user'
@@ -42,7 +42,7 @@ require_relative './routes/api/assignment_types'
 require_relative './routes/api/resource_types'
 require_relative './routes/api/import_types'
 require_relative './routes/api/attachment_types'
-require_relative './routes/api/user_parameters'
+require_relative './routes/api/users'
 require_relative './routes/api/holidays'
 
 # Application Sinatra servant de base
@@ -95,7 +95,7 @@ class CdTServer < Sinatra::Base
     register Routes::Api::ImportAPI
     register Routes::Api::Matchables
 
-    register Routes::Api::UserParametersAPI
+    register Routes::Api::UsersAPI
 
     register Routes::Api::Holidays
 end

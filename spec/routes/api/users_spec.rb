@@ -2,7 +2,7 @@
 
 require_relative '../../test_setup'
 
-describe 'Routes::Api::UserParametersAPI' do
+describe 'Routes::Api::UsersAPI' do
     include Rack::Test::Methods
 
     def app
@@ -10,12 +10,12 @@ describe 'Routes::Api::UserParametersAPI' do
     end
 
     it 'gets user parameters' do
-        up = UserParameters[uid: 'VZZ69999']
+        up = Users[uid: 'VZZ69999']
         up&.destroy
 
         get '/api/users/current/parametres'
 
-        up = UserParameters[uid: LaClasse::Helpers::Auth.session['user'] ]
+        up = Users[uid: LaClasse::Helpers::Auth.session['user'] ]
         expect( up ).to_not be nil
 
         body = JSON.parse( last_response.body )
@@ -30,13 +30,13 @@ describe 'Routes::Api::UserParametersAPI' do
     end
 
     it 'sets user parameters' do
-        up = UserParameters[uid: 'VZZ69999']
+        up = Users[uid: 'VZZ69999']
         up&.destroy
 
         put '/api/users/current/parametres', parameters: { 'affichage_types_de_devoir' => false,
                                                            'affichage_week_ends' => true }.to_json
 
-        up = UserParameters[uid: LaClasse::Helpers::Auth.session['user'] ]
+        up = Users[uid: LaClasse::Helpers::Auth.session['user'] ]
         expect( up ).to_not be nil
 
         body = JSON.parse( last_response.body )

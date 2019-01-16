@@ -4,10 +4,10 @@ require_relative '../../lib/data_management/accessors'
 
 module Routes
     module Api
-        module UserParametersAPI
+        module UsersAPI
             def self.registered( app )
                 app.get '/api/users/current/parametres/?' do
-                    parameters = DataManagement::Accessors.create_or_get( UserParameters,
+                    parameters = DataManagement::Accessors.create_or_get( Users,
                                                                           uid: session['user'] )
                     parameters.update( parameters: { affichage_types_de_devoir: true, affichage_week_ends: false }.to_json ) if parameters[:parameters].empty?
                     parameters.save
@@ -18,7 +18,7 @@ module Routes
                 app.put '/api/users/current/parametres/?' do
                     param 'parameters', String, required: true
 
-                    parameters = DataManagement::Accessors.create_or_get( UserParameters,
+                    parameters = DataManagement::Accessors.create_or_get( Users,
                                                                           uid: session['user'] )
 
                     parameters.update( parameters: params['parameters'] )
