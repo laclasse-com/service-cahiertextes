@@ -73,6 +73,7 @@ module Routes
                     param 'content', String, required: true
                     param 'date_due', Date, required: true
                     param 'time_estimate', Integer, required: true
+                    param 'difficulty', Integer
 
                     param 'session_id', Integer
                     # }
@@ -105,6 +106,7 @@ module Routes
                                                     content: params['content'],
                                                     date_due: params['date_due'],
                                                     time_estimate: params['time_estimate'],
+                                                    difficulty: params['difficulty'],
                                                     ctime: Time.now )
 
                     assignment.modify( params )

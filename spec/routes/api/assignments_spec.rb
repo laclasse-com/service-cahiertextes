@@ -35,6 +35,7 @@ describe 'Routes::Api::Assignments' do
                                         content: MOCK_CONTENT,
                                         date_due: MOCK_DATE.end_of_week,
                                         time_estimate: 5,
+                                        difficulty: 3,
                                         ctime: DateTime.now )
 
         ts.add_assignment( assignment )
@@ -58,7 +59,8 @@ describe 'Routes::Api::Assignments' do
              assignment_type_id: MOCK_ASSIGNMENT_TYPE_ID,
              content: MOCK_CONTENT,
              date_due: MOCK_DATE.end_of_week,
-             time_estimate: 5
+             time_estimate: 5,
+             difficulty: 3
 
         expect( last_response.status ).to eq 401
 
@@ -72,7 +74,8 @@ describe 'Routes::Api::Assignments' do
              assignment_type_id: MOCK_ASSIGNMENT_TYPE_ID,
              content: MOCK_CONTENT,
              date_due: MOCK_DATE.end_of_week,
-             time_estimate: 5
+             time_estimate: 5,
+             difficulty: 3
 
         body = JSON.parse( last_response.body )
         expect( body['timeslot_id'] ).to eq ts.id
@@ -80,6 +83,7 @@ describe 'Routes::Api::Assignments' do
         expect( body['date_due'] ).to eq MOCK_DATE.end_of_week.strftime("%F")
         expect( body['content'] ).to eq MOCK_CONTENT
         expect( body['time_estimate'] ).to eq 5
+        expect( body['difficulty'] ).to eq 3
     end
 
     it 'creates an assignment' do
@@ -88,7 +92,8 @@ describe 'Routes::Api::Assignments' do
              assignment_type_id: MOCK_ASSIGNMENT_TYPE_ID,
              content: MOCK_CONTENT,
              date_due: MOCK_DATE.end_of_week,
-             time_estimate: 5
+             time_estimate: 5,
+             difficulty: 3
 
         body = JSON.parse( last_response.body )
         expect( body['timeslot_id'] ).to eq ts.id
@@ -96,6 +101,7 @@ describe 'Routes::Api::Assignments' do
         expect( body['date_due'] ).to eq MOCK_DATE.end_of_week.strftime("%F")
         expect( body['content'] ).to eq MOCK_CONTENT
         expect( body['time_estimate'] ).to eq 5
+        expect( body['difficulty'] ).to eq 3
     end
 
     it 'FORBIDS update when not ENS DOC' do
@@ -117,7 +123,8 @@ describe 'Routes::Api::Assignments' do
             assignment_type_id: MOCK_ASSIGNMENT_TYPE_ID + 1,
             content: "#{MOCK_CONTENT}#{MOCK_CONTENT}",
             date_due: MOCK_DATE.end_of_month,
-            time_estimate: 15
+            time_estimate: 15,
+            difficulty: 2
 
         body = JSON.parse( last_response.body )
         expect( body['id'] ).to eq assignment.id
@@ -125,6 +132,7 @@ describe 'Routes::Api::Assignments' do
         expect( body['date_due'] ).to eq MOCK_DATE.end_of_month.strftime("%F")
         expect( body['content'] ).to eq "#{MOCK_CONTENT}#{MOCK_CONTENT}"
         expect( body['time_estimate'] ).to eq 15
+        expect( body['difficulty'] ).to eq 2
     end
 
     it 'gets an assignment by id' do
@@ -136,6 +144,7 @@ describe 'Routes::Api::Assignments' do
         expect( body['date_due'] ).to eq MOCK_DATE.end_of_week.strftime("%F")
         expect( body['content'] ).to eq MOCK_CONTENT
         expect( body['time_estimate'] ).to eq 5
+        expect( body['difficulty'] ).to eq 3
     end
 
     # it 'gets an assignment by timeslots_ids' do

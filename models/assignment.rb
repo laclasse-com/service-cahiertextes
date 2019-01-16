@@ -37,6 +37,7 @@ class Assignment < Sequel::Model( :assignments )
         self.assignment_type_id = params['assignment_type_id'] if params.key?( 'assignment_type_id' )
         self.content = params['content'] if params.key?( 'content' )
         self.time_estimate = params['time_estimate'] if params.key?( 'time_estimate' )
+        self.difficulty = params['difficulty'] if params.key?( 'difficulty' )
         self.session_id = params['session_id'] if params.key?( 'session_id' )
         self.author_id = params['author_id'] if params.key?( 'author_id' )
 
