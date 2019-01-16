@@ -193,7 +193,7 @@ describe 'Routes::Api::Sessions' do
         expect( body['vtime'] ).to be nil
     end
 
-    it 'CANNOT validate a Session without a vtime' do
+    it 'validates a Session without a vtime' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
         put "/api/sessions/#{session.id}", validated: true
@@ -202,7 +202,7 @@ describe 'Routes::Api::Sessions' do
         session.id = body['id']
         expect( body['id'] ).to eq session.id
         expect( body['dtime'] ).to be nil
-        expect( body['vtime'] ).to be nil
+        expect( body['vtime'] ).to_not be nil
     end
 
     it 'CANNOT validates a Session when not DIR' do
@@ -225,6 +225,18 @@ describe 'Routes::Api::Sessions' do
         expect( body['id'] ).to eq session.id
         expect( body['dtime'] ).to be nil
         expect( body['vtime'] ).to eq vtime.to_s
+    end
+
+    it 'sees a Session' do
+        $mock_user = MOCK_USER_DIR  # rubocop:disable Style/GlobalVars
+
+        put "/api/sessions/#{session.id}", seen: true
+
+        body = JSON.parse( last_response.body )
+        session.id = body['id']
+        expect( body['id'] ).to eq session.id
+        expect( body['dtime'] ).to be nil
+        expect( body['stime'] ).to_not be nil
     end
 
     it 'CANNOT validates a Session when not DIR' do

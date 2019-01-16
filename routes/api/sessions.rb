@@ -75,17 +75,26 @@ module Routes
                     param 'content', String
                     param 'vtime', DateTime
                     param 'validated', :boolean
+                    param 'stime', DateTime
+                    param 'seen', :boolean
                     # }
 
                     session = Session[ id: params['id'] ]
 
                     halt( 404, 'Session inconnus' ) if session.nil?
 
-                    if params.key?( 'validated' ) && ( !params['validated'] || params.key?( 'vtime' ) )
+                    if params.key?( 'validated' )
                         halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ DIR ], session.timeslot.structure_id )
 
                         session.vtime = nil
-                        session.vtime = params['vtime'] if params['validated'] && params.key?( 'vtime' )
+                        session.vtime = params.key?( 'vtime' ) ? params['vtime'] : DateTime.now if params['validated']
+
+                        session.save
+                    elsif params.key?( 'seen' )
+                        halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ DIR ], session.timeslot.structure_id )
+
+                        session.stime = nil
+                        session.stime = params.key?( 'stime' ) ? params['stime'] : DateTime.now if params['seen']
 
                         session.save
                     else

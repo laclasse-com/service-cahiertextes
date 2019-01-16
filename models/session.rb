@@ -21,6 +21,7 @@ class Session < Sequel::Model( :sessions )
     def modify( params )
         self.mtime = Time.now
 
+        self.stime = params['stime'] if params.key?( 'stime' )
         self.content = params['content'] if params.key?( 'content' )
         self.date = params['date'] if params.key?( 'date' )
 
