@@ -7,4 +7,4 @@ Sequel.migration do
         end
     end
 end
-puts 'applying 048_add_seem_time_to_sessions.rb'
+puts 'applying 048_add_seen_time_to_sessions.rb'
