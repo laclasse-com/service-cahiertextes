@@ -13,6 +13,7 @@ class Timeslot < Sequel::Model( :timeslots )
     many_to_many :resources, class: :Resource, join_table: :timeslots_resources
     one_to_many :sessions
     one_to_many :assignments
+    one_to_many :notes
     many_to_one :import, class: :Import, key: :import_id
 
     def to_hash

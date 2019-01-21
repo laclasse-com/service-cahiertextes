@@ -51,6 +51,13 @@ module Routes
                                                                    .where( Sequel.lit( "DATE_FORMAT( date_due, '%Y-%m-%d') <= '#{params['date<']}'" ) )
                                                                    .naked
                                                                    .all
+
+                                timeslot[:notes] = Note.where( timeslot_id: timeslot[:id] )
+                                                       .where( Sequel.lit( "DATE_FORMAT( date_due, '%Y-%m-%d') >= '#{params['date>']}'" ) )
+                                                       .where( Sequel.lit( "DATE_FORMAT( date_due, '%Y-%m-%d') <= '#{params['date<']}'" ) )
+                                                       .naked
+                                                       .all
+
                                 # TODO: done marker when relevant
                                 timeslot
                             end
@@ -76,7 +83,7 @@ module Routes
                     halt( 404, 'Créneau inconnu' ) if timeslot.nil?
                     halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ELV TUT ENS EVS DOC ADM ], timeslot.structure_id ) && user_is_in_group_g?( timeslot.group_id )
 
-                    json( timeslot.detailed( params['start_time'], params['end_time'], %w[resources sessions assignments] ) )
+                    json( timeslot.detailed( params['start_time'], params['end_time'], %w[resources sessions assignments notes] ) )
                 end
 
                 app.post '/api/timeslots/?' do

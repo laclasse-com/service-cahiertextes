@@ -8,6 +8,7 @@ Sequel.migration do
             foreign_key :timeslot_id, :timeslots, null: false
             String :author_id, null: false
             String :content, size: 4096
+            Date :date
             DateTime :ctime
             DateTime :mtime
             DateTime :dtime
