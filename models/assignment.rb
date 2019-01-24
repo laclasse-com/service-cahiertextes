@@ -6,6 +6,7 @@ class Assignment < Sequel::Model( :assignments )
     many_to_one :assignment_type
     one_to_many :assignment_done_markers
     many_to_one :session
+    many_to_one :users, key: :author_id
 
     def to_deep_hash
         hash = to_hash
@@ -66,4 +67,5 @@ end
 
 class AssignmentDoneMarker < Sequel::Model( :assignment_done_markers )
     many_to_one :assignment
+    many_to_one :users, key: :author_id
 end
