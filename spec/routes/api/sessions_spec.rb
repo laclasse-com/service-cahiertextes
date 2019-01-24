@@ -23,7 +23,7 @@ describe 'Routes::Api::Sessions' do
         session = Session.create( timeslot_id: ts.id,
                                   date: MOCK_DATE,
                                   content: MOCK_CONTENT,
-                                  author_id: LaClasse::Helpers::User.user['id'],
+                                  author_id: u_id,
                                   ctime: Time.now )
     end
 
@@ -123,10 +123,10 @@ describe 'Routes::Api::Sessions' do
     it 'gets Sessions by author_id' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
-        get "/api/sessions", authors_ids: [ LaClasse::Helpers::User.user['id'] ]
+        get "/api/sessions", authors_ids: [ u_id ]
 
         body = JSON.parse( last_response.body )
-        cohort = Session.where(author_id: [ LaClasse::Helpers::User.user['id'] ] )
+        cohort = Session.where(author_id: [ u_id ] )
         expect( body.length ).to eq cohort.count
     end
 

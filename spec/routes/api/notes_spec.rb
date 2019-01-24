@@ -25,7 +25,7 @@ describe 'Routes::Api::Notes' do
         note = Note.create( timeslot_id: ts.id,
                             date: MOCK_DATE,
                             content: MOCK_CONTENT,
-                            author_id: LaClasse::Helpers::User.user['id'],
+                            author_id: u_id,
                             ctime: Time.now )
     end
 
@@ -45,7 +45,7 @@ describe 'Routes::Api::Notes' do
         expect( body['timeslot_id'] ).to eq ts.id
         expect( body['date'] ).to eq MOCK_DATE.strftime("%F")
         expect( body['content'] ).to eq MOCK_CONTENT
-        expect( body['author_id'] ).to eq LaClasse::Helpers::User.user['id']
+        expect( body['author_id'] ).to eq u_id
     end
 
     it 'gets a Note by id' do
@@ -59,7 +59,7 @@ describe 'Routes::Api::Notes' do
         expect( body['date'] ).to eq MOCK_DATE.strftime("%F")
         expect( body['content'] ).to eq MOCK_CONTENT
         expect( body['dtime'] ).to be nil
-        expect( body['author_id'] ).to eq LaClasse::Helpers::User.user['id']
+        expect( body['author_id'] ).to eq u_id
     end
 
     it 'gets Notes by timeslot_id' do

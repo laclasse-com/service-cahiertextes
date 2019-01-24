@@ -57,7 +57,7 @@ module Routes
 
                     halt( 401, '401 Unauthorized' ) unless user_teaches_subject_x_in_group_g?( timeslot.subject_id, timeslot.group_id )
 
-                    session = Session.create( author_id: user['id'],
+                    session = Session.create( author_id: get_ctxt_user( user['id'] ).id,
                                               timeslot_id: timeslot.id,
                                               date: params['date'].to_s,
                                               ctime: Time.now,
@@ -98,7 +98,7 @@ module Routes
 
                         session.save
                     else
-                        halt( 401, '401 Unauthorized' ) unless session.author_id == user['id'] || user_teaches_subject_x_in_group_g?( session.timeslot.subject_id, session.timeslot.group_id )
+                        halt( 401, '401 Unauthorized' ) unless session.author_id == get_ctxt_user( user['id'] ).id || user_teaches_subject_x_in_group_g?( session.timeslot.subject_id, session.timeslot.group_id )
 
                         halt( 401, 'Session visée non modifiable' ) unless session.vtime.nil?
 
@@ -117,7 +117,7 @@ module Routes
                     halt( 404, 'Session inconnu' ) if session.nil?
                     halt( 401, 'Session visé non modifiable' ) unless session.vtime.nil?
 
-                    halt( 401, '401 Unauthorized' ) unless session.author_id == user['id'] || user_teaches_subject_x_in_group_g?( session.timeslot.subject_id, session.timeslot.group_id )
+                    halt( 401, '401 Unauthorized' ) unless session.author_id == get_ctxt_user( user['id'] ).id || user_teaches_subject_x_in_group_g?( session.timeslot.subject_id, session.timeslot.group_id )
 
                     session.update( dtime: session.dtime.nil? ? Time.now : nil, mtime: Time.now )
                     session.save

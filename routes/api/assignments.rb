@@ -59,7 +59,7 @@ module Routes
 
                     hd = assignment.to_deep_hash
                     if params.key?('check_done') && params['check_done'] == 'true'
-                        dti = AssignmentTodoItem[ assignment_id: assignment.id, author_id: user['id'] ]
+                        dti = AssignmentTodoItem[ assignment_id: assignment.id, author_id: get_ctxt_user( user['id'] ).id ]
                         hd[:rtime] = dti.rtime unless dti.nil?
                     end
 
@@ -90,7 +90,7 @@ module Routes
                                          .where( dtime: nil )
                                          .first
                         if session.nil?
-                            session = Session.create( author_id: user['id'],
+                            session = Session.create( author_id: get_ctxt_user( user['id'] ).id,
                                                       timeslot_id: timeslot.id,
                                                       date: params['date_due'],
                                                       ctime: Time.now,
@@ -99,7 +99,7 @@ module Routes
                         session_id = session.id
                     end
 
-                    assignment = Assignment.create( author_id: user['id'],
+                    assignment = Assignment.create( author_id: get_ctxt_user( user['id'] ).id,
                                                     assignment_type_id: params['assignment_type_id'],
                                                     timeslot_id: timeslot.id,
                                                     session_id: session_id,
@@ -130,21 +130,23 @@ module Routes
                     assignment = Assignment[ params['id'] ]
                     halt( 404, 'Assignment inconnu' ) if assignment.nil?
 
+                    u_id = get_ctxt_user( user['id'] ).id
+
                     if params.key?( 'done' )
                         halt( 401, '401 Unauthorized' ) unless user_is_x_in_group_g?( %w[ELV], assignment.session.timeslot.group_id )
 
-                        !params['done'] || assignment.done_by?( user['id'] ) ? assignment.to_be_done_by!( user['id'] ) : assignment.done_by!( user['id'] )
+                        !params['done'] || assignment.done_by?( u_id ) ? assignment.to_be_done_by!( u_id ) : assignment.done_by!( u_id )
 
                         hd = assignment.to_deep_hash
-                        dti = AssignmentDoneMarker[ assignment_id: assignment.id, author_id: user['id'] ]
+                        dti = AssignmentDoneMarker[ assignment_id: assignment.id, author_id: u_id ]
                         hd[:rtime] = dti.rtime unless dti.nil?
                         hd[:done] = !dti.nil?
 
                         json( hd )
                     else
-                        halt( 401, '401 Unauthorized' ) unless assignment.author_id == user['id'] || user_teaches_subject_x_in_group_g?( assignment.session.timeslot.subject_id, assignment.session.timeslot.group_id )
+                        halt( 401, '401 Unauthorized' ) unless assignment.author_id == u_id || user_teaches_subject_x_in_group_g?( assignment.session.timeslot.subject_id, assignment.session.timeslot.group_id )
 
-                        params['author_id'] = user['id']
+                        params['author_id'] = u_id
 
                         assignment.modify( params )
                     end

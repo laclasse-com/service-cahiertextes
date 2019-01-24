@@ -22,7 +22,7 @@ describe 'Routes::Api::Assignments' do
                               end_time: MOCK_END_TIME )
 
         session = Session.create( timeslot_id: ts.id,
-                                  author_id: LaClasse::Helpers::User.user['id'],
+                                  author_id: u_id,
                                   date: DateTime.now,
                                   content: MOCK_CONTENT,
                                   ctime: DateTime.now )
@@ -30,7 +30,7 @@ describe 'Routes::Api::Assignments' do
 
         assignment = Assignment.create( timeslot_id: ts.id,
                                         session_id: session.id,
-                                        author_id: LaClasse::Helpers::User.user['id'],
+                                        author_id: u_id,
                                         assignment_type_id: MOCK_ASSIGNMENT_TYPE_ID,
                                         content: MOCK_CONTENT,
                                         date_due: MOCK_DATE.end_of_week,
@@ -219,7 +219,7 @@ describe 'Routes::Api::Assignments' do
         copy_date = DateTime.now + 1.day
 
         session2 = Session.create( timeslot_id: ts2.id,
-                                   author_id: LaClasse::Helpers::User.user['id'],
+                                   author_id: u_id,
                                    date: DateTime.now,
                                    content: "test session",
                                    ctime: DateTime.now )

@@ -19,7 +19,7 @@ module Routes
                     json( Import.create( structure_id: params['structure_id'],
                                          ctime: DateTime.now,
                                          import_type_id: params.key?( 'type' ) ? ImportType[label: params['type']]&.id : '',
-                                         author_id: user['id'] ) )
+                                         author_id: get_ctxt_user( user['id'] ).id ) )
                 end
 
                 app.post '/api/import/pronote/decrypt/?' do

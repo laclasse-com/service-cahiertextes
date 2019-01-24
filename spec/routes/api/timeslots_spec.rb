@@ -97,7 +97,7 @@ describe 'Routes::Api::Timeslots' do
         import = Import.create( ctime: Time.now,
                                 import_type_id: ImportType.first.id,
                                 structure_id: MOCK_UAI,
-                                author_id: LaClasse::Helpers::User.user['id'] )
+                                author_id: u_id )
         post '/api/timeslots/',
              structure_id: MOCK_UAI,
              group_id: MOCK_GROUP_ID,

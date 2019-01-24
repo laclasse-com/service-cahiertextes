@@ -39,6 +39,18 @@ module LaClasse
             def user_is_super_admin?( uid = nil )
                 !user( uid )['profiles'].select { |profile| profile['type'] == 'TECH' }.empty?
             end
+
+            def get_ctxt_user( uid )
+                u = DataManagement::Accessors.create_or_get( Users,
+                                                             uid: uid )
+
+                if u[:parameters].empty?
+                    u.update( parameters: { affichage_types_de_devoir: true, affichage_week_ends: false }.to_json )
+                    u.save
+                end
+
+                u
+            end
         end
     end
 end

@@ -112,7 +112,8 @@ module Routes
                                         "structure_id" => params['structure_id'],
                                         "import_id" => params['import_id'] } ]
                                 else
-                                    params['timeslots'] = params['timeslots'].map { |ts| JSON.parse( ts ) }
+                                    # params['timeslots'] = params['timeslots'].map { |ts| JSON.parse( ts ) }
+                                    params['timeslots']
                                 end
 
                     halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ENS DOC ADM ], timeslots.first['structure_id'] )
