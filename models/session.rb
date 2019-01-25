@@ -4,7 +4,8 @@ class Session < Sequel::Model( :sessions )
     many_to_many :attachments, join_table: :sessions_attachments
     many_to_one :timeslot
     one_to_many :assignments
-    many_to_one :users, key: :author_id
+    many_to_one :author, key: :author_id, class: :User
+    many_to_many :targets, join_table: :sessions_users, class: :User, left_key: :session_id, right_key: :user_id
 
     def to_deep_hash
         hash = to_hash

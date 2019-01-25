@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 class Assignment < Sequel::Model( :assignments )
-    many_to_many :attachments
     many_to_one :timeslot
-    many_to_one :assignment_type
-    one_to_many :assignment_done_markers
     many_to_one :session
-    many_to_one :users, key: :author_id
+    many_to_one :assignment_type
+    many_to_one :author, key: :author_id, class: :User
+    many_to_many :attachments
+    many_to_many :targets, join_table: :assignments_users, class: :User, left_key: :assignment_id, right_key: :user_id
+    one_to_many :assignment_done_markers
 
     def to_deep_hash
         hash = to_hash
@@ -67,5 +68,5 @@ end
 
 class AssignmentDoneMarker < Sequel::Model( :assignment_done_markers )
     many_to_one :assignment
-    many_to_one :users, key: :author_id
+    many_to_one :author, key: :author_id, class: :User
 end
