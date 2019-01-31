@@ -16,6 +16,10 @@ Sequel.migration do
             add_foreign_key :attachment_type_id, :attachment_types, null: true
         end
         DB[:attachments].update(attachment_type_id: DB[:attachment_types].all.first[:id])
+
+        alter_table( :attachments ) do
+            set_column_not_null :attachment_type_id
+        end
     end
 end
 puts 'applying 043_add_table_attachment_types.rb'
