@@ -15,6 +15,8 @@ class Timeslot < Sequel::Model( :timeslots )
     one_to_many :assignments
     one_to_many :notes
     many_to_one :import, class: :Import, key: :import_id
+    many_to_one :author, key: :author_id, class: :User
+    many_to_many :targets, join_table: :sessions_users, class: :User, left_key: :session_id, right_key: :user_id
 
     def to_hash
         h = super
