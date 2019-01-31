@@ -72,7 +72,7 @@ module Routes
                     param 'assignment_type_id', Integer, required: true
                     param 'content', String, required: true
                     param 'date_due', Date, required: true
-                    param 'time_estimate', Integer, required: true
+                    param 'load', Integer, required: true
                     param 'difficulty', Integer
 
                     param 'session_id', Integer
@@ -105,7 +105,7 @@ module Routes
                                                     session_id: session_id,
                                                     content: params['content'],
                                                     date_due: params['date_due'],
-                                                    time_estimate: params['time_estimate'],
+                                                    load: params['load'],
                                                     difficulty: params['difficulty'],
                                                     ctime: Time.now )
 
@@ -122,7 +122,7 @@ module Routes
                     param 'assignment_type_id', Integer
                     param 'content', String
                     param 'date_due', Date
-                    param 'time_estimate', Integer
+                    param 'load', Integer
                     param 'session_id', Integer
                     param 'done', :boolean
                     # }
@@ -187,7 +187,7 @@ module Routes
                                                         session_id: params['session_id'],
                                                         content: assignment.content,
                                                         date_due: params['date_due'],
-                                                        time_estimate: assignment.time_estimate,
+                                                        load: assignment.load,
                                                         author_id: assignment.author_id,
                                                         ctime: Time.now )
 
