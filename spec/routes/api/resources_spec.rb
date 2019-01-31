@@ -12,8 +12,8 @@ describe 'Routes::Api::Resources' do
     lid = -1
 
     it 'creates multiple Resources' do
-        post '/api/resources/', resources: [ { structure_id: MOCK_UAI, label: MOCK_LABEL, name: MOCK_NAME },
-                                             { structure_id: "#{MOCK_UAI}2", label: "#{MOCK_LABEL}2", name: "#{MOCK_NAME}2" } ]
+        post '/api/resources/', resources: [ { structure_id: MOCK_UAI, label: MOCK_LABEL, name: MOCK_NAME, resource_type_id: 1 },
+                                             { structure_id: "#{MOCK_UAI}2", label: "#{MOCK_LABEL}2", name: "#{MOCK_NAME}2", resource_type_id: 1 } ]
 
         body = JSON.parse( last_response.body )
         expect( body.length ).to eq 2
@@ -32,7 +32,7 @@ describe 'Routes::Api::Resources' do
     end
 
     it 'creates a Resource' do
-        post '/api/resources/', structure_id: MOCK_UAI, label: MOCK_LABEL, name: MOCK_NAME
+        post '/api/resources/', structure_id: MOCK_UAI, label: MOCK_LABEL, name: MOCK_NAME, resource_type_id: 1
 
         body = JSON.parse( last_response.body )
         lid = body['id']

@@ -39,7 +39,7 @@ module Routes
                     param 'label', String
                     param 'name', String
                     param 'import_id', Integer, required: false
-                    param 'resource_type_id', Integer, required: false
+                    param 'resource_type_id', Integer
 
                     param 'resources', Array
 
@@ -62,16 +62,14 @@ module Routes
                     result = resources.map do |resource|
                         new_resource = DataManagement::Accessors.create_or_get( Resource,
                                                                                 structure_id: resource['structure_id'],
-                                                                                label: resource['label'] )
+                                                                                label: resource['label'],
+                                                                                resource_type_id: resource['resource_type_id'] )
 
                         new_resource.name = resource['name']
                         new_resource.save
 
                         import = Import[ id: resource['import_id'] ]
                         new_resource.add_import( import ) unless import.nil?
-
-                        rt = ResourceType[ id: resource['resource_type_id'] ]
-                        new_resource.add_resource_type( rt ) unless rt.nil?
 
                         new_resource.to_hash
                     end
