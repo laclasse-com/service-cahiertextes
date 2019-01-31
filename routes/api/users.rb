@@ -13,7 +13,7 @@ module Routes
                 app.put '/api/users/current/parametres/?' do
                     param 'parameters', String, required: true
 
-                    parameters = DataManagement::Accessors.create_or_get( Users,
+                    parameters = DataManagement::Accessors.create_or_get( User,
                                                                           uid: session['user'] )
 
                     parameters.update( parameters: params['parameters'] )

@@ -10,12 +10,12 @@ describe 'Routes::Api::UsersAPI' do
     end
 
     it 'gets user parameters' do
-        up = Users[uid: 'VZZ69999']
+        up = ::User[uid: 'VZZ69999']
         up&.destroy
 
         get '/api/users/current/parametres'
 
-        up = Users[uid: LaClasse::Helpers::Auth.session['user'] ]
+        up = ::User[uid: LaClasse::Helpers::Auth.session['user'] ]
         expect( up ).to_not be nil
 
         body = JSON.parse( last_response.body )
@@ -30,13 +30,13 @@ describe 'Routes::Api::UsersAPI' do
     end
 
     it 'sets user parameters' do
-        up = Users[uid: 'VZZ69999']
+        up = ::User[uid: 'VZZ69999']
         up&.destroy
 
         put '/api/users/current/parametres', parameters: { 'affichage_types_de_devoir' => false,
                                                            'affichage_week_ends' => true }.to_json
 
-        up = Users[uid: LaClasse::Helpers::Auth.session['user'] ]
+        up = ::User[uid: LaClasse::Helpers::Auth.session['user'] ]
         expect( up ).to_not be nil
 
         body = JSON.parse( last_response.body )
