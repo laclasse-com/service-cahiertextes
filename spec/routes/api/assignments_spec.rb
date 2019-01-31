@@ -34,7 +34,7 @@ describe 'Routes::Api::Assignments' do
                                         assignment_type_id: MOCK_ASSIGNMENT_TYPE_ID,
                                         content: MOCK_CONTENT,
                                         date_due: MOCK_DATE.end_of_week,
-                                        time_estimate: 5,
+                                        load: 5,
                                         difficulty: 3,
                                         ctime: DateTime.now )
 
@@ -59,7 +59,7 @@ describe 'Routes::Api::Assignments' do
              assignment_type_id: MOCK_ASSIGNMENT_TYPE_ID,
              content: MOCK_CONTENT,
              date_due: MOCK_DATE.end_of_week,
-             time_estimate: 5,
+             load: 5,
              difficulty: 3
 
         expect( last_response.status ).to eq 401
@@ -74,7 +74,7 @@ describe 'Routes::Api::Assignments' do
              assignment_type_id: MOCK_ASSIGNMENT_TYPE_ID,
              content: MOCK_CONTENT,
              date_due: MOCK_DATE.end_of_week,
-             time_estimate: 5,
+             load: 5,
              difficulty: 3
 
         body = JSON.parse( last_response.body )
@@ -82,7 +82,7 @@ describe 'Routes::Api::Assignments' do
         expect( body['assignment_type_id'] ).to eq MOCK_ASSIGNMENT_TYPE_ID
         expect( body['date_due'] ).to eq MOCK_DATE.end_of_week.strftime("%F")
         expect( body['content'] ).to eq MOCK_CONTENT
-        expect( body['time_estimate'] ).to eq 5
+        expect( body['load'] ).to eq 5
         expect( body['difficulty'] ).to eq 3
     end
 
@@ -92,7 +92,7 @@ describe 'Routes::Api::Assignments' do
              assignment_type_id: MOCK_ASSIGNMENT_TYPE_ID,
              content: MOCK_CONTENT,
              date_due: MOCK_DATE.end_of_week,
-             time_estimate: 5,
+             load: 5,
              difficulty: 3
 
         body = JSON.parse( last_response.body )
@@ -100,7 +100,7 @@ describe 'Routes::Api::Assignments' do
         expect( body['assignment_type_id'] ).to eq MOCK_ASSIGNMENT_TYPE_ID
         expect( body['date_due'] ).to eq MOCK_DATE.end_of_week.strftime("%F")
         expect( body['content'] ).to eq MOCK_CONTENT
-        expect( body['time_estimate'] ).to eq 5
+        expect( body['load'] ).to eq 5
         expect( body['difficulty'] ).to eq 3
     end
 
@@ -111,7 +111,7 @@ describe 'Routes::Api::Assignments' do
             assignment_type_id: MOCK_ASSIGNMENT_TYPE_ID + 1,
             content: "#{MOCK_CONTENT}#{MOCK_CONTENT}",
             date_due: MOCK_DATE.end_of_month,
-            time_estimate: 15
+            load: 15
 
         expect( last_response.status ).to eq 401
 
@@ -123,7 +123,7 @@ describe 'Routes::Api::Assignments' do
             assignment_type_id: MOCK_ASSIGNMENT_TYPE_ID + 1,
             content: "#{MOCK_CONTENT}#{MOCK_CONTENT}",
             date_due: MOCK_DATE.end_of_month,
-            time_estimate: 15,
+            load: 15,
             difficulty: 2
 
         body = JSON.parse( last_response.body )
@@ -131,7 +131,7 @@ describe 'Routes::Api::Assignments' do
         expect( body['assignment_type_id'] ).to eq MOCK_ASSIGNMENT_TYPE_ID + 1
         expect( body['date_due'] ).to eq MOCK_DATE.end_of_month.strftime("%F")
         expect( body['content'] ).to eq "#{MOCK_CONTENT}#{MOCK_CONTENT}"
-        expect( body['time_estimate'] ).to eq 15
+        expect( body['load'] ).to eq 15
         expect( body['difficulty'] ).to eq 2
     end
 
@@ -143,7 +143,7 @@ describe 'Routes::Api::Assignments' do
         expect( body['assignment_type_id'] ).to eq MOCK_ASSIGNMENT_TYPE_ID
         expect( body['date_due'] ).to eq MOCK_DATE.end_of_week.strftime("%F")
         expect( body['content'] ).to eq MOCK_CONTENT
-        expect( body['time_estimate'] ).to eq 5
+        expect( body['load'] ).to eq 5
         expect( body['difficulty'] ).to eq 3
     end
 
@@ -156,7 +156,7 @@ describe 'Routes::Api::Assignments' do
     #     expect( body['assignment_type_id'] ).to eq MOCK_ASSIGNMENT_TYPE_ID + 1
     #     expect( body['date_due'] ).to eq MOCK_DATE.end_of_month.strftime("%F")
     #     expect( body['content'] ).to eq "#{MOCK_CONTENT}#{MOCK_CONTENT}"
-    #     expect( body['time_estimate'] ).to eq 15
+    #     expect( body['load'] ).to eq 15
     # end
 
     it 'FORBIDS marking an assignment as done by user NOT ELV' do
