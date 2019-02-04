@@ -9,6 +9,7 @@ Sequel.migration do
             set_column_allow_null :weekday
 
             add_column :date, Date
+            add_column :title, String
             add_foreign_key :author_id, :users
         end
 
