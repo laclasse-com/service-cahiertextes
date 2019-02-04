@@ -15,6 +15,7 @@ before_install:
   - sudo mysql_upgrade -u root -ppassword
   - sudo service mysql restart
   - export TZ=Europe/Paris
+  - sudo gem install bundler
 
 gemfile:
   - gems.rb
@@ -23,7 +24,6 @@ before_script:
   - cp config/database.yml.sample config/database.yml
   - cp config/options.rb.sample config/options.rb
   - mysql -u root -ppassword -e 'create database CahierDeTextes;'
-  - sudo gem install bundler
   - bundle install
   - make db-migrate
 
