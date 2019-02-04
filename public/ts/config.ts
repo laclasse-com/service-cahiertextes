@@ -1,7 +1,10 @@
 'use strict';
 
 angular.module( 'cahierDeTextesClientApp' )
-  .config( [ '$httpProvider',
+    .config(function() {
+        angular.lowercase = angular.$$lowercase;
+    })
+    .config( [ '$httpProvider',
     function( $httpProvider ) {
       $httpProvider.defaults.withCredentials = true;
     }] )

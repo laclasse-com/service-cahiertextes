@@ -20,6 +20,9 @@ angular.module('cahierDeTextesClientApp', [
     'uiSwitch',
 ]);
 angular.module('cahierDeTextesClientApp')
+    .config(function () {
+    angular.lowercase = angular.$$lowercase;
+})
     .config(['$httpProvider',
     function ($httpProvider) {
         $httpProvider.defaults.withCredentials = true;
