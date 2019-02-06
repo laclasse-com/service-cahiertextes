@@ -259,27 +259,6 @@ describe 'Routes::Api::Sessions' do
         expect( body['vtime'] ).to be nil
     end
 
-    it 'copies a session to a different timeslot' do
-        $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
-
-        ts2 = Timeslot.create( structure_id: MOCK_UAI,
-                               group_id: 111_111,
-                               subject_id: "SUBJECT_ID",
-                               weekday: Time.now.wday + 1,
-                               start_time: Time.now.strftime( "2000-01-01T%H:00:00+01:00" ),
-                               end_time: Time.now.strftime( "2000-01-01T%H:30:00+01:00" ) )
-
-        copy_date = DateTime.now + 1.day
-
-        post "/api/sessions/#{session.id}/copy_to/timeslot/#{ts2.id}/date/#{copy_date}"
-        # body = JSON.parse( last_response.body )
-
-        expect( ts2.sessions.length ).to eq 1
-        expect( ts2.sessions.first.id ).to_not eq session.id
-        expect( ts2.sessions.first.timeslot_id ).to eq ts2.id
-        expect( ts2.sessions.first.author_id ).to eq Session[session.id].author_id
-    end
-
     it 'FORBIDS deletion when not ENS DOC or author' do
         $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
 
@@ -298,7 +277,5 @@ describe 'Routes::Api::Sessions' do
         expect( body['dtime'] ).to_not be nil
         expect( body['id'] ).to eq session.id
         expect( body['timeslot_id'] ).to eq ts.id
-        # expect( body['date'] ).to eq MOCK_DATE.strftime("%F")
-        # expect( body['content'] ).to eq "#{MOCK_CONTENT}#{MOCK_CONTENT}"
     end
 end

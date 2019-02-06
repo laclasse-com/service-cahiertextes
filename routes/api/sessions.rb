@@ -130,34 +130,6 @@ module Routes
 
                     json( session.to_deep_hash )
                 end
-
-                app.post '/api/sessions/:id/copy_to/timeslot/:timeslot_id/date/:date/?' do
-                    # {
-                    param 'id', Integer, required: true
-                    param 'timeslot_id', Integer, required: true
-                    param 'date', Date, required: true
-                    # }
-
-                    session = Session[ id: params['id'] ]
-                    halt( 404, 'Session inconnu' ) if session.nil?
-                    halt( 403, 'Existing session' ) unless Session.where( timeslot_id: params['timeslot_id'],
-                                                                          date: params['date'] ).count.zero?
-
-                    halt( 401, '401 Unauthorized' ) unless user_teaches_subject_x_in_group_g?( session.timeslot.subject_id, session.timeslot.group_id )
-                    halt( 401, '401 Unauthorized' ) unless user_teaches_subject_x_in_group_g?( session.timeslot.subject_id, Timeslot[id: params['timeslot_id']].group_id )
-
-                    target_session = Session.create( timeslot_id: params['timeslot_id'],
-                                                     date: params['date'],
-                                                     ctime: Time.now,
-                                                     content: session.content,
-                                                     author_id: session.author_id )
-
-                    session.attachments.each do |attachment|
-                        target_session.add_attachment( attachment )
-                    end
-
-                    json( target_session.to_deep_hash )
-                end
             end
         end
     end

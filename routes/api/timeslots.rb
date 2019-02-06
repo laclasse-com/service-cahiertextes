@@ -115,7 +115,6 @@ module Routes
                                     # params['timeslots'] = params['timeslots'].map { |ts| JSON.parse( ts ) }
                                     params['timeslots']
                                 end
-
                     halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ENS DOC ADM ], timeslots.first['structure_id'] )
 
                     result = timeslots.map do |timeslot|
@@ -151,7 +150,6 @@ module Routes
 
                     timeslot = Timeslot[ params['id'] ]
                     halt( 404, 'Créneau inconnu' ) if timeslot.nil?
-
                     halt( 401, '401 Unauthorized' ) unless user_is_x_in_group_g?( %w[ ENS DOC ], timeslot.group_id ) || user_is_x_in_structure_s?( %w[ ADM ], timeslot.structure_id )
 
                     timeslot.modify( params )
@@ -167,7 +165,6 @@ module Routes
 
                     timeslot = Timeslot[ params['id'] ]
                     halt( 404, 'Créneau inconnu' ) if timeslot.nil?
-
                     halt( 401, '401 Unauthorized' ) unless user_is_x_in_group_g?( %w[ ENS DOC ], timeslot.group_id ) || user_is_x_in_structure_s?( %w[ ADM ], timeslot.structure_id )
 
                     timeslot.update( dtime: timeslot.dtime.nil? ? params['dtime'] : nil )
@@ -186,7 +183,6 @@ module Routes
                     # }
 
                     timeslot = Timeslot[ id: params['id'] ]
-
                     halt( 404, 'Créneau inconnu' ) if timeslot.nil?
                     halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ENS DOC ADM ], timeslot.structure_id )
 

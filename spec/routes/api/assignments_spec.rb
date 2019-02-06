@@ -147,18 +147,6 @@ describe 'Routes::Api::Assignments' do
         expect( body['difficulty'] ).to eq 3
     end
 
-    # it 'gets an assignment by timeslots_ids' do
-    #     get "/api/assignments/",
-    #         timeslots_ids: [ ts.id ]
-
-    #     body = JSON.parse( last_response.body )
-    #     expect( body['id'] ).to eq assignment.id
-    #     expect( body['assignment_type_id'] ).to eq MOCK_ASSIGNMENT_TYPE_ID + 1
-    #     expect( body['date_due'] ).to eq MOCK_DATE.end_of_month.strftime("%F")
-    #     expect( body['content'] ).to eq "#{MOCK_CONTENT}#{MOCK_CONTENT}"
-    #     expect( body['load'] ).to eq 15
-    # end
-
     it 'FORBIDS marking an assignment as done by user NOT ELV' do
         $mock_user = MOCK_USER_ENS  # rubocop:disable Style/GlobalVars
 
@@ -206,32 +194,5 @@ describe 'Routes::Api::Assignments' do
         expect( body['dtime'] ).to_not be nil
         expect( body['id'] ).to eq assignment.id
         expect( body['timeslot_id'] ).to eq ts.id
-    end
-
-    it 'copies an assignment to a different timeslot/session' do
-        ts2 = Timeslot.create( structure_id: MOCK_UAI,
-                               group_id: MOCK_GROUP_ID2,
-                               subject_id: MOCK_SUBJECT_ID,
-                               weekday: Time.now.wday + 1,
-                               start_time: Time.now.strftime( "2000-01-01T%H:00:00+01:00" ),
-                               end_time: Time.now.strftime( "2000-01-01T%H:30:00+01:00" ) )
-
-        copy_date = DateTime.now + 1.day
-
-        session2 = Session.create( timeslot_id: ts2.id,
-                                   author_id: u_id,
-                                   date: DateTime.now,
-                                   content: "test session",
-                                   ctime: DateTime.now )
-
-        ts2.add_session( session )
-
-        post "/api/assignments/#{assignment.id}/copy_to/timeslot/#{ts2.id}/date_due/#{copy_date}/session/#{session2.id}"
-
-        expect( ts2.assignments.length ).to eq 1
-        expect( ts2.assignments.first.id ).to_not eq assignment.id
-        expect( ts2.assignments.first.timeslot_id ).to eq ts2.id
-        expect( ts2.assignments.first.session_id ).to eq session2.id
-        expect( ts2.assignments.first.author_id ).to eq Assignment[assignment.id].author_id
     end
 end

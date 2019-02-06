@@ -168,35 +168,6 @@ module Routes
 
                     json( assignment.to_deep_hash )
                 end
-
-                app.post '/api/assignments/:id/copy_to/timeslot/:timeslot_id/date_due/:date_due/session/:session_id' do
-                    # {
-                    param 'id', Integer, required: true
-                    param 'timeslot_id', Integer, required: true
-                    param 'date_due', Date, required: true
-                    param 'session_id', Integer, required: true
-                    # }
-
-                    assignment = Assignment[ params['id'] ]
-                    halt( 404, 'Assignment inconnu' ) if assignment.nil?
-                    halt( 401, '401 Unauthorized' ) unless user_teaches_subject_x_in_group_g?( assignment.session.timeslot.subject_id, assignment.session.timeslot.group_id )
-                    halt( 401, '401 Unauthorized' ) unless user_teaches_subject_x_in_group_g?( assignment.session.timeslot.subject_id, Timeslot[id: params['timeslot_id']].group_id )
-
-                    new_assignment = Assignment.create( assignment_type_id: assignment.assignment_type_id,
-                                                        timeslot_id: params['timeslot_id'],
-                                                        session_id: params['session_id'],
-                                                        content: assignment.content,
-                                                        date_due: params['date_due'],
-                                                        load: assignment.load,
-                                                        author_id: assignment.author_id,
-                                                        ctime: Time.now )
-
-                    assignment.attachments.each do |attachment|
-                        new_assignment.add_attachment( attachment )
-                    end
-
-                    json( new_assignment.to_deep_hash )
-                end
             end
         end
     end

@@ -29,6 +29,7 @@ require_relative './models/matchable'
 require_relative './models/attachment'
 require_relative './models/resource'
 require_relative './models/users'
+require_relative './models/trail'
 
 require_relative './lib/helpers/auth'
 require_relative './lib/helpers/user'
@@ -44,6 +45,7 @@ require_relative './routes/api/assignment_types'
 require_relative './routes/api/resource_types'
 require_relative './routes/api/import_types'
 require_relative './routes/api/attachment_types'
+require_relative './routes/api/trails'
 require_relative './routes/api/users'
 require_relative './routes/api/holidays'
 
@@ -94,6 +96,7 @@ class CdTServer < Sinatra::Base
     register Routes::Api::ResourceTypes
     register Routes::Api::ImportTypes
     register Routes::Api::AttachmentTypes
+    register Routes::Api::Trails
 
     register Routes::Api::ImportAPI
     register Routes::Api::Matchables
