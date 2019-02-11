@@ -47,25 +47,30 @@ module Routes
 
                 app.post '/api/sessions/?' do
                     # {
-                    param 'timeslot_id', Integer, required: true
-                    param 'date', Date, required: true
-                    param 'content', String
+                    param 'sessions', Array, required: true
+                    # [{ 'timeslot_id', Integer, required: true
+                    #    'date', Date, required: true
+                    #    'content', String }]
                     # }
 
-                    timeslot = Timeslot[ params['timeslot_id'] ]
-                    halt( 409, 'Créneau invalide' ) if timeslot.nil?
+                    result = params['sessions'].map do |session|
+                        timeslot = Timeslot[ session['timeslot_id'] ]
+                        halt( 409, 'Créneau invalide' ) if timeslot.nil?
 
-                    halt( 401, '401 Unauthorized' ) unless user_teaches_subject_x_in_group_g?( timeslot.subject_id, timeslot.group_id )
+                        halt( 401, '401 Unauthorized' ) unless user_teaches_subject_x_in_group_g?( timeslot.subject_id, timeslot.group_id )
 
-                    session = Session.create( author_id: get_ctxt_user( user['id'] ).id,
-                                              timeslot_id: timeslot.id,
-                                              date: params['date'].to_s,
-                                              ctime: Time.now,
-                                              content: '' )
+                        new_session = Session.create( author_id: get_ctxt_user( user['id'] ).id,
+                                                  timeslot_id: timeslot.id,
+                                                  date: session['date'].to_s,
+                                                  ctime: Time.now,
+                                                  content: '' )
 
-                    session.modify( params )
+                        new_session.modify( session )
 
-                    json( session.to_deep_hash )
+                        new_session.to_deep_hash
+                    end
+
+                    json( result )
                 end
 
                 app.put '/api/sessions/:id/?' do

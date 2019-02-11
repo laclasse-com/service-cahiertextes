@@ -21,19 +21,24 @@ module Routes
 
                 app.post '/api/import_types/?' do
                     # {
-                    param 'label', String, required: true
-                    param 'description', String
+                    param 'import_types', Array, required: true
+                    # [{ 'label', String, required: true
+                    #    'description', String }]
                     # }
 
                     halt( 401, '401 Unauthorized' ) unless user_is_super_admin?
 
-                    import_type = ImportType[ label: params['label'] ]
-                    halt( 403, "ImportType #{params['label']} existant" ) unless import_type.nil?
+                    result = params['import_types'].map do |import_type|
+                        new_import_type = ImportType[ label: import_type['label'] ]
+                        halt( 403, "ImportType #{import_type['label']} existant" ) unless new_import_type.nil?
 
-                    import_type = ImportType.create( label: params['label'] )
-                    import_type.update( description: params['description'] ) if params.key?( 'description' )
+                        new_import_type = ImportType.create( label: import_type['label'] )
+                        new_import_type.update( description: import_type['description'] ) if import_type.key?( 'description' )
 
-                    json( import_type.to_hash )
+                        new_import_type.to_hash
+                    end
+
+                    json( result )
                 end
 
                 app.put '/api/import_types/:id/?' do

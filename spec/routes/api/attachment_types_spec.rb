@@ -30,7 +30,7 @@ describe 'Routes::Api::AttachmentTypes' do
     it 'FORBIDS creation when not TECH' do
         $mock_user = MOCK_USER_ENS  # rubocop:disable Style/GlobalVars
 
-        post '/api/attachment_types/', label: 'test'
+        post '/api/attachment_types/', attachment_types: [ { label: 'test' } ]
 
         expect( last_response.status ).to eq 401
 
@@ -39,30 +39,32 @@ describe 'Routes::Api::AttachmentTypes' do
 
     it 'creates an attachment type with just a label' do
         nb_types_before = AttachmentType.count
+        label = "test #{Time.now}"
 
-        post '/api/attachment_types/', label: 'test'
+        post '/api/attachment_types/', attachment_types: [ { label: label } ]
 
         body = JSON.parse( last_response.body )
 
         expect( AttachmentType.count ).to eq nb_types_before + 1
-        expect( body['label'] ).to eq 'test'
-        expect( body['description'] ).to be nil
+        expect( body.first['label'] ).to eq label
+        expect( body.first['description'] ).to be nil
 
-        AttachmentType[id: body['id']]&.destroy
+        AttachmentType[id: body.first['id']]&.destroy
     end
 
     it 'creates an attachment type with a label and a description' do
         nb_types_before = AttachmentType.count
+        label = "test #{Time.now}"
 
-        post '/api/attachment_types/', label: 'test', description: 'description'
+        post '/api/attachment_types/', attachment_types: [ { label: label, description: 'description' } ]
 
         body = JSON.parse( last_response.body )
 
-        atid = body['id']
+        atid = body.first['id']
 
         expect( AttachmentType.count ).to eq nb_types_before + 1
-        expect( body['label'] ).to eq 'test'
-        expect( body['description'] ).to eq 'description'
+        expect( body.first['label'] ).to eq label
+        expect( body.first['description'] ).to eq 'description'
     end
 
     it 'FORBIDS update when not TECH' do

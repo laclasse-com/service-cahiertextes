@@ -30,7 +30,7 @@ describe 'Routes::Api::Trails' do
     it 'FORBIDS creation when not TECH' do
         $mock_user = MOCK_USER_ENS  # rubocop:disable Style/GlobalVars
 
-        post '/api/trails/', label: 'test'
+        post '/api/trails/', trails: [ { label: 'test' } ]
 
         expect( last_response.status ).to eq 401
 
@@ -41,13 +41,13 @@ describe 'Routes::Api::Trails' do
         nb_trails_before = Trail.count
         label = "test #{Time.now}"
 
-        post '/api/trails/', label: label
+        post '/api/trails/', trails: [ { label: label } ]
 
         body = JSON.parse( last_response.body )
-        itid = body['id']
+        itid = body.first['id']
 
         expect( Trail.count ).to eq nb_trails_before + 1
-        expect( body['label'] ).to eq label
+        expect( body.first['label'] ).to eq label
 
         #Trail[id: body['id']]&.destroy
     end

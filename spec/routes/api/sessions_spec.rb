@@ -35,7 +35,7 @@ describe 'Routes::Api::Sessions' do
     it 'FORBIDS creation when not ENS DOC' do
         $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
 
-        post '/api/sessions/', timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT
+        post '/api/sessions/', sessions: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT } ]
 
         expect( last_response.status ).to eq 401
     end
@@ -43,13 +43,14 @@ describe 'Routes::Api::Sessions' do
     it 'creates a Session' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
-        post '/api/sessions/', timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT
+        post '/api/sessions/', sessions: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT } ]
 
         body = JSON.parse( last_response.body )
-        expect( body['timeslot_id'] ).to eq ts.id
-        expect( body['date'] ).to eq MOCK_DATE.strftime("%F")
-        expect( body['content'] ).to eq MOCK_CONTENT
-        expect( body['vtime'] ).to be nil
+        expect( body.length ).to eq 1
+        expect( body.first['timeslot_id'] ).to eq ts.id
+        expect( body.first['date'] ).to eq MOCK_DATE.strftime("%F")
+        expect( body.first['content'] ).to eq MOCK_CONTENT
+        expect( body.first['vtime'] ).to be nil
     end
 
     it 'FORBIDS getting from a group the user does not belong to' do

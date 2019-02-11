@@ -32,14 +32,15 @@ describe 'Routes::Api::Resources' do
     end
 
     it 'creates a Resource' do
-        post '/api/resources/', structure_id: MOCK_UAI, label: MOCK_LABEL, name: MOCK_NAME, resource_type_id: 1
+        post '/api/resources/', resources: [ { structure_id: MOCK_UAI, label: MOCK_LABEL, name: MOCK_NAME, resource_type_id: 1 } ]
 
         body = JSON.parse( last_response.body )
-        lid = body['id']
-        expect( body.length ).to eq Resource.columns.count
-        expect( body['structure_id'] ).to eq MOCK_UAI
-        expect( body['label'] ).to eq MOCK_LABEL
-        expect( body['name'] ).to eq MOCK_NAME
+        lid = body.first['id']
+        expect( body.length ).to eq 1
+        expect( body.first.length ).to eq Resource.columns.count
+        expect( body.first['structure_id'] ).to eq MOCK_UAI
+        expect( body.first['label'] ).to eq MOCK_LABEL
+        expect( body.first['name'] ).to eq MOCK_NAME
     end
 
     it 'gets a Resource by id' do

@@ -88,36 +88,20 @@ module Routes
 
                 app.post '/api/timeslots/?' do
                     # {
-                    param 'import_id', Integer
-                    param 'group_id', Integer
-                    param 'subject_id', String
-                    param 'structure_id', String
-                    param 'weekday', Integer
-                    param 'start_time', DateTime
-                    param 'end_time', DateTime
+                    param 'timeslots', Array, required: true
+                    # [ { 'import_id', Integer
+                    #      'group_id', Integer
+                    #      'subject_id', String
+                    #      'structure_id', String
+                    #      'weekday', Integer
+                    #      'start_time', DateTime
+                    #      'end_time', DateTime } ]
 
-                    param 'timeslots', Array
-
-                    one_of :timeslots, :group_id
                     # }
 
-                    single = !params.key?( 'timeslots' )
+                    result = params['timeslots'].map do |timeslot|
+                        halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ENS DOC ADM ], timeslot['structure_id'] )
 
-                    timeslots = if single
-                                    [ { "weekday" => params['weekday'],
-                                        "start_time" => params['start_time'],
-                                        "end_time" => params['end_time'],
-                                        "group_id" => params['group_id'],
-                                        "subject_id" => params['subject_id'],
-                                        "structure_id" => params['structure_id'],
-                                        "import_id" => params['import_id'] } ]
-                                else
-                                    # params['timeslots'] = params['timeslots'].map { |ts| JSON.parse( ts ) }
-                                    params['timeslots']
-                                end
-                    halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ENS DOC ADM ], timeslots.first['structure_id'] )
-
-                    result = timeslots.map do |timeslot|
                         new_timeslot = Timeslot.create( ctime: Time.now,
                                                         start_time: timeslot['start_time'],
                                                         end_time: timeslot['end_time'],
@@ -129,8 +113,6 @@ module Routes
 
                         new_timeslot.to_hash
                     end
-
-                    result = result.first if single
 
                     json( result )
                 end

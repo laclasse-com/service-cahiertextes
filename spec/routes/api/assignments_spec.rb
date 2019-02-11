@@ -53,14 +53,13 @@ describe 'Routes::Api::Assignments' do
     it 'FORBIDS creation when not ENS DOC' do
         $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
 
-        post '/api/assignments/',
-             timeslot_id: ts.id,
-             session_id: session.id,
-             assignment_type_id: MOCK_ASSIGNMENT_TYPE_ID,
-             content: MOCK_CONTENT,
-             date_due: MOCK_DATE.end_of_week,
-             load: 5,
-             difficulty: 3
+        post '/api/assignments/', assignments: [ { timeslot_id: ts.id,
+                                                   session_id: session.id,
+                                                   assignment_type_id: MOCK_ASSIGNMENT_TYPE_ID,
+                                                   content: MOCK_CONTENT,
+                                                   date_due: MOCK_DATE.end_of_week,
+                                                   load: 5,
+                                                   difficulty: 3 } ]
 
         expect( last_response.status ).to eq 401
 
@@ -68,40 +67,40 @@ describe 'Routes::Api::Assignments' do
     end
 
     it 'creates an assignment' do
-        post '/api/assignments/',
-             timeslot_id: ts.id,
-             session_id: session.id,
-             assignment_type_id: MOCK_ASSIGNMENT_TYPE_ID,
-             content: MOCK_CONTENT,
-             date_due: MOCK_DATE.end_of_week,
-             load: 5,
-             difficulty: 3
+        post '/api/assignments/', assignments: [ { timeslot_id: ts.id,
+                                                   session_id: session.id,
+                                                   assignment_type_id: MOCK_ASSIGNMENT_TYPE_ID,
+                                                   content: MOCK_CONTENT,
+                                                   date_due: MOCK_DATE.end_of_week,
+                                                   load: 5,
+                                                   difficulty: 3 } ]
 
         body = JSON.parse( last_response.body )
-        expect( body['timeslot_id'] ).to eq ts.id
-        expect( body['assignment_type_id'] ).to eq MOCK_ASSIGNMENT_TYPE_ID
-        expect( body['date_due'] ).to eq MOCK_DATE.end_of_week.strftime("%F")
-        expect( body['content'] ).to eq MOCK_CONTENT
-        expect( body['load'] ).to eq 5
-        expect( body['difficulty'] ).to eq 3
+        expect( body.length ).to eq 1
+        expect( body.first['timeslot_id'] ).to eq ts.id
+        expect( body.first['assignment_type_id'] ).to eq MOCK_ASSIGNMENT_TYPE_ID
+        expect( body.first['date_due'] ).to eq MOCK_DATE.end_of_week.strftime("%F")
+        expect( body.first['content'] ).to eq MOCK_CONTENT
+        expect( body.first['load'] ).to eq 5
+        expect( body.first['difficulty'] ).to eq 3
     end
 
     it 'creates an assignment' do
-        post '/api/assignments/',
-             timeslot_id: ts.id,
-             assignment_type_id: MOCK_ASSIGNMENT_TYPE_ID,
-             content: MOCK_CONTENT,
-             date_due: MOCK_DATE.end_of_week,
-             load: 5,
-             difficulty: 3
+        post '/api/assignments/', assignments: [ { timeslot_id: ts.id,
+                                                   assignment_type_id: MOCK_ASSIGNMENT_TYPE_ID,
+                                                   content: MOCK_CONTENT,
+                                                   date_due: MOCK_DATE.end_of_week,
+                                                   load: 5,
+                                                   difficulty: 3 } ]
 
         body = JSON.parse( last_response.body )
-        expect( body['timeslot_id'] ).to eq ts.id
-        expect( body['assignment_type_id'] ).to eq MOCK_ASSIGNMENT_TYPE_ID
-        expect( body['date_due'] ).to eq MOCK_DATE.end_of_week.strftime("%F")
-        expect( body['content'] ).to eq MOCK_CONTENT
-        expect( body['load'] ).to eq 5
-        expect( body['difficulty'] ).to eq 3
+        expect( body.length ).to eq 1
+        expect( body.first['timeslot_id'] ).to eq ts.id
+        expect( body.first['assignment_type_id'] ).to eq MOCK_ASSIGNMENT_TYPE_ID
+        expect( body.first['date_due'] ).to eq MOCK_DATE.end_of_week.strftime("%F")
+        expect( body.first['content'] ).to eq MOCK_CONTENT
+        expect( body.first['load'] ).to eq 5
+        expect( body.first['difficulty'] ).to eq 3
     end
 
     it 'FORBIDS update when not ENS DOC' do

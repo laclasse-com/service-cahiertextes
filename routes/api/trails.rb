@@ -21,17 +21,23 @@ module Routes
 
                 app.post '/api/trails/?' do
                     # {
-                    param 'label', String, required: true
+                    param 'trails', Array, required: true
+                    # [{ 'label', String, required: true }]
                     # }
 
                     halt( 401, '401 Unauthorized' ) unless user_is_super_admin?
 
-                    trail = Trail[ label: params['label'] ]
-                    halt( 403, "Trail #{params['label']} existant" ) unless trail.nil?
+                    result = params['trails'].map do |trail|
+                        new_trail = Trail[ label: trail['label'] ]
 
-                    trail = Trail.create( label: params['label'] )
+                        halt( 403, "Trail #{params['label']} existant" ) unless new_trail.nil?
 
-                    json( trail.to_hash )
+                        new_trail = Trail.create( label: trail['label'] )
+
+                        new_trail.to_hash
+                    end
+
+                    json( result )
                 end
 
                 app.put '/api/trails/:id/?' do

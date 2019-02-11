@@ -39,21 +39,29 @@ module Routes
 
                 app.post '/api/notes/?' do
                     # {
-                    param 'timeslot_id', Integer, required: true
-                    param 'content', String
+                    param 'notes', Array, require: true
+                    # [{ 'timeslot_id', Integer, required: true
+                    #    'content', String }]
                     # }
 
-                    timeslot = Timeslot[ params['timeslot_id'] ]
-                    halt( 409, 'Créneau invalide' ) if timeslot.nil?
+                    author_id = get_ctxt_user( user['id'] ).id
 
-                    note = Note.create( author_id: get_ctxt_user( user['id'] ).id,
-                                        timeslot_id: timeslot.id,
-                                        date: params['date'].to_s,
-                                        ctime: Time.now,
-                                        content: params['content'] )
-                    note.save
+                    result = params['notes'].map do |note|
+                        timeslot = Timeslot[ id: note['timeslot_id'] ]
 
-                    json( note )
+                        halt( 409, 'Créneau invalide' ) if timeslot.nil?
+
+                        note = Note.create( author_id: author_id,
+                                            timeslot_id: timeslot.id,
+                                            date: note['date'].to_s,
+                                            ctime: Time.now,
+                                            content: note['content'] )
+                        note.save
+
+                        note
+                    end
+
+                    json( result )
                 end
 
                 app.put '/api/notes/:id/?' do

@@ -59,13 +59,12 @@ describe 'Routes::Api::Timeslots' do
     it 'FORBIDS creation when not ENS, ADM, DOC' do
         $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
 
-        post '/api/timeslots/',
-             structure_id: MOCK_UAI,
-             group_id: MOCK_GROUP_ID,
-             subject_id: MOCK_SUBJECT_ID,
-             weekday: MOCK_WEEKDAY,
-             start_time: MOCK_START_TIME,
-             end_time: MOCK_END_TIME
+        post '/api/timeslots/', timeslots: [ { structure_id: MOCK_UAI,
+                                               group_id: MOCK_GROUP_ID,
+                                               subject_id: MOCK_SUBJECT_ID,
+                                               weekday: MOCK_WEEKDAY,
+                                               start_time: MOCK_START_TIME,
+                                               end_time: MOCK_END_TIME } ]
 
         expect( last_response.status ).to eq 401
 
@@ -73,24 +72,24 @@ describe 'Routes::Api::Timeslots' do
     end
 
     it 'creates a Timeslot' do
-        post '/api/timeslots/',
-             structure_id: MOCK_UAI,
-             group_id: MOCK_GROUP_ID,
-             subject_id: MOCK_SUBJECT_ID,
-             weekday: MOCK_WEEKDAY,
-             start_time: MOCK_START_TIME,
-             end_time: MOCK_END_TIME
+        post '/api/timeslots/', timeslots: [ { structure_id: MOCK_UAI,
+                                               group_id: MOCK_GROUP_ID,
+                                               subject_id: MOCK_SUBJECT_ID,
+                                               weekday: MOCK_WEEKDAY,
+                                               start_time: MOCK_START_TIME,
+                                               end_time: MOCK_END_TIME } ]
 
         body = JSON.parse( last_response.body )
 
-        expect( body.length ).to eq Timeslot.columns.count
-        expect( body['structure_id'] ).to eq MOCK_UAI
-        expect( body['group_id'] ).to eq MOCK_GROUP_ID
-        expect( body['subject_id'] ).to eq MOCK_SUBJECT_ID
-        expect( body['weekday'] ).to eq MOCK_WEEKDAY
-        expect( body['start_time'] ).to eq MOCK_START_TIME
-        expect( body['end_time'] ).to eq MOCK_END_TIME
-        expect( body['import_id'] ).to be nil
+        expect( body.length ).to eq 1
+        expect( body.first.length ).to eq Timeslot.columns.count
+        expect( body.first['structure_id'] ).to eq MOCK_UAI
+        expect( body.first['group_id'] ).to eq MOCK_GROUP_ID
+        expect( body.first['subject_id'] ).to eq MOCK_SUBJECT_ID
+        expect( body.first['weekday'] ).to eq MOCK_WEEKDAY
+        expect( body.first['start_time'] ).to eq MOCK_START_TIME
+        expect( body.first['end_time'] ).to eq MOCK_END_TIME
+        expect( body.first['import_id'] ).to be nil
     end
 
     it 'creates a Timeslot as part of importing' do
@@ -98,27 +97,27 @@ describe 'Routes::Api::Timeslots' do
                                 import_type_id: ImportType.first.id,
                                 structure_id: MOCK_UAI,
                                 author_id: u_id )
-        post '/api/timeslots/',
-             structure_id: MOCK_UAI,
-             group_id: MOCK_GROUP_ID,
-             subject_id: MOCK_SUBJECT_ID,
-             weekday: MOCK_WEEKDAY,
-             start_time: MOCK_START_TIME,
-             end_time: MOCK_END_TIME,
-             import_id: import.id
+        post '/api/timeslots/', timeslots: [ { structure_id: MOCK_UAI,
+                                               group_id: MOCK_GROUP_ID,
+                                               subject_id: MOCK_SUBJECT_ID,
+                                               weekday: MOCK_WEEKDAY,
+                                               start_time: MOCK_START_TIME,
+                                               end_time: MOCK_END_TIME,
+                                               import_id: import.id } ]
 
         body = JSON.parse( last_response.body )
 
-        expect( body.length ).to eq Timeslot.columns.count
-        expect( body['structure_id'] ).to eq MOCK_UAI
-        expect( body['group_id'] ).to eq MOCK_GROUP_ID
-        expect( body['subject_id'] ).to eq MOCK_SUBJECT_ID
-        expect( body['weekday'] ).to eq MOCK_WEEKDAY
-        expect( body['start_time'] ).to eq MOCK_START_TIME
-        expect( body['end_time'] ).to eq MOCK_END_TIME
-        expect( body['import_id'] ).to eq import.id
+        expect( body.length ).to eq 1
+        expect( body.first.length ).to eq Timeslot.columns.count
+        expect( body.first['structure_id'] ).to eq MOCK_UAI
+        expect( body.first['group_id'] ).to eq MOCK_GROUP_ID
+        expect( body.first['subject_id'] ).to eq MOCK_SUBJECT_ID
+        expect( body.first['weekday'] ).to eq MOCK_WEEKDAY
+        expect( body.first['start_time'] ).to eq MOCK_START_TIME
+        expect( body.first['end_time'] ).to eq MOCK_END_TIME
+        expect( body.first['import_id'] ).to eq import.id
 
-        Timeslot[body['id']]&.destroy
+        Timeslot[body.first['id']]&.destroy
         import&.destroy
     end
 

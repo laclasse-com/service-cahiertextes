@@ -39,13 +39,13 @@ describe 'Routes::Api::Notes' do
     it 'creates a Note' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
-        post '/api/notes/', timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT
+        post '/api/notes/', notes: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT } ]
 
         body = JSON.parse( last_response.body )
-        expect( body['timeslot_id'] ).to eq ts.id
-        expect( body['date'] ).to eq MOCK_DATE.strftime("%F")
-        expect( body['content'] ).to eq MOCK_CONTENT
-        expect( body['author_id'] ).to eq u_id
+        expect( body.first['timeslot_id'] ).to eq ts.id
+        expect( body.first['date'] ).to eq MOCK_DATE.strftime("%F")
+        expect( body.first['content'] ).to eq MOCK_CONTENT
+        expect( body.first['author_id'] ).to eq u_id
     end
 
     it 'gets a Note by id' do

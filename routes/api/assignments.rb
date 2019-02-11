@@ -68,50 +68,54 @@ module Routes
 
                 app.post '/api/assignments/?' do
                     # {
-                    param 'timeslot_id', Integer, required: true
-                    param 'assignment_type_id', Integer, required: true
-                    param 'content', String, required: true
-                    param 'date_due', Date, required: true
-                    param 'load', Integer, required: true
-                    param 'difficulty', Integer
-
-                    param 'session_id', Integer
+                    param 'assignments', Array, required: true
+                    # [{ 'timeslot_id', Integer, required: true
+                    #    'assignment_type_id', Integer, required: true
+                    #    'content', String, required: true
+                    #    'date_due', Date, required: true
+                    #    'load', Integer, required: true
+                    #    'difficulty', Integer
+                    #    'session_id', Integer }]
                     # }
 
-                    timeslot = Timeslot[ params['timeslot_id'] ]
-                    halt( 409, 'Créneau invalide' ) if timeslot.nil?
-                    halt( 401, '401 Unauthorized' ) unless user_teaches_subject_x_in_group_g?( timeslot.subject_id, timeslot.group_id )
+                    result = params['assignments'].map do |assignment|
+                        timeslot = Timeslot[ assignment['timeslot_id'] ]
+                        halt( 409, 'Créneau invalide' ) if timeslot.nil?
+                        halt( 401, '401 Unauthorized' ) unless user_teaches_subject_x_in_group_g?( timeslot.subject_id, timeslot.group_id )
 
-                    if params['session_id'] && !params['session_id'].nil?
-                        session_id = params['session_id']
-                    else
-                        session = Session.where( timeslot_id: timeslot.id )
-                                         .where( date: params['date_due'] )
-                                         .where( dtime: nil )
-                                         .first
-                        if session.nil?
-                            session = Session.create( author_id: get_ctxt_user( user['id'] ).id,
-                                                      timeslot_id: timeslot.id,
-                                                      date: params['date_due'],
-                                                      ctime: Time.now,
-                                                      content: '' )
+                        if assignment['session_id'] && !assignment['session_id'].nil?
+                            session_id = assignment['session_id']
+                        else
+                            session = Session.where( timeslot_id: timeslot.id )
+                                             .where( date: assignment['date_due'] )
+                                             .where( dtime: nil )
+                                             .first
+                            if session.nil?
+                                session = Session.create( author_id: get_ctxt_user( user['id'] ).id,
+                                                          timeslot_id: timeslot.id,
+                                                          date: assignment['date_due'],
+                                                          ctime: Time.now,
+                                                          content: '' )
+                            end
+                            session_id = session.id
                         end
-                        session_id = session.id
+
+                        new_assignment = Assignment.create( author_id: get_ctxt_user( user['id'] ).id,
+                                                            assignment_type_id: assignment['assignment_type_id'],
+                                                            timeslot_id: timeslot.id,
+                                                            session_id: session_id,
+                                                            content: assignment['content'],
+                                                            date_due: assignment['date_due'],
+                                                            load: assignment['load'],
+                                                            difficulty: assignment['difficulty'],
+                                                            ctime: Time.now )
+
+                        new_assignment.modify( params )
+
+                        new_assignment.to_deep_hash
                     end
 
-                    assignment = Assignment.create( author_id: get_ctxt_user( user['id'] ).id,
-                                                    assignment_type_id: params['assignment_type_id'],
-                                                    timeslot_id: timeslot.id,
-                                                    session_id: session_id,
-                                                    content: params['content'],
-                                                    date_due: params['date_due'],
-                                                    load: params['load'],
-                                                    difficulty: params['difficulty'],
-                                                    ctime: Time.now )
-
-                    assignment.modify( params )
-
-                    json( assignment.to_deep_hash )
+                    json( result )
                 end
 
                 app.put '/api/assignments/:id/?' do

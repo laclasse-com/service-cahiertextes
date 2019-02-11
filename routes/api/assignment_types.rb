@@ -21,19 +21,24 @@ module Routes
 
                 app.post '/api/assignment_types/?' do
                     # {
-                    param 'label', String, required: true
-                    param 'description', String
+                    param 'assignment_types', Array, required: true
+                    # [{ 'label', String, required: true
+                    #    'description', String }]
                     # }
 
                     halt( 401, '401 Unauthorized' ) unless user_is_super_admin?
 
-                    assignment_type = AssignmentType[ label: params['label'] ]
-                    halt( 403, "AssignmentType #{params['label']} existant" ) unless assignment_type.nil?
+                    result = params['assignment_types'].map do |new_assignment_type|
+                        assignment_type = AssignmentType[ label: new_assignment_type['label'] ]
+                        halt( 403, "AssignmentType #{new_assignment_type['label']} existant" ) unless assignment_type.nil?
 
-                    assignment_type = AssignmentType.create( label: params['label'] )
-                    assignment_type.update( description: params['description'] ) if params.key?( 'description' )
+                        assignment_type = AssignmentType.create( label: new_assignment_type['label'] )
+                        assignment_type.update( description: new_assignment_type['description'] ) if new_assignment_type.key?( 'description' )
 
-                    json( assignment_type.to_hash )
+                        assignment_type.to_hash
+                    end
+
+                    json( result )
                 end
 
                 app.put '/api/assignment_types/:id/?' do

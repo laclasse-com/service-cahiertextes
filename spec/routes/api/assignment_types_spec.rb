@@ -30,7 +30,7 @@ describe 'Routes::Api::AssignmentTypes' do
     it 'FORBIDS creation when not TECH' do
         $mock_user = MOCK_USER_ENS  # rubocop:disable Style/GlobalVars
 
-        post '/api/assignment_types/', label: 'test'
+        post '/api/assignment_types/', assignment_types: [{ label: 'test' }]
 
         expect( last_response.status ).to eq 401
 
@@ -39,30 +39,32 @@ describe 'Routes::Api::AssignmentTypes' do
 
     it 'creates an assignment type with just a label' do
         nb_types_before = AssignmentType.count
+        label = "test #{Time.now}"
 
-        post '/api/assignment_types/', label: 'test'
+        post '/api/assignment_types/', assignment_types: [{ label: label }]
 
         body = JSON.parse( last_response.body )
 
         expect( AssignmentType.count ).to eq nb_types_before + 1
-        expect( body['label'] ).to eq 'test'
-        expect( body['description'] ).to be nil
+        expect( body.first['label'] ).to eq label
+        expect( body.first['description'] ).to be nil
 
-        AssignmentType[id: body['id']]&.destroy
+        AssignmentType[id: body.first['id']]&.destroy
     end
 
     it 'creates an assignment type with a label and a description' do
         nb_types_before = AssignmentType.count
+        label = "test #{Time.now}"
 
-        post '/api/assignment_types/', label: 'test', description: 'description'
+        post '/api/assignment_types/', assignment_types: [{ label: label, description: 'description' }]
 
         body = JSON.parse( last_response.body )
 
-        atid = body['id']
+        atid = body.first['id']
 
         expect( AssignmentType.count ).to eq nb_types_before + 1
-        expect( body['label'] ).to eq 'test'
-        expect( body['description'] ).to eq 'description'
+        expect( body.first['label'] ).to eq label
+        expect( body.first['description'] ).to eq 'description'
     end
 
     it 'FORBIDS update when not TECH' do

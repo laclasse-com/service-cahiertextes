@@ -24,7 +24,7 @@ module Routes
 
                 app.post '/api/import/pronote/decrypt/?' do
                     # {
-                    # param 'file', required: true
+                    #  'file', required: true
                     # }
 
                     json( File.open( params['file']['tempfile'] ) do |xml|

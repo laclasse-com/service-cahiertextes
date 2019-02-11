@@ -21,19 +21,24 @@ module Routes
 
                 app.post '/api/attachment_types/?' do
                     # {
-                    param 'label', String, required: true
-                    param 'description', String
+                    param 'attachment_types', Array, required: true
+                    # [{ 'label', String, required: true
+                    #  'description', String }]
                     # }
 
                     halt( 401, '401 Unauthorized' ) unless user_is_super_admin?
 
-                    attachment_type = AttachmentType[ label: params['label'] ]
-                    halt( 403, "AttachmentType #{params['label']} existant" ) unless attachment_type.nil?
+                    result = params['attachment_types'].map do |new_attachment_type|
+                        attachment_type = AttachmentType[ label: new_attachment_type['label'] ]
+                        halt( 403, "AttachmentType #{new_attachment_type['label']} existant" ) unless attachment_type.nil?
 
-                    attachment_type = AttachmentType.create( label: params['label'] )
-                    attachment_type.update( description: params['description'] ) if params.key?( 'description' )
+                        attachment_type = AttachmentType.create( label: new_attachment_type['label'] )
+                        attachment_type.update( description: new_attachment_type['description'] ) if new_attachment_type.key?( 'description' )
 
-                    json( attachment_type.to_hash )
+                        attachment_type.to_hash
+                    end
+
+                    json( result )
                 end
 
                 app.put '/api/attachment_types/:id/?' do
