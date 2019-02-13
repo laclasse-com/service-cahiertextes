@@ -54,6 +54,8 @@ module Routes
                     # }
 
                     result = params['sessions'].map do |session|
+                        session = JSON.parse( session ) if session.is_a?( String )
+
                         timeslot = Timeslot[ session['timeslot_id'] ]
                         halt( 409, 'Créneau invalide' ) if timeslot.nil?
 

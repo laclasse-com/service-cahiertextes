@@ -41,7 +41,7 @@ module LaClasse
             end
 
             def get_ctxt_user( uid )
-                u = DataManagement::Accessors.create_or_get( Users,
+                u = DataManagement::Accessors.create_or_get( ::User,
                                                              uid: uid )
 
                 if u[:parameters].empty?

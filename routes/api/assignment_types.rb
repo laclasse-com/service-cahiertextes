@@ -28,14 +28,16 @@ module Routes
 
                     halt( 401, '401 Unauthorized' ) unless user_is_super_admin?
 
-                    result = params['assignment_types'].map do |new_assignment_type|
-                        assignment_type = AssignmentType[ label: new_assignment_type['label'] ]
-                        halt( 403, "AssignmentType #{new_assignment_type['label']} existant" ) unless assignment_type.nil?
+                    result = params['assignment_types'].map do |assignment_type|
+                        assignment_type = JSON.parse( assignment_type ) if assignment_type.is_a?( String )
 
-                        assignment_type = AssignmentType.create( label: new_assignment_type['label'] )
-                        assignment_type.update( description: new_assignment_type['description'] ) if new_assignment_type.key?( 'description' )
+                        new_assignment_type = AssignmentType[ label: assignment_type['label'] ]
+                        halt( 403, "AssignmentType #{assignment_type['label']} existant" ) unless new_assignment_type.nil?
 
-                        assignment_type.to_hash
+                        new_assignment_type = AssignmentType.create( label: assignment_type['label'] )
+                        new_assignment_type.update( description: assignment_type['description'] ) if assignment_type.key?( 'description' )
+
+                        new_assignment_type.to_hash
                     end
 
                     json( result )

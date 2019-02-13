@@ -36,8 +36,9 @@ module Routes
                     halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ADM ], params['structure_id'] )
 
                     result = params['matchables'].map do |matchable|
-                        fi = Matchable[ structure_id: params['structure_id'], hash_item: matchable['hash_item'] ]
+                        matchable = JSON.parse( matchable ) if matchable.is_a?( String )
 
+                        fi = Matchable[ structure_id: params['structure_id'], hash_item: matchable['hash_item'] ]
                         if fi.nil?
                             fi = Matchable.create( structure_id: params['structure_id'],
                                                    hash_item: matchable['hash_item'],

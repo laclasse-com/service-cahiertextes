@@ -29,6 +29,8 @@ module Routes
                     halt( 401, '401 Unauthorized' ) unless user_is_super_admin?
 
                     result = params['import_types'].map do |import_type|
+                        import_type = JSON.parse( import_type ) if import_type.is_a?( String )
+
                         new_import_type = ImportType[ label: import_type['label'] ]
                         halt( 403, "ImportType #{import_type['label']} existant" ) unless new_import_type.nil?
 

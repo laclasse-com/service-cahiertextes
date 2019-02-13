@@ -13,7 +13,7 @@ describe 'Routes::Api::Resources' do
 
     it 'creates multiple Resources' do
         post '/api/resources/', resources: [ { structure_id: MOCK_UAI, label: MOCK_LABEL, name: MOCK_NAME, resource_type_id: 1 },
-                                             { structure_id: "#{MOCK_UAI}2", label: "#{MOCK_LABEL}2", name: "#{MOCK_NAME}2", resource_type_id: 1 } ]
+                                             { structure_id: MOCK_UAI, label: "#{MOCK_LABEL}2", name: "#{MOCK_NAME}2", resource_type_id: 1 } ]
 
         body = JSON.parse( last_response.body )
         expect( body.length ).to eq 2
@@ -24,7 +24,7 @@ describe 'Routes::Api::Resources' do
     it 'FORBIDS creation when not TECH' do
         $mock_user = MOCK_USER_ENS  # rubocop:disable Style/GlobalVars
 
-        post '/api/resources/', structure_id: MOCK_UAI, label: MOCK_LABEL, name: MOCK_NAME
+        post '/api/resources/', resources: [ { structure_id: MOCK_UAI, label: MOCK_LABEL, name: MOCK_NAME } ]
 
         expect( last_response.status ).to eq 401
 

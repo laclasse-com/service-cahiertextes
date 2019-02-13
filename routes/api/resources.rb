@@ -44,6 +44,8 @@ module Routes
                     # }
 
                     result = params['resources'].map do |resource|
+                        resource = JSON.parse( resource ) if resource.is_a?( String )
+
                         halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ADM ], resource['structure_id'] )
 
                         new_resource = DataManagement::Accessors.create_or_get( Resource,
@@ -52,10 +54,9 @@ module Routes
                                                                                 resource_type_id: resource['resource_type_id'] )
 
                         new_resource.name = resource['name']
-                        new_resource.save
+                        new_resource.import_id = resource['import_id'] if resource.key?( 'import_id' )
 
-                        import = Import[ id: resource['import_id'] ]
-                        new_resource.add_import( import ) unless import.nil?
+                        new_resource.save
 
                         new_resource.to_hash
                     end

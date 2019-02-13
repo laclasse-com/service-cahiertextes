@@ -21,19 +21,26 @@ module Routes
 
                 app.post '/api/resource_types/?' do
                     # {
-                    param 'label', String, required: true
-                    param 'description', String
+                    param 'resource_types', Array, required: true
+                    # [{ 'label', String, required: true
+                    #    'description', String }]
                     # }
 
                     halt( 401, '401 Unauthorized' ) unless user_is_super_admin?
 
-                    resource_type = ResourceType[ label: params['label'] ]
-                    halt( 403, "ResourceType #{params['label']} existant" ) unless resource_type.nil?
+                    result = params['resource_types'].map do |resource_type|
+                        resource_type = JSON.parse( resource_type ) if resource_type.is_a?( String )
 
-                    resource_type = ResourceType.create( label: params['label'] )
-                    resource_type.update( description: params['description'] ) if params.key?( 'description' )
+                        new_resource_type = ResourceType[ label: params['label'] ]
+                        halt( 403, "ResourceType #{resource_type['label']} existant" ) unless new_resource_type.nil?
 
-                    json( resource_type.to_hash )
+                        new_resource_type = ResourceType.create( label: resource_type['label'] )
+                        new_resource_type.update( description: resource_type['description'] ) if resource_type.key?( 'description' )
+
+                        new_resource_type.to_hash
+                    end
+
+                    json( result )
                 end
 
                 app.put '/api/resource_types/:id/?' do

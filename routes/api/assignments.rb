@@ -79,6 +79,8 @@ module Routes
                     # }
 
                     result = params['assignments'].map do |assignment|
+                        assignment = JSON.parse( assignment ) if assignment.is_a?( String )
+
                         timeslot = Timeslot[ assignment['timeslot_id'] ]
                         halt( 409, 'Créneau invalide' ) if timeslot.nil?
                         halt( 401, '401 Unauthorized' ) unless user_teaches_subject_x_in_group_g?( timeslot.subject_id, timeslot.group_id )

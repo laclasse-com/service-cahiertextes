@@ -47,6 +47,8 @@ module Routes
                     author_id = get_ctxt_user( user['id'] ).id
 
                     result = params['notes'].map do |note|
+                        note = JSON.parse( note ) if note.is_a?( String )
+
                         timeslot = Timeslot[ id: note['timeslot_id'] ]
 
                         halt( 409, 'Créneau invalide' ) if timeslot.nil?

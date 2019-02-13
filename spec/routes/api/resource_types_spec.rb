@@ -29,8 +29,9 @@ describe 'Routes::Api::ResourceTypes' do
 
     it 'FORBIDS creation when not TECH' do
         $mock_user = MOCK_USER_ENS  # rubocop:disable Style/GlobalVars
+        label = "test #{Time.now}"
 
-        post '/api/resource_types/', label: 'test'
+        post '/api/resource_types/', resource_types: [ { label: label } ]
 
         expect( last_response.status ).to eq 401
 
@@ -39,30 +40,31 @@ describe 'Routes::Api::ResourceTypes' do
 
     it 'creates an resource type with just a label' do
         nb_types_before = ResourceType.count
+        label = "test #{Time.now}"
 
-        post '/api/resource_types/', label: 'test'
+        post '/api/resource_types/', resource_types: [ { label: label } ]
 
         body = JSON.parse( last_response.body )
 
         expect( ResourceType.count ).to eq nb_types_before + 1
-        expect( body['label'] ).to eq 'test'
-        expect( body['description'] ).to be nil
+        expect( body.first['label'] ).to eq label
+        expect( body.first['description'] ).to be nil
 
-        ResourceType[id: body['id']]&.destroy
+        ResourceType[id: body.first['id']]&.destroy
     end
 
     it 'creates an resource type with a label and a description' do
         nb_types_before = ResourceType.count
+        label = "test #{Time.now}"
 
-        post '/api/resource_types/', label: 'test', description: 'description'
+        post '/api/resource_types/', resource_types: [ { label: label, description: 'description' } ]
 
         body = JSON.parse( last_response.body )
-
-        rtid = body['id']
+        rtid = body.first['id']
 
         expect( ResourceType.count ).to eq nb_types_before + 1
-        expect( body['label'] ).to eq 'test'
-        expect( body['description'] ).to eq 'description'
+        expect( body.first['label'] ).to eq label
+        expect( body.first['description'] ).to eq 'description'
     end
 
     it 'FORBIDS update when not TECH' do

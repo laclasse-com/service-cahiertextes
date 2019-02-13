@@ -53,8 +53,8 @@ module Routes
                                                                    .all
 
                                 timeslot[:notes] = Note.where( timeslot_id: timeslot[:id] )
-                                                       .where( Sequel.lit( "DATE_FORMAT( date_due, '%Y-%m-%d') >= '#{params['date>']}'" ) )
-                                                       .where( Sequel.lit( "DATE_FORMAT( date_due, '%Y-%m-%d') <= '#{params['date<']}'" ) )
+                                                       .where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') >= '#{params['date>']}'" ) )
+                                                       .where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') <= '#{params['date<']}'" ) )
                                                        .naked
                                                        .all
 
@@ -100,6 +100,8 @@ module Routes
                     # }
 
                     result = params['timeslots'].map do |timeslot|
+                        timeslot = JSON.parse( timeslot ) if timeslot.is_a?( String )
+
                         halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ENS DOC ADM ], timeslot['structure_id'] )
 
                         new_timeslot = Timeslot.create( ctime: Time.now,
