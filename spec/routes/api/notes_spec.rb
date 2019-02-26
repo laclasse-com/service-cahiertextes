@@ -13,7 +13,7 @@ describe 'Routes::Api::Notes' do
     note = nil
 
     before( :each ) do
-        $mock_user = MOCK_USER_GENERIC
+        $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
         ts = Timeslot.create( structure_id: MOCK_UAI,
                               group_id: 999_999,
@@ -30,7 +30,7 @@ describe 'Routes::Api::Notes' do
     end
 
     after( :each ) do
-        $mock_user = MOCK_USER_GENERIC
+        $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
         ts.notes.each(&:destroy)
         ts&.destroy

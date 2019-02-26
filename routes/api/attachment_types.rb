@@ -29,7 +29,7 @@ module Routes
                     halt( 401, '401 Unauthorized' ) unless user_is_super_admin?
 
                     result = params['attachment_types'].map do |new_attachment_type|
-                        attachment_type = JSON.parse( attachment_type ) if attachment_type.is_a?( String )
+                        new_attachment_type = JSON.parse( new_attachment_type ) if new_attachment_type.is_a?( String )
 
                         attachment_type = AttachmentType[ label: new_attachment_type['label'] ]
                         halt( 403, "AttachmentType #{new_attachment_type['label']} existant" ) unless attachment_type.nil?

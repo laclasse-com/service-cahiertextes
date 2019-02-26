@@ -19,7 +19,6 @@ Sequel.migration do
             foreign_key :timeslot_id, :timeslots, null: false
             foreign_key :user_id, :users, null: false
         end
-
     end
 end
 puts 'applying 056_timeslot_as_potential_event.rb'

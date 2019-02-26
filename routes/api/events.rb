@@ -27,7 +27,7 @@ module Routes
                                                         date: event['date'],
                                                         title: event['title'] )
 
-                        if event.key?( 'contributors_uids' ) then
+                        if event.key?( 'contributors_uids' )
                             event['contributors_uids'].each do |contributor_uid|
                                 new_timeslot.add_contributor( get_ctxt_user( contributor_uid ) )
                             end
@@ -75,7 +75,7 @@ module Routes
                     halt( 404, 'Créneau inconnu' ) if event.nil?
 
                     cuid = get_ctxt_user( user['id'] ).id
-                    halt( 401, '401 Unauthorized' ) if event.author_id != cuid && !( event.contributors.map(&:id).include?( cuid ) )
+                    halt( 401, '401 Unauthorized' ) if event.author_id != cuid && !event.contributors.map(&:id).include?( cuid )
 
                     event.remove_contributor( User[id: cuid] ) if event.contributors.map(&:id).include?( cuid )
                     event.update( dtime: event.dtime.nil? ? params['dtime'] : nil ) if event.author_id == cuid

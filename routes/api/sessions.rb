@@ -62,10 +62,10 @@ module Routes
                         halt( 401, '401 Unauthorized' ) unless user_teaches_subject_x_in_group_g?( timeslot.subject_id, timeslot.group_id )
 
                         new_session = Session.create( author_id: get_ctxt_user( user['id'] ).id,
-                                                  timeslot_id: timeslot.id,
-                                                  date: session['date'].to_s,
-                                                  ctime: Time.now,
-                                                  content: '' )
+                                                      timeslot_id: timeslot.id,
+                                                      date: session['date'].to_s,
+                                                      ctime: Time.now,
+                                                      content: '' )
 
                         new_session.modify( session )
 

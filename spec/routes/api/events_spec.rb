@@ -55,8 +55,7 @@ describe 'Routes::Api::Events' do
                                          title: title,
                                          start_time: MOCK_START_TIME,
                                          end_time: MOCK_END_TIME,
-                                         contributors_uids: [ MOCK_USER_ENS['id'], MOCK_USER_ELV['id'] ]
-                                       } ]
+                                         contributors_uids: [ MOCK_USER_ENS['id'], MOCK_USER_ELV['id'] ]} ]
 
         body = JSON.parse( last_response.body )
 
@@ -80,14 +79,12 @@ describe 'Routes::Api::Events' do
         post '/api/events/', events: [ { date: date,
                                          title: title,
                                          start_time: MOCK_START_TIME,
-                                         end_time: MOCK_END_TIME,
-                                       },
+                                         end_time: MOCK_END_TIME},
                                        { date: date,
                                          title: "#{title}#{title}",
                                          start_time: MOCK_START_TIME,
                                          end_time: MOCK_END_TIME,
-                                         contributors_uids: [ MOCK_USER_ENS['id'], MOCK_USER_ELV['id'] ]
-                                       } ]
+                                         contributors_uids: [ MOCK_USER_ENS['id'], MOCK_USER_ELV['id'] ]} ]
 
         body = JSON.parse( last_response.body )
 
@@ -135,8 +132,7 @@ describe 'Routes::Api::Events' do
                                          title: title,
                                          start_time: MOCK_START_TIME,
                                          end_time: MOCK_END_TIME,
-                                         contributors_uids: [ MOCK_USER_ENS['id'], MOCK_USER_ELV['id'] ]
-                                       } ]
+                                         contributors_uids: [ MOCK_USER_ENS['id'], MOCK_USER_ELV['id'] ]} ]
         event = JSON.parse( last_response.body ).first
 
         put "/api/events/#{event['id']}",
@@ -162,8 +158,7 @@ describe 'Routes::Api::Events' do
                                          title: title,
                                          start_time: MOCK_START_TIME,
                                          end_time: MOCK_END_TIME,
-                                         contributors_uids: [ MOCK_USER_ENS['id'], MOCK_USER_ELV['id'] ]
-                                       } ]
+                                         contributors_uids: [ MOCK_USER_ENS['id'], MOCK_USER_ELV['id'] ]} ]
         event = JSON.parse( last_response.body ).first
 
         $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
@@ -205,8 +200,7 @@ describe 'Routes::Api::Events' do
                                          title: title,
                                          start_time: MOCK_START_TIME,
                                          end_time: MOCK_END_TIME,
-                                         contributors_uids: [ MOCK_USER_ENS['id'], MOCK_USER_ELV['id'] ]
-                                       } ]
+                                         contributors_uids: [ MOCK_USER_ENS['id'], MOCK_USER_ELV['id'] ]} ]
         event = JSON.parse( last_response.body ).first
 
         $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
@@ -223,8 +217,7 @@ describe 'Routes::Api::Events' do
                                          title: title,
                                          start_time: MOCK_START_TIME,
                                          end_time: MOCK_END_TIME,
-                                         contributors_uids: [ MOCK_USER_ENS['id'] ]
-                                       } ]
+                                         contributors_uids: [ MOCK_USER_ENS['id'] ]} ]
         event = JSON.parse( last_response.body ).first
 
         $mock_user = MOCK_USER_DIR  # rubocop:disable Style/GlobalVars

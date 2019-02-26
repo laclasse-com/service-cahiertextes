@@ -49,7 +49,7 @@ describe 'Routes::Api::Trails' do
         expect( Trail.count ).to eq nb_trails_before + 1
         expect( body.first['label'] ).to eq label
 
-        #Trail[id: body['id']]&.destroy
+        # Trail[id: body['id']]&.destroy
     end
 
     it 'FORBIDS update when not TECH' do
