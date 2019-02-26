@@ -15,6 +15,7 @@ before_install:
   - sudo mysql_upgrade -u root -ppassword
   - sudo service mysql restart
   - export TZ=Europe/Paris
+  - gem install bundler || gem install bundler --version '< 2'
 
 gemfile:
   - gems.rb
