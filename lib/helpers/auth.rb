@@ -24,11 +24,6 @@ module LaClasse
                 session
             end
 
-            def log_exception( exception )
-                puts "\"#{env['REQUEST_METHOD']} #{env['REQUEST_URI']}\". Exception catched.
-         Message: '#{exception}'. Stack: #{exception.backtrace}"
-            end
-
             def logged?
                 !session.nil?
             end
@@ -44,7 +39,7 @@ module LaClasse
                     service = "#{protocol}://#{env['HTTP_HOST']}#{route}"
                 end
 
-                redirect '/sso/login?ticket=false&service=' + CGI.escape(service)
+                redirect "/sso/login?ticket=false&service=#{CGI.escape(service)}"
             end
         end
     end

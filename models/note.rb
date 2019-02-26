@@ -4,6 +4,7 @@ class Note < Sequel::Model( :notes )
     many_to_many :attachments, join_table: :notes_attachments
     many_to_one :timeslot
     many_to_one :author, key: :author_id, class: :User
+    many_to_one :trail
 end
 
 class NoteAttachment < Sequel::Model( :notes_attachments )

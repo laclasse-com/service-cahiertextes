@@ -9,8 +9,7 @@ Bundler.require( :default, ENV['RACK_ENV'].to_sym )     # require tout les gems 
 require_relative './config/init'
 
 DB_CONFIG = YAML.safe_load( File.read( './config/database.yml' ) )
-DB = Sequel.mysql2( DB_CONFIG[:name],
-                    DB_CONFIG )
+DB = Sequel.mysql2( DB_CONFIG[:name], DB_CONFIG )
 
 Sequel.extension( :migration )
 Sequel::Model.plugin( :json_serializer )
@@ -37,6 +36,7 @@ require_relative './lib/helpers/user'
 require_relative './routes/api/notes'
 require_relative './routes/api/sessions'
 require_relative './routes/api/timeslots'
+require_relative './routes/api/events'
 require_relative './routes/api/assignments'
 require_relative './routes/api/import'
 require_relative './routes/api/matchables'
@@ -69,9 +69,10 @@ class CdTServer < Sinatra::Base
     end
 
     error do
-        status 500
+        puts "\"#{env['REQUEST_METHOD']} #{env['REQUEST_URI']}\". Exception catched.
+              Message: '#{env['sinatra.error']}'. Stack: #{env['sinatra.error'].backtrace}"
 
-        log_exception env['sinatra.error']
+        status 500
         'Erreur Interne au serveur'
     end
 
@@ -87,16 +88,18 @@ class CdTServer < Sinatra::Base
         login!( request.path ) unless logged?
     end
 
+    register Routes::Api::Events
     register Routes::Api::Timeslots
     register Routes::Api::Sessions
     register Routes::Api::Assignments
-    register Routes::Api::AssignmentTypes
     register Routes::Api::Notes
     register Routes::Api::Resources
+    register Routes::Api::Trails
+
+    register Routes::Api::AssignmentTypes
     register Routes::Api::ResourceTypes
     register Routes::Api::ImportTypes
     register Routes::Api::AttachmentTypes
-    register Routes::Api::Trails
 
     register Routes::Api::ImportAPI
     register Routes::Api::Matchables

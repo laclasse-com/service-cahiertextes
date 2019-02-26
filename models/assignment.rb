@@ -8,6 +8,7 @@ class Assignment < Sequel::Model( :assignments )
     many_to_many :attachments
     many_to_many :targets, join_table: :assignments_users, class: :User, left_key: :assignment_id, right_key: :user_id
     one_to_many :assignment_done_markers
+    many_to_one :trail
 
     def to_deep_hash
         hash = to_hash

@@ -3,6 +3,7 @@
 Sequel.migration do
     change do
         alter_table( :timeslots ) do
+            set_column_allow_null :structure_id
             set_column_allow_null :group_id
             set_column_allow_null :subject_id
             set_column_allow_null :active_weeks

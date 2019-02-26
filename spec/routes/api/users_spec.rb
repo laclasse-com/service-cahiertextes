@@ -10,9 +10,6 @@ describe 'Routes::Api::UsersAPI' do
     end
 
     it 'gets user parameters' do
-        up = ::User[uid: 'VZZ69999']
-        up&.destroy
-
         get '/api/users/current/parametres'
 
         up = ::User[uid: LaClasse::Helpers::Auth.session['user'] ]
@@ -30,9 +27,6 @@ describe 'Routes::Api::UsersAPI' do
     end
 
     it 'sets user parameters' do
-        up = ::User[uid: 'VZZ69999']
-        up&.destroy
-
         put '/api/users/current/parametres', parameters: { 'affichage_types_de_devoir' => false,
                                                            'affichage_week_ends' => true }.to_json
 

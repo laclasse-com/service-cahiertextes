@@ -6,6 +6,7 @@ class Session < Sequel::Model( :sessions )
     one_to_many :assignments
     many_to_one :author, key: :author_id, class: :User
     many_to_many :targets, join_table: :sessions_users, class: :User, left_key: :session_id, right_key: :user_id
+    many_to_one :t
 
     def to_deep_hash
         hash = to_hash

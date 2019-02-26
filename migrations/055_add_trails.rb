@@ -14,8 +14,10 @@ Sequel.migration do
             self[:trails].insert( %i[label], trail )
         end
 
-        alter_table( :sessions ) do
-            add_foreign_key :trail_id, :trails, null: true
+        [ :sessions, :assignments, :notes ].each do |table|
+            alter_table( table ) do
+                add_foreign_key :trail_id, :trails, null: true
+            end
         end
     end
 end

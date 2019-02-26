@@ -16,7 +16,7 @@ class Timeslot < Sequel::Model( :timeslots )
     one_to_many :notes
     many_to_one :import, class: :Import, key: :import_id
     many_to_one :author, key: :author_id, class: :User
-    many_to_many :contributors, join_table: :timeslots_users, class: :Timeslot, left_key: :timeslots_id, right_key: :user_id
+    many_to_many :contributors, join_table: :timeslots_users, class: :User, left_key: :timeslot_id, right_key: :user_id
 
     def to_hash
         h = super
@@ -86,7 +86,9 @@ class Timeslot < Sequel::Model( :timeslots )
         update( import_id: params['import_id'] ) if params.key?( 'import_id' )
         update( weekday: params['weekday'] ) if params.key?( 'weekday' )
         update( group_id: params['group_id'] ) if params.key?( 'group_id' )
-        update( active_weeks: params['active_weeks_group'] ) if params.key?( 'active_weeks_group' )
+        update( active_weeks: params['active_weeks'] ) if params.key?( 'active_weeks' )
+        update( date: params['date'] ) if params.key?( 'date' )
+        update( title: params['title'] ) if params.key?( 'title' )
 
         save
 
