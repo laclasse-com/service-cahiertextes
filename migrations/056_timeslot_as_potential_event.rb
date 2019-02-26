@@ -18,6 +18,8 @@ Sequel.migration do
             primary_key %i[timeslot_id user_id]
             foreign_key :timeslot_id, :timeslots, null: false
             foreign_key :user_id, :users, null: false
+
+            TrueClass :confirmed, default: false
         end
     end
 end
