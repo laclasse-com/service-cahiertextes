@@ -23,11 +23,11 @@ module Utils
             fetch_official_calendar( zone ) if @@official_calendar.nil?
             schoolyear_start_year = schoolyear_start_date( zone ).year if schoolyear_start_year.nil?
 
-            description_rentrée_enseignants = @@official_calendar.events.first.description
+            description_rentrée_enseignants = @@official_calendar.events.first.description.force_encoding('UTF-8').unicode_normalize
             this_year = false
 
             holidays_weeks = @@official_calendar.events.map do |e|
-                this_year = e.dtstart.to_date.year == schoolyear_start_year if e.description == description_rentrée_enseignants
+                this_year = e.dtstart.to_date.year == schoolyear_start_year if e.description.force_encoding('UTF-8').unicode_normalize == description_rentrée_enseignants
 
                 next unless this_year
 
