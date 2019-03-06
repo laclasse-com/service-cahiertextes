@@ -20,6 +20,7 @@ module CahierDeTextesApp
         jsonified_semainier = jsonify_semainier( semainier )
         semaine_to_s = lambda do |semaine|
           return '  ' if semaine.nil?
+
           prefix = semaine[:holidays] ? '[' : ' '
           suffix = semaine[:holidays] ? ']' : ' '
           "#{prefix}#{semaine[:presence] ? '1' : '0'}#{suffix}"

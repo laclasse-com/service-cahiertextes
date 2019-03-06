@@ -112,6 +112,7 @@ class CreneauEmploiDuTemps < Sequel::Model( :creneaux_emploi_du_temps )
         .select { |day| day.wday == c.jour_de_la_semaine }
         .map do |jour|
         next unless c.semainier[jour.cweek] == 1
+
         { id: c.id,
           creneau_emploi_du_temps_id: c.id,
           start: Time.new( jour.year, jour.month, jour.mday, c.debut.hour, c.debut.min ).iso8601,
