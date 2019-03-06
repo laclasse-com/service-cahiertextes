@@ -31,7 +31,6 @@ require_relative './lib/helpers/auth'
 require_relative './lib/helpers/user'
 
 require_relative './routes/index'
-require_relative './routes/status'
 require_relative './routes/api/cahiers_de_textes'
 require_relative './routes/api/cours'
 require_relative './routes/api/creneaux_emploi_du_temps'
@@ -82,7 +81,6 @@ module CahierDeTextesApp
     end
 
     register CahierDeTextesApp::Routes::Index
-    register CahierDeTextesApp::Routes::Status
 
     register CahierDeTextesApp::Routes::Api::CahiersDeTextes
     register CahierDeTextesApp::Routes::Api::CoursAPI
