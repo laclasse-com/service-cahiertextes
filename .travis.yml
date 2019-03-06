@@ -3,7 +3,7 @@ language: ruby
 sudo: true
 
 rvm:
-  - "2.2.5"
+  - "2.5.1"
 
 before_install:
   - sudo apt-get install libmagic-dev
