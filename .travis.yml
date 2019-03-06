@@ -32,7 +32,7 @@ services:
 
 branches:
   only:
-    # - master
+    - master
     - develop
 
 notifications:
