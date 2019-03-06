@@ -9,6 +9,7 @@ before_install:
   - sudo apt-get install libmagic-dev
   - gem update --system
   - gem --version
+  - gem install bundler || gem install bundler --version '< 2'
   - gem install rspec
 
 before_script:
