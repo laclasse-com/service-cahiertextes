@@ -14,6 +14,6 @@ describe 'Routes::Api::Holidays' do
 
         body = JSON.parse( last_response.body )
 
-        expect( body ).to eq [1, 8, 9, 16, 17, 28, 29, 30, 31, 32, 33, 34, 35, 43, 44, 52]
+        expect( body ).to eq [1, 8, 9, 16, 17, 28, 29, 30, 31, 32, 33, 34, 35, 43, 44, 52] # year 2018-2019
     end
 end
