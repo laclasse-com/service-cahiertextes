@@ -5,7 +5,7 @@ module Routes
         module ResourceTypes
             def self.registered( app )
                 app.get '/api/resource_types/?' do
-                    ResourceType.all.map(&:to_hash).to_json
+                    ResourceType.naked.all.to_json
                 end
 
                 app.get '/api/resource_types/:id/?' do

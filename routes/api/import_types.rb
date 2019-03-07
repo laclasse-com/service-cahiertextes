@@ -5,7 +5,7 @@ module Routes
         module ImportTypes
             def self.registered( app )
                 app.get '/api/import_types/?' do
-                    ImportType.all.map(&:to_hash).to_json
+                    ImportType.naked.all.to_json
                 end
 
                 app.get '/api/import_types/:id/?' do

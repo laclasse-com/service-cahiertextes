@@ -5,7 +5,7 @@ module Routes
         module AttachmentTypes
             def self.registered( app )
                 app.get '/api/attachment_types/?' do
-                    AttachmentType.all.map(&:to_hash).to_json
+                    AttachmentType.naked.all.to_json
                 end
 
                 app.get '/api/attachment_types/:id/?' do

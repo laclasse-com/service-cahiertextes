@@ -5,7 +5,7 @@ module Routes
         module Trails
             def self.registered( app )
                 app.get '/api/trails/?' do
-                    Trail.all.map(&:to_hash).to_json
+                    Trail.naked.all.to_json
                 end
 
                 app.get '/api/trails/:id/?' do

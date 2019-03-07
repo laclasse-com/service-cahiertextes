@@ -5,7 +5,7 @@ module Routes
         module AssignmentTypes
             def self.registered( app )
                 app.get '/api/assignment_types/?' do
-                    AssignmentType.all.map(&:to_hash).to_json
+                    AssignmentType.naked.all.to_json
                 end
 
                 app.get '/api/assignment_types/:id/?' do
