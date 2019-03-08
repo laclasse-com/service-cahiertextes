@@ -34,7 +34,7 @@ module DataManagement
                         end
                                        .first,
                       assignments: timeslot.assignments
-                                           .select { |assignment| assignment[:dtime].nil? && assignment.date_due == day }
+                                           .select { |assignment| assignment[:dtime].nil? && assignment.date == day }
                                            .map do |assignment|
                             hassignment = assignment.to_hash
                             hassignment[:attachments] = assignment.attachments.map(&:to_hash)

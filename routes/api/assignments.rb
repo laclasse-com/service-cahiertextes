@@ -10,9 +10,9 @@ module Routes
                     param 'timeslots_ids', Array
                     param 'groups_ids', Array
                     param 'sessions_ids', Array
-                    param 'date_due', Date
-                    param 'date_due<', Date
-                    param 'date_due>', Date
+                    param 'date', Date
+                    param 'date<', Date
+                    param 'date>', Date
                     param 'include_deleted', :boolean
                     param 'check_done', :boolean
                     param 'uid', String
@@ -27,8 +27,8 @@ module Routes
                     query = query.where( timeslot_id: params['timeslots_ids']) if params.key?( 'timeslots_ids' )
                     query = query.where( timeslot_id: Timeslot.where( group_id: params['groups_ids'] ).select(:id).all.map(&:id) ) if params.key?( 'groups_ids' )
                     query = query.where( session_id: params['session_ids']) if params.key?( 'session_ids' )
-                    query = query.where( Sequel.lit( "DATE_FORMAT( date_due, '%Y-%m-%d') >= '#{Date.parse( params['date_due>'] )}'" ) ) if params.key?( 'date_due>' )
-                    query = query.where( Sequel.lit( "DATE_FORMAT( date_due, '%Y-%m-%d') <= '#{Date.parse( params['date_due<'] )}'" ) ) if params.key?( 'date_due<' )
+                    query = query.where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') >= '#{Date.parse( params['date>'] )}'" ) ) if params.key?( 'date>' )
+                    query = query.where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') <= '#{Date.parse( params['date<'] )}'" ) ) if params.key?( 'date<' )
                     query = query.where( dtime: nil ) unless params.key?( 'include_deleted')
 
                     data = query.all.map(&:to_deep_hash)
@@ -72,7 +72,7 @@ module Routes
                     # [{ 'timeslot_id', Integer, required: true
                     #    'assignment_type_id', Integer, required: true
                     #    'content', String, required: true
-                    #    'date_due', Date, required: true
+                    #    'date', Date, required: true
                     #    'load', Integer, required: true
                     #    'difficulty', Integer
                     #    'session_id', Integer }]
@@ -89,13 +89,13 @@ module Routes
                             session_id = assignment['session_id']
                         else
                             session = Session.where( timeslot_id: timeslot.id )
-                                             .where( date: assignment['date_due'] )
+                                             .where( date: assignment['date'] )
                                              .where( dtime: nil )
                                              .first
                             if session.nil?
                                 session = Session.create( author_id: get_ctxt_user( user['id'] ).id,
                                                           timeslot_id: timeslot.id,
-                                                          date: assignment['date_due'],
+                                                          date: assignment['date'],
                                                           ctime: Time.now,
                                                           content: '' )
                             end
@@ -107,7 +107,7 @@ module Routes
                                                             timeslot_id: timeslot.id,
                                                             session_id: session_id,
                                                             content: assignment['content'],
-                                                            date_due: assignment['date_due'],
+                                                            date: assignment['date'],
                                                             load: assignment['load'],
                                                             difficulty: assignment['difficulty'],
                                                             ctime: Time.now )
@@ -127,7 +127,7 @@ module Routes
                     param 'timeslot_id', Integer
                     param 'assignment_type_id', Integer
                     param 'content', String
-                    param 'date_due', Date
+                    param 'date', Date
                     param 'load', Integer
                     param 'session_id', Integer
                     param 'done', :boolean

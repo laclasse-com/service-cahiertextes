@@ -47,8 +47,8 @@ module Routes
                                                              .all
 
                                 timeslot[:assignments] = Assignment.where( timeslot_id: timeslot[:id] )
-                                                                   .where( Sequel.lit( "DATE_FORMAT( date_due, '%Y-%m-%d') >= '#{params['date>']}'" ) )
-                                                                   .where( Sequel.lit( "DATE_FORMAT( date_due, '%Y-%m-%d') <= '#{params['date<']}'" ) )
+                                                                   .where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') >= '#{params['date>']}'" ) )
+                                                                   .where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') <= '#{params['date<']}'" ) )
                                                                    .naked
                                                                    .all
 

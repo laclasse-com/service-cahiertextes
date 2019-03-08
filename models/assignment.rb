@@ -35,7 +35,7 @@ class Assignment < Sequel::Model( :assignments )
     end
 
     def modify( params )
-        self.date_due = params['date_due'] if params.key?( 'date_due' )
+        self.date = params['date'] if params.key?( 'date' )
         self.timeslot_id = params['timeslot_id'] if params.key?( 'timeslot_id' )
         self.assignment_type_id = params['assignment_type_id'] if params.key?( 'assignment_type_id' )
         self.content = params['content'] if params.key?( 'content' )
