@@ -2,6 +2,8 @@
 
 Sequel.migration do
     change do
+        puts '050_user_id_links_to_users_table.rb'
+
         [:notes, :sessions, :assignments, :assignment_done_markers, :imports].each do |table|
             nullable_author_id = table == :imports
 
@@ -29,4 +31,3 @@ Sequel.migration do
         end
     end
 end
-puts 'applying 050_user_id_links_to_users_table.rb'

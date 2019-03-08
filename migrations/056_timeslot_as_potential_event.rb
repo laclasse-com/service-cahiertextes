@@ -2,6 +2,8 @@
 
 Sequel.migration do
     change do
+        puts '056_timeslot_as_potential_event.rb'
+
         alter_table( :timeslots ) do
             set_column_allow_null :structure_id
             set_column_allow_null :group_id
@@ -23,4 +25,3 @@ Sequel.migration do
         end
     end
 end
-puts 'applying 056_timeslot_as_potential_event.rb'

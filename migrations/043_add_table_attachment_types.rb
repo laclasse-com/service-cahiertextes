@@ -2,6 +2,8 @@
 
 Sequel.migration do
     change do
+        puts '043_add_table_attachment_types.rb'
+
         create_table!(:attachment_types) do
             primary_key :id
 
@@ -22,4 +24,3 @@ Sequel.migration do
         end
     end
 end
-puts 'applying 043_add_table_attachment_types.rb'

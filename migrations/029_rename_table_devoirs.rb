@@ -2,6 +2,8 @@
 
 Sequel.migration do
     change do
+        puts '029_rename_table_devoirs.rb'
+
         rename_table( :types_devoir, :assignment_types )
 
         rename_table( :devoirs, :assignments )
@@ -31,4 +33,3 @@ Sequel.migration do
         end
     end
 end
-puts '029_rename_table_devoirs.rb'

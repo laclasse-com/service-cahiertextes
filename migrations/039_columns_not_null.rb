@@ -2,6 +2,8 @@
 
 Sequel.migration do
     change do
+        puts '039_columns_not_null.rb'
+
         # structure_id
         alter_table( :timeslots ) do
             set_column_not_null :structure_id
@@ -50,4 +52,3 @@ Sequel.migration do
         end
     end
 end
-puts '039_columns_not_null.rb'

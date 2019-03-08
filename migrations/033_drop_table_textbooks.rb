@@ -2,6 +2,8 @@
 
 Sequel.migration do
     change do
+        puts '033_drop_table_textbooks.rb'
+
         alter_table( :sessions ) do
             drop_foreign_key :textbook_id
         end
@@ -9,4 +11,3 @@ Sequel.migration do
         drop_table :textbooks
     end
 end
-puts '033_drop_table_textbooks.rb'

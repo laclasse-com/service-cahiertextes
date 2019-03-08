@@ -2,6 +2,8 @@
 
 Sequel.migration do
     change do
+        puts '006_add_indexes.rb'
+
         alter_table(:etablissements) do
             add_index :id
 
@@ -48,4 +50,3 @@ Sequel.migration do
         end
     end
 end
-puts 'applying 006_add_indexes.rb'

@@ -2,6 +2,8 @@
 
 Sequel.migration do
     change do
+        puts '055_add_trails.rb'
+
         create_table!(:trails) do
             primary_key :id
 
@@ -21,4 +23,3 @@ Sequel.migration do
         end
     end
 end
-puts 'applying 055_add_trails.rb'

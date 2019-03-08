@@ -2,6 +2,8 @@
 
 Sequel.migration do
     change do
+        puts '022_rename_table_etablissements.rb'
+
         rename_table( :etablissements, :structures )
 
         alter_table( :structures ) do
@@ -27,4 +29,3 @@ Sequel.migration do
         end
     end
 end
-puts '022_rename_table_etablissements.rb'

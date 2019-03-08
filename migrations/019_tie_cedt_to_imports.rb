@@ -2,6 +2,8 @@
 
 Sequel.migration do
     up do
+        puts '019_tie_cedt_to_imports.rb'
+
         alter_table( :creneaux_emploi_du_temps ) do
             add_foreign_key :import_id, :imports, null: true
         end
@@ -13,4 +15,3 @@ Sequel.migration do
         end
     end
 end
-puts 'applying 019_tie_cedt_to_imports.rb'

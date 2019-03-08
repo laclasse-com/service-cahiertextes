@@ -2,6 +2,8 @@
 
 Sequel.migration do
     change do
+        puts '004_add_import_correction_table.rb'
+
         create_table!(:failed_identifications) do
             primary_key :id
 
@@ -11,4 +13,3 @@ Sequel.migration do
         end
     end
 end
-puts 'applying 004_add_import_correction_table.rb'

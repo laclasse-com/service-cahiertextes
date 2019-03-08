@@ -2,6 +2,8 @@
 
 Sequel.migration do
     change do
+        puts '001_creation_de_toutes_les_tables.rb'
+
         create_table!(:etablissements) do
             primary_key :id
 
@@ -137,4 +139,3 @@ Sequel.migration do
         end
     end
 end
-puts 'applying 001_creation_de_toutes_les_tables.rb'

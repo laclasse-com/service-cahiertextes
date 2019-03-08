@@ -2,6 +2,8 @@
 
 Sequel.migration do
     up do
+        puts '008_tie_creneau_to_etablissement.rb'
+
         alter_table( :creneaux_emploi_du_temps ) do
             add_foreign_key :etablissement_id, :etablissements, null: true
         end
@@ -19,4 +21,3 @@ Sequel.migration do
         end
     end
 end
-puts 'applying 008_tie_creneau_to_etablissement.rb'

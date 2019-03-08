@@ -2,6 +2,8 @@
 
 Sequel.migration do
     change do
+        puts '027_rename_table_ressources.rb'
+
         rename_table( :ressources, :resources )
 
         rename_table( :cours_ressources, :cours_resources )
@@ -17,4 +19,3 @@ Sequel.migration do
         end
     end
 end
-puts '027_rename_table_ressources.rb'

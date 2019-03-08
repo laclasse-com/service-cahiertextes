@@ -2,6 +2,8 @@
 
 Sequel.migration do
     change do
+        puts '046_optional_link_users_sessions_assignments.rb'
+
         create_table!( :sessions_users) do
             primary_key %i[session_id user_id]
             foreign_key :session_id, :sessions, null: false
@@ -15,4 +17,3 @@ Sequel.migration do
         end
     end
 end
-puts '046_optional_link_users_sessions_assignments.rb'

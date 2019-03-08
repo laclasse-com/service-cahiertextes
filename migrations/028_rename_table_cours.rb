@@ -2,6 +2,8 @@
 
 Sequel.migration do
     change do
+        puts '028_rename_table_cours.rb'
+
         rename_table( :cours, :sessions )
 
         alter_table( :sessions ) do
@@ -24,4 +26,3 @@ Sequel.migration do
         end
     end
 end
-puts '028_rename_table_cours.rb'

@@ -2,6 +2,8 @@
 
 Sequel.migration do
     change do
+        puts '017_rename_semaines_de_presence_into_semainier.rb'
+
         alter_table( :creneaux_emploi_du_temps_salles ) do
             rename_column( :semaines_de_presence, :semainier )
         end
@@ -11,4 +13,3 @@ Sequel.migration do
         end
     end
 end
-puts 'applying 017_rename_semaines_de_presence_into_semainier.rb'

@@ -2,6 +2,8 @@
 
 Sequel.migration do
     change do
+        puts '040_replace_deleted_with_dtime.rb'
+
         alter_table( :timeslots ) do
             drop_column :deleted
         end
@@ -23,4 +25,3 @@ Sequel.migration do
         end
     end
 end
-puts '040_replace_deleted_with_dtime.rb'

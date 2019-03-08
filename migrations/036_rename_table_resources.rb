@@ -2,6 +2,8 @@
 
 Sequel.migration do
     change do
+        puts '036_rename_table_resources.rb'
+
         rename_table( :resources, :attachments )
 
         rename_table( :sessions_resources, :sessions_attachments )
@@ -17,4 +19,3 @@ Sequel.migration do
         end
     end
 end
-puts '036_rename_table_resources.rb'

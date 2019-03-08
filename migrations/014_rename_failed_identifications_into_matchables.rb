@@ -2,6 +2,8 @@
 
 Sequel.migration do
     change do
+        puts '014_rename_failed_identifications_into_matchables.rb'
+
         DB[:failed_identifications].delete
 
         rename_table :failed_identifications, :matchables
@@ -14,4 +16,3 @@ Sequel.migration do
         end
     end
 end
-puts 'applying 014_rename_failed_identifications_into_matchables.rb'

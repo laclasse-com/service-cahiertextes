@@ -2,6 +2,8 @@
 
 Sequel.migration do
     up do
+        puts '010_tie_salles_back_to_etablissements.rb'
+
         alter_table( :salles ) do
             add_foreign_key :etablissement_id, :etablissements, null: true
         end
@@ -13,4 +15,3 @@ Sequel.migration do
         end
     end
 end
-puts 'applying 010_tie_salles_back_to_etablissements.rb'

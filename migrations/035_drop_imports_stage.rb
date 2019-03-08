@@ -2,9 +2,10 @@
 
 Sequel.migration do
     change do
+        puts '035_drop_imports_stage.rb'
+
         alter_table( :imports ) do
             drop_column :stage
         end
     end
 end
-puts '035_drop_imports_stage.rb'

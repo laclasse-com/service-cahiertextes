@@ -2,6 +2,8 @@
 
 Sequel.migration do
     up do
+        puts '011_allow_null_plages_horaires.rb'
+
         alter_table( :creneaux_emploi_du_temps ) do
             set_column_allow_null( :debut )
             set_column_allow_null( :fin )
@@ -15,4 +17,3 @@ Sequel.migration do
         end
     end
 end
-puts 'applying 011_allow_null_plages_horaires.rb'

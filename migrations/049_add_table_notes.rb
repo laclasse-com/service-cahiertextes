@@ -2,6 +2,8 @@
 
 Sequel.migration do
     change do
+        puts '049_add_table_notes.rb'
+
         create_table!(:notes) do
             primary_key :id
 
@@ -21,4 +23,3 @@ Sequel.migration do
         end
     end
 end
-puts 'applying 049_add_table_notes.rb'

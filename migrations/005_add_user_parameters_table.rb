@@ -2,6 +2,8 @@
 
 require 'json'
 
+puts '005_add_user_parameters_table.rb'
+
 Sequel.migration do
     up do
         create_table!(:users_parameters) do
@@ -14,4 +16,3 @@ Sequel.migration do
         end
     end
 end
-puts 'applying 005_add_user_parameters_table.rb'

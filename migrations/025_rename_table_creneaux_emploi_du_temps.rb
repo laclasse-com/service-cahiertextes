@@ -2,6 +2,8 @@
 
 Sequel.migration do
     change do
+        puts '025_rename_table_creneaux_emploi_du_temps.rb'
+
         rename_table( :creneaux_emploi_du_temps, :timeslots )
 
         alter_table( :timeslots ) do
@@ -31,4 +33,3 @@ Sequel.migration do
         end
     end
 end
-puts '025_rename_table_creneaux_emploi_du_temps.rb'

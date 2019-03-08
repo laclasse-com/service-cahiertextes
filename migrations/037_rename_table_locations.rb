@@ -2,6 +2,8 @@
 
 Sequel.migration do
     change do
+        puts '037_rename_table_locations.rb'
+
         rename_table( :locations, :resources )
 
         rename_table( :timeslots_locations, :timeslots_resources )
@@ -11,4 +13,3 @@ Sequel.migration do
         end
     end
 end
-puts '037_rename_table_locations.rb'

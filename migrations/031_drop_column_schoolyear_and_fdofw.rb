@@ -2,6 +2,8 @@
 
 Sequel.migration do
     change do
+        puts '031_drop_column_schoolyear_and_fdofw.rb'
+
         alter_table( :textbooks ) do
             drop_column :schoolyear_start
             drop_column :schoolyear_end
@@ -14,4 +16,3 @@ Sequel.migration do
         end
     end
 end
-puts '031_drop_column_schoolyear_and_fdofw.rb'

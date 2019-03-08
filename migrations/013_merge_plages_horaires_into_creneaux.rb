@@ -2,6 +2,8 @@
 
 Sequel.migration do
     change do
+        puts '013_merge_plages_horaires_into_creneaux.rb'
+
         # 1. add column to creneaux
         alter_table(:creneaux_emploi_du_temps) do
             add_column :tdebut, Time, null: true, only_time: true
@@ -27,4 +29,3 @@ Sequel.migration do
         drop_table( :plages_horaires )
     end
 end
-puts 'applying 013_merge_plages_horaires_into_creneaux.rb'

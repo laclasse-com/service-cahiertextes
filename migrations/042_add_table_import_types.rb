@@ -2,6 +2,8 @@
 
 Sequel.migration do
     change do
+        puts '042_add_table_import_types.rb'
+
         create_table!(:import_types) do
             primary_key :id
 
@@ -23,4 +25,3 @@ Sequel.migration do
         end
     end
 end
-puts 'applying 042_add_table_import_types.rb'

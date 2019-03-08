@@ -2,6 +2,8 @@
 
 Sequel.migration do
     change do
+        puts '018_merge_cdet_regroupements_into_cdet.rb'
+
         alter_table( :creneaux_emploi_du_temps ) do
             add_column( :regroupement_id, Integer, null: false )
             add_column( :semainier, :Bignum, unsigned: true, null: false, default: 2**52 - 1 )
@@ -16,4 +18,3 @@ Sequel.migration do
         drop_table(:creneaux_emploi_du_temps_regroupements)
     end
 end
-puts 'applying 018_merge_cdet_regroupements_into_cdet.rb'
