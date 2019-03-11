@@ -41,10 +41,6 @@ require_relative './routes/api/assignments'
 require_relative './routes/api/import'
 require_relative './routes/api/matchables'
 require_relative './routes/api/resources'
-require_relative './routes/api/assignment_types'
-require_relative './routes/api/resource_types'
-require_relative './routes/api/import_types'
-require_relative './routes/api/attachment_types'
 require_relative './routes/api/trails'
 require_relative './routes/api/users'
 require_relative './routes/api/holidays'
@@ -95,11 +91,6 @@ class CdTServer < Sinatra::Base
     register Routes::Api::Notes
     register Routes::Api::Resources
     register Routes::Api::Trails
-
-    register Routes::Api::AssignmentTypes
-    register Routes::Api::ResourceTypes
-    register Routes::Api::ImportTypes
-    register Routes::Api::AttachmentTypes
 
     register Routes::Api::ImportAPI
     register Routes::Api::Matchables

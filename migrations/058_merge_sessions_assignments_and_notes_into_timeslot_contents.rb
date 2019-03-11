@@ -40,8 +40,7 @@ Sequel.migration do
             add_foreign_key [:timeslot_content_id], :timeslot_contents
         end
 
-        rename_table :assignment_done_markers, :timeslot_content_done_markers
-        alter_table( :timeslot_content_done_markers ) do
+        alter_table( :assignment_done_markers ) do
             drop_foreign_key [:assignment_id]
             rename_column :assignment_id, :timeslot_content_id
             add_foreign_key [:timeslot_content_id], :timeslot_contents

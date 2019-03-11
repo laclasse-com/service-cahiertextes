@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../../models/session'
+require_relative '../../models/timeslotContent'
 
 module Routes
     module Api
@@ -18,7 +18,7 @@ module Routes
                     any_of 'authors_ids', 'timeslots_ids', 'groups_ids', 'date', 'date>', 'date<'
                     # }
 
-                    query = Session
+                    query = TimeslotContent.where()
 
                     query = query.where( author_id: params['authors_ids'] ) if params.key?( 'authors_ids' )
                     query = query.where( timeslot_id: params['timeslots_ids']) if params.key?( 'timeslots_ids' )
