@@ -45,6 +45,7 @@ module LaClasse
                                                                url: "#{URL_ENT}/api/users/#{session['user']}",
                                                                user: ANNUAIRE[:app_id],
                                                                password: ANNUAIRE[:api_key] ) )
+        utilisateur.delete('password')
 
         parametres = DataManagement::Accessors.create_or_get( UserParameters,
                                                               uid: session['user'] )
