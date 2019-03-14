@@ -52,16 +52,16 @@ Layout/ExtraSpacing:
   Enabled: false
 
 Metrics/ClassLength:
-  Max: 300
+  Enabled: false
 
 Metrics/BlockLength:
-  Max: 300
+  Enabled: false
 
 Metrics/LineLength:
   Enabled: false
 
 Metrics/MethodLength:
-  Max: 200
+  Enabled: false
 
 Layout/BlockAlignment:
   Enabled: false

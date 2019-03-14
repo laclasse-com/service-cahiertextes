@@ -25,12 +25,11 @@ Sequel.migration do
             add_foreign_key [:content_id], :contents
         end
 
-        #rename_table :timeslot_contents_done_markers, :assignment_done_markers
+        # rename_table :timeslot_contents_done_markers, :assignment_done_markers
         alter_table( :assignment_done_markers ) do
             drop_foreign_key [:timeslot_content_id]
             rename_column :timeslot_content_id, :content_id
             add_foreign_key [:content_id], :contents
         end
-
     end
 end

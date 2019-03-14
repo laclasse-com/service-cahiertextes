@@ -65,7 +65,7 @@ Sequel.migration do
         end
         alter_table(:timeslot_contents) do
             drop_foreign_key :timeslot_content_type_id
-            set_column_not_null:type
+            set_column_not_null :type
         end
         drop_table(:timeslot_content_types)
     end

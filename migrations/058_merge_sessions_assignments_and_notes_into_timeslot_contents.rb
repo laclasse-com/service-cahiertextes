@@ -9,7 +9,7 @@ Sequel.migration do
 
             String :label, null: false
         end
-        ['session', 'assignment', 'note'].each do |timeslot_content_type|
+        %w[session assignment note].each do |timeslot_content_type|
             DB[:timeslot_content_types].insert( %i[label], [ timeslot_content_type ] )
         end
 
@@ -88,7 +88,7 @@ Sequel.migration do
             end
             DB[:assignments_users].where( assignment_id: assignment[:id] ).all.each do |user|
                 DB[:timeslot_contents_users].insert( %i[timeslot_content_id user_id],
-                                                     [ new_assignment_id, attachment[:user_id] ] )
+                                                     [ new_assignment_id, user[:user_id] ] )
             end
         end
         drop_table :assignments_attachments
