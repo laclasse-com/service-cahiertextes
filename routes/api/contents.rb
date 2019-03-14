@@ -37,13 +37,19 @@ module Routes
                                                       parent_content_id: content['parent_content_id'],
                                                       trail_id: content.key?('trail_id') ? trail.id : nil )
 
-                        new_content.save
+                        new_content.save_changes
                         if content.key?('attachments')
                             content['attachments'].each do |attachment|
                                 new_content.add_attachment( DataManagement::Accessors.create_or_get( Attachment,
                                                                                                      type: attachment['type'],
                                                                                                      name: attachment['name'],
                                                                                                      external_id: attachment['external_id'] ) )
+                            end
+                        end
+
+                        if content.key?('users_ids')
+                            content['users_ids'].each do |user_id|
+                                new_content.add_user( get_ctxt_user( user_id ) )
                             end
                         end
 
@@ -68,6 +74,8 @@ module Routes
                     param 'load', Integer
                     param 'assignment_type', String
                     param 'type', String
+                    param 'attachments', Array
+                    param 'users', Array
                     # }
 
                     content = Content[ id: params['id'] ]
@@ -95,6 +103,21 @@ module Routes
                             content.parent_content_id = params['parent_content_id'] if params.key?( 'parent_content_id' )
                             content.load = params['load'] if params.key?( 'load' )
                             content.assignment_type = params['assignment_type'] if params.key?( 'assignment_type' )
+                        end
+
+                        if params.key?('attachments')
+                            params['attachments'].each do |attachment|
+                                content.add_attachment( DataManagement::Accessors.create_or_get( Attachment,
+                                                                                                 type: attachment['type'],
+                                                                                                 name: attachment['name'],
+                                                                                                 external_id: attachment['external_id'] ) )
+                            end
+                        end
+
+                        if params.key?('users_ids')
+                            params['users_ids'].each do |user_id|
+                                content.add_user( get_ctxt_user( user_id ) )
+                            end
                         end
 
                         content.mtime = Time.now

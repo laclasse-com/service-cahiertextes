@@ -2,7 +2,7 @@
 
 class Content < Sequel::Model( :contents )
     many_to_many :attachments, join_table: :contents_attachments
-    many_to_many :targets, join_table: :contents_users, class: :User, left_key: :content_id, right_key: :user_id
+    many_to_many :users, join_table: :contents_users, class: :User, left_key: :content_id, right_key: :user_id
     many_to_one :author, key: :author_id, class: :User
     many_to_one :timeslot
     many_to_one :parent, key: :parent_content_id, class: self

@@ -111,6 +111,25 @@ describe 'Routes::Api::Contents' do
         session&.destroy
     end
 
+    it 'creates an Assignment with users' do
+        $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
+
+        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
+        session = Content[id: JSON.parse( last_response.body ).first['id'] ]
+
+        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, assignment_type: "Exposé", users_ids: [ MOCK_USER_ELV['id'] ] } ]
+
+        body = JSON.parse( last_response.body )
+        created_content = Content[id: body.first['id']]
+
+        expect( created_content.users.length ).to eq 1
+        expect( created_content.users.first.uid ).to eq MOCK_USER_ELV['id']
+
+        created_content&.remove_all_users
+        created_content&.destroy
+        session&.destroy
+    end
+
     it 'gets a Content by id' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
@@ -379,9 +398,13 @@ describe 'Routes::Api::Contents' do
             trail_id: trail.id,
             type: "assignment",
             parent_content_id: session2.id,
-            assignment_type: "DM"
+            assignment_type: "DM",
+            attachments: [ { type: "DOC", name: "tralala", external_id: "tralala" },
+                           { type: "URL", name: "trilili", external_id: "trilili" } ],
+            users_ids: [ MOCK_USER_ELV['id'] ]
 
         body = JSON.parse( last_response.body )
+        created_content = Content[id: body['id']]
 
         expect( body['id'] ).to eq session.id
         expect( body['timeslot_id'] ).to eq ts2.id
@@ -392,7 +415,18 @@ describe 'Routes::Api::Contents' do
         expect( DateTime.parse( body['atime'] ).iso8601 ).to eq dt.iso8601
         expect( body['load'] ).to eq 2
         expect( body['type'] ).to eq "assignment"
+        expect( created_content.attachments.length ).to eq 2
+        expect( created_content.attachments.first.type ).to eq "DOC"
+        expect( created_content.attachments.first.name ).to eq "tralala"
+        expect( created_content.attachments.first.external_id ).to eq "tralala"
+        expect( created_content.attachments.last.type ).to eq "URL"
+        expect( created_content.attachments.last.name ).to eq "trilili"
+        expect( created_content.attachments.last.external_id ).to eq "trilili"
+        expect( created_content.users.length ).to eq 1
+        expect( created_content.users.first.uid ).to eq MOCK_USER_ELV['id']
 
+        session&.remove_all_attachments
+        session&.remove_all_users
         session&.destroy
         session2&.destroy
         trail&.destroy
