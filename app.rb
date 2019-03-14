@@ -20,9 +20,7 @@ Sequel::Model.plugin( :json_serializer )
 require_relative './lib/utils'
 
 require_relative './models/timeslot'
-require_relative './models/session'
-require_relative './models/assignment'
-require_relative './models/note'
+require_relative './models/content'
 require_relative './models/import'
 require_relative './models/matchable'
 require_relative './models/attachment'
@@ -33,11 +31,9 @@ require_relative './models/trail'
 require_relative './lib/helpers/auth'
 require_relative './lib/helpers/user'
 
-require_relative './routes/api/notes'
-require_relative './routes/api/sessions'
+require_relative './routes/api/contents'
 require_relative './routes/api/timeslots'
 require_relative './routes/api/events'
-require_relative './routes/api/assignments'
 require_relative './routes/api/import'
 require_relative './routes/api/matchables'
 require_relative './routes/api/resources'
@@ -86,9 +82,7 @@ class CdTServer < Sinatra::Base
 
     register Routes::Api::Events
     register Routes::Api::Timeslots
-    register Routes::Api::Sessions
-    register Routes::Api::Assignments
-    register Routes::Api::Notes
+    register Routes::Api::Contents
     register Routes::Api::Resources
     register Routes::Api::Trails
 

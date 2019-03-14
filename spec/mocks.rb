@@ -4,7 +4,7 @@ MOCK_UAI = '0699999Z'
 MOCK_UID = 'VZZ6999'
 
 MOCK_DATE = DateTime.now
-MOCK_ASSIGNMENT_TYPE_ID = AssignmentType.first.id
+MOCK_ASSIGNMENT_TYPE = "DM"
 MOCK_CONTENT = "test"
 
 MOCK_HASH = 'hash'

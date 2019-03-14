@@ -11,9 +11,7 @@ end
 
 class Timeslot < Sequel::Model( :timeslots )
     many_to_many :resources, class: :Resource, join_table: :timeslots_resources
-    one_to_many :sessions
-    one_to_many :assignments
-    one_to_many :notes
+    one_to_many :contents
     many_to_one :import, class: :Import, key: :import_id
     many_to_one :author, key: :author_id, class: :User
     many_to_many :contributors, join_table: :timeslots_users, class: :User, left_key: :timeslot_id, right_key: :user_id
@@ -100,10 +98,32 @@ class Timeslot < Sequel::Model( :timeslots )
     end
 
     def deep_destroy
-        remove_all_sessions
-        remove_all_assignments
-        remove_all_resources
+        remove_all_contents
 
         destroy
+    end
+
+    def notes_dataset
+        contents_dataset.where(type: "note")
+    end
+
+    def notes
+        contents_dataset.where(type: "note").all
+    end
+
+    def sessions_dataset
+        contents_dataset.where(type: "session")
+    end
+
+    def sessions
+        contents_dataset.where(type: "session").all
+    end
+
+    def assignments_dataset
+        contents_dataset.where(type: "assignment")
+    end
+
+    def assignments
+        contents_dataset.where(type: "assignment").all
     end
 end
