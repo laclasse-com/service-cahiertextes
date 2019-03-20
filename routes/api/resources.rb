@@ -14,7 +14,6 @@ module Routes
                     halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ADM ], params['structure_id'] )
 
                     query = Resource
-
                     query = query.where( structure_id: params['structure_id'] ) if params.key?( 'structure_id' )
                     query = query.where( label: params['label'] ) if params.key?( 'label' )
                     query = query.where( name: params['name'] ) if params.key?( 'name' )
@@ -36,11 +35,6 @@ module Routes
                 app.post '/api/resources/?' do
                     # {
                     param 'resources', Array, required: true
-                    # [{ 'structure_id', String
-                    #  'label', String
-                    #  'name', String
-                    #  'import_id', Integer, required: false
-                    #  'resource_type_id', Integer } ]
                     # }
 
                     result = params['resources'].map do |resource|
@@ -49,6 +43,7 @@ module Routes
                         halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ADM ], resource['structure_id'] )
 
                         new_resource = DataManagement::Accessors.create_or_get( Resource,
+                                                                                author_id: get_ctxt_user( user['id'] ).id,
                                                                                 structure_id: resource['structure_id'],
                                                                                 label: resource['label'],
                                                                                 resource_type_id: resource['resource_type_id'] )
@@ -72,14 +67,12 @@ module Routes
                     param 'label', String, required: true
                     # }
 
-                    resource = Resource[ params['id'] ]
-
-                    halt( 404, "Resource #{params['id']} inconnue" ) if resource.nil?
-
                     halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ADM ], params['structure_id'] )
 
-                    resource.structure_id = params['structure_id']
+                    resource = Resource[ params['id'] ]
+                    halt( 404, "Resource #{params['id']} inconnue" ) if resource.nil?
 
+                    resource.structure_id = params['structure_id']
                     resource.label = params['label']
                     resource.name = params['name']
                     resource.save
@@ -92,11 +85,10 @@ module Routes
                     param 'id', Integer, require: true
                     # }
 
-                    resource = Resource[ params['id'] ]
-
-                    halt( 404, "Resource #{params['id']} inconnue" ) if resource.nil?
-
                     halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ADM ], params['structure_id'] )
+
+                    resource = Resource[ params['id'] ]
+                    halt( 404, "Resource #{params['id']} inconnue" ) if resource.nil?
 
                     resource&.destroy
 

@@ -2,19 +2,13 @@
 
 require_relative '../lib/utils'
 
-class TimeslotResource < Sequel::Model( :timeslots_resources )
-    unrestrict_primary_key
-
-    many_to_one :timeslot
-    many_to_one :resource
-end
-
 class Timeslot < Sequel::Model( :timeslots )
-    many_to_many :resources, class: :Resource, join_table: :timeslots_resources
+    many_to_many :resources, class: :Resource, join_table: :reservations
     one_to_many :contents
     many_to_one :import, class: :Import, key: :import_id
     many_to_one :author, key: :author_id, class: :User
     many_to_many :contributors, join_table: :timeslots_users, class: :User, left_key: :timeslot_id, right_key: :user_id
+    one_to_many :reservations
 
     def to_hash
         h = super
