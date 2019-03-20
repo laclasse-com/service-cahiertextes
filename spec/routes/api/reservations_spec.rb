@@ -120,7 +120,7 @@ describe 'Routes::Api::Reservations' do
                                      subject_id: "SUBJECT_ID2",
                                      weekday: Time.now.wday,
                                      start_time: Time.now.strftime( "2000-01-01T%H:00:00+01:00" ),
-                                    end_time: Time.now.strftime( "2000-01-01T%H:30:00+01:00" ) )
+                                     end_time: Time.now.strftime( "2000-01-01T%H:30:00+01:00" ) )
         resource2 = Resource.create( label: "test2",
                                      structure_id: MOCK_UAI,
                                      type: "test" )
@@ -193,17 +193,17 @@ describe 'Routes::Api::Reservations' do
         get "/api/reservations/", timeslots_ids: [timeslot.id]
         body = JSON.parse( last_response.body )
         expect( body.length ).to eq 3
-        expect( body.map {|r| r['id']}.sort ).to eq [reservation.id, reservation3.id, reservation5.id]
+        expect( body.map { |r| r['id'] }.sort ).to eq [reservation.id, reservation3.id, reservation5.id]
 
         get "/api/reservations/", timeslots_ids: [timeslot2.id]
         body = JSON.parse( last_response.body )
         expect( body.length ).to eq 2
-        expect( body.map {|r| r['id']}.sort ).to eq [reservation2.id, reservation4.id]
+        expect( body.map { |r| r['id'] }.sort ).to eq [reservation2.id, reservation4.id]
 
         get "/api/reservations/", timeslots_ids: [timeslot.id, timeslot2.id]
         body = JSON.parse( last_response.body )
         expect( body.length ).to eq 5
-        expect( body.map {|r| r['id']}.sort ).to eq [reservation.id, reservation2.id, reservation3.id, reservation4.id, reservation5.id]
+        expect( body.map { |r| r['id'] }.sort ).to eq [reservation.id, reservation2.id, reservation3.id, reservation4.id, reservation5.id]
 
         get "/api/reservations/", timeslots_ids: [timeslot.id, timeslot2.id], vtime: true
         body = JSON.parse( last_response.body )
@@ -217,17 +217,17 @@ describe 'Routes::Api::Reservations' do
         get "/api/reservations/", resources_ids: [resource.id]
         body = JSON.parse( last_response.body )
         expect( body.length ).to eq 3
-        expect( body.map {|r| r['id']}.sort ).to eq [reservation.id, reservation2.id, reservation5.id]
+        expect( body.map { |r| r['id'] }.sort ).to eq [reservation.id, reservation2.id, reservation5.id]
 
         get "/api/reservations/", resources_ids: [resource2.id]
         body = JSON.parse( last_response.body )
         expect( body.length ).to eq 2
-        expect( body.map {|r| r['id']}.sort ).to eq [reservation3.id, reservation4.id]
+        expect( body.map { |r| r['id'] }.sort ).to eq [reservation3.id, reservation4.id]
 
         get "/api/reservations/", resources_ids: [resource.id, resource2.id]
         body = JSON.parse( last_response.body )
         expect( body.length ).to eq 5
-        expect( body.map {|r| r['id']}.sort ).to eq [reservation.id, reservation2.id, reservation3.id, reservation4.id, reservation5.id]
+        expect( body.map { |r| r['id'] }.sort ).to eq [reservation.id, reservation2.id, reservation3.id, reservation4.id, reservation5.id]
 
         get "/api/reservations/", resources_ids: [resource.id, resource2.id], vtime: true
         body = JSON.parse( last_response.body )

@@ -18,7 +18,7 @@ module Routes
 
                     json( Import.create( structure_id: params['structure_id'],
                                          ctime: DateTime.now,
-                                         import_type_id: params.key?( 'type' ) ? ImportType[label: params['type']]&.id : '',
+                                         type: params['type'],
                                          author_id: get_ctxt_user( user['id'] ).id ) )
                 end
 

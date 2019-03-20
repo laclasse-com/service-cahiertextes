@@ -46,7 +46,7 @@ module Routes
                                                                                 author_id: get_ctxt_user( user['id'] ).id,
                                                                                 structure_id: resource['structure_id'],
                                                                                 label: resource['label'],
-                                                                                resource_type_id: resource['resource_type_id'] )
+                                                                                type: resource['type'] )
 
                         new_resource.name = resource['name']
                         new_resource.import_id = resource['import_id'] if resource.key?( 'import_id' )

@@ -76,11 +76,11 @@ module Routes
                     query = query.where( timeslot_id: params['timeslots_ids'] ) if params.key?( 'timeslots_ids' )
                     query = query.where( resource_id: params['resources_ids'] ) if params.key?( 'resources_ids' )
                     if params.key?( 'vtime' )
-                        if params['vtime']
-                            query = query.where( Sequel.~( vtime: nil ) )
-                        else
-                            query = query.where( vtime: nil )
-                        end
+                        query = if params['vtime']
+                                    query.where( Sequel.~( vtime: nil ) )
+                                else
+                                    query.where( vtime: nil )
+                                end
                     end
 
                     json( query.naked.all )

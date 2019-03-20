@@ -21,9 +21,8 @@ describe 'Routes::Api::Timeslots' do
     end
 
     after :each do
-        AssignmentDoneMarker.where( assignment_id: Assignment.where( timeslot_id: Timeslot.where( structure_id: MOCK_UAI ).select( :id ) ).select(:id) ).destroy
-        Assignment.where( timeslot_id: Timeslot.where( structure_id: MOCK_UAI ).select( :id ) ).destroy
-        Session.where( timeslot_id: Timeslot.where( structure_id: MOCK_UAI ).select( :id ) ).destroy
+        AssignmentDoneMarker.where( content_id: Content.where( timeslot_id: Timeslot.where( structure_id: MOCK_UAI ).select( :id ) ).select(:id) ).destroy
+        Content.where( timeslot_id: Timeslot.where( structure_id: MOCK_UAI ).select( :id ) ).destroy
         timeslot.destroy
     end
 
@@ -94,7 +93,7 @@ describe 'Routes::Api::Timeslots' do
 
     it 'creates a Timeslot as part of importing' do
         import = Import.create( ctime: Time.now,
-                                import_type_id: ImportType.first.id,
+                                type: "test",
                                 structure_id: MOCK_UAI,
                                 author_id: u_id )
         post '/api/timeslots/', timeslots: [ { structure_id: MOCK_UAI,
