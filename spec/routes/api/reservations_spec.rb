@@ -20,6 +20,8 @@ describe 'Routes::Api::Reservations' do
                                     structure_id: MOCK_UAI,
                                     type: "test" )
 
+        $mock_user = MOCK_USER_ENS  # rubocop:disable Style/GlobalVars
+
         post '/api/reservations/', reservations: [ { timeslot_id: timeslot.id, resource_id: resource.id, date: Time.now.strftime("%F") } ]
 
         body = JSON.parse( last_response.body )
@@ -31,6 +33,8 @@ describe 'Routes::Api::Reservations' do
         Reservation.where(id: body.map { |l| l['id'] })&.destroy
         timeslot&.destroy
         resource&.destroy
+
+        $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
     end
 
     it 'validates a Reservation' do
