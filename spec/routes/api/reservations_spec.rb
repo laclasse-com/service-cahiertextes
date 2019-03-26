@@ -9,6 +9,55 @@ describe 'Routes::Api::Reservations' do
         CdTServer.new
     end
 
+    it 'CANNOT create a Reservation' do
+        $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
+        timeslot = Timeslot.create( structure_id: MOCK_UAI,
+                                    group_id: 999_999,
+                                    subject_id: "SUBJECT_ID",
+                                    weekday: Time.now.wday,
+                                    start_time: Time.now.strftime( "2000-01-01T%H:00:00+01:00" ),
+                                    end_time: Time.now.strftime( "2000-01-01T%H:30:00+01:00" ) )
+        timeslot2 = Timeslot.create( structure_id: MOCK_UAI,
+                                     date: DateTime.now,
+                                     start_time: Time.now.strftime( "2000-01-01T%H:00:00+01:00" ),
+                                     end_time: Time.now.strftime( "2000-01-01T%H:30:00+01:00" ) )
+        resource = Resource.create( label: "test",
+                                    structure_id: MOCK_UAI,
+                                    type: "test" )
+        resource2 = Resource.create( label: "test",
+                                     structure_id: "#{MOCK_UAI}0",
+                                     type: "test" )
+
+        $mock_user = MOCK_USER_ENS  # rubocop:disable Style/GlobalVars
+
+        post '/api/reservations/', reservations: [ { timeslot_id: timeslot.id * 2, resource_id: resource.id } ]
+        expect( last_response.status ).to eq 409
+
+        post '/api/reservations/', reservations: [ { timeslot_id: timeslot.id, resource_id: resource.id * 2 } ]
+        expect( last_response.status ).to eq 409
+
+        post '/api/reservations/', reservations: [ { timeslot_id: timeslot.id, resource_id: resource2.id } ]
+        expect( last_response.status ).to eq 409
+
+        post '/api/reservations/', reservations: [ { timeslot_id: timeslot.id, resource_id: resource.id, vtime: true } ]
+        expect( last_response.status ).to eq 401
+
+        post '/api/reservations/', reservations: [ { timeslot_id: timeslot2.id, resource_id: resource.id } ]
+        expect( last_response.status ).to eq 401
+
+        $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
+
+        post '/api/reservations/', reservations: [ { timeslot_id: timeslot.id, resource_id: resource.id } ]
+        expect( last_response.status ).to eq 401
+
+        timeslot&.destroy
+        timeslot2&.destroy
+        resource&.destroy
+        resource2&.destroy
+
+        $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
+    end
+
     it 'creates Reservations' do
         timeslot = Timeslot.create( structure_id: MOCK_UAI,
                                     group_id: 999_999,
@@ -85,6 +134,57 @@ describe 'Routes::Api::Reservations' do
         Reservation.where(id: body['id'])&.destroy
         timeslot&.destroy
         resource&.destroy
+    end
+
+    it 'CANNOT edit a Reservation' do
+        $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
+        timeslot = Timeslot.create( structure_id: MOCK_UAI,
+                                    group_id: 999_999,
+                                    subject_id: "SUBJECT_ID",
+                                    weekday: Time.now.wday,
+                                    start_time: Time.now.strftime( "2000-01-01T%H:00:00+01:00" ),
+                                    end_time: Time.now.strftime( "2000-01-01T%H:30:00+01:00" ) )
+        timeslot2 = Timeslot.create( structure_id: MOCK_UAI,
+                                     date: DateTime.now,
+                                     start_time: Time.now.strftime( "2000-01-01T%H:00:00+01:00" ),
+                                     end_time: Time.now.strftime( "2000-01-01T%H:30:00+01:00" ) )
+        resource = Resource.create( label: "test",
+                                    structure_id: MOCK_UAI,
+                                    type: "test" )
+        resource2 = Resource.create( label: "test",
+                                     structure_id: "#{MOCK_UAI}0",
+                                     type: "test" )
+        reservation = Reservation.create( timeslot_id: timeslot.id,
+                                          resource_id: resource.id )
+        reservation2 = Reservation.create( timeslot_id: timeslot2.id,
+                                           resource_id: resource.id )
+
+        $mock_user = MOCK_USER_ENS  # rubocop:disable Style/GlobalVars
+
+        put "/api/reservations/#{reservation.id * 2}", date: Time.now.end_of_year.strftime("%F")
+        expect( last_response.status ).to eq 404
+
+        put "/api/reservations/#{reservation2.id}", date: Time.now.end_of_year.strftime("%F")
+        expect( last_response.status ).to eq 401
+
+        put "/api/reservations/#{reservation.id}", date: Time.now.end_of_year.strftime("%F")
+        expect( last_response.status ).to eq 200
+
+        put "/api/reservations/#{reservation.id}", vtime: true
+        expect( last_response.status ).to eq 401
+
+        put "/api/reservations/#{reservation.id}", timeslot_id: timeslot2.id * 2
+        expect( last_response.status ).to eq 409
+
+        put "/api/reservations/#{reservation.id}", resource_id: resource2.id
+        expect( last_response.status ).to eq 409
+
+        reservation&.destroy
+        reservation2&.destroy
+        timeslot&.destroy
+        timeslot2&.destroy
+        resource&.destroy
+        resource2&.destroy
     end
 
     it 'edits a Reservation' do
@@ -251,6 +351,41 @@ describe 'Routes::Api::Reservations' do
         resource&.destroy
         timeslot2&.destroy
         resource2&.destroy
+    end
+
+    it 'CANNOT delete a Reservation' do
+        $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
+        timeslot = Timeslot.create( structure_id: MOCK_UAI,
+                                    group_id: 999_999,
+                                    subject_id: "SUBJECT_ID",
+                                    weekday: Time.now.wday,
+                                    start_time: Time.now.strftime( "2000-01-01T%H:00:00+01:00" ),
+                                    end_time: Time.now.strftime( "2000-01-01T%H:30:00+01:00" ) )
+        timeslot2 = Timeslot.create( structure_id: MOCK_UAI,
+                                     date: DateTime.now,
+                                     start_time: Time.now.strftime( "2000-01-01T%H:00:00+01:00" ),
+                                     end_time: Time.now.strftime( "2000-01-01T%H:30:00+01:00" ) )
+        resource = Resource.create( label: "test",
+                                    structure_id: MOCK_UAI,
+                                    type: "test" )
+        reservation2 = Reservation.create( timeslot_id: timeslot2.id,
+                                           resource_id: resource.id )
+
+        post '/api/reservations/', reservations: [ { timeslot_id: timeslot.id, resource_id: resource.id, date: Time.now.strftime("%F") } ]
+        body = JSON.parse( last_response.body )
+
+        $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
+        delete "/api/reservations/#{body.first['id']}"
+        expect( last_response.status ).to eq 401
+
+        $mock_user = MOCK_USER_ENS  # rubocop:disable Style/GlobalVars
+        delete "/api/reservations/#{reservation2.id}"
+        expect( last_response.status ).to eq 401
+
+        Reservation[ id: body.first['id'] ]&.destroy
+        reservation2&.destroy
+        timeslot&.destroy
+        resource&.destroy
     end
 
     it 'deletes a Reservation' do
