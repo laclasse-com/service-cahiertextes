@@ -321,13 +321,13 @@ describe 'Routes::Api::Contents' do
 
         get "/api/contents", timeslots_ids: [ ts.id ], date: MOCK_DATE.end_of_week
         body = JSON.parse( last_response.body )
-        expect( body.length ).to eq 1
+        expect( body.length ).to eq MOCK_DATE.end_of_week == MOCK_DATE.end_of_month ? 2 : 1
         expect( body.first['id'] ).to eq session2.id
 
         get "/api/contents", timeslots_ids: [ ts.id ], date: MOCK_DATE.end_of_month
         body = JSON.parse( last_response.body )
-        expect( body.length ).to eq 1
-        expect( body.first['id'] ).to eq session3.id
+        expect( body.length ).to eq MOCK_DATE.end_of_week == MOCK_DATE.end_of_month ? 2 : 1
+        expect( body.first['id'] ).to eq MOCK_DATE.end_of_week == MOCK_DATE.end_of_month ? session2.id : session3.id
 
         get "/api/contents", timeslots_ids: [ ts.id ], date: MOCK_DATE.end_of_year
         body = JSON.parse( last_response.body )
@@ -336,9 +336,9 @@ describe 'Routes::Api::Contents' do
 
         get "/api/contents", timeslots_ids: [ ts.id ], "date<": MOCK_DATE.end_of_week
         body = JSON.parse( last_response.body )
-        expect( body.length ).to eq 2
+        expect( body.length ).to eq MOCK_DATE.end_of_week == MOCK_DATE.end_of_month ? 3 : 2
         expect( body.first['id'] ).to eq session.id
-        expect( body.last['id'] ).to eq session2.id
+        expect( body.last['id'] ).to eq MOCK_DATE.end_of_week == MOCK_DATE.end_of_month ? session3.id : session2.id
 
         get "/api/contents", timeslots_ids: [ ts.id ], "date<": MOCK_DATE.end_of_year
         body = JSON.parse( last_response.body )

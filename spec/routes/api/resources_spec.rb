@@ -12,6 +12,7 @@ describe 'Routes::Api::Resources' do
     lid = -1
 
     it 'creates multiple Resources' do
+        $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
         post '/api/resources/', resources: [ { structure_id: MOCK_UAI, label: MOCK_LABEL, name: MOCK_NAME, type: "test" },
                                              { structure_id: MOCK_UAI, label: "#{MOCK_LABEL}2", name: "#{MOCK_NAME}2", type: "test" } ]
 
