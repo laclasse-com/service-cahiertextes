@@ -27,13 +27,14 @@ module Routes
 
                     halt( 401, '401 Unauthorized' ) unless user_is_super_admin?
 
-                    result = params['trails'].map do |trail|
+                    first_pass = params['trails'].map do |trail|
                         trail = JSON.parse( trail ) if trail.is_a?( String )
 
-                        new_trail = Trail[ label: trail['label'] ]
+                        halt( 403, "Trail #{params['label']} existant" ) unless Trail[ label: trail['label'] ].nil?
 
-                        halt( 403, "Trail #{params['label']} existant" ) unless new_trail.nil?
-
+                        trail
+                    end
+                    result = first_pass.map do |trail|
                         new_trail = Trail.create( label: trail['label'] )
 
                         new_trail.to_hash

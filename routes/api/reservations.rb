@@ -14,13 +14,13 @@ module Routes
                     params['reservations'] = params['reservations'].map { |reservation| JSON.parse( reservation ) } if params['reservations'].first.is_a?( String )
 
                     first_pass = params['reservations'].map do |reservation|
-                        reservation['timeslot'] = Timeslot[ id: reservation['timeslot_id'] ]
+                        reservation[:timeslot] = Timeslot[ id: reservation['timeslot_id'] ]
                         halt( 409 ) if reservation['timeslot'].nil?
 
-                        reservation['resource'] = Resource[ id: reservation['resource_id'] ]
+                        reservation[:resource] = Resource[ id: reservation['resource_id'] ]
                         halt( 409 ) unless reservation['timeslot']&.structure_id == reservation['resource']&.structure_id
 
-                        halt( 401 ) if reservation.key?('vtime') &&
+                        halt( 401 ) if reservation.key?('vtime') && reservation['vtime'] &&
                                        !user_is_profile_in_structure?( %w[ADM], reservation['timeslot'].structure_id )
 
                         if reservation['timeslot'].group_id.nil?
@@ -34,8 +34,8 @@ module Routes
                     end
 
                     result = first_pass.map do |reservation|
-                        new_reservation = Reservation.create( timeslot_id: reservation['timeslot'].id,
-                                                              resource_id: reservation['resource'].id,
+                        new_reservation = Reservation.create( timeslot_id: reservation[:timeslot].id,
+                                                              resource_id: reservation[:resource].id,
                                                               active_weeks: reservation['active_weeks'],
                                                               date: reservation['date'],
                                                               vtime: reservation.key?('vtime') && reservation['vtime'] ? DateTime.now : nil,
@@ -69,8 +69,8 @@ module Routes
 
                     if params.key?('timeslot_id')
                         timeslot = Timeslot[ id: params['timeslot_id'] ]
-                        halt( 401 ) unless !timeslot.nil? ||
-                                           ( !timeslot.group_id.nil? && user_is_in_group_g?( timeslot.group_id ) ) ||
+                        halt( 409 ) if timeslot.nil?
+                        halt( 401 ) unless ( !timeslot.group_id.nil? && user_is_in_group_g?( timeslot.group_id ) ) ||
                                            ( timeslot.group_id.nil? && timeslot.contributors.include?( user_id ) ) ||
                                            user_is_profile_in_structure?( %w[ADM], timeslot.structure_id )
                     else
@@ -94,8 +94,8 @@ module Routes
                         reservation[:date] = params['date']
                     end
 
-                    reservation[:timeslot_id] = timeslot.id if params.key?( 'timeslot_id' ) if params.key?('timeslot_id')
-                    reservation[:resource_id] = resource.id if params.key?( 'resource_id' ) if params.key?('resource_id')
+                    reservation[:timeslot_id] = timeslot.id if params.key?( 'timeslot_id' )
+                    reservation[:resource_id] = resource.id if params.key?( 'resource_id' )
 
                     json( reservation )
                 end

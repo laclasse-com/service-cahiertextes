@@ -4,6 +4,84 @@ module Routes
     module Api
         module Timeslots
             def self.registered( app )
+                app.post '/api/timeslots/?' do
+                    # {
+                    param 'timeslots', Array, required: true
+                    # [ { 'import_id', Integer
+                    #      'group_id', Integer
+                    #      'subject_id', String
+                    #      'structure_id', String
+                    #      'weekday', Integer
+                    #      'active_weeks', Integer
+                    #      'start_time', DateTime
+                    #      'end_time', DateTime } ]
+
+                    # }
+
+                    first_pass = params['timeslots'].map do |timeslot|
+                        timeslot = JSON.parse( timeslot ) if timeslot.is_a?( String )
+
+                        halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ENS DOC ADM ], timeslot['structure_id'] )
+
+                        timeslot
+                    end
+                    result = first_pass.map do |timeslot|
+                        new_timeslot = Timeslot.create( ctime: Time.now,
+                                                        start_time: timeslot['start_time'],
+                                                        end_time: timeslot['end_time'],
+                                                        weekday: timeslot['weekday'],
+                                                        active_weeks: timeslot['active_weeks'],
+                                                        subject_id: timeslot['subject_id'],
+                                                        group_id: timeslot['group_id'],
+                                                        structure_id: timeslot['structure_id'],
+                                                        import_id: timeslot['import_id'] )
+
+                        new_timeslot.to_hash
+                    end
+
+                    json( result )
+                end
+
+                app.put '/api/timeslots/:id/?' do
+                    # {
+                    param 'id', Integer, required: true
+
+                    param 'group_id', Integer
+                    param 'subject_id', String
+                    param 'weekday', Integer
+                    param 'active_weeks', Integer
+                    param 'start_time', DateTime
+                    param 'end_time', DateTime
+
+                    any_of :group_id, :subject_id, :weekday, :start_time, :end_time
+                    # }
+
+                    timeslot = Timeslot[ params['id'] ]
+                    halt( 404, 'Créneau inconnu' ) if timeslot.nil?
+                    halt( 401, '401 Unauthorized' ) unless user_is_x_in_group_g?( %w[ ENS DOC ], timeslot.group_id ) || user_is_x_in_structure_s?( %w[ ADM ], timeslot.structure_id )
+
+                    timeslot.modify( params )
+
+                    json( timeslot.to_hash )
+                end
+
+                app.delete '/api/timeslots/:id/?' do
+                    # {
+                    param 'id', Integer, required: true
+                    param 'dtime', DateTime, required: true
+                    # }
+
+                    timeslot = Timeslot[ params['id'] ]
+                    halt( 404, 'Créneau inconnu' ) if timeslot.nil?
+                    halt( 401, '401 Unauthorized' ) unless user_is_x_in_group_g?( %w[ ENS DOC ], timeslot.group_id ) || user_is_x_in_structure_s?( %w[ ADM ], timeslot.structure_id )
+
+                    timeslot.update( dtime: timeslot.dtime.nil? ? params['dtime'] : nil )
+
+                    timeslot.save
+
+                    json( timeslot.to_hash )
+                end
+
                 app.get '/api/timeslots/?' do
                     # {
                     param 'date<', Date
@@ -84,82 +162,6 @@ module Routes
                     halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ELV TUT ENS EVS DOC ADM ], timeslot.structure_id ) && user_is_in_group_g?( timeslot.group_id )
 
                     json( timeslot.detailed( params['start_time'], params['end_time'], %w[resources sessions assignments notes] ) )
-                end
-
-                app.post '/api/timeslots/?' do
-                    # {
-                    param 'timeslots', Array, required: true
-                    # [ { 'import_id', Integer
-                    #      'group_id', Integer
-                    #      'subject_id', String
-                    #      'structure_id', String
-                    #      'weekday', Integer
-                    #      'active_weeks', Integer
-                    #      'start_time', DateTime
-                    #      'end_time', DateTime } ]
-
-                    # }
-
-                    result = params['timeslots'].map do |timeslot|
-                        timeslot = JSON.parse( timeslot ) if timeslot.is_a?( String )
-
-                        # TODO: maybe don't stop but continue with others, or check in a first pass
-                        halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ENS DOC ADM ], timeslot['structure_id'] )
-
-                        new_timeslot = Timeslot.create( ctime: Time.now,
-                                                        start_time: timeslot['start_time'],
-                                                        end_time: timeslot['end_time'],
-                                                        weekday: timeslot['weekday'],
-                                                        active_weeks: timeslot['active_weeks'],
-                                                        subject_id: timeslot['subject_id'],
-                                                        group_id: timeslot['group_id'],
-                                                        structure_id: timeslot['structure_id'],
-                                                        import_id: timeslot['import_id'] )
-
-                        new_timeslot.to_hash
-                    end
-
-                    json( result )
-                end
-
-                app.put '/api/timeslots/:id/?' do
-                    # {
-                    param 'id', Integer, required: true
-
-                    param 'group_id', Integer
-                    param 'subject_id', String
-                    param 'weekday', Integer
-                    param 'active_weeks', Integer
-                    param 'start_time', DateTime
-                    param 'end_time', DateTime
-
-                    any_of :group_id, :subject_id, :weekday, :start_time, :end_time
-                    # }
-
-                    timeslot = Timeslot[ params['id'] ]
-                    halt( 404, 'Créneau inconnu' ) if timeslot.nil?
-                    halt( 401, '401 Unauthorized' ) unless user_is_x_in_group_g?( %w[ ENS DOC ], timeslot.group_id ) || user_is_x_in_structure_s?( %w[ ADM ], timeslot.structure_id )
-
-                    timeslot.modify( params )
-
-                    json( timeslot.to_hash )
-                end
-
-                app.delete '/api/timeslots/:id/?' do
-                    # {
-                    param 'id', Integer, required: true
-                    param 'dtime', DateTime, required: true
-                    # }
-
-                    timeslot = Timeslot[ params['id'] ]
-                    halt( 404, 'Créneau inconnu' ) if timeslot.nil?
-                    halt( 401, '401 Unauthorized' ) unless user_is_x_in_group_g?( %w[ ENS DOC ], timeslot.group_id ) || user_is_x_in_structure_s?( %w[ ADM ], timeslot.structure_id )
-
-                    timeslot.update( dtime: timeslot.dtime.nil? ? params['dtime'] : nil )
-
-                    timeslot.save
-
-                    json( timeslot.to_hash )
                 end
 
                 app.get '/api/timeslots/:id/similar/?' do

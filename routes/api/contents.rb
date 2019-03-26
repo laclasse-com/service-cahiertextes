@@ -13,29 +13,32 @@ module Routes
 
                     author_id = get_ctxt_user( user['id'] ).id
 
-                    result = params['contents'].map do |content|
+                    first_pass = params['contents'].map do |content|
                         content = JSON.parse( content ) if content.is_a?( String )
 
-                        timeslot = Timeslot[ id: content['timeslot_id'] ]
-                        halt( 409, 'Créneau invalide' ) if timeslot.nil?
+                        content[:timeslot] = Timeslot[ id: content['timeslot_id'] ]
+                        halt( 409, 'Créneau invalide' ) if content[:timeslot].nil?
 
-                        halt( 401, '401 Unauthorized' ) unless content['type'] == "note" || user_teaches_subject_x_in_group_g?( timeslot.subject_id, timeslot.group_id )
+                        halt( 401, '401 Unauthorized' ) unless content['type'] == "note" || user_teaches_subject_x_in_group_g?( content[:timeslot].subject_id, content[:timeslot].group_id )
 
                         if content.key?('trail_id')
-                            trail = Trail[ id: content['trail_id'] ]
-                            halt( 409, 'Trail invalide' ) if trail.nil?
+                            content[:trail] = Trail[ id: content['trail_id'] ]
+                            halt( 409, 'Trail invalide' ) if content[:trail].nil?
                         end
 
+                        content
+                    end
+                    result = first_pass.map do |content|
                         new_content = Content.create( author_id: author_id,
                                                       type: content['type'],
-                                                      timeslot_id: timeslot.id,
+                                                      timeslot_id: content[:timeslot].id,
                                                       date: content['date'].to_s,
                                                       ctime: Time.now,
                                                       content: content['content'],
                                                       assignment_type: content['assignment_type'],
                                                       load: content['load'],
                                                       parent_content_id: content['parent_content_id'],
-                                                      trail_id: content.key?('trail_id') ? trail.id : nil )
+                                                      trail_id: content.key?('trail_id') ? content[:trail].id : nil )
 
                         new_content.save_changes
                         if content.key?('attachments')
