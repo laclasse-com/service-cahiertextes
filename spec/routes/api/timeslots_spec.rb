@@ -156,7 +156,7 @@ describe 'Routes::Api::Timeslots' do
     end
 
     it 'gets Timeslots by structure_id' do
-        get "/api/timeslots", structure_id: MOCK_UAI
+        get "/api/timeslots", structures_ids: [MOCK_UAI]
 
         body = JSON.parse( last_response.body )
         cohort = Timeslot.where(structure_id: MOCK_UAI)
@@ -187,7 +187,7 @@ describe 'Routes::Api::Timeslots' do
 
     it 'gets Timeslots by structure_id and groups_ids and subjects_ids' do
         get "/api/timeslots",
-            structure_id: MOCK_UAI,
+            structures_ids: [MOCK_UAI],
             groups_ids: [ MOCK_GROUP_ID ],
             subjects_ids: [ MOCK_SUBJECT_ID ]
 

@@ -87,22 +87,30 @@ module Routes
                     param 'date<', Date
                     param 'date>', Date
                     param 'groups_ids', Array
+                    param 'no_groups', :boolean
+                    param 'structures_ids', Array
+                    param 'no_structures', :boolean
                     param 'subjects_ids', Array
-                    param 'structure_id', String
+                    param 'authors_ids', Array
                     param 'import_id', Integer
 
                     param 'no_year_restriction', :boolean
                     param 'include_deleted', :boolean
-                    param 'include_sessions_and_assignments', :boolean
                     # }
 
                     query = Timeslot
 
                     query = query.where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{Utils::Calendar.schoolyear_start_date( 'A' )}'" ) ) unless params.key?( 'no_year_restriction' )
-                    query = query.where( Sequel.lit( "`dtime` IS NULL OR DATE_FORMAT( dtime, '%Y-%m-%d') >= '#{params['date<']}'" ) ) if params.key?('date<') && !params.key?( 'include_deleted')
-                    query = query.where( group_id: params['groups_ids'] ) if params.key?( 'groups_ids' )
+                    query = query.where( Sequel.lit( "`dtime` IS NULL OR DATE_FORMAT( dtime, '%Y-%m-%d') >= '#{params['date<']}'" ) ) if params.key?( 'date<' ) && !params.key?( 'include_deleted' )
+
+                    query = query.where( group_id: params['groups_ids'] ) if params.key?( 'groups_ids' ) && ( !params.key?( 'no_groups' ) || ( params.key?( 'no_groups' ) && !params['no_groups'] ) )
+                    query = query.where( group_id: nil ) if params.key?( 'no_groups' ) && params['no_groups']
+
+                    query = query.where( structure_id: params['structures_ids'] ) if params.key?( 'structures_ids' ) && ( !params.key?( 'no_structures' ) || ( params.key?( 'no_structures' ) && !params['no_structures'] ) )
+                    query = query.where( structure_id: nil ) if params.key?( 'no_structures' ) && params['no_structures']
+
                     query = query.where( subject_id: params['subjects_ids'] ) if params.key?( 'subjects_ids' )
-                    query = query.where( structure_id: params['structure_id'] ) if params.key?( 'structure_id' )
+                    query = query.where( author_id: params['authors_ids'] ) if params.key?( 'authors_ids' )
                     query = query.where( import_id: params['import_id'] ) if params.key?( 'import_id' )
 
                     data = query.naked.all
@@ -112,32 +120,6 @@ module Routes
                             ( params['date<'] .. params['date>'] )
                                 .reduce( true ) do |memo, day|
                                 memo && ( day.wday == timeslot[:weekday] && timeslot[:active_weeks][day.cweek] == 1 )
-                            end
-                        end
-
-                        if params.key?('include_sessions_and_assignments')
-                            data = data.map do |timeslot|
-                                # FIXME: copy-pasta from sessions/assignments APIs
-                                timeslot[:sessions] = Session.where( timeslot_id: timeslot[:id] )
-                                                             .where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') >= '#{params['date>']}'" ) )
-                                                             .where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') <= '#{params['date<']}'" ) )
-                                                             .naked
-                                                             .all
-
-                                timeslot[:assignments] = Assignment.where( timeslot_id: timeslot[:id] )
-                                                                   .where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') >= '#{params['date>']}'" ) )
-                                                                   .where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') <= '#{params['date<']}'" ) )
-                                                                   .naked
-                                                                   .all
-
-                                timeslot[:notes] = Note.where( timeslot_id: timeslot[:id] )
-                                                       .where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') >= '#{params['date>']}'" ) )
-                                                       .where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') <= '#{params['date<']}'" ) )
-                                                       .naked
-                                                       .all
-
-                                # TODO: done marker when relevant
-                                timeslot
                             end
                         end
                     end
