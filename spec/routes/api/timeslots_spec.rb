@@ -27,6 +27,7 @@ describe 'Routes::Api::Timeslots' do
     end
 
     it 'creates multiple Timeslots' do
+        $mock_user = MOCK_USER_ENS  # rubocop:disable Style/GlobalVars
         post '/api/timeslots/', timeslots: [ { structure_id: MOCK_UAI,
                                                group_id: MOCK_GROUP_ID,
                                                subject_id: MOCK_SUBJECT_ID,
@@ -34,7 +35,7 @@ describe 'Routes::Api::Timeslots' do
                                                start_time: MOCK_START_TIME,
                                                end_time: MOCK_END_TIME },
                                              { structure_id: MOCK_UAI,
-                                               group_id: MOCK_GROUP_ID + 1,
+                                               group_id: MOCK_GROUP_ID,
                                                subject_id: MOCK_SUBJECT_ID,
                                                weekday: MOCK_WEEKDAY,
                                                start_time: MOCK_START_TIME,

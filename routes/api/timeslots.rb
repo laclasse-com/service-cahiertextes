@@ -7,21 +7,16 @@ module Routes
                 app.post '/api/timeslots/?' do
                     # {
                     param 'timeslots', Array, required: true
-                    # [ { 'import_id', Integer
-                    #      'group_id', Integer
-                    #      'subject_id', String
-                    #      'structure_id', String
-                    #      'weekday', Integer
-                    #      'active_weeks', Integer
-                    #      'start_time', DateTime
-                    #      'end_time', DateTime } ]
-
                     # }
 
                     first_pass = params['timeslots'].map do |timeslot|
                         timeslot = JSON.parse( timeslot ) if timeslot.is_a?( String )
 
-                        halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ENS DOC ADM ], timeslot['structure_id'] )
+                        failed = ( timeslot.key?('group_id') &&
+                                   !user_teaches_subject_x_in_group_g?( timeslot['subject_id'], timeslot['group_id'].to_i ) ) ||
+                                 ( timeslot.key?('structure_id') &&
+                                   !user_is_x_in_structure_s?( %w[ ENS DOC ADM ], timeslot['structure_id'] ) )
+                        halt( 401, '401 Unauthorized' ) if failed
 
                         timeslot
                     end
@@ -34,7 +29,16 @@ module Routes
                                                         subject_id: timeslot['subject_id'],
                                                         group_id: timeslot['group_id'],
                                                         structure_id: timeslot['structure_id'],
-                                                        import_id: timeslot['import_id'] )
+                                                        import_id: timeslot['import_id'],
+                                                        author_id: get_ctxt_user( user['id'] ).id,
+                                                        date: timeslot['date'],
+                                                        title: timeslot['title'] )
+
+                        if timeslot.key?( 'contributors_uids' )
+                            timeslot['contributors_uids'].each do |contributor_uid|
+                                new_timeslot.add_contributor( get_ctxt_user( contributor_uid ) )
+                            end
+                        end
 
                         new_timeslot.to_hash
                     end
@@ -52,7 +56,8 @@ module Routes
                     param 'active_weeks', Integer
                     param 'start_time', DateTime
                     param 'end_time', DateTime
-
+                    param 'date', Date
+                    param 'title', String
                     any_of :group_id, :subject_id, :weekday, :start_time, :end_time
                     # }
 
@@ -73,13 +78,33 @@ module Routes
 
                     timeslot = Timeslot[ params['id'] ]
                     halt( 404, 'Créneau inconnu' ) if timeslot.nil?
-                    halt( 401, '401 Unauthorized' ) unless user_is_x_in_group_g?( %w[ ENS DOC ], timeslot.group_id ) || user_is_x_in_structure_s?( %w[ ADM ], timeslot.structure_id )
 
-                    timeslot.update( dtime: timeslot.dtime.nil? ? params['dtime'] : nil )
+                    cuid = get_ctxt_user( user['id'] ).id
+                    is_author = timeslot.author_id == cuid
+                    is_contributor = timeslot.contributors.map(&:id).include?( cuid )
+                    teach_in_group = user_teaches_subject_x_in_group_g?( timeslot.subject_id, timeslot.group_id )
+                    is_adm = user_is_x_in_structure_s?( %w[ ADM ], timeslot.structure_id )
 
-                    timeslot.save
+                    halt( 401, '401 Unauthorized' ) unless is_author || is_contributor || teach_in_group || is_adm
+
+                    if is_contributor
+                        timeslot.remove_contributor( User[id: cuid] )
+                    elsif is_author || teach_in_group || is_adm
+                        timeslot.update( dtime: timeslot.dtime.nil? ? params['dtime'] : nil )
+                    end
 
                     json( timeslot.to_hash )
+                    # # ####################
+
+                    # timeslot = Timeslot[ params['id'] ]
+                    # halt( 404, 'Créneau inconnu' ) if timeslot.nil?
+                    # halt( 401, '401 Unauthorized' ) unless user_is_x_in_group_g?( %w[ ENS DOC ], timeslot.group_id ) || user_is_x_in_structure_s?( %w[ ADM ], timeslot.structure_id )
+
+                    # timeslot.update( dtime: timeslot.dtime.nil? ? params['dtime'] : nil )
+
+                    # timeslot.save
+
+                    # json( timeslot.to_hash )
                 end
 
                 app.get '/api/timeslots/?' do
@@ -141,7 +166,9 @@ module Routes
 
                     timeslot = Timeslot[ id: params['id'] ]
                     halt( 404, 'Créneau inconnu' ) if timeslot.nil?
-                    halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ELV TUT ENS EVS DOC ADM ], timeslot.structure_id ) && user_is_in_group_g?( timeslot.group_id )
+
+                    cuid = get_ctxt_user( user['id'] ).id
+                    halt( 401, '401 Unauthorized' ) unless timeslot.author_id == cuid || ( user_is_x_in_structure_s?( %w[ ELV TUT ENS EVS DOC ADM ], timeslot.structure_id ) && user_is_in_group_g?( timeslot.group_id ) )
 
                     json( timeslot.detailed( params['start_time'], params['end_time'], %w[resources sessions assignments notes] ) )
                 end
@@ -156,7 +183,9 @@ module Routes
 
                     timeslot = Timeslot[ id: params['id'] ]
                     halt( 404, 'Créneau inconnu' ) if timeslot.nil?
-                    halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ENS DOC ADM ], timeslot.structure_id )
+
+                    cuid = get_ctxt_user( user['id'] ).id
+                    halt( 401, '401 Unauthorized' ) unless timeslot.author_id == cuid || user_is_x_in_structure_s?( %w[ ENS DOC ADM ], timeslot.structure_id )
 
                     json( timeslot.similar( params['groups_ids'], params['start_time'], params['end_time'] ) )
                 end

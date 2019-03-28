@@ -9,31 +9,14 @@ describe 'Routes::Api::Events' do
         CdTServer.new
     end
 
-    # event = nil
-
-    # before :each do
-    #     event = Timeslot.create( structure_id: MOCK_UAI,
-    #                              author_id: u_id,
-    #                              date: DateTime.now,
-    #                              start_time: MOCK_START_TIME,
-    #                              end_time: MOCK_END_TIME )
-    # end
-
-    # after :each do
-    #     AssignmentDoneMarker.where( assignment_id: Assignment.where( timeslot_id: Timeslot.where( structure_id: MOCK_UAI ).select( :id ) ).select(:id) ).destroy
-    #     Assignment.where( timeslot_id: Timeslot.where( structure_id: MOCK_UAI ).select( :id ) ).destroy
-    #     Note.where( timeslot_id: Timeslot.where( structure_id: MOCK_UAI ).select( :id ) ).destroy
-    #     timeslot.destroy
-    # end
-
     it 'creates an Event' do
         date = DateTime.now.to_date
         title = "title"
 
-        post '/api/events/', events: [ { date: date,
-                                         title: title,
-                                         start_time: MOCK_START_TIME,
-                                         end_time: MOCK_END_TIME } ]
+        post '/api/timeslots/', timeslots: [ { date: date,
+                                               title: title,
+                                               start_time: MOCK_START_TIME,
+                                               end_time: MOCK_END_TIME } ]
 
         body = JSON.parse( last_response.body )
 
@@ -51,11 +34,11 @@ describe 'Routes::Api::Events' do
         date = DateTime.now.to_date
         title = "title"
 
-        post '/api/events/', events: [ { date: date,
-                                         title: title,
-                                         start_time: MOCK_START_TIME,
-                                         end_time: MOCK_END_TIME,
-                                         contributors_uids: [ MOCK_USER_ENS['id'], MOCK_USER_ELV['id'] ]} ]
+        post '/api/timeslots/', timeslots: [ { date: date,
+                                               title: title,
+                                               start_time: MOCK_START_TIME,
+                                               end_time: MOCK_END_TIME,
+                                               contributors_uids: [ MOCK_USER_ENS['id'], MOCK_USER_ELV['id'] ]} ]
 
         body = JSON.parse( last_response.body )
 
@@ -76,15 +59,15 @@ describe 'Routes::Api::Events' do
         date = DateTime.now.to_date
         title = "title"
 
-        post '/api/events/', events: [ { date: date,
-                                         title: title,
-                                         start_time: MOCK_START_TIME,
-                                         end_time: MOCK_END_TIME},
-                                       { date: date,
-                                         title: "#{title}#{title}",
-                                         start_time: MOCK_START_TIME,
-                                         end_time: MOCK_END_TIME,
-                                         contributors_uids: [ MOCK_USER_ENS['id'], MOCK_USER_ELV['id'] ]} ]
+        post '/api/timeslots/', timeslots: [ { date: date,
+                                               title: title,
+                                               start_time: MOCK_START_TIME,
+                                               end_time: MOCK_END_TIME},
+                                             { date: date,
+                                               title: "#{title}#{title}",
+                                               start_time: MOCK_START_TIME,
+                                               end_time: MOCK_END_TIME,
+                                               contributors_uids: [ MOCK_USER_ENS['id'], MOCK_USER_ELV['id'] ]} ]
 
         body = JSON.parse( last_response.body )
 
@@ -106,13 +89,13 @@ describe 'Routes::Api::Events' do
     it 'gets a Timeslot by id' do
         date = DateTime.now.to_date
         title = "title"
-        post '/api/events/', events: [ { date: date,
-                                         title: title,
-                                         start_time: MOCK_START_TIME,
-                                         end_time: MOCK_END_TIME } ]
+        post '/api/timeslots/', timeslots: [ { date: date,
+                                               title: title,
+                                               start_time: MOCK_START_TIME,
+                                               end_time: MOCK_END_TIME } ]
         event = JSON.parse( last_response.body ).first
 
-        get "/api/events/#{event['id']}"
+        get "/api/timeslots/#{event['id']}"
 
         body = JSON.parse( last_response.body )
         expect( body['id'] ).to eq event['id']
@@ -128,14 +111,14 @@ describe 'Routes::Api::Events' do
         date = DateTime.now.to_date
         title = "title"
 
-        post '/api/events/', events: [ { date: date,
-                                         title: title,
-                                         start_time: MOCK_START_TIME,
-                                         end_time: MOCK_END_TIME,
-                                         contributors_uids: [ MOCK_USER_ENS['id'], MOCK_USER_ELV['id'] ]} ]
+        post '/api/timeslots/', timeslots: [ { date: date,
+                                               title: title,
+                                               start_time: MOCK_START_TIME,
+                                               end_time: MOCK_END_TIME,
+                                               contributors_uids: [ MOCK_USER_ENS['id'], MOCK_USER_ELV['id'] ]} ]
         event = JSON.parse( last_response.body ).first
 
-        put "/api/events/#{event['id']}",
+        put "/api/timeslots/#{event['id']}",
             title: "tralala",
             start_time: MOCK_START_TIME,
             end_time: MOCK_END_TIME
@@ -154,16 +137,16 @@ describe 'Routes::Api::Events' do
         date = DateTime.now.to_date
         title = "title"
 
-        post '/api/events/', events: [ { date: date,
-                                         title: title,
-                                         start_time: MOCK_START_TIME,
-                                         end_time: MOCK_END_TIME,
-                                         contributors_uids: [ MOCK_USER_ENS['id'], MOCK_USER_ELV['id'] ]} ]
+        post '/api/timeslots/', timeslots: [ { date: date,
+                                               title: title,
+                                               start_time: MOCK_START_TIME,
+                                               end_time: MOCK_END_TIME,
+                                               contributors_uids: [ MOCK_USER_ENS['id'], MOCK_USER_ELV['id'] ]} ]
         event = JSON.parse( last_response.body ).first
 
         $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
 
-        put "/api/events/#{event['id']}",
+        put "/api/timeslots/#{event['id']}",
             group_id: MOCK_GROUP_ID + 1,
             subject_id: "#{MOCK_SUBJECT_ID}2",
             weekday: MOCK_WEEKDAY + 1,
@@ -181,13 +164,13 @@ describe 'Routes::Api::Events' do
     it 'deletes a Timeslot as author' do
         date = DateTime.now.to_date
         title = "title"
-        post '/api/events/', events: [ { date: date,
-                                         title: title,
-                                         start_time: MOCK_START_TIME,
-                                         end_time: MOCK_END_TIME } ]
+        post '/api/timeslots/', timeslots: [ { date: date,
+                                               title: title,
+                                               start_time: MOCK_START_TIME,
+                                               end_time: MOCK_END_TIME } ]
         event = JSON.parse( last_response.body ).first
 
-        delete "/api/events/#{event['id']}", dtime: Time.now
+        delete "/api/timeslots/#{event['id']}", dtime: Time.now
 
         expect( Timeslot[id: event['id']].dtime ).to_not be nil
     end
@@ -196,15 +179,15 @@ describe 'Routes::Api::Events' do
         date = DateTime.now.to_date
         title = "title"
 
-        post '/api/events/', events: [ { date: date,
-                                         title: title,
-                                         start_time: MOCK_START_TIME,
-                                         end_time: MOCK_END_TIME,
-                                         contributors_uids: [ MOCK_USER_ENS['id'], MOCK_USER_ELV['id'] ]} ]
+        post '/api/timeslots/', timeslots: [ { date: date,
+                                               title: title,
+                                               start_time: MOCK_START_TIME,
+                                               end_time: MOCK_END_TIME,
+                                               contributors_uids: [ MOCK_USER_ENS['id'], MOCK_USER_ELV['id'] ]} ]
         event = JSON.parse( last_response.body ).first
 
         $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
-        delete "/api/events/#{event['id']}", dtime: Time.now
+        delete "/api/timeslots/#{event['id']}", dtime: Time.now
 
         expect( Timeslot[id: event['id']].dtime ).to be nil
     end
@@ -213,16 +196,16 @@ describe 'Routes::Api::Events' do
         date = DateTime.now.to_date
         title = "title"
 
-        post '/api/events/', events: [ { date: date,
-                                         title: title,
-                                         start_time: MOCK_START_TIME,
-                                         end_time: MOCK_END_TIME,
-                                         contributors_uids: [ MOCK_USER_ENS['id'] ]} ]
+        post '/api/timeslots/', timeslots: [ { date: date,
+                                               title: title,
+                                               start_time: MOCK_START_TIME,
+                                               end_time: MOCK_END_TIME,
+                                               contributors_uids: [ MOCK_USER_ENS['id'] ]} ]
         event = JSON.parse( last_response.body ).first
 
         $mock_user = MOCK_USER_DIR  # rubocop:disable Style/GlobalVars
 
-        delete "/api/events/#{event['id']}", dtime: Time.now
+        delete "/api/timeslots/#{event['id']}", dtime: Time.now
 
         expect( last_response.status ).to eq 401
 

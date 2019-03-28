@@ -34,7 +34,6 @@ require_relative './lib/helpers/user'
 
 require_relative './routes/api/contents'
 require_relative './routes/api/timeslots'
-require_relative './routes/api/events'
 require_relative './routes/api/import'
 require_relative './routes/api/matchables'
 require_relative './routes/api/resources'
@@ -82,7 +81,6 @@ class CdTServer < Sinatra::Base
         login!( request.path ) unless logged?
     end
 
-    register Routes::Api::Events
     register Routes::Api::Timeslots
     register Routes::Api::Contents
     register Routes::Api::Resources
