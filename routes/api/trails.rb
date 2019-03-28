@@ -14,7 +14,7 @@ module Routes
                     # }
 
                     trail = Trail[ params['id'] ]
-                    halt( 404, "Trail #{params['id']} inconnu" ) if trail.nil?
+                    halt( 404 ) if trail.nil?
 
                     json( trail.to_hash )
                 end
@@ -25,12 +25,12 @@ module Routes
                     # [{ 'label', String, required: true }]
                     # }
 
-                    halt( 401, '401 Unauthorized' ) unless user_is_super_admin?
+                    halt( 401 ) unless user_is_super_admin?
 
                     first_pass = params['trails'].map do |trail|
                         trail = JSON.parse( trail ) if trail.is_a?( String )
 
-                        halt( 403, "Trail #{params['label']} existant" ) unless Trail[ label: trail['label'] ].nil?
+                        halt( 403 ) unless Trail[ label: trail['label'] ].nil?
 
                         trail
                     end
@@ -49,13 +49,13 @@ module Routes
                     param 'label', String, required: true
                     # }
 
-                    halt( 401, '401 Unauthorized' ) unless user_is_super_admin?
+                    halt( 401 ) unless user_is_super_admin?
 
                     trail = Trail[ params['id'] ]
-                    halt( 404, "Trail #{params['id']} inconnu" ) if trail.nil?
+                    halt( 404 ) if trail.nil?
 
                     overlapping_trail = Trail[ label: params['label'] ]
-                    halt( 403, "Trail #{params['label']} existant" ) unless overlapping_trail.nil?
+                    halt( 403 ) unless overlapping_trail.nil?
 
                     trail.update( label: params['label'] )
 
@@ -67,10 +67,10 @@ module Routes
                     param 'id', Integer, required: true
                     # }
 
-                    halt( 401, '401 Unauthorized' ) unless user_is_super_admin?
+                    halt( 401 ) unless user_is_super_admin?
 
                     trail = Trail[ params['id'] ]
-                    halt( 404, "Trail #{params['id']} inconnu" ) if trail.nil?
+                    halt( 404 ) if trail.nil?
 
                     trail&.destroy
 

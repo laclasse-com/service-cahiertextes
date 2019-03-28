@@ -14,7 +14,7 @@ module Routes
                     param 'type', String, required: true
                     # }
 
-                    halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ADM], params['structure_id'] )
+                    halt( 401 ) unless user_is_x_in_structure_s?( %w[ADM], params['structure_id'] )
 
                     json( Import.create( structure_id: params['structure_id'],
                                          ctime: DateTime.now,
@@ -32,15 +32,15 @@ module Routes
 
                               uai = nxml.search( 'UAI' ).children.text
 
-                              halt( 500, 'Le fichier ne contient pas de code UAI valide.' ) unless Utils.validate_uai( uai )
-                              halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ADM], uai )
+                              halt( 409 ) unless Utils.validate_uai( uai )
+                              halt( 401 ) unless user_is_x_in_structure_s?( %w[ADM], uai )
 
                               crypted = !nxml.search( 'CLES' ).empty?
 
                               if crypted
                                   uai = nxml.search( 'UAI' ).children.text
 
-                                  halt( 401, '401 Unauthorized' ) unless user_is_profile_in_structure?( 'ADM', uai )
+                                  halt( 401 ) unless user_is_profile_in_structure?( 'ADM', uai )
 
                                   hash = Hash.from_xml( ProNote.decrypt_xml( File.open( params['file']['tempfile'] ) ) )[:ExportEmploiDuTemps]
                               else

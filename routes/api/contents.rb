@@ -17,13 +17,13 @@ module Routes
                         content = JSON.parse( content ) if content.is_a?( String )
 
                         content[:timeslot] = Timeslot[ id: content['timeslot_id'] ]
-                        halt( 409, 'Créneau invalide' ) if content[:timeslot].nil?
+                        halt( 409 ) if content[:timeslot].nil?
 
-                        halt( 401, '401 Unauthorized' ) unless content['type'] == "note" || user_teaches_subject_x_in_group_g?( content[:timeslot].subject_id, content[:timeslot].group_id )
+                        halt( 401 ) unless content['type'] == "note" || user_teaches_subject_x_in_group_g?( content[:timeslot].subject_id, content[:timeslot].group_id )
 
                         if content.key?('trail_id')
                             content[:trail] = Trail[ id: content['trail_id'] ]
-                            halt( 409, 'Trail invalide' ) if content[:trail].nil?
+                            halt( 409 ) if content[:trail].nil?
                         end
 
                         content
@@ -136,9 +136,9 @@ module Routes
                     # }
 
                     content = Content[ id: params['id'] ]
-                    halt( 404, 'Content inconnu' ) if content.nil?
+                    halt( 404 ) if content.nil?
 
-                    halt( 401, '401 Unauthorized' ) unless content.author_id == get_ctxt_user( user['id'] ).id
+                    halt( 401 ) unless content.author_id == get_ctxt_user( user['id'] ).id
 
                     content.update( dtime: content.dtime.nil? ? Time.now : nil, mtime: Time.now )
 
@@ -153,8 +153,8 @@ module Routes
                     # }
 
                     content = Content[ id: params['id'] ]
-                    halt( 404, 'Content inconnue' ) if content.nil? || ( !content.dtime.nil? && content.dtime < UNDELETE_TIME_WINDOW.minutes.ago )
-                    halt( 401, '401 Unauthorized' ) unless content.author_id == get_ctxt_user( user['id'] ).id || user_is_x_in_structure_s?( %w[DIR ENS ELV TUT DOC], content.timeslot.structure_id )
+                    halt( 404 ) if content.nil? || ( !content.dtime.nil? && content.dtime < UNDELETE_TIME_WINDOW.minutes.ago )
+                    halt( 401 ) unless content.author_id == get_ctxt_user( user['id'] ).id || user_is_x_in_structure_s?( %w[DIR ENS ELV TUT DOC], content.timeslot.structure_id )
 
                     json( content )
                 end

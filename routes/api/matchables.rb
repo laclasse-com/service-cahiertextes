@@ -20,7 +20,7 @@ module Routes
 
                     fi = Matchable[ structure_id: params['structure_id'],
                                     hash_item: params['hash_item'] ]
-                    halt( 404, "No match for #{params['hash_item']}" ) if fi.nil?
+                    halt( 404 ) if fi.nil?
 
                     json( fi.to_hash )
                 end
@@ -33,7 +33,7 @@ module Routes
                     #  'known_id', String, required: true } ]
                     # }
 
-                    halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ADM ], params['structure_id'] )
+                    halt( 401 ) unless user_is_x_in_structure_s?( %w[ ADM ], params['structure_id'] )
 
                     result = params['matchables'].map do |matchable|
                         matchable = JSON.parse( matchable ) if matchable.is_a?( String )
@@ -60,7 +60,7 @@ module Routes
                     param 'structure_id', String, required: true
                     param 'hash_item', String, required: true
                     # }
-                    halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ADM ], params['structure_id'] )
+                    halt( 401 ) unless user_is_x_in_structure_s?( %w[ ADM ], params['structure_id'] )
 
                     fi = Matchable[ structure_id: params['structure_id'],
                                     hash_item: params['hash_item'] ]

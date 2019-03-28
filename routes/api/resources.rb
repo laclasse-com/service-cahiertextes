@@ -42,10 +42,10 @@ module Routes
                     param 'label', String, required: true
                     # }
 
-                    halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ADM ], params['structure_id'] )
+                    halt( 401 ) unless user_is_x_in_structure_s?( %w[ ADM ], params['structure_id'] )
 
                     resource = Resource[ params['id'] ]
-                    halt( 404, "Resource #{params['id']} inconnue" ) if resource.nil?
+                    halt( 404 ) if resource.nil?
 
                     resource.structure_id = params['structure_id']
                     resource.label = params['label']
@@ -62,7 +62,7 @@ module Routes
                     param 'name', String
                     # }
 
-                    halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ADM ], params['structure_id'] )
+                    halt( 401 ) unless user_is_x_in_structure_s?( %w[ ADM ], params['structure_id'] )
 
                     query = Resource
                     query = query.where( structure_id: params['structure_id'] ) if params.key?( 'structure_id' )
@@ -78,7 +78,7 @@ module Routes
                     # }
 
                     resource = Resource[ params['id'] ]
-                    halt( 404, "Resource #{params['id']} inconnue" ) if resource.nil?
+                    halt( 404 ) if resource.nil?
 
                     json( resource )
                 end
@@ -88,10 +88,10 @@ module Routes
                     param 'id', Integer, require: true
                     # }
 
-                    halt( 401, '401 Unauthorized' ) unless user_is_x_in_structure_s?( %w[ ADM ], params['structure_id'] )
+                    halt( 401 ) unless user_is_x_in_structure_s?( %w[ ADM ], params['structure_id'] )
 
                     resource = Resource[ params['id'] ]
-                    halt( 404, "Resource #{params['id']} inconnue" ) if resource.nil?
+                    halt( 404 ) if resource.nil?
 
                     resource&.destroy
 
