@@ -22,7 +22,12 @@ describe 'Routes::Api::Timeslots' do
 
     after :each do
         AssignmentDoneMarker.where( content_id: Content.where( timeslot_id: Timeslot.where( structure_id: MOCK_UAI ).select( :id ) ).select(:id) ).destroy
-        Content.where( timeslot_id: Timeslot.where( structure_id: MOCK_UAI ).select( :id ) ).destroy
+        Content.where( timeslot_id: Timeslot.where( structure_id: MOCK_UAI ).select( :id ) ).all.each do |c|
+            c.remove_all_trails
+            c.remove_all_attachments
+            c.remove_all_users
+        end
+        timeslot.remove_all_contents
         timeslot.destroy
     end
 

@@ -7,7 +7,7 @@ class Content < Sequel::Model( :contents )
     many_to_one :timeslot
     many_to_one :parent, key: :parent_content_id, class: self
     one_to_many :children, key: :parent_content_id, class: self
-    many_to_one :trail
+    many_to_many :trails, join_table: :contents_trails
     one_to_many :assignment_done_markers
 
     def to_deep_hash

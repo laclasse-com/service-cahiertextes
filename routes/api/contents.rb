@@ -21,9 +21,13 @@ module Routes
 
                         halt( 401 ) unless content['type'] == "note" || user_teaches_subject_x_in_group_g?( content[:timeslot].subject_id, content[:timeslot].group_id )
 
-                        if content.key?('trail_id')
-                            content[:trail] = Trail[ id: content['trail_id'] ]
-                            halt( 409 ) if content[:trail].nil?
+                        if content.key?('trails_ids')
+                            content[:trails] = content['trails_ids'].map do |trail_id|
+                                trail = Trail[ id: trail_id ]
+                                halt( 409 ) if trail.nil?
+
+                                trail
+                            end
                         end
 
                         content
@@ -37,8 +41,7 @@ module Routes
                                                       content: content['content'],
                                                       assignment_type: content['assignment_type'],
                                                       load: content['load'],
-                                                      parent_content_id: content['parent_content_id'],
-                                                      trail_id: content.key?('trail_id') ? content[:trail].id : nil )
+                                                      parent_content_id: content['parent_content_id'] )
 
                         new_content.save_changes
                         if content.key?('attachments')
@@ -47,6 +50,12 @@ module Routes
                                                                                                      type: attachment['type'],
                                                                                                      name: attachment['name'],
                                                                                                      external_id: attachment['external_id'] ) )
+                            end
+                        end
+
+                        if content.key?(:trails)
+                            content[:trails].each do |trail|
+                                new_content.add_trail( trail )
                             end
                         end
 
@@ -72,7 +81,7 @@ module Routes
                     param 'stime', :boolean
                     param 'atime', DateTime
                     param 'content', String
-                    param 'trail_id', Integer
+                    param 'trails_ids', Array
                     param 'parent_content_id', Integer
                     param 'load', Integer
                     param 'assignment_type', String
@@ -94,6 +103,23 @@ module Routes
                         content.save_changes
                     end
                     if content.vtime.nil? && content.author_id == get_ctxt_user( user['id'] ).id
+                        if params.key?('trails_ids')
+                            params[:trails] = params['trails_ids'].map do |trail_id|
+                                trail = Trail[ id: trail_id ]
+                                halt( 409 ) if trail.nil?
+
+                                trail
+                            end
+                        end
+
+                        if params.key?(:trails)
+                            content.remove_all_trails
+
+                            params[:trails].each do |trail|
+                                content.add_trail( trail )
+                            end
+                        end
+
                         content.type = params['type'] if params.key?( 'type' )
                         content.timeslot_id = params['timeslot_id'] if params.key?( 'timeslot_id' )
 
@@ -180,9 +206,10 @@ module Routes
                     query = query.where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') >= '#{params['date>']}'" ) ) if params.key?( 'date>' )
                     query = query.where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') <= '#{params['date<']}'" ) ) if params.key?( 'date<' )
                     query = query.where( author_id: params['authors_ids']) if params.key?( 'authors_ids' )
-                    query = query.where( trail_id: params['trails_ids']) if params.key?( 'trails_ids' )
                     query = query.where( parent_content_id: params['parent_contents_ids']) if params.key?( 'parent_contents_ids' )
                     query = query.where( assignment_type: params['assignment_types'] ) if params.key?('assignment_types')
+
+                    query = query.where(id: ContentTrail.where(trail_id: params['trails_ids'] ).select(:content_id) ) if params.key?( 'trails_ids' )
 
                     json( query.naked.all )
                 end

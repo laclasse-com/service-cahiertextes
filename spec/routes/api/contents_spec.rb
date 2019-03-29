@@ -25,6 +25,7 @@ describe 'Routes::Api::Contents' do
     after( :each ) do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
+        ts.contents.each(&:remove_all_trails)
         ts.contents.each(&:destroy)
         ts&.destroy
     end
@@ -194,11 +195,8 @@ describe 'Routes::Api::Contents' do
 
         trail = Trail.create( label: "prout" )
 
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session", trail_id: trail.id } ]
+        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session", trails_ids: [trail.id] } ]
         session = Content[id: JSON.parse( last_response.body ).first['id'] ]
-
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, assignment_type: "Exposé" } ]
-        assignment = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
         get "/api/contents", trails_ids: [ trail.id ]
 
@@ -214,7 +212,7 @@ describe 'Routes::Api::Contents' do
         expect( body.first['author_id'] ).to eq u_id
         expect( body.first['type'] ).to eq "session"
 
-        assignment&.destroy
+        session&.remove_all_trails
         session&.destroy
         trail&.destroy
     end
@@ -395,7 +393,7 @@ describe 'Routes::Api::Contents' do
             atime: dt,
             content: "#{MOCK_CONTENT}#{MOCK_CONTENT}",
             load: 2,
-            trail_id: trail.id,
+            trails_ids: [trail.id],
             type: "assignment",
             parent_content_id: session2.id,
             assignment_type: "DM",
@@ -427,6 +425,7 @@ describe 'Routes::Api::Contents' do
 
         session&.remove_all_attachments
         session&.remove_all_users
+        session&.remove_all_trails
         session&.destroy
         session2&.destroy
         trail&.destroy
