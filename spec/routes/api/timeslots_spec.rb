@@ -79,6 +79,22 @@ describe 'Routes::Api::Timeslots' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
     end
 
+    it 'FORBIDS creation when not author' do
+        $mock_user = MOCK_USER_ENS  # rubocop:disable Style/GlobalVars
+
+        post '/api/timeslots/', timeslots: [ { author_id: LaClasse::Helpers::User.get_ctxt_user( MOCK_USER_GENERIC['id'] ).id,
+                                               structure_id: MOCK_UAI,
+                                               group_id: MOCK_GROUP_ID,
+                                               subject_id: MOCK_SUBJECT_ID,
+                                               weekday: MOCK_WEEKDAY,
+                                               start_time: MOCK_START_TIME,
+                                               end_time: MOCK_END_TIME } ]
+
+        expect( last_response.status ).to eq 401
+
+        $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
+    end
+
     it 'creates a Timeslot' do
         post '/api/timeslots/', timeslots: [ { author_id: u_id,
                                                structure_id: MOCK_UAI,
