@@ -95,7 +95,7 @@ module Routes
 
                     resource&.destroy
 
-                    nil
+                    Resource[ params['id'] ]
                 end
             end
         end

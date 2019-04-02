@@ -165,7 +165,7 @@ module Routes
 
                     reservation&.destroy
 
-                    nil
+                    Reservation[ id: params['id'] ]
                 end
             end
         end

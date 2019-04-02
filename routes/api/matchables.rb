@@ -66,7 +66,8 @@ module Routes
                                     hash_item: params['hash_item'] ]
                     fi&.destroy
 
-                    nil
+                    Matchable[ structure_id: params['structure_id'],
+                               hash_item: params['hash_item'] ]
                 end
             end
         end
