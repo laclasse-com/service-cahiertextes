@@ -11,10 +11,12 @@ module Routes
                     param 'contents', Array, require: true
                     # }
 
-                    author_id = get_ctxt_user( user['id'] ).id
+                    user_id = get_ctxt_user( user['id'] ).id
 
                     first_pass = params['contents'].map do |content|
                         content = JSON.parse( content ) if content.is_a?( String )
+
+                        halt( 401 ) unless content['author_id'].to_i == user_id
 
                         content[:timeslot] = Timeslot[ id: content['timeslot_id'] ]
                         halt( 409 ) if content[:timeslot].nil?
@@ -33,7 +35,7 @@ module Routes
                         content
                     end
                     result = first_pass.map do |content|
-                        new_content = Content.create( author_id: author_id,
+                        new_content = Content.create( author_id: content['author_id'].to_i,
                                                       type: content['type'],
                                                       timeslot_id: content[:timeslot].id,
                                                       date: content['date'].to_s,
@@ -60,8 +62,8 @@ module Routes
                         end
 
                         if content.key?('users_ids')
-                            content['users_ids'].each do |user_id|
-                                new_content.add_user( get_ctxt_user( user_id ) )
+                            content['users_ids'].each do |u_id|
+                                new_content.add_user( get_ctxt_user( u_id ) )
                             end
                         end
 

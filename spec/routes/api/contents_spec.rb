@@ -33,7 +33,7 @@ describe 'Routes::Api::Contents' do
     it 'creates a Note' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "note" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "note" } ]
 
         body = JSON.parse( last_response.body )
         expect( body.first['timeslot_id'] ).to eq ts.id
@@ -48,7 +48,7 @@ describe 'Routes::Api::Contents' do
     it 'creates a Session' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
 
         body = JSON.parse( last_response.body )
         expect( body.first['timeslot_id'] ).to eq ts.id
@@ -63,7 +63,7 @@ describe 'Routes::Api::Contents' do
     it 'creates a Session with attachments' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session",
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session",
                                              attachments: [ { type: "DOC", name: "tralala", external_id: "tralala" },
                                                             { type: "URL", name: "trilili", external_id: "trilili" }] } ]
 
@@ -90,10 +90,10 @@ describe 'Routes::Api::Contents' do
     it 'creates an Assignment' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
         session = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, assignment_type: "Exposé" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, assignment_type: "Exposé" } ]
 
         body = JSON.parse( last_response.body )
         created_content = Content[id: body.first['id']]
@@ -115,10 +115,10 @@ describe 'Routes::Api::Contents' do
     it 'creates an Assignment with users' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
         session = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, assignment_type: "Exposé", users_ids: [ MOCK_USER_ELV['id'] ] } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, assignment_type: "Exposé", users_ids: [ MOCK_USER_ELV['id'] ] } ]
 
         body = JSON.parse( last_response.body )
         created_content = Content[id: body.first['id']]
@@ -134,10 +134,10 @@ describe 'Routes::Api::Contents' do
     it 'gets a Content by id' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
         session = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, assignment_type: "Exposé" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, assignment_type: "Exposé" } ]
         assignment = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
         get "/api/contents/#{assignment.id}"
@@ -158,7 +158,7 @@ describe 'Routes::Api::Contents' do
     it 'gets Notes by timeslot_id' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
         session = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
         ts2 = Timeslot.create( structure_id: MOCK_UAI,
@@ -168,7 +168,7 @@ describe 'Routes::Api::Contents' do
                                start_time: Time.now.strftime( "2000-01-01T%H:00:00+01:00" ),
                                end_time: Time.now.strftime( "2000-01-01T%H:30:00+01:00" ) )
 
-        post '/api/contents/', contents: [ { timeslot_id: ts2.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, assignment_type: "Exposé" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts2.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, assignment_type: "Exposé" } ]
         assignment = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
         get "/api/contents", timeslots_ids: [ ts.id ]
@@ -195,7 +195,7 @@ describe 'Routes::Api::Contents' do
 
         trail = Trail.create( label: "prout" )
 
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session", trails_ids: [trail.id] } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session", trails_ids: [trail.id] } ]
         session = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
         get "/api/contents", trails_ids: [ trail.id ]
@@ -220,10 +220,10 @@ describe 'Routes::Api::Contents' do
     it 'gets Notes by parent_content_id' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
         session = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, assignment_type: "Exposé" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, assignment_type: "Exposé" } ]
         assignment = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
         get "/api/contents", parent_contents_ids: [ session.id ]
@@ -247,13 +247,13 @@ describe 'Routes::Api::Contents' do
     it 'gets Notes by assignment_type' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
         session = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, assignment_type: "Exposé" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, assignment_type: "Exposé" } ]
         assignment = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, assignment_type: "DM" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, assignment_type: "DM" } ]
         assignment2 = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
         get "/api/contents", parent_contents_ids: [ session.id ], assignment_types: %w[Exposé]
@@ -300,16 +300,16 @@ describe 'Routes::Api::Contents' do
     it 'gets Notes by date' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
         session = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE.end_of_week, content: MOCK_CONTENT, type: "session" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE.end_of_week, content: MOCK_CONTENT, type: "session" } ]
         session2 = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE.end_of_month, content: MOCK_CONTENT, type: "session" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE.end_of_month, content: MOCK_CONTENT, type: "session" } ]
         session3 = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE.end_of_year, content: MOCK_CONTENT, type: "session" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE.end_of_year, content: MOCK_CONTENT, type: "session" } ]
         session4 = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
         get "/api/contents", timeslots_ids: [ ts.id ], date: MOCK_DATE
@@ -380,10 +380,10 @@ describe 'Routes::Api::Contents' do
 
         trail = Trail.create( label: "prout" )
 
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
         session = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
         session2 = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
         dt = DateTime.now
@@ -435,7 +435,7 @@ describe 'Routes::Api::Contents' do
     it 'FORBIDS marking a Session as validated when not DIR' do
         $mock_user = MOCK_USER_ENS  # rubocop:disable Style/GlobalVars
 
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
         session = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
         $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
@@ -461,7 +461,7 @@ describe 'Routes::Api::Contents' do
     it 'marks a Session as seen' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
         session = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
         $mock_user = MOCK_USER_DIR  # rubocop:disable Style/GlobalVars
@@ -480,7 +480,7 @@ describe 'Routes::Api::Contents' do
     it 'marks a Session as unseen' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
         session = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
         $mock_user = MOCK_USER_DIR  # rubocop:disable Style/GlobalVars
@@ -499,7 +499,7 @@ describe 'Routes::Api::Contents' do
     it 'marks a Session as validated' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
         session = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
         $mock_user = MOCK_USER_DIR  # rubocop:disable Style/GlobalVars
@@ -518,7 +518,7 @@ describe 'Routes::Api::Contents' do
     it 'marks a Session as unvalidated' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
         session = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
         $mock_user = MOCK_USER_DIR  # rubocop:disable Style/GlobalVars
@@ -535,7 +535,7 @@ describe 'Routes::Api::Contents' do
     end
 
     it 'FORBIDS deletion when not author' do
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
         session = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
         $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
@@ -549,7 +549,7 @@ describe 'Routes::Api::Contents' do
     it 'deletes a Content by id' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
-        post '/api/contents/', contents: [ { timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
         session = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
         delete "/api/contents/#{session.id}"

@@ -23,8 +23,8 @@ describe 'Routes::Api::Trails' do
         nb_trails_before = Trail.count
         label = "test #{Time.now}"
 
-        post '/api/trails/', trails: [ { label: label, private: false },
-                                       { label: "#{label}2", private: true } ]
+        post '/api/trails/', trails: [ { author_id: u_id, label: label, private: false },
+                                       { author_id: u_id, label: "#{label}2", private: true } ]
 
         body = JSON.parse( last_response.body )
 
@@ -40,8 +40,8 @@ describe 'Routes::Api::Trails' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
         label = "test #{Time.now}"
-        post '/api/trails/', trails: [ { label: label, private: false },
-                                       { label: label, private: true } ]
+        post '/api/trails/', trails: [ { author_id: u_id, label: label, private: false },
+                                       { author_id: u_id, label: label, private: true } ]
         expect( last_response.status ).to eq 403
     end
 

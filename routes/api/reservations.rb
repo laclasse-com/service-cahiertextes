@@ -9,11 +9,15 @@ module Routes
                     param 'reservations', Array, required: true
                     # }
 
-                    author_id = get_ctxt_user( user['id'] ).id
+                    user_id = get_ctxt_user( user['id'] ).id
 
                     params['reservations'] = params['reservations'].map { |reservation| JSON.parse( reservation ) } if params['reservations'].first.is_a?( String )
 
                     first_pass = params['reservations'].map do |reservation|
+                        reservation = JSON.parse( reservation ) if reservation.is_a?( String )
+
+                        halt( 401 ) unless reservation['author_id'].to_i == user_id
+
                         reservation[:timeslot] = Timeslot[ id: reservation['timeslot_id'] ]
                         halt( 409 ) if reservation['timeslot'].nil?
 
@@ -24,7 +28,7 @@ module Routes
                                        !user_is_profile_in_structure?( %w[ADM], reservation['timeslot'].structure_id )
 
                         if reservation['timeslot'].group_id.nil?
-                            halt( 401 ) unless reservation['timeslot'].author_id == get_ctxt_user( user['id'] ).id
+                            halt( 401 ) unless reservation['timeslot'].author_id == user_id
                         else
                             halt( 401 ) unless user_is_x_in_group_g?( %w[ENS DOC], reservation['timeslot'].group_id ) ||
                                                user_is_profile_in_structure?( %w[ADM], reservation['timeslot'].structure_id )
@@ -39,7 +43,7 @@ module Routes
                                                               active_weeks: reservation['active_weeks'],
                                                               date: reservation['date'],
                                                               vtime: reservation.key?('vtime') && reservation['vtime'] ? DateTime.now : nil,
-                                                              author_id: author_id )
+                                                              author_id: reservation['author_id'] )
 
                         new_reservation.to_hash
                     end
@@ -102,6 +106,7 @@ module Routes
 
                 app.get '/api/reservations/?' do
                     # {
+                    param 'author_id', Integer
                     param 'timeslots_ids', Array
                     param 'resources_ids', Array
                     param 'vtime', :boolean
@@ -109,19 +114,19 @@ module Routes
                     any_of 'timeslots_ids', 'resources_ids'
                     # }
 
-                    query = Reservation
+                    user_id = get_ctxt_user( user['id'] ).id
 
+                    query = Reservation
+                    if params.key?( 'author_id' )
+                        halt( 401 ) unless params['author_id'] == user_id
+                        query = query.where( author_id: params['author_id'] )
+                    end
                     query = query.where( timeslot_id: params['timeslots_ids'] ) if params.key?( 'timeslots_ids' )
                     query = query.where( resource_id: params['resources_ids'] ) if params.key?( 'resources_ids' )
                     if params.key?( 'vtime' )
-                        query = if params['vtime']
-                                    query.where( Sequel.~( vtime: nil ) )
-                                else
-                                    query.where( vtime: nil )
-                                end
+                        query = params['vtime'] ? query.where( Sequel.~( vtime: nil ) ) : query.where( vtime: nil )
                     end
 
-                    user_id = get_ctxt_user( user['id'] ).id
                     result = query.all.map do |reservation|
                         halt( 401 ) unless reservation.author_id == user_id ||
                                            ( !reservation.timeslot.group_id.nil? && user_is_in_group_g?( reservation.timeslot.group_id ) ) ||

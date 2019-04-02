@@ -12,7 +12,7 @@ describe 'Routes::Api::ImportAPI' do
     it 'FORBIDS recording a new import when not TECH' do
         $mock_user = MOCK_USER_ENS  # rubocop:disable Style/GlobalVars
 
-        post '/api/import/log/start/', structure_id: MOCK_UAI, type: "pronote"
+        post '/api/import/log/start/', author_id: u_id, structure_id: MOCK_UAI, type: "pronote"
 
         expect( last_response.status ).to eq 401
 
@@ -22,7 +22,7 @@ describe 'Routes::Api::ImportAPI' do
     it 'records a new import' do
         nb_imports_before = Import.count
 
-        post '/api/import/log/start/', structure_id: MOCK_UAI, type: "pronote"
+        post '/api/import/log/start/', author_id: u_id, structure_id: MOCK_UAI, type: "pronote"
 
         body = JSON.parse( last_response.body )
         import = Import.last

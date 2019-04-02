@@ -9,16 +9,19 @@ module Routes
                     param 'resources', Array, required: true
                     # }
 
+                    user_id = get_ctxt_user( user['id'] ).id
+
                     first_pass = params['resources'].map do |resource|
                         resource = JSON.parse( resource ) if resource.is_a?( String )
 
+                        halt( 401 ) unless resource['author_id'].to_i == user_id
                         halt( 401 ) unless user_is_x_in_structure_s?( %w[ ADM ], resource['structure_id'] )
 
                         resource
                     end
                     result = first_pass.map do |resource|
                         new_resource = DataManagement::Accessors.create_or_get( Resource,
-                                                                                author_id: get_ctxt_user( user['id'] ).id,
+                                                                                author_id: resource['author_id'],
                                                                                 structure_id: resource['structure_id'],
                                                                                 label: resource['label'],
                                                                                 type: resource['type'] )
@@ -57,14 +60,21 @@ module Routes
 
                 app.get '/api/resources/?' do
                     # {
+                    param 'author_id', Integer
                     param 'structure_id', String
                     param 'label', String
                     param 'name', String
                     # }
 
+                    user_id = get_ctxt_user( user['id'] ).id
+
                     halt( 401 ) unless user_is_x_in_structure_s?( %w[ ADM ], params['structure_id'] )
 
                     query = Resource
+                    if params.key?( 'author_id' )
+                        halt( 401 ) unless params['author_id'] == user_id
+                        query = query.where( author_id: params['author_id'] )
+                    end
                     query = query.where( structure_id: params['structure_id'] ) if params.key?( 'structure_id' )
                     query = query.where( label: params['label'] ) if params.key?( 'label' )
                     query = query.where( name: params['name'] ) if params.key?( 'name' )

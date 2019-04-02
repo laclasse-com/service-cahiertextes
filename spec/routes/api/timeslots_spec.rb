@@ -33,13 +33,15 @@ describe 'Routes::Api::Timeslots' do
 
     it 'creates multiple Timeslots' do
         $mock_user = MOCK_USER_ENS  # rubocop:disable Style/GlobalVars
-        post '/api/timeslots/', timeslots: [ { structure_id: MOCK_UAI,
+        post '/api/timeslots/', timeslots: [ { author_id: u_id,
+                                               structure_id: MOCK_UAI,
                                                group_id: MOCK_GROUP_ID,
                                                subject_id: MOCK_SUBJECT_ID,
                                                weekday: MOCK_WEEKDAY,
                                                start_time: MOCK_START_TIME,
                                                end_time: MOCK_END_TIME },
-                                             { structure_id: MOCK_UAI,
+                                             { author_id: u_id,
+                                               structure_id: MOCK_UAI,
                                                group_id: MOCK_GROUP_ID,
                                                subject_id: MOCK_SUBJECT_ID,
                                                weekday: MOCK_WEEKDAY,
@@ -64,7 +66,8 @@ describe 'Routes::Api::Timeslots' do
     it 'FORBIDS creation when not ENS, ADM, DOC' do
         $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
 
-        post '/api/timeslots/', timeslots: [ { structure_id: MOCK_UAI,
+        post '/api/timeslots/', timeslots: [ { author_id: u_id,
+                                               structure_id: MOCK_UAI,
                                                group_id: MOCK_GROUP_ID,
                                                subject_id: MOCK_SUBJECT_ID,
                                                weekday: MOCK_WEEKDAY,
@@ -77,7 +80,8 @@ describe 'Routes::Api::Timeslots' do
     end
 
     it 'creates a Timeslot' do
-        post '/api/timeslots/', timeslots: [ { structure_id: MOCK_UAI,
+        post '/api/timeslots/', timeslots: [ { author_id: u_id,
+                                               structure_id: MOCK_UAI,
                                                group_id: MOCK_GROUP_ID,
                                                subject_id: MOCK_SUBJECT_ID,
                                                weekday: MOCK_WEEKDAY,
@@ -102,7 +106,8 @@ describe 'Routes::Api::Timeslots' do
                                 type: "test",
                                 structure_id: MOCK_UAI,
                                 author_id: u_id )
-        post '/api/timeslots/', timeslots: [ { structure_id: MOCK_UAI,
+        post '/api/timeslots/', timeslots: [ { author_id: u_id,
+                                               structure_id: MOCK_UAI,
                                                group_id: MOCK_GROUP_ID,
                                                subject_id: MOCK_SUBJECT_ID,
                                                weekday: MOCK_WEEKDAY,

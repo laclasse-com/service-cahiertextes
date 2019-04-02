@@ -9,8 +9,12 @@ module Routes
                     param 'timeslots', Array, required: true
                     # }
 
+                    user_id = get_ctxt_user( user['id'] ).id
+
                     first_pass = params['timeslots'].map do |timeslot|
                         timeslot = JSON.parse( timeslot ) if timeslot.is_a?( String )
+
+                        halt( 401 ) unless timeslot['author_id'].to_i == user_id
 
                         failed = ( timeslot.key?('group_id') &&
                                    !user_teaches_subject_x_in_group_g?( timeslot['subject_id'], timeslot['group_id'].to_i ) ) ||
@@ -30,7 +34,7 @@ module Routes
                                                         group_id: timeslot['group_id'],
                                                         structure_id: timeslot['structure_id'],
                                                         import_id: timeslot['import_id'],
-                                                        author_id: get_ctxt_user( user['id'] ).id,
+                                                        author_id: timeslot['author_id'],
                                                         date: timeslot['date'],
                                                         title: timeslot['title'] )
 
@@ -107,12 +111,17 @@ module Routes
                     param 'subjects_ids', Array
                     param 'authors_ids', Array
                     param 'import_id', Integer
+                    param 'author_id', Integer
 
                     param 'no_year_restriction', :boolean
                     param 'include_deleted', :boolean
                     # }
 
                     query = Timeslot
+                    if params.key?( 'author_id' )
+                        halt( 401 ) unless params['author_id'] == user_id
+                        query = query.where( author_id: params['author_id'] )
+                    end
 
                     query = query.where( Sequel.lit( "DATE_FORMAT( ctime, '%Y-%m-%d') >= '#{Utils::Calendar.schoolyear_start_date( 'A' )}'" ) ) unless params.key?( 'no_year_restriction' )
                     query = query.where( Sequel.lit( "`dtime` IS NULL OR DATE_FORMAT( dtime, '%Y-%m-%d') >= '#{params['date<']}'" ) ) if params.key?( 'date<' ) && !params.key?( 'include_deleted' )

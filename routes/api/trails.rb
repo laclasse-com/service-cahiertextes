@@ -28,21 +28,22 @@ module Routes
                     # }
 
                     halt( 401 ) unless user_is_x_in_structure_s?( %w[ENS DOC ADM] ) || user_is_super_admin?
-                    cuid = get_ctxt_user( user['id']).id
+                    user_id = get_ctxt_user( user['id']).id
 
                     first_pass = params['trails'].map do |trail|
                         trail = JSON.parse( trail ) if trail.is_a?( String )
 
+                        halt( 401 ) unless trail['author_id'].to_i == user_id
                         halt( 403 ) unless params['trails'].select { |t| t['label'] == trail['label'] }.count == 1
                         halt( 403 ) unless Trail[ label: trail['label'],
-                                                  author_id: cuid ].nil?
+                                                  author_id: user_id ].nil?
 
                         trail
                     end
                     result = first_pass.map do |trail|
                         new_trail = Trail.create( label: trail['label'],
                                                   private: trail['private'],
-                                                  author_id: cuid )
+                                                  author_id: trail['author_id'].to_i )
 
                         new_trail.to_hash
                     end
@@ -59,12 +60,12 @@ module Routes
                     trail = Trail[ params['id'] ]
                     halt( 404 ) if trail.nil?
 
-                    cuid = get_ctxt_user( user['id']).id
+                    user_id = get_ctxt_user( user['id']).id
                     halt( 401 ) unless trail.author_id == get_ctxt_user( user['id']).id || user_is_super_admin?
 
                     overlapping_trail = Trail[ label: params['label'],
                                                private: trail['private'],
-                                               author_id: cuid ]
+                                               author_id: user_id ]
                     halt( 403 ) unless overlapping_trail.nil?
 
                     trail.update( label: params['label'] )

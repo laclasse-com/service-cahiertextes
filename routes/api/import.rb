@@ -10,16 +10,20 @@ module Routes
             def self.registered( app )
                 app.post '/api/import/log/start/?' do
                     # {
+                    param 'author_id', Integer, required: true
                     param 'structure_id', String, required: true
                     param 'type', String, required: true
                     # }
 
+                    user_id = get_ctxt_user( user['id'] ).id
+
                     halt( 401 ) unless user_is_x_in_structure_s?( %w[ADM], params['structure_id'] )
+                    halt( 401 ) unless user_id == params['author_id']
 
                     json( Import.create( structure_id: params['structure_id'],
                                          ctime: DateTime.now,
                                          type: params['type'],
-                                         author_id: get_ctxt_user( user['id'] ).id ) )
+                                         author_id: user_id ) )
                 end
 
                 app.post '/api/import/pronote/decrypt/?' do

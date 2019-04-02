@@ -13,8 +13,8 @@ describe 'Routes::Api::Resources' do
 
     it 'creates multiple Resources' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
-        post '/api/resources/', resources: [ { structure_id: MOCK_UAI, label: MOCK_LABEL, name: MOCK_NAME, type: "test" },
-                                             { structure_id: MOCK_UAI, label: "#{MOCK_LABEL}2", name: "#{MOCK_NAME}2", type: "test" } ]
+        post '/api/resources/', resources: [ { author_id: u_id, structure_id: MOCK_UAI, label: MOCK_LABEL, name: MOCK_NAME, type: "test" },
+                                             { author_id: u_id, structure_id: MOCK_UAI, label: "#{MOCK_LABEL}2", name: "#{MOCK_NAME}2", type: "test" } ]
 
         body = JSON.parse( last_response.body )
         expect( body.length ).to eq 2
@@ -25,7 +25,7 @@ describe 'Routes::Api::Resources' do
     it 'FORBIDS creation when not TECH' do
         $mock_user = MOCK_USER_ENS  # rubocop:disable Style/GlobalVars
 
-        post '/api/resources/', resources: [ { structure_id: MOCK_UAI, label: MOCK_LABEL, name: MOCK_NAME } ]
+        post '/api/resources/', resources: [ { author_id: u_id, structure_id: MOCK_UAI, label: MOCK_LABEL, name: MOCK_NAME } ]
 
         expect( last_response.status ).to eq 401
 
@@ -33,7 +33,7 @@ describe 'Routes::Api::Resources' do
     end
 
     it 'creates a Resource' do
-        post '/api/resources/', resources: [ { structure_id: MOCK_UAI, label: MOCK_LABEL, name: MOCK_NAME, type: "test" } ]
+        post '/api/resources/', resources: [ { author_id: u_id, structure_id: MOCK_UAI, label: MOCK_LABEL, name: MOCK_NAME, type: "test" } ]
 
         body = JSON.parse( last_response.body )
         lid = body.first['id']

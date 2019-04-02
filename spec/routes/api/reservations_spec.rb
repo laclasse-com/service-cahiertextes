@@ -30,24 +30,24 @@ describe 'Routes::Api::Reservations' do
 
         $mock_user = MOCK_USER_ENS  # rubocop:disable Style/GlobalVars
 
-        post '/api/reservations/', reservations: [ { timeslot_id: timeslot.id * 2, resource_id: resource.id } ]
+        post '/api/reservations/', reservations: [ { author_id: u_id, timeslot_id: timeslot.id * 2, resource_id: resource.id } ]
         expect( last_response.status ).to eq 409
 
-        post '/api/reservations/', reservations: [ { timeslot_id: timeslot.id, resource_id: resource.id * 2 } ]
+        post '/api/reservations/', reservations: [ { author_id: u_id, timeslot_id: timeslot.id, resource_id: resource.id * 2 } ]
         expect( last_response.status ).to eq 409
 
-        post '/api/reservations/', reservations: [ { timeslot_id: timeslot.id, resource_id: resource2.id } ]
+        post '/api/reservations/', reservations: [ { author_id: u_id, timeslot_id: timeslot.id, resource_id: resource2.id } ]
         expect( last_response.status ).to eq 409
 
-        post '/api/reservations/', reservations: [ { timeslot_id: timeslot.id, resource_id: resource.id, vtime: true } ]
+        post '/api/reservations/', reservations: [ { author_id: u_id, timeslot_id: timeslot.id, resource_id: resource.id, vtime: true } ]
         expect( last_response.status ).to eq 401
 
-        post '/api/reservations/', reservations: [ { timeslot_id: timeslot2.id, resource_id: resource.id } ]
+        post '/api/reservations/', reservations: [ { author_id: u_id, timeslot_id: timeslot2.id, resource_id: resource.id } ]
         expect( last_response.status ).to eq 401
 
         $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
 
-        post '/api/reservations/', reservations: [ { timeslot_id: timeslot.id, resource_id: resource.id } ]
+        post '/api/reservations/', reservations: [ { author_id: u_id, timeslot_id: timeslot.id, resource_id: resource.id } ]
         expect( last_response.status ).to eq 401
 
         timeslot&.destroy
@@ -71,7 +71,7 @@ describe 'Routes::Api::Reservations' do
 
         $mock_user = MOCK_USER_ENS  # rubocop:disable Style/GlobalVars
 
-        post '/api/reservations/', reservations: [ { timeslot_id: timeslot.id, resource_id: resource.id, date: Time.now.strftime("%F") } ]
+        post '/api/reservations/', reservations: [ { author_id: u_id, timeslot_id: timeslot.id, resource_id: resource.id, date: Time.now.strftime("%F") } ]
 
         body = JSON.parse( last_response.body )
 
@@ -97,7 +97,7 @@ describe 'Routes::Api::Reservations' do
                                     structure_id: MOCK_UAI,
                                     type: "test" )
 
-        post '/api/reservations/', reservations: [ { timeslot_id: timeslot.id, resource_id: resource.id, date: Time.now.strftime("%F") } ]
+        post '/api/reservations/', reservations: [ { author_id: u_id, timeslot_id: timeslot.id, resource_id: resource.id, date: Time.now.strftime("%F") } ]
         body = JSON.parse( last_response.body )
 
         put "/api/reservations/#{body.first['id']}", vtime: true
@@ -121,7 +121,7 @@ describe 'Routes::Api::Reservations' do
                                     structure_id: MOCK_UAI,
                                     type: "test" )
 
-        post '/api/reservations/', reservations: [ { timeslot_id: timeslot.id, resource_id: resource.id, date: Time.now.strftime("%F") } ]
+        post '/api/reservations/', reservations: [ { author_id: u_id, timeslot_id: timeslot.id, resource_id: resource.id, date: Time.now.strftime("%F") } ]
         body = JSON.parse( last_response.body )
 
         put "/api/reservations/#{body.first['id']}", vtime: true
@@ -198,7 +198,7 @@ describe 'Routes::Api::Reservations' do
                                     structure_id: MOCK_UAI,
                                     type: "test" )
 
-        post '/api/reservations/', reservations: [ { timeslot_id: timeslot.id, resource_id: resource.id, date: Time.now.strftime("%F") } ]
+        post '/api/reservations/', reservations: [ { author_id: u_id, timeslot_id: timeslot.id, resource_id: resource.id, date: Time.now.strftime("%F") } ]
         reservation = JSON.parse( last_response.body )
 
         put "/api/reservations/#{reservation.first['id']}", date: Time.now.end_of_year.strftime("%F")
@@ -253,7 +253,7 @@ describe 'Routes::Api::Reservations' do
                                     structure_id: MOCK_UAI,
                                     type: "test" )
 
-        post '/api/reservations/', reservations: [ { timeslot_id: timeslot.id, resource_id: resource.id, date: Time.now.strftime("%F") } ]
+        post '/api/reservations/', reservations: [ { author_id: u_id, timeslot_id: timeslot.id, resource_id: resource.id, date: Time.now.strftime("%F") } ]
         body = JSON.parse( last_response.body )
 
         get "/api/reservations/#{body.first['id']}"
@@ -371,7 +371,7 @@ describe 'Routes::Api::Reservations' do
         reservation2 = Reservation.create( timeslot_id: timeslot2.id,
                                            resource_id: resource.id )
 
-        post '/api/reservations/', reservations: [ { timeslot_id: timeslot.id, resource_id: resource.id, date: Time.now.strftime("%F") } ]
+        post '/api/reservations/', reservations: [ { author_id: u_id, timeslot_id: timeslot.id, resource_id: resource.id, date: Time.now.strftime("%F") } ]
         body = JSON.parse( last_response.body )
 
         $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
@@ -399,7 +399,7 @@ describe 'Routes::Api::Reservations' do
                                     structure_id: MOCK_UAI,
                                     type: "test" )
 
-        post '/api/reservations/', reservations: [ { timeslot_id: timeslot.id, resource_id: resource.id, date: Time.now.strftime("%F") } ]
+        post '/api/reservations/', reservations: [ { author_id: u_id, timeslot_id: timeslot.id, resource_id: resource.id, date: Time.now.strftime("%F") } ]
         body = JSON.parse( last_response.body )
 
         delete "/api/reservations/#{body.first['id']}"
