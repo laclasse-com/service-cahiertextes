@@ -28,11 +28,13 @@ require_relative './models/resource'
 require_relative './models/users'
 require_relative './models/trail'
 require_relative './models/reservation'
+require_relative './models/assignment_done_marker'
 
 require_relative './lib/helpers/auth'
 require_relative './lib/helpers/user'
 
 require_relative './routes/api/contents'
+require_relative './routes/api/assignment_done_markers'
 require_relative './routes/api/timeslots'
 require_relative './routes/api/import'
 require_relative './routes/api/matchables'
@@ -83,6 +85,7 @@ class CdTServer < Sinatra::Base
 
     register Routes::Api::Timeslots
     register Routes::Api::Contents
+    register Routes::Api::AssignmentDoneMarkers
     register Routes::Api::Resources
     register Routes::Api::Reservations
     register Routes::Api::Trails

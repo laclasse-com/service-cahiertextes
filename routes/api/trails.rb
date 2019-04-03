@@ -5,7 +5,16 @@ module Routes
         module Trails
             def self.registered( app )
                 app.get '/api/trails/?' do
-                    query = Trail.where( Sequel[{author_id: get_ctxt_user( user['id']).id }] | Sequel[{private: false}] )
+                    # {
+                    param 'author_id', Integer
+                    # }
+                    if params.key?('author_id')
+                        halt( 401 ) if params['author_id'] != get_ctxt_user( user['id']).id
+
+                        query = Trail.where( Sequel[{author_id: params['author_id'] }] | Sequel[{private: false}] )
+                    else
+                        query = Trail.where( private: false )
+                    end
 
                     json( query.naked.all )
                 end
@@ -36,7 +45,7 @@ module Routes
                         halt( 401 ) unless trail['author_id'].to_i == user_id
                         halt( 403 ) unless params['trails'].select { |t| t['label'] == trail['label'] }.count == 1
                         halt( 403 ) unless Trail[ label: trail['label'],
-                                                  author_id: user_id ].nil?
+                                                  author_id: trail['author_id'].to_i ].nil?
 
                         trail
                     end

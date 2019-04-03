@@ -432,6 +432,26 @@ describe 'Routes::Api::Contents' do
         ts2&.destroy
     end
 
+    it 'marks an Assignment as done' do
+        $mock_user = MOCK_USER_ENS  # rubocop:disable Style/GlobalVars
+
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment" } ]
+        assignment = Content[id: JSON.parse( last_response.body ).first['id'] ]
+
+        $mock_user = MOCK_USER_ELV  # rubocop:disable Style/GlobalVars
+
+        put "/api/contents/#{assignment.id}",
+            rtime: true,
+            author_id: u_id
+
+        body = JSON.parse( last_response.body )
+
+        expect( body['id'] ).to eq assignment.id
+        expect( body['stime'] ).to_not be nil
+
+        assignment&.destroy
+    end
+
     it 'FORBIDS marking a Session as validated when not DIR' do
         $mock_user = MOCK_USER_ENS  # rubocop:disable Style/GlobalVars
 
