@@ -41,6 +41,7 @@ describe 'Routes::Api::Contents' do
         expect( body.first['content'] ).to eq MOCK_CONTENT
         expect( body.first['author_id'] ).to eq u_id
         expect( body.first['type'] ).to eq "note"
+        expect( body.first['starred'] ).to be false
 
         Content[id: body.first['id']]&.destroy
     end
@@ -48,7 +49,7 @@ describe 'Routes::Api::Contents' do
     it 'creates a Session' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
-        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session", starred: true } ]
 
         body = JSON.parse( last_response.body )
         expect( body.first['timeslot_id'] ).to eq ts.id
@@ -56,6 +57,7 @@ describe 'Routes::Api::Contents' do
         expect( body.first['content'] ).to eq MOCK_CONTENT
         expect( body.first['author_id'] ).to eq u_id
         expect( body.first['type'] ).to eq "session"
+        expect( body.first['starred'] ).to be true
 
         Content[id: body.first['id']]&.destroy
     end
@@ -63,7 +65,7 @@ describe 'Routes::Api::Contents' do
     it 'creates a Session with attachments' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
-        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session",
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session", starred: false,
                                              attachments: [ { type: "DOC", name: "tralala", external_id: "tralala" },
                                                             { type: "URL", name: "trilili", external_id: "trilili" }] } ]
 
@@ -75,6 +77,7 @@ describe 'Routes::Api::Contents' do
         expect( body.first['content'] ).to eq MOCK_CONTENT
         expect( body.first['author_id'] ).to eq u_id
         expect( body.first['type'] ).to eq "session"
+        expect( body.first['starred'] ).to be false
         expect( created_content.attachments.length ).to eq 2
         expect( created_content.attachments.first.type ).to eq "DOC"
         expect( created_content.attachments.first.name ).to eq "tralala"
@@ -396,6 +399,7 @@ describe 'Routes::Api::Contents' do
             trails_ids: [trail.id],
             type: "assignment",
             parent_content_id: session2.id,
+            starred: true,
             assignment_type: "DM",
             attachments: [ { type: "DOC", name: "tralala", external_id: "tralala" },
                            { type: "URL", name: "trilili", external_id: "trilili" } ],
@@ -412,6 +416,7 @@ describe 'Routes::Api::Contents' do
         expect( body['vtime'] ).to be nil
         expect( DateTime.parse( body['atime'] ).iso8601 ).to eq dt.iso8601
         expect( body['load'] ).to eq 2
+        expect( body['starred'] ).to be true
         expect( body['type'] ).to eq "assignment"
         expect( created_content.attachments.length ).to eq 2
         expect( created_content.attachments.first.type ).to eq "DOC"

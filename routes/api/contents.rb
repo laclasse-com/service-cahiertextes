@@ -43,6 +43,7 @@ module Routes
                                                       content: content['content'],
                                                       assignment_type: content['assignment_type'],
                                                       load: content['load'],
+                                                      starred: content.key?('starred') ? content['starred'] == "true" : false,
                                                       parent_content_id: content['parent_content_id'] )
 
                         new_content.save_changes
@@ -90,6 +91,7 @@ module Routes
                     param 'type', String
                     param 'attachments', Array
                     param 'users', Array
+                    param 'starred', :boolean
                     # }
 
                     content = Content[ id: params['id'] ]
@@ -129,6 +131,7 @@ module Routes
                         content.atime = params['atime'] if params.key?('atime')
                         content.content = params['content'] if params.key?( 'content' )
                         content.trail_id = params['trail_id'] if params.key?( 'trail_id' )
+                        content.starred = params['starred'] if params.key?( 'starred' )
 
                         if content.type == "assignment"
                             content.parent_content_id = params['parent_content_id'] if params.key?( 'parent_content_id' )
@@ -198,6 +201,7 @@ module Routes
                     param 'date', Date
                     param 'date>', Date
                     param 'date<', Date
+                    param 'starred', :boolean
                     # }
 
                     query = Content
@@ -210,7 +214,7 @@ module Routes
                     query = query.where( author_id: params['authors_ids']) if params.key?( 'authors_ids' )
                     query = query.where( parent_content_id: params['parent_contents_ids']) if params.key?( 'parent_contents_ids' )
                     query = query.where( assignment_type: params['assignment_types'] ) if params.key?('assignment_types')
-
+                    query = query.where( starred: params['starred'] ) if params.key?('starred')
                     query = query.where(id: ContentTrail.where(trail_id: params['trails_ids'] ).select(:content_id) ) if params.key?( 'trails_ids' )
 
                     json( query.naked.all )
