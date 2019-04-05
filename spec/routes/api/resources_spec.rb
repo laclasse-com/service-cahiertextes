@@ -56,7 +56,7 @@ describe 'Routes::Api::Resources' do
     end
 
     it 'gets Resources by structure_id' do
-        get "/api/resources", structure_id: MOCK_UAI
+        get "/api/resources", structures_ids: [MOCK_UAI]
 
         body = JSON.parse( last_response.body )
         cohort = Resource.where(structure_id: MOCK_UAI)

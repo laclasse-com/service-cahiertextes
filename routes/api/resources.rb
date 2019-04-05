@@ -61,7 +61,7 @@ module Routes
                 app.get '/api/resources/?' do
                     # {
                     param 'author_id', Integer
-                    param 'structure_id', String
+                    param 'structures_ids', Array
                     param 'label', String
                     param 'name', String
                     # }
@@ -75,7 +75,7 @@ module Routes
                         halt( 401 ) unless params['author_id'] == user_id
                         query = query.where( author_id: params['author_id'] )
                     end
-                    query = query.where( structure_id: params['structure_id'] ) if params.key?( 'structure_id' )
+                    query = query.where( structure_id: params['structures_ids'] ) if params.key?( 'structures_ids' )
                     query = query.where( label: params['label'] ) if params.key?( 'label' )
                     query = query.where( name: params['name'] ) if params.key?( 'name' )
 

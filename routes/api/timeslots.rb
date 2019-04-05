@@ -109,7 +109,6 @@ module Routes
                     param 'structures_ids', Array
                     param 'no_structures', :boolean
                     param 'subjects_ids', Array
-                    param 'authors_ids', Array
                     param 'import_id', Integer
                     param 'author_id', Integer
 
@@ -133,7 +132,6 @@ module Routes
                     query = query.where( structure_id: nil ) if params.key?( 'no_structures' ) && params['no_structures']
 
                     query = query.where( subject_id: params['subjects_ids'] ) if params.key?( 'subjects_ids' )
-                    query = query.where( author_id: params['authors_ids'] ) if params.key?( 'authors_ids' )
                     query = query.where( import_id: params['import_id'] ) if params.key?( 'import_id' )
 
                     data = query.naked.all

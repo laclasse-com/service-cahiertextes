@@ -193,7 +193,7 @@ module Routes
                 app.get '/api/contents/?' do
                     # {
                     param 'timeslots_ids', Array
-                    param 'authors_ids', Array
+                    param 'author_id', Array
                     param 'trails_ids', Array
                     param 'parent_contents_ids', Array
                     param 'assignment_types', Array
@@ -211,7 +211,10 @@ module Routes
                     query = query.where( date: params['date'] ) if params.key?( 'date' )
                     query = query.where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') >= '#{params['date>']}'" ) ) if params.key?( 'date>' )
                     query = query.where( Sequel.lit( "DATE_FORMAT( date, '%Y-%m-%d') <= '#{params['date<']}'" ) ) if params.key?( 'date<' )
-                    query = query.where( author_id: params['authors_ids']) if params.key?( 'authors_ids' )
+                    if params.key?( 'author_id' )
+                        halt( 401 ) unless params['author_id'] == user_id
+                        query = query.where( author_id: params['author_id'] )
+                    end
                     query = query.where( parent_content_id: params['parent_contents_ids']) if params.key?( 'parent_contents_ids' )
                     query = query.where( assignment_type: params['assignment_types'] ) if params.key?('assignment_types')
                     query = query.where( starred: params['starred'] ) if params.key?('starred')
