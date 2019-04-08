@@ -21,7 +21,7 @@ module Routes
                     halt( 401 ) unless params['uid'] == session['user']
 
                     ctxt_user = DataManagement::Accessors.create_or_get( User,
-                                                                          uid: params['uid'] )
+                                                                         uid: params['uid'] )
 
                     ctxt_user.update( parameters: params['parameters'] )
                     ctxt_user.save
