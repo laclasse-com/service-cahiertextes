@@ -6,20 +6,27 @@ module Routes
     module Api
         module UsersAPI
             def self.registered( app )
-                app.get '/api/users/current/parametres/?' do
-                    json( get_ctxt_user( session['user'] ).to_hash )
+                app.get '/api/users/:uid/?' do
+                    param 'uid', String, required: true
+
+                    halt( 401 ) unless params['uid'] == session['user']
+
+                    json( get_ctxt_user( params['uid'] ).to_hash )
                 end
 
-                app.put '/api/users/current/parametres/?' do
+                app.put '/api/users/:uid/?' do
+                    param 'uid', String, required: true
                     param 'parameters', String, required: true
 
-                    parameters = DataManagement::Accessors.create_or_get( User,
-                                                                          uid: session['user'] )
+                    halt( 401 ) unless params['uid'] == session['user']
 
-                    parameters.update( parameters: params['parameters'] )
-                    parameters.save
+                    ctxt_user = DataManagement::Accessors.create_or_get( User,
+                                                                          uid: params['uid'] )
 
-                    json( parameters.to_hash )
+                    ctxt_user.update( parameters: params['parameters'] )
+                    ctxt_user.save
+
+                    json( ctxt_user.to_hash )
                 end
             end
         end

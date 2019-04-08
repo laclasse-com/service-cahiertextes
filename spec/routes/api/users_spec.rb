@@ -10,7 +10,7 @@ describe 'Routes::Api::UsersAPI' do
     end
 
     it 'gets user parameters' do
-        get '/api/users/current/parametres'
+        get "/api/users/#{LaClasse::Helpers::Auth.session['user']}"
 
         up = ::User[uid: LaClasse::Helpers::Auth.session['user'] ]
         expect( up ).to_not be nil
@@ -27,8 +27,8 @@ describe 'Routes::Api::UsersAPI' do
     end
 
     it 'sets user parameters' do
-        put '/api/users/current/parametres', parameters: { 'affichage_types_de_devoir' => false,
-                                                           'affichage_week_ends' => true }.to_json
+        put "/api/users/#{LaClasse::Helpers::Auth.session['user']}", parameters: { 'affichage_types_de_devoir' => false,
+                                                                                   'affichage_week_ends' => true }.to_json
 
         up = ::User[uid: LaClasse::Helpers::Auth.session['user'] ]
         expect( up ).to_not be nil
