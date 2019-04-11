@@ -35,11 +35,13 @@ module Routes
                 app.get '/api/assignment_done_markers/?' do
                     # {
                     param 'author_id', Integer, required: true
+                    param 'contents_ids', Array
                     # }
 
                     halt( 401 ) if params['author_id'] != get_ctxt_user( user['id']).id
 
                     query = AssignmentDoneMarker.where( author_id: params['author_id'] )
+                    query = query.where( content_id: params['contents_ids'] ) if params.key?( 'contents_ids' )
 
                     json( query.naked.all )
                 end
