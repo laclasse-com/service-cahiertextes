@@ -29,8 +29,6 @@ module Routes
                     # {
                     param 'structure_id', String, required: true
                     param 'matchables', Array, required: true
-                    # [ { 'hash_item', String, required: true
-                    #  'known_id', String, required: true } ]
                     # }
 
                     halt( 401 ) unless user_is_x_in_structure_s?( %w[ ADM ], params['structure_id'] )
