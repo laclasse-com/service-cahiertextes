@@ -41,7 +41,7 @@ module Routes
                                                       date: content['date'].to_s,
                                                       ctime: Time.now,
                                                       content: content['content'],
-                                                      assignment_type: content['assignment_type'],
+                                                      subtype: content['subtype'],
                                                       load: content['load'],
                                                       starred: content.key?('starred') ? content['starred'] == "true" : false,
                                                       parent_content_id: content['parent_content_id'] )
@@ -87,7 +87,7 @@ module Routes
                     param 'trails_ids', Array
                     param 'parent_content_id', Integer
                     param 'load', Integer
-                    param 'assignment_type', String
+                    param 'subtype', String
                     param 'type', String
                     param 'attachments', Array
                     param 'users', Array
@@ -136,7 +136,7 @@ module Routes
                         if content.type == "assignment"
                             content.parent_content_id = params['parent_content_id'] if params.key?( 'parent_content_id' )
                             content.load = params['load'] if params.key?( 'load' )
-                            content.assignment_type = params['assignment_type'] if params.key?( 'assignment_type' )
+                            content.subtype = params['subtype'] if params.key?( 'subtype' )
                         end
 
                         if params.key?('attachments')
@@ -196,7 +196,7 @@ module Routes
                     param 'author_id', Array
                     param 'trails_ids', Array
                     param 'parent_contents_ids', Array
-                    param 'assignment_types', Array
+                    param 'subtypes', Array
                     param 'types', Array
                     param 'date', Date
                     param 'date>', Date
@@ -216,7 +216,7 @@ module Routes
                         query = query.where( author_id: params['author_id'] )
                     end
                     query = query.where( parent_content_id: params['parent_contents_ids']) if params.key?( 'parent_contents_ids' )
-                    query = query.where( assignment_type: params['assignment_types'] ) if params.key?('assignment_types')
+                    query = query.where( subtype: params['subtypes'] ) if params.key?('subtypes')
                     query = query.where( starred: params['starred'] ) if params.key?('starred')
                     query = query.where(id: ContentTrail.where(trail_id: params['trails_ids'] ).select(:content_id) ) if params.key?( 'trails_ids' )
 
