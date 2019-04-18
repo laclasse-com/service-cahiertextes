@@ -2,7 +2,7 @@
 
 require_relative './app'
 
-STDERR.puts "#{ENV['RACK_ENV']} environment"
+warn "#{ENV['RACK_ENV']} environment"
 
 # vv merge POST/... body into params
 use Rack::NestedParams
