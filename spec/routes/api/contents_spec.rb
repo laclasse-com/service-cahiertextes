@@ -96,7 +96,7 @@ describe 'Routes::Api::Contents' do
         post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
         session = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
-        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, assignment_type: "Exposé" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, subtype: "Exposé" } ]
 
         body = JSON.parse( last_response.body )
         created_content = Content[id: body.first['id']]
@@ -121,7 +121,7 @@ describe 'Routes::Api::Contents' do
         post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
         session = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
-        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, assignment_type: "Exposé", users_ids: [ MOCK_USER_ELV['id'] ] } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, subtype: "Exposé", users_ids: [ MOCK_USER_ELV['id'] ] } ]
 
         body = JSON.parse( last_response.body )
         created_content = Content[id: body.first['id']]
@@ -140,7 +140,7 @@ describe 'Routes::Api::Contents' do
         post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
         session = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
-        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, assignment_type: "Exposé" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, subtype: "Exposé" } ]
         assignment = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
         get "/api/contents/#{assignment.id}"
@@ -171,7 +171,7 @@ describe 'Routes::Api::Contents' do
                                start_time: Time.now.strftime( "2000-01-01T%H:00:00+01:00" ),
                                end_time: Time.now.strftime( "2000-01-01T%H:30:00+01:00" ) )
 
-        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts2.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, assignment_type: "Exposé" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts2.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, subtype: "Exposé" } ]
         assignment = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
         get "/api/contents", timeslots_ids: [ ts.id ]
@@ -226,7 +226,7 @@ describe 'Routes::Api::Contents' do
         post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
         session = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
-        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, assignment_type: "Exposé" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, subtype: "Exposé" } ]
         assignment = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
         get "/api/contents", parent_contents_ids: [ session.id ]
@@ -247,19 +247,19 @@ describe 'Routes::Api::Contents' do
         session&.destroy
     end
 
-    it 'gets Notes by assignment_type' do
+    it 'gets Notes by subtype' do
         $mock_user = MOCK_USER_GENERIC  # rubocop:disable Style/GlobalVars
 
         post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "session" } ]
         session = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
-        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, assignment_type: "Exposé" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, subtype: "Exposé" } ]
         assignment = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
-        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, assignment_type: "DM" } ]
+        post '/api/contents/', contents: [ { author_id: u_id, timeslot_id: ts.id, date: MOCK_DATE, content: MOCK_CONTENT, type: "assignment", parent_content_id: session.id, load: 2, subtype: "DM" } ]
         assignment2 = Content[id: JSON.parse( last_response.body ).first['id'] ]
 
-        get "/api/contents", parent_contents_ids: [ session.id ], assignment_types: %w[Exposé]
+        get "/api/contents", parent_contents_ids: [ session.id ], subtypes: %w[Exposé]
 
         body = JSON.parse( last_response.body )
         expect( body.length ).to eq 1
@@ -270,9 +270,9 @@ describe 'Routes::Api::Contents' do
         expect( body.first['content'] ).to eq MOCK_CONTENT
         expect( body.first['dtime'] ).to be nil
         expect( body.first['author_id'] ).to eq u_id
-        expect( body.first['assignment_type'] ).to eq "Exposé"
+        expect( body.first['subtype'] ).to eq "Exposé"
 
-        get "/api/contents", parent_contents_ids: [ session.id ], assignment_types: %w[DM]
+        get "/api/contents", parent_contents_ids: [ session.id ], subtypes: %w[DM]
 
         body = JSON.parse( last_response.body )
         expect( body.length ).to eq 1
@@ -283,14 +283,14 @@ describe 'Routes::Api::Contents' do
         expect( body.first['content'] ).to eq MOCK_CONTENT
         expect( body.first['dtime'] ).to be nil
         expect( body.first['author_id'] ).to eq u_id
-        expect( body.first['assignment_type'] ).to eq "DM"
+        expect( body.first['subtype'] ).to eq "DM"
 
-        get "/api/contents", parent_contents_ids: [ session.id ], assignment_types: %w[DM Exposé]
+        get "/api/contents", parent_contents_ids: [ session.id ], subtypes: %w[DM Exposé]
 
         body = JSON.parse( last_response.body )
         expect( body.length ).to eq 2
 
-        get "/api/contents", parent_contents_ids: [ session.id ], assignment_types: %w[DS Travail]
+        get "/api/contents", parent_contents_ids: [ session.id ], subtypes: %w[DS Travail]
 
         body = JSON.parse( last_response.body )
         expect( body.length ).to eq 0
@@ -400,7 +400,7 @@ describe 'Routes::Api::Contents' do
             type: "assignment",
             parent_content_id: session2.id,
             starred: true,
-            assignment_type: "DM",
+            subtype: "DM",
             attachments: [ { type: "DOC", name: "tralala", external_id: "tralala" },
                            { type: "URL", name: "trilili", external_id: "trilili" } ],
             users_ids: [ MOCK_USER_ELV['id'] ]
