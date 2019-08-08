@@ -16,9 +16,9 @@ module Routes
 
                         halt( 401 ) unless timeslot['author_id'].to_i == user_id
                         halt( 401 ) if timeslot.key?('structure_id') &&
-                                       !user_is_x_in_structure_s?( %w[ ENS DOC ADM ], timeslot['structure_id'] )
+                                       !user_is_x_in_structure_s?( %w[ ENS DOC ADM DIR ], timeslot['structure_id'] )
                         halt( 401 ) if timeslot.key?('group_id') &&
-                                       !user_is_profile_in_structure?( "ADM", timeslot['structure_id'] ) &&
+                                       !user_is_x_in_structure_s?( %w[ ADM DIR ], timeslot['structure_id'] ) &&
                                        !user_teaches_subject_x_in_group_g?( timeslot['subject_id'], timeslot['group_id'].to_i )
 
                         timeslot
